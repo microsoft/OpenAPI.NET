@@ -147,6 +147,9 @@ namespace Microsoft.OpenApi.Models
             // server
             writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.SerializeAsV3(w));
 
+            // specification extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
             writer.WriteEndObject();
         }
 
