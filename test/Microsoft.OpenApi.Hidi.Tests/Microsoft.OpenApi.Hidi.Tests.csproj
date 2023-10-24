@@ -25,39 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="UtilityFiles\*.json;UtilityFiles\*.yml;UtilityFiles\*.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Compile Update="UtilityFiles\OpenApiDocumentMock.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="UtilityFiles\appsettingstest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="UtilityFiles\postmanCollection_ver1.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="UtilityFiles\postmanCollection_ver2.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="UtilityFiles\postmanCollection_ver3.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="UtilityFiles\postmanCollection_ver4.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="UtilityFiles\SampleOpenApi.yml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="UtilityFiles\Todo.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-     <None Update="UtilityFiles\examplepowershellsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="UtilityFiles\exampleapimanifest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
