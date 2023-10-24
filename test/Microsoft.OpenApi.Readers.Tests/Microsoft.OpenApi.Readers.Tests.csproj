@@ -1,314 +1,33 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net46;net461</TargetFrameworks>
+        <TargetFramework>net7.0</TargetFramework>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <Authors></Authors>
-        <Company>Microsoft</Company>
-        <Product>Microsoft.OpenApi.Readers.Tests</Product>
-        <PackageId>Microsoft.OpenApi.Readers.Tests</PackageId>
-        <Description>Tests for Microsoft.OpenApi.Readers</Description>
-        <AssemblyName>Microsoft.OpenApi.Readers.Tests</AssemblyName>
-        <RootNamespace>Microsoft.OpenApi.Readers.Tests</RootNamespace>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="V2Tests\Samples\ComponentRootReference.json" />
-    </ItemGroup>
-    <ItemGroup>
-      <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
+      <EmbeddedResource Include="**\*.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="ReferenceService\Samples\multipleReferences.v2.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\basic.v2.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\basic.v3.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\ComponentRootReference.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\minimal.v2.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\minimal.v3.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\basicOperation.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithBody.yaml">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithFormData.yaml">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithResponseExamples.yaml" />
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\formDataParameter.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\headerParameterWithIncorrectDataType.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithDefault.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithEnum.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNoSchema.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNoLocation.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithUnknownLocation.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNullLocation.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\headerParameter.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\pathParameter.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\queryParameter.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiPathItem\basicPathItemWithFormData.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiHeader\headerWithDefault.yaml" />
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiHeader\headerWithEnum.yaml" />
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithDefault.yaml" />
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithEnum.yaml" />
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithExample.yaml" />
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2AccessCodeSecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2ApplicationSecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\multipleProduces.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\twoResponses.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\multipleCallbacksWithReference.yaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\basicCallback.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\basicDocumentWithMultipleServers.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\brokenMinimalDocument.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\apiWithFullHeaderComponent.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStore.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStoreExpanded.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\securedApi.yaml" />
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiEncoding\advancedEncoding.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiEncoding\basicEncoding.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\advancedExample.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\explicitString.yaml" />
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiResponse\responseWithHeaderReference.yaml" />
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiOperation\operationWithParameterWithNoLocation.json">
-       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiOperation\securedOperation.yaml">
-       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiMediaType\mediaTypeWithExample.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiMediaType\mediaTypeWithExamples.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\headerParameter.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithExamples.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithNoLocation.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithExample.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithUnknownLocation.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithNullLocation.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\pathParameter.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\queryParameterWithObjectTypeAndContent.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\queryParameterWithObjectType.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\queryParameter.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\advancedSchemaWithReference.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithExample.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\dictionarySchema.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\primitiveSchema.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\selfReferencingSchema.yaml">
-              <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\simpleSchema.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\bearerSecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\oauth2SecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiXml\basicXml.yaml">
+      <EmbeddedResource Include="**\*.json">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-        <PackageReference Include="FluentAssertions" Version="5.10.0">
-        </PackageReference>
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3">
-        </PackageReference>
-        <PackageReference Include="SharpYaml" Version="1.6.5">
-        </PackageReference>
-        <PackageReference Include="xunit" Version="2.4.1">
-        </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="6.0.0" PrivateAssets="all" />
+        <PackageReference Include="coverlet.msbuild" Version="6.0.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+        <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="SharpYaml" Version="2.1.0" />
+        <PackageReference Include="xunit" Version="2.5.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
         <ProjectReference Include="..\..\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Net.Http" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="V2Tests\Samples\definitions.v3.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\host.v2.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\host.v3.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\definitions.v2.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\parameterRef.v2.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\petStore.v2.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\simplest.v3.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\basicSecurityScheme.yaml">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2ImplicitSecurityScheme.yaml">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\callbackWithReference.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithReference.yaml">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Update="V3Tests\Samples\CompleteHeader.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiInfo\minimalInfo.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiInfo\minimalInfoObject.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 
 </Project>

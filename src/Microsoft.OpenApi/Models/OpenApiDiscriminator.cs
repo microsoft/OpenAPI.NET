@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
@@ -23,14 +23,25 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, string> Mapping { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiDiscriminator() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiDiscriminator"/> instance
+        /// </summary>
+        public OpenApiDiscriminator(OpenApiDiscriminator discriminator)
+        {
+            PropertyName = discriminator?.PropertyName ?? PropertyName;
+            Mapping = discriminator?.Mapping != null ? new Dictionary<string, string>(discriminator.Mapping) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

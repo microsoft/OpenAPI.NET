@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 using Xunit;
@@ -26,8 +26,8 @@ namespace Microsoft.OpenApi.Tests.PublicApi
             // It takes a human to read the change, determine if it is breaking and update the PublicApi.approved.txt with the new approved API surface
 
             // Arrange
-            var publicApi = ApiGenerator.GeneratePublicApi(typeof(OpenApiSpecVersion).Assembly, whitelistedNamespacePrefixes: new[] { "Microsoft.OpenApi" });
-            
+            var publicApi = typeof(OpenApiSpecVersion).Assembly.GeneratePublicApi(new() { AllowNamespacePrefixes = new[] { "Microsoft.OpenApi" } } );
+
             // Act
             var approvedFilePath = Path.Combine("PublicApi", "PublicApi.approved.txt");
 

@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class SRResource {
@@ -75,6 +75,15 @@ namespace Microsoft.OpenApi.Properties {
         internal static string ArgumentNullOrWhiteSpace {
             get {
                 return ResourceManager.GetString("ArgumentNullOrWhiteSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://localhost/.
+        /// </summary>
+        internal static string DefaultBaseUri {
+            get {
+                return ResourceManager.GetString("DefaultBaseUri", resourceCulture);
             }
         }
         
@@ -331,6 +340,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The path signature &apos;{0}&apos; MUST begin be unique..
+        /// </summary>
+        internal static string Validation_PathSignatureMustBeUnique {
+            get {
+                return ResourceManager.GetString("Validation_PathSignatureMustBeUnique", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The same rule cannot be in the same rule set twice..
         /// </summary>
         internal static string Validation_RuleAddTwice {
@@ -355,6 +373,15 @@ namespace Microsoft.OpenApi.Properties {
         internal static string Validation_StringMustBeEmailAddress {
             get {
                 return ResourceManager.GetString("Validation_StringMustBeEmailAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenAPI document must be added to an OpenApiWorkspace to be able to resolve external references..
+        /// </summary>
+        internal static string WorkspaceRequredForExternalReferenceResolution {
+            get {
+                return ResourceManager.GetString("WorkspaceRequredForExternalReferenceResolution", resourceCulture);
             }
         }
     }

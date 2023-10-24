@@ -1,0 +1,145 @@
+{
+  "info": {
+    "_postman_id": "43402ca3-f018-7c9b-2315-f176d9b171a3",
+    "name": "Graph-Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "users-GET",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/users",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "v1.0",
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "users-POST",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/users",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "v1.0",
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "/appCatalogs",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/appCatalogs",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "v1.0",
+            "appCatalogs"
+          ]
+        }
+      }
+    },
+    {
+      "name": "/agreementAcceptances",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "v1.0",
+            "agreementAcceptances"
+          ]
+        }
+      }
+    },
+    {
+      "name": "{user-id}-GET",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/users/{user-id}",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "v1.0",
+            "users",
+            "{user-id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "{user-id}-PATCH",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/users/{user-id}",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "v1.0",
+            "users",
+            "{user-id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "{user-id}-DELETE",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/users/{user-id}",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "v1.0",
+            "users",
+            "{user-id}"
+          ]
+        }
+      }
+    }
+  ]
+}

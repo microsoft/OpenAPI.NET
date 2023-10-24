@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,6 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap);
             }
-
         }
 
         private static void ProcessAnyFields<T>(
@@ -56,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {
@@ -91,7 +90,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {
@@ -132,7 +131,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {
@@ -153,13 +152,13 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (value != null && value.StartsWith("$"))
             {
-                return new RuntimeExpressionAnyWrapper
+                return new()
                 {
                     Expression = RuntimeExpression.Build(value)
                 };
             }
 
-            return new RuntimeExpressionAnyWrapper
+            return new()
             {
                 Any = OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny())
             };

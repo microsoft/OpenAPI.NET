@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
@@ -14,46 +14,38 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new FixedFieldMap<OpenApiResponse>
+        private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new()
         {
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {
-                "headers", (o, n) =>
-                {
-                    o.Headers = n.CreateMap(LoadHeader);
-                }
+                "headers",
+                (o, n) => o.Headers = n.CreateMap(LoadHeader)
             },
             {
-                "examples", (o, n) =>
-                {
-                    LoadExamples(o, n);
-                }
+                "examples",
+                LoadExamples
             },
             {
-                "schema", (o, n) =>
-                {
-                    n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n), o);
-                }
+                "schema",
+                (o, n) => n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n), o)
             },
         };
 
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
-            new PatternFieldMap<OpenApiResponse>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
-            new AnyFieldMap<OpenApiMediaType>
+            new()
             {
                 {
                     OpenApiConstants.Example,
-                    new AnyFieldMapParameter<OpenApiMediaType>(
+                    new(
                         m => m.Example,
                         (m, v) => m.Example = v,
                         m => m.Schema)
@@ -73,35 +65,34 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces)
-                ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces);
-            if (produces != null)
+                ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces)
+                ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
+
+            var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+
+            foreach (var produce in produces)
             {
-                foreach (var produce in produces)
+                if (response.Content.TryGetValue(produce, out var produceValue))
                 {
-                    var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
-
-                    if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
+                    if (schema != null)
                     {
-                        if (schema != null)
-                        {
-                            response.Content[produce].Schema = schema;
-                            ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
-                        }
-                    }
-                    else
-                    {
-                        var mediaType = new OpenApiMediaType
-                        {
-                            Schema = schema
-                        };
-
-                        response.Content.Add(produce, mediaType);
+                        produceValue.Schema = schema;
+                        ProcessAnyFields(mapNode, produceValue, _mediaTypeAnyFields);
                     }
                 }
+                else
+                {
+                    var mediaType = new OpenApiMediaType
+                    {
+                        Schema = schema
+                    };
 
-                context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
-                context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
+                    response.Content.Add(produce, mediaType);
+                }
             }
+
+            context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
+            context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
         }
 
         private static void LoadExamples(OpenApiResponse response, ParseNode node)
@@ -123,13 +114,13 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             OpenApiMediaType mediaTypeObject;
-            if (response.Content.ContainsKey(mediaType))
+            if (response.Content.TryGetValue(mediaType, out var value))
             {
-                mediaTypeObject = response.Content[mediaType];
+                mediaTypeObject = value;
             }
             else
             {
-                mediaTypeObject = new OpenApiMediaType
+                mediaTypeObject = new()
                 {
                     Schema = node.Context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response)
                 };

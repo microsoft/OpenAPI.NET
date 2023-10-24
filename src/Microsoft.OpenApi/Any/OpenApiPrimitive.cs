@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Text;
@@ -25,9 +25,18 @@ namespace Microsoft.OpenApi.Any
         }
 
         /// <summary>
+        /// Initializes a copy of an <see cref="IOpenApiPrimitive"/> object
+        /// </summary>
+        /// <param name="openApiPrimitive"></param>
+        public OpenApiPrimitive(OpenApiPrimitive<T> openApiPrimitive)
+        {
+            Value = openApiPrimitive.Value;
+        }
+
+        /// <summary>
         /// The kind of <see cref="IOpenApiAny"/>.
         /// </summary>
-        public AnyType AnyType { get; } = AnyType.Primitive;
+        public AnyType AnyType => AnyType.Primitive;
 
         /// <summary>
         /// The primitive class this object represents.
@@ -109,7 +118,7 @@ namespace Microsoft.OpenApi.Any
 
                 case PrimitiveType.Date:
                     var dateValue = (OpenApiDate)(IOpenApiPrimitive)this;
-                    writer.WriteValue(dateValue.Value);
+                    writer.WriteValue(dateValue.Value.ToString("o").Substring(0, 10));
                     break;
 
                 case PrimitiveType.DateTime:
@@ -128,7 +137,6 @@ namespace Microsoft.OpenApi.Any
                             SRResource.PrimitiveTypeNotSupported,
                             this.PrimitiveType));
             }
-
         }
     }
 }

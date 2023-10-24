@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Globalization;
@@ -50,16 +50,16 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return newObject;
             }
 
-            if (!(openApiAny is OpenApiString))
+            if (openApiAny is not OpenApiString apiString)
             {
                 return openApiAny;
             }
 
-            var value = ((OpenApiString)openApiAny).Value;
+            var value = apiString.Value;
             var type = schema?.Type;
             var format = schema?.Format;
 
-            if (((OpenApiString)openApiAny).IsExplicit())
+            if (apiString.IsExplicit())
             {
                 // More narrow type detection for explicit strings, only check types that are passed as strings
                 if (schema == null)
@@ -113,10 +113,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     }
                 }
 
-                return openApiAny;
+                return apiString;
             }
 
-            if (value == null || value == "null")
+            if (value is null or "null")
             {
                 return new OpenApiNull();
             }
@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
                 if (type == "string")
                 {
-                    return openApiAny;
+                    return apiString;
                 }
 
                 if (type == "boolean")
@@ -260,9 +260,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             // If data conflicts with the given type, return a string.
-            // This converter is used in the parser, so it does not perform any validations, 
+            // This converter is used in the parser, so it does not perform any validations,
             // but the validator can be used to validate whether the data and given type conflicts.
-            return openApiAny;
+            return apiString;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -14,14 +14,13 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public abstract class OpenApiWriterBase : IOpenApiWriter
     {
-        
         /// <summary>
         /// Settings for controlling how the OpenAPI document will be written out.
         /// </summary>
         public OpenApiWriterSettings Settings { get; set; }
 
         /// <summary>
-        /// The indentation string to prepand to each line for each indentation level.
+        /// The indentation string to prepend to each line for each indentation level.
         /// </summary>
         protected const string IndentationString = "  ";
 
@@ -48,18 +47,16 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter"></param>
         /// <param name="settings"></param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings) 
+        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
 
-            Scopes = new Stack<Scope>();
-
+            Scopes = new();
             if (settings == null)
             {
-                settings = new OpenApiWriterSettings();
+                settings = new();
             }
-
             Settings = settings;
         }
 
@@ -394,10 +391,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="name">property name</param>
         protected void VerifyCanWritePropertyName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
+            Utils.CheckArgumentNull(name);
 
             if (Scopes.Count == 0)
             {

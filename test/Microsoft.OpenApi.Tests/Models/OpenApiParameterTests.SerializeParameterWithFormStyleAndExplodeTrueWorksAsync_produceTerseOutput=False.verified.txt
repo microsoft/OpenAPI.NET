@@ -1,0 +1,15 @@
+{
+  "name": "name1",
+  "in": "query",
+  "description": "description1",
+  "style": "form",
+  "schema": {
+    "type": "array",
+    "items": {
+      "enum": [
+        "value1",
+        "value2"
+      ]
+    }
+  }
+}

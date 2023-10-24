@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Extensions;
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static OpenApiOAuthFlow _flow;
 
         private static readonly FixedFieldMap<OpenApiSecurityScheme> _securitySchemeFixedFields =
-            new FixedFieldMap<OpenApiSecurityScheme>
+            new()
             {
                 {
                     "type",
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         {
                             case "basic":
                                 o.Type = SecuritySchemeType.Http;
-                                o.Scheme = "basic";
+                                o.Scheme = OpenApiConstants.Basic;
                                 break;
 
                             case "apiKey":
@@ -47,35 +47,23 @@ namespace Microsoft.OpenApi.Readers.V2
                 {"name", (o, n) => o.Name = n.GetScalarValue()},
                 {"in", (o, n) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()},
                 {
-                    "flow", (o, n) =>
-                    {
-                        _flowValue = n.GetScalarValue();
-                    }
+                    "flow", (_, n) => _flowValue = n.GetScalarValue()
                 },
                 {
                     "authorizationUrl",
-                    (o, n) =>
-                    {
-                        _flow.AuthorizationUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    (_, n) => _flow.AuthorizationUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {
                     "tokenUrl",
-                    (o, n) =>
-                    {
-                        _flow.TokenUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    (_, n) => _flow.TokenUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {
-                    "scopes", (o, n) =>
-                    {
-                        _flow.Scopes = n.CreateSimpleMap(LoadString);
-                    }
+                    "scopes", (_, n) => _flow.Scopes = n.CreateSimpleMap(LoadString)
                 }
             };
 
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
-            new PatternFieldMap<OpenApiSecurityScheme>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
@@ -85,7 +73,7 @@ namespace Microsoft.OpenApi.Readers.V2
             // Reset the local variables every time this method is called.
             // TODO: Change _flow to a tempStorage variable to make the deserializer thread-safe.
             _flowValue = null;
-            _flow = new OpenApiOAuthFlow();
+            _flow = new();
 
             var mapNode = node.CheckMapNode("securityScheme");
 
@@ -98,28 +86,28 @@ namespace Microsoft.OpenApi.Readers.V2
             // Put the Flow object in the right Flows property based on the string in "flow"
             if (_flowValue == OpenApiConstants.Implicit)
             {
-                securityScheme.Flows = new OpenApiOAuthFlows
+                securityScheme.Flows = new()
                 {
                     Implicit = _flow
                 };
             }
             else if (_flowValue == OpenApiConstants.Password)
             {
-                securityScheme.Flows = new OpenApiOAuthFlows
+                securityScheme.Flows = new()
                 {
                     Password = _flow
                 };
             }
             else if (_flowValue == OpenApiConstants.Application)
             {
-                securityScheme.Flows = new OpenApiOAuthFlows
+                securityScheme.Flows = new()
                 {
                     ClientCredentials = _flow
                 };
             }
             else if (_flowValue == OpenApiConstants.AccessCode)
             {
-                securityScheme.Flows = new OpenApiOAuthFlows
+                securityScheme.Flows = new()
                 {
                     AuthorizationCode = _flow
                 };

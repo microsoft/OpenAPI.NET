@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -14,30 +14,24 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiServerVariable> _serverVariableFixedFields =
-            new FixedFieldMap<OpenApiServerVariable>
+            new()
             {
                 {
-                    "enum", (o, n) =>
-                    {
-                        o.Enum = n.CreateSimpleList(s => s.GetScalarValue());
-                    }
+                    "enum",
+                    (o, n) => o.Enum = n.CreateSimpleList(s => s.GetScalarValue())
                 },
                 {
-                    "default", (o, n) =>
-                    {
-                        o.Default = n.GetScalarValue();
-                    }
+                    "default",
+                    (o, n) => o.Default = n.GetScalarValue()
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiServerVariable> _serverVariablePatternFields =
-            new PatternFieldMap<OpenApiServerVariable>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

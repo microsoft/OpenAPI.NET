@@ -1,23 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
+    [UsesVerify]
     public class OpenApiSecuritySchemeTests
     {
-        public static OpenApiSecurityScheme ApiKeySecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme ApiKeySecurityScheme = new()
         {
             Description = "description1",
             Name = "parameterName",
@@ -25,116 +26,111 @@ namespace Microsoft.OpenApi.Tests.Models
             In = ParameterLocation.Query,
         };
 
-        public static OpenApiSecurityScheme HttpBasicSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme HttpBasicSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = "basic",
+            Scheme = OpenApiConstants.Basic
         };
 
-        public static OpenApiSecurityScheme HttpBearerSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme HttpBearerSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = "bearer",
-            BearerFormat = "JWT",
+            Scheme = OpenApiConstants.Bearer,
+            BearerFormat = OpenApiConstants.Jwt
         };
 
-        public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OAuth2,
-            Flows = new OpenApiOAuthFlows
+            Flows = new()
             {
-                Implicit = new OpenApiOAuthFlow
+                Implicit = new()
                 {
                     Scopes = new Dictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
                     },
-                    AuthorizationUrl = new Uri("https://example.com/api/oauth")
+                    AuthorizationUrl = new("https://example.com/api/oauth")
                 }
             }
         };
 
-        public static OpenApiSecurityScheme OAuth2MultipleFlowSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme OAuth2MultipleFlowSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OAuth2,
-            Flows = new OpenApiOAuthFlows
+            Flows = new()
             {
-                Implicit = new OpenApiOAuthFlow
+                Implicit = new()
                 {
                     Scopes = new Dictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
                     },
-                    AuthorizationUrl = new Uri("https://example.com/api/oauth")
+                    AuthorizationUrl = new("https://example.com/api/oauth")
                 },
-                ClientCredentials = new OpenApiOAuthFlow
+                ClientCredentials = new()
                 {
                     Scopes = new Dictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
                     },
-                    TokenUrl = new Uri("https://example.com/api/token"),
-                    RefreshUrl = new Uri("https://example.com/api/refresh"),
+                    TokenUrl = new("https://example.com/api/token"),
+                    RefreshUrl = new("https://example.com/api/refresh"),
                 },
-                AuthorizationCode = new OpenApiOAuthFlow
+                AuthorizationCode = new()
                 {
                     Scopes = new Dictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
                     },
-                    TokenUrl = new Uri("https://example.com/api/token"),
-                    AuthorizationUrl = new Uri("https://example.com/api/oauth"),
+                    TokenUrl = new("https://example.com/api/token"),
+                    AuthorizationUrl = new("https://example.com/api/oauth"),
                 }
             }
         };
 
-        public static OpenApiSecurityScheme OpenIdConnectSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme OpenIdConnectSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
-            Scheme = "openIdConnectUrl",
-            OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
+            Scheme = OpenApiConstants.Bearer,
+            OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
-        public static OpenApiSecurityScheme ReferencedSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme ReferencedSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
-            Scheme = "openIdConnectUrl",
-            OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
-            Reference = new OpenApiReference
+            Scheme = OpenApiConstants.Bearer,
+            OpenIdConnectUrl = new("https://example.com/openIdConnect"),
+            Reference = new()
             {
                 Type = ReferenceType.SecurityScheme,
                 Id = "sampleSecurityScheme"
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiSecuritySchemeTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void SerializeApiKeySecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected =
-                @"{
-  ""type"": ""apiKey"",
-  ""description"": ""description1"",
-  ""name"": ""parameterName"",
-  ""in"": ""query""
-}";
+                """
+                {
+                  "type": "apiKey",
+                  "description": "description1",
+                  "name": "parameterName",
+                  "in": "query"
+                }
+                """;
 
             // Act
             var actual = ApiKeySecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -150,10 +146,12 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"type: apiKey
-description: description1
-name: parameterName
-in: query";
+                """
+                type: apiKey
+                description: description1
+                name: parameterName
+                in: query
+                """;
 
             // Act
             var actual = ApiKeySecurityScheme.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -169,11 +167,13 @@ in: query";
         {
             // Arrange
             var expected =
-                @"{
-  ""type"": ""http"",
-  ""description"": ""description1"",
-  ""scheme"": ""basic""
-}";
+                """
+                {
+                  "type": "http",
+                  "description": "description1",
+                  "scheme": "basic"
+                }
+                """;
 
             // Act
             var actual = HttpBasicSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -189,12 +189,14 @@ in: query";
         {
             // Arrange
             var expected =
-                @"{
-  ""type"": ""http"",
-  ""description"": ""description1"",
-  ""scheme"": ""bearer"",
-  ""bearerFormat"": ""JWT""
-}";
+                """
+                {
+                  "type": "http",
+                  "description": "description1",
+                  "scheme": "bearer",
+                  "bearerFormat": "JWT"
+                }
+                """;
 
             // Act
             var actual = HttpBearerSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -210,19 +212,21 @@ in: query";
         {
             // Arrange
             var expected =
-                @"{
-  ""type"": ""oauth2"",
-  ""description"": ""description1"",
-  ""flows"": {
-    ""implicit"": {
-      ""authorizationUrl"": ""https://example.com/api/oauth"",
-      ""scopes"": {
-        ""operation1:object1"": ""operation 1 on object 1"",
-        ""operation2:object2"": ""operation 2 on object 2""
-      }
-    }
-  }
-}";
+                """
+                {
+                  "type": "oauth2",
+                  "description": "description1",
+                  "flows": {
+                    "implicit": {
+                      "authorizationUrl": "https://example.com/api/oauth",
+                      "scopes": {
+                        "operation1:object1": "operation 1 on object 1",
+                        "operation2:object2": "operation 2 on object 2"
+                      }
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = OAuth2SingleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -238,35 +242,37 @@ in: query";
         {
             // Arrange
             var expected =
-                @"{
-  ""type"": ""oauth2"",
-  ""description"": ""description1"",
-  ""flows"": {
-    ""implicit"": {
-      ""authorizationUrl"": ""https://example.com/api/oauth"",
-      ""scopes"": {
-        ""operation1:object1"": ""operation 1 on object 1"",
-        ""operation2:object2"": ""operation 2 on object 2""
-      }
-    },
-    ""clientCredentials"": {
-      ""tokenUrl"": ""https://example.com/api/token"",
-      ""refreshUrl"": ""https://example.com/api/refresh"",
-      ""scopes"": {
-        ""operation1:object1"": ""operation 1 on object 1"",
-        ""operation2:object2"": ""operation 2 on object 2""
-      }
-    },
-    ""authorizationCode"": {
-      ""authorizationUrl"": ""https://example.com/api/oauth"",
-      ""tokenUrl"": ""https://example.com/api/token"",
-      ""scopes"": {
-        ""operation1:object1"": ""operation 1 on object 1"",
-        ""operation2:object2"": ""operation 2 on object 2""
-      }
-    }
-  }
-}";
+                """
+                {
+                  "type": "oauth2",
+                  "description": "description1",
+                  "flows": {
+                    "implicit": {
+                      "authorizationUrl": "https://example.com/api/oauth",
+                      "scopes": {
+                        "operation1:object1": "operation 1 on object 1",
+                        "operation2:object2": "operation 2 on object 2"
+                      }
+                    },
+                    "clientCredentials": {
+                      "tokenUrl": "https://example.com/api/token",
+                      "refreshUrl": "https://example.com/api/refresh",
+                      "scopes": {
+                        "operation1:object1": "operation 1 on object 1",
+                        "operation2:object2": "operation 2 on object 2"
+                      }
+                    },
+                    "authorizationCode": {
+                      "authorizationUrl": "https://example.com/api/oauth",
+                      "tokenUrl": "https://example.com/api/token",
+                      "scopes": {
+                        "operation1:object1": "operation 1 on object 1",
+                        "operation2:object2": "operation 2 on object 2"
+                      }
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = OAuth2MultipleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -282,11 +288,13 @@ in: query";
         {
             // Arrange
             var expected =
-                @"{
-  ""type"": ""openIdConnect"",
-  ""description"": ""description1"",
-  ""openIdConnectUrl"": ""https://example.com/openIdConnect""
-}";
+                """
+                {
+                  "type": "openIdConnect",
+                  "description": "description1",
+                  "openIdConnectUrl": "https://example.com/openIdConnect"
+                }
+                """;
 
             // Act
             var actual = OpenIdConnectSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -297,55 +305,43 @@ in: query";
             actual.Should().Be(expected);
         }
 
-        [Fact]
-        public void SerializeReferencedSecuritySchemeAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedSecuritySchemeAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""sampleSecurityScheme"": null
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme 
+            // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme
             // as property name.
             writer.WriteStartObject();
             ReferencedSecurityScheme.SerializeAsV3(writer);
             writer.WriteNull();
             writer.WriteEndObject();
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedSecuritySchemeAsV3JsonWithoutReferenceWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedSecuritySchemeAsV3JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""type"": ""openIdConnect"",
-  ""description"": ""description1"",
-  ""openIdConnectUrl"": ""https://example.com/openIdConnect""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedSecurityScheme.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

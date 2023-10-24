@@ -25,10 +25,8 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => RuntimeExpression.Build(expression);
 
             // Assert
-            Assert.Throws<ArgumentException>("expression", test);
+            Assert.Throws<ArgumentNullException>("expression", test);
         }
-
-
 
         [Theory]
         [InlineData("$unknown")]
@@ -40,7 +38,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => RuntimeExpression.Build(expression);
 
             // Assert
-            OpenApiException exception = Assert.Throws<OpenApiException>(test);
+            var exception = Assert.Throws<OpenApiException>(test);
             Assert.Equal(String.Format(SRResource.RuntimeExpressionHasInvalidFormat, expression), exception.Message);
         }
 
@@ -48,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildMethodRuntimeExpressionReturnsMethodExpression()
         {
             // Arrange
-            string expression = "$method";
+            var expression = "$method";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -63,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildUrlRuntimeExpressionReturnsUrlExpression()
         {
             // Arrange
-            string expression = "$url";
+            var expression = "$url";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -78,7 +76,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildStatusCodeRuntimeExpressionReturnsStatusCodeExpression()
         {
             // Arrange
-            string expression = "$statusCode";
+            var expression = "$statusCode";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -93,7 +91,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildRequestRuntimeExpressionReturnsRequestExpression()
         {
             // Arrange
-            string expression = "$request.header.accept";
+            var expression = "$request.header.accept";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -116,7 +114,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildResponseRuntimeExpressionReturnsResponseExpression()
         {
             // Arrange
-            string expression = "$response.body#/status";
+            var expression = "$response.body#/status";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -151,12 +149,11 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Equal(runtimeExpression1, runtimeExpression2);
         }
 
-
         [Fact]
         public void CompositeRuntimeExpressionContainsExpression()
         {
             // Arrange
-            string expression = "This is a composite expression {$url} yay";
+            var expression = "This is a composite expression {$url} yay";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -168,14 +165,13 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Single(compositeExpression.ContainedExpressions);
-
         }
 
         [Fact]
         public void CompositeRuntimeExpressionContainsMultipleExpressions()
         {
             // Arrange
-            string expression = "This is a composite expression {$url} yay and {$request.header.foo}";
+            var expression = "This is a composite expression {$url} yay and {$request.header.foo}";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -188,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
 
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
+            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))
@@ -199,7 +195,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void CompositeRuntimeExpressionForWebHook()
         {
             // Arrange
-            string expression = "http://notificationServer.com?transactionId={$request.body#/id}&email={$request.body#/email}";
+            var expression = "http://notificationServer.com?transactionId={$request.body#/id}&email={$request.body#/email}";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -220,7 +216,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void CompositeRuntimeExpressionWithMultipleRuntimeExpressionsAndFakeBraces()
         {
             // Arrange
-            string expression = "This is a composite expression {url} {test} and {} {$url} and {$request.header.foo}";
+            var expression = "This is a composite expression {url} {test} and {} {$url} and {$request.header.foo}";
 
             // Act
             var runtimeExpression = RuntimeExpression.Build(expression);
@@ -232,7 +228,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             response.Expression.Should().Be(expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
+            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))

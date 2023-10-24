@@ -1,0 +1,25 @@
+﻿openapi: 3.0.0
+info:
+  title: Components for the todo app
+  version: 1.0.0
+paths: {}
+components:
+  parameters:
+    filter:
+      name: filter
+      in: query
+      schema:
+        type: string
+  schemas:
+    todo:
+      type: object
+      allof: 
+        $ref: "#/components/schemas/entity"
+      properties:
+        subject:
+          type: string
+    entity:
+      type: object
+      properties:
+        id:
+          type:string

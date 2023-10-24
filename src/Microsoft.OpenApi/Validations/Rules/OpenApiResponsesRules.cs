@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// An OpenAPI operation must contain at least one response
         /// </summary>
         public static ValidationRule<OpenApiResponses> ResponsesMustContainAtLeastOneResponse =>
-            new ValidationRule<OpenApiResponses>(
+            new(
                 (context, responses) =>
                 {
                     if (!responses.Keys.Any())
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// The response key must either be "default" or an HTTP status code (1xx, 2xx, 3xx, 4xx, 5xx).
         /// </summary>
         public static ValidationRule<OpenApiResponses> ResponsesMustBeIdentifiedByDefaultOrStatusCode =>
-            new ValidationRule<OpenApiResponses>(
+            new(
                 (context, responses) =>
                 {
                     foreach (var key in responses.Keys)

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Extensions;
@@ -14,29 +14,23 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static FixedFieldMap<OpenApiContact> _contactFixedFields = new FixedFieldMap<OpenApiContact>
+        private static FixedFieldMap<OpenApiContact> _contactFixedFields = new()
         {
             {
-                "name", (o, n) =>
-                {
-                    o.Name = n.GetScalarValue();
-                }
+                "name",
+                (o, n) => o.Name = n.GetScalarValue()
             },
             {
-                "url", (o, n) =>
-                {
-                    o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                }
+                "url",
+                (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
             },
             {
-                "email", (o, n) =>
-                {
-                    o.Email = n.GetScalarValue();
-                }
+                "email",
+                (o, n) => o.Email = n.GetScalarValue()
             },
         };
 
-        private static PatternFieldMap<OpenApiContact> _contactPatternFields = new PatternFieldMap<OpenApiContact>
+        private static PatternFieldMap<OpenApiContact> _contactPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };

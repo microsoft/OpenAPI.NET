@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,41 +12,33 @@ using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
     [Collection("DefaultSettings")]
     public class OpenApiValidatorTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiValidatorTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void ResponseMustHaveADescription()
         {
             var openApiDocument = new OpenApiDocument();
-            openApiDocument.Info = new OpenApiInfo()
+            openApiDocument.Info = new()
             {
                 Title = "foo",
                 Version = "1.2.2"
             };
-            openApiDocument.Paths = new OpenApiPaths();
+            openApiDocument.Paths = new();
             openApiDocument.Paths.Add(
                 "/test",
-                new OpenApiPathItem
+                new()
                 {
                     Operations =
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [OperationType.Get] = new()
                         {
                             Responses =
                             {
-                                ["200"] = new OpenApiResponse()
+                                ["200"] = new()
                             }
                         }
                     }
@@ -69,22 +61,21 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var openApiDocument = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new()
                 {
                     Title = "foo",
                     Version = "1.2.2"
                 },
                 Servers = new List<OpenApiServer> {
-                new OpenApiServer
+                new()
                 {
                     Url = "http://example.org"
                 },
-                new OpenApiServer
+                new()
                 {
-
                 },
             },
-                Paths = new OpenApiPaths()
+                Paths = new()
             };
 
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
@@ -99,7 +90,6 @@ namespace Microsoft.OpenApi.Tests.Services
         });
         }
 
-
         [Fact]
         public void ValidateCustomExtension()
         {
@@ -111,21 +101,21 @@ namespace Microsoft.OpenApi.Tests.Services
                  {
                      if (item.Bar == "hey")
                      {
-                         context.AddError(new OpenApiValidatorError("FooExtensionRule", context.PathString, "Don't say hey"));
+                         context.AddError(new("FooExtensionRule", context.PathString, "Don't say hey"));
                      }
                  }));
 
             var openApiDocument = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new()
                 {
                     Title = "foo",
                     Version = "1.2.2"
                 },
-                Paths = new OpenApiPaths()
+                Paths = new()
             };
 
-            var fooExtension = new FooExtension()
+            var fooExtension = new FooExtension
             {
                 Bar = "hey",
                 Baz = "baz"
@@ -143,7 +133,6 @@ namespace Microsoft.OpenApi.Tests.Services
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
                    });
         }
-
     }
 
     internal class FooExtension : IOpenApiExtension, IOpenApiElement

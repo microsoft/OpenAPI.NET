@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using FluentAssertions;
 
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Tests
     public class DefaultSettingsFixture
     {
         /// <summary>
-        /// Initializes an intance of <see cref="DefaultSettingsFixture"/>.
+        /// Initializes an instance of <see cref="DefaultSettingsFixture"/>.
         /// </summary>
         public DefaultSettingsFixture()
         {

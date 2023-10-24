@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 using FluentAssertions;
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiMediaType
                 {
                     Example = new OpenApiFloat(5),
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "number",
                         Format = "float"
@@ -61,16 +61,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Examples =
                     {
-                        ["example1"] = new OpenApiExample()
+                        ["example1"] = new()
                         {
                             Value = new OpenApiFloat(5),
                         },
-                        ["example2"] = new OpenApiExample()
+                        ["example2"] = new()
                         {
                             Value = new OpenApiFloat((float)7.5),
                         }
                     },
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "number",
                         Format = "float"

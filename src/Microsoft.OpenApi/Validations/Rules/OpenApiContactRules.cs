@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Models;
@@ -17,12 +17,11 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Email field MUST be email address.
         /// </summary>
         public static ValidationRule<OpenApiContact> EmailMustBeEmailFormat =>
-            new ValidationRule<OpenApiContact>(
+            new(
                 (context, item) =>
                 {
-
                     context.Enter("email");
-                    if (item != null && item.Email != null)
+                    if (item is {Email: not null})
                     {
                         if (!item.Email.IsEmailAddress())
                         {

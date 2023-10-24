@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Writers;
 
@@ -14,6 +14,19 @@ namespace Microsoft.OpenApi.Any
         /// The type of <see cref="IOpenApiAny"/>
         /// </summary>
         public AnyType AnyType { get; } = AnyType.Null;
+
+        /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiNull() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiNull"/> object
+        /// </summary>
+        public OpenApiNull(OpenApiNull openApiNull)
+        {
+            AnyType = openApiNull.AnyType;
+        }
 
         /// <summary>
         /// Write out null representation

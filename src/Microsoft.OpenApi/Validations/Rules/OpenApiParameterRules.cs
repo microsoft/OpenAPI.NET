@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Models;
@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiParameter> ParameterRequiredFields =>
-            new ValidationRule<OpenApiParameter>(
+            new(
                 (context, item) =>
                 {
                     // name
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the "required" field is true when "in" is path.
         /// </summary>
         public static ValidationRule<OpenApiParameter> RequiredMustBeTrueWhenInIsPath =>
-            new ValidationRule<OpenApiParameter>(
+            new(
                 (context, item) =>
                 {
                     // required
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the data matches with the given data type.
         /// </summary>
         public static ValidationRule<OpenApiParameter> ParameterMismatchedDataType =>
-            new ValidationRule<OpenApiParameter>(
+            new(
                 (context, parameter) =>
                 {
                     // example
@@ -96,6 +96,23 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Exit();
                 });
 
+        /// <summary>
+        /// Validate that a path parameter should always appear in the path
+        /// </summary>
+        public static ValidationRule<OpenApiParameter> PathParameterShouldBeInThePath =>
+            new(
+                (context, parameter) =>
+                {
+                    if (parameter.In == ParameterLocation.Path &&
+                           !(context.PathString.Contains("{" + parameter.Name + "}") || context.PathString.Contains("#/components")))
+                    {
+                        context.Enter("in");
+                        context.CreateError(
+                            nameof(PathParameterShouldBeInThePath),
+                            $"Declared path parameter \"{parameter.Name}\" needs to be defined as a path parameter at either the path or operation level");
+                        context.Exit();
+                    }
+                });
         // add more rule.
     }
 }

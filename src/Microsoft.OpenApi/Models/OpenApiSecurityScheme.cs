@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -13,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
-    public class OpenApiSecurityScheme : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiSecurityScheme : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The type of the security scheme. Valid values are "apiKey", "http", "oauth2", "openIdConnect".
@@ -74,14 +73,34 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiSecurityScheme() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiSecurityScheme"/> object
+        /// </summary>
+        public OpenApiSecurityScheme(OpenApiSecurityScheme securityScheme)
+        {
+            Type = securityScheme?.Type ?? Type;
+            Description = securityScheme?.Description ?? Description;
+            Name = securityScheme?.Name ?? Name;
+            In = securityScheme?.In ?? In;
+            Scheme = securityScheme?.Scheme ?? Scheme;
+            BearerFormat = securityScheme?.BearerFormat ?? BearerFormat;
+            Flows = securityScheme?.Flows != null ? new(securityScheme?.Flows) : null;
+            OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            Extensions = securityScheme?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
+            UnresolvedReference = securityScheme?.UnresolvedReference ?? UnresolvedReference;
+            Reference = securityScheme?.Reference != null ? new(securityScheme?.Reference) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (Reference != null)
             {
@@ -144,10 +163,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (Reference != null)
             {
@@ -189,7 +205,7 @@ namespace Microsoft.OpenApi.Models
                     break;
 
                 case SecuritySchemeType.OAuth2:
-                    // These properties apply to ouauth2 type only.
+                    // These properties apply to oauth2 type only.
                     // flow
                     // authorizationUrl
                     // tokenUrl

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -37,27 +37,50 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData("Pet.json", "Pet.json", null)]
-        [InlineData("Pet.yaml", "Pet.yaml", null)]
-        [InlineData("abc", "abc", null)]
-        [InlineData("Pet.json#/Pet", "Pet.json", "Pet")]
-        [InlineData("Pet.yaml#/Pet", "Pet.yaml", "Pet")]
-        [InlineData("abc#/Pet", "abc", "Pet")]
-        public void SettingExternalReferenceShouldSucceed(string expected, string externalResource, string id)
+        [InlineData("Pet.json", "Pet.json", null, null)]
+        [InlineData("Pet.yaml", "Pet.yaml", null, null)]
+        [InlineData("abc", "abc", null, null)]
+        [InlineData("Pet.json#/components/schemas/Pet", "Pet.json", "Pet", ReferenceType.Schema)]
+        [InlineData("Pet.yaml#/components/schemas/Pet", "Pet.yaml", "Pet", ReferenceType.Schema)]
+        [InlineData("abc#/components/schemas/Pet", "abc", "Pet", ReferenceType.Schema)]
+        public void SettingExternalReferenceV3ShouldSucceed(string expected, string externalResource, string id, ReferenceType? type)
         {
             // Arrange & Act
             var reference = new OpenApiReference
             {
                 ExternalResource = externalResource,
+                Type = type,
                 Id = id
             };
 
             // Assert
             reference.ExternalResource.Should().Be(externalResource);
-            reference.Type.Should().BeNull();
             reference.Id.Should().Be(id);
 
             reference.ReferenceV3.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("Pet.json", "Pet.json", null, null)]
+        [InlineData("Pet.yaml", "Pet.yaml", null, null)]
+        [InlineData("abc", "abc", null, null)]
+        [InlineData("Pet.json#/definitions/Pet", "Pet.json", "Pet", ReferenceType.Schema)]
+        [InlineData("Pet.yaml#/definitions/Pet", "Pet.yaml", "Pet", ReferenceType.Schema)]
+        [InlineData("abc#/definitions/Pet", "abc", "Pet", ReferenceType.Schema)]
+        public void SettingExternalReferenceV2ShouldSucceed(string expected, string externalResource, string id, ReferenceType? type)
+        {
+            // Arrange & Act
+            var reference = new OpenApiReference
+            {
+                ExternalResource = externalResource,
+                Type = type,
+                Id = id
+            };
+
+            // Assert
+            reference.ExternalResource.Should().Be(externalResource);
+            reference.Id.Should().Be(id);
+
             reference.ReferenceV2.Should().Be(expected);
         }
 
@@ -66,9 +89,12 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var reference = new OpenApiReference { Type = ReferenceType.Schema, Id = "Pet" };
-            var expected = @"{
-  ""$ref"": ""#/components/schemas/Pet""
-}";
+            var expected =
+                """
+                {
+                  "$ref": "#/components/schemas/Pet"
+                }
+                """;
 
             // Act
             var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -108,9 +134,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "Pet"
             };
 
-            var expected = @"{
-  ""$ref"": ""#/definitions/Pet""
-}".MakeLineBreaksEnvironmentNeutral();
+            var expected =
+                """
+                {
+                  "$ref": "#/definitions/Pet"
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
 
             // Act
             var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -144,12 +173,16 @@ namespace Microsoft.OpenApi.Tests.Models
             var reference = new OpenApiReference
             {
                 ExternalResource = "main.json",
+                Type= ReferenceType.Schema,
                 Id = "Pets"
             };
 
-            var expected = @"{
-  ""$ref"": ""main.json#/Pets""
-}";
+            var expected =
+                """
+                {
+                  "$ref": "main.json#/definitions/Pets"
+                }
+                """;
 
             // Act
             var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -167,9 +200,10 @@ namespace Microsoft.OpenApi.Tests.Models
             var reference = new OpenApiReference
             {
                 ExternalResource = "main.json",
+                Type = ReferenceType.Schema,
                 Id = "Pets"
             };
-            var expected = @"$ref: main.json#/Pets";
+            var expected = @"$ref: main.json#/definitions/Pets";
 
             // Act
             var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -182,11 +216,14 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeExternalReferenceAsJsonV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference { ExternalResource = "main.json", Id = "Pets" };
+            var reference = new OpenApiReference { ExternalResource = "main.json", Type = ReferenceType.Schema,Id = "Pets" };
 
-            var expected = @"{
-  ""$ref"": ""main.json#/Pets""
-}";
+            var expected =
+                """
+                {
+                  "$ref": "main.json#/components/schemas/Pets"
+                }
+                """;
 
             // Act
             var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -201,8 +238,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeExternalReferenceAsYamlV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference { ExternalResource = "main.json", Id = "Pets" };
-            var expected = @"$ref: main.json#/Pets";
+            var reference = new OpenApiReference { ExternalResource = "main.json", Type = ReferenceType.Schema,  Id = "Pets" };
+            var expected = @"$ref: main.json#/components/schemas/Pets";
 
             // Act
             var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);

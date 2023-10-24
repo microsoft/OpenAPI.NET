@@ -1,48 +1,49 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Globalization;
 using System.IO;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
+    [UsesVerify]
     public class OpenApiCallbackTests
     {
-        public static OpenApiCallback AdvancedCallback = new OpenApiCallback
+        public static OpenApiCallback AdvancedCallback = new()
         {
             PathItems =
             {
                 [RuntimeExpression.Build("$request.body#/url")]
-                = new OpenApiPathItem
+                = new()
                 {
                     Operations =
                     {
                         [OperationType.Post] =
-                        new OpenApiOperation
+                        new()
                         {
-                            RequestBody = new OpenApiRequestBody
+                            RequestBody = new()
                             {
                                 Content =
                                 {
-                                    ["application/json"] = new OpenApiMediaType
+                                    ["application/json"] = new()
                                     {
-                                        Schema = new OpenApiSchema
+                                        Schema = new()
                                         {
                                             Type = "object"
                                         }
                                     }
                                 }
                             },
-                            Responses = new OpenApiResponses
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse
+                                ["200"] = new()
                                 {
                                     Description = "Success"
                                 }
@@ -53,9 +54,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiCallback ReferencedCallback = new OpenApiCallback
+        public static OpenApiCallback ReferencedCallback = new()
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Callback,
                 Id = "simpleHook",
@@ -63,29 +64,29 @@ namespace Microsoft.OpenApi.Tests.Models
             PathItems =
             {
                 [RuntimeExpression.Build("$request.body#/url")]
-                = new OpenApiPathItem
+                = new()
                 {
                     Operations =
                     {
                         [OperationType.Post] =
-                        new OpenApiOperation
+                        new()
                         {
-                            RequestBody = new OpenApiRequestBody
+                            RequestBody = new()
                             {
                                 Content =
                                 {
-                                    ["application/json"] = new OpenApiMediaType
+                                    ["application/json"] = new()
                                     {
-                                        Schema = new OpenApiSchema
+                                        Schema = new()
                                         {
                                             Type = "object"
                                         }
                                     }
                                 }
                             },
-                            Responses = new OpenApiResponses
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse
+                                ["200"] = new()
                                 {
                                     Description = "Success"
                                 }
@@ -96,111 +97,55 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiCallbackTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
-        [Fact]
-        public void SerializeAdvancedCallbackAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeAdvancedCallbackAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""$request.body#/url"": {
-    ""post"": {
-      ""requestBody"": {
-        ""content"": {
-          ""application/json"": {
-            ""schema"": {
-              ""type"": ""object""
-            }
-          }
-        }
-      },
-      ""responses"": {
-        ""200"": {
-          ""description"": ""Success""
-        }
-      }
-    }
-  }
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedCallback.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedCallbackAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedCallbackAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""$ref"": ""#/components/callbacks/simpleHook""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedCallback.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedCallbackAsV3JsonWithoutReferenceWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedCallbackAsV3JsonWithoutReferenceWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""$request.body#/url"": {
-    ""post"": {
-      ""requestBody"": {
-        ""content"": {
-          ""application/json"": {
-            ""schema"": {
-              ""type"": ""object""
-            }
-          }
-        }
-      },
-      ""responses"": {
-        ""200"": {
-          ""description"": ""Success""
-        }
-      }
-    }
-  }
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedCallback.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

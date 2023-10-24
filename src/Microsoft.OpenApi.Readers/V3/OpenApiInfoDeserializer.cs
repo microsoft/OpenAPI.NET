@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -15,47 +15,35 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static FixedFieldMap<OpenApiInfo> InfoFixedFields = new FixedFieldMap<OpenApiInfo>
+        public static FixedFieldMap<OpenApiInfo> InfoFixedFields = new()
         {
             {
-                "title", (o, n) =>
-                {
-                    o.Title = n.GetScalarValue();
-                }
+                "title",
+                (o, n) => o.Title = n.GetScalarValue()
             },
             {
-                "version", (o, n) =>
-                {
-                    o.Version = n.GetScalarValue();
-                }
+                "version",
+                (o, n) => o.Version = n.GetScalarValue()
             },
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {
-                "termsOfService", (o, n) =>
-                {
-                    o.TermsOfService = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                }
+                "termsOfService",
+                (o, n) => o.TermsOfService = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
             },
             {
-                "contact", (o, n) =>
-                {
-                    o.Contact = LoadContact(n);
-                }
+                "contact",
+                (o, n) => o.Contact = LoadContact(n)
             },
             {
-                "license", (o, n) =>
-                {
-                    o.License = LoadLicense(n);
-                }
+                "license",
+                (o, n) => o.License = LoadLicense(n)
             }
         };
 
-        public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new PatternFieldMap<OpenApiInfo>
+        public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, k, n) => o.AddExtension(k,LoadExtension(k, n))}
         };

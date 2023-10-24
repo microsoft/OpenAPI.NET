@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Readers.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
-            new FixedFieldMap<OpenApiOperation>
+            new()
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
@@ -27,76 +27,65 @@ namespace Microsoft.OpenApi.Readers.V2
                                 valueNode.GetScalarValue()))
                 },
                 {
-                    "summary", (o, n) =>
-                    {
-                        o.Summary = n.GetScalarValue();
+                    "summary",
+                    (o, n) => o.Summary = n.GetScalarValue()
+                },
+                {
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
+                },
+                {
+                    "externalDocs",
+                    (o, n) => o.ExternalDocs = LoadExternalDocs(n)
+                },
+                {
+                    "operationId",
+                    (o, n) => o.OperationId = n.GetScalarValue()
+                },
+                {
+                    "parameters",
+                    (o, n) => o.Parameters = n.CreateList(LoadParameter)
+                },
+                {
+                    "consumes", (_, n) => {
+                        var consumes = n.CreateSimpleList(s => s.GetScalarValue());
+                        if (consumes.Count > 0) {
+                            n.Context.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
+                        }
                     }
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
+                    "produces", (_, n) => {
+                        var produces = n.CreateSimpleList(s => s.GetScalarValue());
+                        if (produces.Count > 0) {
+                            n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
+                        }
                     }
                 },
                 {
-                    "externalDocs", (o, n) =>
-                    {
-                        o.ExternalDocs = LoadExternalDocs(n);
-                    }
+                    "responses",
+                    (o, n) => o.Responses = LoadResponses(n)
                 },
                 {
-                    "operationId", (o, n) =>
-                    {
-                        o.OperationId = n.GetScalarValue();
-                    }
+                    "deprecated",
+                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "parameters", (o, n) =>
-                    {
-                        o.Parameters = n.CreateList(LoadParameter);
-                    }
-                },
-                {
-                    "consumes", (o, n) => n.Context.SetTempStorage(
-                        TempStorageKeys.OperationConsumes,
-                        n.CreateSimpleList(s => s.GetScalarValue()))
-                },
-                {
-                    "produces", (o, n) => n.Context.SetTempStorage(
-                        TempStorageKeys.OperationProduces,
-                        n.CreateSimpleList(s => s.GetScalarValue()))
-                },
-                {
-                    "responses", (o, n) =>
-                    {
-                        o.Responses = LoadResponses(n);
-                    }
-                },
-                {
-                    "deprecated", (o, n) =>
-                    {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
-                    }
-                },
-                {
-                    "security", (o, n) =>
-                    {
-                        o.Security = n.CreateList(LoadSecurityRequirement);
-                    }
+                    "security",
+                    (o, n) => o.Security = n.CreateList(LoadSecurityRequirement)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
-            new PatternFieldMap<OpenApiOperation>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields =
-            new FixedFieldMap<OpenApiResponses>();
+        private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields = new();
 
         private static readonly PatternFieldMap<OpenApiResponses> _responsesPatternFields =
-            new PatternFieldMap<OpenApiResponses>
+            new()
             {
                 {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
@@ -157,7 +146,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Properties = formParameters.ToDictionary(
                         k => k.Name,
@@ -180,7 +169,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 Content = consumes.ToDictionary(
                     k => k,
-                    v => mediaType)
+                    _ => mediaType)
             };
 
             return formBody;
@@ -200,7 +189,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 Required = bodyParameter.Required,
                 Content = consumes.ToDictionary(
                     k => k,
-                    v => new OpenApiMediaType
+                    _ => new OpenApiMediaType
                     {
                         Schema = bodyParameter.Schema
                     }),
@@ -215,10 +204,10 @@ namespace Microsoft.OpenApi.Readers.V2
             ParsingContext context,
             string tagName)
         {
-            var tagObject = new OpenApiTag()
+            var tagObject = new OpenApiTag
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference() { Id = tagName, Type = ReferenceType.Tag }
+                Reference = new() { Id = tagName, Type = ReferenceType.Tag }
             };
 
             return tagObject;

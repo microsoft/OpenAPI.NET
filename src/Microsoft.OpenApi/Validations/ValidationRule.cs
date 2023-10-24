@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
 
@@ -39,7 +40,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="validate">Action to perform the validation.</param>
         public ValidationRule(Action<IValidationContext, T> validate)
         {
-            _validate = validate ?? throw Error.ArgumentNull(nameof(validate));
+            _validate = Utils.CheckArgumentNull(validate);
         }
 
         internal override Type ElementType
@@ -49,22 +50,17 @@ namespace Microsoft.OpenApi.Validations
 
         internal override void Evaluate(IValidationContext context, object item)
         {
-            if (context == null)
-            {
-                throw Error.ArgumentNull(nameof(context));
-            }
-
             if (item == null)
             {
                 return;
             }
 
-            if (!(item is T))
+            if (item is not T)
             {
-                throw Error.Argument(string.Format(SRResource.InputItemShouldBeType, typeof(T).FullName));
+                throw new ArgumentException(string.Format(SRResource.InputItemShouldBeType, typeof(T).FullName));
             }
 
-            T typedItem = (T)item;
+            var typedItem = (T)item;
             this._validate(context, typedItem);
         }
     }

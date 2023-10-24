@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -11,7 +10,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiTag : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// The name of the tag.
@@ -44,14 +43,29 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiTag() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiTag"/> object
+        /// </summary>
+        public OpenApiTag(OpenApiTag tag)
+        {
+            Name = tag?.Name ?? Name;
+            Description = tag?.Description ?? Description;
+            ExternalDocs = tag?.ExternalDocs != null ? new(tag?.ExternalDocs) : null;
+            Extensions = tag?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
+            UnresolvedReference = tag?.UnresolvedReference ?? UnresolvedReference;
+            Reference = tag?.Reference != null ? new(tag?.Reference) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (Reference != null)
             {
@@ -89,10 +103,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (Reference != null)
             {

@@ -1,0 +1,48 @@
+name: CodeQL Analysis
+
+on:
+  push:
+    branches: [ vnext ]
+  pull_request:
+  schedule:
+    - cron: '0 8 * * *'
+
+jobs:
+  analyze:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        id: checkout_repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Initialize CodeQL
+        id: init_codeql
+        uses: github/codeql-action/init@v2
+        with:
+          queries: security-and-quality
+
+      - name: Build projects
+        id: build_projects
+        shell: pwsh
+        run: |
+          $projectsArray = @(
+            '.\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj',
+            '.\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj',
+            '.\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj'
+          )
+
+          $projectsArray | ForEach-Object {
+            dotnet build $PSItem -c Release
+          }
+
+      - name: Perform CodeQL Analysis
+        id: analyze_codeql
+        uses: github/codeql-action/analyze@v2
+
+# Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)

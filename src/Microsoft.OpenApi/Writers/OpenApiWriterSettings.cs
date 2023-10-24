@@ -1,23 +1,26 @@
 ﻿
+using System;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
-    /// Indicates if and when the reader should convert references into complete object renderings
+    /// Indicates if and when the writer should convert references into complete object renderings
     /// </summary>
+    [Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
     public enum ReferenceInlineSetting
     {
         /// <summary>
-        /// Create placeholder objects with an OpenApiReference instance and UnresolvedReference set to true.
+        /// Render all references as $ref.
         /// </summary>
         DoNotInlineReferences,
         /// <summary>
-        /// Convert local references to references of valid domain objects.
+        /// Render all local references as inline objects
         /// </summary>
         InlineLocalReferences,
         /// <summary>
-        /// Convert all references to references of valid domain objects.
+        /// Render all references as inline objects.
         /// </summary>
         InlineAllReferences
     }
@@ -27,10 +30,49 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public class OpenApiWriterSettings
     {
-        internal LoopDetector LoopDetector { get; } = new LoopDetector();
+        [Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
+        private ReferenceInlineSetting referenceInline = ReferenceInlineSetting.DoNotInlineReferences;
+
+        internal LoopDetector LoopDetector { get; } = new();
         /// <summary>
         /// Indicates how references in the source document should be handled.
         /// </summary>
-        public ReferenceInlineSetting ReferenceInline { get; set; } = ReferenceInlineSetting.DoNotInlineReferences;
+        [Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
+        public ReferenceInlineSetting ReferenceInline {
+            get { return referenceInline; }
+            set {
+                referenceInline = value;
+                switch(referenceInline)
+                {
+                    case ReferenceInlineSetting.DoNotInlineReferences:
+                        InlineLocalReferences = false;
+                        InlineExternalReferences = false;
+                        break;
+                    case ReferenceInlineSetting.InlineLocalReferences:
+                        InlineLocalReferences = true;
+                        InlineExternalReferences = false;
+                        break;
+                    case ReferenceInlineSetting.InlineAllReferences:
+                        InlineLocalReferences = true;
+                        InlineExternalReferences = true;
+                        break;
+                }
+            }
+        }
+        /// <summary>
+        /// Indicates if local references should be rendered as an inline object
+        /// </summary>
+        public bool InlineLocalReferences { get; set; }
+
+        /// <summary>
+        /// Indicates if external references should be rendered as an inline object
+        /// </summary>
+        public bool InlineExternalReferences { get; set; }
+
+        internal bool ShouldInlineReference(OpenApiReference reference)
+        {
+            return (reference.IsLocal && InlineLocalReferences)
+                             || (reference.IsExternal && InlineExternalReferences);
+        }
     }
 }

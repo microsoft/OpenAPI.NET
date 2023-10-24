@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 else
                 {
                     mapNode.Context.Diagnostic.Errors.Add(
-                        new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
+                        new(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
                 }
             }
 
@@ -44,10 +44,10 @@ namespace Microsoft.OpenApi.Readers.V3
             ParsingContext context,
             string schemeName)
         {
-            var securitySchemeObject = new OpenApiSecurityScheme()
+            var securitySchemeObject = new OpenApiSecurityScheme
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference()
+                Reference = new()
                 {
                     Id = schemeName,
                     Type = ReferenceType.SecurityScheme

@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Microsoft.OpenApi.Any;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -18,6 +19,11 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
+        /// <summary>
+        /// Related workspace containing OpenApiDocuments that are referenced in this document
+        /// </summary>
+        public OpenApiWorkspace Workspace { get; set; }
+
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
         /// </summary>
@@ -60,14 +66,37 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// The unique hash code of the generated OpenAPI document
+        /// </summary>
+        public string HashCode => GenerateHashValue(this);
+
+        /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiDocument() {}
+
+        /// <summary>
+        /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
+        /// </summary>
+        public OpenApiDocument(OpenApiDocument document)
+        {
+            Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
+            Info = document?.Info != null ? new(document?.Info) : null;
+            Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
+            Paths = document?.Paths != null ? new(document?.Paths) : null;
+            Components = document?.Components != null ? new(document?.Components) : null;
+            SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
+            Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
+            ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
+            Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -109,10 +138,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -128,13 +154,13 @@ namespace Microsoft.OpenApi.Models
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV2(w));
 
-            // If references have been inlined we don't need the to render the components section
+            // If references have been inlined we don't need to render the components section
             // however if they have cycles, then we will need a component rendered
-            if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
+            if (writer.GetSettings().InlineLocalReferences)
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                         .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
@@ -147,15 +173,12 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
                        openApiSchemas,
-                       (w, key, component) =>
-                       {
-                           component.SerializeAsV2WithoutReference(w);
-                       });
+                       (w, _, component) => component.SerializeAsV2WithoutReference(w));
                 }
             }
             else
             {
-                // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
+                // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
                 // If the reference exists but points to other objects, the object is serialized to just that reference.
                 // definitions
                 writer.WriteOptionalMap(
@@ -163,8 +186,7 @@ namespace Microsoft.OpenApi.Models
                     Components?.Schemas,
                     (w, key, component) =>
                     {
-                        if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.Schema &&
+                        if (component.Reference is {Type: ReferenceType.Schema} &&
                             component.Reference.Id == key)
                         {
                             component.SerializeAsV2WithoutReference(w);
@@ -176,13 +198,23 @@ namespace Microsoft.OpenApi.Models
                     });
             }
             // parameters
+            var parameters = Components?.Parameters != null
+                ? new(Components.Parameters)
+                : new Dictionary<string, OpenApiParameter>();
+
+            if (Components?.RequestBodies != null)
+            {
+                foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
+                {
+                    parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
+                }
+            }
             writer.WriteOptionalMap(
                 OpenApiConstants.Parameters,
-                Components?.Parameters,
+                parameters,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Parameter &&
+                    if (component.Reference is {Type: ReferenceType.Parameter} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);
@@ -199,8 +231,7 @@ namespace Microsoft.OpenApi.Models
                 Components?.Responses,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Response &&
+                    if (component.Reference is {Type: ReferenceType.Response} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);
@@ -217,8 +248,7 @@ namespace Microsoft.OpenApi.Models
                 Components?.SecuritySchemes,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                    if (component.Reference is {Type: ReferenceType.SecurityScheme} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);
@@ -247,6 +277,18 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
+        private static string ParseServerUrl(OpenApiServer server)
+        {
+            var parsedUrl = server.Url;
+
+            var variables = server.Variables;
+            foreach (var variable in variables.Where(static x => !string.IsNullOrEmpty(x.Value.Default)))
+            {
+                parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", variable.Value.Default);
+            }
+            return parsedUrl;
+        }
+
         private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
         {
             if (servers == null || !servers.Any())
@@ -254,13 +296,13 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            // Arbitrarily choose the first server given that V2 only allows 
+            // Arbitrarily choose the first server given that V2 only allows
             // one host, port, and base path.
-            var firstServer = servers.First();
+            var serverUrl = ParseServerUrl(servers.First());
 
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
-            // The Url property cannotcontain path templating to be valid for V2 serialization.
-            var firstServerUrl = new Uri(firstServer.Url, UriKind.RelativeOrAbsolute);
+            // The Url property cannot contain path templating to be valid for V2 serialization.
+            var firstServerUrl = new Uri(serverUrl, UriKind.RelativeOrAbsolute);
 
             // host
             if (firstServerUrl.IsAbsoluteUri)
@@ -268,7 +310,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(
                     OpenApiConstants.Host,
                     firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
-                
+
                 // basePath
                 if (firstServerUrl.AbsolutePath != "/")
                 {
@@ -294,7 +336,7 @@ namespace Microsoft.OpenApi.Models
             var schemes = servers.Select(
                     s =>
                     {
-                        Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
+                        Uri.TryCreate(ParseServerUrl(s), UriKind.RelativeOrAbsolute, out var url);
                         return url;
                     })
                 .Where(
@@ -314,20 +356,96 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Walk the OpenApiDocument and resolve unresolved references
+        /// </summary>
+        /// <remarks>
+        /// This method will be replaced by a LoadExternalReferences in the next major update to this library.
+        /// Resolving references at load time is going to go away.
+        /// </remarks>
+        public IEnumerable<OpenApiError> ResolveReferences()
+        {
+            var resolver = new OpenApiReferenceResolver(this, false);
+            var walker = new OpenApiWalker(resolver);
+            walker.Walk(this);
+            return resolver.Errors;
+        }
+
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
+        internal T ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
+        {
+            if (reference.IsExternal)
+            {
+                return ResolveReference(reference, true) as T;
+            }
+            else
+            {
+                return ResolveReference(reference, false) as T;
+            }
+        }
+
+        /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        {
+            return ResolveReference(reference, false);
+        }
+
+        /// <summary>
+        /// Takes in an OpenApi document instance and generates its hash value
+        /// </summary>
+        /// <param name="doc">The OpenAPI description to hash.</param>
+        /// <returns>The hash value.</returns>
+        public static string GenerateHashValue(OpenApiDocument doc)
+        {
+            using HashAlgorithm sha = SHA512.Create();
+            using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
+            using var streamWriter = new StreamWriter(cryptoStream);
+
+            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
+            doc.SerializeAsV3(openApiJsonWriter);
+            openApiJsonWriter.Flush();
+
+            cryptoStream.FlushFinalBlock();
+            var hash = sha.Hash;
+
+            return ConvertByteArrayToString(hash);
+        }
+
+        private static string ConvertByteArrayToString(byte[] hash)
+        {
+            // Build the final string by converting each byte
+            // into hex and appending it to a StringBuilder
+            var sb = new StringBuilder();
+            for (var i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
+        internal IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
         {
             if (reference == null)
             {
                 return null;
             }
 
-            if (reference.IsExternal)
+            // Todo: Verify if we need to check to see if this external reference is actually targeted at this document.
+            if (useExternal)
             {
-                // Should not attempt to resolve external references against a single document.
-                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported);
-            }
+                if (this.Workspace == null)
+                {
+                    throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
+                }
+                return this.Workspace.ResolveReference(reference);
+            } 
 
             if (!reference.Type.HasValue)
             {
@@ -384,6 +502,9 @@ namespace Microsoft.OpenApi.Models
 
                     case ReferenceType.Callback:
                         return this.Components.Callbacks[reference.Id];
+
+                    case ReferenceType.Path:
+                        return this.Paths[reference.Id];
 
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);

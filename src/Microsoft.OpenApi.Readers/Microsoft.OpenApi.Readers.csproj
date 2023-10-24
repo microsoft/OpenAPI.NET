@@ -1,23 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
-        <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
-        <PackageLicenseUrl>https://raw.githubusercontent.com/Microsoft/OpenAPI.NET/master/LICENSE</PackageLicenseUrl>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Authors>Microsoft</Authors>
-        <Company>Microsoft</Company>
-        <Title>Microsoft.OpenApi.Readers</Title>
-        <PackageId>Microsoft.OpenApi.Readers</PackageId>
-        <Version>1.2.3</Version>
+        <Version>1.6.9</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
-        <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-        <PackageTags>OpenAPI .NET</PackageTags>
-        
-        <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
-        <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
         <SignAssembly>true</SignAssembly>
+        <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <NoWarn>NU5048</NoWarn>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -26,7 +18,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="SharpYaml" Version="1.6.5" />
+        <PackageReference Include="SharpYaml" Version="2.1.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -51,5 +43,9 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>SRResource.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 </Project>

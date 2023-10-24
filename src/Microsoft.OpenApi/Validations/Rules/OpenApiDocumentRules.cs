@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Models;
@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// The Info field is required.
         /// </summary>
         public static ValidationRule<OpenApiDocument> OpenApiDocumentFieldIsMissing =>
-            new ValidationRule<OpenApiDocument>(
+            new(
                 (context, item) =>
                 {
                     // info

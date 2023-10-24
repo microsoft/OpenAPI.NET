@@ -1,12 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Validations
 {
@@ -20,8 +13,17 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         public static void CreateError(this IValidationContext context, string ruleName, string message)
         {
-            OpenApiValidatorError error = new OpenApiValidatorError(ruleName, context.PathString, message);
+            var error = new OpenApiValidatorError(ruleName, context.PathString, message);
             context.AddError(error);
+        }
+
+        /// <summary>
+        /// Helper method to simplify validation rules
+        /// </summary>
+        public static void CreateWarning(this IValidationContext context, string ruleName, string message)
+        {
+            var warning = new OpenApiValidatorWarning(ruleName, context.PathString, message);
+            context.AddWarning(warning);
         }
     }
 }
