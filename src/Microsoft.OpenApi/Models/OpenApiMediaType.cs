@@ -17,10 +17,16 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible
     {
+        private JsonSchema _schema;
+
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual JsonSchema Schema { get; set; }
+        public virtual JsonSchema Schema
+        {
+            get => _schema;
+            set => _schema = value;
+        }
 
         /// <summary>
         /// Example of the media type.
@@ -57,7 +63,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
-            Schema = InitializeSchema(mediaType?.Schema);
+            _schema = JsonNodeCloneHelper.CloneJsonSchema(mediaType?.Schema);
             Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
@@ -114,15 +120,6 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Media type does not exist in V2.
-        }
-
-        /// <summary>
-        /// Clones a JSON schema instance
-        /// </summary>
-        /// <returns></returns>
-        protected JsonSchema InitializeSchema(JsonSchema schema)
-        {
-            return JsonNodeCloneHelper.CloneJsonSchema(Schema);
         }
     }
 }
