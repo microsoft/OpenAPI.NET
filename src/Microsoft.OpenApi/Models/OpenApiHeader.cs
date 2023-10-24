@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiHeader : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiHeader>
     {
-        private JsonSchema _schema;
+        protected JsonSchema _schema;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
