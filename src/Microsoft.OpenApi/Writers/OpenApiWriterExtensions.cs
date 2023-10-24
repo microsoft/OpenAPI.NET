@@ -367,7 +367,7 @@ namespace Microsoft.OpenApi.Writers
             IDictionary<string, T> elements,
             Action<IOpenApiWriter, T> action)
         {
-            WriteMapInternal(writer, name, elements, (w, k, s) => action(w, s));
+            WriteMapInternal(writer, name, elements, (w, _, s) => action(w, s));
         }
 
         private static void WriteMapInternal<T>(

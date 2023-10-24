@@ -1,15 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -22,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiSchema BasicSchema = new();
 
-        public static OpenApiSchema AdvancedSchemaNumber = new()
+        public static readonly OpenApiSchema AdvancedSchemaNumber = new()
         {
             Title = "title1",
             MultipleOf = 3,
@@ -39,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaObject = new()
+        public static readonly OpenApiSchema AdvancedSchemaObject = new()
         {
             Title = "title1",
             Properties = new Dictionary<string, OpenApiSchema>
@@ -88,7 +91,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaWithAllOf = new()
+        public static readonly OpenApiSchema AdvancedSchemaWithAllOf = new()
         {
             Title = "title1",
             AllOf = new List<OpenApiSchema>
@@ -140,7 +143,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSchema ReferencedSchema = new()
+        public static readonly OpenApiSchema ReferencedSchema = new()
         {
             Title = "title1",
             MultipleOf = 3,
@@ -163,7 +166,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new()
+        public static readonly OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new()
         {
             Title = "title1",
             Required = new HashSet<string> { "property1" },
@@ -505,6 +508,57 @@ namespace Microsoft.OpenApi.Tests.Models
                 { "x-myextension" , new OpenApiInteger(40) }
             };
             Assert.NotEqual(schema.Extensions, schemaCopy.Extensions);
+        }
+
+        [Fact]
+        public void OpenApiWalkerVisitsOpenApiSchemaNot()
+        {
+            var outerSchema = new OpenApiSchema()
+            {
+                Title = "Outer Schema",
+                Not = new OpenApiSchema()
+                {
+                    Title = "Inner Schema",
+                    Type = "string",
+                }
+            };        
+
+            var document = new OpenApiDocument()
+            {
+                Paths = new OpenApiPaths()
+                {
+                    ["/foo"] = new OpenApiPathItem()
+                    {
+                        Parameters = new[]
+                        {
+                            new OpenApiParameter()
+                            {
+                                Name = "foo",
+                                In = ParameterLocation.Query,
+                                Schema = outerSchema,
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var visitor = new SchemaVisitor();
+            var walker = new OpenApiWalker(visitor);
+            walker.Walk(document);
+
+            // Assert
+            visitor.Titles.Count.Should().Be(2);
+        }
+    }
+
+    internal class SchemaVisitor : OpenApiVisitorBase
+    {
+        public List<string> Titles = new();
+
+        public override void Visit(OpenApiSchema schema)
+        {
+            Titles.Add(schema.Title);
         }
     }
 }

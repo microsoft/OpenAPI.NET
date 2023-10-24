@@ -17,22 +17,16 @@ namespace Microsoft.OpenApi.Readers.V3
             new()
             {
                 {
-                    "enum", (o, n) =>
-                    {
-                        o.Enum = n.CreateSimpleList(s => s.GetScalarValue());
-                    }
+                    "enum",
+                    (o, n) => o.Enum = n.CreateSimpleList(s => s.GetScalarValue())
                 },
                 {
-                    "default", (o, n) =>
-                    {
-                        o.Default = n.GetScalarValue();
-                    }
+                    "default",
+                    (o, n) => o.Default = n.GetScalarValue()
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
             };
 

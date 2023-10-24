@@ -17,34 +17,24 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiXml> _xmlFixedFields = new()
         {
             {
-                "name", (o, n) =>
-                {
-                    o.Name = n.GetScalarValue();
-                }
+                "name",
+                (o, n) => o.Name = n.GetScalarValue()
             },
             {
-                "namespace", (o, n) =>
-                {
-                    o.Namespace = new(n.GetScalarValue(), UriKind.Absolute);
-                }
+                "namespace",
+                (o, n) => o.Namespace = new(n.GetScalarValue(), UriKind.Absolute)
             },
             {
-                "prefix", (o, n) =>
-                {
-                    o.Prefix = n.GetScalarValue();
-                }
+                "prefix",
+                (o, n) => o.Prefix = n.GetScalarValue()
             },
             {
-                "attribute", (o, n) =>
-                {
-                    o.Attribute = bool.Parse(n.GetScalarValue());
-                }
+                "attribute",
+                (o, n) => o.Attribute = bool.Parse(n.GetScalarValue())
             },
             {
-                "wrapped", (o, n) =>
-                {
-                    o.Wrapped = bool.Parse(n.GetScalarValue());
-                }
+                "wrapped",
+                (o, n) => o.Wrapped = bool.Parse(n.GetScalarValue())
             },
         };
 

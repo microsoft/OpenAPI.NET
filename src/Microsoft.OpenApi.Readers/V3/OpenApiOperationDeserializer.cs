@@ -24,70 +24,48 @@ namespace Microsoft.OpenApi.Readers.V3
                                 valueNode.GetScalarValue()))
                 },
                 {
-                    "summary", (o, n) =>
-                    {
-                        o.Summary = n.GetScalarValue();
-                    }
+                    "summary",
+                    (o, n) => o.Summary = n.GetScalarValue()
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "externalDocs", (o, n) =>
-                    {
-                        o.ExternalDocs = LoadExternalDocs(n);
-                    }
+                    "externalDocs",
+                    (o, n) => o.ExternalDocs = LoadExternalDocs(n)
                 },
                 {
-                    "operationId", (o, n) =>
-                    {
-                        o.OperationId = n.GetScalarValue();
-                    }
+                    "operationId",
+                    (o, n) => o.OperationId = n.GetScalarValue()
                 },
                 {
-                    "parameters", (o, n) =>
-                    {
-                        o.Parameters = n.CreateList(LoadParameter);
-                    }
+                    "parameters",
+                    (o, n) => o.Parameters = n.CreateList(LoadParameter)
                 },
                 {
-                    "requestBody", (o, n) =>
-                    {
-                        o.RequestBody = LoadRequestBody(n);
-                    }
+                    "requestBody",
+                    (o, n) => o.RequestBody = LoadRequestBody(n)
                 },
                 {
-                    "responses", (o, n) =>
-                    {
-                        o.Responses = LoadResponses(n);
-                    }
+                    "responses",
+                    (o, n) => o.Responses = LoadResponses(n)
                 },
                 {
-                    "callbacks", (o, n) =>
-                    {
-                        o.Callbacks = n.CreateMap(LoadCallback);
-                    }
+                    "callbacks",
+                    (o, n) => o.Callbacks = n.CreateMap(LoadCallback)
                 },
                 {
-                    "deprecated", (o, n) =>
-                    {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
-                    }
+                    "deprecated",
+                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "security", (o, n) =>
-                    {
-                        o.Security = n.CreateList(LoadSecurityRequirement);
-                    }
+                    "security",
+                    (o, n) => o.Security = n.CreateList(LoadSecurityRequirement)
                 },
                 {
-                    "servers", (o, n) =>
-                    {
-                        o.Servers = n.CreateList(LoadServer);
-                    }
+                    "servers",
+                    (o, n) => o.Servers = n.CreateList(LoadServer)
                 },
             };
 

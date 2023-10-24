@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             get
             {
                 return
-                    from input in new int[] {
+                    from input in new[] {
                         int.MinValue,
                         42,
                         int.MaxValue,
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             get
             {
                 return
-                    from input in new long[] {
+                    from input in new[] {
                         long.MinValue,
                         42,
                         long.MaxValue,
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             get
             {
                 return
-                    from input in new float[] {
+                    from input in new[] {
                         float.MinValue,
                         42.42f,
                         float.MaxValue,
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             get
             {
                 return
-                    from input in new double[] {
+                    from input in new[] {
                         double.MinValue,
                         42.42d,
                         double.MaxValue,
@@ -180,13 +180,10 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> BooleanInputs
         {
-            get
-            {
-                return
-                    from input in new [] { true, false }
-                    from shouldBeTerse in shouldProduceTerseOutputValues
-                    select new object[] { input, shouldBeTerse };
-            }
+            get =>
+                from input in new [] { true, false }
+                from shouldBeTerse in shouldProduceTerseOutputValues
+                select new object[] { input, shouldBeTerse };
         }
 
         [Theory]

@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                 UnresolvedReference = false
             };
 
-            OpenApiDocument document = new OpenApiDocument();
+            var document = new OpenApiDocument();
             document.Components = new()
             {
                 Schemas = new Dictionary<string, OpenApiSchema>
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                 UnresolvedReference = true
             };
 
-            OpenApiDocument document = new OpenApiDocument();
+            var document = new OpenApiDocument();
             document.Components = new()
             {
                 Schemas = new Dictionary<string, OpenApiSchema>
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                 UnresolvedReference = true
             };
 
-            OpenApiDocument document = new OpenApiDocument();
+            var document = new OpenApiDocument();
 
             document.Paths = new()
             {
@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
     public class AlwaysFailRule<T> : ValidationRule<T> where T : IOpenApiElement
     {
-        public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
+        public AlwaysFailRule() : base((c, _) => c.CreateError("x", "y"))
         {
         }
     }

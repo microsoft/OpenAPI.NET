@@ -16,15 +16,15 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInInfo()
         {
             // Arrange
-            string titleError = String.Format(SRResource.Validation_FieldIsRequired, "title", "info");
-            string versionError = String.Format(SRResource.Validation_FieldIsRequired, "version", "info");
+            var titleError = String.Format(SRResource.Validation_FieldIsRequired, "title", "info");
+            var versionError = String.Format(SRResource.Validation_FieldIsRequired, "version", "info");
             var info = new OpenApiInfo();
 
             // Act
             var errors = info.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             // Assert
             Assert.False(result);

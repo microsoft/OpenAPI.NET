@@ -50,8 +50,6 @@ namespace Microsoft.OpenApi.Validations
 
         internal override void Evaluate(IValidationContext context, object item)
         {
-            Utils.CheckArgumentNull(context);
-
             if (item == null)
             {
                 return;
@@ -62,7 +60,7 @@ namespace Microsoft.OpenApi.Validations
                 throw new ArgumentException(string.Format(SRResource.InputItemShouldBeType, typeof(T).FullName));
             }
 
-            T typedItem = (T)item;
+            var typedItem = (T)item;
             this._validate(context, typedItem);
         }
     }

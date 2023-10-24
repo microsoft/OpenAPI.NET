@@ -27,37 +27,27 @@ namespace Microsoft.OpenApi.Readers.V2
                                 valueNode.GetScalarValue()))
                 },
                 {
-                    "summary", (o, n) =>
-                    {
-                        o.Summary = n.GetScalarValue();
-                    }
+                    "summary",
+                    (o, n) => o.Summary = n.GetScalarValue()
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "externalDocs", (o, n) =>
-                    {
-                        o.ExternalDocs = LoadExternalDocs(n);
-                    }
+                    "externalDocs",
+                    (o, n) => o.ExternalDocs = LoadExternalDocs(n)
                 },
                 {
-                    "operationId", (o, n) =>
-                    {
-                        o.OperationId = n.GetScalarValue();
-                    }
+                    "operationId",
+                    (o, n) => o.OperationId = n.GetScalarValue()
                 },
                 {
-                    "parameters", (o, n) =>
-                    {
-                        o.Parameters = n.CreateList(LoadParameter);
-                    }
+                    "parameters",
+                    (o, n) => o.Parameters = n.CreateList(LoadParameter)
                 },
                 {
-                    "consumes", (o, n) => {
+                    "consumes", (_, n) => {
                         var consumes = n.CreateSimpleList(s => s.GetScalarValue());
                         if (consumes.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
@@ -65,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "produces", (o, n) => {
+                    "produces", (_, n) => {
                         var produces = n.CreateSimpleList(s => s.GetScalarValue());
                         if (produces.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
@@ -73,22 +63,16 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "responses", (o, n) =>
-                    {
-                        o.Responses = LoadResponses(n);
-                    }
+                    "responses",
+                    (o, n) => o.Responses = LoadResponses(n)
                 },
                 {
-                    "deprecated", (o, n) =>
-                    {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
-                    }
+                    "deprecated",
+                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "security", (o, n) =>
-                    {
-                        o.Security = n.CreateList(LoadSecurityRequirement);
-                    }
+                    "security",
+                    (o, n) => o.Security = n.CreateList(LoadSecurityRequirement)
                 },
             };
 
@@ -185,7 +169,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 Content = consumes.ToDictionary(
                     k => k,
-                    v => mediaType)
+                    _ => mediaType)
             };
 
             return formBody;
@@ -205,7 +189,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 Required = bodyParameter.Required,
                 Content = consumes.ToDictionary(
                     k => k,
-                    v => new OpenApiMediaType
+                    _ => new OpenApiMediaType
                     {
                         Schema = bodyParameter.Schema
                     }),

@@ -21,22 +21,21 @@ namespace Microsoft.OpenApi.Readers.V2
         private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "swagger", (o, n) =>
-                {
-                } /* Version is valid field but we already parsed it */
+                "swagger", (_, _) => {}
+                /* Version is valid field but we already parsed it */
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
-            {"host", (o, n) => n.Context.SetTempStorage("host", n.GetScalarValue())},
-            {"basePath", (o, n) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
+            {"host", (_, n) => n.Context.SetTempStorage("host", n.GetScalarValue())},
+            {"basePath", (_, n) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
             {
-                "schemes", (o, n) => n.Context.SetTempStorage(
+                "schemes", (_, n) => n.Context.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
                         s => s.GetScalarValue()))
             },
             {
                 "consumes",
-                (o, n) =>
+                (_, n) =>
                 {
                     var consumes = n.CreateSimpleList(s => s.GetScalarValue());
                     if (consumes.Count > 0)
@@ -46,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
             {
-                "produces", (o, n) => {
+                "produces", (_, n) => {
                     var produces = n.CreateSimpleList(s => s.GetScalarValue());
                     if (produces.Count > 0)
                     {
@@ -138,7 +137,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
             var schemes = context.GetFromTempStorage<List<string>>("schemes");
-            Uri defaultUrl = rootNode.Context.BaseUrl;
+            var defaultUrl = rootNode.Context.BaseUrl;
 
             // so we don't default to the document path when a host is provided
             if (string.IsNullOrEmpty(basePath) && !string.IsNullOrEmpty(host))
@@ -172,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             // Create the Server objects
-            if (schemes != null && schemes.Count > 0)
+            if (schemes is {Count: > 0})
             {
                 foreach (var scheme in schemes)
                 {
@@ -295,7 +294,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             // Walk all unresolved parameter references
             // if id matches with request body Id, change type
-            if (doc.Components?.RequestBodies != null && doc.Components?.RequestBodies.Count > 0)
+            if (doc.Components?.RequestBodies is {Count: > 0})
             {
                 var fixer = new RequestBodyReferenceFixer(doc.Components?.RequestBodies);
                 var walker = new OpenApiWalker(fixer);

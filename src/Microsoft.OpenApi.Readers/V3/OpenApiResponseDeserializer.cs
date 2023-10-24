@@ -17,28 +17,20 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new()
         {
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {
-                "headers", (o, n) =>
-                {
-                    o.Headers = n.CreateMap(LoadHeader);
-                }
+                "headers",
+                (o, n) => o.Headers = n.CreateMap(LoadHeader)
             },
             {
-                "content", (o, n) =>
-                {
-                    o.Content = n.CreateMap(LoadMediaType);
-                }
+                "content",
+                 (o, n) => o.Content = n.CreateMap(LoadMediaType)
             },
             {
-                "links", (o, n) =>
-                {
-                    o.Links = n.CreateMap(LoadLink);
-                }
+                "links",
+                (o, n) => o.Links = n.CreateMap(LoadLink)
             }
         };
 

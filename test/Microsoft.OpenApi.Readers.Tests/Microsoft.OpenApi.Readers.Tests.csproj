@@ -21,8 +21,8 @@
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="SharpYaml" Version="2.1.0" />
-        <PackageReference Include="xunit" Version="2.5.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1" PrivateAssets="all" />
+        <PackageReference Include="xunit" Version="2.5.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

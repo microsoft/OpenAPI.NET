@@ -13,8 +13,8 @@ public class OpenApiEnumFlagsExtensionTests
     public void ExtensionNameMatchesExpected()
     {
         // Act
-        string name = OpenApiEnumFlagsExtension.Name;
-        string expectedName = "x-ms-enum-flags";
+        var name = OpenApiEnumFlagsExtension.Name;
+        var expectedName = "x-ms-enum-flags";
 
         // Assert
         Assert.Equal(expectedName, name);
@@ -30,7 +30,7 @@ public class OpenApiEnumFlagsExtensionTests
 
         // Act
         extension.Write(writer, OpenApiSpecVersion.OpenApi3_0);
-        string result = sWriter.ToString();
+        var result = sWriter.ToString();
 
         // Assert
         Assert.Contains("\"isFlags\": false", result);
@@ -51,7 +51,7 @@ public class OpenApiEnumFlagsExtensionTests
 
         // Act
         extension.Write(writer, OpenApiSpecVersion.OpenApi3_0);
-        string result = sWriter.ToString();
+        var result = sWriter.ToString();
 
         // Assert
         Assert.Contains("\"isFlags\": true", result);
@@ -71,7 +71,7 @@ public class OpenApiEnumFlagsExtensionTests
 
         // Act
         extension.Write(writer, OpenApiSpecVersion.OpenApi3_0);
-        string result = sWriter.ToString();
+        var result = sWriter.ToString();
 
         // Assert
         Assert.True(extension.IsFlags);

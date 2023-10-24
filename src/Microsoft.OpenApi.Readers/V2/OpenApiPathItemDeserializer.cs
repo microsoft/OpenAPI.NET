@@ -32,10 +32,8 @@ namespace Microsoft.OpenApi.Readers.V2
             {"head", (o, n) => o.AddOperation(OperationType.Head, LoadOperation(n))},
             {"patch", (o, n) => o.AddOperation(OperationType.Patch, LoadOperation(n))},
             {
-                "parameters", (o, n) =>
-                {
-                    LoadPathParameters(o,n);
-                }
+                "parameters",
+                LoadPathParameters
             },
         };
 

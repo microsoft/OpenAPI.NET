@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
                 writer.WriteStartObject();
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                         .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
@@ -109,9 +109,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                        OpenApiConstants.Schemas,
                        Schemas,
-                       (w, key, component) => {
-                           component.SerializeAsV3WithoutReference(w);
-                           });
+                       (w, _, component) => component.SerializeAsV3WithoutReference(w));
                 }
                 writer.WriteEndObject();
                 return;

@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             using var streamReader = new StreamReader(stream);
             var result = streamReader.ReadToEnd();
-            return new OpenApiStringReader().ReadFragment<T>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
+            return new OpenApiStringReader().ReadFragment<T>(result, OpenApiSpecVersion.OpenApi3_0, out var diagnostic4);
         }
 
         public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             using var streamReader = new StreamReader(stream);
             var result = streamReader.ReadToEnd();
-            return new OpenApiStringReader().ReadFragment<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
+            return new OpenApiStringReader().ReadFragment<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out var diagnostic4);
         }
 
         [Fact]

@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void PathExpressionConstructorWorks()
         {
             // Arrange
-            string name = "anyValue";
+            var name = "anyValue";
 
             // Act
             var path = new PathExpression(name);

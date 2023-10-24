@@ -401,11 +401,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ShouldAllowComponentsThatJustContainAReference()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "ComponentRootReference.json"));
-            OpenApiStreamReader reader = new OpenApiStreamReader();
-            OpenApiDocument doc = reader.Read(stream, out OpenApiDiagnostic diags);
-            OpenApiSchema schema1 = doc.Components.Schemas["AllPets"];
+            var reader = new OpenApiStreamReader();
+            var doc = reader.Read(stream, out var diags);
+            var schema1 = doc.Components.Schemas["AllPets"];
             Assert.False(schema1.UnresolvedReference);
-            OpenApiSchema schema2 = doc.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
+            var schema2 = doc.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
             if (schema2.UnresolvedReference && schema1.Reference.Id == schema2.Reference.Id)
             {
                 // detected a cycle - this code gets triggered
@@ -418,7 +418,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"));
             var doc = new OpenApiStreamReader(new() { DefaultContentType =  new() { "application/json" } })
-                .Read(stream, out OpenApiDiagnostic diags);
+                .Read(stream, out var diags);
             var mediaType = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
         }

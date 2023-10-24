@@ -18,52 +18,36 @@ namespace Microsoft.OpenApi.Readers.V3
             new()
             {
                 {
-                    "type", (o, n) =>
-                    {
-                        o.Type = n.GetScalarValue().GetEnumFromDisplayName<SecuritySchemeType>();
-                    }
+                    "type",
+                    (o, n) => o.Type = n.GetScalarValue().GetEnumFromDisplayName<SecuritySchemeType>()
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "name", (o, n) =>
-                    {
-                        o.Name = n.GetScalarValue();
-                    }
+                    "name",
+                    (o, n) => o.Name = n.GetScalarValue()
                 },
                 {
-                    "in", (o, n) =>
-                    {
-                        o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
-                    }
+                    "in",
+                    (o, n) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()
                 },
                 {
-                    "scheme", (o, n) =>
-                    {
-                        o.Scheme = n.GetScalarValue();
-                    }
+                    "scheme",
+                    (o, n) => o.Scheme = n.GetScalarValue()
                 },
                 {
-                    "bearerFormat", (o, n) =>
-                    {
-                        o.BearerFormat = n.GetScalarValue();
-                    }
+                    "bearerFormat",
+                    (o, n) => o.BearerFormat = n.GetScalarValue()
                 },
                 {
-                    "openIdConnectUrl", (o, n) =>
-                    {
-                        o.OpenIdConnectUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    "openIdConnectUrl",
+                    (o, n) => o.OpenIdConnectUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {
-                    "flows", (o, n) =>
-                    {
-                        o.Flows = LoadOAuthFlows(n);
-                    }
+                    "flows",
+                    (o, n) => o.Flows = LoadOAuthFlows(n)
                 }
             };
 
