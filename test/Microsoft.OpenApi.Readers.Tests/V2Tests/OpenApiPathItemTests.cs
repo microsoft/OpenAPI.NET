@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -67,6 +68,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Schema = new()
                                 {
+                                    Type = "object",
                                     Properties =
                                     {
                                         ["name"] = new()
@@ -90,6 +92,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Schema = new()
                                 {
+                                    Type = "object",
                                     Properties =
                                     {
                                         ["name"] = new()
@@ -171,6 +174,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Schema = new()
                                 {
+                                    Type = "object",
                                     Properties =
                                     {
                                         ["name"] = new()
@@ -199,6 +203,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Schema = new()
                                 {
+                                    Type = "object",
                                     Properties =
                                     {
                                         ["name"] = new()
