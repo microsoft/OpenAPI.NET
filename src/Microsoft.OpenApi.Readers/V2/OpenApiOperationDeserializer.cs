@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -171,6 +172,8 @@ namespace Microsoft.OpenApi.Readers.V2
                     k => k,
                     _ => mediaType)
             };
+            foreach(var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && string.IsNullOrEmpty(x.Schema.Type)))
+                value.Schema.Type = "object";
 
             return formBody;
         }

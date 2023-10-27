@@ -336,7 +336,7 @@ namespace Microsoft.OpenApi.Models
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
             else
-            if (Schema?.UnresolvedReference == true || Schema?.Type == "object")
+            if (Schema?.UnresolvedReference == true || "object".Equals(Schema?.Type, StringComparison.OrdinalIgnoreCase))
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }
