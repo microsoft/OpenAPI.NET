@@ -15,9 +15,9 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
-        private Dictionary<Uri, OpenApiDocument> _documents = new Dictionary<Uri, OpenApiDocument>();
-        private Dictionary<Uri, IOpenApiReferenceable> _fragments = new Dictionary<Uri, IOpenApiReferenceable>();
-        private Dictionary<Uri, Stream> _artifacts = new Dictionary<Uri, Stream>();
+        private Dictionary<Uri, OpenApiDocument> _documents = new();
+        private Dictionary<Uri, IOpenApiReferenceable> _fragments = new();
+        private Dictionary<Uri, Stream> _artifacts = new();
 
         /// <summary>
         /// A list of OpenApiDocuments contained in the workspace
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public OpenApiWorkspace()
         {
-            BaseUrl = new Uri("file://" + Environment.CurrentDirectory + $"{Path.DirectorySeparatorChar}" );
+            BaseUrl = new("file://" + Environment.CurrentDirectory + $"{Path.DirectorySeparatorChar}" );
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>Returns true if a matching document is found.</returns>
         public bool Contains(string location)
         {
-            Uri key = ToLocationUrl(location);
+            var key = ToLocationUrl(location);
             return _documents.ContainsKey(key) || _fragments.ContainsKey(key) || _artifacts.ContainsKey(key);
         }
 
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Add a stream based artificat to the workspace.  Useful for images, examples, alternative schemas.
+        /// Add a stream based artifact to the workspace.  Useful for images, examples, alternative schemas.
         /// </summary>
         /// <param name="location"></param>
         /// <param name="artifact"></param>
@@ -117,11 +117,11 @@ namespace Microsoft.OpenApi.Services
         /// <returns></returns>
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
-            if (_documents.TryGetValue(new Uri(BaseUrl, reference.ExternalResource), out var doc))
+            if (_documents.TryGetValue(new(BaseUrl, reference.ExternalResource), out var doc))
             {
                 return doc.ResolveReference(reference, false);
             }
-            else if (_fragments.TryGetValue(new Uri(BaseUrl, reference.ExternalResource), out var fragment))
+            else if (_fragments.TryGetValue(new(BaseUrl, reference.ExternalResource), out var fragment))
             {
                 var jsonPointer = new JsonPointer($"/{reference.Id ?? string.Empty}");
                 return fragment.ResolveReference(jsonPointer);
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Services
 
         private Uri ToLocationUrl(string location)
         {
-            return new Uri(BaseUrl, location);
+            return new(BaseUrl, location);
         }
     }
 }

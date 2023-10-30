@@ -15,20 +15,18 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiXml> _xmlFixedFields = new FixedFieldMap<OpenApiXml>
+        private static readonly FixedFieldMap<OpenApiXml> _xmlFixedFields = new()
         {
             {
-                "name", (o, n) =>
-                {
-                    o.Name = n.GetScalarValue();
-                }
+                "name",
+                (o, n) => o.Name = n.GetScalarValue()
             },
             {
                 "namespace", (o, n) =>
                 {
                     if (Uri.IsWellFormedUriString(n.GetScalarValue(), UriKind.Absolute))
                     {
-                        o.Namespace = new Uri(n.GetScalarValue(), UriKind.Absolute);
+                        o.Namespace = new(n.GetScalarValue(), UriKind.Absolute);
                     }
                     else
                     {
@@ -37,27 +35,21 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
             {
-                "prefix", (o, n) =>
-                {
-                    o.Prefix = n.GetScalarValue();
-                }
+                "prefix",
+                (o, n) => o.Prefix = n.GetScalarValue()
             },
             {
-                "attribute", (o, n) =>
-                {
-                    o.Attribute = bool.Parse(n.GetScalarValue());
-                }
+                "attribute",
+                (o, n) => o.Attribute = bool.Parse(n.GetScalarValue())
             },
             {
-                "wrapped", (o, n) =>
-                {
-                    o.Wrapped = bool.Parse(n.GetScalarValue());
-                }
+                "wrapped",
+                (o, n) => o.Wrapped = bool.Parse(n.GetScalarValue())
             },
         };
 
         private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =
-            new PatternFieldMap<OpenApiXml>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

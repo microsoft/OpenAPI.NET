@@ -18,11 +18,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
+            var reader = new OpenApiStreamReader(new()
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new MockLoader(),
-                BaseUrl = new Uri("file://c:\\")
+                BaseUrl = new("file://c:\\")
             });
 
             // Todo: this should be ReadAsync
@@ -48,11 +48,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
+            var reader = new OpenApiStreamReader(new()
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
-                BaseUrl = new Uri("fie://c:\\")
+                BaseUrl = new("fie://c:\\")
             });
 
             ReadResult result;
@@ -75,10 +75,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             Assert.False(referencedSchema.UnresolvedReference);
 
             var referencedParameter = result.OpenApiDocument
-                                            .Paths["/todos"]
-                                            .Operations[OperationType.Get]
-                                            .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
-                                            .Where(p => p.Name == "filter").FirstOrDefault();
+                .Paths["/todos"]
+                .Operations[OperationType.Get]
+                .Parameters
+                .Select(p => p.GetEffective(result.OpenApiDocument))
+                .FirstOrDefault(p => p.Name == "filter");
 
             Assert.Equal("string", referencedParameter.Schema.Type);
         }
@@ -107,8 +108,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 
         public Task<Stream> LoadAsync(Uri uri)
         {
-            var path = new Uri(new Uri("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
-            path = path.Substring(1); // remove leading slash
+            var path = new Uri(new("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
+            path = path[1..]; // remove leading slash
             return Task.FromResult(Resources.GetStream(path));
         }
     }

@@ -13,8 +13,8 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiOAuthFlows> _oAuthFlowsFixedFileds =
-            new FixedFieldMap<OpenApiOAuthFlows>
+        private static readonly FixedFieldMap<OpenApiOAuthFlows> _oAuthFlowsFixedFields =
+            new()
             {
                 {"implicit", (o, n) => o.Implicit = LoadOAuthFlow(n)},
                 {"password", (o, n) => o.Password = LoadOAuthFlow(n)},
@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.V3
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlows> _oAuthFlowsPatternFields =
-            new PatternFieldMap<OpenApiOAuthFlows>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var oAuthFlows = new OpenApiOAuthFlows();
             foreach (var property in mapNode)
             {
-                property.ParseField(oAuthFlows, _oAuthFlowsFixedFileds, _oAuthFlowsPatternFields);
+                property.ParseField(oAuthFlows, _oAuthFlowsFixedFields, _oAuthFlowsPatternFields);
             }
 
             return oAuthFlows;

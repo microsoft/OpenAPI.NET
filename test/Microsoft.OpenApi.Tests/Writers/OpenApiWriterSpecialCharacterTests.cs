@@ -18,23 +18,20 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> StringWithSpecialCharacters
         {
-            get
-            {
-                return
-                    from inputExpected in new[] {
-                       new[]{ "Test\bTest", "\"Test\\bTest\"" },
-                       new[]{ "Test\fTest", "\"Test\\fTest\""},
-                       new[]{ "Test\nTest", "\"Test\\nTest\""},
-                       new[]{ "Test\rTest", "\"Test\\rTest\""},
-                       new[]{ "Test\tTest", "\"Test\\tTest\""},
-                       new[]{ "Test\\Test", "\"Test\\\\Test\""},
-                       new[]{ "Test\"Test", "\"Test\\\"Test\""},
-                       new[]{ "StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\""},
-                       new[]{ "0x1234", "\"0x1234\""},
-                     }
-                    from shouldBeTerse in shouldProduceTerseOutputValues
-                    select new object[] { inputExpected[0], inputExpected[1], shouldBeTerse };
-            }
+            get =>
+                from inputExpected in new[] {
+                    new[]{ "Test\bTest", "\"Test\\bTest\"" },
+                    new[]{ "Test\fTest", "\"Test\\fTest\""},
+                    new[]{ "Test\nTest", "\"Test\\nTest\""},
+                    new[]{ "Test\rTest", "\"Test\\rTest\""},
+                    new[]{ "Test\tTest", "\"Test\\tTest\""},
+                    new[]{ "Test\\Test", "\"Test\\\\Test\""},
+                    new[]{ "Test\"Test", "\"Test\\\"Test\""},
+                    new[]{ "StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\""},
+                    new[]{ "0x1234", "\"0x1234\""},
+                }
+                from shouldBeTerse in shouldProduceTerseOutputValues
+                select new object[] { inputExpected[0], inputExpected[1], shouldBeTerse };
         }
 
         [Theory]
@@ -43,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             writer.WriteValue(input);

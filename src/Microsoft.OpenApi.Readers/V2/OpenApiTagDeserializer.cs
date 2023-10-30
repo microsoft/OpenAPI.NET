@@ -13,29 +13,23 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiTag> _tagFixedFields = new FixedFieldMap<OpenApiTag>
+        private static readonly FixedFieldMap<OpenApiTag> _tagFixedFields = new()
         {
             {
-                OpenApiConstants.Name, (o, n) =>
-                {
-                    o.Name = n.GetScalarValue();
-                }
+                OpenApiConstants.Name,
+                (o, n) => o.Name = n.GetScalarValue()
             },
             {
-                OpenApiConstants.Description, (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                OpenApiConstants.Description,
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {
-                OpenApiConstants.ExternalDocs, (o, n) =>
-                {
-                    o.ExternalDocs = LoadExternalDocs(n);
-                }
+                OpenApiConstants.ExternalDocs,
+                (o, n) => o.ExternalDocs = LoadExternalDocs(n)
             }
         };
 
-        private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new PatternFieldMap<OpenApiTag>
+        private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };

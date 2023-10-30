@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi
                     return null;
                 }
 
-                return new JsonPointer(Tokens.Take(Tokens.Length - 1).ToArray());
+                return new(Tokens.Take(Tokens.Length - 1).ToArray());
             }
         }
 

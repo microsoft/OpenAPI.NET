@@ -14,12 +14,12 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public abstract class OpenApiVisitorBase
     {
-        private readonly Stack<string> _path = new Stack<string>();
+        private readonly Stack<string> _path = new();
 
         /// <summary>
         /// Properties available to identify context of where an object is within OpenAPI Document
         /// </summary>
-        public CurrentKeys CurrentKeys { get; } = new CurrentKeys();
+        public CurrentKeys CurrentKeys { get; } = new();
 
         /// <summary>
         /// Allow Rule to indicate validation error occured at a deeper context level.
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Exit from path context elevel.  Enter and Exit calls should be matched.
+        /// Exit from path context level.  Enter and Exit calls should be matched.
         /// </summary>
         public virtual void Exit()
         {
@@ -41,13 +41,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Pointer to source of validation error in document
         /// </summary>
-        public string PathString
-        {
-            get
-            {
-                return "#/" + String.Join("/", _path.Reverse());
-            }
-        }
+        public string PathString { get => "#/" + String.Join("/", _path.Reverse()); }
 
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>

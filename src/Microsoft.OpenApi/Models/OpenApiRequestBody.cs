@@ -70,10 +70,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
 
@@ -182,7 +179,7 @@ namespace Microsoft.OpenApi.Models
                     paramSchema.Type = "file";
                     paramSchema.Format = null;
                 }
-                yield return new OpenApiFormDataParameter
+                yield return new()
                 {
                     Description = property.Value.Description,
                     Name = property.Key,

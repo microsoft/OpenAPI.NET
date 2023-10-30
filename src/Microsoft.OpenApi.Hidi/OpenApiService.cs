@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Hidi
                 if (options.Output == null)
                 {
                     var inputExtension = GetInputPathExtension(options.OpenApi, options.Csdl);
-                    options.Output = new FileInfo($"./output{inputExtension}");
+                    options.Output = new($"./output{inputExtension}");
                 };
 
                 if (options.CleanOutput && options.Output.Exists)
@@ -66,8 +66,8 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
-                OpenApiFormat openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
-                OpenApiSpecVersion openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_0;
+                var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
+                var openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_0;
 
                 // If ApiManifest is provided, set the referenced OpenAPI document
                 var apiDependency = await FindApiDependency(options.FilterOptions.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Load OpenAPI document
-                OpenApiDocument document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
                 {
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Hidi
 
                 IOpenApiWriter writer = openApiFormat switch
                 {
-                    OpenApiFormat.Json => options.TerseOutput ? new OpenApiJsonWriter(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
+                    OpenApiFormat.Json => options.TerseOutput ? new(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
                     OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
                     _ => throw new ArgumentException("Unknown format"),
                 };
@@ -227,7 +227,7 @@ namespace Microsoft.OpenApi.Hidi
                     Stream? filteredStream = null;
                     if (!string.IsNullOrEmpty(options.CsdlFilter))
                     {
-                        XslCompiledTransform transform = GetFilterTransform();
+                        var transform = GetFilterTransform();
                         filteredStream = ApplyFilterToCsdl(stream, options.CsdlFilter, transform);
                         filteredStream.Position = 0;
                         await stream.DisposeAsync().ConfigureAwait(false);
@@ -299,7 +299,7 @@ namespace Microsoft.OpenApi.Hidi
         private static XslCompiledTransform GetFilterTransform()
         {
             XslCompiledTransform transform = new();
-            Assembly assembly = typeof(OpenApiService).GetTypeInfo().Assembly;
+            var assembly = typeof(OpenApiService).GetTypeInfo().Assembly;
             using var xslt = assembly.GetManifestResourceStream("Microsoft.OpenApi.Hidi.CsdlFilter.xslt") ?? throw new InvalidOperationException("Could not find the Microsoft.OpenApi.Hidi.CsdlFilter.xslt file in the assembly. Check build configuration.");
             using var streamReader = new StreamReader(xslt);
             using var textReader = new XmlTextReader(streamReader);
@@ -310,7 +310,7 @@ namespace Microsoft.OpenApi.Hidi
         private static Stream ApplyFilterToCsdl(Stream csdlStream, string entitySetOrSingleton, XslCompiledTransform transform)
         {
             using StreamReader inputReader = new(csdlStream, leaveOpen: true);
-            using XmlReader inputXmlReader = XmlReader.Create(inputReader);
+            using var inputXmlReader = XmlReader.Create(inputReader);
             MemoryStream filteredStream = new();
             using StreamWriter writer = new(filteredStream, leaveOpen: true);
             XsltArgumentList args = new();
@@ -363,16 +363,16 @@ namespace Microsoft.OpenApi.Hidi
         private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
         {
             ReadResult result;
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew();
             using (logger.BeginScope("Parsing OpenAPI: {OpenApiFile}", openApiFile))
             {
                 stopwatch.Start();
 
-                result = await new OpenApiStreamReader(new OpenApiReaderSettings
-                {
+                result = await new OpenApiStreamReader(new()
+                    {
                     LoadExternalRefs = inlineExternal,
                     BaseUrl = openApiFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ?
-                        new Uri(openApiFile) :
+                        new(openApiFile) :
                         new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 }
                 ).ReadAsync(stream, cancellationToken).ConfigureAwait(false);
@@ -398,7 +398,7 @@ namespace Microsoft.OpenApi.Hidi
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
             settings ??= SettingsUtilities.GetConfiguration();
 
-            OpenApiDocument document = edmModel.ConvertToOpenApi(SettingsUtilities.GetOpenApiConvertSettings(settings, metadataVersion));
+            var document = edmModel.ConvertToOpenApi(SettingsUtilities.GetOpenApiConvertSettings(settings, metadataVersion));
             document = FixReferences(document);
 
             return document;
@@ -459,7 +459,7 @@ namespace Microsoft.OpenApi.Hidi
                         }
                         else
                         {
-                            paths.Add(path, new List<string> {method});
+                            paths.Add(path, new() {method});
                         }
                     }
                     else
@@ -725,7 +725,7 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             // Load OpenAPI document
-            OpenApiDocument document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+            var document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -741,7 +741,7 @@ namespace Microsoft.OpenApi.Hidi
                 outputFolder.Create();
             }
             // Write OpenAPI to Output folder
-            options.Output = new FileInfo(Path.Combine(options.OutputFolder, "openapi.json"));
+            options.Output = new(Path.Combine(options.OutputFolder, "openapi.json"));
             options.TerseOutput = true;
             WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
 
@@ -762,7 +762,7 @@ namespace Microsoft.OpenApi.Hidi
             // Write OpenAIPluginManifest to Output folder
             var manifestFile = new FileInfo(Path.Combine(options.OutputFolder, "ai-plugin.json"));
             using var file = new FileStream(manifestFile.FullName, FileMode.Create);
-            using var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
+            using var jsonWriter = new Utf8JsonWriter(file, new() { Indented = true });
             manifest.Write(jsonWriter);
             await jsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
         }

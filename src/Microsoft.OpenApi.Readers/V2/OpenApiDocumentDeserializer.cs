@@ -18,34 +18,34 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "swagger", (o, n) =>
-                {
-                } /* Version is valid field but we already parsed it */
+                "swagger", (_, _) => {}
+                /* Version is valid field but we already parsed it */
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
-            {"host", (o, n) => n.Context.SetTempStorage("host", n.GetScalarValue())},
-            {"basePath", (o, n) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
+            {"host", (_, n) => n.Context.SetTempStorage("host", n.GetScalarValue())},
+            {"basePath", (_, n) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
             {
-                "schemes", (o, n) => n.Context.SetTempStorage(
+                "schemes", (_, n) => n.Context.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
                         s => s.GetScalarValue()))
             },
             {
                 "consumes",
-                (o, n) => {
+                (_, n) =>
+                {
                     var consumes = n.CreateSimpleList(s => s.GetScalarValue());
                     if (consumes.Count > 0)
                     {
                         n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
                     }
-                   }
+                }
             },
             {
-                "produces", (o, n) => {
+                "produces", (_, n) => {
                     var produces = n.CreateSimpleList(s => s.GetScalarValue());
                     if (produces.Count > 0)
                     {
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     if (o.Components == null)
                     {
-                        o.Components = new OpenApiComponents();
+                        o.Components = new();
                     }
 
                     o.Components.Schemas = n.CreateMapWithReference(
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     if (o.Components == null)
                     {
-                        o.Components = new OpenApiComponents();
+                        o.Components = new();
                     }
 
                     o.Components.Parameters = n.CreateMapWithReference(
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     if (o.Components == null)
                     {
-                        o.Components = new OpenApiComponents();
+                        o.Components = new();
                     }
 
                     o.Components.Responses = n.CreateMapWithReference(
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     if (o.Components == null)
                     {
-                        o.Components = new OpenApiComponents();
+                        o.Components = new();
                     }
 
                     o.Components.SecuritySchemes = n.CreateMapWithReference(
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)}
         };
 
-        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new()
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
             var schemes = context.GetFromTempStorage<List<string>>("schemes");
-            Uri defaultUrl = rootNode.Context.BaseUrl;
+            var defaultUrl = rootNode.Context.BaseUrl;
 
             // so we don't default to the document path when a host is provided
             if (string.IsNullOrEmpty(basePath) && !string.IsNullOrEmpty(host))
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Readers.V2
             //Validate host
             if (host != null && !IsHostValid(host))
             {
-                rootNode.Context.Diagnostic.Errors.Add(new OpenApiError(rootNode.Context.GetLocation(), "Invalid host"));
+                rootNode.Context.Diagnostic.Errors.Add(new(rootNode.Context.GetLocation(), "Invalid host"));
                 return;
             }
 
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             // Create the Server objects
-            if (schemes != null && schemes.Count > 0)
+            if (schemes is {Count: > 0})
             {
                 foreach (var scheme in schemes)
                 {
@@ -294,7 +294,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             // Walk all unresolved parameter references
             // if id matches with request body Id, change type
-            if (doc.Components?.RequestBodies != null && doc.Components?.RequestBodies.Count > 0)
+            if (doc.Components?.RequestBodies is {Count: > 0})
             {
                 var fixer = new RequestBodyReferenceFixer(doc.Components?.RequestBodies);
                 var walker = new OpenApiWalker(fixer);
@@ -323,18 +323,20 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             _requestBodies = requestBodies;
         }
+
         public override void Visit(OpenApiOperation operation)
         {
-            var body = operation.Parameters.Where(p => p.UnresolvedReference == true
-            && _requestBodies.ContainsKey(p.Reference.Id)).FirstOrDefault();
+            var body = operation.Parameters.FirstOrDefault(
+                p => p.UnresolvedReference
+                     && _requestBodies.ContainsKey(p.Reference.Id));
 
             if (body != null)
             {
                 operation.Parameters.Remove(body);
-                operation.RequestBody = new OpenApiRequestBody
+                operation.RequestBody = new()
                 {
                     UnresolvedReference = true,
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Id = body.Reference.Id,
                         Type = ReferenceType.RequestBody

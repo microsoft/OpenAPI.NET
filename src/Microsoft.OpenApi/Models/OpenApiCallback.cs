@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
         /// A Path Item Object used to define a callback request and expected responses.
         /// </summary>
         public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
-            = new Dictionary<RuntimeExpression, OpenApiPathItem>();
+            = new();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -57,19 +57,12 @@ namespace Microsoft.OpenApi.Models
         /// <param name="pathItem">The path item.</param>
         public void AddPathItem(RuntimeExpression expression, OpenApiPathItem pathItem)
         {
-            if (expression == null)
-            {
-                throw Error.ArgumentNull(nameof(expression));
-            }
-
-            if (pathItem == null)
-            {
-                throw Error.ArgumentNull(nameof(pathItem));
-            }
+            Utils.CheckArgumentNull(expression);
+            Utils.CheckArgumentNull(pathItem);
 
             if (PathItems == null)
             {
-                PathItems = new Dictionary<RuntimeExpression, OpenApiPathItem>();
+                PathItems = new();
             }
 
             PathItems.Add(expression, pathItem);
@@ -80,10 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
 

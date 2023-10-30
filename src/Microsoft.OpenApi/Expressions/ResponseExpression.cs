@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <param name="source">The source of the response.</param>
         public ResponseExpression(SourceExpression source)
         {
-            Source = source ?? throw Error.ArgumentNull(nameof(source));
+            Source = Utils.CheckArgumentNull(source);
         }
 
         /// <summary>

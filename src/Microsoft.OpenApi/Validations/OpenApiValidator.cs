@@ -30,24 +30,12 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the validation errors.
         /// </summary>
-        public IEnumerable<OpenApiValidatorError> Errors
-        {
-            get
-            {
-                return _errors;
-            }
-        }
+        public IEnumerable<OpenApiValidatorError> Errors { get => _errors; }
 
         /// <summary>
         /// Gets the validation warnings.
         /// </summary>
-        public IEnumerable<OpenApiValidatorWarning> Warnings
-        {
-            get
-            {
-                return _warnings;
-            }
-        }
+        public IEnumerable<OpenApiValidatorWarning> Warnings { get => _warnings; }
 
         /// <summary>
         /// Register an error with the validation context.
@@ -55,10 +43,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="error">Error to register.</param>
         public void AddError(OpenApiValidatorError error)
         {
-            if (error == null)
-            {
-                throw Error.ArgumentNull(nameof(error));
-            }
+            Utils.CheckArgumentNull(error);
 
             _errors.Add(error);
         }
@@ -69,10 +54,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="warning">Error to register.</param>
         public void AddWarning(OpenApiValidatorWarning warning)
         {
-            if (warning == null)
-            {
-                throw Error.ArgumentNull(nameof(warning));
-            }
+            Utils.CheckArgumentNull(warning);
 
             _warnings.Add(warning);
         }
@@ -310,7 +292,7 @@ namespace Microsoft.OpenApi.Validations
             }
 
             // Validate unresolved references as references
-            if (item is IOpenApiReferenceable potentialReference && potentialReference.UnresolvedReference)
+            if (item is IOpenApiReferenceable {UnresolvedReference: true})
             {
                 type = typeof(IOpenApiReferenceable);
             }

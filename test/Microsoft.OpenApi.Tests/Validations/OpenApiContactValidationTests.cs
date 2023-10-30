@@ -18,19 +18,19 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             const string testEmail = "support/example.com";
 
-            OpenApiContact contact = new OpenApiContact
+            var contact = new OpenApiContact
             {
                 Email = testEmail
             };
 
             // Act
             var errors = contact.Validate(ValidationRuleSet.GetDefaultRuleSet());
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            OpenApiError error = Assert.Single(errors);
+            var error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_StringMustBeEmailAddress, testEmail), error.Message);
         }
     }

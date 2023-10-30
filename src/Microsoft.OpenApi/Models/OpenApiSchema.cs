@@ -297,10 +297,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             var settings = writer.GetSettings();
             var target = this;
@@ -496,11 +493,6 @@ namespace Microsoft.OpenApi.Models
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
             var settings = writer.GetSettings();
             var target = this;
 
@@ -560,11 +552,6 @@ namespace Microsoft.OpenApi.Models
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
             // type
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
@@ -634,11 +621,6 @@ namespace Microsoft.OpenApi.Models
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
             // format
             if (string.IsNullOrEmpty(Format))
             {

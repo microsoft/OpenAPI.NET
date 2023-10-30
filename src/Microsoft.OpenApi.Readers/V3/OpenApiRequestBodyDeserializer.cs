@@ -14,30 +14,24 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiRequestBody> _requestBodyFixedFields =
-            new FixedFieldMap<OpenApiRequestBody>
+            new()
             {
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "content", (o, n) =>
-                    {
-                        o.Content = n.CreateMap(LoadMediaType);
-                    }
+                    "content",
+                    (o, n) => o.Content = n.CreateMap(LoadMediaType)
                 },
                 {
-                    "required", (o, n) =>
-                    {
-                        o.Required = bool.Parse(n.GetScalarValue());
-                    }
+                    "required",
+                    (o, n) => o.Required = bool.Parse(n.GetScalarValue())
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiRequestBody> _requestBodyPatternFields =
-            new PatternFieldMap<OpenApiRequestBody>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

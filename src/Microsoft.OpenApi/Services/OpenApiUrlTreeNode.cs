@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>true or false.</returns>
         public bool HasOperations(string label)
         {
-            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+            Utils.CheckArgumentNullOrEmpty(label);
 
             return PathItems is not null && PathItems.TryGetValue(label, out var item) && item.Operations is not null && item.Operations.Any();
         }
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
         public static OpenApiUrlTreeNode Create()
         {
-            return new OpenApiUrlTreeNode(RootPathSegment);
+            return new(RootPathSegment);
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace Microsoft.OpenApi.Services
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
         public static OpenApiUrlTreeNode Create(OpenApiDocument doc, string label)
         {
-            Utils.CheckArgumentNull(doc, nameof(doc));
-            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+            Utils.CheckArgumentNull(doc);
+            Utils.CheckArgumentNullOrEmpty(label);
 
             var root = Create();
 
@@ -113,8 +113,8 @@ namespace Microsoft.OpenApi.Services
         /// <param name="label">Name tag for labelling related <see cref="OpenApiUrlTreeNode"/> nodes in the directory structure.</param>
         public void Attach(OpenApiDocument doc, string label)
         {
-            Utils.CheckArgumentNull(doc, nameof(doc));
-            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+            Utils.CheckArgumentNull(doc);
+            Utils.CheckArgumentNullOrEmpty(label);
 
             var paths = doc.Paths;
             if (paths != null)
@@ -139,9 +139,9 @@ namespace Microsoft.OpenApi.Services
                                          OpenApiPathItem pathItem,
                                          string label)
         {
-            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
-            Utils.CheckArgumentNullOrEmpty(path, nameof(path));
-            Utils.CheckArgumentNull(pathItem, nameof(pathItem));
+            Utils.CheckArgumentNullOrEmpty(label);
+            Utils.CheckArgumentNullOrEmpty(path);
+            Utils.CheckArgumentNull(pathItem);
 
             if (path.StartsWith(RootPathSegment))
             {
@@ -218,7 +218,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="additionalData">A dictionary of key value pairs that contain information about a node.</param>
         public void AddAdditionalData(Dictionary<string, List<string>> additionalData)
         {
-            Utils.CheckArgumentNull(additionalData, nameof(additionalData));
+            Utils.CheckArgumentNull(additionalData);
 
             foreach (var item in additionalData)
             {
@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, uppercased, concatenated HTTP methods.
+        /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, upper-cased, concatenated HTTP methods.
         /// </summary>
         public readonly static IReadOnlyDictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>(StringComparer.OrdinalIgnoreCase)
         {

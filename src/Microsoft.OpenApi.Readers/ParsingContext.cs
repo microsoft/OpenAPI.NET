@@ -21,13 +21,13 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class ParsingContext
     {
-        private readonly Stack<string> _currentLocation = new Stack<string>();
-        private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
-        private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new Dictionary<object, Dictionary<string, object>>();
-        private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
-        internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
+        private readonly Stack<string> _currentLocation = new();
+        private readonly Dictionary<string, object> _tempStorage = new();
+        private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new();
+        private readonly Dictionary<string, Stack<string>> _loopStacks = new();
+        internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new();
         internal RootNode RootNode { get; set; }
-        internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
+        internal List<OpenApiTag> Tags { get; private set; } = new();
         internal Uri BaseUrl { get; set; }
         internal List<string> DefaultContentType { get; set; }
 
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Create Parsing Context
         /// </summary>
-        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
         public ParsingContext(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal OpenApiDocument Parse(YamlDocument yamlDocument)
         {
-            RootNode = new RootNode(this, yamlDocument);
+            RootNode = new(this, yamlDocument);
 
             var inputVersion = GetVersion(RootNode);
 
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers
         {
             var node = ParseNode.Create(this, yamlDocument.RootNode);
 
-            T element = default(T);
+            var element = default(T);
 
             switch (version)
             {
@@ -112,14 +112,14 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         private static string GetVersion(RootNode rootNode)
         {
-            var versionNode = rootNode.Find(new JsonPointer("/openapi"));
+            var versionNode = rootNode.Find(new("/openapi"));
 
             if (versionNode != null)
             {
                 return versionNode.GetScalarValue();
             }
 
-            versionNode = rootNode.Find(new JsonPointer("/swagger"));
+            versionNode = rootNode.Find(new("/swagger"));
 
             return versionNode?.GetScalarValue();
         }
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <summary>
-        /// Sets the temporary storge for this key and value.
+        /// Sets the temporary storage for this key and value.
         /// </summary>
         public void SetTempStorage(string key, object value, object scope = null)
         {
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Readers
             }
             else if (!_scopedTempStorage.TryGetValue(scope, out storage))
             {
-                storage = _scopedTempStorage[scope] = new Dictionary<string, object>();
+                storage = _scopedTempStorage[scope] = new();
             }
 
             if (value == null)
@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Readers
         {
             if (!_loopStacks.TryGetValue(loopId, out var stack))
             {
-                stack = new Stack<string>();
+                stack = new();
                 _loopStacks.Add(loopId, stack);
             }
 

@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiExternalDocs> UrlIsRequired =>
-            new ValidationRule<OpenApiExternalDocs>(
+            new(
                 (context, item) =>
                 {
                     // url

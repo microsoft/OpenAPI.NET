@@ -20,32 +20,17 @@ namespace Microsoft.OpenApi.Expressions
         public HeaderExpression(string token)
             : base(token)
         {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(token));
-            }
+            Utils.CheckArgumentNullOrEmpty(token);
         }
 
         /// <summary>
         /// Gets the expression string.
         /// </summary>
-        public override string Expression
-        {
-            get
-            {
-                return Header + Value;
-            }
-        }
+        public override string Expression { get => Header + Value; }
 
         /// <summary>
         /// Gets the token string.
         /// </summary>
-        public string Token
-        {
-            get
-            {
-                return Value;
-            }
-        }
+        public string Token { get => Value; }
     }
 }

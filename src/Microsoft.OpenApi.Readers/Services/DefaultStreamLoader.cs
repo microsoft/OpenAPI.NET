@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Services
     internal class DefaultStreamLoader : IStreamLoader
     {
         private readonly Uri baseUrl;
-        private HttpClient _httpClient = new HttpClient();
+        private HttpClient _httpClient = new();
 
         public DefaultStreamLoader(Uri baseUrl)
         {

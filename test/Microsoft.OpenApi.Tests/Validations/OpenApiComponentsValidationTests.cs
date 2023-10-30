@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             const string key = "%@abc";
 
-            OpenApiComponents components = new OpenApiComponents
+            var components = new OpenApiComponents
             {
                 Responses = new Dictionary<string, OpenApiResponse>
                 {
@@ -31,12 +31,12 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = components.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Act
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            OpenApiError error = Assert.Single(errors);
+            var error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_ComponentsKeyMustMatchRegularExpr, key, "responses", OpenApiComponentsRules.KeyRegex.ToString()),
                 error.Message);
         }

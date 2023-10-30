@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -15,12 +14,12 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiContactTests
     {
-        public static OpenApiContact BasicContact = new OpenApiContact();
+        public static OpenApiContact BasicContact = new();
 
-        public static OpenApiContact AdvanceContact = new OpenApiContact
+        public static OpenApiContact AdvanceContact = new()
         {
             Name = "API Support",
-            Url = new Uri("http://www.example.com/support"),
+            Url = new("http://www.example.com/support"),
             Email = "support@example.com",
             Extensions = new Dictionary<string, IOpenApiExtension>
             {

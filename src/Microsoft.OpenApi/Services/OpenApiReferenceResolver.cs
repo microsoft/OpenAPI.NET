@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Services
     {
         private OpenApiDocument _currentDocument;
         private readonly bool _resolveRemoteReferences;
-        private List<OpenApiError> _errors = new List<OpenApiError>();
+        private List<OpenApiError> _errors = new();
 
         /// <summary>
         /// Initializes the <see cref="OpenApiReferenceResolver"/> class.
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private void ResolveTags(IList<OpenApiTag> tags)
         {
-            for (int i = 0; i < tags.Count; i++)
+            for (var i = 0; i < tags.Count; i++)
             {
                 var tag = tags[i];
                 if (IsUnresolvedReference(tag))
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Services
 
                     if (resolvedTag == null)
                     {
-                        resolvedTag = new OpenApiTag
+                        resolvedTag = new()
                         {
                             Name = tag.Reference.Id
                         };
@@ -229,7 +229,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (list == null) return;
 
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 var entity = list[i];
                 if (IsUnresolvedReference(entity))
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Services
             else
             {
                 // Leave as unresolved reference
-                return new T
+                return new()
                 {
                     UnresolvedReference = true,
                     Reference = reference
@@ -300,7 +300,7 @@ namespace Microsoft.OpenApi.Services
 
         private bool IsUnresolvedReference(IOpenApiReferenceable possibleReference)
         {
-            return (possibleReference != null && possibleReference.UnresolvedReference);
+            return possibleReference is {UnresolvedReference: true};
         }
     }
 }

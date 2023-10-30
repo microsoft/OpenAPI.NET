@@ -15,15 +15,15 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiRequestBodyTests
     {
-        public static OpenApiRequestBody AdvancedRequestBody = new OpenApiRequestBody
+        public static OpenApiRequestBody AdvancedRequestBody = new()
         {
             Description = "description",
             Required = true,
             Content =
             {
-                ["application/json"] = new OpenApiMediaType
+                ["application/json"] = new()
                 {
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -31,9 +31,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiRequestBody ReferencedRequestBody = new OpenApiRequestBody
+        public static OpenApiRequestBody ReferencedRequestBody = new()
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.RequestBody,
                 Id = "example1",
@@ -42,9 +42,9 @@ namespace Microsoft.OpenApi.Tests.Models
             Required = true,
             Content =
             {
-                ["application/json"] = new OpenApiMediaType
+                ["application/json"] = new()
                 {
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedRequestBody.SerializeAsV3(writer);
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedRequestBody.SerializeAsV3(writer);
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedRequestBody.SerializeAsV3WithoutReference(writer);

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -17,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
-            new FixedFieldMap<OpenApiOperation>
+            new()
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
@@ -27,37 +28,27 @@ namespace Microsoft.OpenApi.Readers.V2
                                 valueNode.GetScalarValue()))
                 },
                 {
-                    "summary", (o, n) =>
-                    {
-                        o.Summary = n.GetScalarValue();
-                    }
+                    "summary",
+                    (o, n) => o.Summary = n.GetScalarValue()
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "externalDocs", (o, n) =>
-                    {
-                        o.ExternalDocs = LoadExternalDocs(n);
-                    }
+                    "externalDocs",
+                    (o, n) => o.ExternalDocs = LoadExternalDocs(n)
                 },
                 {
-                    "operationId", (o, n) =>
-                    {
-                        o.OperationId = n.GetScalarValue();
-                    }
+                    "operationId",
+                    (o, n) => o.OperationId = n.GetScalarValue()
                 },
                 {
-                    "parameters", (o, n) =>
-                    {
-                        o.Parameters = n.CreateList(LoadParameter);
-                    }
+                    "parameters",
+                    (o, n) => o.Parameters = n.CreateList(LoadParameter)
                 },
                 {
-                    "consumes", (o, n) => {
+                    "consumes", (_, n) => {
                         var consumes = n.CreateSimpleList(s => s.GetScalarValue());
                         if (consumes.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
@@ -65,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "produces", (o, n) => {
+                    "produces", (_, n) => {
                         var produces = n.CreateSimpleList(s => s.GetScalarValue());
                         if (produces.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
@@ -73,36 +64,29 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "responses", (o, n) =>
-                    {
-                        o.Responses = LoadResponses(n);
-                    }
+                    "responses",
+                    (o, n) => o.Responses = LoadResponses(n)
                 },
                 {
-                    "deprecated", (o, n) =>
-                    {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
-                    }
+                    "deprecated",
+                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "security", (o, n) =>
-                    {
-                        o.Security = n.CreateList(LoadSecurityRequirement);
-                    }
+                    "security",
+                    (o, n) => o.Security = n.CreateList(LoadSecurityRequirement)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
-            new PatternFieldMap<OpenApiOperation>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields =
-            new FixedFieldMap<OpenApiResponses>();
+        private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields = new();
 
         private static readonly PatternFieldMap<OpenApiResponses> _responsesPatternFields =
-            new PatternFieldMap<OpenApiResponses>
+            new()
             {
                 {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
@@ -163,7 +147,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Properties = formParameters.ToDictionary(
                         k => k.Name,
@@ -186,8 +170,10 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 Content = consumes.ToDictionary(
                     k => k,
-                    v => mediaType)
+                    _ => mediaType)
             };
+            foreach(var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && string.IsNullOrEmpty(x.Schema.Type)))
+                value.Schema.Type = "object";
 
             return formBody;
         }
@@ -206,7 +192,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 Required = bodyParameter.Required,
                 Content = consumes.ToDictionary(
                     k => k,
-                    v => new OpenApiMediaType
+                    _ => new OpenApiMediaType
                     {
                         Schema = bodyParameter.Schema
                     }),
@@ -224,7 +210,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var tagObject = new OpenApiTag
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference { Id = tagName, Type = ReferenceType.Tag }
+                Reference = new() { Id = tagName, Type = ReferenceType.Tag }
             };
 
             return tagObject;

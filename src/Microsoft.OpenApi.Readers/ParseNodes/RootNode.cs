@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public MapNode GetMap()
         {
-            return new MapNode(Context, (YamlMappingNode)_yamlDocument.RootNode);
+            return new(Context, (YamlMappingNode)_yamlDocument.RootNode);
         }
     }
 }

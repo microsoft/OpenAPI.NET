@@ -177,10 +177,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
 
@@ -249,7 +246,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, _explode, _style.HasValue && _style.Value == ParameterStyle.Form);
+            writer.WriteProperty(OpenApiConstants.Explode, _explode, _style is ParameterStyle.Form);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
@@ -277,10 +274,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
             if (Reference != null)
@@ -342,7 +336,7 @@ namespace Microsoft.OpenApi.Models
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
             else
-            if (Schema?.UnresolvedReference == true || Schema?.Type == "object")
+            if (Schema?.UnresolvedReference == true || "object".Equals(Schema?.Type, StringComparison.OrdinalIgnoreCase))
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -15,15 +14,15 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiLicenseTests
     {
-        public static OpenApiLicense BasicLicense = new OpenApiLicense
+        public static OpenApiLicense BasicLicense = new()
         {
             Name = "Apache 2.0"
         };
 
-        public static OpenApiLicense AdvanceLicense = new OpenApiLicense
+        public static OpenApiLicense AdvanceLicense = new()
         {
             Name = "Apache 2.0",
-            Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html"),
+            Url = new("http://www.apache.org/licenses/LICENSE-2.0.html"),
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
                 {"x-copyright", new OpenApiString("Abc")}
@@ -123,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             licenseCopy.Name = "";
-            licenseCopy.Url = new Uri("https://exampleCopy.com");
+            licenseCopy.Url = new("https://exampleCopy.com");
 
             // Assert
             Assert.NotEqual(AdvanceLicense.Name, licenseCopy.Name);

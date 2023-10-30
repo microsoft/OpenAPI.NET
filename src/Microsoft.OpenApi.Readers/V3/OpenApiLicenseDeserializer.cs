@@ -14,23 +14,19 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static FixedFieldMap<OpenApiLicense> _licenseFixedFields = new FixedFieldMap<OpenApiLicense>
+        private static FixedFieldMap<OpenApiLicense> _licenseFixedFields = new()
         {
             {
-                "name", (o, n) =>
-                {
-                    o.Name = n.GetScalarValue();
-                }
+                "name",
+                (o, n) => o.Name = n.GetScalarValue()
             },
             {
-                "url", (o, n) =>
-                {
-                    o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                }
+                "url",
+                (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
             },
         };
 
-        private static PatternFieldMap<OpenApiLicense> _licensePatternFields = new PatternFieldMap<OpenApiLicense>
+        private static PatternFieldMap<OpenApiLicense> _licensePatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };

@@ -16,9 +16,9 @@ namespace Microsoft.OpenApi.Hidi
             }
             var res = value.Split('.', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
-            if (int.TryParse(res, out int result))
+            if (int.TryParse(res, out var result))
             {
-                if (result >= 2 && result < 3)
+                if (result is >= 2 and < 3)
                 {
                     return OpenApiSpecVersion.OpenApi2_0;
                 }

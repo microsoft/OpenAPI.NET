@@ -16,129 +16,93 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new FixedFieldMap<OpenApiHeader>
+        private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new()
         {
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {
-                "type", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Type = n.GetScalarValue();
-                }
+                "type",
+                (o, n) => GetOrCreateSchema(o).Type = n.GetScalarValue()
             },
             {
-                "format", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Format = n.GetScalarValue();
-                }
+                "format",
+                (o, n) => GetOrCreateSchema(o).Format = n.GetScalarValue()
             },
             {
-                "items", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Items = LoadSchema(n);
-                }
+                "items",
+                (o, n) => GetOrCreateSchema(o).Items = LoadSchema(n)
             },
             {
-                "collectionFormat", (o, n) =>
-                {
-                    LoadStyle(o, n.GetScalarValue());
-                }
+                "collectionFormat",
+                (o, n) => LoadStyle(o, n.GetScalarValue())
             },
             {
-                "default", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Default = n.CreateAny();
-                }
+                "default",
+                (o, n) => GetOrCreateSchema(o).Default = n.CreateAny()
             },
             {
-                "maximum", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                }
+                "maximum",
+                (o, n) => GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
-                "exclusiveMaximum", (o, n) =>
-                {
-                    GetOrCreateSchema(o).ExclusiveMaximum = bool.Parse(n.GetScalarValue());
-                }
+                "exclusiveMaximum",
+                (o, n) => GetOrCreateSchema(o).ExclusiveMaximum = bool.Parse(n.GetScalarValue())
             },
             {
-                "minimum", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                }
+                "minimum",
+                (o, n) => GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
-                "exclusiveMinimum", (o, n) =>
-                {
-                    GetOrCreateSchema(o).ExclusiveMinimum = bool.Parse(n.GetScalarValue());
-                }
+                "exclusiveMinimum",
+                (o, n) => GetOrCreateSchema(o).ExclusiveMinimum = bool.Parse(n.GetScalarValue())
             },
             {
-                "maxLength", (o, n) =>
-                {
-                    GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                }
+                "maxLength",
+                (o, n) => GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
-                "minLength", (o, n) =>
-                {
-                    GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                }
+                "minLength",
+                (o, n) => GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
-                "pattern", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Pattern = n.GetScalarValue();
-                }
+                "pattern",
+                (o, n) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
             },
             {
-                "maxItems", (o, n) =>
-                {
-                    GetOrCreateSchema(o).MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                }
+                "maxItems",
+                (o, n) => GetOrCreateSchema(o).MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
-                "minItems", (o, n) =>
-                {
-                    GetOrCreateSchema(o).MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                }
+                "minItems",
+                (o, n) => GetOrCreateSchema(o).MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
-                "uniqueItems", (o, n) =>
-                {
-                    GetOrCreateSchema(o).UniqueItems = bool.Parse(n.GetScalarValue());
-                }
+                "uniqueItems",
+                (o, n) => GetOrCreateSchema(o).UniqueItems = bool.Parse(n.GetScalarValue())
             },
             {
-                "multipleOf", (o, n) =>
-                {
-                    GetOrCreateSchema(o).MultipleOf = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                }
+                "multipleOf",
+                (o, n) => GetOrCreateSchema(o).MultipleOf = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
-                "enum", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Enum = n.CreateListOfAny();
-                }
+                "enum",
+                (o, n) => GetOrCreateSchema(o).Enum = n.CreateListOfAny()
             }
         };
 
-        private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new PatternFieldMap<OpenApiHeader>
+        private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         private static readonly AnyFieldMap<OpenApiHeader> _headerAnyFields =
-            new AnyFieldMap<OpenApiHeader>
+            new()
             {
                 {
                     OpenApiConstants.Default,
-                    new AnyFieldMapParameter<OpenApiHeader>(
+                    new(
                         p => p.Schema?.Default,
                         (p, v) =>
                         {
@@ -150,11 +114,11 @@ namespace Microsoft.OpenApi.Readers.V2
             };
 
         private static readonly AnyListFieldMap<OpenApiHeader> _headerAnyListFields =
-            new AnyListFieldMap<OpenApiHeader>
+            new()
             {
                 {
                     OpenApiConstants.Enum,
-                    new AnyListFieldMapParameter<OpenApiHeader>(
+                    new(
                         p => p.Schema?.Enum,
                         (p, v) =>
                         {

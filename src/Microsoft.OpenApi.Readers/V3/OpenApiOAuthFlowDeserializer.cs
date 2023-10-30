@@ -14,32 +14,26 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiOAuthFlow> _oAuthFlowFixedFileds =
-            new FixedFieldMap<OpenApiOAuthFlow>
+        private static readonly FixedFieldMap<OpenApiOAuthFlow> _oAuthFlowFixedFields =
+            new()
             {
                 {
-                    "authorizationUrl", (o, n) =>
-                    {
-                        o.AuthorizationUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    "authorizationUrl",
+                    (o, n) => o.AuthorizationUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {
-                    "tokenUrl", (o, n) =>
-                    {
-                        o.TokenUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    "tokenUrl",
+                    (o, n) => o.TokenUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {
-                    "refreshUrl", (o, n) =>
-                    {
-                        o.RefreshUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    "refreshUrl",
+                    (o, n) => o.RefreshUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {"scopes", (o, n) => o.Scopes = n.CreateSimpleMap(LoadString)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =
-            new PatternFieldMap<OpenApiOAuthFlow>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
@@ -51,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var oauthFlow = new OpenApiOAuthFlow();
             foreach (var property in mapNode)
             {
-                property.ParseField(oauthFlow, _oAuthFlowFixedFileds, _oAuthFlowPatternFields);
+                property.ParseField(oauthFlow, _oAuthFlowFixedFields, _oAuthFlowPatternFields);
             }
 
             return oauthFlow;

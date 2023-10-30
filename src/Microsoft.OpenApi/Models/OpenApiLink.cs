@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Models
         /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
         /// </summary>
         public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
-            new Dictionary<string, RuntimeExpressionAnyWrapper>();
+            new();
 
         /// <summary>
         /// A literal value or {expression} to use as a request body when calling the target operation.
@@ -86,10 +86,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
 
@@ -149,6 +146,9 @@ namespace Microsoft.OpenApi.Models
 
             // server
             writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.SerializeAsV3(w));
+
+            // specification extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }

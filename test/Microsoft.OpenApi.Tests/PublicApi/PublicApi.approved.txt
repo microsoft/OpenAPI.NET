@@ -1431,6 +1431,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     [Microsoft.OpenApi.Validations.Rules.OpenApiRule]
     public static class OpenApiPathsRules
     {
+        public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiPaths> PathMustBeUnique { get; }
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiPaths> PathNameMustBeginWithSlash { get; }
     }
     [Microsoft.OpenApi.Validations.Rules.OpenApiRule]

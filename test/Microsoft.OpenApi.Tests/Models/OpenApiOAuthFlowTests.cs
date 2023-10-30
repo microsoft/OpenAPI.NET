@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -13,11 +12,11 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiOAuthFlowTests
     {
-        public static OpenApiOAuthFlow BasicOAuthFlow = new OpenApiOAuthFlow();
+        public static OpenApiOAuthFlow BasicOAuthFlow = new();
 
-        public static OpenApiOAuthFlow PartialOAuthFlow = new OpenApiOAuthFlow
+        public static OpenApiOAuthFlow PartialOAuthFlow = new()
         {
-            AuthorizationUrl = new Uri("http://example.com/authorization"),
+            AuthorizationUrl = new("http://example.com/authorization"),
             Scopes = new Dictionary<string, string>
             {
                 ["scopeName3"] = "description3",
@@ -25,11 +24,11 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiOAuthFlow CompleteOAuthFlow = new OpenApiOAuthFlow
+        public static OpenApiOAuthFlow CompleteOAuthFlow = new()
         {
-            AuthorizationUrl = new Uri("http://example.com/authorization"),
-            TokenUrl = new Uri("http://example.com/token"),
-            RefreshUrl = new Uri("http://example.com/refresh"),
+            AuthorizationUrl = new("http://example.com/authorization"),
+            TokenUrl = new("http://example.com/token"),
+            RefreshUrl = new("http://example.com/refresh"),
             Scopes = new Dictionary<string, string>
             {
                 ["scopeName3"] = "description3",

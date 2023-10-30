@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -13,13 +12,13 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiOAuthFlowsTests
     {
-        public static OpenApiOAuthFlows BasicOAuthFlows = new OpenApiOAuthFlows();
+        public static OpenApiOAuthFlows BasicOAuthFlows = new();
 
-        public static OpenApiOAuthFlows OAuthFlowsWithSingleFlow = new OpenApiOAuthFlows
+        public static OpenApiOAuthFlows OAuthFlowsWithSingleFlow = new()
         {
-            Implicit = new OpenApiOAuthFlow
+            Implicit = new()
             {
-                AuthorizationUrl = new Uri("http://example.com/authorization"),
+                AuthorizationUrl = new("http://example.com/authorization"),
                 Scopes = new Dictionary<string, string>
                 {
                     ["scopeName1"] = "description1",
@@ -28,21 +27,21 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiOAuthFlows OAuthFlowsWithMultipleFlows = new OpenApiOAuthFlows
+        public static OpenApiOAuthFlows OAuthFlowsWithMultipleFlows = new()
         {
-            Implicit = new OpenApiOAuthFlow
+            Implicit = new()
             {
-                AuthorizationUrl = new Uri("http://example.com/authorization"),
+                AuthorizationUrl = new("http://example.com/authorization"),
                 Scopes = new Dictionary<string, string>
                 {
                     ["scopeName1"] = "description1",
                     ["scopeName2"] = "description2"
                 }
             },
-            Password = new OpenApiOAuthFlow
+            Password = new()
             {
-                TokenUrl = new Uri("http://example.com/token"),
-                RefreshUrl = new Uri("http://example.com/refresh"),
+                TokenUrl = new("http://example.com/token"),
+                RefreshUrl = new("http://example.com/refresh"),
                 Scopes = new Dictionary<string, string>
                 {
                     ["scopeName3"] = "description3",

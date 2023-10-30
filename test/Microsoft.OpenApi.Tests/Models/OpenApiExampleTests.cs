@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiExampleTests
     {
-        public static OpenApiExample AdvancedExample = new OpenApiExample
+        public static OpenApiExample AdvancedExample = new()
         {
             Value = new OpenApiObject
             {
@@ -57,9 +57,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiExample ReferencedExample = new OpenApiExample
+        public static OpenApiExample ReferencedExample = new()
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Example,
                 Id = "example1",
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedExample.SerializeAsV3(writer);
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedExample.SerializeAsV3(writer);
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedExample.SerializeAsV3WithoutReference(writer);

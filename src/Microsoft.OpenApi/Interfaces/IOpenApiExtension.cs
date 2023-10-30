@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Writers;
 namespace Microsoft.OpenApi.Interfaces
 {
     /// <summary>
-    /// Interface requuired for implementing any custom extension
+    /// Interface required for implementing any custom extension
     /// </summary>
     public interface IOpenApiExtension
     {

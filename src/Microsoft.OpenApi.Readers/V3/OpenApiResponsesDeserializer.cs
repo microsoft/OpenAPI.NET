@@ -13,9 +13,9 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>();
+        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new();
 
-        public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
+        public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new()
         {
             {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}

@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Services
             // Fetch and copy title, graphVersion and server info from OpenApiDoc
             var subset = new OpenApiDocument
             {
-                Info = new OpenApiInfo
+                Info = new()
                 {
                     Title = source.Info.Title + " - Subset",
                     Description = source.Info.Description,
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Services
                     Extensions = source.Info.Extensions
                 },
 
-                Components = new OpenApiComponents { SecuritySchemes = source.Components.SecuritySchemes },
+                Components = new() { SecuritySchemes = source.Components.SecuritySchemes },
                 SecurityRequirements = source.SecurityRequirements,
                 Servers = source.Servers
             };
@@ -87,15 +87,15 @@ namespace Microsoft.OpenApi.Services
 
                 if (subset.Paths == null)
                 {
-                    subset.Paths = new OpenApiPaths();
-                    pathItem = new OpenApiPathItem();
+                    subset.Paths = new();
+                    pathItem = new();
                     subset.Paths.Add(pathKey, pathItem);
                 }
                 else
                 {
                     if (!subset.Paths.TryGetValue(pathKey, out pathItem))
                     {
-                        pathItem = new OpenApiPathItem();
+                        pathItem = new();
                         subset.Paths.Add(pathKey, pathItem);
                     }
                 }
@@ -284,7 +284,7 @@ namespace Microsoft.OpenApi.Services
                                     .FirstOrDefault(c => url.Contains(c));
 
             return baseUrl == null ?
-                    new Uri(new Uri(SRResource.DefaultBaseUri), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped)
+                    new Uri(new(SRResource.DefaultBaseUri), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped)
                     : url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
         }
 
@@ -304,12 +304,12 @@ namespace Microsoft.OpenApi.Services
         {
             if (operationIds == "*")
             {
-                return (url, operationType, operation) => true;  // All operations
+                return (_, _, _) => true;  // All operations
             }
             else
             {
                 var operationIdsArray = operationIds.Split(',');
-                return (url, operationType, operation) => operationIdsArray.Contains(operation.OperationId);
+                return (_, _, operation) => operationIdsArray.Contains(operation.OperationId);
             }
         }
 
@@ -319,11 +319,11 @@ namespace Microsoft.OpenApi.Services
             if (tagsArray.Length == 1)
             {
                 var regex = new Regex(tagsArray[0]);
-                return (url, operationType, operation) => operation.Tags.Any(tag => regex.IsMatch(tag.Name));
+                return (_, _, operation) => operation.Tags.Any(tag => regex.IsMatch(tag.Name));
             }
             else
             {
-                return (url, operationType, operation) => operation.Tags.Any(tag => tagsArray.Contains(tag.Name));
+                return (_, _, operation) => operation.Tags.Any(tag => tagsArray.Contains(tag.Name));
             }
         }
 
@@ -357,7 +357,7 @@ namespace Microsoft.OpenApi.Services
             }
 
             // predicate for matching url and operationTypes
-            return (path, operationType, operation) => operationTypes.Contains(operationType + path);
+            return (path, operationType, _) => operationTypes.Contains(operationType + path);
         }
 
         private static List<string> GetOperationTypes(IDictionary<OperationType, OpenApiOperation> openApiOperations, List<string> url, string path)

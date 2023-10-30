@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiParameter> ParameterRequiredFields =>
-            new ValidationRule<OpenApiParameter>(
+            new(
                 (context, item) =>
                 {
                     // name
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the "required" field is true when "in" is path.
         /// </summary>
         public static ValidationRule<OpenApiParameter> RequiredMustBeTrueWhenInIsPath =>
-            new ValidationRule<OpenApiParameter>(
+            new(
                 (context, item) =>
                 {
                     // required
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the data matches with the given data type.
         /// </summary>
         public static ValidationRule<OpenApiParameter> ParameterMismatchedDataType =>
-            new ValidationRule<OpenApiParameter>(
+            new(
                 (context, parameter) =>
                 {
                     // example
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate that a path parameter should always appear in the path
         /// </summary>
         public static ValidationRule<OpenApiParameter> PathParameterShouldBeInThePath =>
-            new ValidationRule<OpenApiParameter>(
+            new(
                 (context, parameter) =>
                 {
                     if (parameter.In == ParameterLocation.Path &&

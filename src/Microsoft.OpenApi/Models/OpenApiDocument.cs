@@ -96,10 +96,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -141,10 +138,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -166,7 +160,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                         .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
@@ -179,10 +173,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
                        openApiSchemas,
-                       (w, key, component) =>
-                       {
-                           component.SerializeAsV2WithoutReference(w);
-                       });
+                       (w, _, component) => component.SerializeAsV2WithoutReference(w));
                 }
             }
             else
@@ -195,8 +186,7 @@ namespace Microsoft.OpenApi.Models
                     Components?.Schemas,
                     (w, key, component) =>
                     {
-                        if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.Schema &&
+                        if (component.Reference is {Type: ReferenceType.Schema} &&
                             component.Reference.Id == key)
                         {
                             component.SerializeAsV2WithoutReference(w);
@@ -209,7 +199,7 @@ namespace Microsoft.OpenApi.Models
             }
             // parameters
             var parameters = Components?.Parameters != null
-                ? new Dictionary<string, OpenApiParameter>(Components.Parameters)
+                ? new(Components.Parameters)
                 : new Dictionary<string, OpenApiParameter>();
 
             if (Components?.RequestBodies != null)
@@ -224,8 +214,7 @@ namespace Microsoft.OpenApi.Models
                 parameters,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Parameter &&
+                    if (component.Reference is {Type: ReferenceType.Parameter} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);
@@ -242,8 +231,7 @@ namespace Microsoft.OpenApi.Models
                 Components?.Responses,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Response &&
+                    if (component.Reference is {Type: ReferenceType.Response} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);
@@ -260,8 +248,7 @@ namespace Microsoft.OpenApi.Models
                 Components?.SecuritySchemes,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                    if (component.Reference is {Type: ReferenceType.SecurityScheme} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);
@@ -314,7 +301,7 @@ namespace Microsoft.OpenApi.Models
             var serverUrl = ParseServerUrl(servers.First());
 
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
-            // The Url property cannotcontain path templating to be valid for V2 serialization.
+            // The Url property cannot contain path templating to be valid for V2 serialization.
             var firstServerUrl = new Uri(serverUrl, UriKind.RelativeOrAbsolute);
 
             // host
@@ -417,7 +404,7 @@ namespace Microsoft.OpenApi.Models
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
-            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings { Terse = true });
+            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
             doc.SerializeAsV3(openApiJsonWriter);
             openApiJsonWriter.Flush();
 
@@ -431,8 +418,8 @@ namespace Microsoft.OpenApi.Models
         {
             // Build the final string by converting each byte
             // into hex and appending it to a StringBuilder
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
+            var sb = new StringBuilder();
+            for (var i = 0; i < hash.Length; i++)
             {
                 sb.Append(hash[i].ToString("X2"));
             }

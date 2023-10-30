@@ -26,13 +26,13 @@ namespace Microsoft.OpenApi.Readers.V3
         /// <summary>
         /// Create Parsing Context
         /// </summary>
-        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
         public OpenApiV3VersionService(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;
         }
 
-        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        private Dictionary<Type, Func<ParseNode, object>> _loaders = new()
         {
             [typeof(IOpenApiAny)] = OpenApiV3Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.V3
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
         /// <param name="reference">The URL of the reference</param>
-        /// <param name="type">The type of object refefenced based on the context of the reference</param>
+        /// <param name="type">The type of object referenced based on the context of the reference</param>
         public OpenApiReference ConvertToOpenApiReference(
             string reference,
             ReferenceType? type)
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
-                        return new OpenApiReference
+                        return new()
                         {
                             Type = type,
                             Id = reference
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     // Either this is an external reference as an entire file
                     // or a simple string-style reference for tag and security scheme.
-                    return new OpenApiReference
+                    return new()
                     {
                         Type = type,
                         ExternalResource = segments[0]
@@ -106,11 +106,11 @@ namespace Microsoft.OpenApi.Readers.V3
                         }
                         catch (OpenApiException ex)
                         {
-                            Diagnostic.Errors.Add(new OpenApiError(ex));
+                            Diagnostic.Errors.Add(new(ex));
                         }
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
-                    string id = segments[1];
+                    var id = segments[1];
                     var openApiReference = new OpenApiReference();
 
                     // $ref: externalSource.yaml#/Pet
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 if (segments[1] == "components")
                 {
                     var referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
-                    return new OpenApiReference { Type = referenceType, Id = segments[3] };
+                    return new() { Type = referenceType, Id = segments[3] };
                 }
             }
 

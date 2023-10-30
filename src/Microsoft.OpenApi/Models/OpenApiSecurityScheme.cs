@@ -100,10 +100,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (Reference != null)
             {
@@ -166,10 +163,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (Reference != null)
             {
@@ -211,7 +205,7 @@ namespace Microsoft.OpenApi.Models
                     break;
 
                 case SecuritySchemeType.OAuth2:
-                    // These properties apply to ouauth2 type only.
+                    // These properties apply to oauth2 type only.
                     // flow
                     // authorizationUrl
                     // tokenUrl

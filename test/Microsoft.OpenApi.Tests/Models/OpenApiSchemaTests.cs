@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -21,9 +23,9 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiSchemaTests
     {
-        public static OpenApiSchema BasicSchema = new OpenApiSchema();
+        public static OpenApiSchema BasicSchema = new();
 
-        public static OpenApiSchema AdvancedSchemaNumber = new OpenApiSchema
+        public static readonly OpenApiSchema AdvancedSchemaNumber = new()
         {
             Title = "title1",
             MultipleOf = 3,
@@ -34,47 +36,47 @@ namespace Microsoft.OpenApi.Tests.Models
             Type = "integer",
 
             Nullable = true,
-            ExternalDocs = new OpenApiExternalDocs
+            ExternalDocs = new()
             {
-                Url = new Uri("http://example.com/externalDocs")
+                Url = new("http://example.com/externalDocs")
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaObject = new OpenApiSchema
+        public static readonly OpenApiSchema AdvancedSchemaObject = new()
         {
             Title = "title1",
             Properties = new Dictionary<string, OpenApiSchema>
             {
-                ["property1"] = new OpenApiSchema
+                ["property1"] = new()
                 {
                     Properties = new Dictionary<string, OpenApiSchema>
                     {
-                        ["property2"] = new OpenApiSchema
+                        ["property2"] = new()
                         {
                             Type = "integer"
                         },
-                        ["property3"] = new OpenApiSchema
+                        ["property3"] = new()
                         {
                             Type = "string",
                             MaxLength = 15
                         }
                     },
                 },
-                ["property4"] = new OpenApiSchema
+                ["property4"] = new()
                 {
                     Properties = new Dictionary<string, OpenApiSchema>
                     {
-                        ["property5"] = new OpenApiSchema
+                        ["property5"] = new()
                         {
                             Properties = new Dictionary<string, OpenApiSchema>
                             {
-                                ["property6"] = new OpenApiSchema
+                                ["property6"] = new()
                                 {
                                     Type = "boolean"
                                 }
                             }
                         },
-                        ["property7"] = new OpenApiSchema
+                        ["property7"] = new()
                         {
                             Type = "string",
                             MinLength = 2
@@ -83,49 +85,49 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             },
             Nullable = true,
-            ExternalDocs = new OpenApiExternalDocs
+            ExternalDocs = new()
             {
-                Url = new Uri("http://example.com/externalDocs")
+                Url = new("http://example.com/externalDocs")
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaWithAllOf = new OpenApiSchema
+        public static readonly OpenApiSchema AdvancedSchemaWithAllOf = new()
         {
             Title = "title1",
             AllOf = new List<OpenApiSchema>
             {
-                new OpenApiSchema
+                new()
                 {
                     Title = "title2",
                     Properties = new Dictionary<string, OpenApiSchema>
                     {
-                        ["property1"] = new OpenApiSchema
+                        ["property1"] = new()
                         {
                             Type = "integer"
                         },
-                        ["property2"] = new OpenApiSchema
+                        ["property2"] = new()
                         {
                             Type = "string",
                             MaxLength = 15
                         }
                     },
                 },
-                new OpenApiSchema
+                new()
                 {
                     Title = "title3",
                     Properties = new Dictionary<string, OpenApiSchema>
                     {
-                        ["property3"] = new OpenApiSchema
+                        ["property3"] = new()
                         {
                             Properties = new Dictionary<string, OpenApiSchema>
                             {
-                                ["property4"] = new OpenApiSchema
+                                ["property4"] = new()
                                 {
                                     Type = "boolean"
                                 }
                             }
                         },
-                        ["property5"] = new OpenApiSchema
+                        ["property5"] = new()
                         {
                             Type = "string",
                             MinLength = 2
@@ -135,13 +137,13 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             },
             Nullable = true,
-            ExternalDocs = new OpenApiExternalDocs
+            ExternalDocs = new()
             {
-                Url = new Uri("http://example.com/externalDocs")
+                Url = new("http://example.com/externalDocs")
             }
         };
 
-        public static OpenApiSchema ReferencedSchema = new OpenApiSchema
+        public static readonly OpenApiSchema ReferencedSchema = new()
         {
             Title = "title1",
             MultipleOf = 3,
@@ -152,34 +154,34 @@ namespace Microsoft.OpenApi.Tests.Models
             Type = "integer",
 
             Nullable = true,
-            ExternalDocs = new OpenApiExternalDocs
+            ExternalDocs = new()
             {
-                Url = new Uri("http://example.com/externalDocs")
+                Url = new("http://example.com/externalDocs")
             },
 
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Schema,
                 Id = "schemaObject1"
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new OpenApiSchema
+        public static readonly OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new()
         {
             Title = "title1",
             Required = new HashSet<string> { "property1" },
             Properties = new Dictionary<string, OpenApiSchema>
             {
-                ["property1"] = new OpenApiSchema
+                ["property1"] = new()
                 {
                     Required = new HashSet<string> { "property3" },
                     Properties = new Dictionary<string, OpenApiSchema>
                     {
-                        ["property2"] = new OpenApiSchema
+                        ["property2"] = new()
                         {
                             Type = "integer"
                         },
-                        ["property3"] = new OpenApiSchema
+                        ["property3"] = new()
                         {
                             Type = "string",
                             MaxLength = 15,
@@ -188,21 +190,21 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                     ReadOnly = true,
                 },
-                ["property4"] = new OpenApiSchema
+                ["property4"] = new()
                 {
                     Properties = new Dictionary<string, OpenApiSchema>
                     {
-                        ["property5"] = new OpenApiSchema
+                        ["property5"] = new()
                         {
                             Properties = new Dictionary<string, OpenApiSchema>
                             {
-                                ["property6"] = new OpenApiSchema
+                                ["property6"] = new()
                                 {
                                     Type = "boolean"
                                 }
                             }
                         },
-                        ["property7"] = new OpenApiSchema
+                        ["property7"] = new()
                         {
                             Type = "string",
                             MinLength = 2
@@ -212,9 +214,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             },
             Nullable = true,
-            ExternalDocs = new OpenApiExternalDocs
+            ExternalDocs = new()
             {
-                Url = new Uri("http://example.com/externalDocs")
+                Url = new("http://example.com/externalDocs")
             }
         };
 
@@ -377,7 +379,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedSchema.SerializeAsV3WithoutReference(writer);
@@ -394,7 +396,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedSchema.SerializeAsV3(writer);
@@ -411,7 +413,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedSchemaWithRequiredPropertiesObject.SerializeAsV2(writer);
@@ -429,17 +431,17 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 OneOf = new List<OpenApiSchema>
                 {
-                    new OpenApiSchema
+                    new()
                     {
                         Type = "number",
                         Format = "decimal"
                     },
-                    new OpenApiSchema { Type = "string" },
+                    new() { Type = "string" },
                 }
             };
 
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var openApiJsonWriter = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+            var openApiJsonWriter = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
 
             // Act
             // Serialize as V2
@@ -506,6 +508,57 @@ namespace Microsoft.OpenApi.Tests.Models
                 { "x-myextension" , new OpenApiInteger(40) }
             };
             Assert.NotEqual(schema.Extensions, schemaCopy.Extensions);
+        }
+
+        [Fact]
+        public void OpenApiWalkerVisitsOpenApiSchemaNot()
+        {
+            var outerSchema = new OpenApiSchema()
+            {
+                Title = "Outer Schema",
+                Not = new OpenApiSchema()
+                {
+                    Title = "Inner Schema",
+                    Type = "string",
+                }
+            };        
+
+            var document = new OpenApiDocument()
+            {
+                Paths = new OpenApiPaths()
+                {
+                    ["/foo"] = new OpenApiPathItem()
+                    {
+                        Parameters = new[]
+                        {
+                            new OpenApiParameter()
+                            {
+                                Name = "foo",
+                                In = ParameterLocation.Query,
+                                Schema = outerSchema,
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var visitor = new SchemaVisitor();
+            var walker = new OpenApiWalker(visitor);
+            walker.Walk(document);
+
+            // Assert
+            visitor.Titles.Count.Should().Be(2);
+        }
+    }
+
+    internal class SchemaVisitor : OpenApiVisitorBase
+    {
+        public List<string> Titles = new();
+
+        public override void Visit(OpenApiSchema schema)
+        {
+            Titles.Add(schema.Title);
         }
     }
 }

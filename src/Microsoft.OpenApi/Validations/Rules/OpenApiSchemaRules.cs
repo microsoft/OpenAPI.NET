@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the data matches with the given data type.
         /// </summary>
         public static ValidationRule<OpenApiSchema> SchemaMismatchedDataType =>
-            new ValidationRule<OpenApiSchema>(
+            new(
                 (context, schema) =>
                 {
                     // default
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (schema.Enum != null)
                     {
-                        for (int i = 0; i < schema.Enum.Count; i++)
+                        for (var i = 0; i < schema.Enum.Count; i++)
                         {
                             context.Enter(i.ToString());
                             RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Enum[i], schema);
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validates Schema Discriminator
         /// </summary>
         public static ValidationRule<OpenApiSchema> ValidateSchemaDiscriminator =>
-            new ValidationRule<OpenApiSchema>(
+            new(
                 (context, schema) =>
                 {
                     // discriminator

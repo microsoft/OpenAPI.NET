@@ -14,45 +14,37 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiMediaType> _mediaTypeFixedFields =
-            new FixedFieldMap<OpenApiMediaType>
+            new()
             {
                 {
-                    OpenApiConstants.Schema, (o, n) =>
-                    {
-                        o.Schema = LoadSchema(n);
-                    }
+                    OpenApiConstants.Schema,
+                    (o, n) => o.Schema = LoadSchema(n)
                 },
                 {
-                    OpenApiConstants.Examples, (o, n) =>
-                    {
-                        o.Examples = n.CreateMap(LoadExample);
-                    }
+                    OpenApiConstants.Examples,
+                    (o, n) => o.Examples = n.CreateMap(LoadExample)
                 },
                 {
-                    OpenApiConstants.Example, (o, n) =>
-                    {
-                        o.Example = n.CreateAny();
-                    }
+                    OpenApiConstants.Example,
+                    (o, n) => o.Example = n.CreateAny()
                 },
                 {
-                    OpenApiConstants.Encoding, (o, n) =>
-                    {
-                        o.Encoding = n.CreateMap(LoadEncoding);
-                    }
+                    OpenApiConstants.Encoding,
+                    (o, n) => o.Encoding = n.CreateMap(LoadEncoding)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
-            new PatternFieldMap<OpenApiMediaType>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new AnyFieldMap<OpenApiMediaType>
+        private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new()
         {
             {
                 OpenApiConstants.Example,
-                new AnyFieldMapParameter<OpenApiMediaType>(
+                new(
                     s => s.Example,
                     (s, v) => s.Example = v,
                     s => s.Schema)
@@ -60,11 +52,11 @@ namespace Microsoft.OpenApi.Readers.V3
         };
 
         private static readonly AnyMapFieldMap<OpenApiMediaType, OpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
-            new AnyMapFieldMap<OpenApiMediaType, OpenApiExample>
-        {
+            new()
+            {
             {
                 OpenApiConstants.Examples,
-                new AnyMapFieldMapParameter<OpenApiMediaType, OpenApiExample>(
+                new(
                     m => m.Examples,
                     e => e.Value,
                     (e, v) => e.Value = v,

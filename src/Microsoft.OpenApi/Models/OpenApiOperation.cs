@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
         /// </summary>
-        public OpenApiResponses Responses { get; set; } = new OpenApiResponses();
+        public OpenApiResponses Responses { get; set; } = new();
 
         /// <summary>
         /// A map of possible out-of band callbacks related to the parent operation.
@@ -135,10 +135,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -146,10 +143,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
                 Tags,
-                (w, t) =>
-                {
-                    t.SerializeAsV3(w);
-                });
+                (w, t) => t.SerializeAsV3(w));
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -195,10 +189,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -206,10 +197,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
                 Tags,
-                (w, t) =>
-                {
-                    t.SerializeAsV2(w);
-                });
+                (w, t) => t.SerializeAsV2(w));
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -226,11 +214,11 @@ namespace Microsoft.OpenApi.Models
             List<OpenApiParameter> parameters;
             if (Parameters == null)
             {
-                parameters = new List<OpenApiParameter>();
+                parameters = new();
             }
             else
             {
-                parameters = new List<OpenApiParameter>(Parameters);
+                parameters = new(Parameters);
             }
 
             if (RequestBody != null)
@@ -253,7 +241,7 @@ namespace Microsoft.OpenApi.Models
                 else if (RequestBody.Reference != null)
                 {
                     parameters.Add(
-                        new OpenApiParameter
+                        new()
                         {
                             UnresolvedReference = true,
                             Reference = RequestBody.Reference
@@ -286,7 +274,7 @@ namespace Microsoft.OpenApi.Models
                     .SelectMany(static r => r.Value.Content?.Keys)
                     .Concat(
                         Responses
-                        .Where(static r => r.Value.Reference != null && r.Value.Reference.HostDocument != null)
+                        .Where(static r => r.Value.Reference is {HostDocument: not null})
                         .SelectMany(static r => r.Value.GetEffective(r.Value.Reference.HostDocument)?.Content?.Keys))
                     .Distinct()
                     .ToList();

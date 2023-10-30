@@ -20,32 +20,17 @@ namespace Microsoft.OpenApi.Expressions
         public PathExpression(string name)
             : base(name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
+            Utils.CheckArgumentNullOrEmpty(name);
         }
 
         /// <summary>
         /// Gets the expression string.
         /// </summary>
-        public override string Expression
-        {
-            get
-            {
-                return Path + Value;
-            }
-        }
+        public override string Expression { get => Path + Value; }
 
         /// <summary>
         /// Gets the name string.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return Value;
-            }
-        }
+        public string Name { get => Value; }
     }
 }

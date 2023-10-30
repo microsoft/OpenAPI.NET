@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An enumeration of string values to be used if the substitution options are from a limited set.
         /// </summary>
-        public List<string> Enum { get; set; } = new List<string>();
+        public List<string> Enum { get; set; } = new();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Models
         {
             Description = serverVariable?.Description;
             Default = serverVariable?.Default;
-            Enum = serverVariable?.Enum != null ? new List<string>(serverVariable?.Enum) : serverVariable?.Enum;
+            Enum = serverVariable?.Enum != null ? new(serverVariable?.Enum) : serverVariable?.Enum;
             Extensions = serverVariable?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(serverVariable?.Extensions) : serverVariable?.Extensions;
         }
 
@@ -54,10 +54,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

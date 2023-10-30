@@ -39,12 +39,12 @@ namespace Microsoft.OpenApi.Readers
             foreach (var err in diagnosticToAdd.Errors)
             {
                 var errMsgWithFileName = fileNameIsSupplied ? $"[File: {fileNameToAdd}] {err.Message}" : err.Message;
-                Errors.Add(new OpenApiError(err.Pointer, errMsgWithFileName));
+                Errors.Add(new(err.Pointer, errMsgWithFileName));
             }
             foreach (var warn in diagnosticToAdd.Warnings)
             {
                 var warnMsgWithFileName = fileNameIsSupplied ? $"[File: {fileNameToAdd}] {warn.Message}" : warn.Message;
-                Warnings.Add(new OpenApiError(warn.Pointer, warnMsgWithFileName));
+                Warnings.Add(new(warn.Pointer, warnMsgWithFileName));
             }
         }
     }

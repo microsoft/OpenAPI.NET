@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Writers
         public OpenApiWriterSettings Settings { get; set; }
 
         /// <summary>
-        /// The indentation string to prepand to each line for each indentation level.
+        /// The indentation string to prepend to each line for each indentation level.
         /// </summary>
         protected const string IndentationString = "  ";
 
@@ -52,10 +52,10 @@ namespace Microsoft.OpenApi.Writers
             Writer = textWriter;
             Writer.NewLine = "\n";
 
-            Scopes = new Stack<Scope>();
+            Scopes = new();
             if (settings == null)
             {
-                settings = new OpenApiWriterSettings();
+                settings = new();
             }
             Settings = settings;
         }
@@ -391,10 +391,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="name">property name</param>
         protected void VerifyCanWritePropertyName(string name)
         {
-            if (name == null)
-            {
-                throw Error.ArgumentNull(nameof(name));
-            }
+            Utils.CheckArgumentNull(name);
 
             if (Scopes.Count == 0)
             {

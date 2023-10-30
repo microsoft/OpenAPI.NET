@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Required = true,
                 Example = new OpenApiInteger(55),
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Type = "string",
                 }
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             errors = validator.Errors;
             var warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -59,21 +59,21 @@ namespace Microsoft.OpenApi.Validations.Tests
             var header = new OpenApiHeader
             {
                 Required = true,
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Type = "object",
-                    AdditionalProperties = new OpenApiSchema
+                    AdditionalProperties = new()
                     {
                         Type = "integer",
                     }
                 },
                 Examples =
                     {
-                        ["example0"] = new OpenApiExample
+                        ["example0"] = new()
                         {
                             Value = new OpenApiString("1"),
                         },
-                        ["example1"] = new OpenApiExample
+                        ["example1"] = new()
                         {
                            Value = new OpenApiObject
                            {
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                 ["z"] = new OpenApiString("200")
                             }
                         },
-                        ["example2"] = new OpenApiExample
+                        ["example2"] = new()
                         {
                             Value =
                             new OpenApiArray
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                 new OpenApiInteger(3)
                             }
                         },
-                        ["example3"] = new OpenApiExample
+                        ["example3"] = new()
                         {
                             Value = new OpenApiObject
                             {
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(header);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();

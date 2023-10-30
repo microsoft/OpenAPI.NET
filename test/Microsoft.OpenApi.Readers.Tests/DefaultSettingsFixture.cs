@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers.Tests
     public class DefaultSettingsFixture
     {
         /// <summary>
-        /// Initializes an intance of <see cref="DefaultSettingsFixture"/>.
+        /// Initializes an instance of <see cref="DefaultSettingsFixture"/>.
         /// </summary>
         public DefaultSettingsFixture()
         {

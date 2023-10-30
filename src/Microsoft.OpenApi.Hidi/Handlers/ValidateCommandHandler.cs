@@ -26,8 +26,8 @@ namespace Microsoft.OpenApi.Hidi.Handlers
         }
         public async Task<int> InvokeAsync(InvocationContext context)
         {
-            HidiOptions hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
-            CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetRequiredService(typeof(CancellationToken));
+            var hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
+            var cancellationToken = (CancellationToken)context.BindingContext.GetRequiredService(typeof(CancellationToken));
             using var loggerFactory = Logger.ConfigureLogger(hidiOptions.LogLevel);
             var logger = loggerFactory.CreateLogger<ValidateCommandHandler>();
             try
