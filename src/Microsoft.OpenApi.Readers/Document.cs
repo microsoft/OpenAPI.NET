@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers
     /// <summary>
     /// Loads an OpenApiDocument instance through Load/LoadAsync/Parse pattern
     /// </summary>
-    internal static class Document
+    public static class Document
     {
         /// <summary>
         /// Loads an OpenApiDocument from a file stream
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="cancellationToken"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static Task<ReadResult> LoadAsync(TextReader reader, CancellationToken cancellationToken = default, OpenApiReaderSettings settings = null)
+        public static Task<ReadResult> LoadAsync(TextReader reader, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             return new OpenApiTextReaderReader(settings).ReadAsync(reader, cancellationToken);
         }
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="cancellationToken"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream stream, CancellationToken cancellationToken = default, OpenApiReaderSettings settings = null)
+        public static async Task<ReadResult> LoadAsync(Stream stream, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             return await new OpenApiStreamReader(settings).ReadAsync(stream, cancellationToken);
         }
