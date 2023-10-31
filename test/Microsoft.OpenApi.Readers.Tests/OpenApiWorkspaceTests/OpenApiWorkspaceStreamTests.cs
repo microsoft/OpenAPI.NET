@@ -18,12 +18,12 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var settings = new OpenApiReaderSettings()
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new MockLoader(),
                 BaseUrl = new Uri("file://c:\\")
-            });
+            };
 
             // Todo: this should be ReadAsync
             var stream = new MemoryStream();
@@ -37,7 +37,7 @@ paths: {}";
             wr.Flush();
             stream.Position = 0;
 
-            var result = await reader.ReadAsync(stream);
+            var result = await Document.LoadAsync(stream, settings: settings);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
 
