@@ -40,7 +40,7 @@ paths:
             $ref: '#/defi888nition/does/notexist'
 ";
 
-            var doc = Document.Parse(input, out var diagnostic);
+            var doc = new OpenApiDocument().Parse(input, out var diagnostic);
 
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
                 new OpenApiError( new OpenApiException("Unknown reference type 'defi888nition'")) });
@@ -66,7 +66,7 @@ paths:
             $ref: '#/definitions/doesnotexist'
 ";
 
-            var doc = Document.Load(input, out var diagnostic);
+            var doc = new OpenApiDocument().Load(input, out var diagnostic);
 
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
                 new OpenApiError( new OpenApiException("Invalid Reference identifier 'doesnotexist'.")) });
@@ -84,7 +84,7 @@ paths:
             Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
-            var openApiDoc = Document.Load(
+            var openApiDoc = new OpenApiDocument().Load(
                 @"
 swagger: 2.0
 info: 
@@ -163,7 +163,7 @@ paths: {}",
         public void ShouldParseProducesInAnyOrder()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "twoResponses.json"));
-            var doc = Document.Load(stream, out var diagnostic);
+            var doc = new OpenApiDocument().Load(stream, out var diagnostic);
 
             var successSchema = new OpenApiSchema()
             {
@@ -357,7 +357,7 @@ paths: {}",
             OpenApiDocument document;
 
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json"));
-            document = Document.Load(stream, out var diagnostic);
+            document = new OpenApiDocument().Load(stream, out var diagnostic);
 
             Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
 
@@ -429,7 +429,7 @@ paths: {}",
         public void ShouldAllowComponentsThatJustContainAReference()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "ComponentRootReference.json"));
-            OpenApiDocument doc = Document.Load(stream, out OpenApiDiagnostic diags);
+            OpenApiDocument doc = new OpenApiDocument().Load(stream, out OpenApiDiagnostic diags);
             OpenApiSchema schema1 = doc.Components.Schemas["AllPets"];
             Assert.False(schema1.UnresolvedReference);
             OpenApiSchema schema2 = doc.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);

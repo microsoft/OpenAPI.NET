@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
-            var openApiDoc = Document.Parse(
+            var openApiDoc = new OpenApiDocument().Parse(
                 @"
 openapi : 3.0.0
 info:
@@ -121,7 +121,7 @@ paths: {}",
             Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
-            var openApiDoc = Document.Load(
+            var openApiDoc = new OpenApiDocument().Load(
                 @"
 openapi : 3.0.0
 info:
@@ -194,7 +194,7 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml")))
             {
-                var openApiDoc = Document.Load(stream, out var diagnostic);
+                var openApiDoc = new OpenApiDocument().Load(stream, out var diagnostic);
 
                 diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic()
@@ -236,7 +236,7 @@ paths: {}",
         public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
-            var openApiDoc = Document.Load(stream, out var diagnostic);
+            var openApiDoc = new OpenApiDocument().Load(stream, out var diagnostic);
 
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -265,7 +265,7 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml")))
             {
-                var openApiDoc = Document.Load(stream, out var diagnostic);
+                var openApiDoc = new OpenApiDocument().Load(stream, out var diagnostic);
 
                 openApiDoc.Should().BeEquivalentTo(
                     new OpenApiDocument
@@ -296,7 +296,7 @@ paths: {}",
             OpenApiDiagnostic context;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml")))
             {
-                var actual = Document.Load(stream, out context);
+                var actual = new OpenApiDocument().Load(stream, out context);
 
                 var components = new OpenApiComponents
                 {
@@ -726,7 +726,7 @@ paths: {}",
             OpenApiDiagnostic context;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml")))
             {
-                var actual = Document.Load(stream, out context);
+                var actual = new OpenApiDocument().Load(stream, out context);
 
                 var components = new OpenApiComponents
                 {
@@ -1260,7 +1260,7 @@ paths: {}",
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml")))
             {
-                var actual = Document.Load(stream, out context);
+                var actual = new OpenApiDocument().Load(stream, out context);
 
                 // TODO: Create the object in memory and compare with the one read from YAML file.
             }
@@ -1274,7 +1274,7 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedApi.yaml")))
             {
-                var openApiDoc = Document.Load(stream, out var diagnostic);
+                var openApiDoc = new OpenApiDocument().Load(stream, out var diagnostic);
 
                 var securityRequirement = openApiDoc.SecurityRequirements.First();
 
@@ -1287,7 +1287,7 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml")))
             {
-                var openApiDoc = Document.Load(stream, out var diagnostic);
+                var openApiDoc = new OpenApiDocument().Load(stream, out var diagnostic);
 
                 var exampleHeader = openApiDoc.Components?.Headers?["example-header"];
                 Assert.NotNull(exampleHeader);
@@ -1364,7 +1364,7 @@ paths: {}",
 
             // Act
             var settings = new OpenApiReaderSettings { ReferenceResolution = ReferenceResolutionSetting.DoNotResolveReferences };
-            var doc = Document.Load(stream, out var diagnostic, settings);
+            var doc = new OpenApiDocument().Load(stream, out var diagnostic, settings);
                 
             var externalRef = doc.Components.Schemas["Nested"].Properties["AnyOf"].AnyOf.First().Reference.ReferenceV3;
             var externalRef2 = doc.Components.Schemas["Nested"].Properties["AnyOf"].AnyOf.Last().Reference.ReferenceV3;
@@ -1386,7 +1386,7 @@ paths: {}",
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
             };
 
-            var doc = Document.Load(stream, out var diagnostic, settings);
+            var doc = new OpenApiDocument().Load(stream, out var diagnostic, settings);
 
             var securityScheme = doc.Components.SecuritySchemes["OAuth2"];
 
@@ -1400,7 +1400,7 @@ paths: {}",
         {
             // Arrange and Act
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
-            var actual = Document.Load(stream, out var diagnostic);
+            var actual = new OpenApiDocument().Load(stream, out var diagnostic);
 
             var components = new OpenApiComponents
             {
@@ -1608,7 +1608,7 @@ paths: {}",
         {
             // Arrange && Act
             using var stream = Resources.GetStream("V3Tests/Samples/OpenApiDocument/documentWithReusablePaths.yaml");
-            var actual = Document.Load(stream, out var context);
+            var actual = new OpenApiDocument().Load(stream, out var context);
 
             var components = new OpenApiComponents
             {
@@ -1828,7 +1828,7 @@ paths: {}",
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithSummaryAndDescriptionInReference.yaml"));
 
             // Act
-            var actual = Document.Load(stream, out var diagnostic);
+            var actual = new OpenApiDocument().Load(stream, out var diagnostic);
             var schema = actual.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             var header = actual.Components.Responses["Test"].Headers["X-Test"];
 

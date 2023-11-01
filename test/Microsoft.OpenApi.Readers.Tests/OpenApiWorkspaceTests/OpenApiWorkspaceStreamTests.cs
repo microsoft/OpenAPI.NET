@@ -37,7 +37,7 @@ paths: {}";
             wr.Flush();
             stream.Position = 0;
 
-            var result = await Document.LoadAsync(stream, settings: settings);
+            var result = await new OpenApiDocument().LoadAsync(stream, settings: settings);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
 
