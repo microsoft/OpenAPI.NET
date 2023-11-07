@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Hidi
                 if (!string.IsNullOrEmpty(filterByOperationIds))
                 {
                     logger.LogTrace("Creating predicate based on the operationIds supplied.");
-                    predicate = OpenApiFilterService.CreatePredicate(tags: filterByOperationIds);
+                    predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
 
                 }
                 if (!string.IsNullOrEmpty(filterByTags))
