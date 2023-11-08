@@ -20,6 +20,7 @@ namespace Microsoft.OpenApi.Models
     {
         private bool? _explode;
         private ParameterStyle? _style;
+        protected JsonSchema _schema;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -107,7 +108,11 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual JsonSchema Schema { get; set; }
+        public virtual JsonSchema Schema 
+        { 
+            get => _schema; 
+            set => _schema = value;  
+        }
 
         /// <summary>
         /// Examples of the media type. Each example SHOULD contain a value
@@ -163,7 +168,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter?.Style ?? Style;
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
-            Schema = JsonNodeCloneHelper.CloneJsonSchema(Schema);
+            _schema = JsonNodeCloneHelper.CloneJsonSchema(parameter?.Schema);
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;

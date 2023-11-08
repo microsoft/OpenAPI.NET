@@ -2,15 +2,6 @@
 // Licensed under the MIT license. 
 
 using System.IO;
-using System.Text.Json.Nodes;
-using System.Text.Json;
-using Json.Schema;
-using Microsoft.OpenApi.Models;
-using YamlDotNet.Serialization;
-using System.Collections.Generic;
-using Yaml2JsonNode;
-using System.Collections;
-using System;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -230,7 +221,6 @@ namespace Microsoft.OpenApi.Writers
                 DecreaseIndentation();
             }
         }
-
 
         private void WriteChompingIndicator(string value)
         {

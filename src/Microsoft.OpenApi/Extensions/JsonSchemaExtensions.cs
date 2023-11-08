@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns></returns>
         public static IDictionary<string, IOpenApiExtension> GetExtensions(this JsonSchema schema)
         {
-            return (Dictionary<string, IOpenApiExtension>)(schema.TryGetKeyword<ExtensionsKeyword>(ExtensionsKeyword.Name, out var k) ? k.Extensions! : null);
+            return schema.TryGetKeyword<ExtensionsKeyword>(ExtensionsKeyword.Name, out var k) ? k.Extensions! : null;
         }        
     }
 }

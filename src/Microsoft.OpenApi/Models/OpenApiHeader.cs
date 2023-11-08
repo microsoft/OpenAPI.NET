@@ -19,6 +19,8 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiHeader : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiHeader>
     {
+        protected JsonSchema _schema;
+
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
@@ -66,9 +68,13 @@ namespace Microsoft.OpenApi.Models
         public virtual bool AllowReserved { get; set; }
 
         /// <summary>
-        /// The schema defining the type used for the header.
+        /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual JsonSchema Schema { get; set; }
+        public virtual JsonSchema Schema 
+        { 
+            get => _schema; 
+            set => _schema = value;  
+        }
 
         /// <summary>
         /// Example of the media type.
@@ -109,7 +115,7 @@ namespace Microsoft.OpenApi.Models
             Style = header?.Style ?? Style;
             Explode = header?.Explode ?? Explode;
             AllowReserved = header?.AllowReserved ?? AllowReserved;
-            Schema = JsonNodeCloneHelper.CloneJsonSchema(Schema);
+            _schema = JsonNodeCloneHelper.CloneJsonSchema(header?.Schema);
             Example = JsonNodeCloneHelper.Clone(header?.Example);
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;

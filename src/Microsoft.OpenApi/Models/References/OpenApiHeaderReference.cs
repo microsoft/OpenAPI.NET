@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models.References
         public override bool AllowEmptyValue { get => Target.AllowEmptyValue; set => Target.AllowEmptyValue = value; }
 
         /// <inheritdoc/>
-        public override JsonSchema Schema { get => Target.Schema; set => Target.Schema = value; }
+        public override JsonSchema Schema { get => _schema; set => _schema = value; }
 
         /// <inheritdoc/>
         public override ParameterStyle? Style { get => Target.Style; set => Target.Style = value; }

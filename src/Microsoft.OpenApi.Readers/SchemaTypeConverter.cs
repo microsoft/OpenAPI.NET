@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -10,8 +10,7 @@ namespace Microsoft.OpenApi.Readers
     {
         internal static SchemaValueType ConvertToSchemaValueType(string value)
         {
-            value = value.ToLowerInvariant();
-            return value switch
+            return value.ToLowerInvariant() switch
             {
                 "string" => SchemaValueType.String,
                 "number" or "double" => SchemaValueType.Number,
