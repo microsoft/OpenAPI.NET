@@ -342,5 +342,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.Equal(SchemaValueType.Object, schema.GetJsonType());
             Assert.Equal("A pet in a petstore", schema.GetDescription()); /*The reference object's description overrides that of the referenced component*/
         }
+
+        [Fact]
+        public void ParseDocumentWithExampleInSchemaShouldSucceed()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithExample.yaml"));
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+            // Act
+            var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            actual.SerializeAsV31(writer);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
     }
 }
