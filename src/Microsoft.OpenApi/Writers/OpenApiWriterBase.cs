@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
-using YamlDotNet.Serialization.ObjectGraphVisitors;
 
 namespace Microsoft.OpenApi.Writers
 {

@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
     {
         private bool? _explode;
         private ParameterStyle? _style;
-        protected JsonSchema _schema;
+        private JsonSchema _schema;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Models
         public virtual bool AllowReserved { get; set; }
 
         /// <summary>
-        /// The schema defining the type used for the request body.
+        /// The schema defining the type used for the parameter.
         /// </summary>
         public virtual JsonSchema Schema 
         { 

@@ -15,20 +15,12 @@ namespace Microsoft.OpenApi.Readers.V31
         public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
         {
             var mapNode = node.CheckMapNode("security");
-            string description = null;
-            string summary = null;
 
             var securityRequirement = new OpenApiSecurityRequirement();
 
             foreach (var property in mapNode)
             {
-                if (property.Name.Equals("description") || property.Name.Equals("summary"))
-                {
-                    description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                    summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-                }
-
-                var scheme = LoadSecuritySchemeByReference(property.Name, summary, description);
+                var scheme = LoadSecuritySchemeByReference(property.Name);
 
                 var scopes = property.Value.CreateSimpleList(value => value.GetScalarValue());
 
@@ -46,18 +38,13 @@ namespace Microsoft.OpenApi.Readers.V31
             return securityRequirement;
         }
 
-        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
-            string schemeName,
-            string summary = null,
-            string description = null)
+        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(string schemeName)
         {
             var securitySchemeObject = new OpenApiSecurityScheme()
             {
                 UnresolvedReference = true,
                 Reference = new OpenApiReference()
                 {
-                    Summary = summary,
-                    Description = description,
                     Id = schemeName,
                     Type = ReferenceType.SecurityScheme
                 }
