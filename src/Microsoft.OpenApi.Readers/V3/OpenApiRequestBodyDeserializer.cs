@@ -49,10 +49,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-
-                return mapNode.GetReferencedObject<OpenApiRequestBody>(ReferenceType.RequestBody, pointer, summary, description);
+                return mapNode.GetReferencedObject<OpenApiRequestBody>(ReferenceType.RequestBody, pointer);
             }
 
             var requestBody = new OpenApiRequestBody();

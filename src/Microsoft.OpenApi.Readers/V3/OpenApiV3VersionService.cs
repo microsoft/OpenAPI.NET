@@ -86,8 +86,6 @@ namespace Microsoft.OpenApi.Readers.V3
                     {
                         return new OpenApiReference
                         {
-                            Summary = summary,
-                            Description = description,
                             Type = type,
                             Id = reference
                         };
@@ -97,8 +95,6 @@ namespace Microsoft.OpenApi.Readers.V3
                     // or a simple string-style reference for tag and security scheme.
                     return new OpenApiReference
                     {
-                        Summary = summary,
-                        Description = description,
                         Type = type,
                         ExternalResource = segments[0]
                     };
@@ -110,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         // "$ref": "#/components/schemas/Pet"
                         try
                         {
-                            return ParseLocalReference(segments[1], summary, description);
+                            return ParseLocalReference(segments[1]);
                         }
                         catch (OpenApiException ex)
                         {
@@ -165,7 +161,6 @@ namespace Microsoft.OpenApi.Readers.V3
             return (T)_loaders[typeof(T)](node);
         }
 
-
         /// <inheritdoc />
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
@@ -180,7 +175,7 @@ namespace Microsoft.OpenApi.Readers.V3
             return null;
         }
 
-        private OpenApiReference ParseLocalReference(string localReference, string summary = null, string description = null)
+        private OpenApiReference ParseLocalReference(string localReference)
         {
             if (string.IsNullOrWhiteSpace(localReference))
             {
@@ -202,8 +197,6 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     var parsedReference = new OpenApiReference
                     {
-                        Summary = summary,
-                        Description = description,
                         Type = referenceType,
                         Id = refId
                     };

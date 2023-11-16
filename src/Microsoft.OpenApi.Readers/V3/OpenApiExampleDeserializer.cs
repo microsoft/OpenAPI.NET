@@ -55,10 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-
-                return mapNode.GetReferencedObject<OpenApiExample>(ReferenceType.Example, pointer, summary, description);
+                return mapNode.GetReferencedObject<OpenApiExample>(ReferenceType.Example, pointer);
             }
 
             var example = new OpenApiExample();
