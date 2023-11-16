@@ -181,6 +181,25 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write the optional of collection string.
+        /// </summary>
+        /// <param name="writer">The Open API writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="elements">The collection values.</param>
+        /// <param name="action">The collection string writer action.</param>
+        public static void WriteOptionalCollection(
+            this IOpenApiWriter writer,
+            string name,
+            IEnumerable<string> elements,
+            Action<IOpenApiWriter, string> action)
+        {
+            if (elements != null && elements.Any())
+            {
+                writer.WriteCollectionInternal(name, elements, action);
+            }
+        }
+
+        /// <summary>
         /// Write the optional Open API object/element collection.
         /// </summary>
         /// <typeparam name="T">The Open API element type. <see cref="IOpenApiElement"/></typeparam>
