@@ -3,27 +3,40 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Helpers
 {
     internal static class JsonNodeCloneHelper
     {
+        private static readonly JsonSerializerOptions options = new()
+        {
+            ReferenceHandler = ReferenceHandler.IgnoreCycles
+        };
+
         internal static OpenApiAny Clone(OpenApiAny value)
         {
-            if(value == null)
+            var jsonString = Serialize(value);
+            var result = JsonSerializer.Deserialize<OpenApiAny>(jsonString, options);
+
+            return result;
+        }
+
+        internal static JsonSchema CloneJsonSchema(JsonSchema schema)
+        {
+            var jsonString = Serialize(schema);
+            var result = JsonSerializer.Deserialize<JsonSchema>(jsonString, options);
+            return result;
+        }
+
+        private static string Serialize(object obj)
+        {
+            if (obj == null)
             {
                 return null;
             }
-            
-            var options = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
-            };
-
-            var jsonString = JsonSerializer.Serialize(value.Node, options);
-            var result = JsonSerializer.Deserialize<OpenApiAny>(jsonString, options);
-
+            var result = JsonSerializer.Serialize(obj, options);
             return result;
         }
     }

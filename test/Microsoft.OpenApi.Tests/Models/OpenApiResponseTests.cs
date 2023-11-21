@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -24,21 +24,16 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiResponse BasicResponse = new OpenApiResponse();
 
-        public static OpenApiResponse AdvancedResponse = new OpenApiResponse
+        public static OpenApiResponse AdvancedV2Response = new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
-                        }
-                    },
+                    Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Array)
+                                .Items(new JsonSchemaBuilder().Ref("#/definitions/customType")),
                     Example = new OpenApiAny("Blabla"),
                     Extensions = new Dictionary<string, IOpenApiExtension>
                     {
@@ -51,23 +46,47 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "integer"
-                    }
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "integer"
-                    }
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
             }
         };
-
-        public static OpenApiResponse ReferencedResponse = new OpenApiResponse
+        public static OpenApiResponse AdvancedV3Response = new OpenApiResponse
+        {
+            Description = "A complex object array response",
+            Content =
+            {
+                ["text/plain"] = new OpenApiMediaType
+                {
+                    Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Array)
+                                .Items(new JsonSchemaBuilder().Ref("#/components/schemas/customType")),
+                    Example = new OpenApiAny("Blabla"),
+                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    {
+                        ["myextension"] = new OpenApiAny("myextensionvalue"),
+                    },
+                }
+            },
+            Headers =
+            {
+                ["X-Rate-Limit-Limit"] = new OpenApiHeader
+                {
+                    Description = "The number of allowed requests in the current period",
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                },
+                ["X-Rate-Limit-Reset"] = new OpenApiHeader
+                {
+                    Description = "The number of seconds left in the current period",
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                },
+            }
+        };
+        public static OpenApiResponse ReferencedV2Response = new OpenApiResponse
         {
             Reference = new OpenApiReference
             {
@@ -79,14 +98,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
-                        }
-                    }
+                    Schema = new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Array)
+                                    .Items(new JsonSchemaBuilder().Ref("#/definitions/customType"))
                 }
             },
             Headers =
@@ -94,18 +108,43 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "integer"
-                    }
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "integer"
-                    }
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                },
+            }
+        };
+        public static OpenApiResponse ReferencedV3Response = new OpenApiResponse
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.Response,
+                Id = "example1"
+            },
+            Description = "A complex object array response",
+            Content =
+            {
+                ["text/plain"] = new OpenApiMediaType
+                {
+                    Schema = new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Array)
+                                    .Items(new JsonSchemaBuilder().Ref("#/components/schemas/customType"))
+                }
+            },
+            Headers =
+            {
+                ["X-Rate-Limit-Limit"] = new OpenApiHeader
+                {
+                    Description = "The number of allowed requests in the current period",
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                },
+                ["X-Rate-Limit-Reset"] = new OpenApiHeader
+                {
+                    Description = "The number of seconds left in the current period",
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
             }
         };
@@ -175,7 +214,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedResponse.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = AdvancedV3Response.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -208,7 +247,7 @@ content:
     myextension: myextensionvalue";
 
             // Act
-            var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = AdvancedV3Response.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -245,7 +284,7 @@ content:
 }";
 
             // Act
-            var actual = AdvancedResponse.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = AdvancedV2Response.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -275,7 +314,7 @@ headers:
     type: integer";
 
             // Act
-            var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = AdvancedV2Response.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -293,7 +332,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedResponse.SerializeAsV3(writer);
+            ReferencedV3Response.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -310,7 +349,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedResponse.SerializeAsV3WithoutReference(writer);
+            ReferencedV3Response.SerializeAsV3WithoutReference(writer);
             writer.Flush();
 
             // Assert
@@ -327,7 +366,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedResponse.SerializeAsV2(writer);
+            ReferencedV2Response.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert
@@ -344,7 +383,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedResponse.SerializeAsV2WithoutReference(writer);
+            ReferencedV2Response.SerializeAsV2WithoutReference(writer);
             writer.Flush();
 
             // Assert

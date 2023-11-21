@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiLink() {}
+        public OpenApiLink() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiLink"/> object
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiLink"/> to Open Api v3.0
         /// </summary>

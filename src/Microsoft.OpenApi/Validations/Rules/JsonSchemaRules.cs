@@ -1,31 +1,35 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 using System.Collections.Generic;
+using System.Linq;
+using Json.Schema;
+using Json.Schema.OpenApi;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
     /// <summary>
-    /// The validation rules for <see cref="OpenApiSchema"/>.
+    /// The validation rules for <see cref="JsonSchema"/>.
     /// </summary>
     [OpenApiRule]
-    public static class OpenApiSchemaRules
+    public static class JsonSchemaRules
     {
         /// <summary>
         /// Validate the data matches with the given data type.
         /// </summary>
-        public static ValidationRule<OpenApiSchema> SchemaMismatchedDataType =>
-            new ValidationRule<OpenApiSchema>(
-                (context, schema) =>
+        public static ValidationRule<JsonSchema> SchemaMismatchedDataType =>
+            new ValidationRule<JsonSchema>(
+                (context, jsonSchema) =>
                 {
                     // default
                     context.Enter("default");
 
-                    if (schema.Default != null)
+                    if (jsonSchema.GetDefault() != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Default.Node, schema);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), jsonSchema.GetDefault(), jsonSchema);
                     }
 
                     context.Exit();
@@ -33,9 +37,9 @@ namespace Microsoft.OpenApi.Validations.Rules
                     // example
                     context.Enter("example");
 
-                    if (schema.Example != null)
+                    if (jsonSchema.GetExample() != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Example.Node, schema);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), jsonSchema.GetExample(), jsonSchema);
                     }
 
                     context.Exit();
@@ -43,12 +47,12 @@ namespace Microsoft.OpenApi.Validations.Rules
                     // enum
                     context.Enter("enum");
 
-                    if (schema.Enum != null)
+                    if (jsonSchema.GetEnum() != null)
                     {
-                        for (int i = 0; i < schema.Enum.Count; i++)
+                        for (int i = 0; i < jsonSchema.GetEnum().Count; i++)
                         {
                             context.Enter(i.ToString());
-                            RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Enum[i].Node, schema);
+                            RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), jsonSchema.GetEnum().ElementAt(i), jsonSchema);
                             context.Exit();
                         }
                     }
@@ -59,22 +63,22 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validates Schema Discriminator
         /// </summary>
-        public static ValidationRule<OpenApiSchema> ValidateSchemaDiscriminator =>
-            new ValidationRule<OpenApiSchema>(
-                (context, schema) =>
+        public static ValidationRule<JsonSchema> ValidateSchemaDiscriminator =>
+            new ValidationRule<JsonSchema>(
+                (context, jsonSchema) =>
                 {
                     // discriminator
                     context.Enter("discriminator");
 
-                    if (schema.Reference != null && schema.Discriminator != null)
+                    if (jsonSchema.GetRef() != null && jsonSchema.GetOpenApiDiscriminator() != null)
                     {
-                        var discriminatorName = schema.Discriminator?.PropertyName;
+                        var discriminatorName = jsonSchema.GetOpenApiDiscriminator()?.PropertyName;
 
-                        if (!ValidateChildSchemaAgainstDiscriminator(schema, discriminatorName))
+                        if (!ValidateChildSchemaAgainstDiscriminator(jsonSchema, discriminatorName))
                         {
                             context.CreateError(nameof(ValidateSchemaDiscriminator),
                             string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
-                                schema.Reference.Id, discriminatorName));
+                                jsonSchema.GetRef(), discriminatorName));
                         }
                     }
 
@@ -87,22 +91,22 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <param name="schema">The parent schema.</param>
         /// <param name="discriminatorName">Adds support for polymorphism. The discriminator is an object name that is used to differentiate
         /// between other schemas which may satisfy the payload description.</param>
-        public static bool ValidateChildSchemaAgainstDiscriminator(OpenApiSchema schema, string discriminatorName)
+        public static bool ValidateChildSchemaAgainstDiscriminator(JsonSchema schema, string discriminatorName)
         {
-            if (!schema.Required?.Contains(discriminatorName) ?? false)
+            if (!schema.GetRequired()?.Contains(discriminatorName) ?? true)
             {
                 // recursively check nested schema.OneOf, schema.AnyOf or schema.AllOf and their required fields for the discriminator
-                if (schema.OneOf.Count != 0)
+                if (schema.GetOneOf()?.Count != 0 && TraverseSchemaElements(discriminatorName, schema.GetOneOf()))
                 {
-                    return TraverseSchemaElements(discriminatorName, schema.OneOf);
+                    return true;
                 }
-                if (schema.AnyOf.Count != 0)
+                if (schema.GetAnyOf()?.Count != 0 && TraverseSchemaElements(discriminatorName, schema.GetAnyOf()))
                 {
-                    return TraverseSchemaElements(discriminatorName, schema.AnyOf);
+                    return true;
                 }
-                if (schema.AllOf.Count != 0)
+                if (schema.GetAllOf()?.Count != 0 && TraverseSchemaElements(discriminatorName, schema.GetAllOf()))
                 {
-                    return TraverseSchemaElements(discriminatorName, schema.AllOf);
+                    return true; 
                 }
             }
             else
@@ -120,12 +124,15 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// between other schemas which may satisfy the payload description.</param>
         /// <param name="childSchema">The child schema.</param>
         /// <returns></returns>
-        public static bool TraverseSchemaElements(string discriminatorName, IList<OpenApiSchema> childSchema)
+        public static bool TraverseSchemaElements(string discriminatorName, IReadOnlyCollection<JsonSchema> childSchema)
         {
+            if (!childSchema?.Any() ?? true)
+                return false;
+
             foreach (var childItem in childSchema)
             {
-                if ((!childItem.Properties?.ContainsKey(discriminatorName) ?? false) &&
-                                    (!childItem.Required?.Contains(discriminatorName) ?? false))
+                if ((!childItem.GetProperties()?.ContainsKey(discriminatorName) ?? true) &&
+                                    (!childItem.GetRequired()?.Contains(discriminatorName) ?? true))
                 {
                     return ValidateChildSchemaAgainstDiscriminator(childItem, discriminatorName);
                 }

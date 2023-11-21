@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v3.0
         /// </summary>

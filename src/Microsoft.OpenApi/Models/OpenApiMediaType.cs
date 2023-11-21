@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -15,10 +17,16 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible
     {
+        private JsonSchema _schema;
+
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public OpenApiSchema Schema { get; set; }
+        public virtual JsonSchema Schema
+        {
+            get => _schema;
+            set => _schema = value;
+        }
 
         /// <summary>
         /// Example of the media type.
@@ -55,7 +63,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
-            Schema = mediaType?.Schema != null ? new(mediaType?.Schema) : null;
+            _schema = JsonNodeCloneHelper.CloneJsonSchema(mediaType?.Schema);
             Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
@@ -76,20 +84,20 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
-        }        
-        
+        }
+
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-            
+
             writer.WriteStartObject();
-            
+
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteJsonSchema(s));
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
@@ -102,7 +110,7 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, version);
-            
+
             writer.WriteEndObject();
         }
 

@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +15,6 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.Services;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -71,7 +68,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the document
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count() > 0)
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Any())
             {
                 var openApiErrors = document.Validate(_settings.RuleSet);
                 foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())

@@ -2,12 +2,10 @@
 // Licensed under the MIT license. 
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
-using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -25,9 +23,9 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
 
-            bool result = !errors.Any();
+            bool result = errors.Any();
 
-            Assert.False(result);
+            Assert.True(result);
             Assert.NotNull(errors);
             OpenApiError error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"), error.Message);

@@ -24,7 +24,8 @@ namespace Microsoft.OpenApi.Workbench
             try
             {
                 await _mainModel.ParseDocument();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _mainModel.Errors = ex.Message;
             }

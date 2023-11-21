@@ -8,7 +8,7 @@ webhooks:
     "$ref": '#/components/pathItems/pets'
 components:
   schemas:
-    pet:
+    petSchema:
         type: object
         required:
         - id
@@ -62,12 +62,12 @@ components:
                    schema:
                      type: array
                      items:
-                       "$ref": '#/components/schemas/pet'
+                       "$ref": '#/components/schemas/petSchema'
                  application/xml:
                    schema:
                      type: array
                      items:
-                       "$ref": '#/components/schemas/pet'
+                       "$ref": '#/components/schemas/petSchema'
         post:
           requestBody:
             description: Information about a new pet in the system
@@ -82,4 +82,4 @@ components:
               content:
                 application/json:
                   schema:
-                    $ref: '#/components/schemas/pet'
+                    $ref: '#/components/schemas/petSchema'

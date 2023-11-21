@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 using Xunit;
@@ -18,22 +18,14 @@ namespace Microsoft.OpenApi.Tests.Validations
         {
             // Arrange
 
-            var sharedSchema = new OpenApiSchema
-            {
-                Type = "string",
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = false
-            };
+            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test");
 
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>()
+                Schemas = new Dictionary<string, JsonSchema>()
                 {
-                    [sharedSchema.Reference.Id] = sharedSchema
+                    ["test"] = sharedSchema
                 }
             };
 
@@ -66,8 +58,8 @@ namespace Microsoft.OpenApi.Tests.Validations
             // Act
             var rules = new Dictionary<string, IList<ValidationRule>>()
             {
-                { typeof(OpenApiSchema).Name,
-                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
+                { typeof(JsonSchema).Name,
+                    new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
                 }
             };
 
@@ -79,55 +71,11 @@ namespace Microsoft.OpenApi.Tests.Validations
         }
 
         [Fact]
-        public void UnresolvedReferenceSchemaShouldNotBeValidated()
-        {
-            // Arrange
-            var sharedSchema = new OpenApiSchema
-            {
-                Type = "string",
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = true
-            };
-
-            OpenApiDocument document = new OpenApiDocument();
-            document.Components = new OpenApiComponents()
-            {
-                Schemas = new Dictionary<string, OpenApiSchema>()
-                {
-                    [sharedSchema.Reference.Id] = sharedSchema
-                }
-            };
-
-            // Act            
-            var rules = new Dictionary<string, IList<ValidationRule>>()
-            {
-                { typeof(AlwaysFailRule<OpenApiSchema>).Name,
-                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
-                }
-            };
-
-            var errors = document.Validate(new ValidationRuleSet(rules));
-
-            // Assert
-            Assert.True(errors.Count() == 0);
-        }
-
-        [Fact]
         public void UnresolvedSchemaReferencedShouldNotBeValidated()
         {
             // Arrange
 
-            var sharedSchema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = true
-            };
+            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test").Build();
 
             OpenApiDocument document = new OpenApiDocument();
 
@@ -160,19 +108,19 @@ namespace Microsoft.OpenApi.Tests.Validations
             // Act
             var rules = new Dictionary<string, IList<ValidationRule>>()
             {
-                { typeof(AlwaysFailRule<OpenApiSchema>).Name,
-                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
+                { typeof(JsonSchema).Name,
+                    new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
                 }
             };
 
             var errors = document.Validate(new ValidationRuleSet(rules));
 
             // Assert
-            Assert.True(errors.Count() == 0);
+            Assert.True(!errors.Any());
         }
     }
 
-    public class AlwaysFailRule<T> : ValidationRule<T> where T : IOpenApiElement
+    public class AlwaysFailRule<T> : ValidationRule<T>
     {
         public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
         {

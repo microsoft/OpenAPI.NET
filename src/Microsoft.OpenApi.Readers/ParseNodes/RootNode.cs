@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Text.Json;
 using System.Text.Json.Nodes;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -16,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public RootNode(
             ParsingContext context,
-            JsonNode jsonNode) : base(context)
+            JsonNode jsonNode) : base(context, jsonNode)
         {
             _jsonNode = jsonNode;
         }

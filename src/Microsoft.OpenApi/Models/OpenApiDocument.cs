@@ -7,7 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json.Nodes;
+using System.Text.Json;
+using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IBaseDocument
     {
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
@@ -84,9 +85,14 @@ namespace Microsoft.OpenApi.Models
         public string HashCode => GenerateHashValue(this);
 
         /// <summary>
+        /// Implements IBaseDocument
+        /// </summary>
+        public Uri BaseUri { get; }
+
+        /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiDocument() {}
+        public OpenApiDocument() { }
 
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
@@ -104,7 +110,7 @@ namespace Microsoft.OpenApi.Models
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
-        }   
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to Open API v3.1 document.
@@ -115,16 +121,16 @@ namespace Microsoft.OpenApi.Models
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
-            
+
             // openApi;
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.0");
-            
+
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
 
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w),
                 (w, element) => element.SerializeAsV31WithoutReference(w));
-            
+
             // webhooks
             writer.WriteOptionalMap(
             OpenApiConstants.Webhooks,
@@ -155,10 +161,10 @@ namespace Microsoft.OpenApi.Models
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
-            
+
             // openapi
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w), 
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w),
                 (w, element) => element.SerializeAsV3WithoutReference(w));
             writer.WriteEndObject();
         }
@@ -170,10 +176,10 @@ namespace Microsoft.OpenApi.Models
         /// <param name="version"></param>
         /// <param name="callback"></param>
         /// <param name="action"></param>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
-            Action<IOpenApiWriter, IOpenApiSerializable> callback, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+            Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
-        {            
+        {
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, callback);
 
@@ -229,10 +235,10 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
                 {
-                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
-                        .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
+                    var openApiSchemas = schemas.Cast<JsonSchema>().Distinct()
+                        .ToDictionary(k => k.GetRef().ToString());
 
                     foreach (var schema in openApiSchemas.Values.ToList())
                     {
@@ -242,10 +248,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
                        openApiSchemas,
-                       (w, key, component) =>
-                       {
-                           component.SerializeAsV2WithoutReference(w);
-                       });
+                       (w, key, s) => w.WriteJsonSchema(s));
                 }
             }
             else
@@ -253,13 +256,45 @@ namespace Microsoft.OpenApi.Models
                 // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
                 // If the reference exists but points to other objects, the object is serialized to just that reference.
                 // definitions
+                if (Components?.Schemas != null)
+                {
+                    writer.WriteOptionalMap(
+                        OpenApiConstants.Definitions,
+                        Components?.Schemas,
+                        (w, key, s) =>
+                        {
+                            var reference = s.GetRef();
+                            if (reference != null &&
+                                reference.OriginalString.Split('/').Last().Equals(key))
+                            {
+                                w.WriteJsonSchemaWithoutReference(w, s);
+                            }
+                            else
+                            {
+                                w.WriteJsonSchema(s);
+                            }
+                        });
+                }
+
+                // parameters
+                var parameters = Components?.Parameters != null
+                    ? new Dictionary<string, OpenApiParameter>(Components.Parameters)
+                    : new Dictionary<string, OpenApiParameter>();
+
+                if (Components?.RequestBodies != null)
+                {
+                    foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
+                    {
+                        parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
+                    }
+                }
                 writer.WriteOptionalMap(
-                    OpenApiConstants.Definitions,
-                    Components?.Schemas,
+                    OpenApiConstants.Parameters,
+                    parameters,
                     (w, key, component) =>
                     {
                         if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.Schema &&
+                            component.Reference.Type == ReferenceType.Parameter &&
                             component.Reference.Id == key)
                         {
                             component.SerializeAsV2WithoutReference(w);
@@ -269,88 +304,60 @@ namespace Microsoft.OpenApi.Models
                             component.SerializeAsV2(w);
                         }
                     });
+
+                // responses
+                writer.WriteOptionalMap(
+                    OpenApiConstants.Responses,
+                    Components?.Responses,
+                    (w, key, component) =>
+                    {
+                        if (component.Reference != null &&
+                            component.Reference.Type == ReferenceType.Response &&
+                            component.Reference.Id == key)
+                        {
+                            component.SerializeAsV2WithoutReference(w);
+                        }
+                        else
+                        {
+                            component.SerializeAsV2(w);
+                        }
+                    });
+
+                // securityDefinitions
+                writer.WriteOptionalMap(
+                    OpenApiConstants.SecurityDefinitions,
+                    Components?.SecuritySchemes,
+                    (w, key, component) =>
+                    {
+                        if (component.Reference != null &&
+                            component.Reference.Type == ReferenceType.SecurityScheme &&
+                            component.Reference.Id == key)
+                        {
+                            component.SerializeAsV2WithoutReference(w);
+                        }
+                        else
+                        {
+                            component.SerializeAsV2(w);
+                        }
+                    });
+
+                // security
+                writer.WriteOptionalCollection(
+                    OpenApiConstants.Security,
+                    SecurityRequirements,
+                    (w, s) => s.SerializeAsV2(w));
+
+                // tags
+                writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2WithoutReference(w));
+
+                // externalDocs
+                writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
+
+                // extensions
+                writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+                writer.WriteEndObject();
             }
-            // parameters
-            var parameters = Components?.Parameters != null 
-                ? new Dictionary<string, OpenApiParameter>(Components.Parameters) 
-                : new Dictionary<string, OpenApiParameter>();
-
-            if (Components?.RequestBodies != null)
-            {
-                foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
-                {
-                    parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
-                }
-            }
-            writer.WriteOptionalMap(
-                OpenApiConstants.Parameters,
-                parameters,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Parameter &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV2WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV2(w);
-                    }
-                });
-
-            // responses
-            writer.WriteOptionalMap(
-                OpenApiConstants.Responses,
-                Components?.Responses,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Response &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV2WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV2(w);
-                    }
-                });
-
-            // securityDefinitions
-            writer.WriteOptionalMap(
-                OpenApiConstants.SecurityDefinitions,
-                Components?.SecuritySchemes,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.SecurityScheme &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV2WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV2(w);
-                    }
-                });
-
-            // security
-            writer.WriteOptionalCollection(
-                OpenApiConstants.Security,
-                SecurityRequirements,
-                (w, s) => s.SerializeAsV2(w));
-
-            // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2WithoutReference(w));
-
-            // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
-
-            writer.WriteEndObject();
         }
 
         private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
@@ -374,13 +381,14 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(
                     OpenApiConstants.Host,
                     firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
-                
+
                 // basePath
                 if (firstServerUrl.AbsolutePath != "/")
                 {
                     writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
                 }
-            } else
+            }
+            else
             {
                 var relativeUrl = firstServerUrl.OriginalString;
                 if (relativeUrl.StartsWith("//"))
@@ -509,7 +517,7 @@ namespace Microsoft.OpenApi.Models
                     throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
                 }
                 return this.Workspace.ResolveReference(reference);
-            } 
+            }
 
             if (!reference.Type.HasValue)
             {
@@ -540,51 +548,46 @@ namespace Microsoft.OpenApi.Models
             {
                 switch (reference.Type)
                 {
-                    case ReferenceType.Schema:
-                        var resolvedSchema = this.Components.Schemas[reference.Id];
-                        resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
-                        return resolvedSchema;
-                        
                     case ReferenceType.PathItem:
                         var resolvedPathItem = this.Components.PathItems[reference.Id];
-                        resolvedPathItem.Description = reference.Description != null ? reference.Description : resolvedPathItem.Description;
-                        resolvedPathItem.Summary = reference.Summary != null ? reference.Summary : resolvedPathItem.Summary;
+                        resolvedPathItem.Description = reference.Description ?? resolvedPathItem.Description;
+                        resolvedPathItem.Summary = reference.Summary ?? resolvedPathItem.Summary;
                         return resolvedPathItem;
-                        
+
                     case ReferenceType.Response:
                         var resolvedResponse = this.Components.Responses[reference.Id];
-                        resolvedResponse.Description = reference.Description != null ? reference.Description : resolvedResponse.Description;
+                        resolvedResponse.Description = reference.Description ?? resolvedResponse.Description;
                         return resolvedResponse;
 
                     case ReferenceType.Parameter:
                         var resolvedParameter = this.Components.Parameters[reference.Id];
-                        resolvedParameter.Description = reference.Description != null ? reference.Description : resolvedParameter.Description;
+                        resolvedParameter.Description = reference.Description ?? resolvedParameter.Description;
                         return resolvedParameter;
 
                     case ReferenceType.Example:
                         var resolvedExample = this.Components.Examples[reference.Id];
-                        resolvedExample.Summary = reference.Summary != null ? reference.Summary : resolvedExample.Summary;
-                        resolvedExample.Description = reference.Description != null ? reference.Description : resolvedExample.Description;
+                        resolvedExample.Summary = reference.Summary ?? resolvedExample.Summary;
+                        resolvedExample.Description = reference.Description ?? resolvedExample.Description;
                         return resolvedExample;
 
                     case ReferenceType.RequestBody:
                         var resolvedRequestBody = this.Components.RequestBodies[reference.Id];
-                        resolvedRequestBody.Description = reference.Description != null ? reference.Description : resolvedRequestBody.Description;
+                        resolvedRequestBody.Description = reference.Description ?? resolvedRequestBody.Description;
                         return resolvedRequestBody;
-                        
+
                     case ReferenceType.Header:
                         var resolvedHeader = this.Components.Headers[reference.Id];
-                        resolvedHeader.Description = reference.Description != null ? reference.Description : resolvedHeader.Description;
+                        resolvedHeader.Description = reference.Description ?? resolvedHeader.Description;
                         return resolvedHeader;
-                        
+
                     case ReferenceType.SecurityScheme:
                         var resolvedSecurityScheme = this.Components.SecuritySchemes[reference.Id];
-                        resolvedSecurityScheme.Description = reference.Description != null ? reference.Description : resolvedSecurityScheme.Description;
+                        resolvedSecurityScheme.Description = reference.Description ?? resolvedSecurityScheme.Description;
                         return resolvedSecurityScheme;
-                        
+
                     case ReferenceType.Link:
                         var resolvedLink = this.Components.Links[reference.Id];
-                        resolvedLink.Description = reference.Description != null ? reference.Description : resolvedLink.Description;
+                        resolvedLink.Description = reference.Description ?? resolvedLink.Description;
                         return resolvedLink;
 
                     case ReferenceType.Callback:
@@ -599,48 +602,23 @@ namespace Microsoft.OpenApi.Models
                 throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
         }
+
+        public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, OpenApiSchema> Schemas;
+        private Dictionary<string, JsonSchema> Schemas;
 
-        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, OpenApiSchema> schemas )
+        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, JsonSchema> schemas)
         {
             var visitor = new FindSchemaReferences();
             visitor.Schemas = schemas;
             var walker = new OpenApiWalker(visitor);
             walker.Walk(components);
-        }
-
-        public override void Visit(IOpenApiReferenceable referenceable)
-        {
-            switch (referenceable)
-            {
-                case OpenApiSchema schema:
-                    if (!Schemas.ContainsKey(schema.Reference.Id))
-                    {
-                        Schemas.Add(schema.Reference.Id, schema);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-            base.Visit(referenceable);
-        }
-
-        public override void Visit(OpenApiSchema schema)
-        {
-            // This is needed to handle schemas used in Responses in components
-            if (schema.Reference != null)
-            {
-                if (!Schemas.ContainsKey(schema.Reference.Id))
-                {
-                    Schemas.Add(schema.Reference.Id, schema);
-                }
-            }
-            base.Visit(schema);
         }
     }
 }

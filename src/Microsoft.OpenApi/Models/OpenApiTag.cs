@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Models
             UnresolvedReference = tag?.UnresolvedReference ?? UnresolvedReference;
             Reference = tag?.Reference != null ? new(tag?.Reference) : null;
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.1
         /// </summary>
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
@@ -98,16 +98,16 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, 
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
                 (writer, element) => element.SerializeAsV31(writer));
         }
-        
+
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
         public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
                 (writer, element) => element.SerializeAsV3(writer));
         }
 

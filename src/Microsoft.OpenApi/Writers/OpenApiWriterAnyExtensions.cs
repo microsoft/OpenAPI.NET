@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -54,7 +53,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteAny(this IOpenApiWriter writer, OpenApiAny any)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-            
+
             if (any.Node == null)
             {
                 writer.WriteNull();
@@ -67,10 +66,10 @@ namespace Microsoft.OpenApi.Writers
             {
                 case JsonValueKind.Array: // Array
                     writer.WriteArray(node as JsonArray);
-                    break;                    
+                    break;
                 case JsonValueKind.Object: // Object
                     writer.WriteObject(node as JsonObject);
-                    break;                    
+                    break;
                 case JsonValueKind.String: // Primitive
                     writer.WritePrimitive(element);
                     break;
@@ -94,7 +93,7 @@ namespace Microsoft.OpenApi.Writers
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
-            
+
             if (array == null)
             {
                 throw Error.ArgumentNull(nameof(array));
@@ -149,7 +148,7 @@ namespace Microsoft.OpenApi.Writers
                 }
                 else if (primitive.TryGetDateTimeOffset(out var dateTimeOffset))
                 {
-                        writer.WriteValue(dateTimeOffset);
+                    writer.WriteValue(dateTimeOffset);
                 }
                 else
                 {

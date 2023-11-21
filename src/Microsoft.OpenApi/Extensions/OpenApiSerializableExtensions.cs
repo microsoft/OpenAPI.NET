@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Extensions
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format, 
+            OpenApiFormat format,
             OpenApiWriterSettings settings)
             where T : IOpenApiSerializable
         {
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Extensions
                 case OpenApiSpecVersion.OpenApi3_1:
                     element.SerializeAsV31(writer);
                     break;
-                    
+
                 case OpenApiSpecVersion.OpenApi3_0:
                     element.SerializeAsV3(writer);
                     break;

@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -69,7 +71,7 @@ namespace Microsoft.OpenApi.Services
             ResolveMap(components.Links);
             ResolveMap(components.Callbacks);
             ResolveMap(components.Examples);
-            ResolveMap(components.Schemas);
+            components.Schemas = ResolveJsonSchemas(components.Schemas);
             ResolveMap(components.PathItems);
             ResolveMap(components.SecuritySchemes);
             ResolveMap(components.Headers);
@@ -108,12 +110,12 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Resolve all references using in mediaType object
+        /// Resolve all references used in mediaType object
         /// </summary>
         /// <param name="mediaType"></param>
         public override void Visit(OpenApiMediaType mediaType)
         {
-            ResolveObject(mediaType.Schema, r => mediaType.Schema = r);
+            ResolveJsonSchema(mediaType.Schema, r => mediaType.Schema = r ?? mediaType.Schema);
         }
 
         /// <summary>
@@ -176,7 +178,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public override void Visit(OpenApiParameter parameter)
         {
-            ResolveObject(parameter.Schema, r => parameter.Schema = r);
+            ResolveJsonSchema(parameter.Schema, r => parameter.Schema = r);
             ResolveMap(parameter.Examples);
         }
 
@@ -187,18 +189,96 @@ namespace Microsoft.OpenApi.Services
         {
             ResolveMap(links);
         }
+        
+        /// <summary>
+        /// Resolve all references used in a schem
+        /// </summary>
+        /// <param name="schema"></param>
+        public override void Visit(ref JsonSchema schema)
+        {
+            var reference = schema.GetRef();
+            var description = schema.GetDescription();
+            var summary = schema.GetSummary();
+
+            if (reference != null)
+            {
+                schema = ResolveJsonSchemaReference(reference, description, summary);
+            }
+            
+            var builder = new JsonSchemaBuilder();
+            foreach (var keyword in schema.Keywords)
+            {
+                builder.Add(keyword);
+            }
+            
+            ResolveJsonSchema(schema.GetItems(), r => builder.Items(r));
+            ResolveJsonSchemaList((IList<JsonSchema>)schema.GetOneOf(), r => builder.OneOf(r));
+            ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAllOf(), r => builder.AllOf(r));
+            ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAnyOf(), r => builder.AnyOf(r));
+            ResolveJsonSchemaMap((IDictionary<string, JsonSchema>)schema.GetProperties(), r => builder.Properties((IReadOnlyDictionary<string, JsonSchema>)r));
+            ResolveJsonSchema(schema.GetAdditionalProperties(), r => builder.AdditionalProperties(r));
+
+            schema = builder.Build();
+        }
 
         /// <summary>
-        /// Resolve all references used in a schema
+        /// Visits an IBaseDocument instance
         /// </summary>
-        public override void Visit(OpenApiSchema schema)
+        /// <param name="document"></param>
+        public override void Visit(IBaseDocument document) { }
+
+        private Dictionary<string, JsonSchema> ResolveJsonSchemas(IDictionary<string, JsonSchema> schemas)
         {
-            ResolveObject(schema.Items, r => schema.Items = r);
-            ResolveList(schema.OneOf);
-            ResolveList(schema.AllOf);
-            ResolveList(schema.AnyOf);
-            ResolveMap(schema.Properties);
-            ResolveObject(schema.AdditionalProperties, r => schema.AdditionalProperties = r);
+            var resolvedSchemas = new Dictionary<string, JsonSchema>();
+            foreach (var schema in schemas)
+            {
+                var schemaValue = schema.Value;
+                Visit(ref schemaValue);
+                resolvedSchemas[schema.Key] = schemaValue;
+            }
+
+            return resolvedSchemas;
+        }
+
+        /// <summary>
+        /// Resolves the target to a JSON schema reference by retrieval from Schema registry
+        /// </summary>
+        /// <param name="reference">The JSON schema reference.</param>
+        /// <param name="description">The schema's description.</param>
+        /// <param name="summary">The schema's summary.</param>
+        /// <returns></returns>
+        public JsonSchema ResolveJsonSchemaReference(Uri reference, string description = null, string summary = null)
+        {
+            var refUri = $"https://registry{reference.OriginalString.Split('#').LastOrDefault()}";
+            var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(refUri));
+
+            if (resolvedSchema != null)
+            {
+                var resolvedSchemaBuilder = new JsonSchemaBuilder();
+
+                foreach (var keyword in resolvedSchema.Keywords)
+                {
+                    resolvedSchemaBuilder.Add(keyword);
+
+                    // Replace the resolved schema's description with that of the schema reference
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        resolvedSchemaBuilder.Description(description);
+                    }
+
+                    // Replace the resolved schema's summary with that of the schema reference
+                    if (!string.IsNullOrEmpty(summary))
+                    {
+                        resolvedSchemaBuilder.Summary(summary);
+                    }
+                }
+
+                return resolvedSchemaBuilder.Build();
+            }
+            else 
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -235,6 +315,19 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+        private void ResolveJsonSchema(JsonSchema schema, Action<JsonSchema> assign)
+        {
+            if (schema == null) return;
+            var reference = schema.GetRef();
+            var description = schema.GetDescription();
+            var summary = schema.GetSummary();
+
+            if (reference != null)
+            {
+                assign(ResolveJsonSchemaReference(reference, description, summary));
+            }
+        }
+
         private void ResolveList<T>(IList<T> list) where T : class, IOpenApiReferenceable, new()
         {
             if (list == null) return;
@@ -249,6 +342,23 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+        private void ResolveJsonSchemaList(IList<JsonSchema> list, Action<List<JsonSchema>> assign)
+        {
+            if (list == null) return;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                var entity = list[i];
+                var reference = entity.GetRef();
+                if (reference != null)
+                {
+                    list[i] = ResolveJsonSchemaReference(reference);
+                }
+            }
+
+            assign(list.ToList());
+        }
+
         private void ResolveMap<T>(IDictionary<string, T> map) where T : class, IOpenApiReferenceable, new()
         {
             if (map == null) return;
@@ -261,6 +371,23 @@ namespace Microsoft.OpenApi.Services
                     map[key] = ResolveReference<T>(entity.Reference);
                 }
             }
+        }
+
+        private void ResolveJsonSchemaMap(IDictionary<string, JsonSchema> map, Action<IDictionary<string, JsonSchema>> assign)
+        {
+            if (map == null) return;
+
+            foreach (var key in map.Keys.ToList())
+            {
+                var entity = map[key];
+                var reference = entity.GetRef();
+                if (reference != null)
+                {
+                    map[key] = ResolveJsonSchemaReference(reference);
+                }
+            }
+
+            assign(map.ToDictionary(e => e.Key, e => e.Value));
         }
 
         private T ResolveReference<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable, new()

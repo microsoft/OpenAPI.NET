@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models
         /// Field: Info
         /// </summary>
         public const string Info = "info";
-       
+
         /// <summary>
         /// Field: JsonSchemaDialect
         /// </summary>
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Models
         /// Field: Webhooks
         /// </summary>
         public const string Webhooks = "webhooks";
-        
+
         /// <summary>
         /// Field: Title
         /// </summary>
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Models
         /// Field: PathItems
         /// </summary>
         public const string PathItems = "pathItems";
-        
+
         /// <summary>
         /// Field: Security
         /// </summary>
@@ -594,6 +594,16 @@ namespace Microsoft.OpenApi.Models
         /// Field: defaultUrl
         /// </summary>
         public static readonly Uri defaultUrl = new Uri("http://localhost/");
+
+        /// <summary>
+        /// Field: V3 JsonSchema Reference Uri
+        /// </summary>
+        public const string V3ReferenceUri = "https://registry/components/schemas/";
+
+        /// <summary>
+        /// Field: V2 JsonSchema Reference Uri
+        /// </summary>
+        public const string V2ReferenceUri = "https://registry/definitions/";
 
         #region V2.0
 

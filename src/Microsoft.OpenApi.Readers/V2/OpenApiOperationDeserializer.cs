@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -165,19 +164,25 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema
-                {
-                    Properties = formParameters.ToDictionary(
+                Schema = new JsonSchemaBuilder().Properties(formParameters.ToDictionary(
                         k => k.Name,
                         v =>
                         {
+                            var schemaBuilder = new JsonSchemaBuilder();
                             var schema = v.Schema;
-                            schema.Description = v.Description;
-                            schema.Extensions = v.Extensions;
-                            return schema;
-                        }),
-                    Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
-                }
+
+                            foreach (var keyword in schema.Keywords)
+                            {
+                                schemaBuilder.Add(keyword);
+                            }
+
+                            schemaBuilder.Description(v.Description);
+                            if (v.Extensions.Any())
+                            {
+                                schemaBuilder.Extensions(v.Extensions);
+                            }
+                            return schemaBuilder.Build();
+                        })).Required(new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))).Build()
             };
 
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
@@ -218,7 +223,7 @@ namespace Microsoft.OpenApi.Readers.V2
             requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
             return requestBody;
         }
-        
+
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
             string tagName)

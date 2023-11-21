@@ -2,8 +2,11 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -15,9 +18,9 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
+        private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
         {
-            {"schemas", (o, n) => o.Schemas = n.CreateMapWithReference(ReferenceType.Schema, LoadSchema)},
+            {"schemas", (o, n) => o.Schemas = n.CreateMap(LoadSchema)},
             {"responses", (o, n) => o.Responses = n.CreateMapWithReference(ReferenceType.Response, LoadResponse)},
             {"parameters", (o, n) => o.Parameters = n.CreateMapWithReference(ReferenceType.Parameter, LoadParameter)},
             {"examples", (o, n) => o.Examples = n.CreateMapWithReference(ReferenceType.Example, LoadExample)},
@@ -29,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"pathItems", (o, n) => o.PathItems = n.CreateMapWithReference(ReferenceType.PathItem, LoadPathItem)}
         };
 
-        private static PatternFieldMap<OpenApiComponents> _componentsPatternFields =
+        private static readonly PatternFieldMap<OpenApiComponents> _componentsPatternFields =
             new PatternFieldMap<OpenApiComponents>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
@@ -41,6 +44,12 @@ namespace Microsoft.OpenApi.Readers.V3
             var components = new OpenApiComponents();
 
             ParseMap(mapNode, components, _componentsFixedFields, _componentsPatternFields);
+            
+            foreach (var schema in components.Schemas)
+            {
+                var refUri = new Uri(OpenApiConstants.V3ReferenceUri + schema.Key);
+                SchemaRegistry.Global.Register(refUri, schema.Value);
+            }
 
             return components;
         }

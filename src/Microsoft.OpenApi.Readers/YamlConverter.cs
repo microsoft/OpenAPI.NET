@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json.Nodes;
-using SharpYaml.Serialization;
 using SharpYaml;
-using System.Globalization;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
 {

@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -268,7 +267,7 @@ namespace Microsoft.OpenApi.Services
             { "DELETE", new MermaidNodeStyle("Tomato", MermaidNodeShape.Rhombus) },
             { "OTHER", new MermaidNodeStyle("White", MermaidNodeShape.SquareCornerRectangle) },
         };
-        
+
         private static void ProcessNode(OpenApiUrlTreeNode node, TextWriter writer)
         {
             var path = string.IsNullOrEmpty(node.Path) ? "/" : SanitizeMermaidNode(node.Path);
@@ -296,7 +295,7 @@ namespace Microsoft.OpenApi.Services
 
         private static (string, string) GetShapeDelimiters(string methods)
         {
-            
+
             if (MermaidNodeStyles.TryGetValue(methods, out var style))
             {
                 //switch on shape
@@ -329,7 +328,7 @@ namespace Microsoft.OpenApi.Services
                     .Replace(".", "_")
                     .Replace("(", "_")
                     .Replace(")", "_")
-                    .Replace(";", "_")                    
+                    .Replace(";", "_")
                     .Replace("-", "_")
                     .Replace("graph", "gra_ph")  // graph is a reserved word
                     .Replace("default", "def_ault");  // default is a reserved word for classes
@@ -354,12 +353,12 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// The CSS color name of the diagram element
         /// </summary>
-        public string Color { get;  }
+        public string Color { get; }
 
         /// <summary>
         /// The shape of the diagram element
         /// </summary>
-        public MermaidNodeShape Shape { get;  }
+        public MermaidNodeShape Shape { get; }
     }
 
     /// <summary>

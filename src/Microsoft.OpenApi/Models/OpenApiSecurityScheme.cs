@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), SerializeAsV31WithoutReference);
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
         /// </summary>
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), SerializeAsV3WithoutReference);
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
         /// </summary>
@@ -118,13 +118,13 @@ namespace Microsoft.OpenApi.Models
             Action<IOpenApiWriter> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-           
-            if (Reference != null) 
+
+            if (Reference != null)
             {
                 callback(writer, Reference);
                 return;
             }
-            
+
             action(writer);
         }
 
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, 
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
                 (writer, element) => element.SerializeAsV31(writer));
         }
 
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
                 (writer, element) => element.SerializeAsV3(writer));
         }
 

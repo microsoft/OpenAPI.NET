@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi;
 using Microsoft.OpenApi.Models;

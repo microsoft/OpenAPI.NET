@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -43,7 +42,7 @@ namespace Microsoft.OpenApi.Models
             Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = externalDocs?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions) : null;
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.1.
         /// </summary>
@@ -51,7 +50,7 @@ namespace Microsoft.OpenApi.Models
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi3_1);
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
@@ -59,7 +58,7 @@ namespace Microsoft.OpenApi.Models
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
         /// </summary>

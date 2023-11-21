@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 {
     public class ConvertToOpenApiReferenceV2Tests
     {
-        public OpenApiDiagnostic Diagnostic{get;}
+        public OpenApiDiagnostic Diagnostic { get; }
 
         public ConvertToOpenApiReferenceV2Tests()
         {

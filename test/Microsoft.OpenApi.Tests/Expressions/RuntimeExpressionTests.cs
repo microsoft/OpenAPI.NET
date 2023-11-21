@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Writers

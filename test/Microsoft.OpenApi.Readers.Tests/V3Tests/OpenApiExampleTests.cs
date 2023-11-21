@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 var asJsonNode = yamlNode.ToJsonNode();
                 var node = new MapNode(context, asJsonNode);
-                
+
                 var example = OpenApiV3Deserializer.LoadExample(node);
                 var expected = new OpenApiExample
                 {
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 var actualRoot = example.Value.Node["versions"][0]["status"].Root;
                 var expectedRoot = expected.Value.Node["versions"][0]["status"].Root;
-                
+
                 diagnostic.Errors.Should().BeEmpty();
 
                 example.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences()

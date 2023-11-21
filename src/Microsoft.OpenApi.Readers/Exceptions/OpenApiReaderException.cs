@@ -4,7 +4,6 @@
 using System;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Exceptions;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.Exceptions
 {
@@ -30,7 +29,8 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         /// </summary>
         /// <param name="message">Plain text error message for this exception.</param>
         /// <param name="context">Context of current parsing process.</param>
-        public OpenApiReaderException(string message, ParsingContext context) : base(message) {
+        public OpenApiReaderException(string message, ParsingContext context) : base(message)
+        {
             Pointer = context.GetLocation();
         }
 

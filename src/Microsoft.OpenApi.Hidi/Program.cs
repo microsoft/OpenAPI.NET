@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Handlers;
@@ -51,7 +48,7 @@ namespace Microsoft.OpenApi.Hidi
 
             var formatOption = new Option<OpenApiFormat?>("--format", "File format");
             formatOption.AddAlias("-f");
-            
+
             var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
             terseOutputOption.AddAlias("--to");
 

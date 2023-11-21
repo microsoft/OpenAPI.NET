@@ -3,8 +3,8 @@
 
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Json.Schema;
+using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
 using Xunit;
@@ -12,7 +12,7 @@ using Xunit;
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
     [Collection("DefaultSettings")]
-    public class OpenApiSchemaTests
+    public class JsonSchemaTests
     {
         private const string SampleFolderPath = "V2Tests/Samples/OpenApiSchema/";
 
@@ -30,14 +30,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            schema.Should().BeEquivalentTo(
-                new OpenApiSchema
-                {
-                    Type = "number",
-                    Format = "float",
-                    Default = new OpenApiAny(5)
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(schema => schema.Default.Node.Parent));
+            schema.Should().BeEquivalentTo(new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Number).Format("float").Default(5).Build(),
+                                options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -55,13 +50,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             schema.Should().BeEquivalentTo(
-                new OpenApiSchema
-                {
-                    Type = "number",
-                    Format = "float",
-                    Example = new OpenApiAny(5)
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(schema => schema.Example.Node.Parent));
+                new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Number)
+                    .Format("float")
+                    .Example(5)
+                    .Build(),
+                options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -78,21 +72,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            schema.Should().BeEquivalentTo(
-                new OpenApiSchema
-                {
-                    Type = "number",
-                    Format = "float",
-                    Enum = 
-                    { 
-                        new OpenApiAny(7), 
-                        new OpenApiAny(8), 
-                        new OpenApiAny(9)
-                    }                    
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(s => s.Enum[0].Node.Parent)
-                .Excluding(s => s.Enum[1].Node.Parent)
-                .Excluding(s => s.Enum[2].Node.Parent));
+            var expected = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Number)
+                                .Format("float")
+                                .Enum(7, 8, 9)
+                                .Build();
+            schema.Should().BeEquivalentTo(expected,
+                                options => options.IgnoringCyclicReferences());
         }
     }
 }

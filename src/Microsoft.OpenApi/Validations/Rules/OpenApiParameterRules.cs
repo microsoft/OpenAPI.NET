@@ -86,7 +86,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                             {
                                 context.Enter(key);
                                 context.Enter("value");
-                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(ParameterMismatchedDataType), parameter.Examples[key]?.Value.Node, parameter.Schema);
+                                RuleHelpers.ValidateDataTypeMismatch(context, 
+                                    nameof(ParameterMismatchedDataType), parameter.Examples[key]?.Value.Node, parameter.Schema);
                                 context.Exit();
                                 context.Exit();
                             }
@@ -103,7 +104,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiParameter>(
                 (context, parameter) =>
                 {
-                    if (parameter.In == ParameterLocation.Path && 
+                    if (parameter.In == ParameterLocation.Path &&
                            !(context.PathString.Contains("{" + parameter.Name + "}") || context.PathString.Contains("#/components")))
                     {
                         context.Enter("in");

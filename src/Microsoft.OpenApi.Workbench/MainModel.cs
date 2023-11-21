@@ -4,7 +4,6 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -40,7 +39,7 @@ namespace Microsoft.OpenApi.Workbench
 
         private string _renderTime;
 
-                
+
         /// <summary>
         /// Default format.
         /// </summary>
@@ -215,7 +214,7 @@ namespace Microsoft.OpenApi.Workbench
                     if (_inputFile.StartsWith("http"))
                     {
                         stream = await _httpClient.GetStreamAsync(_inputFile);
-                    } 
+                    }
                     else
                     {
                         stream = new FileStream(_inputFile, FileMode.Open);
@@ -292,7 +291,8 @@ namespace Microsoft.OpenApi.Workbench
                 Output = string.Empty;
                 Errors = "Failed to parse input: " + ex.Message;
             }
-            finally {
+            finally
+            {
                 if (stream != null)
                 {
                     stream.Close();
@@ -308,16 +308,17 @@ namespace Microsoft.OpenApi.Workbench
         private string WriteContents(OpenApiDocument document)
         {
             var outputStream = new MemoryStream();
-            
+
             document.Serialize(
                 outputStream,
                 Version,
                 Format,
-                new OpenApiWriterSettings() {
+                new OpenApiWriterSettings()
+                {
                     InlineLocalReferences = InlineLocal,
                     InlineExternalReferences = InlineExternal
                 });
-            
+
             outputStream.Position = 0;
 
             return new StreamReader(outputStream).ReadToEnd();

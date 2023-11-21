@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
@@ -48,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     mapNode.Context.StartObject(anyFieldName);
 
                     var any = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
-                    
+
                     if (any == null)
                     {
                         anyFieldMap[anyFieldName].PropertySetter(domainObject, null);
@@ -79,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 try
                 {
-                    var newProperty = new List<OpenApiAny>();
+                    var newProperty = new List<JsonNode>();
 
                     mapNode.Context.StartObject(anyListFieldName);
 
@@ -110,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.V3
             foreach (var anyMapFieldName in anyMapFieldMap.Keys.ToList())
             {
                 try
-                {                   
+                {
                     mapNode.Context.StartObject(anyMapFieldName);
 
                     foreach (var propertyMapElement in anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject))
@@ -120,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         if (propertyMapElement.Value != null)
                         {
                             var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
-                           
+
                             anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
                         }
                     }
@@ -166,7 +167,7 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             return node.CreateAny();
         }
-        
+
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))

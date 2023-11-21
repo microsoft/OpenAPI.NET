@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml")))
             {
-                var reader = new OpenApiStreamReader(new OpenApiReaderSettings { LeaveStreamOpen = true});
+                var reader = new OpenApiStreamReader(new OpenApiReaderSettings { LeaveStreamOpen = true });
                 reader.Read(stream, out _);
                 Assert.True(stream.CanRead);
             }

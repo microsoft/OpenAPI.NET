@@ -13,12 +13,15 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal abstract class ParseNode
     {
-        protected ParseNode(ParsingContext parsingContext)
+        protected ParseNode(ParsingContext parsingContext, JsonNode jsonNode)
         {
             Context = parsingContext;
+            JsonNode = jsonNode;
         }
 
         public ParsingContext Context { get; }
+
+        public JsonNode JsonNode { get; }
 
         public MapNode CheckMapNode(string nodeName)
         {
@@ -72,7 +75,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             throw new OpenApiReaderException("Cannot create simple map from this type of node.", Context);
         }
-        
+
         public virtual OpenApiAny CreateAny()
         {
             throw new OpenApiReaderException("Cannot create an Any object this type of node.", Context);
@@ -87,8 +90,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             throw new OpenApiReaderException("Cannot create a scalar value from this type of node.", Context);
         }
-        
-        public virtual List<OpenApiAny> CreateListOfAny()
+
+        public virtual List<JsonNode> CreateListOfAny()
         {
             throw new OpenApiReaderException("Cannot create a list from this type of node.", Context);
         }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net7.0</TargetFrameworks>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -125,10 +125,13 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\basicCallback.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\documentWithReusablePaths.yaml">
+      <EmbeddedResource Include="V31Tests\Samples\OpenApiDocument\documentWithReusablePaths.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\documentWithSummaryAndDescriptionInReference.yaml">
+      <EmbeddedResource Include="V31Tests\Samples\OpenApiDocument\documentWithSummaryAndDescriptionInReference.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V31Tests\Samples\OpenApiDocument\docWithExample.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
@@ -143,10 +146,13 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\docWithSecuritySchemeReference.yaml">
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\docWithJsonSchema.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\docWithSecuritySchemeReference.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\documentWithWebhooks.yaml">
+      <EmbeddedResource Include="V31Tests\Samples\OpenApiDocument\documentWithWebhooks.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\apiWithFullHeaderComponent.yaml">
@@ -179,7 +185,16 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiLicense\licenseWithSpdxIdentifier.yaml">
+      <EmbeddedResource Include="V31Tests\Samples\OpenApiInfo\basicInfo.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V31Tests\Samples\OpenApiSchema\schema.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V31Tests\Samples\OpenApiSchema\advancedSchema.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V31Tests\Samples\OpenApiLicense\licenseWithSpdxIdentifier.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml">
@@ -272,6 +287,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="JsonSchema.Net" Version="4.1.5" />
+        <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+        <PackageReference Include="FluentAssertions" Version="6.7.0" />
         <PackageReference Include="coverlet.collector" Version="3.2.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
@@ -293,8 +312,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Yaml2JsonNode" Version="1.1.0" />
-        <PackageReference Include="YamlDotNet" Version="13.0.2" />
+        <PackageReference Include="Yaml2JsonNode" Version="1.1.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -339,6 +357,12 @@
         <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithReference.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Update="V31Tests\Samples\OpenApiSchema\advancedSchema.yaml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="V31Tests\Samples\OpenApiSchema\schema.yaml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="V3Tests\Samples\CompleteHeader.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -348,6 +372,10 @@
         <None Update="V3Tests\Samples\OpenApiInfo\minimalInfoObject.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+  
+    <ItemGroup>
+      <Folder Include="V31Tests\Samples\OpenApiInfo\" />
     </ItemGroup>
 
 </Project>

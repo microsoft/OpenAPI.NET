@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
@@ -72,7 +73,7 @@ namespace Microsoft.OpenApi.Models.References
         public override bool AllowEmptyValue { get => Target.AllowEmptyValue; set => Target.AllowEmptyValue = value; }
 
         /// <inheritdoc/>
-        public override OpenApiSchema Schema { get => Target.Schema; set => Target.Schema = value; }
+        public override JsonSchema Schema { get => Target.Schema; set => Target.Schema = value; }
 
         /// <inheritdoc/>
         public override ParameterStyle? Style { get => Target.Style; set => Target.Style = value; }

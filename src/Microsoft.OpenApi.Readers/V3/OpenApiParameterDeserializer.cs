@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -30,16 +29,9 @@ namespace Microsoft.OpenApi.Readers.V3
                     {
                         var inString = n.GetScalarValue();
 
-                        if ( Enum.GetValues(typeof(ParameterLocation)).Cast<ParameterLocation>()
+                        o.In = Enum.GetValues(typeof(ParameterLocation)).Cast<ParameterLocation>()
                             .Select( e => e.GetDisplayName() )
-                            .Contains(inString) )
-                        {
-                            o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
-                        }
-                        else
-                        {
-                            o.In = null;
-                        }
+                            .Contains(inString) ? n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>() : null;
                     }
                 },
                 {
@@ -147,10 +139,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-                
-                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer, summary, description);
+                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
             }
 
             var parameter = new OpenApiParameter();

@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -30,10 +29,10 @@ namespace Microsoft.OpenApi.Models
         /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
         protected OpenApiExtensibleDictionary(
             Dictionary<string, T> dictionary = null,
-            IDictionary<string, IOpenApiExtension> extensions = null) : base (dictionary)
+            IDictionary<string, IOpenApiExtension> extensions = null) : base(dictionary)
         {
             Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : null;
-        }       
+        }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -58,11 +57,11 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
-        
+
         /// <summary>
         /// Serialize to Open Api v3.0
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));

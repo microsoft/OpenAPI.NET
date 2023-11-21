@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -49,7 +48,7 @@ namespace Microsoft.OpenApi.Models
             Url = license?.Url != null ? new Uri(license.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.1
         /// </summary>
@@ -64,8 +63,8 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
-        {            
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);            
+        {
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
             writer.WriteEndObject();
         }
 
@@ -82,7 +81,7 @@ namespace Microsoft.OpenApi.Models
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
             writer.WriteStartObject();
-            
+
             // name
             writer.WriteProperty(OpenApiConstants.Name, Name);
 

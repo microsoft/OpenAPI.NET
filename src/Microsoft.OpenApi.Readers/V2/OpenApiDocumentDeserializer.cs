@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
             {
                 "swagger", (o, n) =>
@@ -63,9 +64,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         o.Components = new OpenApiComponents();
                     }
 
-                    o.Components.Schemas = n.CreateMapWithReference(
-                        ReferenceType.Schema,
-                        LoadSchema);
+                    o.Components.Schemas = n.CreateMap(LoadSchema);
                 }
             },
             {
@@ -126,7 +125,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)}
         };
 
-        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
@@ -264,6 +263,8 @@ namespace Microsoft.OpenApi.Readers.V2
             MakeServers(openApidoc.Servers, openApiNode.Context, rootNode);
 
             FixRequestBodyReferences(openApidoc);
+            RegisterComponentsSchemasInGlobalRegistry(openApidoc.Components?.Schemas);
+
             return openApidoc;
         }
 
@@ -309,6 +310,20 @@ namespace Microsoft.OpenApi.Readers.V2
             //Check if the host (excluding port number) is a valid dns/ip address.
             var hostPart = host.Split(':').First();
             return Uri.CheckHostName(hostPart) != UriHostNameType.Unknown;
+        }
+
+        private static void RegisterComponentsSchemasInGlobalRegistry(IDictionary<string, JsonSchema> schemas)
+        {
+            if (schemas == null)
+            {
+                return;
+            }
+
+            foreach (var schema in schemas)
+            {
+                var refUri = new Uri(OpenApiConstants.V2ReferenceUri + schema.Key);
+                SchemaRegistry.Global.Register(refUri, schema.Value);
+            }
         }
     }
 

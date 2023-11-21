@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = OpenApiConstants.Basic           
+            Scheme = OpenApiConstants.Basic
 
         };
 

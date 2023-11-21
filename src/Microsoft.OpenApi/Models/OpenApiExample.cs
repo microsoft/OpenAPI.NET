@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiExample() {}
+        public OpenApiExample() { }
 
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiExample"/> object
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), 
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
         }
 
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
 

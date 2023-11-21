@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -134,7 +133,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiReference() {}
+        public OpenApiReference() { }
 
         /// <summary>
         /// Initializes a copy instance of the <see cref="OpenApiReference"/> object
@@ -157,7 +156,7 @@ namespace Microsoft.OpenApi.Models
             // summary and description are in 3.1 but not in 3.0
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
             writer.WriteProperty(OpenApiConstants.Description, Description);
-            
+
             SerializeInternal(writer);
         }
 
@@ -165,7 +164,7 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
-        {            
+        {
             SerializeInternal(writer);
         }
 
@@ -194,7 +193,7 @@ namespace Microsoft.OpenApi.Models
 
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
-            
+
             writer.WriteEndObject();
         }
 
@@ -235,8 +234,8 @@ namespace Microsoft.OpenApi.Models
                 {
                     return ExternalResource + "#" + Id;
                 }
-                
-                return ExternalResource + "#/components/" + Type.GetDisplayName() + "/"+ Id;
+
+                return ExternalResource + "#/components/" + Type.GetDisplayName() + "/" + Id;
             }
 
             return ExternalResource;

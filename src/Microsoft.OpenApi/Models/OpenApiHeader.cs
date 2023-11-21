@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
@@ -17,6 +19,8 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiHeader : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiHeader>
     {
+        private JsonSchema _schema;
+
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
@@ -64,9 +68,13 @@ namespace Microsoft.OpenApi.Models
         public virtual bool AllowReserved { get; set; }
 
         /// <summary>
-        /// The schema defining the type used for the header.
+        /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual OpenApiSchema Schema { get; set; }
+        public virtual JsonSchema Schema 
+        { 
+            get => _schema; 
+            set => _schema = value;  
+        }
 
         /// <summary>
         /// Example of the media type.
@@ -91,7 +99,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiHeader() {}
+        public OpenApiHeader() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiHeader"/> object
@@ -107,30 +115,30 @@ namespace Microsoft.OpenApi.Models
             Style = header?.Style ?? Style;
             Explode = header?.Explode ?? Explode;
             AllowReserved = header?.AllowReserved ?? AllowReserved;
-            Schema = header?.Schema != null ? new(header?.Schema) : null;
+            _schema = JsonNodeCloneHelper.CloneJsonSchema(header?.Schema);
             Example = JsonNodeCloneHelper.Clone(header?.Example);
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
             Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.1
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), 
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.0
         /// </summary>
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
-        }        
+        }
 
         private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
@@ -151,7 +159,7 @@ namespace Microsoft.OpenApi.Models
                     target = GetEffective(Reference.HostDocument);
                 }
             }
-            
+
             action(writer, target);
         }
 
@@ -177,7 +185,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, 
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
                 (writer, element) => element.SerializeAsV31(writer));
         }
 
@@ -186,7 +194,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
                 (writer, element) => element.SerializeAsV3(writer));
         }
 
@@ -217,7 +225,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteJsonSchema(s));
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
@@ -287,7 +295,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            Schema?.WriteAsItemsProperties(writer);
+            SchemaSerializerHelper.WriteAsItemsProperties(Schema, writer, Extensions);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));

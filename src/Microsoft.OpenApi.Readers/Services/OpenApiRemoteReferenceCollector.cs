@@ -25,7 +25,8 @@ namespace Microsoft.OpenApi.Readers.Services
         /// </summary>
         public IEnumerable<OpenApiReference> References
         {
-            get {
+            get
+            {
                 return _references.Values;
             }
         }
@@ -54,6 +55,6 @@ namespace Microsoft.OpenApi.Readers.Services
                     }
                 }
             }
-        }    
+        }
     }
 }

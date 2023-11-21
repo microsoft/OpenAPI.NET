@@ -48,8 +48,8 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     mapNode.Context.StartObject(anyFieldName);
                     var anyFieldValue = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
-                    
-                    if(anyFieldValue == null)
+
+                    if (anyFieldValue == null)
                     {
                         anyFieldMap[anyFieldName].PropertySetter(domainObject, null);
                     }
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 try
                 {
-                    var newProperty = new List<OpenApiAny>();
+                    var newProperty = new List<JsonNode>();
 
                     mapNode.Context.StartObject(anyListFieldName);
 
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             }
         }
-        
+
         public static OpenApiAny LoadAny(ParseNode node)
         {
             return node.CreateAny();

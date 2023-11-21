@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -11,7 +7,7 @@ using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers.Services
 {
-    internal class OpenApiWorkspaceLoader 
+    internal class OpenApiWorkspaceLoader
     {
         private OpenApiWorkspace _workspace;
         private IStreamLoader _loader;

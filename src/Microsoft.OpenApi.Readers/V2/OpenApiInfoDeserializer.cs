@@ -2,7 +2,6 @@
 // Licensed under the MIT license. 
 
 using System;
-using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -15,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static FixedFieldMap<OpenApiInfo> _infoFixedFields = new FixedFieldMap<OpenApiInfo>
+        private static readonly FixedFieldMap<OpenApiInfo> _infoFixedFields = new FixedFieldMap<OpenApiInfo>
         {
             {
                 "title", (o, n) =>
@@ -55,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         };
 
-        private static PatternFieldMap<OpenApiInfo> _infoPatternFields = new PatternFieldMap<OpenApiInfo>
+        private static readonly PatternFieldMap<OpenApiInfo> _infoPatternFields = new PatternFieldMap<OpenApiInfo>
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };

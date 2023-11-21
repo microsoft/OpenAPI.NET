@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             get
             {
                 return
-                    from input in new [] {         
+                    from input in new[] {
                         "2017-1-2",
                         "1999-01-02T12:10:22",
                         "1999-01-03",
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             get
             {
                 return
-                    from input in new [] { true, false }
+                    from input in new[] { true, false }
                     from shouldBeTerse in shouldProduceTerseOutputValues
                     select new object[] { input, shouldBeTerse };
             }

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 foreach (var produce in produces)
                 {
-                    var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+                    var schema = context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response);
 
                     if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
                     {
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 mediaTypeObject = new OpenApiMediaType
                 {
-                    Schema = node.Context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response)
+                    Schema = node.Context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response)
                 };
                 response.Content.Add(mediaType, mediaTypeObject);
             }

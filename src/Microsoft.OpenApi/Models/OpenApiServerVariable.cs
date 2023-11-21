@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiServerVariable() {}
+        public OpenApiServerVariable() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiServerVariable"/> object
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiServerVariable"/> to Open Api v3.0
         /// </summary>
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiServerVariable"/> to Open Api v3.0
         /// </summary>

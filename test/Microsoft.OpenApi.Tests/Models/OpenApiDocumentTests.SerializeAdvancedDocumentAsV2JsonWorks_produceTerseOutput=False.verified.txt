@@ -62,8 +62,8 @@
                 "type": "object",
                 "properties": {
                   "id": {
-                    "format": "int64",
-                    "type": "integer"
+                    "type": "integer",
+                    "format": "int64"
                   },
                   "name": {
                     "type": "string"
@@ -85,8 +85,8 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "format": "int32",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "message": {
                   "type": "string"
@@ -104,8 +104,8 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "format": "int32",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "message": {
                   "type": "string"
@@ -138,8 +138,8 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "format": "int64",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 },
                 "name": {
                   "type": "string"
@@ -162,8 +162,8 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "format": "int64",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 },
                 "name": {
                   "type": "string"
@@ -184,8 +184,8 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "format": "int32",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "message": {
                   "type": "string"
@@ -203,8 +203,8 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "format": "int32",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "message": {
                   "type": "string"
@@ -245,8 +245,8 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "format": "int64",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 },
                 "name": {
                   "type": "string"
@@ -267,8 +267,8 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "format": "int32",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "message": {
                   "type": "string"
@@ -286,8 +286,8 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "format": "int32",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "message": {
                   "type": "string"
@@ -327,8 +327,8 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "format": "int32",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "message": {
                   "type": "string"
@@ -346,8 +346,8 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "format": "int32",
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "message": {
                   "type": "string"
@@ -368,8 +368,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "format": "int64",
-          "type": "integer"
+          "type": "integer",
+          "format": "int64"
         },
         "name": {
           "type": "string"
@@ -386,8 +386,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "format": "int64",
-          "type": "integer"
+          "type": "integer",
+          "format": "int64"
         },
         "name": {
           "type": "string"
@@ -405,8 +405,8 @@
       "type": "object",
       "properties": {
         "code": {
-          "format": "int32",
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"

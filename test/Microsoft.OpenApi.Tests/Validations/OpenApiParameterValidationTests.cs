@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -73,12 +74,9 @@ namespace Microsoft.OpenApi.Validations.Tests
                 In = ParameterLocation.Path,
                 Required = true,
                 Example = new OpenApiAny(55),
-                Schema = new OpenApiSchema()
-                {
-                    Type = "string",
-                }
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
             };
-            
+
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Enter("{parameter1}");
@@ -111,14 +109,13 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema()
-                {
-                    Type = "object",
-                    AdditionalProperties = new OpenApiSchema()
-                    {
-                        Type = "integer",
-                    }
-                },
+                Schema = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Object)
+                            .AdditionalProperties(
+                                new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Integer)
+                                .Build())
+                            .Build(),
                 Examples =
                     {
                         ["example0"] = new OpenApiExample()
@@ -136,15 +133,14 @@ namespace Microsoft.OpenApi.Validations.Tests
                         },
                         ["example2"] = new OpenApiExample()
                         {
-                            Value =
-                            new OpenApiAny(new JsonArray(){3})
+                            Value = new OpenApiAny(new JsonArray(){3})
                         },
                         ["example3"] = new OpenApiExample()
                         {
                             Value = new OpenApiAny(new JsonObject()
                             {
                                 ["x"] = 4,
-                                ["y"] =40
+                                ["y"] = 40
                             })
                         },
                     }
@@ -188,10 +184,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema()
-                {
-                    Type = "string",
-                }
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
             };
 
             // Act
@@ -226,10 +219,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema()
-                {
-                    Type = "string",
-                }
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
             };
 
             // Act

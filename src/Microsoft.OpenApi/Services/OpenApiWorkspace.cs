@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Json.More;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -18,18 +18,21 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
-        private Dictionary<Uri, OpenApiDocument> _documents = new Dictionary<Uri, OpenApiDocument>();
-        private Dictionary<Uri, IOpenApiReferenceable> _fragments = new Dictionary<Uri, IOpenApiReferenceable>();
-        private Dictionary<Uri, Stream> _artifacts = new Dictionary<Uri, Stream>();
+        private readonly Dictionary<Uri, OpenApiDocument> _documents = new();
+        private readonly Dictionary<Uri, IOpenApiReferenceable> _fragments = new();
+        private readonly Dictionary<Uri, JsonSchema> _schemaFragments = new();
+        private readonly Dictionary<Uri, Stream> _artifacts = new();
 
         /// <summary>
         /// A list of OpenApiDocuments contained in the workspace
         /// </summary>
-        public IEnumerable<OpenApiDocument> Documents {
-            get {
+        public IEnumerable<OpenApiDocument> Documents
+        {
+            get
+            {
                 return _documents.Values;
             }
-        }  
+        }
 
         /// <summary>
         /// A list of document fragments that are contained in the workspace
@@ -60,13 +63,13 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public OpenApiWorkspace()
         {
-            BaseUrl = new Uri("file://" + Environment.CurrentDirectory + "\\" );
+            BaseUrl = new Uri("file://" + Environment.CurrentDirectory + "\\");
         }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiWorkspace"/> object
         /// </summary>
-        public OpenApiWorkspace(OpenApiWorkspace workspace){}
+        public OpenApiWorkspace(OpenApiWorkspace workspace) { }
 
         /// <summary>
         /// Verify if workspace contains a document based on its URL. 
@@ -84,7 +87,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="location"></param>
         /// <param name="document"></param>
-        public void AddDocument(string location, OpenApiDocument  document)
+        public void AddDocument(string location, OpenApiDocument document)
         {
             document.Workspace = this;
             _documents.Add(ToLocationUrl(location), document);
@@ -101,6 +104,16 @@ namespace Microsoft.OpenApi.Services
         public void AddFragment(string location, IOpenApiReferenceable fragment)
         {
             _fragments.Add(ToLocationUrl(location), fragment);
+        }
+
+        /// <summary>
+        /// Adds a schema fragment of an OpenApiDocument to the workspace.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="fragment"></param>
+        public void AddSchemaFragment(string location, JsonSchema fragment)
+        {
+            _schemaFragments.Add(ToLocationUrl(location), fragment);
         }
 
         /// <summary>
@@ -133,6 +146,41 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Resolve the target of a JSON schema reference from within the workspace
+        /// </summary>
+        /// <param name="reference">An instance of a JSON schema reference.</param>
+        /// <returns></returns>
+        public JsonSchema ResolveJsonSchemaReference(Uri reference)
+        {
+            var docs = _documents.Values;
+            if (docs.Any())
+            {
+                var doc = docs.FirstOrDefault();
+                if (doc != null)
+                {
+                    foreach (var jsonSchema in doc.Components.Schemas)
+                    {
+                        var refUri = new Uri(OpenApiConstants.V3ReferenceUri + jsonSchema.Key);
+                        SchemaRegistry.Global.Register(refUri, jsonSchema.Value);
+                    }
+
+                    var resolver = new OpenApiReferenceResolver(doc);
+                    return resolver.ResolveJsonSchemaReference(reference);
+                }
+                return null;
+            }
+            else
+            {
+                foreach (var jsonSchema in _schemaFragments)
+                {
+                    SchemaRegistry.Global.Register(reference, jsonSchema.Value);
+                }
+
+                return FetchSchemaFromRegistry(reference);                
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="location"></param>
@@ -145,6 +193,12 @@ namespace Microsoft.OpenApi.Services
         private Uri ToLocationUrl(string location)
         {
             return new Uri(BaseUrl, location);
+        }
+
+        private static JsonSchema FetchSchemaFromRegistry(Uri reference)
+        {
+            var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(reference);
+            return resolvedSchema;
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using System.Text.Json.Nodes;
+using Json.Schema;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -14,28 +14,28 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Constructor
         /// </summary>
         public AnyListFieldMapParameter(
-            Func<T, IList<OpenApiAny>> propertyGetter,
-            Action<T, IList<OpenApiAny>> propertySetter,
-            Func<T, OpenApiSchema> schemaGetter)
+            Func<T, IList<JsonNode>> propertyGetter,
+            Action<T, IList<JsonNode>> propertySetter,
+            Func<T, JsonSchema> SchemaGetter = null)
         {
             this.PropertyGetter = propertyGetter;
             this.PropertySetter = propertySetter;
-            this.SchemaGetter = schemaGetter;
+            this.SchemaGetter = SchemaGetter;
         }
 
         /// <summary>
         /// Function to retrieve the value of the property.
         /// </summary>
-        public Func<T, IList<OpenApiAny>> PropertyGetter { get; }
+        public Func<T, IList<JsonNode>> PropertyGetter { get; }
 
         /// <summary>
         /// Function to set the value of the property.
         /// </summary>
-        public Action<T, IList<OpenApiAny>> PropertySetter { get; }
+        public Action<T, IList<JsonNode>> PropertySetter { get; }
 
         /// <summary>
         /// Function to get the schema to apply to the property.
         /// </summary>
-        public Func<T, OpenApiSchema> SchemaGetter { get; }
+        public Func<T, JsonSchema> SchemaGetter { get; }
     }
 }

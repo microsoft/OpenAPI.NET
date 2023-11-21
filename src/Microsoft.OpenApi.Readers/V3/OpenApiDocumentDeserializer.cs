@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
             {
                 "openapi", (o, n) =>
@@ -21,10 +21,8 @@ namespace Microsoft.OpenApi.Readers.V3
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
-            {"jsonSchemaDialect", (o, n) => o.JsonSchemaDialect = n.GetScalarValue() },
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
-            {"webhooks", (o, n) => o.Webhooks = LoadPaths(n)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
@@ -40,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}
         };
 
-        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}

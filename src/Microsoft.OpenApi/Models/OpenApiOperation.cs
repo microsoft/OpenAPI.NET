@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiOperation() {}
+        public OpenApiOperation() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiOperation"/> object
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
         /// </summary>
@@ -195,8 +195,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, callback);
 
             // specification extensions
-            writer.WriteExtensions(Extensions,version);
-            
+            writer.WriteExtensions(Extensions, version);
+
             writer.WriteEndObject();
         }
 

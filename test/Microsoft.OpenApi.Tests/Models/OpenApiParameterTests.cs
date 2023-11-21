@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -45,19 +46,15 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Required = true,
             Deprecated = false,
-
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema = new OpenApiSchema
-            {
-                Title = "title2",
-                Description = "description2",
-                OneOf = new List<OpenApiSchema>
-                {
-                    new OpenApiSchema { Type = "number", Format = "double" },
-                    new OpenApiSchema { Type = "string" }                        
-                }
-            },
+            Schema = new JsonSchemaBuilder()
+                        .Title("title2")
+                        .Description("description2")
+                        .OneOf(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("double").Build(),
+                            new JsonSchemaBuilder().Type(SchemaValueType.String).Build())
+                        .Build(),
+
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
@@ -75,19 +72,18 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Style = ParameterStyle.Form,
             Explode = false,
-            Schema = new OpenApiSchema
-            {
-                Type = "array",
-                Items = new OpenApiSchema
-                {
-                    Enum = new List<OpenApiAny>
+            Schema = new JsonSchemaBuilder()
+            .Type(SchemaValueType.Array)
+            .Items(
+                new JsonSchemaBuilder()
+                .Enum(new List<JsonNode>
                     {
-                        new OpenApiAny("value1"),
-                        new OpenApiAny("value2")
-                    }
-                }
-            }
-            
+                        new OpenApiAny("value1").Node,
+                        new OpenApiAny("value2").Node
+                    })
+                .Build())
+            .Build()
+
         };
 
         public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
@@ -97,34 +93,32 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Style = ParameterStyle.Form,
             Explode = true,
-            Schema = new OpenApiSchema
-            {
-                Type = "array",
-                Items = new OpenApiSchema
-                {
-                    Enum = new List<OpenApiAny>
+            Schema = new JsonSchemaBuilder()
+            .Type(SchemaValueType.Array)
+            .Items(
+                new JsonSchemaBuilder()
+                .Enum(new List<JsonNode>
                     {
-                        new OpenApiAny("value1"),
-                        new OpenApiAny("value2")
-                    }
-                }
-            }
+                        new OpenApiAny("value1").Node,
+                        new OpenApiAny("value2").Node
+                    })
+                .Build())
+            .Build()
 
         };
-        
+
         public static OpenApiParameter QueryParameterWithMissingStyle = new OpenApiParameter
-        {            
+        {
             Name = "id",
             In = ParameterLocation.Query,
-            Schema = new OpenApiSchema
-            {
-                Type = "object",
-                AdditionalProperties = new OpenApiSchema
-                {
-                    Type = "integer"
-                }                
-            }
-        };    
+            Schema = new JsonSchemaBuilder()
+            .Type(SchemaValueType.Object)
+            .AdditionalProperties(
+                new JsonSchemaBuilder()
+                .Type(SchemaValueType.Integer).Build())
+            .AdditionalPropertiesAllowed(true)
+            .Build()
+        };
 
         public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter
         {
@@ -136,15 +130,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "schemaObject1"
-                },
-                UnresolvedReference = true
-            },
+            Schema = new JsonSchemaBuilder().Ref("schemaObject1").Build(),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
@@ -165,10 +151,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema = new OpenApiSchema
-            {
-                Type = "object"
-            },
+            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
@@ -201,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act & Assert
             parameter.Explode.Should().Be(expectedExplode);
-        }        
+        }
 
         [Theory]
         [InlineData(ParameterLocation.Path, ParameterStyle.Simple)]
@@ -223,7 +206,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act & Assert
             parameter.SerializeAsV3(writer);
             writer.Flush();
-            
+
             parameter.Style.Should().Be(expectedStyle);
         }
 
@@ -387,23 +370,6 @@ schema:
 
             // Act
             ReferencedParameter.SerializeAsV2WithoutReference(writer);
-            writer.Flush();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeParameterWithSchemaReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
-
-            // Act
-            AdvancedHeaderParameterWithSchemaReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

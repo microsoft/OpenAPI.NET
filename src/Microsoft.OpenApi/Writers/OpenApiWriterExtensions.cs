@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Writers
@@ -138,7 +139,6 @@ namespace Microsoft.OpenApi.Writers
             string name,
             T value,
             Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
         {
             if (value != null)
             {
@@ -165,7 +165,6 @@ namespace Microsoft.OpenApi.Writers
             string name,
             T value,
             Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
         {
             CheckArguments(writer, name, action);
 
@@ -213,7 +212,6 @@ namespace Microsoft.OpenApi.Writers
             string name,
             IEnumerable<T> elements,
             Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
         {
             if (elements != null && elements.Any())
             {
@@ -222,21 +220,39 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write the required Open API object/element collection.
+        /// Write the required Open API element map (string to string mapping).
+        /// </summary>
+        /// <param name="writer">The Open API writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="elements">The map values.</param>
+        /// <param name="action">The map element writer action.</param>
+        public static void WriteRequiredMap(
+            this IOpenApiWriter writer,
+            string name,
+            IDictionary<string, string> elements,
+            Action<IOpenApiWriter, string> action)
+        {
+            writer.WriteMapInternal(name, elements, action);
+        }
+
+        /// <summary>
+        /// Write the optional Open API element map.
         /// </summary>
         /// <typeparam name="T">The Open API element type. <see cref="IOpenApiElement"/></typeparam>
         /// <param name="writer">The Open API writer.</param>
         /// <param name="name">The property name.</param>
-        /// <param name="elements">The collection values.</param>
-        /// <param name="action">The collection element writer action.</param>
-        public static void WriteRequiredCollection<T>(
+        /// <param name="elements">The map values.</param>
+        /// <param name="action">The map element writer action with writer and value as input.</param>
+        public static void WriteOptionalMap(
             this IOpenApiWriter writer,
             string name,
-            IEnumerable<T> elements,
-            Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
+            IDictionary<string, JsonSchema> elements,
+            Action<IOpenApiWriter, string, JsonSchema> action)
         {
-            writer.WriteCollectionInternal(name, elements, action);
+            if (elements != null && elements.Any())
+            {
+                writer.WriteMapInternal(name, elements, action);
+            }
         }
 
         /// <summary>
@@ -256,22 +272,6 @@ namespace Microsoft.OpenApi.Writers
             {
                 writer.WriteMapInternal(name, elements, action);
             }
-        }
-
-        /// <summary>
-        /// Write the required Open API element map (string to string mapping).
-        /// </summary>
-        /// <param name="writer">The Open API writer.</param>
-        /// <param name="name">The property name.</param>
-        /// <param name="elements">The map values.</param>
-        /// <param name="action">The map element writer action.</param>
-        public static void WriteRequiredMap(
-            this IOpenApiWriter writer,
-            string name,
-            IDictionary<string, string> elements,
-            Action<IOpenApiWriter, string> action)
-        {
-            writer.WriteMapInternal(name, elements, action);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace Microsoft.OpenApi.Writers
 
             writer.WriteEndArray();
         }
-
+        
         private static void WriteMapInternal<T>(
             this IOpenApiWriter writer,
             string name,

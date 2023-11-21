@@ -45,12 +45,12 @@ paths:
                 schema:
                     type: array
                     items:
-                      "$ref": '#/components/schemas/pet'
+                      "$ref": '#/components/schemas/pet1'
             application/xml:
                 schema:
                     type: array
                     items:
-                      "$ref": '#/components/schemas/pet'
+                      "$ref": '#/components/schemas/pet1'
 
         '4XX':
           description: unexpected client error
@@ -83,7 +83,7 @@ paths:
           content:
             application/json:
                 schema:
-                    "$ref": '#/components/schemas/pet'
+                    "$ref": '#/components/schemas/pet1'
         '4XX':
           description: unexpected client error
           content:
@@ -119,10 +119,10 @@ paths:
           content:
             application/json:
                 schema:
-                    "$ref": '#/components/schemas/pet'
+                    "$ref": '#/components/schemas/pet1'
             application/xml:
                 schema:
-                    "$ref": '#/components/schemas/pet'
+                    "$ref": '#/components/schemas/pet1'
         '4XX':
           description: unexpected client error
           content:
@@ -163,7 +163,7 @@ paths:
                 "$ref": '#/components/schemas/errorModel'
 components:
   schemas:
-    pet:
+    pet1:
       type: object
       required:
         - id

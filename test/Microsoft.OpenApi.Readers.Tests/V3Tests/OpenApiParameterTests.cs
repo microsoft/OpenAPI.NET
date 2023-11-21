@@ -3,6 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -37,10 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 });
         }
 
@@ -65,14 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
-                    },
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     Style = ParameterStyle.Form,
                     Explode = true
                 });
@@ -97,14 +88,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "freeForm",
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "object",
-                        AdditionalProperties = new OpenApiSchema
-                        {
-                            Type = "integer"
-                        }
-                    },
+                    Schema = new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Object)
+                    .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
                     Style = ParameterStyle.Form
                 });
         }
@@ -132,26 +118,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["application/json"] = new OpenApiMediaType
                         {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "object",
-                                Required =
-                                {
-                                    "lat",
-                                    "long"
-                                },
-                                Properties =
-                                {
-                                    ["lat"] = new OpenApiSchema
-                                    {
-                                        Type = "number"
-                                    },
-                                    ["long"] = new OpenApiSchema
-                                    {
-                                        Type = "number"
-                                    }
-                                }
-                            }
+                            Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Required("lat", "long")
+                                .Properties(
+                                    ("lat", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.Number)
+                                    ),
+                                    ("long", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.Number)
+                                    )
+                                )
                         }
                     }
                 });
@@ -180,15 +157,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "integer",
-                            Format = "int64",
-                        }
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Array)
+                        .Items(new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Integer)
+                            .Format("int64"))
                 });
         }
 
@@ -213,10 +186,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.String)
                 });
         }
 
@@ -241,10 +212,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.String)
                 });
         }
 
@@ -269,10 +238,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.String)
                 });
         }
 
@@ -298,14 +265,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Example = new OpenApiAny((float)5.0),
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "number",
-                        Format = "float"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Number)
+                        .Format("float")
                 }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Node.Parent));
         }
-        
+
         [Fact]
         public void ParseParameterWithExamplesShouldSucceed()
         {
@@ -338,11 +303,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Value = new OpenApiAny((float)7.5)
                         }
                     },
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "number",
-                        Format = "float"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Number)
+                                .Format("float")
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(p => p.Examples["example1"].Value.Node.Parent)
                 .Excluding(p => p.Examples["example2"].Value.Node.Parent));

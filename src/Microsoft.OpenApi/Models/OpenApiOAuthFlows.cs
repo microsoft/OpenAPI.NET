@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiOAuthFlows() {}
+        public OpenApiOAuthFlows() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiOAuthFlows"/> object
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v3.0
         /// </summary>
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/>
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));

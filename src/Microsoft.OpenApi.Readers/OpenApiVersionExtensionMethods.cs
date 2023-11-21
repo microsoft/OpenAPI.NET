@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers
             {
                 result = true;
             }
-            
+
             return result;
         }
 

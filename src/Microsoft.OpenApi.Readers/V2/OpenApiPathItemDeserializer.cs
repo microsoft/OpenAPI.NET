@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.V2
             if (bodyParameter != null)
             {
                 var requestBody = CreateRequestBody(node.Context, bodyParameter);
-                foreach(var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
+                foreach (var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
                 {
                     switch (opPair.Key)
                     {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
 using Microsoft.OpenApi.Readers.V3;
+using Microsoft.OpenApi.Readers.V31;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Readers
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new Dictionary<object, Dictionary<string, object>>();
         private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
-        internal Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = 
+        internal Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } =
             new Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
 
         internal RootNode RootNode { get; set; }
@@ -68,13 +69,18 @@ namespace Microsoft.OpenApi.Readers
                     ValidateRequiredFields(doc, version);
                     break;
 
-                case string version when version.is3_0() || version.is3_1():
+                case string version when version.is3_0():
                     VersionService = new OpenApiV3VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = version.is3_1() ? OpenApiSpecVersion.OpenApi3_1 : OpenApiSpecVersion.OpenApi3_0;
                     ValidateRequiredFields(doc, version);
                     break;
-
+                case string version when version.is3_1():
+                    VersionService = new OpenApiV31VersionService(Diagnostic);
+                    doc = VersionService.LoadDocument(RootNode);
+                    this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_1;
+                    ValidateRequiredFields(doc, version);
+                    break;
                 default:
                     throw new OpenApiUnsupportedSpecVersionException(inputVersion);
             }
@@ -103,6 +109,10 @@ namespace Microsoft.OpenApi.Readers
 
                 case OpenApiSpecVersion.OpenApi3_0:
                     this.VersionService = new OpenApiV3VersionService(Diagnostic);
+                    element = this.VersionService.LoadElement<T>(node);
+                    break;
+                case OpenApiSpecVersion.OpenApi3_1:
+                    this.VersionService = new OpenApiV31VersionService(Diagnostic);
                     element = this.VersionService.LoadElement<T>(node);
                     break;
             }
@@ -145,7 +155,7 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public string GetLocation()
         {
-            return "#/" + string.Join("/", _currentLocation.Reverse().Select(s=> s.Replace("~","~0").Replace("/","~1")).ToArray());
+            return "#/" + string.Join("/", _currentLocation.Reverse().Select(s => s.Replace("~", "~0").Replace("/", "~1")).ToArray());
         }
 
         /// <summary>

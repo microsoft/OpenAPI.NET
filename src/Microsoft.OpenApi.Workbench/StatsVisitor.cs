@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
@@ -22,7 +20,7 @@ namespace Microsoft.OpenApi.Workbench
 
         public int SchemaCount { get; set; } = 0;
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(ref JsonSchema schema)
         {
             SchemaCount++;
         }

@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers
         {
             _settings = settings ?? new OpenApiReaderSettings();
 
-            if((_settings.ReferenceResolution == ReferenceResolutionSetting.ResolveAllReferences || _settings.LoadExternalRefs)
+            if ((_settings.ReferenceResolution == ReferenceResolutionSetting.ResolveAllReferences || _settings.LoadExternalRefs)
                 && _settings.BaseUrl == null)
             {
                 throw new ArgumentException("BaseUrl must be provided to resolve external references.");

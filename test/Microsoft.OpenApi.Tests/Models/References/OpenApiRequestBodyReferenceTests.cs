@@ -5,6 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers;
@@ -18,8 +20,8 @@ namespace Microsoft.OpenApi.Tests.Models.References
     [UsesVerify]
     public class OpenApiRequestBodyReferenceTests
     {
-        private const string OpenApi = @"
-openapi: 3.0.3
+        private readonly string OpenApi = @"
+openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
@@ -53,8 +55,8 @@ components:
           type: string
 ";
 
-        private const string OpenApi_2 = @"
-openapi: 3.0.3
+        private readonly string OpenApi_2 = @"
+openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
@@ -98,6 +100,15 @@ paths:
         public void RequestBodyReferenceResolutionWorks()
         {
             // Assert
+            var expectedSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .Properties(
+                    ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    ("email", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .Build();
+            var actualSchema = _localRequestBodyReference.Content["application/json"].Schema;
+
+            actualSchema.Should().BeEquivalentTo(expectedSchema);
             Assert.Equal("User request body", _localRequestBodyReference.Description);
             Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
             Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);

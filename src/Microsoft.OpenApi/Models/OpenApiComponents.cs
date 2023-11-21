@@ -3,8 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+
 
 namespace Microsoft.OpenApi.Models
 {
@@ -14,9 +17,9 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
+        /// An object to hold reusable <see cref="JsonSchema"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
+        public IDictionary<string, JsonSchema> Schemas { get; set; } = new Dictionary<string, JsonSchema>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
@@ -81,7 +84,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
+            Schemas = components?.Schemas != null ? new Dictionary<string, JsonSchema>(components.Schemas) : null;
             Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
             Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
             Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
@@ -111,7 +114,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            
+
             // pathItems - only present in v3.1
             writer.WriteOptionalMap(
             OpenApiConstants.PathItems,
@@ -131,7 +134,7 @@ namespace Microsoft.OpenApi.Models
             });
 
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer),
-               (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));          
+               (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));
         }
 
         /// <summary>
@@ -154,11 +157,11 @@ namespace Microsoft.OpenApi.Models
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer),
                 (writer, referenceElement) => referenceElement.SerializeAsV3WithoutReference(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/>.
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
@@ -168,17 +171,17 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(
                 OpenApiConstants.Schemas,
                 Schemas,
-                (w, key, component) =>
+                (w, key, s) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                    var reference = s.GetRef();
+                    if (reference != null &&
+                        reference.OriginalString.Split('/').Last().Equals(key))
                     {
-                        action(w, component);
+                        w.WriteJsonSchemaWithoutReference(w, s);
                     }
                     else
                     {
-                        callback(w, component);
+                        w.WriteJsonSchema(s);
                     }
                 });
 
@@ -243,9 +246,9 @@ namespace Microsoft.OpenApi.Models
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.RequestBody && 
+                        component.Reference.Type == ReferenceType.RequestBody &&
                         string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
-                        
+
                     {
                         action(w, component);
                     }
@@ -326,7 +329,7 @@ namespace Microsoft.OpenApi.Models
                         callback(w, component);
                     }
                 });
-            
+
             // extensions
             writer.WriteExtensions(Extensions, version);
             writer.WriteEndObject();
@@ -336,19 +339,16 @@ namespace Microsoft.OpenApi.Models
         {
             var loops = writer.GetSettings().LoopDetector.Loops;
             writer.WriteStartObject();
-            if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+            if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
             {
-
                 writer.WriteOptionalMap(
                    OpenApiConstants.Schemas,
                    Schemas,
-                   static (w, key, component) => {
-                       component.SerializeAsV31WithoutReference(w);
-                   });
+                   static (w, key, s) => { w.WriteJsonSchema(s); });
             }
             writer.WriteEndObject();
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
         /// </summary>

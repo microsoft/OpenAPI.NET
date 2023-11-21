@@ -4,9 +4,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
+using Json.Schema;
+using Json.Schema.OpenApi;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -15,7 +21,7 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public abstract class OpenApiWriterBase : IOpenApiWriter
     {
-        
+
         /// <summary>
         /// Settings for controlling how the OpenAPI document will be written out.
         /// </summary>
@@ -49,7 +55,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter"></param>
         /// <param name="settings"></param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings) 
+        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
@@ -227,6 +233,10 @@ namespace Microsoft.OpenApi.Writers
             {
                 WriteValue((int)value);
             }
+            else if (type == typeof(uint) || type == typeof(uint?))
+            {
+                WriteValue((uint)value);
+            }
             else if (type == typeof(long) || type == typeof(long?))
             {
                 WriteValue((long)value);
@@ -299,7 +309,7 @@ namespace Microsoft.OpenApi.Writers
                 Writer.Write(IndentationString);
             }
         }
-
+        
         /// <summary>
         /// Get current scope.
         /// </summary>
@@ -409,6 +419,193 @@ namespace Microsoft.OpenApi.Writers
                 throw new OpenApiWriterException(
                     string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
             }
+        }
+
+        /// <summary>
+        /// Writes out a JsonSchema object
+        /// </summary>
+        /// <param name="schema"></param>
+        public void WriteJsonSchema(JsonSchema schema)
+        {
+            if (schema == null)
+            {
+                return;
+            }
+            
+            var reference = schema.GetRef();
+            if (reference != null)
+            {
+                if (!Settings.ShouldInlineReference())
+                {
+                    WriteJsonSchemaReference(this, reference);
+                    return;
+                }
+                else
+                {
+                    if (Settings.InlineExternalReferences)
+                    {
+                        FindJsonSchemaRefs.ResolveJsonSchema(schema);
+                    }
+                    if (!Settings.LoopDetector.PushLoop(schema))
+                    {
+                        Settings.LoopDetector.SaveLoop(schema);
+                        WriteJsonSchemaReference(this, reference);
+                        return;
+                    }
+                }
+            }
+
+            WriteJsonSchemaWithoutReference(this, schema);
+
+            if (reference != null)
+            {
+                Settings.LoopDetector.PopLoop<JsonSchema>();
+            }
+        }
+
+        /// <inheritdoc />
+        public void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema)
+        {
+            writer.WriteStartObject();
+
+            // title
+            writer.WriteProperty(OpenApiConstants.Title, schema.GetTitle());
+
+            // multipleOf
+            writer.WriteProperty(OpenApiConstants.MultipleOf, schema.GetMultipleOf());
+
+            // maximum
+            writer.WriteProperty(OpenApiConstants.Maximum, schema.GetMaximum());
+
+            // exclusiveMaximum
+            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, schema.GetOpenApiExclusiveMaximum());
+
+            // minimum
+            writer.WriteProperty(OpenApiConstants.Minimum, schema.GetMinimum());
+
+            // exclusiveMinimum
+            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, schema.GetOpenApiExclusiveMinimum());
+
+            // maxLength
+            writer.WriteProperty(OpenApiConstants.MaxLength, schema.GetMaxLength());
+
+            // minLength
+            writer.WriteProperty(OpenApiConstants.MinLength, schema.GetMinLength());
+
+            // pattern
+            writer.WriteProperty(OpenApiConstants.Pattern, schema.GetPattern()?.ToString());
+
+            // maxItems
+            writer.WriteProperty(OpenApiConstants.MaxItems, schema.GetMaxItems());
+
+            // minItems
+            writer.WriteProperty(OpenApiConstants.MinItems, schema.GetMinItems());
+
+            // uniqueItems
+            writer.WriteProperty(OpenApiConstants.UniqueItems, schema.GetUniqueItems());
+
+            // maxProperties
+            writer.WriteProperty(OpenApiConstants.MaxProperties, schema.GetMaxProperties());
+
+            // minProperties
+            writer.WriteProperty(OpenApiConstants.MinProperties, schema.GetMinProperties());
+
+            // required
+            writer.WriteOptionalCollection(OpenApiConstants.Required, schema.GetRequired(), (w, s) => w.WriteValue(s));
+
+            // enum
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, schema.GetEnum(), (nodeWriter, s) => nodeWriter.WriteAny(new OpenApiAny(s)));
+
+            // type
+            writer.WriteProperty(OpenApiConstants.Type, schema.GetJsonType()?.ToString().ToLowerInvariant());
+
+            // allOf
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, schema.GetAllOf(), (w, s) => w.WriteJsonSchema(s));
+
+            // anyOf
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, schema.GetAnyOf(), (w, s) => w.WriteJsonSchema(s));
+
+            // oneOf
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, schema.GetOneOf(), (w, s) => w.WriteJsonSchema(s));
+
+            // not
+            writer.WriteOptionalObject(OpenApiConstants.Not, schema.GetNot(), (w, s) => w.WriteJsonSchema(s));
+
+            // items
+            writer.WriteOptionalObject(OpenApiConstants.Items, schema.GetItems(), (w, s) => w.WriteJsonSchema(s));
+
+            // properties
+            writer.WriteOptionalMap(OpenApiConstants.Properties, (IDictionary<string, JsonSchema>)schema.GetProperties(),
+                (w, key, s) => w.WriteJsonSchema(s));
+
+            // additionalProperties
+            if (schema.GetAdditionalPropertiesAllowed() ?? false)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.AdditionalProperties,
+                    schema.GetAdditionalProperties(),
+                    (w, s) => w.WriteJsonSchema(s));
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.AdditionalProperties, schema.GetAdditionalPropertiesAllowed());
+            }
+
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, schema.GetDescription());
+
+            // format
+            writer.WriteProperty(OpenApiConstants.Format, schema.GetFormat()?.Key);
+
+            // default
+            writer.WriteOptionalObject(OpenApiConstants.Default, schema.GetDefault(), (w, d) => w.WriteAny(new OpenApiAny(d)));
+
+            // nullable
+            writer.WriteProperty(OpenApiConstants.Nullable, schema.GetNullable(), false);
+
+            // discriminator
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, schema.GetOpenApiDiscriminator(), (w, d) => d.SerializeAsV3(w));
+
+            // readOnly
+            writer.WriteProperty(OpenApiConstants.ReadOnly, schema.GetReadOnly(), false);
+
+            // writeOnly
+            writer.WriteProperty(OpenApiConstants.WriteOnly, schema.GetWriteOnly(), false);
+
+            // xml
+            writer.WriteOptionalObject(OpenApiConstants.Xml, schema.GetXml(), (w, s) => JsonSerializer.Serialize(s));
+
+            // externalDocs
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, schema.GetExternalDocs(), (w, s) => JsonSerializer.Serialize(s));
+
+            // example
+            writer.WriteOptionalObject(OpenApiConstants.Example, schema.GetExample(), (w, e) => w.WriteAny(new OpenApiAny(e)));
+
+            // deprecated
+            writer.WriteProperty(OpenApiConstants.Deprecated, schema.GetDeprecated(), false);
+
+            // extensions
+            writer.WriteExtensions(schema.GetExtensions(), OpenApiSpecVersion.OpenApi3_0);
+
+            writer.WriteEndObject();
+        }
+
+        /// <inheritdoc />
+        public void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference)
+        {
+            this.WriteStartObject();
+            this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
+            WriteEndObject();
+        }
+    }
+
+    internal class FindJsonSchemaRefs : OpenApiVisitorBase
+    {
+        public static void ResolveJsonSchema(JsonSchema schema)
+        {
+            var visitor = new FindJsonSchemaRefs();
+            var walker = new OpenApiWalker(visitor);
+            walker.Walk(schema);
         }
     }
 }

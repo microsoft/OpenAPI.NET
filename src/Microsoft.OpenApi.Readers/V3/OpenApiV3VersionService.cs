@@ -1,10 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
             [typeof(OpenApiRequestBody)] = OpenApiV3Deserializer.LoadRequestBody,
             [typeof(OpenApiResponse)] = OpenApiV3Deserializer.LoadResponse,
             [typeof(OpenApiResponses)] = OpenApiV3Deserializer.LoadResponses,
-            [typeof(OpenApiSchema)] = OpenApiV3Deserializer.LoadSchema,
+            [typeof(JsonSchema)] = OpenApiV3Deserializer.LoadSchema,
             [typeof(OpenApiSecurityRequirement)] = OpenApiV3Deserializer.LoadSecurityRequirement,
             [typeof(OpenApiSecurityScheme)] = OpenApiV3Deserializer.LoadSecurityScheme,
             [typeof(OpenApiServer)] = OpenApiV3Deserializer.LoadServer,
@@ -86,8 +86,6 @@ namespace Microsoft.OpenApi.Readers.V3
                     {
                         return new OpenApiReference
                         {
-                            Summary = summary,
-                            Description = description,
                             Type = type,
                             Id = reference
                         };
@@ -97,8 +95,6 @@ namespace Microsoft.OpenApi.Readers.V3
                     // or a simple string-style reference for tag and security scheme.
                     return new OpenApiReference
                     {
-                        Summary = summary,
-                        Description = description,
                         Type = type,
                         ExternalResource = segments[0]
                     };
@@ -110,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         // "$ref": "#/components/schemas/Pet"
                         try
                         {
-                            return ParseLocalReference(segments[1], summary, description);
+                            return ParseLocalReference(segments[1]);
                         }
                         catch (OpenApiException ex)
                         {
@@ -129,7 +125,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         if (type == null)
                         {
                             type = referencedType;
-                        } 
+                        }
                         else
                         {
                             if (type != referencedType)
@@ -165,7 +161,6 @@ namespace Microsoft.OpenApi.Readers.V3
             return (T)_loaders[typeof(T)](node);
         }
 
-
         /// <inheritdoc />
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
@@ -180,7 +175,7 @@ namespace Microsoft.OpenApi.Readers.V3
             return null;
         }
 
-        private OpenApiReference ParseLocalReference(string localReference, string summary = null, string description = null)
+        private OpenApiReference ParseLocalReference(string localReference)
         {
             if (string.IsNullOrWhiteSpace(localReference))
             {
@@ -202,12 +197,10 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     var parsedReference = new OpenApiReference
                     {
-                        Summary = summary,
-                        Description = description,
                         Type = referenceType,
                         Id = refId
                     };
-                    
+
                     return parsedReference;
                 }
             }

@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiXml() {}
+        public OpenApiXml() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiXml"/> object
