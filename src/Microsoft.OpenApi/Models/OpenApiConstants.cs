@@ -598,12 +598,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Field: V3 JsonSchema Reference Uri
         /// </summary>
-        public const string v3ReferenceUri = "https://everything.json/components/schemas/";
+        public const string V3ReferenceUri = "https://registry/components/schemas/";
 
         /// <summary>
         /// Field: V2 JsonSchema Reference Uri
         /// </summary>
-        public const string v2ReferenceUri = "https://everything.json/definitions/";
+        public const string V2ReferenceUri = "https://registry/definitions/";
 
         #region V2.0
 

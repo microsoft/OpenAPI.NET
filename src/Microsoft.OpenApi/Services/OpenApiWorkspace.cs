@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var jsonSchema in doc.Components.Schemas)
                     {
-                        var refUri = new Uri(OpenApiConstants.v3ReferenceUri + jsonSchema.Key);
+                        var refUri = new Uri(OpenApiConstants.V3ReferenceUri + jsonSchema.Key);
                         SchemaRegistry.Global.Register(refUri, jsonSchema.Value);
                     }
 

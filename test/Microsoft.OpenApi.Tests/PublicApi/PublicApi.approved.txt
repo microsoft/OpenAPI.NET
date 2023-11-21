@@ -453,6 +453,8 @@ namespace Microsoft.OpenApi.Models
         public const string Type = "type";
         public const string UniqueItems = "uniqueItems";
         public const string Url = "url";
+        public const string V2ReferenceUri = "https://registry/definitions/";
+        public const string V3ReferenceUri = "https://registry/components/schemas/";
         public const string Value = "value";
         public const string Variables = "variables";
         public const string Version = "version";
@@ -460,8 +462,6 @@ namespace Microsoft.OpenApi.Models
         public const string Wrapped = "wrapped";
         public const string WriteOnly = "writeOnly";
         public const string Xml = "xml";
-        public const string v2ReferenceUri = "https://everything.json/definitions/";
-        public const string v3ReferenceUri = "https://everything.json/components/schemas/";
         public static readonly System.Uri defaultUrl;
         public static readonly System.Version version2_0;
         public static readonly System.Version version3_0_0;
@@ -1490,6 +1490,7 @@ namespace Microsoft.OpenApi.Writers
     }
     public static class OpenApiWriterExtensions
     {
+        public static void WriteOptionalCollection(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IEnumerable<string> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string> action) { }
         public static void WriteOptionalCollection<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IEnumerable<T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, T> action) { }
         public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, Json.Schema.JsonSchema> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string, Json.Schema.JsonSchema> action) { }
         public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, string> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string> action) { }
