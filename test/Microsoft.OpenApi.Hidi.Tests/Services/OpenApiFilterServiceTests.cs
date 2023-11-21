@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [InlineData(null, "users.user", 2)]
         [InlineData(null, "applications.application", 1)]
         [InlineData(null, "reports.Functions", 2)]
-        public void ReturnFilteredOpenApiDocumentBasedOnOperationIdsAndTags(string operationIds, string tags, int expectedPathCount)
+        public void ReturnFilteredOpenApiDocumentBasedOnOperationIdsAndTags(string? operationIds, string? tags, int expectedPathCount)
         {
             // Act
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
@@ -173,7 +173,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Theory]
         [InlineData("reports.getTeamsUserActivityUserDetail-a3f1", null)]
         [InlineData(null, "reports.Functions")]
-        public void ReturnsPathParametersOnSlicingBasedOnOperationIdsOrTags(string operationIds, string tags)
+        public void ReturnsPathParametersOnSlicingBasedOnOperationIdsOrTags(string? operationIds, string? tags)
         {
             // Act
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
