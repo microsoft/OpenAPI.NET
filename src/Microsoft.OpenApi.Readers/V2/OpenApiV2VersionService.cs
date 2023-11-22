@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
 
-
 namespace Microsoft.OpenApi.Readers.V2
 {
     /// <summary>
@@ -26,13 +25,13 @@ namespace Microsoft.OpenApi.Readers.V2
         /// <summary>
         /// Create Parsing Context
         /// </summary>
-        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
         public OpenApiV2VersionService(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;
         }
 
-        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        private Dictionary<Type, Func<ParseNode, object>> _loaders = new()
         {
             [typeof(OpenApiAny)] = OpenApiV2Deserializer.LoadAny,
             [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
@@ -72,7 +71,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 var id = localReference.Substring(
                     segments[0].Length + "/".Length + segments[1].Length + "/".Length);
 
-                return new OpenApiReference { Type = referenceType, Id = id };
+                return new() { Type = referenceType, Id = id };
             }
 
             throw new OpenApiException(
@@ -147,15 +146,15 @@ namespace Microsoft.OpenApi.Readers.V2
                     if (type == null)
                     {
                         // "$ref": "Pet.json"
-                        return new OpenApiReference
+                        return new()
                         {
                             ExternalResource = segments[0]
                         };
                     }
 
-                    if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
+                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
-                        return new OpenApiReference
+                        return new()
                         {
                             Type = type,
                             Id = reference
@@ -173,13 +172,13 @@ namespace Microsoft.OpenApi.Readers.V2
                         }
                         catch (OpenApiException ex)
                         {
-                            Diagnostic.Errors.Add(new OpenApiError(ex));
+                            Diagnostic.Errors.Add(new(ex));
                             return null;
                         }
                     }
 
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
-                    string id = segments[1];
+                    var id = segments[1];
                     // $ref: externalSource.yaml#/Pet
                     if (id.StartsWith("/definitions/"))
                     {
@@ -199,9 +198,8 @@ namespace Microsoft.OpenApi.Readers.V2
                         id = localSegments[2];
                     }
 
-
                     // $ref: externalSource.yaml#/Pet
-                    return new OpenApiReference
+                    return new()
                     {
                         ExternalResource = segments[0],
                         Type = type,

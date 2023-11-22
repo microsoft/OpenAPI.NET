@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(schema);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(schema);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -229,7 +229,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(components);
 
             errors = validator.Errors;
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             // Assert
             result.Should().BeFalse();

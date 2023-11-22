@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 
@@ -17,12 +17,7 @@ namespace Microsoft.OpenApi.Attributes
         /// <param name="name">The display name.</param>
         public DisplayAttribute(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            Name = name;
+            Name = Utils.CheckArgumentNullOrEmpty(name);
         }
 
         /// <summary>

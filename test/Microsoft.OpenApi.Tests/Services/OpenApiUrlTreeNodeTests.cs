@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -15,42 +15,42 @@ namespace Microsoft.OpenApi.Tests.Services
     [UsesVerify]
     public class OpenApiUrlTreeNodeTests
     {
-        private OpenApiDocument OpenApiDocumentSample_1 => new OpenApiDocument()
+        private OpenApiDocument OpenApiDocumentSample_1 => new()
         {
-            Paths = new OpenApiPaths()
+            Paths = new()
             {
-                ["/"] = new OpenApiPathItem()
+                ["/"] = new()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation(),
+                        [OperationType.Get] = new(),
                     }
                 },
-                ["/houses"] = new OpenApiPathItem()
+                ["/houses"] = new()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation(),
-                        [OperationType.Post] = new OpenApiOperation()
+                        [OperationType.Get] = new(),
+                        [OperationType.Post] = new()
                     }
                 },
-                ["/cars"] = new OpenApiPathItem()
+                ["/cars"] = new()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Post] = new OpenApiOperation()
+                        [OperationType.Post] = new()
                     }
                 }
             }
         };
 
-        private OpenApiDocument OpenApiDocumentSample_2 => new OpenApiDocument()
+        private OpenApiDocument OpenApiDocumentSample_2 => new()
         {
-            Paths = new OpenApiPaths()
+            Paths = new()
             {
-                ["/"] = new OpenApiPathItem(),
-                ["/hotels"] = new OpenApiPathItem(),
-                ["/offices"] = new OpenApiPathItem()
+                ["/"] = new(),
+                ["/hotels"] = new(),
+                ["/offices"] = new()
             }
         };
 
@@ -65,11 +65,11 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void CreateSingleRootWorks()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new()
                 {
-                    ["/"] = new OpenApiPathItem()
+                    ["/"] = new()
                 }
             };
 
@@ -79,17 +79,17 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotNull(rootNode);
             Assert.NotNull(rootNode.PathItems);
             Assert.False(rootNode.HasOperations(label));
-            Assert.Equal(0, rootNode.Children.Count);
+            Assert.Empty(rootNode.Children);
         }
 
         [Fact]
         public void CreatePathWithoutRootWorks()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new()
                 {
-                    ["/houses"] = new OpenApiPathItem()
+                    ["/houses"] = new()
                 }
             };
 
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             Assert.NotNull(rootNode);
             Assert.NotNull(rootNode.PathItems);
-            Assert.Equal(1, rootNode.Children.Count);
+            Assert.Single(rootNode.Children);
             Assert.Equal("houses", rootNode.Children["houses"].Segment);
             Assert.NotNull(rootNode.Children["houses"].PathItems);
             Assert.False(rootNode.Children["houses"].HasOperations("cabin"));
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var doc = OpenApiDocumentSample_1;
 
-            string label = "assets";
+            var label = "assets";
             var rootNode = OpenApiUrlTreeNode.Create(doc, label);
 
             Assert.NotNull(rootNode);
@@ -155,10 +155,10 @@ namespace Microsoft.OpenApi.Tests.Services
                         OperationType.Get, new OpenApiOperation
                         {
                             OperationId = "motorcycles.ListMotorcycle",
-                            Responses = new OpenApiResponses()
+                            Responses = new()
                             {
                                 {
-                                    "200", new OpenApiResponse()
+                                    "200", new()
                                     {
                                         Description = "Retrieved entities"
                                     }
@@ -180,10 +180,10 @@ namespace Microsoft.OpenApi.Tests.Services
                         OperationType.Get, new OpenApiOperation
                         {
                             OperationId = "computers.ListComputer",
-                            Responses = new OpenApiResponses()
+                            Responses = new()
                             {
                                 {
-                                    "200", new OpenApiResponse()
+                                    "200", new()
                                     {
                                         Description = "Retrieved entities"
                                     }
@@ -199,22 +199,22 @@ namespace Microsoft.OpenApi.Tests.Services
             rootNode.Attach(path2, pathItem2, label2);
 
             Assert.Equal(4, rootNode.Children.Count);
-            Assert.True(rootNode.Children.ContainsKey(path1.Substring(1)));
-            Assert.True(rootNode.Children.ContainsKey(path2.Substring(1)));
-            Assert.True(rootNode.Children[path1.Substring(1)].PathItems.ContainsKey(label1));
-            Assert.True(rootNode.Children[path2.Substring(1)].PathItems.ContainsKey(label2));
+            Assert.True(rootNode.Children.ContainsKey(path1[1..]));
+            Assert.True(rootNode.Children.ContainsKey(path2[1..]));
+            Assert.True(rootNode.Children[path1[1..]].PathItems.ContainsKey(label1));
+            Assert.True(rootNode.Children[path2[1..]].PathItems.ContainsKey(label2));
         }
 
         [Fact]
         public void CreatePathsWithMultipleSegmentsWorks()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new()
                 {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses/apartments/{apartment-id}"] = new OpenApiPathItem(),
-                    ["/cars/coupes"] = new OpenApiPathItem()
+                    ["/"] = new(),
+                    ["/houses/apartments/{apartment-id}"] = new(),
+                    ["/cars/coupes"] = new()
                 }
             };
 
@@ -233,13 +233,13 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void HasOperationsWorks()
         {
-            var doc1 = new OpenApiDocument()
+            var doc1 = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new()
                 {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses"] = new OpenApiPathItem(),
-                    ["/cars/{car-id}"] = new OpenApiPathItem()
+                    ["/"] = new(),
+                    ["/houses"] = new(),
+                    ["/cars/{car-id}"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -247,10 +247,10 @@ namespace Microsoft.OpenApi.Tests.Services
                                 OperationType.Get, new OpenApiOperation
                                 {
                                     OperationId = "cars.GetCar",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Retrieved entity"
                                             }
@@ -263,11 +263,11 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var doc2 = new OpenApiDocument()
+            var doc2 = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new()
                 {
-                    ["/cars/{car-id}"] = new OpenApiPathItem()
+                    ["/cars/{car-id}"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -275,10 +275,10 @@ namespace Microsoft.OpenApi.Tests.Services
                                 OperationType.Get, new OpenApiOperation
                                 {
                                     OperationId = "cars.GetCar",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Retrieved entity"
                                             }
@@ -290,10 +290,10 @@ namespace Microsoft.OpenApi.Tests.Services
                                 OperationType.Put, new OpenApiOperation
                                 {
                                     OperationId = "cars.UpdateCar",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "204", new OpenApiResponse()
+                                            "204", new()
                                             {
                                                 Description = "Success."
                                             }
@@ -327,12 +327,12 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void SegmentIsParameterWorks()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new()
                 {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses/apartments/{apartment-id}"] = new OpenApiPathItem()
+                    ["/"] = new(),
+                    ["/houses/apartments/{apartment-id}"] = new()
                 }
             };
 
@@ -340,7 +340,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var rootNode = OpenApiUrlTreeNode.Create(doc, label);
 
             Assert.NotNull(rootNode);
-            Assert.Equal(1, rootNode.Children.Count);
+            Assert.Single(rootNode.Children);
             Assert.NotNull(rootNode.Children["houses"].Children["apartments"].Children["{apartment-id}"].PathItems);
             Assert.True(rootNode.Children["houses"].Children["apartments"].Children["{apartment-id}"].IsParameter);
             Assert.Equal("{apartment-id}", rootNode.Children["houses"].Children["apartments"].Children["{apartment-id}"].Segment);
@@ -378,28 +378,13 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.Equal(4, rootNode.AdditionalData.Count);
             Assert.True(rootNode.AdditionalData.ContainsKey("DatePurchased"));
             Assert.Collection(rootNode.AdditionalData["Location"],
-                item =>
-                {
-                    Assert.Equal("Seattle, WA", item);
-                });
+                item => Assert.Equal("Seattle, WA", item));
             Assert.Collection(rootNode.Children["houses"].AdditionalData["Bedrooms"],
-                item =>
-                {
-                    Assert.Equal("Five", item);
-                });
+                item => Assert.Equal("Five", item));
             Assert.Collection(rootNode.Children["cars"].AdditionalData["Categories"],
-                item =>
-                {
-                    Assert.Equal("Coupe", item);
-                },
-                item =>
-                {
-                    Assert.Equal("Sedan", item);
-                },
-                item =>
-                {
-                    Assert.Equal("Convertible", item);
-                });
+                item => Assert.Equal("Coupe", item),
+                item => Assert.Equal("Sedan", item),
+                item => Assert.Equal("Convertible", item));
         }
 
         [Fact]

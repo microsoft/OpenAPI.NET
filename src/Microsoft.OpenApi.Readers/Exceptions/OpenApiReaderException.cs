@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Text.Json.Nodes;
@@ -51,6 +51,5 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         /// <param name="message">Plain text error message for this exception.</param>
         /// <param name="innerException">Inner exception that caused this exception to be thrown.</param>
         public OpenApiReaderException(string message, Exception innerException) : base(message, innerException) { }
-
     }
 }

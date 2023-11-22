@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
         /// </summary>
-        public OpenApiResponses Responses { get; set; } = new OpenApiResponses();
+        public OpenApiResponses Responses { get; set; } = new();
 
         /// <summary>
         /// A map of possible out-of band callbacks related to the parent operation.
@@ -213,10 +213,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
                 Tags,
-                (w, t) =>
-                {
-                    t.SerializeAsV2(w);
-                });
+                (w, t) => t.SerializeAsV2(w));
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -233,11 +230,11 @@ namespace Microsoft.OpenApi.Models
             List<OpenApiParameter> parameters;
             if (Parameters == null)
             {
-                parameters = new List<OpenApiParameter>();
+                parameters = new();
             }
             else
             {
-                parameters = new List<OpenApiParameter>(Parameters);
+                parameters = new(Parameters);
             }
 
             if (RequestBody != null)
@@ -260,7 +257,7 @@ namespace Microsoft.OpenApi.Models
                 else if (RequestBody.Reference != null)
                 {
                     parameters.Add(
-                        new OpenApiParameter
+                        new()
                         {
                             UnresolvedReference = true,
                             Reference = RequestBody.Reference
@@ -293,7 +290,7 @@ namespace Microsoft.OpenApi.Models
                     .SelectMany(static r => r.Value.Content?.Keys)
                     .Concat(
                         Responses
-                        .Where(static r => r.Value.Reference != null && r.Value.Reference.HostDocument != null)
+                        .Where(static r => r.Value.Reference is {HostDocument: not null})
                         .SelectMany(static r => r.Value.GetEffective(r.Value.Reference.HostDocument)?.Content?.Keys))
                     .Distinct()
                     .ToList();
@@ -321,7 +318,7 @@ namespace Microsoft.OpenApi.Models
 
             // schemes
             // All schemes in the Servers are extracted, regardless of whether the host matches
-            // the host defined in the outermost Swagger object. This is due to the 
+            // the host defined in the outermost Swagger object. This is due to the
             // inaccessibility of information for that host in the context of an inner object like this Operation.
             if (Servers != null)
             {

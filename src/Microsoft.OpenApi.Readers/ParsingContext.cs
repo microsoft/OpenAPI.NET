@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -30,8 +30,9 @@ namespace Microsoft.OpenApi.Readers
             new Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
 
         internal RootNode RootNode { get; set; }
-        internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
+        internal List<OpenApiTag> Tags { get; private set; } = new();
         internal Uri BaseUrl { get; set; }
+        internal List<string> DefaultContentType { get; set; }
 
         /// <summary>
         /// Diagnostic object that returns metadata about the parsing process.
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Create Parsing Context
         /// </summary>
-        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
         public ParsingContext(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;
@@ -98,7 +99,7 @@ namespace Microsoft.OpenApi.Readers
         {
             var node = ParseNode.Create(this, jsonNode);
 
-            T element = default(T);
+            var element = default(T);
 
             switch (version)
             {
@@ -125,14 +126,14 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         private static string GetVersion(RootNode rootNode)
         {
-            var versionNode = rootNode.Find(new JsonPointer("/openapi"));
+            var versionNode = rootNode.Find(new("/openapi"));
 
             if (versionNode != null)
             {
                 return versionNode.GetScalarValue().Replace("\"", string.Empty);
             }
 
-            versionNode = rootNode.Find(new JsonPointer("/swagger"));
+            versionNode = rootNode.Find(new("/swagger"));
 
             return versionNode?.GetScalarValue().Replace("\"", string.Empty);
         }
@@ -171,14 +172,14 @@ namespace Microsoft.OpenApi.Readers
             }
             else if (!_scopedTempStorage.TryGetValue(scope, out storage))
             {
-                return default(T);
+                return default;
             }
 
-            return storage.TryGetValue(key, out var value) ? (T)value : default(T);
+            return storage.TryGetValue(key, out var value) ? (T)value : default;
         }
 
         /// <summary>
-        /// Sets the temporary storge for this key and value.
+        /// Sets the temporary storage for this key and value.
         /// </summary>
         public void SetTempStorage(string key, object value, object scope = null)
         {
@@ -190,7 +191,7 @@ namespace Microsoft.OpenApi.Readers
             }
             else if (!_scopedTempStorage.TryGetValue(scope, out storage))
             {
-                storage = _scopedTempStorage[scope] = new Dictionary<string, object>();
+                storage = _scopedTempStorage[scope] = new();
             }
 
             if (value == null)
@@ -219,10 +220,9 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>If method returns false a loop was detected and the key is not added.</returns>
         public bool PushLoop(string loopId, string key)
         {
-            Stack<string> stack;
-            if (!_loopStacks.TryGetValue(loopId, out stack))
+            if (!_loopStacks.TryGetValue(loopId, out var stack))
             {
-                stack = new Stack<string>();
+                stack = new();
                 _loopStacks.Add(loopId, stack);
             }
 

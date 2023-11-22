@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -13,13 +13,12 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Workspaces
 {
-
     public class OpenApiReferencableTests
     {
-        private static readonly OpenApiCallback _callbackFragment = new OpenApiCallback();
-        private static readonly OpenApiExample _exampleFragment = new OpenApiExample();
-        private static readonly OpenApiLink _linkFragment = new OpenApiLink();
-        private static readonly OpenApiHeader _headerFragment = new OpenApiHeader()
+        private static readonly OpenApiCallback _callbackFragment = new();
+        private static readonly OpenApiExample _exampleFragment = new();
+        private static readonly OpenApiLink _linkFragment = new();
+        private static readonly OpenApiHeader _headerFragment = new()
         {
             Schema = new JsonSchemaBuilder().Build(),
             Examples = new Dictionary<string, OpenApiExample>
@@ -27,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
                 { "example1", new OpenApiExample() }
             }
         };
-        private static readonly OpenApiParameter _parameterFragment = new OpenApiParameter
+        private static readonly OpenApiParameter _parameterFragment = new()
         {
             Schema = new JsonSchemaBuilder().Build(),
             Examples = new Dictionary<string, OpenApiExample>
@@ -35,8 +34,8 @@ namespace Microsoft.OpenApi.Tests.Workspaces
                 { "example1", new OpenApiExample() }
             }
         };
-        private static readonly OpenApiRequestBody _requestBodyFragment = new OpenApiRequestBody();
-        private static readonly OpenApiResponse _responseFragment = new OpenApiResponse()
+        private static readonly OpenApiRequestBody _requestBodyFragment = new();
+        private static readonly OpenApiResponse _responseFragment = new()
         {
             Headers = new Dictionary<string, OpenApiHeader>
             {
@@ -77,7 +76,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             IOpenApiElement expectedResolvedElement)
         {
             // Act
-            var actualResolvedElement = element.ResolveReference(new JsonPointer(jsonPointer));
+            var actualResolvedElement = element.ResolveReference(new(jsonPointer));
 
             // Assert
             Assert.Same(expectedResolvedElement, actualResolvedElement);
@@ -102,7 +101,6 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _responseFragment, "/content" },
             new object[] { _responseFragment, "/content/" },
             new object[] { _responseFragment, "/content/a" }
-
         };
 
         [Theory]
@@ -110,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         public void ResolveReferenceShouldThrowOnInvalidReferenceId(IOpenApiReferenceable element, string jsonPointer)
         {
             // Act
-            Action resolveReference = () => element.ResolveReference(new JsonPointer(jsonPointer));
+            Action resolveReference = () => element.ResolveReference(new(jsonPointer));
 
             // Assert
             var exception = Assert.Throws<OpenApiException>(resolveReference);

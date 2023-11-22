@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
 using Microsoft.OpenApi.Models;
@@ -24,8 +24,8 @@ namespace Microsoft.OpenApi.SmokeTests
             {
                 AutomaticDecompression = DecompressionMethods.GZip
             });
-            _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
-            _httpClient.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("OpenApi.Net.Tests", "1.0"));
+            _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new("gzip"));
+            _httpClient.DefaultRequestHeaders.UserAgent.Add(new("OpenApi.Net.Tests", "1.0"));
 
             var response = _httpClient.GetAsync(graphOpenApiUrl)
                                 .GetAwaiter().GetResult();
@@ -44,11 +44,9 @@ namespace Microsoft.OpenApi.SmokeTests
             if (diagnostic.Errors.Count > 0)
             {
                 _output.WriteLine($"Errors parsing");
-                _output.WriteLine(String.Join("\n", diagnostic.Errors));
+                _output.WriteLine(String.Join('\n', diagnostic.Errors));
                 //               Assert.True(false);  // Uncomment to identify descriptions with errors.
             }
-
-
         }
 
         //[Fact(Skip="Run manually")]

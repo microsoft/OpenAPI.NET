@@ -1,6 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
+using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -66,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
-        public OpenApiDocument HostDocument { get; set; } = null;
+        public OpenApiDocument HostDocument { get; set; }
 
         /// <summary>
         /// Gets the full reference string for v3.0.
@@ -82,7 +83,7 @@ namespace Microsoft.OpenApi.Models
 
                 if (!Type.HasValue)
                 {
-                    throw Error.ArgumentNull(nameof(Type));
+                    throw new ArgumentNullException(nameof(Type));
                 }
 
                 if (Type == ReferenceType.Tag)
@@ -113,7 +114,7 @@ namespace Microsoft.OpenApi.Models
 
                 if (!Type.HasValue)
                 {
-                    throw Error.ArgumentNull(nameof(Type));
+                    throw new ArgumentNullException(nameof(Type));
                 }
 
                 if (Type == ReferenceType.Tag)

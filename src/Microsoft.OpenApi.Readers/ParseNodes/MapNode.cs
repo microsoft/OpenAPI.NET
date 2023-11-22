@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             {
                 if (_node.TryGetPropertyValue(key, out var node))
                 {
-                    return new PropertyNode(Context, key, node);
+                    return new(Context, key, node);
                 }
 
                 return null;
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         // If the component isn't a reference to another component, then point it to itself.
                         if (entry.value.Reference == null)
                         {
-                            entry.value.Reference = new OpenApiReference()
+                            entry.value.Reference = new()
                             {
                                 Type = referenceType,
                                 Id = entry.key
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId, string summary = null, string description = null)
             where T : IOpenApiReferenceable, new()
         {
-            return new T()
+            return new()
             {
                 UnresolvedReference = true,
                 Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType, summary, description)

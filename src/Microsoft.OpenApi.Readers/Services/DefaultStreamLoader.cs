@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.IO;
@@ -15,8 +15,7 @@ namespace Microsoft.OpenApi.Readers.Services
     internal class DefaultStreamLoader : IStreamLoader
     {
         private readonly Uri baseUrl;
-        private HttpClient _httpClient = new HttpClient();
-
+        private HttpClient _httpClient = new();
 
         public DefaultStreamLoader(Uri baseUrl)
         {

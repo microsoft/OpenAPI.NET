@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Extensions;
@@ -15,25 +15,21 @@ namespace Microsoft.OpenApi.Readers.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static readonly FixedFieldMap<OpenApiExternalDocs> _externalDocsFixedFields =
-            new FixedFieldMap<OpenApiExternalDocs>
+            new()
             {
                 {
-                    OpenApiConstants.Description, (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    OpenApiConstants.Description,
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    OpenApiConstants.Url, (o, n) =>
-                    {
-                        o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    OpenApiConstants.Url,
+                    (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
-                new PatternFieldMap<OpenApiExternalDocs> {
-
+                new()
+                {
                     {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
                     };
 

@@ -1,7 +1,6 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
-using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -72,11 +71,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2ImplicitSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ImplicitSecurityScheme.yaml")))
-            {
-                var document = LoadYamlDocument(stream);
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ImplicitSecurityScheme.yaml"));
+            var document = LoadYamlDocument(stream);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
                 var asJsonNode = document.RootNode.ToJsonNode();
 
@@ -85,25 +83,24 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 // Act
                 var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new()
                     {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows
+                        Implicit = new()
                         {
-                            Implicit = new OpenApiOAuthFlow
+                            AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
+                            Scopes =
                             {
-                                AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                                Scopes =
-                                {
-                                    ["write:pets"] = "modify pets in your account",
-                                    ["read:pets"] = "read your pets"
-                                }
+                                ["write:pets"] = "modify pets in your account",
+                                ["read:pets"] = "read your pets"
                             }
                         }
-                    });
-            }
+                    }
+                });
         }
 
         [Fact]

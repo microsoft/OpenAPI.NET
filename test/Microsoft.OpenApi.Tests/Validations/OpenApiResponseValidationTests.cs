@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
-            OpenApiResponse response = new OpenApiResponse();
+            var response = new OpenApiResponse();
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
@@ -26,12 +26,12 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(response);
 
             errors = validator.Errors;
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            OpenApiValidatorError error = Assert.Single(errors) as OpenApiValidatorError;
+            var error = Assert.Single(errors) as OpenApiValidatorError;
             Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "description", "response"), error.Message);
             Assert.Equal("#/description", error.Pointer);
         }

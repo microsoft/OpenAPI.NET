@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Globalization;
 using System.IO;
@@ -9,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -17,22 +16,22 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiRequestBodyTests
     {
-        public static OpenApiRequestBody AdvancedRequestBody = new OpenApiRequestBody
+        public static OpenApiRequestBody AdvancedRequestBody = new()
         {
             Description = "description",
             Required = true,
             Content =
             {
-                ["application/json"] = new OpenApiMediaType
+                ["application/json"] = new()
                 {
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
                 }
             }
         };
 
-        public static OpenApiRequestBody ReferencedRequestBody = new OpenApiRequestBody
+        public static OpenApiRequestBody ReferencedRequestBody = new()
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.RequestBody,
                 Id = "example1",
@@ -41,19 +40,12 @@ namespace Microsoft.OpenApi.Tests.Models
             Required = true,
             Content =
             {
-                ["application/json"] = new OpenApiMediaType
+                ["application/json"] = new()
                 {
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
                 }
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiRequestBodyTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(true)]
@@ -62,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedRequestBody.SerializeAsV3(writer);
@@ -79,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedRequestBody.SerializeAsV3(writer);
@@ -96,7 +88,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedRequestBody.SerializeAsV3WithoutReference(writer);

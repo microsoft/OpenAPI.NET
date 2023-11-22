@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.IO;
 using FluentAssertions;
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "coordinates",
                     Content =
                     {
-                        ["application/json"] = new OpenApiMediaType
+                        ["application/json"] = new()
                         {
                             Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
@@ -294,11 +294,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Examples =
                     {
-                        ["example1"] = new OpenApiExample()
+                        ["example1"] = new()
                         {
                             Value = new OpenApiAny(5.0)
                         },
-                        ["example2"] = new OpenApiExample()
+                        ["example2"] = new()
                         {
                             Value = new OpenApiAny((float)7.5)
                         }

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.OpenApi.Hidi
 {
-    public class Logger
+    public static class Logger
     {
         public static ILoggerFactory ConfigureLogger(LogLevel logLevel)
         {
@@ -17,11 +17,8 @@ namespace Microsoft.OpenApi.Hidi
             return LoggerFactory.Create((builder) =>
             {
                 builder
-                    .AddSimpleConsole(c =>
-                    {
-                        c.IncludeScopes = true;
-                    })
-#if DEBUG   
+                    .AddSimpleConsole(c => c.IncludeScopes = true)
+#if DEBUG
                     .AddDebug()
 #endif
                     .SetMinimumLevel(logLevel);

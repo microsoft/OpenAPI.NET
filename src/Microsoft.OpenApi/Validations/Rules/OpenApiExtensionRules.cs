@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Interfaces;
@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Extension name MUST start with "x-".
         /// </summary>
         public static ValidationRule<IOpenApiExtensible> ExtensionNameMustStartWithXDash =>
-            new ValidationRule<IOpenApiExtensible>(
+            new(
                 (context, item) =>
                 {
                     context.Enter("extensions");

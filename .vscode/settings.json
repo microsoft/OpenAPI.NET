@@ -4,5 +4,8 @@
         "titleBar.activeBackground": "#054754",
         "titleBar.activeForeground": "#F0FCFE"
     },
-    "omnisharp.enableRoslynAnalyzers": true
+    "cSpell.words": [
+        "csdl",
+        "Hidi"
+    ]
 }

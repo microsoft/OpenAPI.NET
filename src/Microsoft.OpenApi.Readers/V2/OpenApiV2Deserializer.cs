@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,6 @@ using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -30,10 +29,11 @@ namespace Microsoft.OpenApi.Readers.V2
                 return;
             }
 
-            foreach (var propertyNode in mapNode)
+            var allFields = fixedFieldMap.Keys.Union(mapNode.Select(static x => x.Name));
+            foreach (var propertyNode in allFields)
             {
-                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap);
-                requiredFields?.Remove(propertyNode.Name);
+                mapNode[propertyNode]?.ParseField(domainObject, fixedFieldMap, patternFieldMap);
+                requiredFields?.Remove(propertyNode);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {
@@ -82,11 +82,10 @@ namespace Microsoft.OpenApi.Readers.V2
                     var newProperty = new List<JsonNode>();
 
                     mapNode.Context.StartObject(anyListFieldName);
-
-                    var list = anyListFieldMap[anyListFieldName].PropertyGetter(domainObject);
-                    if (list != null)
+                    if (anyListFieldMap.TryGetValue(anyListFieldName, out var fieldName))
                     {
-                        foreach (var propertyElement in list)
+                        var list = fieldName.PropertyGetter(domainObject);
+                        if (list != null)
                         {
                             newProperty.Add(propertyElement);
                         }
@@ -97,7 +96,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -42,11 +42,12 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public OpenApiDocument Read(JsonNode input, out OpenApiDiagnostic diagnostic)
         {
-            diagnostic = new OpenApiDiagnostic();
+            diagnostic = new();
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers,
-                BaseUrl = _settings.BaseUrl
+                BaseUrl = _settings.BaseUrl,
+                DefaultContentType = _settings.DefaultContentType
             };
 
             OpenApiDocument document = null;
@@ -64,7 +65,7 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (OpenApiException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError(ex));
+                diagnostic.Errors.Add(new(ex));
             }
 
             // Validate the document
@@ -101,14 +102,20 @@ namespace Microsoft.OpenApi.Readers
 
                 if (_settings.LoadExternalRefs)
                 {
-                    await LoadExternalRefs(document, cancellationToken);
+                    var diagnosticExternalRefs = await LoadExternalRefs(document, cancellationToken);
+                    // Merge diagnostics of external reference
+                    if (diagnosticExternalRefs != null)
+                    {
+                        diagnostic.Errors.AddRange(diagnosticExternalRefs.Errors);
+                        diagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
+                    }
                 }
 
                 ResolveReferences(diagnostic, document);
             }
             catch (OpenApiException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError(ex));
+                diagnostic.Errors.Add(new(ex));
             }
 
             // Validate the document
@@ -125,14 +132,14 @@ namespace Microsoft.OpenApi.Readers
                 }
             }
 
-            return new ReadResult()
+            return new()
             {
                 OpenApiDocument = document,
                 OpenApiDiagnostic = diagnostic
             };
         }
 
-        private async Task LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken)
+        private Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken = default)
         {
             // Create workspace for all documents to live in.
             var openApiWorkSpace = new OpenApiWorkspace();
@@ -140,12 +147,12 @@ namespace Microsoft.OpenApi.Readers
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
-            await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, cancellationToken);
+            return workspaceLoader.LoadAsync(new() { ExternalResource = "/" }, document, null, cancellationToken);
         }
 
         private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
         {
-            List<OpenApiError> errors = new List<OpenApiError>();
+            var errors = new List<OpenApiError>();
 
             // Resolve References if requested
             switch (_settings.ReferenceResolution)
@@ -174,7 +181,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
         {
-            diagnostic = new OpenApiDiagnostic();
+            diagnostic = new();
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers
@@ -188,7 +195,7 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (OpenApiException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError(ex));
+                diagnostic.Errors.Add(new(ex));
             }
 
             // Validate the element

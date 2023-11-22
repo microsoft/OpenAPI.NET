@@ -20,14 +20,14 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => new QueryExpression(name);
 
             // Act
-            Assert.Throws<ArgumentException>("name", test);
+            Assert.Throws<ArgumentNullException>("name", test);
         }
 
         [Fact]
         public void QueryExpressionConstructorWorks()
         {
             // Arrange
-            string name = "anyValue";
+            var name = "anyValue";
 
             // Act
             var query = new QueryExpression(name);

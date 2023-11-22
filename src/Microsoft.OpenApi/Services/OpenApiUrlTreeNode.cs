@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -56,14 +56,9 @@ namespace Microsoft.OpenApi.Services
         /// <returns>true or false.</returns>
         public bool HasOperations(string label)
         {
-            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+            Utils.CheckArgumentNullOrEmpty(label);
 
-            if (!(PathItems?.ContainsKey(label) ?? false))
-            {
-                return false;
-            }
-
-            return PathItems[label].Operations?.Any() ?? false;
+            return PathItems is not null && PathItems.TryGetValue(label, out var item) && item.Operations is not null && item.Operations.Any();
         }
 
         /// <summary>
@@ -81,7 +76,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
         public static OpenApiUrlTreeNode Create()
         {
-            return new OpenApiUrlTreeNode(RootPathSegment);
+            return new(RootPathSegment);
         }
 
         /// <summary>
@@ -92,8 +87,8 @@ namespace Microsoft.OpenApi.Services
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
         public static OpenApiUrlTreeNode Create(OpenApiDocument doc, string label)
         {
-            Utils.CheckArgumentNull(doc, nameof(doc));
-            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+            Utils.CheckArgumentNull(doc);
+            Utils.CheckArgumentNullOrEmpty(label);
 
             var root = Create();
 
@@ -118,8 +113,8 @@ namespace Microsoft.OpenApi.Services
         /// <param name="label">Name tag for labelling related <see cref="OpenApiUrlTreeNode"/> nodes in the directory structure.</param>
         public void Attach(OpenApiDocument doc, string label)
         {
-            Utils.CheckArgumentNull(doc, nameof(doc));
-            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+            Utils.CheckArgumentNull(doc);
+            Utils.CheckArgumentNullOrEmpty(label);
 
             var paths = doc.Paths;
             if (paths != null)
@@ -144,9 +139,9 @@ namespace Microsoft.OpenApi.Services
                                          OpenApiPathItem pathItem,
                                          string label)
         {
-            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
-            Utils.CheckArgumentNullOrEmpty(path, nameof(path));
-            Utils.CheckArgumentNull(pathItem, nameof(pathItem));
+            Utils.CheckArgumentNullOrEmpty(label);
+            Utils.CheckArgumentNullOrEmpty(path);
+            Utils.CheckArgumentNull(pathItem);
 
             if (path.StartsWith(RootPathSegment))
             {
@@ -189,14 +184,15 @@ namespace Microsoft.OpenApi.Services
             }
 
             // If the child segment has already been defined, then insert into it
-            if (Children.ContainsKey(segment))
+            if (Children.TryGetValue(segment, out var child))
             {
                 var newPath = currentPath + PathSeparator + segment;
 
-                return Children[segment].Attach(segments: segments.Skip(1),
-                                                pathItem: pathItem,
-                                                label: label,
-                                                currentPath: newPath);
+                return child.Attach(
+                    segments: segments.Skip(1),
+                    pathItem: pathItem,
+                    label: label,
+                    currentPath: newPath);
             }
             else
             {
@@ -222,18 +218,11 @@ namespace Microsoft.OpenApi.Services
         /// <param name="additionalData">A dictionary of key value pairs that contain information about a node.</param>
         public void AddAdditionalData(Dictionary<string, List<string>> additionalData)
         {
-            Utils.CheckArgumentNull(additionalData, nameof(additionalData));
+            Utils.CheckArgumentNull(additionalData);
 
             foreach (var item in additionalData)
             {
-                if (AdditionalData.ContainsKey(item.Key))
-                {
-                    AdditionalData[item.Key] = item.Value;
-                }
-                else
-                {
-                    AdditionalData.Add(item.Key, item.Value);
-                }
+                AdditionalData[item.Key] = item.Value;
             }
         }
 
@@ -253,7 +242,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, uppercased, concatenated HTTP methods.
+        /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, upper-cased, concatenated HTTP methods.
         /// </summary>
         public readonly static IReadOnlyDictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>(StringComparer.OrdinalIgnoreCase)
         {
@@ -295,7 +284,6 @@ namespace Microsoft.OpenApi.Services
 
         private static (string, string) GetShapeDelimiters(string methods)
         {
-
             if (MermaidNodeStyles.TryGetValue(methods, out var style))
             {
                 //switch on shape

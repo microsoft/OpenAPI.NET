@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Validations
 {
@@ -21,13 +21,13 @@ namespace Microsoft.OpenApi.Validations
         void AddWarning(OpenApiValidatorWarning warning);
 
         /// <summary>
-        /// Allow Rule to indicate validation error occured at a deeper context level.  
+        /// Allow Rule to indicate validation error occured at a deeper context level.
         /// </summary>
         /// <param name="segment">Identifier for context</param>
         void Enter(string segment);
 
         /// <summary>
-        /// Exit from path context elevel.  Enter and Exit calls should be matched.
+        /// Exit from path context level.  Enter and Exit calls should be matched.
         /// </summary>
         void Exit();
 
@@ -35,6 +35,5 @@ namespace Microsoft.OpenApi.Validations
         /// Pointer to source of validation error in document
         /// </summary>
         string PathString { get; }
-
     }
 }

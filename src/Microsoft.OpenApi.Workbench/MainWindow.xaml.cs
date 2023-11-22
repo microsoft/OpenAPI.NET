@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Windows;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Workbench
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly MainModel _mainModel = new MainModel();
+        private readonly MainModel _mainModel = new();
 
         public MainWindow()
         {

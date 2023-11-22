@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -12,36 +13,36 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public static class SpecialCharacterStringExtensions
     {
-        // Plain style strings cannot start with indicators. 
+        // Plain style strings cannot start with indicators.
         // http://www.yaml.org/spec/1.2/spec.html#indicator//
-        private static readonly char[] _yamlIndicators =
+        private static readonly HashSet<string> _yamlIndicators = new()
         {
-            '-',
-            '?',
-            ':',
-            ',',
-            '{',
-            '}',
-            '[',
-            ']',
-            '&',
-            '*',
-            '#',
-            '?',
-            '|',
-            '-',
-            '>',
-            '!',
-            '%',
-            '@',
-            '`',
-            '\'',
-            '"',
+            "-",
+            "?",
+            ":",
+            ",",
+            "{",
+            "}",
+            "[",
+            "]",
+            "&",
+            "*",
+            "#",
+            "?",
+            "|",
+            "-",
+            ">",
+            "!",
+            "%",
+            "@",
+            "`",
+            "'",
+            "\""
         };
 
         // Plain style strings cannot contain these character combinations.
         // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
-        private static readonly string[] _yamlPlainStringForbiddenCombinations =
+        private static readonly HashSet<string> _yamlPlainStringForbiddenCombinations = new()
         {
             ": ",
             " #",
@@ -57,48 +58,51 @@ namespace Microsoft.OpenApi.Writers
 
         // Plain style strings cannot end with these characters.
         // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
-        private static readonly string[] _yamlPlainStringForbiddenTerminals =
+        private static readonly HashSet<string> _yamlPlainStringForbiddenTerminals = new()
         {
             ":"
         };
 
         // Double-quoted strings are needed for these non-printable control characters.
         // http://www.yaml.org/spec/1.2/spec.html#style/flow/double-quoted
-        private static readonly char[] _yamlControlCharacters =
+        private static readonly Dictionary<char, string> _yamlControlCharacterCharReplacements = new()
         {
-            '\0',
-            '\x01',
-            '\x02',
-            '\x03',
-            '\x04',
-            '\x05',
-            '\x06',
-            '\a',
-            '\b',
-            '\t',
-            '\n',
-            '\v',
-            '\f',
-            '\r',
-            '\x0e',
-            '\x0f',
-            '\x10',
-            '\x11',
-            '\x12',
-            '\x13',
-            '\x14',
-            '\x15',
-            '\x16',
-            '\x17',
-            '\x18',
-            '\x19',
-            '\x1a',
-            '\x1b',
-            '\x1c',
-            '\x1d',
-            '\x1e',
-            '\x1f'
+            {'\0', "\\0"},
+            {'\x01', "\\x01"},
+            {'\x02', "\\x02"},
+            {'\x03', "\\x03"},
+            {'\x04', "\\x04"},
+            {'\x05', "\\x05"},
+            {'\x06', "\\x06"},
+            {'\a', "\\a"},
+            {'\b', "\\b"},
+            {'\t', "\\t"},
+            {'\n', "\\n"},
+            {'\v', "\\v"},
+            {'\f', "\\f"},
+            {'\r', "\\r"},
+            {'\x0e', "\\x0e"},
+            {'\x0f', "\\x0f"},
+            {'\x10', "\\x10"},
+            {'\x11', "\\x11"},
+            {'\x12', "\\x12"},
+            {'\x13', "\\x13"},
+            {'\x14', "\\x14"},
+            {'\x15', "\\x15"},
+            {'\x16', "\\x16"},
+            {'\x17', "\\x17"},
+            {'\x18', "\\x18"},
+            {'\x19', "\\x19"},
+            {'\x1a', "\\x1a"},
+            {'\x1b', "\\x1b"},
+            {'\x1c', "\\x1c"},
+            {'\x1d', "\\x1d"},
+            {'\x1e', "\\x1e"},
+            {'\x1f', "\\x1f"},
         };
+        
+        private static readonly Dictionary<string, string> _yamlControlCharacterStringReplacements = _yamlControlCharacterCharReplacements
+            .ToDictionary(x => x.Key.ToString(), x => x.Value);
 
         /// <summary>
         /// Escapes all special characters and put the string in quotes if necessary to
@@ -106,26 +110,21 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         internal static string GetYamlCompatibleString(this string input)
         {
-            // If string is an empty string, wrap it in quote to ensure it is not recognized as null.
-            if (input == "")
+            switch (input)
             {
-                return "''";
-            }
-
-            // If string is the word null, wrap it in quote to ensure it is not recognized as empty scalar null.
-            if (input == "null")
-            {
-                return "'null'";
-            }
-
-            // If string is the letter ~, wrap it in quote to ensure it is not recognized as empty scalar null.
-            if (input == "~")
-            {
-                return "'~'";
+                // If string is an empty string, wrap it in quote to ensure it is not recognized as null.
+                case "":
+                    return "''";
+                // If string is the word null, wrap it in quote to ensure it is not recognized as empty scalar null.
+                case "null":
+                    return "'null'";
+                // If string is the letter ~, wrap it in quote to ensure it is not recognized as empty scalar null.
+                case "~":
+                    return "'~'";
             }
 
             // If string includes a control character, wrapping in double quote is required.
-            if (input.Any(c => _yamlControlCharacters.Contains(c)))
+            if (input.Any(c => _yamlControlCharacterCharReplacements.ContainsKey(c)))
             {
                 // Replace the backslash first, so that the new backslashes created by other Replaces are not duplicated.
                 input = input.Replace("\\", "\\\\");
@@ -134,51 +133,23 @@ namespace Microsoft.OpenApi.Writers
                 input = input.Replace("\"", "\\\"");
 
                 // Escape all the control characters.
-                input = input.Replace("\0", "\\0");
-                input = input.Replace("\x01", "\\x01");
-                input = input.Replace("\x02", "\\x02");
-                input = input.Replace("\x03", "\\x03");
-                input = input.Replace("\x04", "\\x04");
-                input = input.Replace("\x05", "\\x05");
-                input = input.Replace("\x06", "\\x06");
-                input = input.Replace("\a", "\\a");
-                input = input.Replace("\b", "\\b");
-                input = input.Replace("\t", "\\t");
-                input = input.Replace("\n", "\\n");
-                input = input.Replace("\v", "\\v");
-                input = input.Replace("\f", "\\f");
-                input = input.Replace("\r", "\\r");
-                input = input.Replace("\x0e", "\\x0e");
-                input = input.Replace("\x0f", "\\x0f");
-                input = input.Replace("\x10", "\\x10");
-                input = input.Replace("\x11", "\\x11");
-                input = input.Replace("\x12", "\\x12");
-                input = input.Replace("\x13", "\\x13");
-                input = input.Replace("\x14", "\\x14");
-                input = input.Replace("\x15", "\\x15");
-                input = input.Replace("\x16", "\\x16");
-                input = input.Replace("\x17", "\\x17");
-                input = input.Replace("\x18", "\\x18");
-                input = input.Replace("\x19", "\\x19");
-                input = input.Replace("\x1a", "\\x1a");
-                input = input.Replace("\x1b", "\\x1b");
-                input = input.Replace("\x1c", "\\x1c");
-                input = input.Replace("\x1d", "\\x1d");
-                input = input.Replace("\x1e", "\\x1e");
-                input = input.Replace("\x1f", "\\x1f");
-
+                foreach (var replacement in _yamlControlCharacterStringReplacements)
+                {
+                    input = input.Replace(replacement.Key, replacement.Value);
+                }
+                
                 return $"\"{input}\"";
             }
 
-            // If string 
+            // If string
             // 1) includes a character forbidden in plain string,
-            // 2) starts with an indicator, OR 
+            // 2) starts with an indicator, OR
             // 3) has trailing/leading white spaces,
             // wrap the string in single quote.
             // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
             if (_yamlPlainStringForbiddenCombinations.Any(fc => input.Contains(fc)) ||
-                _yamlIndicators.Any(i => input.StartsWith(i.ToString())) ||
-                _yamlPlainStringForbiddenTerminals.Any(i => input.EndsWith(i.ToString())) ||
+                _yamlIndicators.Any(i => input.StartsWith(i)) ||
+                _yamlPlainStringForbiddenTerminals.Any(i => input.EndsWith(i)) ||
                 input.Trim() != input)
             {
                 // Escape single quotes with two single quotes.
@@ -189,10 +160,10 @@ namespace Microsoft.OpenApi.Writers
 
             // If string can be mistaken as a number, c-style hexadecimal notation, a boolean, or a timestamp,
             // wrap it in quote to indicate that this is indeed a string, not a number, c-style hexadecimal notation, a boolean, or a timestamp
-            if (decimal.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out var _) ||
+            if (decimal.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out _) ||
                 IsHexadecimalNotation(input) ||
-                bool.TryParse(input, out var _) ||
-                DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out var _))
+                bool.TryParse(input, out _) ||
+                DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
                 return $"'{input}'";
             }
@@ -215,21 +186,20 @@ namespace Microsoft.OpenApi.Writers
             // http://json.org/
 
             // Replace the backslash first, so that the new backslashes created by other Replaces are not duplicated.
-            value = value.Replace("\\", "\\\\");
-
-            value = value.Replace("\b", "\\b");
-            value = value.Replace("\f", "\\f");
-            value = value.Replace("\n", "\\n");
-            value = value.Replace("\r", "\\r");
-            value = value.Replace("\t", "\\t");
-            value = value.Replace("\"", "\\\"");
+            value = value.Replace("\\", "\\\\")
+                .Replace("\b", "\\b")
+                .Replace("\f", "\\f")
+                .Replace("\n", "\\n")
+                .Replace("\r", "\\r")
+                .Replace("\t", "\\t")
+                .Replace("\"", "\\\"");
 
             return $"\"{value}\"";
         }
 
         internal static bool IsHexadecimalNotation(string input)
         {
-            return input.StartsWith("0x") && int.TryParse(input.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var _);
+            return input.StartsWith("0x") && int.TryParse(input.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _);
         }
     }
 }

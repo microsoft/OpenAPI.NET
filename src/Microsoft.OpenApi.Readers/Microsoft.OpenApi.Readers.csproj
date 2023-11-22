@@ -1,37 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
-        <LangVersion>9.0</LangVersion>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
-        <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Authors>Microsoft</Authors>
-        <Company>Microsoft</Company>
-        <Title>Microsoft.OpenApi.Readers</Title>
-        <PackageId>Microsoft.OpenApi.Readers</PackageId>
-        <Version>1.6.4-preview4</Version>
+        <Version>1.6.10</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
-        <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-        <PackageTags>OpenAPI .NET</PackageTags>
-        <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
-        <PackageReleaseNotes>https://github.com/microsoft/OpenAPI.NET/releases</PackageReleaseNotes>
-        <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
-        <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <NoWarn>NU5048</NoWarn>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
         <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
-    </PropertyGroup>
-
-    <!-- https://github.com/clairernovotny/DeterministicBuilds#deterministic-builds -->
-    <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
     <ItemGroup>
@@ -64,5 +47,9 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>SRResource.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 </Project>

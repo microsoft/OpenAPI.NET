@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public MapNode CheckMapNode(string nodeName)
         {
-            if (!(this is MapNode mapNode))
+            if (this is not MapNode mapNode)
             {
                 throw new OpenApiReaderException($"{nodeName} must be a map/object", Context);
             }

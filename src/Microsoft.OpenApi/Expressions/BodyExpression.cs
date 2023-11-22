@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Expressions
 {
@@ -33,10 +33,7 @@ namespace Microsoft.OpenApi.Expressions
         public BodyExpression(JsonPointer pointer)
             : base(pointer?.ToString())
         {
-            if (pointer == null)
-            {
-                throw Error.ArgumentNull(nameof(pointer));
-            }
+            Utils.CheckArgumentNull(pointer);
         }
 
         /// <summary>
@@ -58,12 +55,6 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the fragment string.
         /// </summary>
-        public string Fragment
-        {
-            get
-            {
-                return Value;
-            }
-        }
+        public string Fragment { get => Value; }
     }
 }

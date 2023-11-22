@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
 using FluentAssertions;
@@ -14,17 +14,18 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void ParseCustomExtension()
         {
-            var description = @"
-openapi: 3.0.0
-info: 
-    title: A doc with an extension
-    version: 1.0.0
-    x-foo: 
-        bar: hey
-        baz: hi!
-paths: {}
-";
-            var settings = new OpenApiReaderSettings()
+            var description =
+                """
+                openapi: 3.0.0
+                info:
+                    title: A doc with an extension
+                    version: 1.0.0
+                    x-foo:
+                        bar: hey
+                        baz: hi!
+                paths: {}
+                """;
+            var settings = new OpenApiReaderSettings
             {
                 ExtensionParsers = { { "x-foo", (a,v) => {
                         var fooNode = (JsonObject)a.Node;

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -11,7 +11,6 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests
 {
-
     public class OpenApiWorkspaceTests
     {
         [Fact]
@@ -19,8 +18,8 @@ namespace Microsoft.OpenApi.Tests
         {
             var workspace = new OpenApiWorkspace();
 
-            workspace.AddDocument("root", new OpenApiDocument());
-            workspace.AddDocument("common", new OpenApiDocument());
+            workspace.AddDocument("root", new());
+            workspace.AddDocument("common", new());
 
             Assert.Equal(2, workspace.Documents.Count());
         }
@@ -34,7 +33,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Paths = new OpenApiPaths()
                 {
-                    ["/"] = new OpenApiPathItem()
+                    ["/"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>()
                         {
@@ -42,7 +41,7 @@ namespace Microsoft.OpenApi.Tests
                             {
                                 Responses = new OpenApiResponses()
                                 {
-                                    ["200"] = new OpenApiResponse()
+                                    ["200"] = new()
                                     {
                                         Content = new Dictionary<string, OpenApiMediaType>()
                                         {
@@ -67,7 +66,6 @@ namespace Microsoft.OpenApi.Tests
                     }
                 }
             });
-
             Assert.Equal(2, workspace.Documents.Count());
         }
 
@@ -120,8 +118,8 @@ namespace Microsoft.OpenApi.Tests
         public void OpenApiWorkspacesShouldNormalizeDocumentLocations()
         {
             var workspace = new OpenApiWorkspace();
-            workspace.AddDocument("hello", new OpenApiDocument());
-            workspace.AddDocument("hi", new OpenApiDocument());
+            workspace.AddDocument("hello", new());
+            workspace.AddDocument("hi", new());
 
             Assert.True(workspace.Contains("./hello"));
             Assert.True(workspace.Contains("./foo/../hello"));
@@ -159,7 +157,7 @@ namespace Microsoft.OpenApi.Tests
         {
             // Arrange
             var workspace = new OpenApiWorkspace();
-            var responseFragment = new OpenApiResponse()
+            var responseFragment = new OpenApiResponse
             {
                 Headers = new Dictionary<string, OpenApiHeader>
                 {
@@ -169,7 +167,7 @@ namespace Microsoft.OpenApi.Tests
             workspace.AddFragment("fragment", responseFragment);
 
             // Act
-            var resolvedElement = workspace.ResolveReference(new OpenApiReference()
+            var resolvedElement = workspace.ResolveReference(new()
             {
                 Id = "headers/header1",
                 ExternalResource = "fragment"
@@ -179,14 +177,12 @@ namespace Microsoft.OpenApi.Tests
             Assert.Same(responseFragment.Headers["header1"], resolvedElement);
         }
 
-
         // Test artifacts
-
         private static OpenApiDocument CreateCommonDocument()
         {
-            return new OpenApiDocument()
+            return new()
             {
-                Components = new OpenApiComponents()
+                Components = new()
                 {
                     Schemas = {
                         ["test"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("The referenced one").Build()

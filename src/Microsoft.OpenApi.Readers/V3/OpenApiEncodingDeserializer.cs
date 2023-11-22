@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -13,42 +13,32 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiEncoding> _encodingFixedFields = new FixedFieldMap<OpenApiEncoding>
+        private static readonly FixedFieldMap<OpenApiEncoding> _encodingFixedFields = new()
         {
             {
-                "contentType", (o, n) =>
-                {
-                    o.ContentType = n.GetScalarValue();
-                }
+                "contentType",
+                (o, n) => o.ContentType = n.GetScalarValue()
             },
             {
-                "headers", (o, n) =>
-                {
-                    o.Headers = n.CreateMap(LoadHeader);
-                }
+                "headers",
+                (o, n) => o.Headers = n.CreateMap(LoadHeader)
             },
             {
-                "style", (o, n) =>
-                {
-                    o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
-                }
+                "style",
+                (o, n) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
             },
             {
-                "explode", (o, n) =>
-                {
-                    o.Explode = bool.Parse(n.GetScalarValue());
-                }
+                "explode",
+                (o, n) => o.Explode = bool.Parse(n.GetScalarValue())
             },
             {
-                "allowedReserved", (o, n) =>
-                {
-                    o.AllowReserved = bool.Parse(n.GetScalarValue());
-                }
+                "allowedReserved", 
+                (o, n) => o.AllowReserved = bool.Parse(n.GetScalarValue())
             },
         };
 
         private static readonly PatternFieldMap<OpenApiEncoding> _encodingPatternFields =
-            new PatternFieldMap<OpenApiEncoding>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,20 +19,22 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStreamReader(new()
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new MockLoader(),
-                BaseUrl = new Uri("file://c:\\")
+                BaseUrl = new("file://c:\\")
             });
 
             // Todo: this should be ReadAsync
             var stream = new MemoryStream();
-            var doc = @"openapi: 3.0.0
-info:
-  title: foo
-  version: 1.0.0
-paths: {}";
+            var doc = """
+                      openapi: 3.0.0
+                      info:
+                        title: foo
+                        version: 1.0.0
+                      paths: {}
+                      """;
             var wr = new StreamWriter(stream);
             wr.Write(doc);
             wr.Flush();
@@ -41,19 +43,17 @@ paths: {}";
             var result = await reader.ReadAsync(stream);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
-
         }
-
 
         [Fact]
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStreamReader(new()
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
-                BaseUrl = new Uri("file://c:\\")
+                BaseUrl = new("fie://c:\\")
             });
 
             ReadResult result;
@@ -109,8 +109,8 @@ paths: {}";
 
         public Task<Stream> LoadAsync(Uri uri)
         {
-            var path = new Uri(new Uri("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
-            path = path.Substring(1); // remove leading slash
+            var path = new Uri(new("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
+            path = path[1..]; // remove leading slash
             return Task.FromResult(Resources.GetStream(path));
         }
     }

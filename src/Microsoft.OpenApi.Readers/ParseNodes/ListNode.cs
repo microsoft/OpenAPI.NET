@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList.Select(n => map(new ValueNode(Context, n))).ToList();
+            return _nodeList.Select(n => map(new(Context, n))).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()

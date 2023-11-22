@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
@@ -23,22 +23,15 @@ namespace Microsoft.OpenApi.Extensions
         public static void AddExtension<T>(this T element, string name, IOpenApiExtension any)
             where T : IOpenApiExtensible
         {
-            if (element == null)
-            {
-                throw Error.ArgumentNull(nameof(element));
-            }
-
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
+            Utils.CheckArgumentNull(element);
+            Utils.CheckArgumentNullOrEmpty(name);
 
             if (!name.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix))
             {
                 throw new OpenApiException(string.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
             }
 
-            element.Extensions[name] = any ?? throw Error.ArgumentNull(nameof(any));
+            element.Extensions[name] = Utils.CheckArgumentNull(any);
         }
     }
 }

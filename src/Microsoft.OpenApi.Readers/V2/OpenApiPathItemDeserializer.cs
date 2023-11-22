@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +15,12 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new FixedFieldMap<OpenApiPathItem>
+        private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new()
         {
             {
                 "$ref", (o, n) =>
                 {
-                    o.Reference = new OpenApiReference() { ExternalResource = n.GetScalarValue() };
+                    o.Reference = new() { ExternalResource = n.GetScalarValue() };
                     o.UnresolvedReference =true;
                 }
             },
@@ -32,15 +32,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {"head", (o, n) => o.AddOperation(OperationType.Head, LoadOperation(n))},
             {"patch", (o, n) => o.AddOperation(OperationType.Patch, LoadOperation(n))},
             {
-                "parameters", (o, n) =>
-                {
-                    LoadPathParameters(o,n);
-                }
+                "parameters",
+                LoadPathParameters
             },
         };
 
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
-            new PatternFieldMap<OpenApiPathItem>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))},
             };
@@ -99,7 +97,6 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 }
             }
-
         }
     }
 }

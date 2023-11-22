@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using FluentAssertions;
@@ -13,18 +13,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseStringContactFragmentShouldSucceed()
         {
-            var input = @"
-{
-  ""name"": ""API Support"",
-  ""url"": ""http://www.swagger.io/support"",
-  ""email"": ""support@swagger.io""
-}
-";
+            var input =
+                """
+                {
+                  "name": "API Support",
+                  "url": "http://www.swagger.io/support",
+                  "email": "support@swagger.io"
+                }
+                """;
             var reader = new OpenApiStringReader();
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var contact = reader.ReadFragment<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var contact = reader.ReadFragment<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Email = "support@swagger.io",
                     Name = "API Support",
-                    Url = new Uri("http://www.swagger.io/support")
+                    Url = new("http://www.swagger.io/support")
                 });
         }
     }

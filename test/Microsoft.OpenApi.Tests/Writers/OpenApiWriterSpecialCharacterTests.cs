@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,41 +8,30 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
     public class OpenApiWriterSpecialCharacterTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiWriterSpecialCharacterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         static bool[] shouldProduceTerseOutputValues = new[] { true, false };
 
         public static IEnumerable<object[]> StringWithSpecialCharacters
         {
-            get
-            {
-                return
-                    from inputExpected in new[] {
-                       new[]{ "Test\bTest", "\"Test\\bTest\"" },
-                       new[]{ "Test\fTest", "\"Test\\fTest\""},
-                       new[]{ "Test\nTest", "\"Test\\nTest\""},
-                       new[]{ "Test\rTest", "\"Test\\rTest\""},
-                       new[]{ "Test\tTest", "\"Test\\tTest\""},
-                       new[]{ "Test\\Test", "\"Test\\\\Test\""},
-                       new[]{ "Test\"Test", "\"Test\\\"Test\""},
-                       new[]{ "StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\""},
-                       new[]{ "0x1234", "\"0x1234\""},
-                     }
-                    from shouldBeTerse in shouldProduceTerseOutputValues
-                    select new object[] { inputExpected[0], inputExpected[1], shouldBeTerse };
-            }
+            get =>
+                from inputExpected in new[] {
+                    new[]{ "Test\bTest", "\"Test\\bTest\"" },
+                    new[]{ "Test\fTest", "\"Test\\fTest\""},
+                    new[]{ "Test\nTest", "\"Test\\nTest\""},
+                    new[]{ "Test\rTest", "\"Test\\rTest\""},
+                    new[]{ "Test\tTest", "\"Test\\tTest\""},
+                    new[]{ "Test\\Test", "\"Test\\\\Test\""},
+                    new[]{ "Test\"Test", "\"Test\\\"Test\""},
+                    new[]{ "StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\""},
+                    new[]{ "0x1234", "\"0x1234\""},
+                }
+                from shouldBeTerse in shouldProduceTerseOutputValues
+                select new object[] { inputExpected[0], inputExpected[1], shouldBeTerse };
         }
 
         [Theory]
@@ -51,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             writer.WriteValue(input);

@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.IO;
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     Type = SecuritySchemeType.ApiKey,
                     Name = "api_key",
                     In = ParameterLocation.Header,
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "api_key_sample"
@@ -116,14 +116,14 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 new OpenApiResponse
                 {
                     Description = "Entity not found.",
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.Response,
                         Id = "NotFound"
                     },
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new OpenApiMediaType()
+                        ["application/json"] = new()
                     }
                 }
             );
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     Description = "General Error",
                     Content =
                     {
-                        ["application/json"] = new OpenApiMediaType
+                        ["application/json"] = new()
                         {
                             Schema = new JsonSchemaBuilder()
                             .Description("Sample description")
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                         }
                     },
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.Response,
                         Id = "GeneralError"

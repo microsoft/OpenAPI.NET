@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiRequestBody>
+    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiRequestBody>
     {
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref 
+        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiRequestBody</returns>
@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Models
                     //paramSchema.Type("file");
                     //paramSchema.Format(null);
                 }
-                yield return new OpenApiFormDataParameter
+                yield return new()
                 {
                     Description = property.Value.GetDescription(),
                     Name = property.Key,

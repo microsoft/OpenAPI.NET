@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.IO;
 using System.Linq;
@@ -19,14 +19,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void OperationWithSecurityRequirementShouldReferenceSecurityScheme()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedOperation.yaml")))
-            {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                var securityRequirement = openApiDoc.Paths["/"].Operations[Models.OperationType.Get].Security.First();
+            var securityRequirement = openApiDoc.Paths["/"].Operations[OperationType.Get].Security.First();
 
-                Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
-            }
+            Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
         }
 
         [Fact]
@@ -43,14 +41,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var operation = OpenApiV3Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(new OpenApiOperation()
+            operation.Should().BeEquivalentTo(new OpenApiOperation
             {
                 Tags =
                 {
                     new OpenApiTag
                     {
                         UnresolvedReference = true,
-                        Reference = new OpenApiReference()
+                        Reference = new()
                         {
                             Id = "user",
                             Type = ReferenceType.Tag

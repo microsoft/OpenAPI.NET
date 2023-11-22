@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Globalization;
@@ -21,10 +21,8 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new FixedFieldMap<OpenApiHeader>
         {
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {
                 "type", (o, n) =>
@@ -45,10 +43,8 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
             {
-                "collectionFormat", (o, n) =>
-                {
-                    LoadStyle(o, n.GetScalarValue());
-                }
+                "collectionFormat",
+                (o, n) => LoadStyle(o, n.GetScalarValue())
             },
             {
                 "default", (o, n) =>
@@ -130,7 +126,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }            
         };
 
-        private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new PatternFieldMap<OpenApiHeader>
+        private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };

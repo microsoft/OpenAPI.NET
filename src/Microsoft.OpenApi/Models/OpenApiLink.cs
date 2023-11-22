@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiLink>
+    public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiLink>
     {
         /// <summary>
         /// A relative or absolute reference to an OAS operation.
@@ -28,8 +28,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
         /// </summary>
-        public virtual Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
-            new Dictionary<string, RuntimeExpressionAnyWrapper>();
+        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
+            new();
 
         /// <summary>
         /// A literal value or {expression} to use as a request body when calling the target operation.
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiLink object based on the presence of a $ref 
+        /// Returns an effective OpenApiLink object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiLink</returns>
@@ -176,6 +176,9 @@ namespace Microsoft.OpenApi.Models
 
             // server
             writer.WriteOptionalObject(OpenApiConstants.Server, Server, callback);
+
+            // specification extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }

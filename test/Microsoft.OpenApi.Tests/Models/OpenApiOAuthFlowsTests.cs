@@ -1,26 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
     public class OpenApiOAuthFlowsTests
     {
-        public static OpenApiOAuthFlows BasicOAuthFlows = new OpenApiOAuthFlows();
+        public static OpenApiOAuthFlows BasicOAuthFlows = new();
 
-        public static OpenApiOAuthFlows OAuthFlowsWithSingleFlow = new OpenApiOAuthFlows
+        public static OpenApiOAuthFlows OAuthFlowsWithSingleFlow = new()
         {
-            Implicit = new OpenApiOAuthFlow
+            Implicit = new()
             {
-                AuthorizationUrl = new Uri("http://example.com/authorization"),
+                AuthorizationUrl = new("http://example.com/authorization"),
                 Scopes = new Dictionary<string, string>
                 {
                     ["scopeName1"] = "description1",
@@ -29,21 +27,21 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiOAuthFlows OAuthFlowsWithMultipleFlows = new OpenApiOAuthFlows
+        public static OpenApiOAuthFlows OAuthFlowsWithMultipleFlows = new()
         {
-            Implicit = new OpenApiOAuthFlow
+            Implicit = new()
             {
-                AuthorizationUrl = new Uri("http://example.com/authorization"),
+                AuthorizationUrl = new("http://example.com/authorization"),
                 Scopes = new Dictionary<string, string>
                 {
                     ["scopeName1"] = "description1",
                     ["scopeName2"] = "description2"
                 }
             },
-            Password = new OpenApiOAuthFlow
+            Password = new()
             {
-                TokenUrl = new Uri("http://example.com/token"),
-                RefreshUrl = new Uri("http://example.com/refresh"),
+                TokenUrl = new("http://example.com/token"),
+                RefreshUrl = new("http://example.com/refresh"),
                 Scopes = new Dictionary<string, string>
                 {
                     ["scopeName3"] = "description3",
@@ -51,13 +49,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiOAuthFlowsTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Fact]
         public void SerializeBasicOAuthFlowsAsV3JsonWorks()
@@ -96,15 +87,17 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""implicit"": {
-    ""authorizationUrl"": ""http://example.com/authorization"",
-    ""scopes"": {
-      ""scopeName1"": ""description1"",
-      ""scopeName2"": ""description2""
-    }
-  }
-}";
+                """
+                {
+                  "implicit": {
+                    "authorizationUrl": "http://example.com/authorization",
+                    "scopes": {
+                      "scopeName1": "description1",
+                      "scopeName2": "description2"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = OAuthFlowsWithSingleFlow.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -120,23 +113,25 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""implicit"": {
-    ""authorizationUrl"": ""http://example.com/authorization"",
-    ""scopes"": {
-      ""scopeName1"": ""description1"",
-      ""scopeName2"": ""description2""
-    }
-  },
-  ""password"": {
-    ""tokenUrl"": ""http://example.com/token"",
-    ""refreshUrl"": ""http://example.com/refresh"",
-    ""scopes"": {
-      ""scopeName3"": ""description3"",
-      ""scopeName4"": ""description4""
-    }
-  }
-}";
+                """
+                {
+                  "implicit": {
+                    "authorizationUrl": "http://example.com/authorization",
+                    "scopes": {
+                      "scopeName1": "description1",
+                      "scopeName2": "description2"
+                    }
+                  },
+                  "password": {
+                    "tokenUrl": "http://example.com/token",
+                    "refreshUrl": "http://example.com/refresh",
+                    "scopes": {
+                      "scopeName3": "description3",
+                      "scopeName4": "description4"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = OAuthFlowsWithMultipleFlows.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);

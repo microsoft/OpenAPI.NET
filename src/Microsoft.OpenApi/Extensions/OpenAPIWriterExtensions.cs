@@ -11,11 +11,11 @@ namespace Microsoft.OpenApi
         /// <returns></returns>
         internal static OpenApiWriterSettings GetSettings(this IOpenApiWriter openApiWriter)
         {
-            if (openApiWriter is OpenApiWriterBase)
+            if (openApiWriter is OpenApiWriterBase @base)
             {
-                return ((OpenApiWriterBase)openApiWriter).Settings;
+                return @base.Settings;
             }
-            return new OpenApiWriterSettings();
+            return new();
         }
     }
 }

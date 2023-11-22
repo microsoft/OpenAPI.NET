@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Expressions
 {
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <param name="source">The source of the response.</param>
         public ResponseExpression(SourceExpression source)
         {
-            Source = source ?? throw Error.ArgumentNull(nameof(source));
+            Source = Utils.CheckArgumentNull(source);
         }
 
         /// <summary>

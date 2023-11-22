@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Json.Schema;
@@ -21,23 +21,23 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
         {
             var applicationJsonMediaType = "application/json";
 
-            var document = new OpenApiDocument()
+            var document = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new()
                 {
                     Title = "People",
                     Version = "v1.0"
                 },
                 Servers = new List<OpenApiServer>
                 {
-                    new OpenApiServer
+                    new()
                     {
                         Url = "https://graph.microsoft.com/v1.0"
                     }
                 },
-                Paths = new OpenApiPaths()
+                Paths = new()
                 {
-                    ["/"] = new OpenApiPathItem() // root path
+                    ["/"] = new() // root path
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -45,10 +45,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 OperationType.Get, new OpenApiOperation
                                 {
                                     OperationId = "graphService.GetGraphService",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200",new OpenApiResponse()
+                                            "200",new()
                                             {
                                                 Description = "OK"
                                             }
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/reports/microsoft.graph.getTeamsUserActivityCounts(period={period})"] = new OpenApiPathItem()
+                    ["/reports/microsoft.graph.getTeamsUserActivityCounts(period={period})"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "reports.Functions"
                                             }
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Parameters = new List<OpenApiParameter>
                                     {
                                         {
-                                            new OpenApiParameter()
+                                            new()
                                             {
                                                 Name = "period",
                                                 In = ParameterLocation.Path,
@@ -88,10 +88,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Success",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                         Parameters = new List<OpenApiParameter>
                         {
                             {
-                                new OpenApiParameter()
+                                new()
                                 {
                                     Name = "period",
                                     In = ParameterLocation.Path,
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/reports/microsoft.graph.getTeamsUserActivityUserDetail(date={date})"] = new OpenApiPathItem()
+                    ["/reports/microsoft.graph.getTeamsUserActivityUserDetail(date={date})"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "reports.Functions"
                                             }
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Parameters = new List<OpenApiParameter>
                                     {
                                         {
-                                            new OpenApiParameter()
+                                            new()
                                             {
                                                 Name = "period",
                                                 In = ParameterLocation.Path,
@@ -153,10 +153,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Success",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                         },
                         Parameters = new List<OpenApiParameter>
                         {
-                            new OpenApiParameter
+                            new()
                             {
                                 Name = "period",
                                 In = ParameterLocation.Path,
@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/users"] = new OpenApiPathItem()
+                    ["/users"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "users.user"
                                             }
@@ -204,10 +204,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     },
                                     OperationId = "users.user.ListUser",
                                     Summary = "Get entities from users",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Retrieved entities",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -237,7 +237,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/users/{user-id}"] = new OpenApiPathItem()
+                    ["/users/{user-id}"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "users.user"
                                             }
@@ -255,10 +255,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     },
                                     OperationId = "users.user.GetUser",
                                     Summary = "Get entity from users by key",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Retrieved entity",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "users.user"
                                             }
@@ -290,10 +290,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     },
                                     OperationId = "users.user.UpdateUser",
                                     Summary = "Update entity in users",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "204", new OpenApiResponse()
+                                            "204", new()
                                             {
                                                 Description = "Success"
                                             }
@@ -303,7 +303,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/users/{user-id}/messages/{message-id}"] = new OpenApiPathItem()
+                    ["/users/{user-id}/messages/{message-id}"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -313,7 +313,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "users.message"
                                             }
@@ -324,7 +324,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Description = "The messages in a mailbox or folder. Read-only. Nullable.",
                                     Parameters = new List<OpenApiParameter>
                                     {
-                                        new OpenApiParameter()
+                                        new()
                                         {
                                             Name = "$select",
                                             In = ParameterLocation.Query,
@@ -334,10 +334,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             // missing explode parameter
                                         }
                                     },
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Retrieved navigation property",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -357,7 +357,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/administrativeUnits/{administrativeUnit-id}/microsoft.graph.restore"] = new OpenApiPathItem()
+                    ["/administrativeUnits/{administrativeUnit-id}/microsoft.graph.restore"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -367,7 +367,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "administrativeUnits.Actions"
                                             }
@@ -378,7 +378,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Parameters = new List<OpenApiParameter>
                                     {
                                         {
-                                            new OpenApiParameter()
+                                            new()
                                             {
                                                 Name = "administrativeUnit-id",
                                                 In = ParameterLocation.Path,
@@ -388,10 +388,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Success",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -416,7 +416,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/applications/{application-id}/logo"] = new OpenApiPathItem()
+                    ["/applications/{application-id}/logo"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -426,7 +426,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "applications.application"
                                             }
@@ -434,10 +434,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     },
                                     OperationId = "applications.application.UpdateLogo",
                                     Summary = "Update media content for application in applications",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "204", new OpenApiResponse()
+                                            "204", new()
                                             {
                                                 Description = "Success"
                                             }
@@ -447,7 +447,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/security/hostSecurityProfiles"] = new OpenApiPathItem()
+                    ["/security/hostSecurityProfiles"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -457,7 +457,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "security.hostSecurityProfile"
                                             }
@@ -465,10 +465,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     },
                                     OperationId = "security.ListHostSecurityProfiles",
                                     Summary = "Get hostSecurityProfiles from security",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Retrieved navigation property",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -495,7 +495,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/communications/calls/{call-id}/microsoft.graph.keepAlive"] = new OpenApiPathItem()
+                    ["/communications/calls/{call-id}/microsoft.graph.keepAlive"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -505,7 +505,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Tags = new List<OpenApiTag>
                                     {
                                         {
-                                            new OpenApiTag()
+                                            new()
                                             {
                                                 Name = "communications.Actions"
                                             }
@@ -515,7 +515,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Summary = "Invoke action keepAlive",
                                     Parameters = new List<OpenApiParameter>
                                     {
-                                        new OpenApiParameter()
+                                        new()
                                         {
                                             Name = "call-id",
                                             In = ParameterLocation.Path,
@@ -530,10 +530,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "204", new OpenApiResponse()
+                                            "204", new()
                                             {
                                                 Description = "Success"
                                             }
@@ -549,7 +549,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/groups/{group-id}/events/{event-id}/calendar/events/microsoft.graph.delta"] = new OpenApiPathItem()
+                    ["/groups/{group-id}/events/{event-id}/calendar/events/microsoft.graph.delta"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -558,7 +558,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     Tags = new List<OpenApiTag>
                                     {
-                                        new OpenApiTag()
+                                        new()
                                         {
                                             Name = "groups.Functions"
                                         }
@@ -567,7 +567,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Summary = "Invoke function delta",
                                     Parameters = new List<OpenApiParameter>
                                     {
-                                        new OpenApiParameter()
+                                        new()
                                         {
                                             Name = "group-id",
                                             In = ParameterLocation.Path,
@@ -576,7 +576,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
                                             Extensions = new Dictionary <string, IOpenApiExtension> { { "x-ms-docs-key-type", new OpenApiAny("group") } }
                                         },
-                                        new OpenApiParameter()
+                                        new()
                                         {
                                             Name = "event-id",
                                             In = ParameterLocation.Path,
@@ -586,10 +586,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Extensions = new Dictionary <string, IOpenApiExtension> { { "x-ms-docs-key-type", new OpenApiAny("event") } }
                                         }
                                     },
-                                    Responses = new OpenApiResponses()
+                                    Responses = new()
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new()
                                             {
                                                 Description = "Success",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -615,7 +615,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/applications/{application-id}/createdOnBehalfOf/$ref"] = new OpenApiPathItem()
+                    ["/applications/{application-id}/createdOnBehalfOf/$ref"] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -624,7 +624,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     Tags = new List<OpenApiTag>
                                     {
-                                        new OpenApiTag()
+                                        new()
                                         {
                                             Name = "applications.directoryObject"
                                         }
@@ -636,7 +636,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                         }
                     }
                 },
-                Components = new OpenApiComponents
+                Components = new()
                 {
                     Schemas = new Dictionary<string, JsonSchema>
                     {

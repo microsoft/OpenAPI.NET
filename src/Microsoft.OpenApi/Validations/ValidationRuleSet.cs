@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Linq;
@@ -16,11 +16,11 @@ namespace Microsoft.OpenApi.Validations
     /// </summary>
     public sealed class ValidationRuleSet
     {
-        private readonly IDictionary<string, IList<ValidationRule>> _rulesDictionary = new Dictionary<string, IList<ValidationRule>>();
+        private Dictionary<Type, IList<ValidationRule>> _rules = new();
 
         private static ValidationRuleSet _defaultRuleSet;
 
-        private readonly IList<ValidationRule> _emptyRules = new List<ValidationRule>();
+        private List<ValidationRule> _emptyRules = new();
 
         /// <summary>
         /// Gets the keys in this rule set.
@@ -59,8 +59,8 @@ namespace Microsoft.OpenApi.Validations
         /// Gets the default validation rule sets.
         /// </summary>
         /// <remarks>
-        /// This is a method instead of a property to signal that a new default ruleset object is created
-        /// per call. Making this a property may be misleading callers to think the returned rulesets from multiple calls
+        /// This is a method instead of a property to signal that a new default rule-set object is created
+        /// per call. Making this a property may be misleading callers to think the returned rule-sets from multiple calls
         /// are the same objects.
         /// </remarks>
         public static ValidationRuleSet GetDefaultRuleSet()
@@ -73,17 +73,17 @@ namespace Microsoft.OpenApi.Validations
 
             // We create a new instance of ValidationRuleSet per call as a safeguard
             // against unintentional modification of the private _defaultRuleSet.
-            return new ValidationRuleSet(_defaultRuleSet);
+            return new(_defaultRuleSet);
         }
 
         /// <summary>
-        /// Return Ruleset with no rules
+        /// Return <see cref="ValidationRuleSet"/> with no rules
         /// </summary>
         public static ValidationRuleSet GetEmptyRuleSet()
         {
             // We create a new instance of ValidationRuleSet per call as a safeguard
             // against unintentional modification of the private _defaultRuleSet.
-            return new ValidationRuleSet();
+            return new();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Validations
                 return;
             }
 
-            foreach (ValidationRule rule in ruleSet)
+            foreach (var rule in ruleSet)
             {
                 Add(rule.ElementType.Name, rule);
             }
@@ -285,10 +285,10 @@ namespace Microsoft.OpenApi.Validations
 
         private static ValidationRuleSet BuildDefaultRuleSet()
         {
-            ValidationRuleSet ruleSet = new ValidationRuleSet();
-            Type validationRuleType = typeof(ValidationRule);
+            var ruleSet = new ValidationRuleSet();
+            var validationRuleType = typeof(ValidationRule);
 
-            IEnumerable<PropertyInfo> rules = typeof(ValidationRuleSet).Assembly.GetTypes()
+            var rules = typeof(ValidationRuleSet).Assembly.GetTypes()
                 .Where(t => t.IsClass
                             && t != typeof(object)
                             && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
@@ -298,8 +298,7 @@ namespace Microsoft.OpenApi.Validations
             foreach (var property in rules)
             {
                 var propertyValue = property.GetValue(null); // static property
-                ValidationRule rule = propertyValue as ValidationRule;
-                if (rule != null)
+                if (propertyValue is ValidationRule rule)
                 {
                     ruleSet.Add(rule.ElementType.Name, rule);
                 }

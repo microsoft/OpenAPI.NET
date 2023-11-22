@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,13 +12,13 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallback : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiCallback>
+    public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiCallback>
     {
         /// <summary>
         /// A Path Item Object used to define a callback request and expected responses.
         /// </summary>
-        public virtual Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
-            = new Dictionary<RuntimeExpression, OpenApiPathItem>();
+        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
+            = new();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -58,19 +58,12 @@ namespace Microsoft.OpenApi.Models
         /// <param name="pathItem">The path item.</param>
         public void AddPathItem(RuntimeExpression expression, OpenApiPathItem pathItem)
         {
-            if (expression == null)
-            {
-                throw Error.ArgumentNull(nameof(expression));
-            }
-
-            if (pathItem == null)
-            {
-                throw Error.ArgumentNull(nameof(pathItem));
-            }
+            Utils.CheckArgumentNull(expression);
+            Utils.CheckArgumentNull(pathItem);
 
             if (PathItems == null)
             {
-                PathItems = new Dictionary<RuntimeExpression, OpenApiPathItem>();
+                PathItems = new();
             }
 
             PathItems.Add(expression, pathItem);
@@ -127,7 +120,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiCallback object based on the presence of a $ref 
+        /// Returns an effective OpenApiCallback object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiCallback</returns>

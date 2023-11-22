@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Globalization;
@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -21,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiExampleTests
     {
-        public static OpenApiExample AdvancedExample = new OpenApiExample
+        public static OpenApiExample AdvancedExample = new()
         {
             Value = new OpenApiAny(new JsonObject
             {
@@ -59,9 +58,9 @@ namespace Microsoft.OpenApi.Tests.Models
             })
         };
 
-        public static OpenApiExample ReferencedExample = new OpenApiExample
+        public static OpenApiExample ReferencedExample = new()
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Example,
                 Id = "example1",
@@ -102,13 +101,6 @@ namespace Microsoft.OpenApi.Tests.Models
             })
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiExampleTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -116,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedExample.SerializeAsV3(writer);
@@ -133,7 +125,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedExample.SerializeAsV3(writer);
@@ -150,7 +142,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedExample.SerializeAsV3WithoutReference(writer);

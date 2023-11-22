@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -54,7 +54,6 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
             Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);
-
         }
 
         /// <summary>
@@ -72,7 +71,7 @@ namespace Microsoft.OpenApi.Services
             // Visit tags
             if (tags != null)
             {
-                for (int i = 0; i < tags.Count; i++)
+                for (var i = 0; i < tags.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(tags[i]));
                 }
@@ -257,6 +256,7 @@ namespace Microsoft.OpenApi.Services
                     _visitor.CurrentKeys.Path = null;
                 }
             }
+
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace Microsoft.OpenApi.Services
             // Visit Servers
             if (servers != null)
             {
-                for (int i = 0; i < servers.Count; i++)
+                for (var i = 0; i < servers.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(servers[i]));
                 }
@@ -348,7 +348,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="IOpenApiExtension"/> 
+        /// Visits <see cref="IOpenApiExtension"/>
         /// </summary>
         internal void Walk(IOpenApiExtension extension)
         {
@@ -498,7 +498,8 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(pathItem);
 
-            if (pathItem != null)
+            // The path may be a reference
+            if (pathItem != null && !ProcessAsReference(pathItem))
             {
                 Walk(OpenApiConstants.Parameters, () => Walk(pathItem.Parameters));
                 Walk(pathItem.Operations);
@@ -566,13 +567,12 @@ namespace Microsoft.OpenApi.Services
 
             if (securityRequirements != null)
             {
-                for (int i = 0; i < securityRequirements.Count; i++)
+                for (var i = 0; i < securityRequirements.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(securityRequirements[i]));
                 }
             }
         }
-
 
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
@@ -588,7 +588,7 @@ namespace Microsoft.OpenApi.Services
 
             if (parameters != null)
             {
-                for (int i = 0; i < parameters.Count; i++)
+                for (var i = 0; i < parameters.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(parameters[i]));
                 }
@@ -666,12 +666,9 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(requestBody);
 
-            if (requestBody != null)
+            if (requestBody is {Content: not null})
             {
-                if (requestBody.Content != null)
-                {
-                    Walk(OpenApiConstants.Content, () => Walk(requestBody.Content));
-                }
+                Walk(OpenApiConstants.Content, () => Walk(requestBody.Content));
             }
             Walk(requestBody as IOpenApiExtensible);
         }
@@ -829,6 +826,11 @@ namespace Microsoft.OpenApi.Services
                 Walk("items", () => Walk(schema.GetItems()));
             }
 
+            if (schema.Not != null)
+            {
+                Walk("not", () => Walk(schema.Not));
+            }
+
             if (schema.GetAllOf() != null)
             {
                 Walk("allOf", () => Walk(schema.GetAllOf()));
@@ -947,7 +949,7 @@ namespace Microsoft.OpenApi.Services
             // Visit Examples
             if (examples != null)
             {
-                for (int i = 0; i < examples.Count; i++)
+                for (var i = 0; i < examples.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(examples[i]));
                 }
@@ -964,10 +966,10 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            // Visit Schemass
+            // Visit Schemas
             if (schemas != null)
             {
-                for (int i = 0; i < schemas.Count; i++)
+                for (var i = 0; i < schemas.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(schemas[i]));
                 }
@@ -1124,6 +1126,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiOAuthFlow e: Walk(e); break;
                 case OpenApiOperation e: Walk(e); break;
                 case OpenApiParameter e: Walk(e); break;
+                case OpenApiPaths e: Walk(e); break;
                 case OpenApiRequestBody e: Walk(e); break;
                 case OpenApiResponse e: Walk(e); break;
                 case JsonSchema e: Walk(e); break;

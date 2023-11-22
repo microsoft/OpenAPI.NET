@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Extensions;
@@ -17,16 +17,12 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiLicense> _licenseFixedFields = new FixedFieldMap<OpenApiLicense>
         {
             {
-                "name", (o, n) =>
-                {
-                    o.Name = n.GetScalarValue();
-                }
+                "name",
+                (o, n) => o.Name = n.GetScalarValue()
             },
             {
-                "url", (o, n) =>
-                {
-                    o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                }
+                "url",
+                (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
             },
         };
 

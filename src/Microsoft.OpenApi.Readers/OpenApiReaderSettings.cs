@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.MicrosoftExtensions;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Validations;
 
@@ -49,7 +50,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Dictionary of parsers for converting extensions into strongly typed classes
         /// </summary>
-        public Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
+        public Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new();
 
         /// <summary>
         /// Rules to use for validating OpenAPI specification.  If none are provided a default set of rules are applied.
@@ -60,6 +61,11 @@ namespace Microsoft.OpenApi.Readers
         /// URL where relative references should be resolved from if the description does not contain Server definitions
         /// </summary>
         public Uri BaseUrl { get; set; }
+
+        /// <summary>
+        /// Allows clients to define a custom DefaultContentType if produces array is empty
+        /// </summary>
+        public List<string> DefaultContentType { get; set; }
 
         /// <summary>
         /// Function used to provide an alternative loader for accessing external references.
@@ -74,5 +80,31 @@ namespace Microsoft.OpenApi.Readers
         /// from an <see cref="OpenApiStreamReader"/> object.
         /// </summary>
         public bool LeaveStreamOpen { get; set; }
+
+        /// <summary>
+        /// Adds parsers for Microsoft OpenAPI extensions:
+        /// - <see cref="OpenApiPagingExtension"/>
+        /// - <see cref="OpenApiEnumValuesDescriptionExtension"/>
+        /// - <see cref="OpenApiPrimaryErrorMessageExtension"/>
+        /// - <see cref="OpenApiDeprecationExtension"/>
+        /// - <see cref="OpenApiReservedParameterExtension"/>
+        /// - <see cref="OpenApiEnumFlagsExtension"/>
+        /// NOTE: The list of extensions is subject to change.
+        /// </summary>
+        public void AddMicrosoftExtensionParsers()
+        {
+            if (!ExtensionParsers.ContainsKey(OpenApiPagingExtension.Name))
+                ExtensionParsers.Add(OpenApiPagingExtension.Name, static (i, _) => OpenApiPagingExtension.Parse(i));
+            if (!ExtensionParsers.ContainsKey(OpenApiEnumValuesDescriptionExtension.Name))
+                ExtensionParsers.Add(OpenApiEnumValuesDescriptionExtension.Name, static (i, _ ) => OpenApiEnumValuesDescriptionExtension.Parse(i));
+            if (!ExtensionParsers.ContainsKey(OpenApiPrimaryErrorMessageExtension.Name))
+                ExtensionParsers.Add(OpenApiPrimaryErrorMessageExtension.Name, static (i, _ ) => OpenApiPrimaryErrorMessageExtension.Parse(i));
+            if (!ExtensionParsers.ContainsKey(OpenApiDeprecationExtension.Name))
+                ExtensionParsers.Add(OpenApiDeprecationExtension.Name, static (i, _ ) => OpenApiDeprecationExtension.Parse(i));
+            if (!ExtensionParsers.ContainsKey(OpenApiReservedParameterExtension.Name))
+                ExtensionParsers.Add(OpenApiReservedParameterExtension.Name, static (i, _ ) => OpenApiReservedParameterExtension.Parse(i));
+            if (!ExtensionParsers.ContainsKey(OpenApiEnumFlagsExtension.Name))
+                ExtensionParsers.Add(OpenApiEnumFlagsExtension.Name, static (i, _ ) => OpenApiEnumFlagsExtension.Parse(i));
+        }
     }
 }

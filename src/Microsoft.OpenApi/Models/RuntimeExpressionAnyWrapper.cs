@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
@@ -69,10 +69,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void WriteValue(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (_any != null)
             {

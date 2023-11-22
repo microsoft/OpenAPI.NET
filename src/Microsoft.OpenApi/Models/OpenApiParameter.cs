@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
+    public class OpenApiParameter : IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
     {
         private bool? _explode;
         private ParameterStyle? _style;
@@ -218,7 +218,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiParameter object based on the presence of a $ref 
+        /// Returns an effective OpenApiParameter object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiParameter</returns>
@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, _explode, _style.HasValue && _style.Value == ParameterStyle.Form);
+            writer.WriteProperty(OpenApiConstants.Explode, _explode, _style is ParameterStyle.Form);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
@@ -443,10 +443,10 @@ namespace Microsoft.OpenApi.Models
         {
             Style = In switch
             {
-                ParameterLocation.Query => (ParameterStyle?)ParameterStyle.Form,
-                ParameterLocation.Header => (ParameterStyle?)ParameterStyle.Simple,
-                ParameterLocation.Path => (ParameterStyle?)ParameterStyle.Simple,
-                ParameterLocation.Cookie => (ParameterStyle?)ParameterStyle.Form,
+                ParameterLocation.Query => ParameterStyle.Form,
+                ParameterLocation.Header => ParameterStyle.Simple,
+                ParameterLocation.Path => ParameterStyle.Simple,
+                ParameterLocation.Cookie => ParameterStyle.Form,
                 _ => (ParameterStyle?)ParameterStyle.Simple,
             };
 

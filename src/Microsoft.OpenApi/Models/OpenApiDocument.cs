@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -157,6 +157,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
 
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
@@ -213,7 +217,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -253,7 +257,7 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
+                // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
                 // If the reference exists but points to other objects, the object is serialized to just that reference.
                 // definitions
                 if (Components?.Schemas != null)
@@ -360,6 +364,18 @@ namespace Microsoft.OpenApi.Models
             }
         }
 
+        private static string ParseServerUrl(OpenApiServer server)
+        {
+            var parsedUrl = server.Url;
+
+            var variables = server.Variables;
+            foreach (var variable in variables.Where(static x => !string.IsNullOrEmpty(x.Value.Default)))
+            {
+                parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", variable.Value.Default);
+            }
+            return parsedUrl;
+        }
+
         private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
         {
             if (servers == null || !servers.Any())
@@ -367,13 +383,13 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            // Arbitrarily choose the first server given that V2 only allows 
+            // Arbitrarily choose the first server given that V2 only allows
             // one host, port, and base path.
-            var firstServer = servers.First();
+            var serverUrl = ParseServerUrl(servers.First());
 
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
-            // The Url property cannotcontain path templating to be valid for V2 serialization.
-            var firstServerUrl = new Uri(firstServer.Url, UriKind.RelativeOrAbsolute);
+            // The Url property cannot contain path templating to be valid for V2 serialization.
+            var firstServerUrl = new Uri(serverUrl, UriKind.RelativeOrAbsolute);
 
             // host
             if (firstServerUrl.IsAbsoluteUri)
@@ -408,7 +424,7 @@ namespace Microsoft.OpenApi.Models
             var schemes = servers.Select(
                     s =>
                     {
-                        Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
+                        Uri.TryCreate(ParseServerUrl(s), UriKind.RelativeOrAbsolute, out var url);
                         return url;
                     })
                 .Where(
@@ -466,7 +482,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Takes in an OpenApi document instance and generates its hash value 
+        /// Takes in an OpenApi document instance and generates its hash value
         /// </summary>
         /// <param name="doc">The OpenAPI description to hash.</param>
         /// <returns>The hash value.</returns>
@@ -476,7 +492,7 @@ namespace Microsoft.OpenApi.Models
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
-            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings { Terse = true });
+            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
             doc.SerializeAsV3(openApiJsonWriter);
             openApiJsonWriter.Flush();
 
@@ -490,8 +506,8 @@ namespace Microsoft.OpenApi.Models
         {
             // Build the final string by converting each byte
             // into hex and appending it to a StringBuilder
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
+            var sb = new StringBuilder();
+            for (var i = 0; i < hash.Length; i++)
             {
                 sb.Append(hash[i].ToString("X2"));
             }
@@ -592,6 +608,9 @@ namespace Microsoft.OpenApi.Models
 
                     case ReferenceType.Callback:
                         return this.Components.Callbacks[reference.Id];
+
+                    case ReferenceType.Path:
+                        return this.Paths[reference.Id];
 
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);

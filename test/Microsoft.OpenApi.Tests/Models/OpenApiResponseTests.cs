@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,7 +14,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -22,14 +21,14 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiResponseTests
     {
-        public static OpenApiResponse BasicResponse = new OpenApiResponse();
+        public static OpenApiResponse BasicResponse = new();
 
-        public static OpenApiResponse AdvancedV2Response = new OpenApiResponse
+        public static OpenApiResponse AdvancedResponse = new()
         {
             Description = "A complex object array response",
             Content =
             {
-                ["text/plain"] = new OpenApiMediaType
+                ["text/plain"] = new()
                 {
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Array)
@@ -74,12 +73,12 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Headers =
             {
-                ["X-Rate-Limit-Limit"] = new OpenApiHeader
+                ["X-Rate-Limit-Limit"] = new()
                 {
                     Description = "The number of allowed requests in the current period",
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
-                ["X-Rate-Limit-Reset"] = new OpenApiHeader
+                ["X-Rate-Limit-Reset"] = new()
                 {
                     Description = "The number of seconds left in the current period",
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
@@ -88,7 +87,7 @@ namespace Microsoft.OpenApi.Tests.Models
         };
         public static OpenApiResponse ReferencedV2Response = new OpenApiResponse
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Response,
                 Id = "example1"
@@ -96,7 +95,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "A complex object array response",
             Content =
             {
-                ["text/plain"] = new OpenApiMediaType
+                ["text/plain"] = new()
                 {
                     Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.Array)
@@ -105,12 +104,12 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Headers =
             {
-                ["X-Rate-Limit-Limit"] = new OpenApiHeader
+                ["X-Rate-Limit-Limit"] = new()
                 {
                     Description = "The number of allowed requests in the current period",
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
-                ["X-Rate-Limit-Reset"] = new OpenApiHeader
+                ["X-Rate-Limit-Reset"] = new()
                 {
                     Description = "The number of seconds left in the current period",
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
@@ -149,13 +148,6 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiResponseTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
@@ -166,9 +158,13 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenApiFormat format)
         {
             // Arrange
-            var expected = format == OpenApiFormat.Json ? @"{
-  ""description"": null
-}" : @"description: ";
+            var expected = format == OpenApiFormat.Json ?
+                """
+                {
+                  "description": null
+                }
+                """ :
+                @"description: ";
 
             // Act
             var actual = BasicResponse.Serialize(version, format);
@@ -183,35 +179,37 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedResponseAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""description"": ""A complex object array response"",
-  ""headers"": {
-    ""X-Rate-Limit-Limit"": {
-      ""description"": ""The number of allowed requests in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
-    },
-    ""X-Rate-Limit-Reset"": {
-      ""description"": ""The number of seconds left in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
-    }
-  },
-  ""content"": {
-    ""text/plain"": {
-      ""schema"": {
-        ""type"": ""array"",
-        ""items"": {
-          ""$ref"": ""#/components/schemas/customType""
-        }
-      },
-      ""example"": ""Blabla"",
-      ""myextension"": ""myextensionvalue""
-    }
-  }
-}";
+            var expected = """
+                           {
+                             "description": "A complex object array response",
+                             "headers": {
+                               "X-Rate-Limit-Limit": {
+                                 "description": "The number of allowed requests in the current period",
+                                 "schema": {
+                                   "type": "integer"
+                                 }
+                               },
+                               "X-Rate-Limit-Reset": {
+                                 "description": "The number of seconds left in the current period",
+                                 "schema": {
+                                   "type": "integer"
+                                 }
+                               }
+                             },
+                             "content": {
+                               "text/plain": {
+                                 "schema": {
+                                   "type": "array",
+                                   "items": {
+                                     "$ref": "#/components/schemas/customType"
+                                   }
+                                 },
+                                 "example": "Blabla",
+                                 "myextension": "myextensionvalue"
+                               }
+                             }
+                           }
+                           """;
 
             // Act
             var actual = AdvancedV3Response.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -227,24 +225,26 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"description: A complex object array response
-headers:
-  X-Rate-Limit-Limit:
-    description: The number of allowed requests in the current period
-    schema:
-      type: integer
-  X-Rate-Limit-Reset:
-    description: The number of seconds left in the current period
-    schema:
-      type: integer
-content:
-  text/plain:
-    schema:
-      type: array
-      items:
-        $ref: '#/components/schemas/customType'
-    example: Blabla
-    myextension: myextensionvalue";
+                """
+                description: A complex object array response
+                headers:
+                  X-Rate-Limit-Limit:
+                    description: The number of allowed requests in the current period
+                    schema:
+                      type: integer
+                  X-Rate-Limit-Reset:
+                    description: The number of seconds left in the current period
+                    schema:
+                      type: integer
+                content:
+                  text/plain:
+                    schema:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/customType'
+                    example: Blabla
+                    myextension: myextensionvalue
+                """;
 
             // Act
             var actual = AdvancedV3Response.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -259,29 +259,32 @@ content:
         public void SerializeAdvancedResponseAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""description"": ""A complex object array response"",
-  ""schema"": {
-    ""type"": ""array"",
-    ""items"": {
-      ""$ref"": ""#/definitions/customType""
-    }
-  },
-  ""examples"": {
-    ""text/plain"": ""Blabla""
-  },
-  ""myextension"": ""myextensionvalue"",
-  ""headers"": {
-    ""X-Rate-Limit-Limit"": {
-      ""description"": ""The number of allowed requests in the current period"",
-      ""type"": ""integer""
-    },
-    ""X-Rate-Limit-Reset"": {
-      ""description"": ""The number of seconds left in the current period"",
-      ""type"": ""integer""
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "description": "A complex object array response",
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/customType"
+                    }
+                  },
+                  "examples": {
+                    "text/plain": "Blabla"
+                  },
+                  "myextension": "myextensionvalue",
+                  "headers": {
+                    "X-Rate-Limit-Limit": {
+                      "description": "The number of allowed requests in the current period",
+                      "type": "integer"
+                    },
+                    "X-Rate-Limit-Reset": {
+                      "description": "The number of seconds left in the current period",
+                      "type": "integer"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedV2Response.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -297,21 +300,23 @@ content:
         {
             // Arrange
             var expected =
-                @"description: A complex object array response
-schema:
-  type: array
-  items:
-    $ref: '#/definitions/customType'
-examples:
-  text/plain: Blabla
-myextension: myextensionvalue
-headers:
-  X-Rate-Limit-Limit:
-    description: The number of allowed requests in the current period
-    type: integer
-  X-Rate-Limit-Reset:
-    description: The number of seconds left in the current period
-    type: integer";
+                """
+                description: A complex object array response
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/definitions/customType'
+                examples:
+                  text/plain: Blabla
+                myextension: myextensionvalue
+                headers:
+                  X-Rate-Limit-Limit:
+                    description: The number of allowed requests in the current period
+                    type: integer
+                  X-Rate-Limit-Reset:
+                    description: The number of seconds left in the current period
+                    type: integer
+                """;
 
             // Act
             var actual = AdvancedV2Response.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -329,7 +334,7 @@ headers:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedV3Response.SerializeAsV3(writer);
@@ -346,7 +351,7 @@ headers:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedV3Response.SerializeAsV3WithoutReference(writer);
@@ -363,7 +368,7 @@ headers:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedV2Response.SerializeAsV2(writer);
@@ -380,7 +385,7 @@ headers:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedV2Response.SerializeAsV2WithoutReference(writer);

@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +20,8 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test");
 
-            OpenApiDocument document = new OpenApiDocument();
-            document.Components = new OpenApiComponents()
+            var document = new OpenApiDocument();
+            document.Components = new()
             {
                 Schemas = new Dictionary<string, JsonSchema>()
                 {
@@ -29,21 +29,21 @@ namespace Microsoft.OpenApi.Tests.Validations
                 }
             };
 
-            document.Paths = new OpenApiPaths()
+            document.Paths = new()
             {
-                ["/"] = new OpenApiPathItem()
+                ["/"] = new()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation()
+                        [OperationType.Get] = new()
                         {
-                            Responses = new OpenApiResponses()
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse()
+                                ["200"] = new()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, OpenApiMediaType>
                                     {
-                                        ["application/json"] = new OpenApiMediaType()
+                                        ["application/json"] = new()
                                         {
                                             Schema = sharedSchema
                                         }
@@ -77,23 +77,23 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test").Build();
 
-            OpenApiDocument document = new OpenApiDocument();
+            var document = new OpenApiDocument();
 
-            document.Paths = new OpenApiPaths()
+            document.Paths = new()
             {
-                ["/"] = new OpenApiPathItem()
+                ["/"] = new()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation()
+                        [OperationType.Get] = new()
                         {
-                            Responses = new OpenApiResponses()
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse()
+                                ["200"] = new()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, OpenApiMediaType>
                                     {
-                                        ["application/json"] = new OpenApiMediaType()
+                                        ["application/json"] = new()
                                         {
                                             Schema = sharedSchema
                                         }
@@ -122,9 +122,8 @@ namespace Microsoft.OpenApi.Tests.Validations
 
     public class AlwaysFailRule<T> : ValidationRule<T>
     {
-        public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
+        public AlwaysFailRule() : base((c, _) => c.CreateError("x", "y"))
         {
-
         }
     }
 }

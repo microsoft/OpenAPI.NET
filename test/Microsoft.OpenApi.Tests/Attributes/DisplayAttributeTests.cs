@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Attributes
 {
-
     public enum ApiLevel
     {
         [DisplayAttribute("private")]
@@ -14,6 +13,7 @@ namespace Microsoft.OpenApi.Tests.Attributes
         [DisplayAttribute("corporate")]
         Corporate = 3
     }
+
     public class DisplayAttributeTests
     {
         [Theory]

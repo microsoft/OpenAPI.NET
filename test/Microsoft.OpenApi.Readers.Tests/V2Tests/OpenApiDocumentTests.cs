@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +11,6 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
-
-
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V2Tests/Samples/";
@@ -20,10 +18,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ShouldParseProducesInAnyOrder()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "twoResponses.json")))
-            {
-                var reader = new OpenApiStreamReader();
-                var doc = reader.Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "twoResponses.json"));
+            var reader = new OpenApiStreamReader();
+            var doc = reader.Read(stream, out var diagnostic);
 
                 var successSchema = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Array)
@@ -38,119 +35,106 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
 
-                var okMediaType = new OpenApiMediaType
+            var errorMediaType = new OpenApiMediaType
+            {
+                Schema = errorSchema
+            };
+
+            doc.Should().BeEquivalentTo(new OpenApiDocument
+            {
+                Info = new()
                 {
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(okSchema)
                 };
 
                 var errorMediaType = new OpenApiMediaType
                 {
-                    Schema = errorSchema
-                };
-
-                doc.Should().BeEquivalentTo(new OpenApiDocument
-                {
-                    Info = new OpenApiInfo
+                    ["/items"] = new()
                     {
-                        Title = "Two responses",
-                        Version = "1.0.0"
-                    },
-                    Servers =
-                    {
-                        new OpenApiServer
+                        Operations =
                         {
-                            Url = "https://"
-                        }
-                    },
-                    Paths = new OpenApiPaths
-                    {
-                        ["/items"] = new OpenApiPathItem
-                        {
-                            Operations =
+                            [OperationType.Get] = new()
                             {
-                                [OperationType.Get] = new OpenApiOperation
+                                Responses =
                                 {
-                                    Responses =
+                                    ["200"] = new()
                                     {
-                                        ["200"] = new OpenApiResponse
+                                        Description = "An OK response",
+                                        Content =
                                         {
-                                            Description = "An OK response",
-                                            Content =
-                                            {
-                                                ["application/json"] = okMediaType,
-                                                ["application/xml"] = okMediaType,
-                                            }
-                                        },
-                                        ["default"] = new OpenApiResponse
+                                            ["application/json"] = okMediaType,
+                                            ["application/xml"] = okMediaType,
+                                        }
+                                    },
+                                    ["default"] = new()
+                                    {
+                                        Description = "An error response",
+                                        Content =
                                         {
-                                            Description = "An error response",
-                                            Content =
-                                            {
-                                                ["application/json"] = errorMediaType,
-                                                ["application/xml"] = errorMediaType
-                                            }
+                                            ["application/json"] = errorMediaType,
+                                            ["application/xml"] = errorMediaType
                                         }
                                     }
-                                },
-                                [OperationType.Post] = new OpenApiOperation
+                                }
+                            },
+                            [OperationType.Post] = new()
+                            {
+                                Responses =
                                 {
-                                    Responses =
+                                    ["200"] = new()
                                     {
-                                        ["200"] = new OpenApiResponse
+                                        Description = "An OK response",
+                                        Content =
                                         {
-                                            Description = "An OK response",
-                                            Content =
-                                            {
-                                                ["html/text"] = okMediaType
-                                            }
-                                        },
-                                        ["default"] = new OpenApiResponse
+                                            ["html/text"] = okMediaType
+                                        }
+                                    },
+                                    ["default"] = new()
+                                    {
+                                        Description = "An error response",
+                                        Content =
                                         {
-                                            Description = "An error response",
-                                            Content =
-                                            {
-                                                ["html/text"] = errorMediaType
-                                            }
+                                            ["html/text"] = errorMediaType
                                         }
                                     }
-                                },
-                                [OperationType.Patch] = new OpenApiOperation
+                                }
+                            },
+                            [OperationType.Patch] = new()
+                            {
+                                Responses =
                                 {
-                                    Responses =
+                                    ["200"] = new()
                                     {
-                                        ["200"] = new OpenApiResponse
+                                        Description = "An OK response",
+                                        Content =
                                         {
-                                            Description = "An OK response",
-                                            Content =
-                                            {
-                                                ["application/json"] = okMediaType,
-                                                ["application/xml"] = okMediaType,
-                                            }
-                                        },
-                                        ["default"] = new OpenApiResponse
+                                            ["application/json"] = okMediaType,
+                                            ["application/xml"] = okMediaType,
+                                        }
+                                    },
+                                    ["default"] = new()
+                                    {
+                                        Description = "An error response",
+                                        Content =
                                         {
-                                            Description = "An error response",
-                                            Content =
-                                            {
-                                                ["application/json"] = errorMediaType,
-                                                ["application/xml"] = errorMediaType
-                                            }
+                                            ["application/json"] = errorMediaType,
+                                            ["application/xml"] = errorMediaType
                                         }
                                     }
                                 }
                             }
                         }
-                    },
-                    Components = new OpenApiComponents
-                    {
-                        Schemas =
-                        {
-                            ["Item"] = okSchema,
-                            ["Error"] = errorSchema
-                        }
                     }
-                });
-            }
+                },
+                Components = new()
+                {
+                    Schemas =
+                    {
+                        ["Item"] = okSchema,
+                        ["Error"] = errorSchema
+                    }
+                }
+            });
         }
 
         [Fact]
@@ -192,7 +176,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
         }
 
-
         [Fact]
         public void ShouldAllowComponentsThatJustContainAReference()
         {
@@ -210,6 +193,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 // detected a cycle - this code gets triggered
                 Assert.Fail("A cycle should not be detected");
             }
+        }
+
+        [Fact]
+        public void ParseDocumentWithDefaultContentTypeSettingShouldSucceed()
+        {
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"));
+            var doc = new OpenApiStreamReader(new() { DefaultContentType =  new() { "application/json" } })
+                .Read(stream, out var diags);
+            var mediaType = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
+            Assert.Contains("application/json", mediaType);
         }
     }
 }

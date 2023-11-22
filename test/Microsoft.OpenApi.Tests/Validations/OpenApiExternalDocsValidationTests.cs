@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateUrlIsRequiredInExternalDocs()
         {
             // Arrange
-            OpenApiExternalDocs externalDocs = new OpenApiExternalDocs();
+            var externalDocs = new OpenApiExternalDocs();
 
             // Act
             var errors = externalDocs.Validate(ValidationRuleSet.GetDefaultRuleSet());
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             Assert.True(result);
             Assert.NotNull(errors);
-            OpenApiError error = Assert.Single(errors);
+            var error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"), error.Message);
         }
     }

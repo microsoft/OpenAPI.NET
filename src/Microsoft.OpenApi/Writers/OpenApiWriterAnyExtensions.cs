@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Text.Json;
@@ -22,10 +22,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="specVersion">Version of the OpenAPI specification that that will be output.</param>
         public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions, OpenApiSpecVersion specVersion)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (extensions != null)
             {
@@ -89,16 +86,6 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WriteArray(this IOpenApiWriter writer, JsonArray array)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (array == null)
-            {
-                throw Error.ArgumentNull(nameof(array));
-            }
-
             writer.WriteStartArray();
 
             foreach (var item in array)
@@ -111,16 +98,6 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WriteObject(this IOpenApiWriter writer, JsonObject entity)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (entity == null)
-            {
-                throw Error.ArgumentNull(nameof(entity));
-            }
-
             writer.WriteStartObject();
 
             foreach (var item in entity)

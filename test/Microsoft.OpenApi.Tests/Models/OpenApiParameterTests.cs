@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,7 +14,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -22,24 +21,24 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiParameterTests
     {
-        public static OpenApiParameter BasicParameter = new OpenApiParameter
+        public static OpenApiParameter BasicParameter = new()
         {
             Name = "name1",
             In = ParameterLocation.Path
         };
 
-        public static OpenApiParameter ReferencedParameter = new OpenApiParameter
+        public static OpenApiParameter ReferencedParameter = new()
         {
             Name = "name1",
             In = ParameterLocation.Path,
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Parameter,
                 Id = "example1"
             }
         };
 
-        public static OpenApiParameter AdvancedPathParameterWithSchema = new OpenApiParameter
+        public static OpenApiParameter AdvancedPathParameterWithSchema = new()
         {
             Name = "name1",
             In = ParameterLocation.Path,
@@ -57,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Examples = new Dictionary<string, OpenApiExample>
             {
-                ["test"] = new OpenApiExample
+                ["test"] = new()
                 {
                     Summary = "summary3",
                     Description = "description3"
@@ -65,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter ParameterWithFormStyleAndExplodeFalse = new OpenApiParameter
+        public static OpenApiParameter ParameterWithFormStyleAndExplodeFalse = new()
         {
             Name = "name1",
             In = ParameterLocation.Query,
@@ -86,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         };
 
-        public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
+        public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new()
         {
             Name = "name1",
             In = ParameterLocation.Query,
@@ -133,7 +132,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Schema = new JsonSchemaBuilder().Ref("schemaObject1").Build(),
             Examples = new Dictionary<string, OpenApiExample>
             {
-                ["test"] = new OpenApiExample
+                ["test"] = new()
                 {
                     Summary = "summary3",
                     Description = "description3"
@@ -141,7 +140,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter AdvancedHeaderParameterWithSchemaTypeObject = new OpenApiParameter
+        public static OpenApiParameter AdvancedHeaderParameterWithSchemaTypeObject = new()
         {
             Name = "name1",
             In = ParameterLocation.Header,
@@ -154,20 +153,13 @@ namespace Microsoft.OpenApi.Tests.Models
             Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object),
             Examples = new Dictionary<string, OpenApiExample>
             {
-                ["test"] = new OpenApiExample
+                ["test"] = new()
                 {
                     Summary = "summary3",
                     Description = "description3"
                 }
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiParameterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(ParameterStyle.Form, true)]
@@ -232,10 +224,13 @@ schema:
         public void SerializeBasicParameterAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""name"": ""name1"",
-  ""in"": ""path""
-}";
+            var expected =
+                """
+                {
+                  "name": "name1",
+                  "in": "path"
+                }
+                """;
 
             // Act
             var actual = BasicParameter.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -250,33 +245,36 @@ schema:
         public void SerializeAdvancedParameterAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""name"": ""name1"",
-  ""in"": ""path"",
-  ""description"": ""description1"",
-  ""required"": true,
-  ""style"": ""simple"",
-  ""explode"": true,
-  ""schema"": {
-    ""title"": ""title2"",
-    ""oneOf"": [
-      {
-        ""type"": ""number"",
-        ""format"": ""double""
-      },
-      {
-        ""type"": ""string""
-      }
-    ],
-    ""description"": ""description2""
-  },
-  ""examples"": {
-    ""test"": {
-      ""summary"": ""summary3"",
-      ""description"": ""description3""
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "name": "name1",
+                  "in": "path",
+                  "description": "description1",
+                  "required": true,
+                  "style": "simple",
+                  "explode": true,
+                  "schema": {
+                    "title": "title2",
+                    "oneOf": [
+                      {
+                        "type": "number",
+                        "format": "double"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "description": "description2"
+                  },
+                  "examples": {
+                    "test": {
+                      "summary": "summary3",
+                      "description": "description3"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -291,13 +289,16 @@ schema:
         public void SerializeAdvancedParameterAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""in"": ""path"",
-  ""name"": ""name1"",
-  ""description"": ""description1"",
-  ""required"": true,
-  ""format"": ""double""
-}";
+            var expected =
+                """
+                {
+                  "in": "path",
+                  "name": "name1",
+                  "description": "description1",
+                  "required": true,
+                  "format": "double"
+                }
+                """;
 
             // Act
             var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -315,7 +316,7 @@ schema:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedParameter.SerializeAsV3(writer);
@@ -332,7 +333,7 @@ schema:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedParameter.SerializeAsV3WithoutReference(writer);
@@ -349,7 +350,7 @@ schema:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedParameter.SerializeAsV2(writer);
@@ -366,7 +367,7 @@ schema:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedParameter.SerializeAsV2WithoutReference(writer);
@@ -383,7 +384,7 @@ schema:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedHeaderParameterWithSchemaTypeObject.SerializeAsV2(writer);
@@ -400,7 +401,7 @@ schema:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ParameterWithFormStyleAndExplodeFalse.SerializeAsV3WithoutReference(writer);
@@ -417,7 +418,7 @@ schema:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ParameterWithFormStyleAndExplodeTrue.SerializeAsV3WithoutReference(writer);

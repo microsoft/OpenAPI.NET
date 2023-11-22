@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,9 +18,9 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiTagTests
     {
-        public static OpenApiTag BasicTag = new OpenApiTag();
+        public static OpenApiTag BasicTag = new();
 
-        public static OpenApiTag AdvancedTag = new OpenApiTag
+        public static OpenApiTag AdvancedTag = new()
         {
             Name = "pet",
             Description = "Pets operations",
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiTag ReferencedTag = new OpenApiTag
+        public static OpenApiTag ReferencedTag = new()
         {
             Name = "pet",
             Description = "Pets operations",
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 {"x-tag-extension", null}
             },
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Tag,
                 Id = "pet"
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             BasicTag.SerializeAsV3WithoutReference(writer);
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             BasicTag.SerializeAsV2WithoutReference(writer);
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedTag.SerializeAsV3WithoutReference(writer);
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedTag.SerializeAsV2WithoutReference(writer);
@@ -159,12 +159,14 @@ namespace Microsoft.OpenApi.Tests.Models
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
             var expected =
-                @"name: pet
-description: Pets operations
-externalDocs:
-  description: Find more info here
-  url: https://example.com
-x-tag-extension: ";
+                """
+                name: pet
+                description: Pets operations
+                externalDocs:
+                  description: Find more info here
+                  url: https://example.com
+                x-tag-extension:
+                """;
 
             // Act
             AdvancedTag.SerializeAsV3WithoutReference(writer);
@@ -184,12 +186,14 @@ x-tag-extension: ";
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
             var expected =
-                @"name: pet
-description: Pets operations
-externalDocs:
-  description: Find more info here
-  url: https://example.com
-x-tag-extension: ";
+                """
+                name: pet
+                description: Pets operations
+                externalDocs:
+                  description: Find more info here
+                  url: https://example.com
+                x-tag-extension:
+                """;
 
             // Act
             AdvancedTag.SerializeAsV2WithoutReference(writer);
@@ -209,7 +213,7 @@ x-tag-extension: ";
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
@@ -226,7 +230,7 @@ x-tag-extension: ";
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedTag.SerializeAsV2(writer);
@@ -283,7 +287,7 @@ x-tag-extension: ";
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedTag.SerializeAsV3(writer);
@@ -300,7 +304,7 @@ x-tag-extension: ";
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedTag.SerializeAsV2(writer);

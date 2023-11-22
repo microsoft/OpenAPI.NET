@@ -37,5 +37,7 @@ namespace Microsoft.OpenApi.Extensions
 
             return default;
         }
+        internal static string ToFirstCharacterLowerCase(this string input)
+        => string.IsNullOrEmpty(input) ? string.Empty : char.ToLowerInvariant(input[0]) + input.Substring(1);
     }
 }

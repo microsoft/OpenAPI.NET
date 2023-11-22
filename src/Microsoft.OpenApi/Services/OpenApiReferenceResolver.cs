@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Services
     {
         private OpenApiDocument _currentDocument;
         private readonly bool _resolveRemoteReferences;
-        private List<OpenApiError> _errors = new List<OpenApiError>();
+        private List<OpenApiError> _errors = new();
 
         /// <summary>
         /// Initializes the <see cref="OpenApiReferenceResolver"/> class.
@@ -286,7 +286,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private void ResolveTags(IList<OpenApiTag> tags)
         {
-            for (int i = 0; i < tags.Count; i++)
+            for (var i = 0; i < tags.Count; i++)
             {
                 var tag = tags[i];
                 if (IsUnresolvedReference(tag))
@@ -295,7 +295,7 @@ namespace Microsoft.OpenApi.Services
 
                     if (resolvedTag == null)
                     {
-                        resolvedTag = new OpenApiTag()
+                        resolvedTag = new()
                         {
                             Name = tag.Reference.Id
                         };
@@ -332,7 +332,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (list == null) return;
 
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 var entity = list[i];
                 if (IsUnresolvedReference(entity))
@@ -392,7 +392,7 @@ namespace Microsoft.OpenApi.Services
 
         private T ResolveReference<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable, new()
         {
-            if (string.IsNullOrEmpty(reference.ExternalResource))
+            if (string.IsNullOrEmpty(reference?.ExternalResource))
             {
                 try
                 {
@@ -427,7 +427,7 @@ namespace Microsoft.OpenApi.Services
             else
             {
                 // Leave as unresolved reference
-                return new T()
+                return new()
                 {
                     UnresolvedReference = true,
                     Reference = reference

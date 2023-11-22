@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -23,8 +23,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInParameter()
         {
             // Arrange
-            string nameError = String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
-            string inError = String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
+            var nameError = String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
+            var inError = String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
             var parameter = new OpenApiParameter();
 
             // Act
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateRequiredIsTrueWhenInIsPathInParameter()
         {
             // Arrange
-            var parameter = new OpenApiParameter()
+            var parameter = new OpenApiParameter
             {
                 Name = "name",
                 In = ParameterLocation.Path
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var parameter = new OpenApiParameter()
+            var parameter = new OpenApiParameter
             {
                 Name = "parameter1",
                 In = ParameterLocation.Path,
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             IEnumerable<OpenApiError> warnings;
 
-            var parameter = new OpenApiParameter()
+            var parameter = new OpenApiParameter
             {
                 Name = "parameter1",
                 In = ParameterLocation.Path,
@@ -118,11 +118,11 @@ namespace Microsoft.OpenApi.Validations.Tests
                             .Build(),
                 Examples =
                     {
-                        ["example0"] = new OpenApiExample()
+                        ["example0"] = new()
                         {
                             Value = new OpenApiAny("1"),
                         },
-                        ["example1"] = new OpenApiExample()
+                        ["example1"] = new()
                         {
                            Value = new OpenApiAny(new JsonObject()
                             {
@@ -131,11 +131,11 @@ namespace Microsoft.OpenApi.Validations.Tests
                                 ["z"] = "200"
                             })
                         },
-                        ["example2"] = new OpenApiExample()
+                        ["example2"] = new()
                         {
                             Value = new OpenApiAny(new JsonArray(){3})
                         },
-                        ["example3"] = new OpenApiExample()
+                        ["example3"] = new()
                         {
                             Value = new OpenApiAny(new JsonObject()
                             {
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             IEnumerable<OpenApiError> errors;
 
-            var parameter = new OpenApiParameter()
+            var parameter = new OpenApiParameter
             {
                 Name = "parameter1",
                 In = ParameterLocation.Path,
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
 
             errors = validator.Errors;
-            bool result = errors.Any();
+            var result = errors.Any();
 
             // Assert
             result.Should().BeTrue();
@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             IEnumerable<OpenApiError> errors;
 
-            var parameter = new OpenApiParameter()
+            var parameter = new OpenApiParameter
             {
                 Name = "parameter1",
                 In = ParameterLocation.Path,
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
 
             errors = validator.Errors;
-            bool result = errors.Any();
+            var result = errors.Any();
 
             // Assert
             result.Should().BeFalse();

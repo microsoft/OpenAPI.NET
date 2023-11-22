@@ -1,0 +1,14 @@
+{
+    "produces": [],
+    "responses": {
+        "200": {
+            "description": "OK",
+            "schema": {
+                "format": "binary",
+                "description": "The content of the file.",
+                "type": "string",
+                "x-ms-summary": "File Content"
+            }
+        }
+    }
+}

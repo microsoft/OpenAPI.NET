@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -25,15 +25,15 @@ namespace Microsoft.OpenApi.Writers
         InlineAllReferences
     }
 
-
     /// <summary>
     /// Configuration settings to control how OpenAPI documents are written
     /// </summary>
     public class OpenApiWriterSettings
     {
+        [Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
         private ReferenceInlineSetting referenceInline = ReferenceInlineSetting.DoNotInlineReferences;
 
-        internal LoopDetector LoopDetector { get; } = new LoopDetector();
+        internal LoopDetector LoopDetector { get; } = new();
         /// <summary>
         /// Indicates how references in the source document should be handled.
         /// </summary>
@@ -64,12 +64,12 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Indicates if local references should be rendered as an inline object
         /// </summary>
-        public bool InlineLocalReferences { get; set; } = false;
+        public bool InlineLocalReferences { get; set; }
 
         /// <summary>
         /// Indicates if external references should be rendered as an inline object
         /// </summary>
-        public bool InlineExternalReferences { get; set; } = false;
+        public bool InlineExternalReferences { get; set; }
 
         internal bool ShouldInlineReference(OpenApiReference reference)
         {

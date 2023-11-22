@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -23,16 +23,18 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         public OpenApiDiagnostic Diagnostic { get; }
 
+        private static readonly char[] _pathSeparator = new char[] { '/' };
+
         /// <summary>
         /// Create Parsing Context
         /// </summary>
-        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
         public OpenApiV3VersionService(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;
         }
 
-        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        private Dictionary<Type, Func<ParseNode, object>> _loaders = new()
         {
             [typeof(OpenApiAny)] = OpenApiV3Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
@@ -68,9 +70,7 @@ namespace Microsoft.OpenApi.Readers.V3
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
         /// <param name="reference">The URL of the reference</param>
-        /// <param name="type">The type of object refefenced based on the context of the reference</param>
-        /// <param name="summary">The summary of the reference</param>
-        /// <param name="description">A reference description</param>
+        /// <param name="type">The type of object referenced based on the context of the reference</param>
         public OpenApiReference ConvertToOpenApiReference(
             string reference,
             ReferenceType? type,
@@ -82,9 +82,9 @@ namespace Microsoft.OpenApi.Readers.V3
                 var segments = reference.Split('#');
                 if (segments.Length == 1)
                 {
-                    if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
+                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
-                        return new OpenApiReference
+                        return new()
                         {
                             Type = type,
                             Id = reference
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     // Either this is an external reference as an entire file
                     // or a simple string-style reference for tag and security scheme.
-                    return new OpenApiReference
+                    return new()
                     {
                         Type = type,
                         ExternalResource = segments[0]
@@ -110,11 +110,11 @@ namespace Microsoft.OpenApi.Readers.V3
                         }
                         catch (OpenApiException ex)
                         {
-                            Diagnostic.Errors.Add(new OpenApiError(ex));
+                            Diagnostic.Errors.Add(new(ex));
                         }
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
-                    string id = segments[1];
+                    var id = segments[1];
                     var openApiReference = new OpenApiReference();
 
                     // $ref: externalSource.yaml#/Pet
@@ -134,6 +134,20 @@ namespace Microsoft.OpenApi.Readers.V3
                             }
                         }
                         id = localSegments[3];
+                    }
+                    else if (id.StartsWith("/paths/"))
+                    {
+                        var localSegments = segments[1].Split(_pathSeparator, StringSplitOptions.RemoveEmptyEntries);
+                        if (localSegments.Length == 2)
+                        {
+                            // The reference of a path may contain JSON escape character ~1 for the forward-slash character, replace this otherwise
+                            // the reference cannot be resolved.
+                            id = localSegments[1].Replace("~1", "/");
+                        }
+                        else
+                        {
+                            throw new OpenApiException("Referenced Path mismatch");
+                        }
                     }
                     else
                     {

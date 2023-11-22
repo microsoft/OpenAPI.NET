@@ -1,7 +1,6 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Json.Schema;
@@ -9,14 +8,13 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
     public class OpenApiComponentsTests
     {
-        public static OpenApiComponents AdvancedComponents = new OpenApiComponents
+        public static OpenApiComponents AdvancedComponents = new()
         {
             Schemas = new Dictionary<string, JsonSchema>
             {
@@ -29,34 +27,34 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
-                ["securityScheme1"] = new OpenApiSecurityScheme
+                ["securityScheme1"] = new()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
+                    Flows = new()
                     {
-                        Implicit = new OpenApiOAuthFlow
+                        Implicit = new()
                         {
                             Scopes = new Dictionary<string, string>
                             {
                                 ["operation1:object1"] = "operation 1 on object 1",
                                 ["operation2:object2"] = "operation 2 on object 2"
                             },
-                            AuthorizationUrl = new Uri("https://example.com/api/oauth")
+                            AuthorizationUrl = new("https://example.com/api/oauth")
                         }
                     }
                 },
-                ["securityScheme2"] = new OpenApiSecurityScheme
+                ["securityScheme2"] = new()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OpenIdConnect,
                     Scheme = OpenApiConstants.Bearer,
-                    OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
+                    OpenIdConnectUrl = new("https://example.com/openIdConnect")
                 }
             }
         };
 
-        public static OpenApiComponents AdvancedComponentsWithReference = new OpenApiComponents
+        public static OpenApiComponents AdvancedComponentsWithReference = new()
         {
             Schemas = new Dictionary<string, JsonSchema>
             {
@@ -70,35 +68,35 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
-                ["securityScheme1"] = new OpenApiSecurityScheme
+                ["securityScheme1"] = new()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
+                    Flows = new()
                     {
-                        Implicit = new OpenApiOAuthFlow
+                        Implicit = new()
                         {
                             Scopes = new Dictionary<string, string>
                             {
                                 ["operation1:object1"] = "operation 1 on object 1",
                                 ["operation2:object2"] = "operation 2 on object 2"
                             },
-                            AuthorizationUrl = new Uri("https://example.com/api/oauth")
+                            AuthorizationUrl = new("https://example.com/api/oauth")
                         }
                     },
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "securityScheme1"
                     }
                 },
-                ["securityScheme2"] = new OpenApiSecurityScheme
+                ["securityScheme2"] = new()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OpenIdConnect,
                     Scheme = OpenApiConstants.Bearer,
-                    OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
-                    Reference = new OpenApiReference
+                    OpenIdConnectUrl = new("https://example.com/openIdConnect"),
+                    Reference = new()
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "securityScheme2"
@@ -107,9 +105,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents BasicComponents = new OpenApiComponents();
+        public static OpenApiComponents BasicComponents = new();
 
-        public static OpenApiComponents BrokenComponents = new OpenApiComponents
+        public static OpenApiComponents BrokenComponents = new()
         {
             Schemas = new Dictionary<string, JsonSchema>
             {
@@ -121,7 +119,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
+        public static OpenApiComponents TopLevelReferencingComponents = new()
         {
             Schemas =
             {
@@ -134,7 +132,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
+        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new()
         {
             Schemas =
             {
@@ -153,7 +151,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
+        public static OpenApiComponents TopLevelSelfReferencingComponents = new()
         {
             Schemas =
             {
@@ -210,13 +208,6 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiComponentsTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void SerializeBasicComponentsAsJsonWorks()
         {
@@ -251,41 +242,44 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedComponentsAsJsonV3Works()
         {
             // Arrange
-            var expected = @"{
-  ""schemas"": {
-    ""schema1"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        },
-        ""property3"": {
-          ""maxLength"": 15,
-          ""type"": ""string""
-        }
-      }
-    }
-  },
-  ""securitySchemes"": {
-    ""securityScheme1"": {
-      ""type"": ""oauth2"",
-      ""description"": ""description1"",
-      ""flows"": {
-        ""implicit"": {
-          ""authorizationUrl"": ""https://example.com/api/oauth"",
-          ""scopes"": {
-            ""operation1:object1"": ""operation 1 on object 1"",
-            ""operation2:object2"": ""operation 2 on object 2""
-          }
-        }
-      }
-    },
-    ""securityScheme2"": {
-      ""type"": ""openIdConnect"",
-      ""description"": ""description1"",
-      ""openIdConnectUrl"": ""https://example.com/openIdConnect""
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "schemas": {
+                    "schema1": {
+                      "properties": {
+                        "property2": {
+                          "type": "integer"
+                        },
+                        "property3": {
+                          "maxLength": 15,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "securitySchemes": {
+                    "securityScheme1": {
+                      "type": "oauth2",
+                      "description": "description1",
+                      "flows": {
+                        "implicit": {
+                          "authorizationUrl": "https://example.com/api/oauth",
+                          "scopes": {
+                            "operation1:object1": "operation 1 on object 1",
+                            "operation2:object2": "operation 2 on object 2"
+                          }
+                        }
+                      }
+                    },
+                    "securityScheme2": {
+                      "type": "openIdConnect",
+                      "description": "description1",
+                      "openIdConnectUrl": "https://example.com/openIdConnect"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedComponents.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -300,47 +294,50 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedComponentsWithReferenceAsJsonV3Works()
         {
             // Arrange
-            var expected = @"{
-  ""schemas"": {
-    ""schema1"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        },
-        ""property3"": {
-          ""$ref"": ""#/components/schemas/schema2""
-        }
-      }
-    },
-    ""schema2"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        }
-      }
-    }
-  },
-  ""securitySchemes"": {
-    ""securityScheme1"": {
-      ""type"": ""oauth2"",
-      ""description"": ""description1"",
-      ""flows"": {
-        ""implicit"": {
-          ""authorizationUrl"": ""https://example.com/api/oauth"",
-          ""scopes"": {
-            ""operation1:object1"": ""operation 1 on object 1"",
-            ""operation2:object2"": ""operation 2 on object 2""
-          }
-        }
-      }
-    },
-    ""securityScheme2"": {
-      ""type"": ""openIdConnect"",
-      ""description"": ""description1"",
-      ""openIdConnectUrl"": ""https://example.com/openIdConnect""
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "schemas": {
+                    "schema1": {
+                      "properties": {
+                        "property2": {
+                          "type": "integer"
+                        },
+                        "property3": {
+                          "$ref": "#/components/schemas/schema2"
+                        }
+                      }
+                    },
+                    "schema2": {
+                      "properties": {
+                        "property2": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "securitySchemes": {
+                    "securityScheme1": {
+                      "type": "oauth2",
+                      "description": "description1",
+                      "flows": {
+                        "implicit": {
+                          "authorizationUrl": "https://example.com/api/oauth",
+                          "scopes": {
+                            "operation1:object1": "operation 1 on object 1",
+                            "operation2:object2": "operation 2 on object 2"
+                          }
+                        }
+                      }
+                    },
+                    "securityScheme2": {
+                      "type": "openIdConnect",
+                      "description": "description1",
+                      "openIdConnectUrl": "https://example.com/openIdConnect"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedComponentsWithReference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -355,28 +352,31 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    properties:
-      property2:
-        type: integer
-      property3:
-        maxLength: 15
-        type: string
-securitySchemes:
-  securityScheme1:
-    type: oauth2
-    description: description1
-    flows:
-      implicit:
-        authorizationUrl: https://example.com/api/oauth
-        scopes:
-          operation1:object1: operation 1 on object 1
-          operation2:object2: operation 2 on object 2
-  securityScheme2:
-    type: openIdConnect
-    description: description1
-    openIdConnectUrl: https://example.com/openIdConnect";
+            var expected =
+                """
+                schemas:
+                  schema1:
+                    properties:
+                      property2:
+                        type: integer
+                      property3:
+                        maxLength: 15
+                        type: string
+                securitySchemes:
+                  securityScheme1:
+                    type: oauth2
+                    description: description1
+                    flows:
+                      implicit:
+                        authorizationUrl: https://example.com/api/oauth
+                        scopes:
+                          operation1:object1: operation 1 on object 1
+                          operation2:object2: operation 2 on object 2
+                  securityScheme2:
+                    type: openIdConnect
+                    description: description1
+                    openIdConnectUrl: https://example.com/openIdConnect
+                """;
 
             // Act
             var actual = AdvancedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -391,31 +391,34 @@ securitySchemes:
         public void SerializeAdvancedComponentsWithReferenceAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    properties:
-      property2:
-        type: integer
-      property3:
-        $ref: '#/components/schemas/schema2'
-  schema2:
-    properties:
-      property2:
-        type: integer
-securitySchemes:
-  securityScheme1:
-    type: oauth2
-    description: description1
-    flows:
-      implicit:
-        authorizationUrl: https://example.com/api/oauth
-        scopes:
-          operation1:object1: operation 1 on object 1
-          operation2:object2: operation 2 on object 2
-  securityScheme2:
-    type: openIdConnect
-    description: description1
-    openIdConnectUrl: https://example.com/openIdConnect";
+            var expected =
+                """
+                schemas:
+                  schema1:
+                    properties:
+                      property2:
+                        type: integer
+                      property3:
+                        $ref: '#/components/schemas/schema2'
+                  schema2:
+                    properties:
+                      property2:
+                        type: integer
+                securitySchemes:
+                  securityScheme1:
+                    type: oauth2
+                    description: description1
+                    flows:
+                      implicit:
+                        authorizationUrl: https://example.com/api/oauth
+                        scopes:
+                          operation1:object1: operation 1 on object 1
+                          operation2:object2: operation 2 on object 2
+                  securityScheme2:
+                    type: openIdConnect
+                    description: description1
+                    openIdConnectUrl: https://example.com/openIdConnect
+                """;
 
             // Act
             var actual = AdvancedComponentsWithReference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -480,14 +483,17 @@ securitySchemes:
         public void SerializeTopLevelReferencingComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    $ref: '#/components/schemas/schema2'
-  schema2:
-    type: object
-    properties:
-      property1:
-        type: string";
+            var expected =
+                """
+                schemas:
+                  schema1:
+                    $ref: '#/components/schemas/schema2'
+                  schema2:
+                    type: object
+                    properties:
+                      property1:
+                        type: string
+                """;
 
             // Act
             var actual = TopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);

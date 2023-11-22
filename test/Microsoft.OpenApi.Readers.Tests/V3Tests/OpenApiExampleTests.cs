@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.IO;
 using System.Linq;
@@ -22,14 +22,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseAdvancedExampleShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedExample.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedExample.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
                 var asJsonNode = yamlNode.ToJsonNode();
                 var node = new MapNode(context, asJsonNode);
@@ -53,7 +52,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             ["rel"] = "sampleRel1"
                                         }
                                     }
-                                },
+                                }
+                            },
 
                                 new JsonObject
                                 {
@@ -92,11 +92,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseExampleForcedStringSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "explicitString.yaml")))
-            {
-                new OpenApiStreamReader().Read(stream, out var diagnostic);
-                diagnostic.Errors.Should().BeEmpty();
-            }
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "explicitString.yaml"));
+            new OpenApiStreamReader().Read(stream, out var diagnostic);
+            diagnostic.Errors.Should().BeEmpty();
         }
     }
 }

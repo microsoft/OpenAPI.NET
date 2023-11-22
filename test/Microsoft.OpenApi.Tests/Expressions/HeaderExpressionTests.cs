@@ -20,14 +20,14 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => new HeaderExpression(token);
 
             // Act
-            Assert.Throws<ArgumentException>("token", test);
+            Assert.Throws<ArgumentNullException>("token", test);
         }
 
         [Fact]
         public void BodyExpressionWorksWithConstructor()
         {
             // Arrange
-            string expression = "accept";
+            var expression = "accept";
 
             // Act
             var header = new HeaderExpression(expression);

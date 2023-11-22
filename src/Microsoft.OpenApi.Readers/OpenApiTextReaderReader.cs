@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.IO;
 using System.Linq;
@@ -48,9 +48,9 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (YamlException ex)
             {
-                diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
-                return new OpenApiDocument();
+                diagnostic = new();
+                diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
+                return new();
             }
 
             return new OpenApiYamlDocumentReader(this._settings).Read(jsonNode, out diagnostic);
@@ -74,8 +74,8 @@ namespace Microsoft.OpenApi.Readers
             catch (JsonException ex)
             {
                 var diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", ex.Message));
-                return new ReadResult
+                diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
+                return new()
                 {
                     OpenApiDocument = null,
                     OpenApiDiagnostic = diagnostic
@@ -84,7 +84,6 @@ namespace Microsoft.OpenApi.Readers
 
             return await new OpenApiYamlDocumentReader(this._settings).ReadAsync(jsonNode, cancellationToken);
         }
-
 
         /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
@@ -104,9 +103,9 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (JsonException ex)
             {
-                diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", ex.Message));
-                return default(T);
+                diagnostic = new();
+                diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
+                return default;
             }
 
             return new OpenApiYamlDocumentReader(this._settings).ReadFragment<T>(jsonNode, version, out diagnostic);

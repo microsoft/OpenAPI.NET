@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Models;
@@ -17,10 +17,9 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiInfo> InfoRequiredFields =>
-            new ValidationRule<OpenApiInfo>(
+            new(
                 (context, item) =>
                 {
-
                     // title
                     context.Enter("title");
                     if (item.Title == null)

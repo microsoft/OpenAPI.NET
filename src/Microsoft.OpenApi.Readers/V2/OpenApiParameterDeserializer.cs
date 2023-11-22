@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -21,43 +21,31 @@ namespace Microsoft.OpenApi.Readers.V2
     {
         private static JsonSchemaBuilder _parameterJsonSchemaBuilder;
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
-            new FixedFieldMap<OpenApiParameter>
+            new()
             {
                 {
-                    "name", (o, n) =>
-                    {
-                        o.Name = n.GetScalarValue();
-                    }
+                    "name",
+                    (o, n) => o.Name = n.GetScalarValue()
                 },
                 {
-                    "in", (o, n) =>
-                    {
-                        ProcessIn(o, n);
-                    }
+                    "in",
+                    ProcessIn
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "required", (o, n) =>
-                    {
-                        o.Required = bool.Parse(n.GetScalarValue());
-                    }
+                    "required",
+                    (o, n) => o.Required = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "deprecated", (o, n) =>
-                    {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
-                    }
+                    "deprecated",
+                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "allowEmptyValue", (o, n) =>
-                    {
-                        o.AllowEmptyValue = bool.Parse(n.GetScalarValue());
-                    }
+                    "allowEmptyValue",
+                    (o, n) => o.AllowEmptyValue = bool.Parse(n.GetScalarValue())
                 },
                 {
                     "type", (o, n) =>
@@ -72,10 +60,8 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "collectionFormat", (o, n) =>
-                    {
-                        LoadStyle(o, n.GetScalarValue());
-                    }
+                    "collectionFormat",
+                    (o, n) => LoadStyle(o, n.GetScalarValue())
                 },
                 {
                     "format", (o, n) =>
@@ -132,15 +118,13 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "schema", (o, n) =>
-                    {
-                        o.Schema = LoadSchema(n);
-                    }
+                    "schema",
+                    (o, n) => o.Schema = LoadSchema(n)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
-            new PatternFieldMap<OpenApiParameter>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
@@ -194,7 +178,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     var formParameters = n.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                     if (formParameters == null)
                     {
-                        formParameters = new List<OpenApiParameter>();
+                        formParameters = new();
                         n.Context.SetTempStorage("formParameters", formParameters);
                     }
 
@@ -242,7 +226,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 node.Context.SetTempStorage("schema", null);
             }
 
-            bool isBodyOrFormData = (bool)node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
+            var isBodyOrFormData = (bool)node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
             if (isBodyOrFormData && !loadRequestBody)
             {
                 return null; // Don't include Form or Body parameters when normal parameters are loaded.

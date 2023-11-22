@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -11,63 +11,63 @@ namespace Microsoft.OpenApi.Hidi
 {
     internal class StatsVisitor : OpenApiVisitorBase
     {
-        public int ParameterCount { get; set; } = 0;
+        public int ParameterCount { get; set; }
 
         public override void Visit(OpenApiParameter parameter)
         {
             ParameterCount++;
         }
 
-        public int SchemaCount { get; set; } = 0;
+        public int SchemaCount { get; set; }
 
         public override void Visit(ref JsonSchema schema)
         {
             SchemaCount++;
         }
 
-        public int HeaderCount { get; set; } = 0;
+        public int HeaderCount { get; set; }
 
         public override void Visit(IDictionary<string, OpenApiHeader> headers)
         {
             HeaderCount++;
         }
 
-        public int PathItemCount { get; set; } = 0;
+        public int PathItemCount { get; set; }
 
         public override void Visit(OpenApiPathItem pathItem)
         {
             PathItemCount++;
         }
 
-        public int RequestBodyCount { get; set; } = 0;
+        public int RequestBodyCount { get; set; }
 
         public override void Visit(OpenApiRequestBody requestBody)
         {
             RequestBodyCount++;
         }
 
-        public int ResponseCount { get; set; } = 0;
+        public int ResponseCount { get; set; }
 
         public override void Visit(OpenApiResponses response)
         {
             ResponseCount++;
         }
 
-        public int OperationCount { get; set; } = 0;
+        public int OperationCount { get; set; }
 
         public override void Visit(OpenApiOperation operation)
         {
             OperationCount++;
         }
 
-        public int LinkCount { get; set; } = 0;
+        public int LinkCount { get; set; }
 
         public override void Visit(OpenApiLink operation)
         {
             LinkCount++;
         }
 
-        public int CallbackCount { get; set; } = 0;
+        public int CallbackCount { get; set; }
 
         public override void Visit(OpenApiCallback callback)
         {

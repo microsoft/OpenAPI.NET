@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Linq;
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi
                     return null;
                 }
 
-                return new JsonPointer(Tokens.Take(Tokens.Length - 1).ToArray());
+                return new(Tokens.Take(Tokens.Length - 1).ToArray());
             }
         }
 

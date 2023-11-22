@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiResponse>
+    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiResponse>
     {
         /// <summary>
         /// REQUIRED. A short description of the response.
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref 
+        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiResponse</returns>

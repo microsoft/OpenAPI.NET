@@ -1,26 +1,25 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Hidi;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
 using Moq;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests.Services
+namespace Microsoft.OpenApi.Hidi.Tests
 {
     public class OpenApiFilterServiceTests
     {
         private readonly OpenApiDocument _openApiDocumentMock;
-        private readonly Mock<ILogger<OpenApiService>> _mockLogger;
-        private readonly ILogger<OpenApiService> _logger;
+        private readonly Mock<ILogger<OpenApiFilterServiceTests>> _mockLogger;
+        private readonly ILogger<OpenApiFilterServiceTests> _logger;
 
         public OpenApiFilterServiceTests()
         {
             _openApiDocumentMock = OpenApiDocumentMock.CreateOpenApiDocument();
-            _mockLogger = new Mock<ILogger<OpenApiService>>();
+            _mockLogger = new();
             _logger = _mockLogger.Object;
         }
 
@@ -36,7 +35,7 @@ namespace Microsoft.OpenApi.Tests.Services
         [InlineData(null, "users.user", 2)]
         [InlineData(null, "applications.application", 1)]
         [InlineData(null, "reports.Functions", 2)]
-        public void ReturnFilteredOpenApiDocumentBasedOnOperationIdsAndTags(string operationIds, string tags, int expectedPathCount)
+        public void ReturnFilteredOpenApiDocumentBasedOnOperationIdsAndTags(string? operationIds, string? tags, int expectedPathCount)
         {
             // Act
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
@@ -52,7 +51,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ReturnFilteredOpenApiDocumentBasedOnPostmanCollection()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver2.json");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver2.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -67,11 +66,48 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.Equal(3, subsetOpenApiDocument.Paths.Count);
         }
 
+        // Create predicate based RequestUrls
+        [Fact]
+        public void TestPredicateFiltersUsingRelativeRequestUrls()
+        {
+            var openApiDocument = new OpenApiDocument
+            {
+                Info = new() { Title = "Test", Version = "1.0" },
+                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Paths = new()
+                {
+                    {"/foo", new() {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            { OperationType.Get, new() },
+                            { OperationType.Patch, new() },
+                            { OperationType.Post, new() }
+                          }
+                        }
+                    }
+                }
+            };
+
+            // Given a set of RequestUrls
+            var requestUrls = new Dictionary<string, List<string>>
+            {
+                    {"/foo", new List<string> {"GET","POST"}}
+            };
+
+            // When
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: openApiDocument);
+
+            // Then
+            Assert.True(predicate("/foo", OperationType.Get, null));
+            Assert.True(predicate("/foo", OperationType.Post, null));
+            Assert.False(predicate("/foo", OperationType.Patch, null));
+        }
+
         [Fact]
         public void ShouldParseNestedPostmanCollection()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver3.json");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver3.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -88,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ThrowsExceptionWhenUrlsInCollectionAreMissingFromSourceDocument()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver1.json");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver1.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -105,7 +141,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ContinueProcessingWhenUrlsInCollectionAreMissingFromSourceDocument()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver4.json");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver4.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -137,7 +173,7 @@ namespace Microsoft.OpenApi.Tests.Services
         [Theory]
         [InlineData("reports.getTeamsUserActivityUserDetail-a3f1", null)]
         [InlineData(null, "reports.Functions")]
-        public void ReturnsPathParametersOnSlicingBasedOnOperationIdsOrTags(string operationIds, string tags)
+        public void ReturnsPathParametersOnSlicingBasedOnOperationIdsOrTags(string? operationIds, string? tags)
         {
             // Act
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
@@ -147,7 +183,7 @@ namespace Microsoft.OpenApi.Tests.Services
             foreach (var pathItem in subsetOpenApiDocument.Paths)
             {
                 Assert.True(pathItem.Value.Parameters.Any());
-                Assert.Equal(1, pathItem.Value.Parameters.Count);
+                Assert.Single(pathItem.Value.Parameters);
             }
         }
     }

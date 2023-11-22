@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
             {
-                "openapi", (o, n) =>
+                "openapi", (_, _) =>
                 {
                 } /* Version is valid field but we already parsed it */
             },
@@ -26,13 +26,13 @@ namespace Microsoft.OpenApi.Readers.V3
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
-    {
-                    tag.Reference = new OpenApiReference()
+                {
+                    tag.Reference = new()
                     {
                         Id = tag.Name,
                         Type = ReferenceType.Tag
                     };
-    }
+                }
             } },
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)},
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}

@@ -2,18 +2,23 @@
 // Licensed under the MIT license.
 
 using System;
-using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Hidi.Options;
 
 namespace Microsoft.OpenApi.Hidi.Handlers
 {
     internal class ValidateCommandHandler : ICommandHandler
     {
-        public Option<string> DescriptionOption { get; set; }
-        public Option<LogLevel> LogLevelOption { get; set; }
+        public CommandOptions CommandOptions { get; }
+
+        public ValidateCommandHandler(CommandOptions commandOptions)
+        {
+            CommandOptions = commandOptions;
+        }
 
         public int Invoke(InvocationContext context)
         {
@@ -21,28 +26,34 @@ namespace Microsoft.OpenApi.Hidi.Handlers
         }
         public async Task<int> InvokeAsync(InvocationContext context)
         {
-            string openapi = context.ParseResult.GetValueForOption(DescriptionOption);
-            LogLevel logLevel = context.ParseResult.GetValueForOption(LogLevelOption);
-            CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
-
-
-            using var loggerFactory = Logger.ConfigureLogger(logLevel);
-            var logger = loggerFactory.CreateLogger<OpenApiService>();
+            var hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
+            var cancellationToken = (CancellationToken)context.BindingContext.GetRequiredService(typeof(CancellationToken));
+            using var loggerFactory = Logger.ConfigureLogger(hidiOptions.LogLevel);
+            var logger = loggerFactory.CreateLogger<ValidateCommandHandler>();
             try
             {
-                await OpenApiService.ValidateOpenApiDocument(openapi, logger, cancellationToken);
+                if (hidiOptions.OpenApi is null) throw new InvalidOperationException("OpenApi file is required");
+                await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken).ConfigureAwait(false);
                 return 0;
             }
+#if RELEASE
+#pragma warning disable CA1031 // Do not catch general exception types
+#endif
             catch (Exception ex)
             {
 #if DEBUG
-                logger.LogCritical(ex, ex.Message);
+                logger.LogCritical(ex, "Command failed");
                 throw; // so debug tools go straight to the source of the exception when attached
 #else
-                logger.LogCritical( ex.Message);
+#pragma warning disable CA2254
+                logger.LogCritical(ex.Message);
+#pragma warning restore CA2254
                 return 1;
 #endif
             }
+#if RELEASE
+#pragma warning restore CA1031 // Do not catch general exception types
+#endif
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
-            var header = new OpenApiHeader()
+            var header = new OpenApiHeader
             {
                 Required = true,
                 Example = new OpenApiAny(55),
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             errors = validator.Errors;
             var warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             IEnumerable<OpenApiError> warnings;
 
-            var header = new OpenApiHeader()
+            var header = new OpenApiHeader
             {
                 Required = true,
                 Schema = new JsonSchemaBuilder()
@@ -67,11 +67,11 @@ namespace Microsoft.OpenApi.Validations.Tests
                 .Build(),
                 Examples =
                     {
-                        ["example0"] = new OpenApiExample()
+                        ["example0"] = new()
                         {
                             Value = new OpenApiAny("1"),
                         },
-                        ["example1"] = new OpenApiExample()
+                        ["example1"] = new()
                         {
                            Value = new OpenApiAny(new JsonObject()
                             {
@@ -80,12 +80,12 @@ namespace Microsoft.OpenApi.Validations.Tests
                                 ["z"] = "200"
                             })
                         },
-                        ["example2"] = new OpenApiExample()
+                        ["example2"] = new()
                         {
                             Value =new OpenApiAny(
                             new JsonArray(){3})
                         },
-                        ["example3"] = new OpenApiExample()
+                        ["example3"] = new()
                         {
                             Value = new OpenApiAny(new JsonObject()
                             {
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(header);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();

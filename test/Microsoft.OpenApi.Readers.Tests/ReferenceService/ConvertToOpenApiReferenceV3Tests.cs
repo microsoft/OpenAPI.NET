@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
@@ -14,10 +14,8 @@ namespace Microsoft.OpenApi.Readers.Tests
 
         public ConvertToOpenApiReferenceV3Tests()
         {
-            Diagnostic = new OpenApiDiagnostic();
+            Diagnostic = new();
         }
-
-
 
         [Fact]
         public void ParseExternalReference()
@@ -123,6 +121,25 @@ namespace Microsoft.OpenApi.Readers.Tests
             // Assert
             reference.Type.Should().Be(referenceType);
             reference.ExternalResource.Should().Be(input);
+        }
+
+        [Fact]
+        public void ParseExternalPathReference()
+        {
+            // Arrange
+            var versionService = new OpenApiV3VersionService(Diagnostic);
+            var externalResource = "externalSchema.json";
+            var referenceJsonEscaped = "/paths/~1applications~1{AppUUID}~1services~1{ServiceName}";
+            var input = $"{externalResource}#{referenceJsonEscaped}";
+            var id = "/applications/{AppUUID}/services/{ServiceName}";
+
+            // Act
+            var reference = versionService.ConvertToOpenApiReference(input, null);
+
+            // Assert
+            reference.Type.Should().BeNull();
+            reference.ExternalResource.Should().Be(externalResource);
+            reference.Id.Should().Be(id);
         }
     }
 }

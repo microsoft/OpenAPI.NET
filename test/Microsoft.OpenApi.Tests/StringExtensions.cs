@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 
@@ -17,8 +17,10 @@ namespace Microsoft.OpenApi.Tests
         public static string MakeLineBreaksEnvironmentNeutral(this string input)
         {
             return input.Replace("\r\n", "\n")
-                .Replace("\r", "\n")
-                .Replace("\n", Environment.NewLine);
+                .Replace('\r', '\n')
+                .Replace("\n", Environment.NewLine)
+                .Replace($" {Environment.NewLine}", Environment.NewLine)// also cleanup new lines preceded with spaces
+                .TrimEnd();
         }
     }
 }
