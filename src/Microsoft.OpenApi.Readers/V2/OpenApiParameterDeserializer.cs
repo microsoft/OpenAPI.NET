@@ -61,11 +61,11 @@ namespace Microsoft.OpenApi.Readers.V2
                 },
                 {
                     "minimum",
-                    (o, n) => GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                    (o, n) => GetOrCreateSchema(o).Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
                 },
                 {
                     "maximum",
-                    (o, n) => GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                    (o, n) => GetOrCreateSchema(o).Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
                 },
                 {
                     "maxLength",
