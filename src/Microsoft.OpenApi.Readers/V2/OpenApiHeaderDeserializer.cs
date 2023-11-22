@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "maximum",
-                (o, n) => GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n) => GetOrCreateSchema(o).Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "exclusiveMaximum",
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "minimum",
-                (o, n) => GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n) => GetOrCreateSchema(o).Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
             },
             {
                 "exclusiveMinimum",
