@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [InlineData("Todos.Todo.UpdateTodo", null, 1)]
         [InlineData("Todos.Todo.ListTodo", null, 1)]
         [InlineData(null, "Todos.Todo", 5)]
-        public async Task ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string operationIds, string tags, int expectedPathCount)
+        public async Task ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string? operationIds, string? tags, int expectedPathCount)
         {
             // Arrange
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "Todo.xml");
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Theory]
         [InlineData("UtilityFiles/appsettingstest.json")]
         [InlineData(null)]
-        public void ReturnOpenApiConvertSettingsWhenSettingsFileIsProvided(string filePath)
+        public void ReturnOpenApiConvertSettingsWhenSettingsFileIsProvided(string? filePath)
         {
             // Arrange
             var config = SettingsUtilities.GetConfiguration(filePath);

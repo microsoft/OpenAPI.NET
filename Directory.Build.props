@@ -20,6 +20,6 @@
   <ItemGroup>
     <PackageReference
      Condition="!$(MSBuildProjectName.EndsWith('Tests'))"
-     Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+     Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
 </Project>
