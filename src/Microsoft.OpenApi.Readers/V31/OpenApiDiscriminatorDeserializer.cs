@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers.V31
     internal static partial class OpenApiV31Deserializer
     {
         private static readonly FixedFieldMap<OpenApiDiscriminator> _discriminatorFixedFields =
-            new FixedFieldMap<OpenApiDiscriminator>
+            new()
             {
                 {
                     "propertyName", (o, n) =>

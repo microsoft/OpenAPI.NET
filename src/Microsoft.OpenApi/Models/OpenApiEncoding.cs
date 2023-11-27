@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Models
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

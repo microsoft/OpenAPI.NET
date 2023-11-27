@@ -13,10 +13,10 @@ namespace Microsoft.OpenApi.Readers.V31
     internal static partial class OpenApiV31Deserializer
     {
         private static readonly FixedFieldMap<OpenApiCallback> _callbackFixedFields =
-            new FixedFieldMap<OpenApiCallback>();
+            new();
 
         private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
-            new PatternFieldMap<OpenApiCallback>
+            new()
             {
             {s => !s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n))},
             {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},

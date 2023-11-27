@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="any">The Any value</param>
         public static void WriteAny(this IOpenApiWriter writer, OpenApiAny any)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);;
 
             if (any.Node == null)
             {
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Writers
         {
             if (writer == null)
             {
-                throw Error.ArgumentNull(nameof(writer));
+                Utils.CheckArgumentNull(writer);
             }
 
             if (primitive.ValueKind == JsonValueKind.String)

@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Models
         private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);;
             var target = this;
 
             if (Reference != null)
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);;
 
             var target = this;
 

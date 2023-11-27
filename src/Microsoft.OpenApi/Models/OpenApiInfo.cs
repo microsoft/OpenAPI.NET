@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);;
             writer.WriteStartObject();
 
             // title
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);;
 
             writer.WriteStartObject();
 

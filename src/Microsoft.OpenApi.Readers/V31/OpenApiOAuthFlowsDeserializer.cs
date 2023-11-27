@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers.V31
     internal static partial class OpenApiV31Deserializer
     {
         private static readonly FixedFieldMap<OpenApiOAuthFlows> _oAuthFlowsFixedFileds =
-            new FixedFieldMap<OpenApiOAuthFlows>
+            new()
             {
                 {"implicit", (o, n) => o.Implicit = LoadOAuthFlow(n)},
                 {"password", (o, n) => o.Password = LoadOAuthFlow(n)},
@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.V31
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlows> _oAuthFlowsPatternFields =
-            new PatternFieldMap<OpenApiOAuthFlows>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

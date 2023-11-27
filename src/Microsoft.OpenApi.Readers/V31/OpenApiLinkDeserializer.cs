@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Readers.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiLink> _linkFixedFields = new FixedFieldMap<OpenApiLink>
+        private static readonly FixedFieldMap<OpenApiLink> _linkFixedFields = new()
         {
             {
                 "operationRef", (o, n) =>
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {"server", (o, n) => o.Server = LoadServer(n)}
         };
 
-        private static readonly PatternFieldMap<OpenApiLink> _linkPatternFields = new PatternFieldMap<OpenApiLink>
+        private static readonly PatternFieldMap<OpenApiLink> _linkPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
         };

@@ -10,9 +10,9 @@ namespace Microsoft.OpenApi.Readers.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiPaths> _pathsFixedFields = new FixedFieldMap<OpenApiPaths>();
+        private static readonly FixedFieldMap<OpenApiPaths> _pathsFixedFields = new();
 
-        private static readonly PatternFieldMap<OpenApiPaths> _pathsPatternFields = new PatternFieldMap<OpenApiPaths>
+        private static readonly PatternFieldMap<OpenApiPaths> _pathsPatternFields = new()
         {
             {s => s.StartsWith("/"), (o, k, n) => o.Add(k, LoadPathItem(n))},
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
@@ -118,7 +117,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -157,12 +156,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -609,9 +603,6 @@ namespace Microsoft.OpenApi.Models
                     case ReferenceType.Callback:
                         return this.Components.Callbacks[reference.Id];
 
-                    case ReferenceType.Path:
-                        return this.Paths[reference.Id];
-
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
                 }
@@ -622,6 +613,7 @@ namespace Microsoft.OpenApi.Models
             }
         }
 
+        ///
         public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
         {
             throw new NotImplementedException();

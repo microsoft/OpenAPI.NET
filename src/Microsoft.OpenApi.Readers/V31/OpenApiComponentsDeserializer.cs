@@ -15,8 +15,8 @@ namespace Microsoft.OpenApi.Readers.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
-    {
+        private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new()
+        {
         {"schemas", (o, n) => o.Schemas = n.CreateMap(LoadSchema)},
         {"responses", (o, n) => o.Responses = n.CreateMapWithReference(ReferenceType.Response, LoadResponse)},
         {"parameters", (o, n) => o.Parameters = n.CreateMapWithReference(ReferenceType.Parameter, LoadParameter)},
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.V31
     };
 
         private static readonly PatternFieldMap<OpenApiComponents> _componentsPatternFields =
-            new PatternFieldMap<OpenApiComponents>
+            new()
             {
             {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };

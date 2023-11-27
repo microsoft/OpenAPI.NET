@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
                 "swagger", (_, _) => {}
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)}
         };
 
-        private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new()
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}

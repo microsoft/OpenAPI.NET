@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Json.Schema;
-using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Extensions
 {
@@ -18,6 +16,16 @@ namespace Microsoft.OpenApi.Extensions
         public static DiscriminatorKeyword GetOpenApiDiscriminator(this JsonSchema schema)
         {
             return schema.TryGetKeyword<DiscriminatorKeyword>(DiscriminatorKeyword.Name, out var k) ? k! : null;
+        }
+
+        /// <summary>
+        /// Gets the 'externalDocs' keyword if it exists.
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public static OpenApiExternalDocs GetOpenApiExternalDocs(this JsonSchema schema)
+        {
+            return schema.TryGetKeyword<ExternalDocsKeyword>(ExternalDocsKeyword.Name, out var k) ? k.Value! : null;
         }
 
         /// <summary>

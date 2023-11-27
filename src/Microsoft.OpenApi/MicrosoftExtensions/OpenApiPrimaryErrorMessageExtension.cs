@@ -1,9 +1,10 @@
-// ------------------------------------------------------------
+﻿// ------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
 using System;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -33,16 +34,16 @@ public class OpenApiPrimaryErrorMessageExtension : IOpenApiExtension
     public bool IsPrimaryErrorMessage { get; set; }
 
     /// <summary>
-    /// Parses the <see cref="IOpenApiAny"/> to <see cref="OpenApiPrimaryErrorMessageExtension"/>.
+    /// Parses the <see cref="OpenApiAny"/> to <see cref="OpenApiPrimaryErrorMessageExtension"/>.
     /// </summary>
     /// <param name="source">The source object.</param>
     /// <returns>The <see cref="OpenApiPrimaryErrorMessageExtension"/>.</returns>
-    public static OpenApiPrimaryErrorMessageExtension Parse(IOpenApiAny source)
+    public static OpenApiPrimaryErrorMessageExtension Parse(OpenApiAny source)
     {
-        if (source is not OpenApiBoolean rawObject) throw new ArgumentOutOfRangeException(nameof(source));
+        if (source.Node is not JsonNode rawObject) throw new ArgumentOutOfRangeException(nameof(source));
         return new()
         {
-            IsPrimaryErrorMessage = rawObject.Value
+            IsPrimaryErrorMessage = rawObject.GetValue<bool>()
         };
     }
 }

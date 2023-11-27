@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V31
     internal static partial class OpenApiV31Deserializer
     {
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
-            new FixedFieldMap<OpenApiParameter>
+            new()
             {
                 {
                     "name", (o, n) =>
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Readers.V31
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
-            new PatternFieldMap<OpenApiParameter>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

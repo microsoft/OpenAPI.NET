@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Readers.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiEncoding> _encodingFixedFields = new FixedFieldMap<OpenApiEncoding>
+        private static readonly FixedFieldMap<OpenApiEncoding> _encodingFixedFields = new()
         {
             {
                 "contentType", (o, n) =>
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V31
         };
 
         private static readonly PatternFieldMap<OpenApiEncoding> _encodingPatternFields =
-            new PatternFieldMap<OpenApiEncoding>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

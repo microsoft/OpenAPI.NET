@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations
     /// </summary>
     public sealed class ValidationRuleSet
     {
-        private Dictionary<Type, IList<ValidationRule>> _rules = new();
+        private Dictionary<string, IList<ValidationRule>> _rulesDictionary = new();
 
         private static ValidationRuleSet _defaultRuleSet;
 

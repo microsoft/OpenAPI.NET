@@ -12,7 +12,7 @@ public class OpenApiReservedParameterExtensionTests
     [Fact]
     public void Parses()
     {
-        var oaiValue = new OpenApiBoolean(true);
+        var oaiValue = new OpenApiAny(true);
         var value = OpenApiReservedParameterExtension.Parse(oaiValue);
         Assert.NotNull(value);
         Assert.True(value.IsReserved);

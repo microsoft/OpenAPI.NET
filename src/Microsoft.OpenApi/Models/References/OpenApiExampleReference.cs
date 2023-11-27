@@ -43,11 +43,11 @@ namespace Microsoft.OpenApi.Models.References
         {
             if (string.IsNullOrEmpty(referenceId))
             {
-                throw Error.Argument(nameof(referenceId), SRResource.ReferenceIdIsNullOrEmpty);
+                Utils.CheckArgumentNullOrEmpty(referenceId);
             }
             if (hostDocument == null)
             {
-                throw Error.Argument(nameof(hostDocument), SRResource.HostDocumentIsNull);
+                Utils.CheckArgumentNull(hostDocument);
             }
 
             _reference = new OpenApiReference()
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Models.References
         private void SerializeInternal(IOpenApiWriter writer,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);;
             action(writer, Target);
         }
     }

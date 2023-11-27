@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiServer> _serverFixedFields = new FixedFieldMap<OpenApiServer>
+        private static readonly FixedFieldMap<OpenApiServer> _serverFixedFields = new()
         {
             {
                 "url", (o, n) =>
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.V31
             }
         };
 
-        private static readonly PatternFieldMap<OpenApiServer> _serverPatternFields = new PatternFieldMap<OpenApiServer>
+        private static readonly PatternFieldMap<OpenApiServer> _serverPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };

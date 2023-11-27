@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers
             catch (JsonException ex)
             {
                 var diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
+                diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
                 return new()
                 {
                     OpenApiDocument = null,
@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Readers
             catch (JsonException ex)
             {
                 diagnostic = new();
-                diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
+                diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
                 return default;
             }
 

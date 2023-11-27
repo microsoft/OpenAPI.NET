@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -13,9 +13,9 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static readonly FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>();
+        public static readonly FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new();
 
-        public static readonly PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
+        public static readonly PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new()
         {
             {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}

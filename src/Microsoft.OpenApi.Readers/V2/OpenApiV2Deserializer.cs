@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -62,76 +63,6 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
                     mapNode.Context.Diagnostic.Errors.Add(new(exception));
-                }
-                finally
-                {
-                    mapNode.Context.EndObject();
-                }
-            }
-        }
-
-        private static void ProcessAnyListFields<T>(
-            MapNode mapNode,
-            T domainObject,
-            AnyListFieldMap<T> anyListFieldMap)
-        {
-            foreach (var anyListFieldName in anyListFieldMap.Keys.ToList())
-            {
-                try
-                {
-                    var newProperty = new List<JsonNode>();
-
-                    mapNode.Context.StartObject(anyListFieldName);
-                    if (anyListFieldMap.TryGetValue(anyListFieldName, out var fieldName))
-                    {
-                        var list = fieldName.PropertyGetter(domainObject);
-                        if (list != null)
-                        {
-                            newProperty.Add(propertyElement);
-                        }
-                    }
-
-                    anyListFieldMap[anyListFieldName].PropertySetter(domainObject, newProperty);
-                }
-                catch (OpenApiException exception)
-                {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
-                }
-                finally
-                {
-                    mapNode.Context.EndObject();
-                }
-            }
-        }
-
-        private static void ProcessAnyMapFields<T, U>(
-            MapNode mapNode,
-            T domainObject,
-            AnyMapFieldMap<T, U> anyMapFieldMap)
-        {
-            foreach (var anyMapFieldName in anyMapFieldMap.Keys.ToList())
-            {
-                try
-                {
-                    mapNode.Context.StartObject(anyMapFieldName);
-
-                    foreach (var propertyMapElement in anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject))
-                    {
-                        if (propertyMapElement.Value != null)
-                        {
-                            mapNode.Context.StartObject(propertyMapElement.Key);
-
-                            var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
-
-                            anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
-                        }
-                    }
-                }
-                catch (OpenApiException exception)
-                {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
                 }
                 finally
                 {

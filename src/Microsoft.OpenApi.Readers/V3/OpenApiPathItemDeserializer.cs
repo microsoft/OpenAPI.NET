@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var refObject = mapNode.GetReferencedObject<OpenApiPathItem>(ReferenceType.Path, pointer);
+                var refObject = mapNode.GetReferencedObject<OpenApiPathItem>(ReferenceType.PathItem, pointer);
                 return refObject;
             }
 

@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Models
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            Utils.CheckArgumentNull(writer);;
             writer.WriteStartObject();
 
             // name

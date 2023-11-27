@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var link = new OpenApiLink()
             {
                 Extensions = {
-                { "x-display", new OpenApiString("Abc") }
+                { "x-display", new OpenApiAny("Abc") }
 }
             };
 

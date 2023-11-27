@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -22,18 +22,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var reader = new OpenApiStreamReader();
             var doc = reader.Read(stream, out var diagnostic);
 
-                var successSchema = new JsonSchemaBuilder()
-                            .Type(SchemaValueType.Array)
-                            .Items(new JsonSchemaBuilder()
-                                .Ref("#/definitions/Item"));
+            var successSchema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Array)
+                        .Items(new JsonSchemaBuilder()
+                            .Ref("#/definitions/Item"));
 
-                var okSchema = new JsonSchemaBuilder()
-                        .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")));
+            var okSchema = new JsonSchemaBuilder()
+                    .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")));
 
-                var errorSchema = new JsonSchemaBuilder()
-                        .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
-                        ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                        ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
+            var errorSchema = new JsonSchemaBuilder()
+                    .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
+                    ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
+
+            var okMediaType = new OpenApiMediaType
+            {
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(okSchema)
+            };
 
             var errorMediaType = new OpenApiMediaType
             {
@@ -42,100 +47,108 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             doc.Should().BeEquivalentTo(new OpenApiDocument
             {
-                Info = new()
+                Info = new OpenApiInfo
                 {
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(okSchema)
-                };
-
-                var errorMediaType = new OpenApiMediaType
+                    Title = "Two responses",
+                    Version = "1.0.0"
+                },
+                Servers =
+                    {
+                        new OpenApiServer
+                        {
+                            Url = "https://"
+                        }
+                    },
+                Paths = new OpenApiPaths
                 {
-                    ["/items"] = new()
+                    ["/items"] = new OpenApiPathItem
                     {
                         Operations =
-                        {
-                            [OperationType.Get] = new()
                             {
-                                Responses =
+                                [OperationType.Get] = new OpenApiOperation
                                 {
-                                    ["200"] = new()
+                                    Responses =
                                     {
-                                        Description = "An OK response",
-                                        Content =
+                                        ["200"] = new OpenApiResponse
                                         {
-                                            ["application/json"] = okMediaType,
-                                            ["application/xml"] = okMediaType,
-                                        }
-                                    },
-                                    ["default"] = new()
-                                    {
-                                        Description = "An error response",
-                                        Content =
+                                            Description = "An OK response",
+                                            Content =
+                                            {
+                                                ["application/json"] = okMediaType,
+                                                ["application/xml"] = okMediaType,
+                                            }
+                                        },
+                                        ["default"] = new OpenApiResponse
                                         {
-                                            ["application/json"] = errorMediaType,
-                                            ["application/xml"] = errorMediaType
+                                            Description = "An error response",
+                                            Content =
+                                            {
+                                                ["application/json"] = errorMediaType,
+                                                ["application/xml"] = errorMediaType
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            [OperationType.Post] = new()
-                            {
-                                Responses =
+                                },
+                                [OperationType.Post] = new OpenApiOperation
                                 {
-                                    ["200"] = new()
+                                    Responses =
                                     {
-                                        Description = "An OK response",
-                                        Content =
+                                        ["200"] = new OpenApiResponse
                                         {
-                                            ["html/text"] = okMediaType
-                                        }
-                                    },
-                                    ["default"] = new()
-                                    {
-                                        Description = "An error response",
-                                        Content =
+                                            Description = "An OK response",
+                                            Content =
+                                            {
+                                                ["html/text"] = okMediaType
+                                            }
+                                        },
+                                        ["default"] = new OpenApiResponse
                                         {
-                                            ["html/text"] = errorMediaType
+                                            Description = "An error response",
+                                            Content =
+                                            {
+                                                ["html/text"] = errorMediaType
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            [OperationType.Patch] = new()
-                            {
-                                Responses =
+                                },
+                                [OperationType.Patch] = new OpenApiOperation
                                 {
-                                    ["200"] = new()
+                                    Responses =
                                     {
-                                        Description = "An OK response",
-                                        Content =
+                                        ["200"] = new OpenApiResponse
                                         {
-                                            ["application/json"] = okMediaType,
-                                            ["application/xml"] = okMediaType,
-                                        }
-                                    },
-                                    ["default"] = new()
-                                    {
-                                        Description = "An error response",
-                                        Content =
+                                            Description = "An OK response",
+                                            Content =
+                                            {
+                                                ["application/json"] = okMediaType,
+                                                ["application/xml"] = okMediaType,
+                                            }
+                                        },
+                                        ["default"] = new OpenApiResponse
                                         {
-                                            ["application/json"] = errorMediaType,
-                                            ["application/xml"] = errorMediaType
+                                            Description = "An error response",
+                                            Content =
+                                            {
+                                                ["application/json"] = errorMediaType,
+                                                ["application/xml"] = errorMediaType
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
                     }
                 },
-                Components = new()
+                Components = new OpenApiComponents
                 {
                     Schemas =
-                    {
-                        ["Item"] = okSchema,
-                        ["Error"] = errorSchema
-                    }
+                        {
+                            ["Item"] = okSchema,
+                            ["Error"] = errorSchema
+                        }
                 }
             });
         }
+
 
         [Fact]
         public void ShouldAssignSchemaToAllResponses()

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -178,8 +178,6 @@ namespace Microsoft.OpenApi.Readers.V2
                     k => k,
                     _ => mediaType)
             };
-            foreach(var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && string.IsNullOrEmpty(x.Schema.Type)))
-                value.Schema.Type = "object";
 
             return formBody;
         }

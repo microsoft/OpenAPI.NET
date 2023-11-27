@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces)
                 ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
 
-            var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+            var schema = context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response);
 
             foreach (var produce in produces)
             {

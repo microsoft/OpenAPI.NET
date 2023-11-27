@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Readers.V31
     internal static partial class OpenApiV31Deserializer
     {
         private static readonly FixedFieldMap<OpenApiExternalDocs> _externalDocsFixedFields =
-            new FixedFieldMap<OpenApiExternalDocs>
+            new()
             {
                 // $ref
                 {
@@ -30,7 +30,8 @@ namespace Microsoft.OpenApi.Readers.V31
             };
 
         private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
-                new PatternFieldMap<OpenApiExternalDocs> {
+                new()
+                {
 
                     {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
                     };

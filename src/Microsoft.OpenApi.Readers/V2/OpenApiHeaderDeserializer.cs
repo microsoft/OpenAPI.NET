@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static JsonSchemaBuilder _headerJsonSchemaBuilder;
-        private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new FixedFieldMap<OpenApiHeader>
+        private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new()
         {
             {
                 "description",

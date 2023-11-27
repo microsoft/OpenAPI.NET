@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Helpers
         {
             if (writer == null)
             {
-                throw Error.ArgumentNull(nameof(writer));
+                Utils.CheckArgumentNull(writer);
             }
 
             // type

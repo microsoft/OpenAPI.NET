@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers.V31
     internal static partial class OpenApiV31Deserializer
     {
         private static readonly FixedFieldMap<OpenApiMediaType> _mediaTypeFixedFields =
-            new FixedFieldMap<OpenApiMediaType>
+            new()
             {
                 {
                     OpenApiConstants.Schema, (o, n) =>
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.V31
             };
 
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
-            new PatternFieldMap<OpenApiMediaType>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

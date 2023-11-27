@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -826,9 +826,9 @@ namespace Microsoft.OpenApi.Services
                 Walk("items", () => Walk(schema.GetItems()));
             }
 
-            if (schema.Not != null)
+            if (schema.GetNot() != null)
             {
-                Walk("not", () => Walk(schema.Not));
+                Walk("not", () => Walk(schema.GetNot()));
             }
 
             if (schema.GetAllOf() != null)

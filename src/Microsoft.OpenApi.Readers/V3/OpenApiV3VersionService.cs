@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -71,6 +71,8 @@ namespace Microsoft.OpenApi.Readers.V3
         /// </summary>
         /// <param name="reference">The URL of the reference</param>
         /// <param name="type">The type of object referenced based on the context of the reference</param>
+        /// <param name="summary"></param>
+        /// <param name="description"></param>
         public OpenApiReference ConvertToOpenApiReference(
             string reference,
             ReferenceType? type,

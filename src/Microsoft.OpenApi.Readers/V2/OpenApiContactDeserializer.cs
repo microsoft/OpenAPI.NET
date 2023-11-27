@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiContact> _contactFixedFields = new FixedFieldMap<OpenApiContact>
+        private static readonly FixedFieldMap<OpenApiContact> _contactFixedFields = new()
         {
             {
                 "name",
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.V2
             },
         };
 
-        private static readonly PatternFieldMap<OpenApiContact> _contactPatternFields = new PatternFieldMap<OpenApiContact>
+        private static readonly PatternFieldMap<OpenApiContact> _contactPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };

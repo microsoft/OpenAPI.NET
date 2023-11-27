@@ -235,6 +235,10 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
+        /// <summary>
+        /// Visits <see cref="IBaseDocument"/>
+        /// </summary>
+        /// <param name="document"></param>
         public virtual void Visit(IBaseDocument document) { }
 
         /// <summary>

@@ -4,6 +4,7 @@ using Microsoft.OpenApi.MicrosoftExtensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Tests.MicrosoftExtensions;
 
@@ -74,15 +75,15 @@ public class OpenApiPagingExtensionsTests
     public void ParsesPagingInfo()
     {
         // Arrange
-        var obj = new OpenApiObject
+        var obj = new JsonObject
         {
-            ["nextLinkName"] = new OpenApiString("@odata.nextLink"),
-            ["operationName"] = new OpenApiString("more"),
-            ["itemName"] = new OpenApiString("item"),
+            ["nextLinkName"] = new OpenApiAny("@odata.nextLink").Node,
+            ["operationName"] = new OpenApiAny("more").Node,
+            ["itemName"] = new OpenApiAny("item").Node,
         };
 
         // Act
-        var extension = OpenApiPagingExtension.Parse(obj);
+        var extension = OpenApiPagingExtension.Parse(new OpenApiAny(obj));
 
         // Assert
         Assert.Equal("@odata.nextLink", extension.NextLinkName);

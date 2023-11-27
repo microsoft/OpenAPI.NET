@@ -1,8 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -14,6 +15,8 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class JsonSchemaBuilderExtensions
     {
+        private static readonly Dictionary<string, IJsonSchemaKeyword> _keywords = new Dictionary<string, IJsonSchemaKeyword>();
+
         /// <summary>
         /// Custom extensions in the schema
         /// </summary>
@@ -98,6 +101,63 @@ namespace Microsoft.OpenApi.Extensions
             builder.Add(new DiscriminatorKeyword(discriminator));
             return builder;
         }
+
+        /// <summary>
+        /// ExternalDocs object.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="externalDocs"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder OpenApiExternalDocs(this JsonSchemaBuilder builder, OpenApiExternalDocs externalDocs)
+        {
+            builder.Add(new ExternalDocsKeyword(externalDocs));
+            return builder;
+        }
+
+        /// <summary>
+        /// Removes a keyword from the builder instance
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="keyWord"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder RemoveKeyWord(this JsonSchemaBuilder builder, IJsonSchemaKeyword keyWord)
+        {
+            var schema = builder.Build();
+            var newKeyWords = new List<IJsonSchemaKeyword>();
+            newKeyWords = schema.Keywords.Where(x => !x.Equals(keyWord)).ToList();
+            foreach (var item in newKeyWords)
+            {
+                builder.Add(item);
+            }
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Removes a keyword
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="keyword"></param>
+        public static JsonSchemaBuilder Remove(this JsonSchemaBuilder builder, string keyword)
+        {
+            var keywords = builder.Build().Keywords;
+            keywords = keywords.Where(x => !x.Keyword().Equals(keyword)).ToList();
+            var schemaBuilder = new JsonSchemaBuilder();
+            if (keywords.Count == 0)
+            {
+                return schemaBuilder;
+            }
+            else
+            {
+                foreach (var item in keywords)
+                {
+                    schemaBuilder.Add(item);
+                }
+            }
+
+            //_keywords.Remove(keyword);
+            return schemaBuilder;
+        }
     }
 
     /// <summary>
@@ -181,10 +241,46 @@ namespace Microsoft.OpenApi.Extensions
         public bool Value { get; }
 
         /// <summary>
-        /// Creates a new <see cref="IdKeyword"/>.
+        /// Creates a new <see cref="NullableKeyword"/>.
         /// </summary>
         /// <param name="value">Whether the `minimum` value should be considered exclusive.</param>
         public NullableKeyword(bool value)
+        {
+            Value = value;
+        }
+
+        /// <summary>
+        /// Implementation of IJsonSchemaKeyword interface
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// The nullable keyword
+    /// </summary>
+    [SchemaKeyword(Name)]
+    public class ExternalDocsKeyword : IJsonSchemaKeyword
+    {
+        /// <summary>
+        /// The schema keyword name
+        /// </summary>
+        public const string Name = "externalDocs";
+
+        /// <summary>
+        /// The ID.
+        /// </summary>
+        public OpenApiExternalDocs Value { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="ExternalDocsKeyword"/>.
+        /// </summary>
+        /// <param name="value">Whether the `minimum` value should be considered exclusive.</param>
+        public ExternalDocsKeyword(OpenApiExternalDocs value)
         {
             Value = value;
         }

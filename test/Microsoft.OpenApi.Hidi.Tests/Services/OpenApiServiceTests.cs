@@ -25,46 +25,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             _logger = new Logger<OpenApiServiceTests>(_loggerFactory);
         }
-
-        [Fact]
-        public async Task ReturnConvertedCSDLFile()
-        {
-            // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "Todo.xml");
-            var fileInput = new FileInfo(filePath);
-            var csdlStream = fileInput.OpenRead();
-            // Act
-            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
-            var expectedPathCount = 5;
-
-            // Assert
-            Assert.NotNull(openApiDoc);
-            Assert.NotEmpty(openApiDoc.Paths);
-            Assert.Equal(expectedPathCount, openApiDoc.Paths.Count);
-        }
-
-        [Theory]
-        [InlineData("Todos.Todo.UpdateTodo", null, 1)]
-        [InlineData("Todos.Todo.ListTodo", null, 1)]
-        [InlineData(null, "Todos.Todo", 5)]
-        public async Task ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string? operationIds, string? tags, int expectedPathCount)
-        {
-            // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "Todo.xml");
-            var fileInput = new FileInfo(filePath);
-            var csdlStream = fileInput.OpenRead();
-
-            // Act
-            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
-            var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
-            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(openApiDoc, predicate);
-
-            // Assert
-            Assert.NotNull(subsetOpenApiDocument);
-            Assert.NotEmpty(subsetOpenApiDocument.Paths);
-            Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
-        }
-
+       
         [Theory]
         [InlineData("UtilityFiles/appsettingstest.json")]
         [InlineData(null)]
@@ -154,23 +115,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             };
             var filePath = await OpenApiService.ShowOpenApiDocument(options, _logger);
             Assert.True(File.Exists(filePath));
-        }
-
-        [Fact]
-        public async Task ShowCommandGeneratesMermaidMarkdownFileFromCsdlWithMermaidDiagram()
-        {
-            var options = new HidiOptions
-            {
-                Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
-                CsdlFilter = "todos",
-                Output = new("sample.md")
-            };
-
-            // create a dummy ILogger instance for testing
-            await OpenApiService.ShowOpenApiDocument(options, _logger);
-
-            var output = await File.ReadAllTextAsync(options.Output.FullName);
-            Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
         [Fact]

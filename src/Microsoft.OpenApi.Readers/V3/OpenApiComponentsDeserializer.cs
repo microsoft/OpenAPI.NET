@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
+        private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new()
         {
             {"schemas", (o, n) => o.Schemas = n.CreateMap(LoadSchema)},
             {"responses", (o, n) => o.Responses = n.CreateMapWithReference(ReferenceType.Response, LoadResponse)},
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.V3
         };
 
         private static readonly PatternFieldMap<OpenApiComponents> _componentsPatternFields =
-            new PatternFieldMap<OpenApiComponents>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };

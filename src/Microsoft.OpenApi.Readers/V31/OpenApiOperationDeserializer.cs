@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers.V31
     internal static partial class OpenApiV31Deserializer
     {
         private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
-            new FixedFieldMap<OpenApiOperation>
+            new()
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Readers.V31
             };
 
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
-            new PatternFieldMap<OpenApiOperation>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
