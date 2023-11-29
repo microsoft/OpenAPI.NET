@@ -55,20 +55,20 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/pet"
+                "$ref": "#/definitions/pet"
               }
             }
           },
           "4XX": {
             "description": "unexpected client error",
             "schema": {
-              "$ref": "#/components/schemas/errorModel"
+              "$ref": "#/definitions/errorModel"
             }
           },
           "5XX": {
             "description": "unexpected server error",
             "schema": {
-              "$ref": "#/components/schemas/errorModel"
+              "$ref": "#/definitions/errorModel"
             }
           }
         }
@@ -90,7 +90,7 @@
             "description": "Pet to add to the store",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/newPet"
+              "$ref": "#/definitions/newPet"
             }
           }
         ],
@@ -98,19 +98,19 @@
           "200": {
             "description": "pet response",
             "schema": {
-              "$ref": "#/components/schemas/pet"
+              "$ref": "#/definitions/pet"
             }
           },
           "4XX": {
             "description": "unexpected client error",
             "schema": {
-              "$ref": "#/components/schemas/errorModel"
+              "$ref": "#/definitions/errorModel"
             }
           },
           "5XX": {
             "description": "unexpected server error",
             "schema": {
-              "$ref": "#/components/schemas/errorModel"
+              "$ref": "#/definitions/errorModel"
             }
           }
         }
@@ -139,19 +139,19 @@
           "200": {
             "description": "pet response",
             "schema": {
-              "$ref": "#/components/schemas/pet"
+              "$ref": "#/definitions/pet"
             }
           },
           "4XX": {
             "description": "unexpected client error",
             "schema": {
-              "$ref": "#/components/schemas/errorModel"
+              "$ref": "#/definitions/errorModel"
             }
           },
           "5XX": {
             "description": "unexpected server error",
             "schema": {
-              "$ref": "#/components/schemas/errorModel"
+              "$ref": "#/definitions/errorModel"
             }
           }
         }
@@ -179,13 +179,13 @@
           "4XX": {
             "description": "unexpected client error",
             "schema": {
-              "$ref": "#/components/schemas/errorModel"
+              "$ref": "#/definitions/errorModel"
             }
           },
           "5XX": {
             "description": "unexpected server error",
             "schema": {
-              "$ref": "#/components/schemas/errorModel"
+              "$ref": "#/definitions/errorModel"
             }
           }
         }

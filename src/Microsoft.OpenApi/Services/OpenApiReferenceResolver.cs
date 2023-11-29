@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Services
         {
             ResolveMap(links);
         }
-        
+
         /// <summary>
         /// Resolve all references used in a schem
         /// </summary>
@@ -200,17 +200,17 @@ namespace Microsoft.OpenApi.Services
             var description = schema.GetDescription();
             var summary = schema.GetSummary();
 
-            if (reference != null)
+            if (schema.Keywords.Count.Equals(1) && reference != null)
             {
                 schema = ResolveJsonSchemaReference(reference, description, summary);
             }
-            
+
             var builder = new JsonSchemaBuilder();
-            foreach (var keyword in schema.Keywords)
+            foreach (var keyword in schema?.Keywords)
             {
                 builder.Add(keyword);
             }
-            
+
             ResolveJsonSchema(schema.GetItems(), r => builder.Items(r));
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetOneOf(), r => builder.OneOf(r));
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAllOf(), r => builder.AllOf(r));

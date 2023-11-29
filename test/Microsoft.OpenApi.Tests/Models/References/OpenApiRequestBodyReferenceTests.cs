@@ -101,6 +101,7 @@ paths:
         {
             // Assert
             var expectedSchema = new JsonSchemaBuilder()
+                .Ref("#/components/schemas/UserSchema")
                 .Type(SchemaValueType.Object)
                 .Properties(
                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),

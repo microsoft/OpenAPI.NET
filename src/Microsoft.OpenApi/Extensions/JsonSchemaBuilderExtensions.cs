@@ -15,8 +15,6 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class JsonSchemaBuilderExtensions
     {
-        private static readonly Dictionary<string, IJsonSchemaKeyword> _keywords = new Dictionary<string, IJsonSchemaKeyword>();
-
         /// <summary>
         /// Custom extensions in the schema
         /// </summary>
@@ -115,25 +113,6 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// Removes a keyword from the builder instance
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="keyWord"></param>
-        /// <returns></returns>
-        public static JsonSchemaBuilder RemoveKeyWord(this JsonSchemaBuilder builder, IJsonSchemaKeyword keyWord)
-        {
-            var schema = builder.Build();
-            var newKeyWords = new List<IJsonSchemaKeyword>();
-            newKeyWords = schema.Keywords.Where(x => !x.Equals(keyWord)).ToList();
-            foreach (var item in newKeyWords)
-            {
-                builder.Add(item);
-            }
-
-            return builder;
-        }
-
-        /// <summary>
         /// Removes a keyword
         /// </summary>
         /// <param name="builder"></param>
@@ -155,7 +134,6 @@ namespace Microsoft.OpenApi.Extensions
                 }
             }
 
-            //_keywords.Remove(keyword);
             return schemaBuilder;
         }
     }

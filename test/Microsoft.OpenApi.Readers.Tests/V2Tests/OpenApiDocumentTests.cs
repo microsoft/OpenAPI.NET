@@ -22,15 +22,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var reader = new OpenApiStreamReader();
             var doc = reader.Read(stream, out var diagnostic);
 
-            var successSchema = new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Array)
-                        .Items(new JsonSchemaBuilder()
-                            .Ref("#/definitions/Item"));
-
             var okSchema = new JsonSchemaBuilder()
+                    .Ref("#/definitions/Item")
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")));
 
             var errorSchema = new JsonSchemaBuilder()
+                    .Ref("#/definitions/Error")
                     .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                     ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
@@ -165,10 +162,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var successSchema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Array)
                 .Items(new JsonSchemaBuilder()
+                    .Ref("#/definitions/Item")
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))))
                 .Build();
 
             var errorSchema = new JsonSchemaBuilder()
+                    .Ref("#/definitions/Error")
                     .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
@@ -201,7 +200,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             JsonSchema schema = doc.Components.Schemas["AllPets"];
 
             // Assert
-            if (schema.GetRef() != null)
+            if (schema.Keywords.Count.Equals(1) && schema.GetRef() != null)
             {
                 // detected a cycle - this code gets triggered
                 Assert.Fail("A cycle should not be detected");

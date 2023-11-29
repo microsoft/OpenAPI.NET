@@ -217,13 +217,14 @@ paths: {}",
             OpenApiDiagnostic context;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml")))
             {
-                var actual = new OpenApiStreamReader().Read(stream, out context);
+                var doc = new OpenApiStreamReader().Read(stream, out context);
 
                 var components = new OpenApiComponents
                 {
                     Schemas = new Dictionary<string, JsonSchema>
                     {
                         ["pet"] = new JsonSchemaBuilder()
+                                    .Ref("#/components/schemas/pet")
                                     .Type(SchemaValueType.Object)
                                     .Required("id", "name")
                                     .Properties(
@@ -231,6 +232,7 @@ paths: {}",
                                         ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                         ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["newPet"] = new JsonSchemaBuilder()
+                                        .Ref("#/components/schemas/newPet")
                                         .Type(SchemaValueType.Object)
                                         .Required("name")
                                         .Properties(
@@ -238,6 +240,7 @@ paths: {}",
                                             ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                             ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["errorModel"] = new JsonSchemaBuilder()
+                                        .Ref("#/components/schemas/errorModel")
                                         .Type(SchemaValueType.Object)
                                         .Required("code", "message")
                                         .Properties(
@@ -252,7 +255,7 @@ paths: {}",
 
                 var errorModelSchema = components.Schemas["errorModel"];
 
-                var expected = new OpenApiDocument
+                var expectedDoc = new OpenApiDocument
                 {
                     Info = new OpenApiInfo
                     {
@@ -519,7 +522,7 @@ paths: {}",
                     Components = components
                 };
 
-                actual.Should().BeEquivalentTo(expected);
+                doc.Should().BeEquivalentTo(expectedDoc);
             }
 
             context.Should().BeEquivalentTo(
@@ -539,6 +542,7 @@ paths: {}",
                     Schemas = new Dictionary<string, JsonSchema>
                     {
                         ["pet1"] = new JsonSchemaBuilder()
+                            .Ref("#/components/schemas/pet1")
                             .Type(SchemaValueType.Object)
                             .Required("id", "name")
                             .Properties(
@@ -546,6 +550,7 @@ paths: {}",
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["newPet"] = new JsonSchemaBuilder()
+                            .Ref("#/components/schemas/newPet")
                             .Type(SchemaValueType.Object)
                             .Required("name")
                             .Properties(
@@ -553,6 +558,7 @@ paths: {}",
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["errorModel"] = new JsonSchemaBuilder()
+                            .Ref("#/components/schemas/errorModel")
                             .Type(SchemaValueType.Object)
                             .Required("code", "message")
                             .Properties(
@@ -1090,6 +1096,7 @@ paths: {}",
             var actualSchema = doc.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             var expectedSchema = new JsonSchemaBuilder()
+                .Ref("#/components/schemas/User")
                 .Type(SchemaValueType.Object)
                 .Properties(
                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
