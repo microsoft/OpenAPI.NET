@@ -59,6 +59,14 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
                 new( new OpenApiException("[File: ./TodoReference.yaml] Invalid Reference identifier 'object-not-existing'.")) });
         }
+
+        [Fact]
+        public void DifferentVerbSameRouteShouldPass()
+        {
+            using var stream = Resources.GetStream("OpenApiReaderTests/Samples/differentMethodSameRoute.json");
+            new OpenApiStreamReader().Read(stream, out var diagnostic);
+            diagnostic.Errors.Should().BeEmpty();
+        }
     }
 
     public class ResourceLoader : IStreamLoader
