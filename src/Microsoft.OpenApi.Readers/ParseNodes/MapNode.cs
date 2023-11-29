@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -111,6 +112,63 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                                 Type = referenceType,
                                 Id = entry.key
                             };
+                        }
+                    }
+                    finally
+                    {
+                        Context.EndObject();
+                    }
+                    return entry;
+                }
+                );
+            return nodes.Where(n => n != default).ToDictionary(k => k.key, v => v.value);
+        }
+
+        public override Dictionary<string, JsonSchema> CreateJsonSchemaMapWithReference(
+            ReferenceType referenceType,
+            Func<MapNode, JsonSchema> map,
+            OpenApiSpecVersion version)
+        {
+            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(JsonSchema).Name}", Context);
+
+            var nodes = jsonMap.Select(
+                n =>
+                {
+                    var key = n.Key;
+                    (string key, JsonSchema value) entry;
+                    try
+                    {
+                        Context.StartObject(key);
+                        entry = (key,
+                            value: map(new MapNode(Context, (JsonObject)n.Value))
+                        );
+                        if (entry.value == null)
+                        {
+                            return default;  // Body Parameters shouldn't be converted to Parameters
+                        }
+                        // If the component isn't a reference to another component, then point it to itself.
+                        if (entry.value.GetRef() == null)
+                        {
+                            var builder = new JsonSchemaBuilder();
+
+                            // construct the Ref and append it to the builder
+                            var reference = version == OpenApiSpecVersion.OpenApi2_0 ? string.Concat("#/definitions/", entry.key) :
+                                string.Concat("#/components/schemas/", entry.key);
+
+                            builder.Ref(reference);
+
+                            // Append all the keywords in original schema to our new schema using a builder instance
+                            foreach (var keyword in entry.value.Keywords)
+                            {
+                                builder.Add(keyword);
+                            }
+                            entry.value = builder.Build();
+                            //entry.value.GetRef() = new OpenApiReference()
+                            //{
+                            //    Type = referenceType,
+                            //    Id = entry.key
+                            //};
+
                         }
                     }
                     finally
