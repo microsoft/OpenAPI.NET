@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -422,19 +422,20 @@ namespace Microsoft.OpenApi.Writers
         /// Writes out a JsonSchema object
         /// </summary>
         /// <param name="schema"></param>
-        public void WriteJsonSchema(JsonSchema schema)
+        /// <param name="version"></param>
+        public void WriteJsonSchema(JsonSchema schema, OpenApiSpecVersion version)
         {
             if (schema == null)
             {
                 return;
             }
-            
+
             var reference = schema.GetRef();
             if (reference != null)
             {
                 if (!Settings.ShouldInlineReference())
                 {
-                    WriteJsonSchemaReference(this, reference);
+                    WriteJsonSchemaReference(this, reference, version);
                     return;
                 }
                 else
@@ -446,13 +447,13 @@ namespace Microsoft.OpenApi.Writers
                     if (!Settings.LoopDetector.PushLoop(schema))
                     {
                         Settings.LoopDetector.SaveLoop(schema);
-                        WriteJsonSchemaReference(this, reference);
+                        WriteJsonSchemaReference(this, reference, version);
                         return;
                     }
                 }
             }
 
-            WriteJsonSchemaWithoutReference(this, schema);
+            WriteJsonSchemaWithoutReference(this, schema, version);
 
             if (reference != null)
             {
@@ -461,7 +462,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <inheritdoc />
-        public void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema)
+        public void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema, OpenApiSpecVersion version)
         {
             writer.WriteStartObject();
 
@@ -517,23 +518,23 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteProperty(OpenApiConstants.Type, schema.GetJsonType()?.ToString().ToLowerInvariant());
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, schema.GetAllOf(), (w, s) => w.WriteJsonSchema(s));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, schema.GetAllOf(), (w, s) => w.WriteJsonSchema(s, version));
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, schema.GetAnyOf(), (w, s) => w.WriteJsonSchema(s));
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, schema.GetAnyOf(), (w, s) => w.WriteJsonSchema(s, version));
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, schema.GetOneOf(), (w, s) => w.WriteJsonSchema(s));
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, schema.GetOneOf(), (w, s) => w.WriteJsonSchema(s, version));
 
             // not
-            writer.WriteOptionalObject(OpenApiConstants.Not, schema.GetNot(), (w, s) => w.WriteJsonSchema(s));
+            writer.WriteOptionalObject(OpenApiConstants.Not, schema.GetNot(), (w, s) => w.WriteJsonSchema(s, version));
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, schema.GetItems(), (w, s) => w.WriteJsonSchema(s));
+            writer.WriteOptionalObject(OpenApiConstants.Items, schema.GetItems(), (w, s) => w.WriteJsonSchema(s, version));
 
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, (IDictionary<string, JsonSchema>)schema.GetProperties(),
-                (w, key, s) => w.WriteJsonSchema(s));
+                (w, key, s) => w.WriteJsonSchema(s, version));
 
             // additionalProperties
             if (schema.GetAdditionalPropertiesAllowed() ?? false)
@@ -541,7 +542,7 @@ namespace Microsoft.OpenApi.Writers
                 writer.WriteOptionalObject(
                     OpenApiConstants.AdditionalProperties,
                     schema.GetAdditionalProperties(),
-                    (w, s) => w.WriteJsonSchema(s));
+                    (w, s) => w.WriteJsonSchema(s, version));
             }
             else
             {
@@ -588,10 +589,20 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <inheritdoc />
-        public void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference)
+        public void WriteJsonSchemaReference(IOpenApiWriter writer, Uri referenceUri, OpenApiSpecVersion version)
         {
-            this.WriteStartObject();
-            this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
+            var reference = String.Empty;
+            if (version.Equals(OpenApiSpecVersion.OpenApi2_0))
+            {
+                reference = referenceUri.OriginalString.Replace("components/schemas", "definitions");
+            }
+            else
+            {
+                reference = referenceUri.OriginalString;
+            }
+
+            WriteStartObject();
+            this.WriteProperty(OpenApiConstants.DollarRef, reference);
             WriteEndObject();
         }
     }

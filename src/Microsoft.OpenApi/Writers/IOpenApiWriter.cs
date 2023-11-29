@@ -76,14 +76,16 @@ namespace Microsoft.OpenApi.Writers
         /// Write the JsonSchema object
         /// </summary>
         /// <param name="schema"></param>
-        void WriteJsonSchema(JsonSchema schema);
+        /// <param name="version"></param>
+        void WriteJsonSchema(JsonSchema schema, OpenApiSpecVersion version);
 
         /// <summary>
         /// Write the JsonSchema object
         /// </summary>
         /// <param name="writer">The IOpenApiWriter object</param>
         /// <param name="schema">The JsonSchema object</param>
-        void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema);
+        /// <param name="version"></param>
+        void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema, OpenApiSpecVersion version);
 
         /// <summary>
         /// Flush the writer.
@@ -95,6 +97,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="reference"></param>
-        void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference);
+        /// <param name="version"></param>
+        void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference, OpenApiSpecVersion version);
     }
 }
