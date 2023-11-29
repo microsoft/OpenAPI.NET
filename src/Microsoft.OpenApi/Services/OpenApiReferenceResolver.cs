@@ -277,7 +277,8 @@ namespace Microsoft.OpenApi.Services
             }
             else 
             {
-                return null;
+                var referenceId = reference.OriginalString.Split('/').LastOrDefault();
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, referenceId));
             }
         }
 
@@ -349,7 +350,7 @@ namespace Microsoft.OpenApi.Services
             for (int i = 0; i < list.Count; i++)
             {
                 var entity = list[i];
-                var reference = entity.GetRef();
+                var reference = entity?.GetRef();
                 if (reference != null)
                 {
                     list[i] = ResolveJsonSchemaReference(reference);
