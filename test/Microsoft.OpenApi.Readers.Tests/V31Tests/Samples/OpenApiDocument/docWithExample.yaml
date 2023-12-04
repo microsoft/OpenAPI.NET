@@ -61,7 +61,8 @@ paths: # The available paths and operations for the API
                 properties:
                   message: # A property for the confirmation message
                     type: string
-                    example: File uploaded successfully
+                    examples:
+                      - The file was uploaded successfully
 components: # Reusable components for the API
   schemas: # JSON Schema definitions for the API
     User: # A schema for a user object

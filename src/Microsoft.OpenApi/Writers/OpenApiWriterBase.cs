@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -574,9 +574,9 @@ namespace Microsoft.OpenApi.Writers
 
             // externalDocs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, schema.GetExternalDocs(), (w, s) => JsonSerializer.Serialize(s));
-
-            // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, schema.GetExample(), (w, e) => w.WriteAny(new OpenApiAny(e)));
+            
+            // examples
+            writer.WriteOptionalCollection(OpenApiConstants.Examples, schema.GetExamples(), (n, e) => n.WriteAny(new OpenApiAny(e)));
 
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, schema.GetDeprecated(), false);

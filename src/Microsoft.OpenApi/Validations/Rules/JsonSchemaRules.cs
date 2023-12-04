@@ -34,12 +34,18 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     context.Exit();
 
-                    // example
-                    context.Enter("example");
+                    // examples
+                    context.Enter("examples");
 
-                    if (jsonSchema.GetExample() != null)
+                    if (jsonSchema.GetExamples() != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), jsonSchema.GetExample(), jsonSchema);
+                        for (int i = 0; i < jsonSchema.GetExamples().Count(); i++)
+                        {
+                            context.Enter(i.ToString());
+                            RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), jsonSchema.GetExamples().ElementAt(i), jsonSchema);
+                            context.Exit();
+                        }
+                        
                     }
 
                     context.Exit();
