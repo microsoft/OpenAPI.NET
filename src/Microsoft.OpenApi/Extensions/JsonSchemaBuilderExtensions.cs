@@ -15,8 +15,6 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class JsonSchemaBuilderExtensions
     {
-        private static readonly Dictionary<string, IJsonSchemaKeyword> _keywords = new Dictionary<string, IJsonSchemaKeyword>();
-
         /// <summary>
         /// Custom extensions in the schema
         /// </summary>
@@ -154,8 +152,7 @@ namespace Microsoft.OpenApi.Extensions
                     schemaBuilder.Add(item);
                 }
             }
-
-            //_keywords.Remove(keyword);
+            
             return schemaBuilder;
         }
     }

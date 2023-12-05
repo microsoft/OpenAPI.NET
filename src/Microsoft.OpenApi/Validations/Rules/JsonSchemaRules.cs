@@ -49,6 +49,16 @@ namespace Microsoft.OpenApi.Validations.Rules
                     }
 
                     context.Exit();
+                    
+                    // example
+                    context.Enter("example");
+
+                    if (jsonSchema.GetExample() != null)
+                    {
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), jsonSchema.GetExample(), jsonSchema);
+                    }
+
+                    context.Exit();
 
                     // enum
                     context.Enter("enum");
