@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Json.Schema;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -96,5 +97,13 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer"></param>
         /// <param name="reference"></param>
         void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference);
+
+        /// <summary>
+        /// Writes out existing examples in a mediatype object
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="example"></param>
+        /// <param name="version"></param>
+        void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version);
     }
 }

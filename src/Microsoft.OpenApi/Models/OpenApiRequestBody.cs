@@ -186,6 +186,7 @@ namespace Microsoft.OpenApi.Models
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
                 Schema = Content.Values.FirstOrDefault()?.Schema ?? new JsonSchemaBuilder().Build(),
+                Examples = Content.Values.FirstOrDefault()?.Examples,
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
@@ -219,6 +220,7 @@ namespace Microsoft.OpenApi.Models
                     Description = property.Value.GetDescription(),
                     Name = property.Key,
                     Schema = property.Value,
+                    Examples = Content.Values.FirstOrDefault()?.Examples,
                     Required = Content.First().Value.Schema.GetRequired()?.Contains(property.Key) ?? false
                 };
             }

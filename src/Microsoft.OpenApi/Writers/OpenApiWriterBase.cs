@@ -594,6 +594,29 @@ namespace Microsoft.OpenApi.Writers
             this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
             WriteEndObject();
         }
+
+        /// <inheritdoc/>
+        public void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version)
+        {
+            writer.WriteStartObject();
+
+            // summary
+            writer.WriteProperty(OpenApiConstants.Summary, example.Summary);
+
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, example.Description);
+
+            // value
+            writer.WriteOptionalObject(OpenApiConstants.Value, example.Value, (w, v) => w.WriteAny(v));
+
+            // externalValue
+            writer.WriteProperty(OpenApiConstants.ExternalValue, example.ExternalValue);
+
+            // extensions
+            writer.WriteExtensions(example.Extensions, version);
+
+            writer.WriteEndObject();
+        }
     }
 
     internal class FindJsonSchemaRefs : OpenApiVisitorBase

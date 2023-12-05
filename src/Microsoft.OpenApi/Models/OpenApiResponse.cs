@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using Json.More;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -229,6 +231,27 @@ namespace Microsoft.OpenApi.Models
                             {
                                 writer.WritePropertyName(mediaTypePair.Key);
                                 writer.WriteAny(mediaTypePair.Value.Example);
+                            }
+                        }
+
+                        writer.WriteEndObject();
+                    }
+
+                    if (Content.Values.Any(m => m.Examples != null && m.Examples.Any()))
+                    {
+                        writer.WritePropertyName("x-examples");
+                        writer.WriteStartObject();
+
+                        foreach (var mediaTypePair in Content)
+                        {
+                            var examples = mediaTypePair.Value.Examples;
+                            if (examples != null && examples.Any())
+                            {
+                                foreach (var example in examples)
+                                {
+                                    writer.WritePropertyName(example.Key);
+                                    writer.WriteV2Examples(writer, example.Value, OpenApiSpecVersion.OpenApi2_0);
+                                }
                             }
                         }
 
