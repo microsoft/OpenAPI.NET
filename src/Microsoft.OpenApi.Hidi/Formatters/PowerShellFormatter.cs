@@ -44,8 +44,8 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         // 6. Add AdditionalProperties to object schemas.
 
         public override void Visit(ref JsonSchema schema)
-        {
-            AddAdditionalPropertiesToSchema(schema);
+         {
+            AddAdditionalPropertiesToSchema(ref schema);
             schema = ResolveAnyOfSchema(ref schema);
             schema = ResolveOneOfSchema(ref schema);
 
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return parameters;
         }
 
-        private void AddAdditionalPropertiesToSchema(JsonSchema schema)
+        private void AddAdditionalPropertiesToSchema(ref JsonSchema schema)
         {
             if (schema != null && !_schemaLoop.Contains(schema) && schema.GetJsonType().Equals(SchemaValueType.Object))
             {
@@ -200,6 +200,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                     _schemaLoop.Push(additionalProps);
                 }
             }
+            
         }
 
         private static JsonSchema ResolveOneOfSchema(ref JsonSchema schema)
@@ -254,6 +255,14 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         private static JsonSchema CopySchema(JsonSchema schema, JsonSchema newSchema)
         {
             var schemaBuilder = new JsonSchemaBuilder();
+            var keywords = schema.Keywords;
+            if (keywords != null)
+            {
+                foreach (var keyword in keywords)
+                {
+                    schemaBuilder.Add(keyword);
+                }
+            }
 
             if (schema.GetTitle() == null && newSchema.GetTitle() is { } title)
             {
