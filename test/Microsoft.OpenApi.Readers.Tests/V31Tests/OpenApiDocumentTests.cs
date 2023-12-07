@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -71,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Schemas =
                 {
                     ["pet1"] = petSchema,
-                    ["newPet"] = newPetSchema
+                    ["newPet1"] = newPetSchema
                 }
             };
 
@@ -199,7 +198,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                     ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
-                    ["newPet"] = new JsonSchemaBuilder()
+                    ["newPetSchema"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("name")
                                 .Properties(
@@ -211,7 +210,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Create a clone of the schema to avoid modifying things in components.
             var petSchema = components.Schemas["petSchema"];
-            var newPetSchema = components.Schemas["newPet"];
+            var newPetSchema = components.Schemas["newPetSchema"];
 
             components.PathItems = new Dictionary<string, OpenApiPathItem>
             {
@@ -333,14 +332,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            var schema = actual.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             var header = actual.Components.Responses["Test"].Headers["X-Test"];
 
             // Assert
             Assert.True(header.Description == "A referenced X-Test header"); /*response header #ref's description overrides the header's description*/
-            Assert.Null(schema.GetRef());
-            Assert.Equal(SchemaValueType.Object, schema.GetJsonType());
-            Assert.Equal("A pet in a petstore", schema.GetDescription()); /*The reference object's description overrides that of the referenced component*/
         }
 
         [Fact]

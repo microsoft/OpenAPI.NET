@@ -249,7 +249,7 @@ get:
                                     new JsonSchemaBuilder()
                                         .Type(SchemaValueType.Object)
                                         .Required("rootCause")
-                                            .Properties(("rootCause", new JsonSchemaBuilder().Type(SchemaValueType.String))))
+                                        .Properties(("rootCause", new JsonSchemaBuilder().Type(SchemaValueType.String))))
                     }
                 },
                 options => options.Excluding(m => m.Name == "HostDocument")

@@ -44,7 +44,7 @@ webhooks:
           content:
             'application/json':
               schema:
-                "$ref": '#/components/schemas/newPet'
+                "$ref": '#/components/schemas/newPet1'
         responses:
           "200":
             description: Return a 200 status to indicate that the data was received successfully
@@ -67,7 +67,7 @@ components:
               type: string
             tag:
               type: string
-    newPet:
+    newPet1:
         type: object
         required:
         - name
