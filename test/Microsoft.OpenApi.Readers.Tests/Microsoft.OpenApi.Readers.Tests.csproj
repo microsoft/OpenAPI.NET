@@ -22,7 +22,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="SharpYaml" Version="2.1.0" />
         <PackageReference Include="xunit" Version="2.6.2" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" PrivateAssets="all" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.5" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
