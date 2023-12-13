@@ -577,7 +577,10 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, schema.GetExternalDocs(), (w, s) => JsonSerializer.Serialize(s));
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, schema.GetExample(), (w, e) => w.WriteAny(new OpenApiAny(e)));
+            writer.WriteOptionalObject(OpenApiConstants.Example, schema.GetExample(), (w, s) => w.WriteAny(new OpenApiAny(s)));
+
+            // examples
+            writer.WriteOptionalCollection(OpenApiConstants.Examples, schema.GetExamples(), (n, e) => n.WriteAny(new OpenApiAny(e)));
 
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, schema.GetDeprecated(), false);
