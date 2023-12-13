@@ -59,12 +59,9 @@ namespace Microsoft.OpenApi.Readers.V2
                 "definitions",
                 (o, n) =>
                 {
-                    if (o.Components == null)
-                    {
-                        o.Components = new();
-                    }
-
-                o.Components.Schemas = n.CreateJsonSchemaMapWithReference(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi2_0);                }
+                    o.Components ??= new();
+                    o.Components.Schemas = n.CreateJsonSchemaMapWithReference(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi2_0);
+                }
             },
             {
                 "parameters",

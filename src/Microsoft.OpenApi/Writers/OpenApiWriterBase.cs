@@ -594,15 +594,9 @@ namespace Microsoft.OpenApi.Writers
         /// <inheritdoc />
         public void WriteJsonSchemaReference(IOpenApiWriter writer, Uri referenceUri, OpenApiSpecVersion version)
         {
-            var reference = String.Empty;
-            if (version.Equals(OpenApiSpecVersion.OpenApi2_0))
-            {
-                reference = referenceUri.OriginalString.Replace("components/schemas", "definitions");
-            }
-            else
-            {
-                reference = referenceUri.OriginalString;
-            }
+            var reference = version.Equals(OpenApiSpecVersion.OpenApi2_0)
+                ? referenceUri.OriginalString.Replace("components/schemas", "definitions")
+                : referenceUri.OriginalString;
 
             WriteStartObject();
             this.WriteProperty(OpenApiConstants.DollarRef, reference);
