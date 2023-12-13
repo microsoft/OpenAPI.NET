@@ -18,11 +18,6 @@ namespace Microsoft.OpenApi.Helpers
                                                     IDictionary<string, IOpenApiExtension> extensions,
                                                     OpenApiSpecVersion version)
         {
-            if (writer == null)
-            {
-                Utils.CheckArgumentNull(writer);
-            }
-
             // type
             if (schema.GetJsonType() != null)
             {
