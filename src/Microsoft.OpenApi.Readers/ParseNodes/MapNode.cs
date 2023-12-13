@@ -163,12 +163,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                                 builder.Add(keyword);
                             }
                             entry.value = builder.Build();
-                            //entry.value.GetRef() = new OpenApiReference()
-                            //{
-                            //    Type = referenceType,
-                            //    Id = entry.key
-                            //};
-
                         }
                     }
                     finally
