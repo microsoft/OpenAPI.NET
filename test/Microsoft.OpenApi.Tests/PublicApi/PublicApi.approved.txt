@@ -1546,7 +1546,7 @@ namespace Microsoft.OpenApi.Writers
         public abstract void WriteEndObject();
         public virtual void WriteIndentation() { }
         public void WriteJsonSchema(Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version) { }
-        public void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Uri referenceUri, Microsoft.OpenApi.OpenApiSpecVersion version) { }
+        public void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Uri reference, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public void WriteJsonSchemaWithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public abstract void WriteNull();
         public abstract void WritePropertyName(string name);
