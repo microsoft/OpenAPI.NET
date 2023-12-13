@@ -206,9 +206,12 @@ namespace Microsoft.OpenApi.Services
             }
 
             var builder = new JsonSchemaBuilder();
-            foreach (var keyword in schema?.Keywords)
+            if (schema?.Keywords is { } keywords)
             {
-                builder.Add(keyword);
+                foreach (var keyword in schema?.Keywords)
+                {
+                    builder.Add(keyword);
+                }
             }
 
             ResolveJsonSchema(schema.GetItems(), r => builder.Items(r));
