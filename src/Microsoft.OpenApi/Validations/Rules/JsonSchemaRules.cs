@@ -39,7 +39,8 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (jsonSchema.GetExamples() is { } examples)
                     {
-                        for (int i = 0; i < jsonSchema.GetExamples().Count(); i++)
+                        var examplesCount = examples.Count();
+                        for (int i = 0; i < examplesCount; i++)
                         {
                             context.Enter(i.ToString());
                             RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), jsonSchema.GetExamples().ElementAt(i), jsonSchema);
