@@ -236,15 +236,14 @@ namespace Microsoft.OpenApi.Readers.V31
             {
                 "example", (o, n) =>
                 {
-                    if(n is ListNode)
+                        o.Example(n.CreateAny().Node);
+                }
+            },
+            {
+                "examples", (o, n) =>
                     {
                         o.Examples(n.CreateSimpleList(s => (JsonNode)s.GetScalarValue()));
                     }
-                    else
-                    {
-                        o.Example(n.CreateAny().Node);
-                    }
-                }
             },
             {
                 "deprecated", (o, n) =>
