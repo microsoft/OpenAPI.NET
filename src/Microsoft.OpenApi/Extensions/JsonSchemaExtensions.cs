@@ -84,6 +84,6 @@ namespace Microsoft.OpenApi.Extensions
         public static IDictionary<string, IOpenApiExtension> GetExtensions(this JsonSchema schema)
         {
             return schema.TryGetKeyword<ExtensionsKeyword>(ExtensionsKeyword.Name, out var k) ? k.Extensions! : null;
-        }        
+        }
     }
 }

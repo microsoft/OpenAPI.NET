@@ -56,8 +56,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             Assert.NotNull(result);
             Assert.NotNull(result.OpenApiDocument.Workspace);
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoReference.yaml"));
-            result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new( new OpenApiException("[File: ./TodoReference.yaml] Invalid Reference identifier 'object-not-existing'.")) });
+            result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> 
+            {
+                new OpenApiError("", "[File: ./TodoReference.yaml] Paths is a REQUIRED field at #/"),
+                new(new OpenApiException("[File: ./TodoReference.yaml] Invalid Reference identifier 'object-not-existing'.")) 
+            });
         }
     }
 

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -291,7 +291,7 @@ namespace Microsoft.OpenApi.Models
             if (Schema != null)
             {
                 writer.WritePropertyName(OpenApiConstants.Schema);
-                writer.WriteJsonSchema(Schema);
+                writer.WriteJsonSchema(Schema, version);
             }
 
             // example
@@ -371,7 +371,7 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (this is OpenApiBodyParameter)
             {
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteJsonSchema(s));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteJsonSchema(s, OpenApiSpecVersion.OpenApi2_0));
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
@@ -400,7 +400,7 @@ namespace Microsoft.OpenApi.Models
                 // multipleOf
                 if (Schema != null)
                 {
-                    SchemaSerializerHelper.WriteAsItemsProperties(Schema, writer, Extensions);
+                    SchemaSerializerHelper.WriteAsItemsProperties(Schema, writer, Extensions, OpenApiSpecVersion.OpenApi2_0);
                     var extensions = Schema.GetExtensions();
                     if (extensions != null)
                     {

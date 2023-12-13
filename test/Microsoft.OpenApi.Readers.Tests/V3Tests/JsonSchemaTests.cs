@@ -224,20 +224,22 @@ get:
                     }
                 });
 
-            components.Should().BeEquivalentTo(
-                new OpenApiComponents
-                {
-                    Schemas =
+            var expectedComponents = new OpenApiComponents
+            {
+                Schemas =
                     {
                             ["ErrorModel"] = new JsonSchemaBuilder()
+                                .Ref("#/components/schemas/ErrorModel")
                                 .Type(SchemaValueType.Object)
                                 .Required("message", "code")
                                 .Properties(
                                     ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                     ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600))),
                             ["ExtendedErrorModel"] = new JsonSchemaBuilder()
+                                .Ref("#/components/schemas/ExtendedErrorModel")
                                 .AllOf(
                                     new JsonSchemaBuilder()
+                                        .Ref("#/components/schemas/ErrorModel")
                                         .Type(SchemaValueType.Object)
                                         .Properties(
                                             ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600)),
@@ -246,11 +248,11 @@ get:
                                     new JsonSchemaBuilder()
                                         .Type(SchemaValueType.Object)
                                         .Required("rootCause")
-                                            .Properties(("rootCause", new JsonSchemaBuilder().Type(SchemaValueType.String))))
+                                        .Properties(("rootCause", new JsonSchemaBuilder().Type(SchemaValueType.String))))
                     }
-                },
-                options => options.Excluding(m => m.Name == "HostDocument")
-                                    .IgnoringCyclicReferences());
+            };
+
+            components.Should().BeEquivalentTo(expectedComponents);
         }
 
         [Fact]
@@ -280,6 +282,7 @@ get:
                         .Description("A representation of a cat")
                         .AllOf(
                             new JsonSchemaBuilder()
+                                .Ref("#/components/schemas/Pet1")
                                 .Type(SchemaValueType.Object)
                                 .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
                                 .Properties(
@@ -306,6 +309,7 @@ get:
                         .Description("A representation of a dog")
                         .AllOf(
                             new JsonSchemaBuilder()
+                                .Ref("#/components/schemas/Pet1")
                                 .Type(SchemaValueType.Object)
                                 .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
                                 .Properties(

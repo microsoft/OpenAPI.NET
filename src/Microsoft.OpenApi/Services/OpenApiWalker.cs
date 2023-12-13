@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Schemas)
                     {
-                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
+                        Walk(item.Key, () => components.Schemas[item.Key] = Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -498,8 +498,7 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(pathItem);
 
-            // The path may be a reference
-            if (pathItem != null && !ProcessAsReference(pathItem))
+            if (pathItem != null)
             {
                 Walk(OpenApiConstants.Parameters, () => Walk(pathItem.Parameters));
                 Walk(pathItem.Operations);
@@ -850,9 +849,20 @@ namespace Microsoft.OpenApi.Services
             {
                 Walk("properties", () =>
                 {
+                    var props = new Dictionary<string, JsonSchema>();
+                    var builder = new JsonSchemaBuilder();
+                    foreach(var keyword in schema.Keywords)
+                    {
+                        builder.Add(keyword);
+                    }
+
                     foreach (var item in schema.GetProperties())
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        var key = item.Key;
+                        JsonSchema newSchema = null;
+                        Walk(key, () => newSchema = Walk(item.Value));
+                        props.Add(key, newSchema);
+                        schema = builder.Properties(props);
                     }
                 });
             }
@@ -1158,7 +1168,8 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private bool ProcessAsReference(IOpenApiReferenceable referenceable, bool isComponent = false)
         {
-            var isReference = referenceable.Reference != null && !isComponent;
+            var isReference = referenceable.Reference != null && 
+                              (!isComponent || referenceable.UnresolvedReference);
             if (isReference)
             {
                 Walk(referenceable);

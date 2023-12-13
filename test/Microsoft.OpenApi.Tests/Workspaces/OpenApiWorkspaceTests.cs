@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -72,13 +72,14 @@ namespace Microsoft.OpenApi.Tests
         [Fact]
         public void OpenApiWorkspacesCanResolveExternalReferences()
         {
+            var refUri = new Uri("https://everything.json/common#/components/schemas/test");
             var workspace = new OpenApiWorkspace();
-            var doc = CreateCommonDocument();
+            var doc = CreateCommonDocument(refUri);
             var location = "common";
             
             workspace.AddDocument(location, doc);
 
-            var schema = workspace.ResolveJsonSchemaReference(new Uri("https://everything.json/common#/components/schemas/test"));
+            var schema = workspace.ResolveJsonSchemaReference(refUri);
             
             Assert.NotNull(schema);
             Assert.Equal("The referenced one", schema.GetDescription());
@@ -90,6 +91,7 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
 
             var doc = new OpenApiDocument();
+            var reference = "#/components/schemas/test";
             doc.CreatePathItem("/", p =>
             {
                 p.Description = "Consumer";
@@ -98,14 +100,15 @@ namespace Microsoft.OpenApi.Tests
                   {
                       re.Description = "Success";
                       re.CreateContent("application/json", co =>
-                          co.Schema = new JsonSchemaBuilder().Ref("test").Build()                      
+                          co.Schema = new JsonSchemaBuilder().Ref(reference).Build()                      
                       );
                   })
                 );
             });
 
+            var refUri = new Uri("https://registry" + reference.Split('#').LastOrDefault());
             workspace.AddDocument("root", doc);
-            workspace.AddDocument("common", CreateCommonDocument());
+            workspace.AddDocument("common", CreateCommonDocument(refUri));
             var errors = doc.ResolveReferences();
             Assert.Empty(errors);
 
@@ -178,9 +181,9 @@ namespace Microsoft.OpenApi.Tests
         }
 
         // Test artifacts
-        private static OpenApiDocument CreateCommonDocument()
+        private static OpenApiDocument CreateCommonDocument(Uri refUri)
         {
-            return new()
+            var doc =  new OpenApiDocument()
             {
                 Components = new()
                 {
@@ -189,6 +192,13 @@ namespace Microsoft.OpenApi.Tests
                     }
                 }
             };
+
+            foreach(var schema in doc.Components.Schemas)
+            {
+                SchemaRegistry.Global.Register(refUri, schema.Value);
+            }
+
+            return doc;
         }
     }
 

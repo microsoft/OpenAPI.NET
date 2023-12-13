@@ -61,21 +61,10 @@ paths: # The available paths and operations for the API
                 properties:
                   message: # A property for the confirmation message
                     type: string
-                    example: File uploaded successfully
+                    examples:
+                      - The file was uploaded successfully
 components: # Reusable components for the API
   schemas: # JSON Schema definitions for the API
-    User: # A schema for a user object
-      $id: http://example.com/schemas/user # The identifier for the schema
-      type: object
-      properties:
-        name: # A property for the user name
-          type: string
-          default: "John Doe" # The default value for the user name
-        age: # A property for the user age
-          type: integer
-          minimum: 0
-          default: 18 # The default value for the user age
-      unevaluatedProperties: false # No additional properties are allowed
     Pet: # A schema for a pet object
       type: object
       required:
