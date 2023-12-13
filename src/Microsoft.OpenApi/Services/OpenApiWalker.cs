@@ -1168,7 +1168,8 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private bool ProcessAsReference(IOpenApiReferenceable referenceable, bool isComponent = false)
         {
-            var isReference = referenceable.Reference != null && !isComponent;
+            var isReference = referenceable.Reference != null && 
+                              (!isComponent || referenceable.UnresolvedReference);
             if (isReference)
             {
                 Walk(referenceable);

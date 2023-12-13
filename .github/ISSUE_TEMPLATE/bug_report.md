@@ -10,8 +10,8 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the current behavior:
+**OpenApi File To Reproduce**
+Add the OpenApi file you're using or a link to it as well as the steps to reproduce the current behavior.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
