@@ -592,14 +592,14 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <inheritdoc />
-        public void WriteJsonSchemaReference(IOpenApiWriter writer, Uri referenceUri, OpenApiSpecVersion version)
+        public void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference, OpenApiSpecVersion version)
         {
-            var reference = version.Equals(OpenApiSpecVersion.OpenApi2_0)
-                ? referenceUri.OriginalString.Replace("components/schemas", "definitions")
-                : referenceUri.OriginalString;
+            var referenceItem = version.Equals(OpenApiSpecVersion.OpenApi2_0)
+                ? reference.OriginalString.Replace("components/schemas", "definitions")
+                : reference.OriginalString;
 
             WriteStartObject();
-            this.WriteProperty(OpenApiConstants.DollarRef, reference);
+            this.WriteProperty(OpenApiConstants.DollarRef, referenceItem);
             WriteEndObject();
         }
     }

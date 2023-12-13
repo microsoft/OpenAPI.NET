@@ -18,6 +18,7 @@ namespace Microsoft.OpenApi.Helpers
                                                     IDictionary<string, IOpenApiExtension> extensions,
                                                     OpenApiSpecVersion version)
         {
+            Utils.CheckArgumentNull(writer);
             // type
             if (schema.GetJsonType() != null)
             {
