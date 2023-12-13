@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     // examples
                     context.Enter("examples");
 
-                    if (jsonSchema.GetExamples() != null)
+                    if (jsonSchema.GetExamples() is { } examples)
                     {
                         for (int i = 0; i < jsonSchema.GetExamples().Count(); i++)
                         {
