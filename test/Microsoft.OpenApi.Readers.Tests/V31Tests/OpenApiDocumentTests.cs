@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
@@ -69,8 +69,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             {
                 Schemas =
                 {
-                    ["pet1"] = petSchema,
-                    ["newPet1"] = newPetSchema
+                    ["petSchema"] = petSchema,
+                    ["newPetSchema"] = newPetSchema
                 }
             };
 

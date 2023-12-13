@@ -224,10 +224,9 @@ get:
                     }
                 });
 
-            components.Should().BeEquivalentTo(
-                new OpenApiComponents
-                {
-                    Schemas =
+            var expectedComponents = new OpenApiComponents
+            {
+                Schemas =
                     {
                             ["ErrorModel"] = new JsonSchemaBuilder()
                                 .Ref("#/components/schemas/ErrorModel")
@@ -240,7 +239,7 @@ get:
                                 .Ref("#/components/schemas/ExtendedErrorModel")
                                 .AllOf(
                                     new JsonSchemaBuilder()
-                                        .Ref("#/components/schemas/ExtendedErrorModel")
+                                        .Ref("#/components/schemas/ErrorModel")
                                         .Type(SchemaValueType.Object)
                                         .Properties(
                                             ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600)),
@@ -251,9 +250,9 @@ get:
                                         .Required("rootCause")
                                         .Properties(("rootCause", new JsonSchemaBuilder().Type(SchemaValueType.String))))
                     }
-                },
-                options => options.Excluding(m => m.Name == "HostDocument")
-                                    .IgnoringCyclicReferences());
+            };
+
+            components.Should().BeEquivalentTo(expectedComponents);
         }
 
         [Fact]

@@ -31,12 +31,12 @@ webhooks:
                    schema:
                        type: array
                        items:
-                         "$ref": '#/components/schemas/pet1'
+                         "$ref": '#/components/schemas/petSchema'
                application/xml:
                    schema:
                        type: array
                        items:
-                         "$ref": '#/components/schemas/pet1'
+                         "$ref": '#/components/schemas/petSchema'
       post:
         requestBody:
           description: Information about a new pet in the system
@@ -44,17 +44,17 @@ webhooks:
           content:
             'application/json':
               schema:
-                "$ref": '#/components/schemas/newPet1'
+                "$ref": '#/components/schemas/newPetSchema'
         responses:
           "200":
             description: Return a 200 status to indicate that the data was received successfully
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/pet1'
+                  $ref: '#/components/schemas/petSchema'
 components:
   schemas:
-    pet1:
+    petSchema:
         type: object
         required:
         - id
@@ -67,7 +67,7 @@ components:
               type: string
             tag:
               type: string
-    newPet1:
+    newPetSchema:
         type: object
         required:
         - name

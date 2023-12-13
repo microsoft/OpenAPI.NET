@@ -223,8 +223,8 @@ paths: {}",
                 {
                     Schemas = new Dictionary<string, JsonSchema>
                     {
-                        ["pet"] = new JsonSchemaBuilder()
-                                    .Ref("#/components/schemas/pet")
+                        ["pet1"] = new JsonSchemaBuilder()
+                                    .Ref("#/components/schemas/pet1")
                                     .Type(SchemaValueType.Object)
                                     .Required("id", "name")
                                     .Properties(
@@ -249,7 +249,7 @@ paths: {}",
                     }
                 };
 
-                var petSchema = components.Schemas["pet"];
+                var petSchema = components.Schemas["pet1"];
 
                 var newPetSchema = components.Schemas["newPet"];
 
