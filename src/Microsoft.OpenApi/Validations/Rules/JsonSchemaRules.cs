@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                         for (int i = 0; i < examplesCount; i++)
                         {
                             context.Enter(i.ToString());
-                            RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), jsonSchema.GetExamples().ElementAt(i), jsonSchema);
+                            RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), examples.ElementAt(i), jsonSchema);
                             context.Exit();
                         }
                         
