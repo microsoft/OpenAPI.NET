@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Services
             var builder = new JsonSchemaBuilder();
             if (schema?.Keywords is { } keywords)
             {
-                foreach (var keyword in schema?.Keywords)
+                foreach (var keyword in keywords)
                 {
                     builder.Add(keyword);
                 }
