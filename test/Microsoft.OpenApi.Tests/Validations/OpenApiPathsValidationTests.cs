@@ -62,5 +62,21 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             errors.Should().BeEmpty();
         }
+        [Fact]
+        public void ValidatePathsAreUniqueConsidersMultiParametersAsIdentical()
+        {
+            // Arrange
+            var paths = new OpenApiPaths
+            {
+                {"/drives/{drive-id}/items/{driveItem-id}/workbook/worksheets/{workbookWorksheet-id}/charts/{workbookChart-id}/image(width={width},height={height})",new OpenApiPathItem() },
+                {"/drives/{drive-id}/items/{driveItem-id}/workbook/worksheets/{workbookWorksheet-id}/charts/{workbookChart-id}/image(width={width},height={size})",new OpenApiPathItem() },
+            };
+
+            // Act
+            var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
+
+            // Assert
+            errors.Should().NotBeEmpty();
+        }
     }
 }
