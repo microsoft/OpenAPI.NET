@@ -21,7 +21,7 @@ components:
               type: string
             tag:
               type: string
-    newPet:
+    newPetSchema:
         type: object
         required:
         - name
@@ -75,7 +75,7 @@ components:
             content:
               'application/json':
                  schema:
-                   "$ref": '#/components/schemas/newPet'
+                   "$ref": '#/components/schemas/newPetSchema'
           responses:
             "200":
               description: Return a 200 status to indicate that the data was received successfully

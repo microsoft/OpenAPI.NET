@@ -13,13 +13,12 @@ namespace Microsoft.OpenApi.Helpers
 {
     internal static class SchemaSerializerHelper
     {
-        internal static void WriteAsItemsProperties(JsonSchema schema, IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions)
+        internal static void WriteAsItemsProperties(JsonSchema schema,
+                                                    IOpenApiWriter writer,
+                                                    IDictionary<string, IOpenApiExtension> extensions,
+                                                    OpenApiSpecVersion version)
         {
-            if (writer == null)
-            {
-                Utils.CheckArgumentNull(writer);
-            }
-
+            Utils.CheckArgumentNull(writer);
             // type
             if (schema.GetJsonType() != null)
             {
@@ -39,7 +38,7 @@ namespace Microsoft.OpenApi.Helpers
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, schema.GetItems(),
-                (w, s) => w.WriteJsonSchema(s));
+                (w, s) => w.WriteJsonSchema(s, version));
 
             // collectionFormat
             // We need information from style in parameter to populate this.
@@ -96,7 +95,7 @@ namespace Microsoft.OpenApi.Helpers
             // extensions
             writer.WriteExtensions(extensions, OpenApiSpecVersion.OpenApi2_0);
         }
-        
+
         private static string RetrieveFormatFromNestedSchema(IReadOnlyCollection<JsonSchema> schema)
         {
             if (schema != null)

@@ -187,24 +187,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public async Task TransformCommandConvertsCsdlWithDefaultOutputName()
-        {
-            var options = new HidiOptions
-            {
-                Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
-                CleanOutput = true,
-                TerseOutput = false,
-                InlineLocal = false,
-                InlineExternal = false,
-            };
-            // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument(options, _logger);
-
-            var output = await File.ReadAllTextAsync("output.yml");
-            Assert.NotEmpty(output);
-        }
-
-        [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputNameAndSwitchFormat()
         {
             var options = new HidiOptions

@@ -210,6 +210,18 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     Headers = new Dictionary<string, OpenApiHeader>
                     {
                         ["test-header"] = testHeader
+                    },
+                    SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+                    {
+                        ["test-secScheme"] = new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "reference-to-scheme",
+                                Type = ReferenceType.SecurityScheme
+                            },
+                            UnresolvedReference = true
+                        }
                     }
                 }
             };
@@ -224,6 +236,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "referenceAt: #/components/schemas/derived",
                 "referenceAt: #/components/schemas/derived/anyOf",
                 "referenceAt: #/components/schemas/base",
+                "referenceAt: #/components/securitySchemes/test-secScheme",
                 "referenceAt: #/components/headers/test-header/schema"
             });
         }

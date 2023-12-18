@@ -1,9 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -62,6 +63,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             ReferenceType referenceType,
             Func<MapNode, T> map)
             where T : class, IOpenApiReferenceable
+        {
+            throw new OpenApiReaderException("Cannot create map from this reference.", Context);
+        }
+
+        public virtual Dictionary<string, JsonSchema> CreateJsonSchemaMapWithReference(
+            ReferenceType referenceType,
+            Func<MapNode, JsonSchema> map,
+            OpenApiSpecVersion version)
         {
             throw new OpenApiReaderException("Cannot create map from this reference.", Context);
         }

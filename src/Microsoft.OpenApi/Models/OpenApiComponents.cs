@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Models
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                RenderComponents(writer);
+                RenderComponents(writer, OpenApiSpecVersion.OpenApi3_1);
                 return;
             }
 
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Models
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                RenderComponents(writer);
+                RenderComponents(writer, OpenApiSpecVersion.OpenApi3_0);
                 return;
             }
 
@@ -177,11 +177,11 @@ namespace Microsoft.OpenApi.Models
                     if (reference != null &&
                         reference.OriginalString.Split('/').Last().Equals(key))
                     {
-                        w.WriteJsonSchemaWithoutReference(w, s);
+                        w.WriteJsonSchemaWithoutReference(w, s, version);
                     }
                     else
                     {
-                        w.WriteJsonSchema(s);
+                        w.WriteJsonSchema(s, version);
                     }
                 });
 
@@ -335,7 +335,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private void RenderComponents(IOpenApiWriter writer)
+        private void RenderComponents(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             var loops = writer.GetSettings().LoopDetector.Loops;
             writer.WriteStartObject();
@@ -344,7 +344,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalMap(
                    OpenApiConstants.Schemas,
                    Schemas,
-                   static (w, key, s) => { w.WriteJsonSchema(s); });
+                   (w, key, s) => { w.WriteJsonSchema(s, version); });
             }
             writer.WriteEndObject();
         }

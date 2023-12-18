@@ -13,17 +13,16 @@ paths:
             application/json:
                 schema:
                   "$ref": '#/components/schemas/pet'
-                  summary: A pet
-                  description: A pet in a petstore
 components:
   headers:
     X-Test:
       description: Test
+      summary: An X-Test header
       schema:
         type: string
   responses:
     Test:
-      description: Test Repsonse
+      description: Test Response
       headers:
         X-Test:
           $ref: '#/components/headers/X-Test'

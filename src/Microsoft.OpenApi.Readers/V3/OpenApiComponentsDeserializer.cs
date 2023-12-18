@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new()
         {
-            {"schemas", (o, n) => o.Schemas = n.CreateMap(LoadSchema)},
+            {"schemas", (o, n) => o.Schemas =  n.CreateJsonSchemaMapWithReference(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi3_0)},
             {"responses", (o, n) => o.Responses = n.CreateMapWithReference(ReferenceType.Response, LoadResponse)},
             {"parameters", (o, n) => o.Parameters = n.CreateMapWithReference(ReferenceType.Parameter, LoadParameter)},
             {"examples", (o, n) => o.Examples = n.CreateMapWithReference(ReferenceType.Example, LoadExample)},

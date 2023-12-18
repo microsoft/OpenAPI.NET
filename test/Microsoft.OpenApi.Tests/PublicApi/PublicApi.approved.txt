@@ -1482,9 +1482,9 @@ namespace Microsoft.OpenApi.Writers
         void Flush();
         void WriteEndArray();
         void WriteEndObject();
-        void WriteJsonSchema(Json.Schema.JsonSchema schema);
-        void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Uri reference);
-        void WriteJsonSchemaWithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Json.Schema.JsonSchema schema);
+        void WriteJsonSchema(Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version);
+        void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Uri reference, Microsoft.OpenApi.OpenApiSpecVersion version);
+        void WriteJsonSchemaWithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version);
         void WriteNull();
         void WritePropertyName(string name);
         void WriteRaw(string value);
@@ -1546,9 +1546,9 @@ namespace Microsoft.OpenApi.Writers
         public abstract void WriteEndArray();
         public abstract void WriteEndObject();
         public virtual void WriteIndentation() { }
-        public void WriteJsonSchema(Json.Schema.JsonSchema schema) { }
-        public void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Uri reference) { }
-        public void WriteJsonSchemaWithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Json.Schema.JsonSchema schema) { }
+        public void WriteJsonSchema(Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version) { }
+        public void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Uri reference, Microsoft.OpenApi.OpenApiSpecVersion version) { }
+        public void WriteJsonSchemaWithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public abstract void WriteNull();
         public abstract void WritePropertyName(string name);
         public abstract void WriteRaw(string value);

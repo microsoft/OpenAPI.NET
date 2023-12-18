@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -77,14 +77,16 @@ namespace Microsoft.OpenApi.Writers
         /// Write the JsonSchema object
         /// </summary>
         /// <param name="schema"></param>
-        void WriteJsonSchema(JsonSchema schema);
+        /// <param name="version"></param>
+        void WriteJsonSchema(JsonSchema schema, OpenApiSpecVersion version);
 
         /// <summary>
         /// Write the JsonSchema object
         /// </summary>
         /// <param name="writer">The IOpenApiWriter object</param>
         /// <param name="schema">The JsonSchema object</param>
-        void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema);
+        /// <param name="version"></param>
+        void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema, OpenApiSpecVersion version);
 
         /// <summary>
         /// Flush the writer.
@@ -96,14 +98,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="reference"></param>
-        void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference);
-
-        /// <summary>
-        /// Writes out existing examples in a mediatype object
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="example"></param>
         /// <param name="version"></param>
-        void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version);
+        void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference, OpenApiSpecVersion version);
     }
 }

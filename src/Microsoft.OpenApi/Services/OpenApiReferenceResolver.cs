@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Services
         {
             ResolveMap(links);
         }
-        
+
         /// <summary>
         /// Resolve all references used in a schem
         /// </summary>
@@ -200,17 +200,20 @@ namespace Microsoft.OpenApi.Services
             var description = schema.GetDescription();
             var summary = schema.GetSummary();
 
-            if (reference != null)
+            if (schema.Keywords.Count.Equals(1) && reference != null)
             {
                 schema = ResolveJsonSchemaReference(reference, description, summary);
             }
-            
+
             var builder = new JsonSchemaBuilder();
-            foreach (var keyword in schema.Keywords)
+            if (schema?.Keywords is { } keywords)
             {
-                builder.Add(keyword);
+                foreach (var keyword in keywords)
+                {
+                    builder.Add(keyword);
+                }
             }
-            
+
             ResolveJsonSchema(schema.GetItems(), r => builder.Items(r));
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetOneOf(), r => builder.OneOf(r));
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAllOf(), r => builder.AllOf(r));
@@ -277,7 +280,8 @@ namespace Microsoft.OpenApi.Services
             }
             else 
             {
-                return null;
+                var referenceId = reference.OriginalString.Split('/').LastOrDefault();
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, referenceId));
             }
         }
 
@@ -349,7 +353,7 @@ namespace Microsoft.OpenApi.Services
             for (int i = 0; i < list.Count; i++)
             {
                 var entity = list[i];
-                var reference = entity.GetRef();
+                var reference = entity?.GetRef();
                 if (reference != null)
                 {
                     list[i] = ResolveJsonSchemaReference(reference);

@@ -3,15 +3,7 @@
   "content": {
     "application/json": {
       "schema": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          }
-        }
+        "$ref": "#/components/schemas/UserSchema"
       }
     }
   }
