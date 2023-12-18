@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     }
                 });
 
-        private static readonly Regex regexPath = new Regex("\\{([^/]+)\\}", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
+        private static readonly Regex regexPath = new Regex("\\{([^/}]+)\\}", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
         /// <summary>
         /// A relative path to an individual endpoint. The field name MUST begin with a slash.
         /// </summary>
