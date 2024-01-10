@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Services
             {
                 if (PathItems.ContainsKey(label))
                 {
-                    throw new ArgumentException("A duplicate label already exists for this node.", nameof(label));
+                    throw new ArgumentException($"A duplicate label already exists for this node: {label}", nameof(label));
                 }
 
                 Path = currentPath;
