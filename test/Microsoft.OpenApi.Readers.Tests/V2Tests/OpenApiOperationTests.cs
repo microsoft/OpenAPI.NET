@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Tests;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -292,6 +293,57 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Root)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Parent)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Root));
+        }
+
+        [Fact]
+        public void ParseV2ResponseWithExamplesExtensionWorks()
+        {            
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "opWithResponseExamplesExtension.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            var expected = @"summary: Get all pets
+responses:
+  '200':
+    description: Successful response
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              age:
+                type: integer
+        examples:
+          example1:
+            summary: Example - List of Pets
+            value:
+              - name: Buddy
+                age: 2
+              - name: Whiskers
+                age: 1
+          example2:
+            summary: Example - Playful Cat
+            value:
+              name: Whiskers
+              age: 1";
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+            //Assert.Equal(expected, actual);
         }
     }
 }
