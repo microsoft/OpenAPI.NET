@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -100,5 +100,13 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="reference"></param>
         /// <param name="version"></param>
         void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference, OpenApiSpecVersion version);
+
+        /// <summary>
+        /// Writes out existing examples in a mediatype object
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="example"></param>
+        /// <param name="version"></param>
+        void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version);
     }
 }
