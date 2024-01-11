@@ -226,7 +226,7 @@ namespace Microsoft.OpenApi.Models
 
                     if (Content.Values.Any(m => m.Examples != null && m.Examples.Any()))
                     {
-                        writer.WritePropertyName("x-examples");
+                        writer.WritePropertyName(OpenApiConstants.ExamplesExtension);
                         writer.WriteStartObject();
 
                         foreach (var example in Content
