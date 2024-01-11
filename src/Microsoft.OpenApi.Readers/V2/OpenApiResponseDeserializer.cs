@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith("x-") && !s.Equals("x-examples"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-") && !s.Equals("x-examples", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
