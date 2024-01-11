@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Readers.V3;
 using Microsoft.OpenApi.Tests;
 using Xunit;
 
@@ -484,7 +485,56 @@ responses:
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
-            //Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void LoadV3ExamplesInResponseAsExtensionsWorks()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "v3OperationWithResponseExamples.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV3Deserializer.LoadOperation(node);
+            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            var expected = @"summary: Get all pets
+produces:
+  - application/json
+responses:
+  '200':
+    description: Successful response
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          age:
+            type: integer
+    x-examples:
+      example1:
+        summary: Example - List of Pets
+        value:
+          - name: Buddy
+            age: 2
+          - name: Whiskers
+            age: 1
+      example2:
+        summary: Example - Playful Cat
+        value:
+          name: Whiskers
+          age: 1";
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
     }
 }
