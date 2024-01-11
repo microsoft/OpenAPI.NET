@@ -229,16 +229,12 @@ namespace Microsoft.OpenApi.Models
                         writer.WritePropertyName("x-examples");
                         writer.WriteStartObject();
 
-                        foreach (var examples in Content.Select(mediaTypePair => mediaTypePair.Value.Examples))
+                        foreach (var example in Content
+                            .Where(mediaTypePair => mediaTypePair.Value.Examples != null && mediaTypePair.Value.Examples.Any())
+                            .SelectMany(mediaTypePair => mediaTypePair.Value.Examples))
                         {
-                            if (examples != null && examples.Any())
-                            {
-                                foreach (var example in examples)
-                                {
-                                    writer.WritePropertyName(example.Key);
-                                    writer.WriteV2Examples(writer, example.Value, OpenApiSpecVersion.OpenApi2_0);
-                                }
-                            }
+                            writer.WritePropertyName(example.Key);
+                            writer.WriteV2Examples(writer, example.Value, OpenApiSpecVersion.OpenApi2_0);
                         }
 
                         writer.WriteEndObject();
