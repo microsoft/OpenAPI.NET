@@ -229,9 +229,8 @@ namespace Microsoft.OpenApi.Models
                         writer.WritePropertyName("x-examples");
                         writer.WriteStartObject();
 
-                        foreach (var mediaTypePair in Content)
+                        foreach (var examples in Content.Select(mediaTypePair => mediaTypePair.Value.Examples))
                         {
-                            var examples = mediaTypePair.Value.Examples;
                             if (examples != null && examples.Any())
                             {
                                 foreach (var example in examples)
