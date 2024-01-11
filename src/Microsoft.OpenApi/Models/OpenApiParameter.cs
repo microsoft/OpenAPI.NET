@@ -21,7 +21,6 @@ namespace Microsoft.OpenApi.Models
         private bool? _explode;
         private ParameterStyle? _style;
         private JsonSchema _schema;
-        private OpenApiAny _example;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -132,11 +131,7 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
         /// a string value can contain the example with escaping where necessary.
         /// </summary>
-        public virtual OpenApiAny Example 
-        {
-            get => _example;
-            set => _example = value;
-        }
+        public virtual OpenApiAny Example { get; set; }
 
         /// <summary>
         /// A map containing the representations for the parameter.
