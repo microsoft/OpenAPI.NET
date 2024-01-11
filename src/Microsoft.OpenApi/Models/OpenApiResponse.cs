@@ -118,14 +118,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiResponse</returns>
         public OpenApiResponse GetEffective(OpenApiDocument doc)
         {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiResponse>(Reference);
-            }
-            else
-            {
-                return this;
-            }
+            return Reference != null ? doc.ResolveReferenceTo<OpenApiResponse>(Reference) : this;
         }
 
         /// <summary>

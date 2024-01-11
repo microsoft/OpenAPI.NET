@@ -613,7 +613,13 @@ namespace Microsoft.OpenApi.Models
             }
         }
 
-        ///
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pointer"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
         {
             throw new NotImplementedException();
