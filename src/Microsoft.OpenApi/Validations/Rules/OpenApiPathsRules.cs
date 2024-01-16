@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
@@ -36,7 +35,6 @@ namespace Microsoft.OpenApi.Validations.Rules
                     }
                 });
 
-        private static readonly Regex regexPath = new Regex("\\{([^/]+)\\}", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
         /// <summary>
         /// A relative path to an individual endpoint. The field name MUST begin with a slash.
         /// </summary>
@@ -50,7 +48,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         context.Enter(path);
 
-                        var pathSignature = regexPath.Replace(path, "{}");
+                        var pathSignature = GetPathSignature(path);
                         
                         if (!hashSet.Add(pathSignature))
                             context.CreateError(nameof(PathMustBeUnique),
@@ -59,6 +57,28 @@ namespace Microsoft.OpenApi.Validations.Rules
                         context.Exit();
                     }
                 });
+
+        /// <summary>
+        ///  Replaces placeholders in the path with {}, e.g. /pets/{petId} becomes /pets/{} .
+        /// </summary>
+        /// <param name="path">The input path</param>
+        /// <returns>The path signature</returns>
+        private static string GetPathSignature(string path)
+        {
+            for (int openBrace = path.IndexOf('{'); openBrace > -1; openBrace = path.IndexOf('{', openBrace + 2))
+            {
+                int closeBrace = path.IndexOf('}', openBrace);
+
+                if (closeBrace < 0)
+                {
+                    return path;
+                }
+
+                path = path.Substring(0, openBrace + 1) + path.Substring(closeBrace);
+            }
+
+            return path;
+        }
 
         // add more rules
     }

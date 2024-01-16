@@ -1338,5 +1338,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             Assert.False(securityScheme.UnresolvedReference);
             Assert.NotNull(securityScheme.Flows);
         }
+
+        [Fact]
+        public void ValidateExampleShouldNotHaveDataTypeMismatch()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"));
+
+            // Act
+            var doc = new OpenApiStreamReader(new()
+            {
+                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
+            }).Read(stream, out var diagnostic);
+
+            // Assert
+            var warnings = diagnostic.Warnings;
+            Assert.False(warnings.Any());
+        }
     }
 }

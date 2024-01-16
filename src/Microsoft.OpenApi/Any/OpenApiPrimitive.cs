@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Text;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
@@ -74,7 +75,19 @@ namespace Microsoft.OpenApi.Any
 
                 case PrimitiveType.Double:
                     var doubleValue = (OpenApiDouble)(IOpenApiPrimitive)this;
-                    writer.WriteValue(doubleValue.Value);
+                    var actualValue = doubleValue.Value;
+                    if (actualValue.Equals(double.NaN)
+                        || actualValue.Equals(double.NegativeInfinity)
+                        || actualValue.Equals(double.PositiveInfinity))
+                    {
+                        // Write out NaN, -Infinity, Infinity as strings
+                        writer.WriteValue(actualValue.ToString(CultureInfo.InvariantCulture));
+                        break;
+                    }
+                    else
+                    {
+                        writer.WriteValue(actualValue);
+                    }
                     break;
 
                 case PrimitiveType.String:

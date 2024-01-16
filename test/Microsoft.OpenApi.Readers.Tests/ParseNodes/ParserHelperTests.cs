@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
         [Fact]
         public void ParseDecimalWithFallbackOnOverflow_Overflows_ReturnsFallback()
         {
-            Assert.Equal(10, ParserHelper.ParseDecimalWithFallbackOnOverflow(double.MaxValue.ToString(), 10));
+            Assert.Equal(10, ParserHelper.ParseDecimalWithFallbackOnOverflow(double.MaxValue.ToString(CultureInfo.InvariantCulture), 10));
         }
     }
 }
