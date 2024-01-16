@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Lorem Ipsum
+  version: 1.0.0
+servers:
+  - url: http://api.example.com/v1
+    description: Lorem Ipsum
+paths:
+  /issues:
+    get:
+      summary: Returns a list of issues.
+      description: Lorem Ipsum
+      responses:
+        "200":
+          description: Lorem Ipsum
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/issueData"
+              example:
+                data:
+                  - issuedAt: "2023-10-12"
+components:
+  schemas:
+    issueData:
+      type: object
+      title: Issue Data
+      description: Information about the issue.
+      properties:
+        issuedAt:
+          type: string
+          format: date
+          description: Lorem Ipsum
+          example: "2023-10-12"

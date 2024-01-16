@@ -66,7 +66,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
                     {
-                        return new OpenApiDateTime(dateTimeValue);
+                        // if the time component is exactly midnight(00:00:00) meaning no time has elapsed, return a date-only value
+                        return dateTimeValue.TimeOfDay == TimeSpan.Zero ? new OpenApiDate(dateTimeValue.Date) 
+                            : new OpenApiDateTime(dateTimeValue);
                     }
                 }
                 else if (type == "string")
