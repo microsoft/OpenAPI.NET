@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             {
                 // More narrow type detection for explicit strings, only check types that are passed as strings
                 if (schema == null)
-                 {
+                {
                     if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
                     {
                         // if the time component is exactly midnight(00:00:00) meaning no time has elapsed, return a date-only value
