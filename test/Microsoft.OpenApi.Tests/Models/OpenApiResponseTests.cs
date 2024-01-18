@@ -17,7 +17,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiResponseTests
     {
         public static OpenApiResponse BasicResponse = new();
