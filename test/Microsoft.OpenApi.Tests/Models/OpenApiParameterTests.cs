@@ -16,7 +16,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiParameterTests
     {
         public static OpenApiParameter BasicParameter = new()

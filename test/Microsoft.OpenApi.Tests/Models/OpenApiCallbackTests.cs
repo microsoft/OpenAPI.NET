@@ -13,7 +13,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiCallbackTests
     {
         public static OpenApiCallback AdvancedCallback = new()

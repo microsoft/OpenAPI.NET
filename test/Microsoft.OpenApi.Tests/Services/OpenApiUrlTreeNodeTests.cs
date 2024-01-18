@@ -12,7 +12,6 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
-    [UsesVerify]
     public class OpenApiUrlTreeNodeTests
     {
         private OpenApiDocument OpenApiDocumentSample_1 => new()
