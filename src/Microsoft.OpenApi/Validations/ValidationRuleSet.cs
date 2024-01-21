@@ -135,6 +135,21 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
+        /// Remove a rule by name.
+        /// </summary>        
+        /// <param name="ruleName">Name of the rule.</param>
+        public void Remove(string ruleName)
+        {
+            foreach (KeyValuePair<Type, IList<ValidationRule>> rule in _rules)
+            {
+                _rules[rule.Key] = rule.Value.Where(vr => !vr.Name.Equals(ruleName, StringComparison.Ordinal)).ToList();                
+            }
+
+            // Remove types with no rule
+            _rules = _rules.Where(r => r.Value.Any()).ToDictionary(r => r.Key, r => r.Value);
+        }
+
+        /// <summary>
         /// Get the enumerator.
         /// </summary>
         /// <returns>The enumerator.</returns>

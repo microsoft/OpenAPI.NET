@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the data matches with the given data type.
         /// </summary>
         public static ValidationRule<OpenApiSchema> SchemaMismatchedDataType =>
-            new(
+            new(nameof(SchemaMismatchedDataType),
                 (context, schema) =>
                 {
                     // default
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validates Schema Discriminator
         /// </summary>
         public static ValidationRule<OpenApiSchema> ValidateSchemaDiscriminator =>
-            new(
+            new(nameof(ValidateSchemaDiscriminator),
                 (context, schema) =>
                 {
                     // discriminator
