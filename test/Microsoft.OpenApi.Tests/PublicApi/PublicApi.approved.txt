@@ -1348,6 +1348,7 @@ namespace Microsoft.OpenApi.Validations
     public abstract class ValidationRule
     {
         protected ValidationRule() { }
+        public abstract string Name { get; }
     }
     public sealed class ValidationRuleSet : System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.ValidationRule>, System.Collections.IEnumerable
     {
@@ -1358,6 +1359,7 @@ namespace Microsoft.OpenApi.Validations
         public void Add(Microsoft.OpenApi.Validations.ValidationRule rule) { }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> FindRules(System.Type type) { }
         public System.Collections.Generic.IEnumerator<Microsoft.OpenApi.Validations.ValidationRule> GetEnumerator() { }
+        public void Remove(string ruleName) { }
         public static Microsoft.OpenApi.Validations.ValidationRuleSet GetDefaultRuleSet() { }
         public static Microsoft.OpenApi.Validations.ValidationRuleSet GetEmptyRuleSet() { }
     }
@@ -1365,6 +1367,8 @@ namespace Microsoft.OpenApi.Validations
         where T : Microsoft.OpenApi.Interfaces.IOpenApiElement
     {
         public ValidationRule(System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
+        public ValidationRule(string name, System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
+        public override string Name { get; }
     }
 }
 namespace Microsoft.OpenApi.Validations.Rules

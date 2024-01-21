@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
 
             ruleset.Add(
-             new ValidationRule<FooExtension>(
+             new ValidationRule<FooExtension>("FooExtensionRule",
                  (context, item) =>
                  {
                      if (item.Bar == "hey")
@@ -132,6 +132,16 @@ namespace Microsoft.OpenApi.Tests.Services
                    {
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
                    });
+        }
+
+        [Fact]
+        public void RemoveRule()
+        {
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            int expected = ruleset.Rules.Count - 1;
+            ruleset.Remove("KeyMustBeRegularExpression");
+
+            Assert.Equal(expected, ruleset.Rules.Count);
         }
     }
 

@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Globalization;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
 
@@ -17,6 +16,11 @@ namespace Microsoft.OpenApi.Validations
         /// Element Type.
         /// </summary>
         internal abstract Type ElementType { get; }
+
+        /// <summary>
+        /// Validation rule Name.
+        /// </summary>
+        public abstract string Name { get; }
 
         /// <summary>
         /// Validate the object.
@@ -36,12 +40,28 @@ namespace Microsoft.OpenApi.Validations
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRule"/> class.
-        /// </summary>
+        /// </summary>        
         /// <param name="validate">Action to perform the validation.</param>
         public ValidationRule(Action<IValidationContext, T> validate)
+            : this (null, validate)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationRule"/> class.
+        /// </summary>
+        /// <param name="name">Validation rule name.</param>
+        /// <param name="validate">Action to perform the validation.</param>
+        public ValidationRule(string name, Action<IValidationContext, T> validate)
         {
             _validate = Utils.CheckArgumentNull(validate);
+            Name = name ?? "UnnamedRule";
         }
+
+        /// <summary>
+        /// Validation Rule Name.
+        /// </summary>
+        public override string Name { get; }
 
         internal override Type ElementType
         {
