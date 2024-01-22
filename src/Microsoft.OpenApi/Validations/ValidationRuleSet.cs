@@ -142,18 +142,11 @@ namespace Microsoft.OpenApi.Validations
         {
             foreach (KeyValuePair<Type, IList<ValidationRule>> rule in _rules)
             {
-                var validationRule = rule.Value.FirstOrDefault(vr => vr.Name.Equals(ruleName, StringComparison.Ordinal));
-                if (validationRule != null)
-                {
-                    rule.Value.Remove(validationRule);
-                }
+                _rules[rule.Key] = rule.Value.Where(vr => !vr.Name.Equals(ruleName, StringComparison.Ordinal)).ToList();                
             }
 
-            var r = _rules.FirstOrDefault(kvp => !kvp.Value.Any());
-            if (r.Key != null)
-            {
-                _rules.Remove(r.Key);
-            }
+            // Remove types with no rule
+            _rules = _rules.Where(r => r.Value.Any()).ToDictionary(r => r.Key, r => r.Value);
         }
 
         /// <summary>

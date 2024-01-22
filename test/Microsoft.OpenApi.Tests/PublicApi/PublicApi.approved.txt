@@ -1347,8 +1347,7 @@ namespace Microsoft.OpenApi.Validations
     }
     public abstract class ValidationRule
     {
-        protected ValidationRule() { }
-        public abstract string Name { get; }
+        public string Name { get; }
     }
     public sealed class ValidationRuleSet : System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.ValidationRule>, System.Collections.IEnumerable
     {
@@ -1366,9 +1365,9 @@ namespace Microsoft.OpenApi.Validations
     public class ValidationRule<T> : Microsoft.OpenApi.Validations.ValidationRule
         where T : Microsoft.OpenApi.Interfaces.IOpenApiElement
     {
+        [System.Obsolete("Please use the other constructor and specify a name")]
         public ValidationRule(System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
         public ValidationRule(string name, System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
-        public override string Name { get; }
     }
 }
 namespace Microsoft.OpenApi.Validations.Rules

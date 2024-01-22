@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Validation rule Name.
         /// </summary>
-        public abstract string Name { get; }
+        public string Name { get; }
 
         /// <summary>
         /// Validate the object.
@@ -28,6 +28,11 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="context">The context.</param>
         /// <param name="item">The object item.</param>
         internal abstract void Evaluate(IValidationContext context, object item);
+
+        internal ValidationRule(string name)
+        {
+            Name = name;
+        }
     }
 
     /// <summary>
@@ -37,11 +42,12 @@ namespace Microsoft.OpenApi.Validations
     public class ValidationRule<T> : ValidationRule where T : IOpenApiElement
     {
         private readonly Action<IValidationContext, T> _validate;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRule"/> class.
         /// </summary>        
         /// <param name="validate">Action to perform the validation.</param>
+        [Obsolete("Please use the other constructor and specify a name")]
         public ValidationRule(Action<IValidationContext, T> validate)
             : this (null, validate)
         {
@@ -53,15 +59,10 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="name">Validation rule name.</param>
         /// <param name="validate">Action to perform the validation.</param>
         public ValidationRule(string name, Action<IValidationContext, T> validate)
+            : base(name) 
         {
-            _validate = Utils.CheckArgumentNull(validate);
-            Name = name ?? "UnnamedRule";
+            _validate = Utils.CheckArgumentNull(validate);            
         }
-
-        /// <summary>
-        /// Validation Rule Name.
-        /// </summary>
-        public override string Name { get; }
 
         internal override Type ElementType
         {
