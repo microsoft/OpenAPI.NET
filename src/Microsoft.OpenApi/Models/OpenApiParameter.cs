@@ -433,20 +433,6 @@ namespace Microsoft.OpenApi.Models
                 }
             }
 
-            //examples
-            if (Examples != null && Examples.Any())
-            {
-                writer.WritePropertyName("x-examples");
-                writer.WriteStartObject();
-
-                foreach (var example in Examples)
-                {
-                    writer.WritePropertyName(example.Key);
-                    writer.WriteV2Examples(writer, example.Value, OpenApiSpecVersion.OpenApi2_0);
-                }
-                writer.WriteEndObject();
-            }
-
             // extensions
             writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
