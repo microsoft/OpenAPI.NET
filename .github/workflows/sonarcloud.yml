@@ -9,6 +9,11 @@ on:
     types: [opened, synchronize, reopened]
     paths-ignore: ['.vscode/**']
 
+
+permissions:
+  contents: read
+  pull-requests: read
+
 env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
