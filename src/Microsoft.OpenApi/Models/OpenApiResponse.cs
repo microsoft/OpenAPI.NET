@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -195,6 +195,27 @@ namespace Microsoft.OpenApi.Models
                             {
                                 writer.WritePropertyName(mediaTypePair.Key);
                                 writer.WriteAny(mediaTypePair.Value.Example);
+                            }
+                        }
+
+                        writer.WriteEndObject();
+                    }
+
+                    if (Content.Values.Any(m => m.Examples != null && m.Examples.Any()))
+                    {
+                        writer.WritePropertyName("x-examples");
+                        writer.WriteStartObject();
+
+                        foreach (var mediaTypePair in Content)
+                        {
+                            var examples = mediaTypePair.Value.Examples;
+                            if (examples != null && examples.Any())
+                            {
+                                foreach (var example in examples)
+                                {
+                                    writer.WritePropertyName(example.Key);
+                                    writer.WriteV2Examples(writer, example.Value, OpenApiSpecVersion.OpenApi2_0);
+                                }
                             }
                         }
 

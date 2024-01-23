@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -404,6 +404,29 @@ namespace Microsoft.OpenApi.Writers
                 throw new OpenApiWriterException(
                     string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
             }
+        }
+
+        /// <inheritdoc/>
+        public void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version)
+        {
+            writer.WriteStartObject();
+
+            // summary
+            writer.WriteProperty(OpenApiConstants.Summary, example.Summary);
+
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, example.Description);
+
+            // value
+            writer.WriteOptionalObject(OpenApiConstants.Value, example.Value, (w, v) => w.WriteAny(v));
+
+            // externalValue
+            writer.WriteProperty(OpenApiConstants.ExternalValue, example.ExternalValue);
+
+            // extensions
+            writer.WriteExtensions(example.Extensions, version);
+
+            writer.WriteEndObject();
         }
     }
 }
