@@ -390,7 +390,7 @@ namespace Microsoft.OpenApi.Models
             //examples
             if (Examples != null && Examples.Any())
             {
-                writer.WritePropertyName("x-examples");
+                writer.WritePropertyName(OpenApiConstants.ExamplesExtension);
                 writer.WriteStartObject();
 
                 foreach (var example in Examples)

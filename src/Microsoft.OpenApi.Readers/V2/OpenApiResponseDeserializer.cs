@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith("x-") && !s.Equals("x-examples", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void LoadExamplesExtension(OpenApiResponse response, ParseNode node)
         {
-            var mapNode = node.CheckMapNode("x-examples");
+            var mapNode = node.CheckMapNode(OpenApiConstants.ExamplesExtension);
             var examples = new Dictionary<string, OpenApiExample>();
 
             foreach (var examplesNode in mapNode)
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 var exampleNode = examplesNode.Value.CheckMapNode(examplesNode.Name);
                 foreach (var valueNode in exampleNode)
                 {
-                    switch (valueNode.Name)
+                    switch (valueNode.Name.ToLowerInvariant())
                     {
                         case "summary":
                             example.Summary = valueNode.Value.GetScalarValue();
