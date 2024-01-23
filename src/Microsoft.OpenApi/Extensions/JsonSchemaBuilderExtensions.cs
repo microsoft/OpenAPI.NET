@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -113,25 +113,6 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// Removes a keyword from the builder instance
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="keyWord"></param>
-        /// <returns></returns>
-        public static JsonSchemaBuilder RemoveKeyWord(this JsonSchemaBuilder builder, IJsonSchemaKeyword keyWord)
-        {
-            var schema = builder.Build();
-            var newKeyWords = new List<IJsonSchemaKeyword>();
-            newKeyWords = schema.Keywords.Where(x => !x.Equals(keyWord)).ToList();
-            foreach (var item in newKeyWords)
-            {
-                builder.Add(item);
-            }
-
-            return builder;
-        }
-
-        /// <summary>
         /// Removes a keyword
         /// </summary>
         /// <param name="builder"></param>
@@ -153,7 +134,6 @@ namespace Microsoft.OpenApi.Extensions
                 }
             }
 
-            //_keywords.Remove(keyword);
             return schemaBuilder;
         }
     }
