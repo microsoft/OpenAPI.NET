@@ -204,14 +204,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiParameter</returns>
         public OpenApiParameter GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiParameter>(this.Reference);
-            }
-            else
-            {
-                return this;
-            }
+            return Reference != null ? doc.ResolveReferenceTo<OpenApiParameter>(Reference) : this;
         }
 
         /// <summary>

@@ -96,14 +96,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiRequestBody</returns>
         public OpenApiRequestBody GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiRequestBody>(this.Reference);
-            }
-            else
-            {
-                return this;
-            }
+            return Reference != null ? doc.ResolveReferenceTo<OpenApiRequestBody>(Reference) : this;
         }
 
         /// <summary>
@@ -157,7 +150,7 @@ namespace Microsoft.OpenApi.Models
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
-            if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
+            if (bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyParameterName))
             {
                 bodyParameter.Name = (Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
