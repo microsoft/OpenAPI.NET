@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -29,6 +29,10 @@ namespace Microsoft.OpenApi.Readers.V2
                 LoadExamples
             },
             {
+                "x-examples",
+                LoadExamplesExtension
+            },
+            {
                 "schema",
                 (o, n) => n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n), o)
             },
@@ -37,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-") && !s.Equals("x-examples"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
@@ -69,6 +73,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
 
             var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+            var examples = context.GetFromTempStorage<Dictionary<string, OpenApiExample>>(TempStorageKeys.Examples, response);
 
             foreach (var produce in produces)
             {
@@ -84,7 +89,8 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     var mediaType = new OpenApiMediaType
                     {
-                        Schema = schema
+                        Schema = schema,
+                        Examples = examples
                     };
 
                     response.Content.Add(produce, mediaType);
@@ -92,12 +98,49 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
+            context.SetTempStorage(TempStorageKeys.Examples, null, response);
             context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
+        }
+
+        private static void LoadExamplesExtension(OpenApiResponse response, ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("x-examples");
+            var examples = new Dictionary<string, OpenApiExample>();
+
+            foreach (var examplesNode in mapNode)
+            {
+                // Load the media type node as an OpenApiExample object
+                var example = new OpenApiExample();
+                var exampleNode = examplesNode.Value.CheckMapNode(examplesNode.Name);
+                foreach (var valueNode in exampleNode)
+                {
+                    switch (valueNode.Name)
+                    {
+                        case "summary":
+                            example.Summary = valueNode.Value.GetScalarValue();
+                            break;
+                        case "description":
+                            example.Description = valueNode.Value.GetScalarValue();
+                            break;
+                        case "value":
+                            example.Value = valueNode.Value.CreateAny();
+                            break;
+                        case "externalValue":
+                            example.ExternalValue = valueNode.Value.GetScalarValue();
+                            break;
+                    }
+                }                
+
+                examples.Add(examplesNode.Name, example);
+            }
+
+            node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
         }
 
         private static void LoadExamples(OpenApiResponse response, ParseNode node)
         {
             var mapNode = node.CheckMapNode("examples");
+
             foreach (var mediaTypeNode in mapNode)
             {
                 LoadExample(response, mediaTypeNode.Name, mediaTypeNode.Value);
@@ -108,10 +151,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var exampleNode = node.CreateAny();
 
-            if (response.Content == null)
-            {
-                response.Content = new Dictionary<string, OpenApiMediaType>();
-            }
+            response.Content ??= new Dictionary<string, OpenApiMediaType>();
 
             OpenApiMediaType mediaTypeObject;
             if (response.Content.TryGetValue(mediaType, out var value))
@@ -141,6 +181,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             var response = new OpenApiResponse();
+
             foreach (var property in mapNode)
             {
                 property.ParseField(response, _responseFixedFields, _responsePatternFields);
