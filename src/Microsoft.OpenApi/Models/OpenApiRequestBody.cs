@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Models
                 // V2 spec actually allows the body to have custom name.
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
-                Schema = Content.Values.FirstOrDefault()?.Schema ?? new JsonSchemaBuilder().Build(),
+                Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
                 Examples = Content.Values.FirstOrDefault()?.Examples,
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Models
                     Name = property.Key,
                     Schema = property.Value,
                     Examples = Content.Values.FirstOrDefault()?.Examples,
-                    Required = Content.First().Value.Schema.GetRequired()?.Contains(property.Key) ?? false
+                    Required = Content.First().Value.Schema.Required?.Contains(property.Key) ?? false
                 };
             }
         }

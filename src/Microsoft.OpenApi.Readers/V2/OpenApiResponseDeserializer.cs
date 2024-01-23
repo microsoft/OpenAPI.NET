@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Readers.V2
                             example.Description = valueNode.Value.GetScalarValue();
                             break;
                         case "value":
-                            example.Value = valueNode.Value.CreateAny();
+                            example.Value = OpenApiAnyConverter.GetSpecificOpenApiAny(valueNode.Value.CreateAny());
                             break;
                         case "externalValue":
                             example.ExternalValue = valueNode.Value.GetScalarValue();
