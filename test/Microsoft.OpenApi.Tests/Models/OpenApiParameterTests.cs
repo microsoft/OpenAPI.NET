@@ -272,7 +272,13 @@ namespace Microsoft.OpenApi.Tests.Models
                   "name": "name1",
                   "description": "description1",
                   "required": true,
-                  "format": "double"
+                  "format": "double",
+                  "x-examples": {
+                    "test": {
+                      "summary": "summary3",
+                      "description": "description3"
+                    }
+                  }
                 }
                 """;
 
