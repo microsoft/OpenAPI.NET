@@ -3,11 +3,5 @@
   "name": "name1",
   "description": "description1",
   "required": true,
-  "type": "string",
-  "x-examples": {
-    "test": {
-      "summary": "summary3",
-      "description": "description3"
-    }
-  }
+  "type": "string"
 }
