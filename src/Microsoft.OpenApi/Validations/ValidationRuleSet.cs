@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        /// Remove a rule by name.
+        /// Remove a rule by its name from all types it is used by.
         /// </summary>        
         /// <param name="ruleName">Name of the rule.</param>
         public void Remove(string ruleName)
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        /// Remove a rule by type.
+        /// Remove a rule by element type.
         /// </summary>        
         /// <param name="type">Type of the rule.</param>
         public void Remove(Type type)
