@@ -150,6 +150,15 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
+        /// Remove a rule by type.
+        /// </summary>        
+        /// <param name="type">Type of the rule.</param>
+        public void Remove(Type type)
+        {
+            _rules.Remove(type);
+        }
+
+        /// <summary>
         /// Get the enumerator.
         /// </summary>
         /// <returns>The enumerator.</returns>

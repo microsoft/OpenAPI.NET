@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
 
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Validations
 
         internal ValidationRule(string name)
         {
-            Name = name;
+            Name = !string.IsNullOrEmpty(name) ? name : throw new ArgumentNullException(nameof(name));
         }
     }
 
@@ -49,7 +50,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="validate">Action to perform the validation.</param>
         [Obsolete("Please use the other constructor and specify a name")]
         public ValidationRule(Action<IValidationContext, T> validate)
-            : this (null, validate)
+            : this (Guid.NewGuid().ToString("D"), validate)
         {
         }
 

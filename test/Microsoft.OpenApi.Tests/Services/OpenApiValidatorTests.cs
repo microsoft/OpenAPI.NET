@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -135,11 +136,39 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
-        public void RemoveRule()
+        public void RemoveRuleByName_Invalid()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<IOpenApiAny>(null, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<IOpenApiAny>(string.Empty, (vc, oaa) => { }));
+        }
+
+        [Fact]
+        public void RemoveRuleByName()
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
             int expected = ruleset.Rules.Count - 1;
             ruleset.Remove("KeyMustBeRegularExpression");
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+            
+            ruleset.Remove("KeyMustBeRegularExpression");
+            ruleset.Remove("UnknownName");
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+        }
+
+        [Fact]
+        public void RemoveRuleByType()
+        {
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            int expected = ruleset.Rules.Count - 1;
+            
+            ruleset.Remove(typeof(OpenApiComponents));
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+
+            ruleset.Remove(typeof(OpenApiComponents));
+            ruleset.Remove(typeof(int));
 
             Assert.Equal(expected, ruleset.Rules.Count);
         }

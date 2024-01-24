@@ -1359,6 +1359,7 @@ namespace Microsoft.OpenApi.Validations
         public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> FindRules(System.Type type) { }
         public System.Collections.Generic.IEnumerator<Microsoft.OpenApi.Validations.ValidationRule> GetEnumerator() { }
         public void Remove(string ruleName) { }
+        public void Remove(System.Type type) { }
         public static Microsoft.OpenApi.Validations.ValidationRuleSet GetDefaultRuleSet() { }
         public static Microsoft.OpenApi.Validations.ValidationRuleSet GetEmptyRuleSet() { }
     }
