@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -259,6 +259,14 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 parameter.Schema = schema;
                 node.Context.SetTempStorage("schema", null);
+            }
+
+            // load examples from storage and add them to the parameter
+            var examples = node.Context.GetFromTempStorage<Dictionary<string, OpenApiExample>>(TempStorageKeys.Examples, parameter);
+            if (examples != null)
+            {
+                parameter.Examples = examples;
+                node.Context.SetTempStorage("examples", null);
             }
 
             var isBodyOrFormData = (bool)node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);

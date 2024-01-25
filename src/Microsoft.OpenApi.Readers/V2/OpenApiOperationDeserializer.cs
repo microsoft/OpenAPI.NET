@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Xml.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -194,7 +195,8 @@ namespace Microsoft.OpenApi.Readers.V2
                     k => k,
                     _ => new OpenApiMediaType
                     {
-                        Schema = bodyParameter.Schema
+                        Schema = bodyParameter.Schema,
+                        Examples = bodyParameter.Examples
                     }),
                 Extensions = bodyParameter.Extensions
             };
