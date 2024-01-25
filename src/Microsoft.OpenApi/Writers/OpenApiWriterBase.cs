@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Writers
@@ -405,29 +404,6 @@ namespace Microsoft.OpenApi.Writers
                 throw new OpenApiWriterException(
                     string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
             }
-        }
-
-        /// <inheritdoc/>
-        public void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version)
-        {
-            writer.WriteStartObject();
-
-            // summary
-            writer.WriteProperty(OpenApiConstants.Summary, example.Summary);
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, example.Description);
-
-            // value
-            writer.WriteOptionalObject(OpenApiConstants.Value, example.Value, (w, v) => w.WriteAny(v));
-
-            // externalValue
-            writer.WriteProperty(OpenApiConstants.ExternalValue, example.ExternalValue);
-
-            // extensions
-            writer.WriteExtensions(example.Extensions, version);
-
-            writer.WriteEndObject();
         }
     }
 }
