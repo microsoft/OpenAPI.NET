@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Models
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
-            if (bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyParameterName))
+            if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
             {
                 bodyParameter.Name = (Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
