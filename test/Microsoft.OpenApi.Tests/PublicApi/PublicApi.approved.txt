@@ -643,6 +643,7 @@ namespace Microsoft.OpenApi.Models
         public bool UnresolvedReference { get; set; }
         public Microsoft.OpenApi.Any.IOpenApiAny Value { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExample GetEffective(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
+        public void Serialize(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV2WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1487,7 +1488,6 @@ namespace Microsoft.OpenApi.Writers
         void WriteRaw(string value);
         void WriteStartArray();
         void WriteStartObject();
-        void WriteV2Examples(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.Models.OpenApiExample example, Microsoft.OpenApi.OpenApiSpecVersion version);
         void WriteValue(bool value);
         void WriteValue(decimal value);
         void WriteValue(int value);
@@ -1549,7 +1549,6 @@ namespace Microsoft.OpenApi.Writers
         public abstract void WriteRaw(string value);
         public abstract void WriteStartArray();
         public abstract void WriteStartObject();
-        public void WriteV2Examples(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.Models.OpenApiExample example, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public virtual void WriteValue(bool value) { }
         public virtual void WriteValue(System.DateTime value) { }
         public virtual void WriteValue(System.DateTimeOffset value) { }
