@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Models
                             .SelectMany(mediaTypePair => mediaTypePair.Value.Examples))
                         {
                             writer.WritePropertyName(example.Key);
-                            writer.WriteV2Examples(writer, example.Value, OpenApiSpecVersion.OpenApi2_0);
+                            example.Value.Serialize(writer, OpenApiSpecVersion.OpenApi2_0);
                         }
 
                         writer.WriteEndObject();

@@ -397,7 +397,7 @@ namespace Microsoft.OpenApi.Models
                 foreach (var example in Examples)
                 {
                     writer.WritePropertyName(example.Key);
-                    writer.WriteV2Examples(writer, example.Value, OpenApiSpecVersion.OpenApi2_0);
+                    example.Value.Serialize(writer, OpenApiSpecVersion.OpenApi2_0);
                 }
                 writer.WriteEndObject();
             }
