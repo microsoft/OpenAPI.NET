@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -95,12 +95,17 @@ namespace Microsoft.OpenApi.Readers.V2
                     "schema",
                     (o, n) => o.Schema = LoadSchema(n)
                 },
+                {
+                    "x-examples",
+                    LoadParameterExamplesExtension
+                },
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase),
+                    (o, p, n) => o.AddExtension(p, LoadExtension(p, n))} 
             };
 
         private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields =
@@ -164,6 +169,12 @@ namespace Microsoft.OpenApi.Readers.V2
                     p.Explode = true;
                     return;
             }
+        }
+
+        private static void LoadParameterExamplesExtension(OpenApiParameter parameter, ParseNode node)
+        {
+            var examples = LoadExamplesExtension(node);
+            node.Context.SetTempStorage(TempStorageKeys.Examples, examples, parameter);
         }
 
         private static OpenApiSchema GetOrCreateSchema(OpenApiParameter p)

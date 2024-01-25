@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "x-examples",
-                LoadExamplesExtension
+                LoadResponseExamplesExtension
             },
             {
                 "schema",
@@ -42,7 +42,8 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase), 
+                    (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
@@ -104,7 +105,13 @@ namespace Microsoft.OpenApi.Readers.V2
             context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
         }
 
-        private static void LoadExamplesExtension(OpenApiResponse response, ParseNode node)
+        private static void LoadResponseExamplesExtension(OpenApiResponse response, ParseNode node)
+        {
+            var examples = LoadExamplesExtension(node);
+            node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
+        }
+
+        private static Dictionary<string, OpenApiExample> LoadExamplesExtension(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.ExamplesExtension);
             var examples = new Dictionary<string, OpenApiExample>();
@@ -131,12 +138,12 @@ namespace Microsoft.OpenApi.Readers.V2
                             example.ExternalValue = valueNode.Value.GetScalarValue();
                             break;
                     }
-                }                
+                }
 
                 examples.Add(examplesNode.Name, example);
             }
 
-            node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
+            return examples;
         }
 
         private static void LoadExamples(OpenApiResponse response, ParseNode node)
