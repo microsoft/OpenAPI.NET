@@ -536,5 +536,108 @@ responses:
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
+
+        [Fact]
+        public void LoadV2OperationWithBodyParameterExamplesWorks()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "opWithBodyParameterExamples.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            var expected = @"summary: Get all pets
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            age:
+              type: integer
+      examples:
+        example1:
+          summary: Example - List of Pets
+          value:
+            - name: Buddy
+              age: 2
+            - name: Whiskers
+              age: 1
+        example2:
+          summary: Example - Playful Cat
+          value:
+            name: Whiskers
+            age: 1
+  required: true
+  x-bodyName: body
+responses: { }";
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void LoadV3ExamplesInRequestBodyParameterAsExtensionsWorks()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "v3OperationWithBodyParameterExamples.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV3Deserializer.LoadOperation(node);
+            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            var expected = @"summary: Get all pets
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          age:
+            type: integer
+    x-examples:
+      example1:
+        summary: Example - List of Pets
+        value:
+          - name: Buddy
+            age: 2
+          - name: Whiskers
+            age: 1
+      example2:
+        summary: Example - Playful Cat
+        value:
+          name: Whiskers
+          age: 1
+responses: { }";
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
     }
 }

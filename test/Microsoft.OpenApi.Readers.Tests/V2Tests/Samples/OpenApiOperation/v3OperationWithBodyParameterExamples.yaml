@@ -1,0 +1,27 @@
+summary: Get all pets
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            age:
+              type: integer
+      examples:
+        example1:
+          summary: Example - List of Pets
+          value:
+            - name: "Buddy"
+              age: 2
+            - name: "Whiskers"
+              age: 1
+        example2:
+          summary: Example - Playful Cat
+          value:
+            name: "Whiskers"
+            age: 1
