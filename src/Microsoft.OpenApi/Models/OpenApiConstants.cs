@@ -566,6 +566,11 @@ namespace Microsoft.OpenApi.Models
         public const string BodyName = "x-bodyName";
 
         /// <summary>
+        /// Field: Examples Extension
+        /// </summary>
+        public const string ExamplesExtension = "x-examples";
+
+        /// <summary>
         /// Field: version3_0_0
         /// </summary>
         public static readonly Version version3_0_0 = new(3, 0, 0);
