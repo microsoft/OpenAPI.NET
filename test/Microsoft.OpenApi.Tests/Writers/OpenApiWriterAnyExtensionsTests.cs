@@ -16,7 +16,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiWriterAnyExtensionsTests
     {
         static bool[] shouldProduceTerseOutputValues = new[] { true, false };

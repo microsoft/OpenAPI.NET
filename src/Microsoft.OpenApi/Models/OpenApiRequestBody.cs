@@ -96,14 +96,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiRequestBody</returns>
         public OpenApiRequestBody GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiRequestBody>(this.Reference);
-            }
-            else
-            {
-                return this;
-            }
+            return Reference != null ? doc.ResolveReferenceTo<OpenApiRequestBody>(Reference) : this;
         }
 
         /// <summary>
@@ -153,6 +146,7 @@ namespace Microsoft.OpenApi.Models
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
                 Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
+                Examples = Content.Values.FirstOrDefault()?.Examples,
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
@@ -184,7 +178,8 @@ namespace Microsoft.OpenApi.Models
                     Description = property.Value.Description,
                     Name = property.Key,
                     Schema = property.Value,
-                    Required = Content.First().Value.Schema.Required.Contains(property.Key)
+                    Examples = Content.Values.FirstOrDefault()?.Examples,
+                    Required = Content.First().Value.Schema.Required?.Contains(property.Key) ?? false
                 };
             }
         }

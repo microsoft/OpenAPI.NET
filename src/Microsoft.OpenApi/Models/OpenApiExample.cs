@@ -119,6 +119,16 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
+            Serialize(writer, OpenApiSpecVersion.OpenApi3_0);
+        }
+
+        /// <summary>
+        /// Writes out existing examples in a mediatype object
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="version"></param>
+        public void Serialize(IOpenApiWriter writer, OpenApiSpecVersion version)
+        {
             writer.WriteStartObject();
 
             // summary
@@ -134,7 +144,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }

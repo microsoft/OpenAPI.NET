@@ -12,7 +12,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiHeaderTests
     {
         public static OpenApiHeader AdvancedHeader = new()

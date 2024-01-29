@@ -14,7 +14,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiLinkTests
     {
         public static readonly OpenApiLink AdvancedLink = new()

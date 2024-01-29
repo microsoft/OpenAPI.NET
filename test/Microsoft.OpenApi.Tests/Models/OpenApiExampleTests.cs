@@ -15,7 +15,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiExampleTests
     {
         public static OpenApiExample AdvancedExample = new()

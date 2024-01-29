@@ -2,6 +2,9 @@ name: CI/CD Pipeline
 
 on: [push, pull_request, workflow_dispatch]
 
+permissions:
+  contents: write
+
 jobs:
   ci:
     name: Continuous Integration

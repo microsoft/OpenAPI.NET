@@ -20,7 +20,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiSchemaTests
     {
         public static OpenApiSchema BasicSchema = new();

@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// REQUIRED.
         /// </summary>
         public static ValidationRule<OpenApiLicense> LicenseRequiredFields =>
-            new(
+            new(nameof(LicenseRequiredFields),
                 (context, license) =>
                 {
                     context.Enter("name");
