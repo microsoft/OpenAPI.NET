@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Hidi
                     predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
 
                 }
-                if (requestUrls.Any())
+                if (requestUrls.Count != 0)
                 {
                     logger.LogTrace("Creating predicate based on the paths and Http methods defined in the Postman collection.");
                     predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: document);
@@ -307,7 +307,7 @@ namespace Microsoft.OpenApi.Hidi
             return transform;
         }
 
-        private static Stream ApplyFilterToCsdl(Stream csdlStream, string entitySetOrSingleton, XslCompiledTransform transform)
+        private static MemoryStream ApplyFilterToCsdl(Stream csdlStream, string entitySetOrSingleton, XslCompiledTransform transform)
         {
             using StreamReader inputReader = new(csdlStream, leaveOpen: true);
             using var inputXmlReader = XmlReader.Create(inputReader);
