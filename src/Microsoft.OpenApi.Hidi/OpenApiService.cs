@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Hidi
                     predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
 
                 }
-                if (requestUrls.Any())
+                if (requestUrls.Count != 0)
                 {
                     logger.LogTrace("Creating predicate based on the paths and Http methods defined in the Postman collection.");
                     predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: document);
