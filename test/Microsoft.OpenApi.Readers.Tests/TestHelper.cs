@@ -1,9 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
 using System.Linq;
-using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.ParseNodes;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.Tests

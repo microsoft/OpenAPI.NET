@@ -11,10 +11,12 @@ using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
 using Xunit;
+using Microsoft.OpenApi.Reader.Tests;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V3;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -26,30 +28,28 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParsePrimitiveSchemaShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "primitiveSchema.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "primitiveSchema.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
-                // Act
-                var schema = OpenApiV3Deserializer.LoadSchema(node);
+            // Act
+            var schema = OpenApiV3Deserializer.LoadSchema(node);
 
-                // Assert
-                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            // Assert
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-                schema.Should().BeEquivalentTo(
-                    new JsonSchemaBuilder()
-                        .Type(SchemaValueType.String)
-                        .Format("email")
-                        .Build());
-            }
+            schema.Should().BeEquivalentTo(
+                new JsonSchemaBuilder()
+                    .Type(SchemaValueType.String)
+                    .Format("email")
+                    .Build());
         }       
 
         [Fact]

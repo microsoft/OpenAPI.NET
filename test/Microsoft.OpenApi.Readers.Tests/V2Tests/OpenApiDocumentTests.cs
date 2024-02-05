@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Json.Schema;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -18,9 +17,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ShouldParseProducesInAnyOrder()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "twoResponses.json"));
-            var reader = new OpenApiStreamReader();
-            var doc = reader.Read(stream, out var diagnostic);
+            var doc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"), out var diagnostic);
 
             var okSchema = new JsonSchemaBuilder()
                     .Ref("#/definitions/Item")

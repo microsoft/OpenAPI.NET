@@ -5,9 +5,9 @@ using System.IO;
 using FluentAssertions;
 using Json.Schema;
 using Json.Schema.OpenApi;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Reader.V2;
 using Xunit;
+using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {

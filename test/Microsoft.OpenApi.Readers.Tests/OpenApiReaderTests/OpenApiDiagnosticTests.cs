@@ -8,8 +8,9 @@ using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using Microsoft.OpenApi.Readers.Interface;
 using System.IO;
+using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Reader;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
 {

@@ -11,11 +11,11 @@ using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -24,7 +24,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
 
-        private readonly ITestOutputHelper _output;
+        public OpenApiDocumentTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
 
         public T Clone<T>(T element) where T : IOpenApiSerializable
         {
@@ -70,23 +73,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             }
         }
 
-
-        public OpenApiDocumentTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
-            var openApiDoc = new OpenApiStringReader().Read(
+            var openApiDoc = OpenApiDocument.Parse(
                 @"
 openapi : 3.0.0
 info:
     title: Simple Document
     version: 0.9.1
 paths: {}",
-                out var context);
+                out var context, OpenApiConstants.Yaml);
 
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -101,7 +98,7 @@ paths: {}",
 
             context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
-                {
+                { 
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
                     Errors = new List<OpenApiError>()
                         {
@@ -113,51 +110,47 @@ paths: {}",
         [Fact]
         public void ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml")))
-            {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var path = Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
+            var openApiDoc = OpenApiDocument.Load(path, out var diagnostic);
 
-                diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic()
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic()
+                { 
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Errors = new List<OpenApiError>()
                     {
-                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                        Errors = new List<OpenApiError>()
+                        new OpenApiError("", "Paths is a REQUIRED field at #/")
+                    }
+                });
+
+            openApiDoc.Should().BeEquivalentTo(
+                new OpenApiDocument
+                {
+                    Info = new OpenApiInfo
+                    {
+                        Title = "The API",
+                        Version = "0.9.1",
+                    },
+                    Servers =
+                    {
+                        new OpenApiServer
                         {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                            Url = new Uri("http://www.example.org/api").ToString(),
+                            Description = "The http endpoint"
+                        },
+                        new OpenApiServer
+                        {
+                            Url = new Uri("https://www.example.org/api").ToString(),
+                            Description = "The https endpoint"
                         }
-                    });
-
-                openApiDoc.Should().BeEquivalentTo(
-                    new OpenApiDocument
-                    {
-                        Info = new OpenApiInfo
-                        {
-                            Title = "The API",
-                            Version = "0.9.1",
-                        },
-                        Servers =
-                        {
-                            new OpenApiServer
-                            {
-                                Url = new Uri("http://www.example.org/api").ToString(),
-                                Description = "The http endpoint"
-                            },
-                            new OpenApiServer
-                            {
-                                Url = new Uri("https://www.example.org/api").ToString(),
-                                Description = "The https endpoint"
-                            }
-                        },
-                        Paths = new OpenApiPaths()
-                    });
-            }
+                    },
+                    Paths = new OpenApiPaths()
+                });
         }
-
         [Fact]
         public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var openApiDoc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"), out var diagnostic);
 
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -184,31 +177,28 @@ paths: {}",
         [Fact]
         public void ParseMinimalDocumentShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml")))
-            {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var openApiDoc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "minimalDocument.yaml"), out var diagnostic);
 
-                openApiDoc.Should().BeEquivalentTo(
-                    new OpenApiDocument
+            openApiDoc.Should().BeEquivalentTo(
+                new OpenApiDocument
+                {
+                    Info = new OpenApiInfo
                     {
-                        Info = new OpenApiInfo
-                        {
-                            Title = "Simple Document",
-                            Version = "0.9.1"
-                        },
-                        Paths = new OpenApiPaths()
-                    });
+                        Title = "Simple Document",
+                        Version = "0.9.1"
+                    },
+                    Paths = new OpenApiPaths()
+                });
 
-                diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic()
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic()
+                {
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Errors = new List<OpenApiError>()
                     {
-                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                        Errors = new List<OpenApiError>()
-                        {
                             new OpenApiError("", "Paths is a REQUIRED field at #/")
-                        }
-                    });
-            }
+                    }
+                });
         }
 
         [Fact]
@@ -655,12 +645,12 @@ paths: {}",
                         }
                     },
                     Servers = new List<OpenApiServer>
-                    {
-                        new OpenApiServer
                         {
-                            Url = "http://petstore.swagger.io/api"
-                        }
-                    },
+                            new OpenApiServer
+                            {
+                                Url = "http://petstore.swagger.io/api"
+                            }
+                        },
                     Paths = new OpenApiPaths
                     {
                         ["/pets"] = new OpenApiPathItem
@@ -670,35 +660,35 @@ paths: {}",
                                 [OperationType.Get] = new OpenApiOperation
                                 {
                                     Tags = new List<OpenApiTag>
-                                    {
-                                        tag1,
-                                        tag2
-                                    },
+                                        {
+                                            tag1,
+                                            tag2
+                                        },
                                     Description = "Returns all pets from the system that the user has access to",
                                     OperationId = "findPets",
                                     Parameters = new List<OpenApiParameter>
-                                    {
-                                        new OpenApiParameter
                                         {
-                                            Name = "tags",
-                                            In = ParameterLocation.Query,
-                                            Description = "tags to filter by",
-                                            Required = false,
-                                            Schema = new JsonSchemaBuilder()
-                                                        .Type(SchemaValueType.Array)
-                                                        .Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+                                            new OpenApiParameter
+                                            {
+                                                Name = "tags",
+                                                In = ParameterLocation.Query,
+                                                Description = "tags to filter by",
+                                                Required = false,
+                                                Schema = new JsonSchemaBuilder()
+                                                            .Type(SchemaValueType.Array)
+                                                            .Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+                                            },
+                                            new OpenApiParameter
+                                            {
+                                                Name = "limit",
+                                                In = ParameterLocation.Query,
+                                                Description = "maximum number of results to return",
+                                                Required = false,
+                                                Schema = new JsonSchemaBuilder()
+                                                            .Type(SchemaValueType.Integer)
+                                                            .Format("int32")
+                                            }
                                         },
-                                        new OpenApiParameter
-                                        {
-                                            Name = "limit",
-                                            In = ParameterLocation.Query,
-                                            Description = "maximum number of results to return",
-                                            Required = false,
-                                            Schema = new JsonSchemaBuilder()
-                                                        .Type(SchemaValueType.Integer)
-                                                        .Format("int32")
-                                        }
-                                    },
                                     Responses = new OpenApiResponses
                                     {
                                         ["200"] = new OpenApiResponse
@@ -747,10 +737,10 @@ paths: {}",
                                 [OperationType.Post] = new OpenApiOperation
                                 {
                                     Tags = new List<OpenApiTag>
-                                    {
-                                        tag1,
-                                        tag2
-                                    },
+                                        {
+                                            tag1,
+                                            tag2
+                                        },
                                     Description = "Creates a new pet in the store.  Duplicates are allowed",
                                     OperationId = "addPet",
                                     RequestBody = new OpenApiRequestBody
@@ -802,17 +792,17 @@ paths: {}",
                                         }
                                     },
                                     Security = new List<OpenApiSecurityRequirement>
-                                    {
-                                        new OpenApiSecurityRequirement
                                         {
-                                            [securityScheme1] = new List<string>(),
-                                            [securityScheme2] = new List<string>
+                                            new OpenApiSecurityRequirement
                                             {
-                                                "scope1",
-                                                "scope2"
+                                                [securityScheme1] = new List<string>(),
+                                                [securityScheme2] = new List<string>
+                                                {
+                                                    "scope1",
+                                                    "scope2"
+                                                }
                                             }
                                         }
-                                    }
                                 }
                             }
                         },
@@ -826,18 +816,18 @@ paths: {}",
                                         "Returns a user based on a single ID, if the user does not have access to the pet",
                                     OperationId = "findPetById",
                                     Parameters = new List<OpenApiParameter>
-                                    {
-                                        new OpenApiParameter
                                         {
-                                            Name = "id",
-                                            In = ParameterLocation.Path,
-                                            Description = "ID of pet to fetch",
-                                            Required = true,
-                                            Schema = new JsonSchemaBuilder()
-                                                        .Type(SchemaValueType.Integer)
-                                                        .Format("int64")
-                                        }
-                                    },
+                                            new OpenApiParameter
+                                            {
+                                                Name = "id",
+                                                In = ParameterLocation.Path,
+                                                Description = "ID of pet to fetch",
+                                                Required = true,
+                                                Schema = new JsonSchemaBuilder()
+                                                            .Type(SchemaValueType.Integer)
+                                                            .Format("int64")
+                                            }
+                                        },
                                     Responses = new OpenApiResponses
                                     {
                                         ["200"] = new OpenApiResponse
@@ -884,18 +874,18 @@ paths: {}",
                                     Description = "deletes a single pet based on the ID supplied",
                                     OperationId = "deletePet",
                                     Parameters = new List<OpenApiParameter>
-                                    {
-                                        new OpenApiParameter
                                         {
-                                            Name = "id",
-                                            In = ParameterLocation.Path,
-                                            Description = "ID of pet to delete",
-                                            Required = true,
-                                            Schema = new JsonSchemaBuilder()
-                                                        .Type(SchemaValueType.Integer)
-                                                        .Format("int64")
-                                        }
-                                    },
+                                            new OpenApiParameter
+                                            {
+                                                Name = "id",
+                                                In = ParameterLocation.Path,
+                                                Description = "ID of pet to delete",
+                                                Required = true,
+                                                Schema = new JsonSchemaBuilder()
+                                                            .Type(SchemaValueType.Integer)
+                                                            .Format("int64")
+                                            }
+                                        },
                                     Responses = new OpenApiResponses
                                     {
                                         ["204"] = new OpenApiResponse
@@ -931,31 +921,31 @@ paths: {}",
                     },
                     Components = components,
                     Tags = new List<OpenApiTag>
-                    {
-                        new OpenApiTag
                         {
-                            Name = "tagName1",
-                            Description = "tagDescription1",
-                            Reference = new OpenApiReference()
+                            new OpenApiTag
                             {
-                                Id = "tagName1",
-                                Type = ReferenceType.Tag
+                                Name = "tagName1",
+                                Description = "tagDescription1",
+                                Reference = new OpenApiReference()
+                                {
+                                    Id = "tagName1",
+                                    Type = ReferenceType.Tag
+                                }
                             }
-                        }
-                    },
+                        },
                     SecurityRequirements = new List<OpenApiSecurityRequirement>
-                    {
-                        new OpenApiSecurityRequirement
                         {
-                            [securityScheme1] = new List<string>(),
-                            [securityScheme2] = new List<string>
+                            new OpenApiSecurityRequirement
                             {
-                                "scope1",
-                                "scope2",
-                                "scope3"
+                                [securityScheme1] = new List<string>(),
+                                [securityScheme2] = new List<string>
+                                {
+                                    "scope1",
+                                    "scope2",
+                                    "scope3"
+                                }
                             }
                         }
-                    }
                 };
 
                 actual.Should().BeEquivalentTo(expected, options => options.Excluding(m => m.Name == "HostDocument"));
@@ -968,14 +958,9 @@ paths: {}",
         [Fact]
         public void ParsePetStoreExpandedShouldSucceed()
         {
-            OpenApiDiagnostic context;
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"), out var context);
 
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml")))
-            {
-                var actual = new OpenApiStreamReader().Read(stream, out context);
-
-                // TODO: Create the object in memory and compare with the one read from YAML file.
-            }
+            // TODO: Create the object in memory and compare with the one read from YAML file.
 
             context.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
@@ -984,21 +969,17 @@ paths: {}",
         [Fact]
         public void GlobalSecurityRequirementShouldReferenceSecurityScheme()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedApi.yaml")))
-            {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var openApiDoc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedApi.yaml"), out var diagnostic);
 
-                var securityRequirement = openApiDoc.SecurityRequirements.First();
+            var securityRequirement = openApiDoc.SecurityRequirements.First();
 
-                Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
-            }
+            Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
         }
 
         [Fact]
         public void HeaderParameterShouldAllowExample()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var openApiDoc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"), out var diagnostic);
 
             var exampleHeader = openApiDoc.Components?.Headers?["example-header"];
             Assert.NotNull(exampleHeader);
@@ -1065,15 +1046,13 @@ paths: {}",
         [Fact]
         public void ParseDocumentWithReferencedSecuritySchemeWorks()
         {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"));
-
             // Act
-            var doc = new OpenApiStreamReader(new OpenApiReaderSettings
+            var settings = new OpenApiReaderSettings
             {
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
-            }).Read(stream, out var diagnostic);
+            };
 
+            var doc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), out var context, settings);
             var securityScheme = doc.Components.SecuritySchemes["OAuth2"];
 
             // Assert

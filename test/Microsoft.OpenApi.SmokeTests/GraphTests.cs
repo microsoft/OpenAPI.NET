@@ -1,3 +1,6 @@
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Services;
 using System;
 using System.Net;
 using System.Net.Http;

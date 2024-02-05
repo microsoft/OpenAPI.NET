@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using FluentAssertions;
-using Microsoft.OpenApi.Readers.Exceptions;
+using Microsoft.OpenApi.Exceptions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests

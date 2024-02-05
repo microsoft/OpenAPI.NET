@@ -3,8 +3,10 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V31;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.Tests;
+using Microsoft.OpenApi.Reader.V31;
 using SharpYaml.Serialization;
 using Xunit;
 
