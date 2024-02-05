@@ -11,8 +11,9 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
-using Microsoft.OpenApi.Readers.Services;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.Interface;
+using Microsoft.OpenApi.Reader.Services;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 

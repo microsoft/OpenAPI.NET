@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
-namespace Microsoft.OpenApi.Readers.Services
+namespace Microsoft.OpenApi.Reader.Services
 {
     /// <summary>
     /// Builds a list of all remote references used in an OpenApi document

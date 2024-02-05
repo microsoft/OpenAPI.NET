@@ -7,7 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.Interface;
 
 namespace Microsoft.OpenApi.Readers
 {
