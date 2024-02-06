@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Readers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;

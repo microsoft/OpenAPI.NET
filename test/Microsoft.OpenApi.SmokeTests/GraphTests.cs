@@ -1,12 +1,9 @@
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader;
+﻿using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using System;
 using System.Net;
 using System.Net.Http;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Services;
 using Xunit;
 using Xunit.Abstractions;
 
