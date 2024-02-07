@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
 {
     internal static class OpenApiModelFactory
     {
-        private static readonly HttpClient _httpClient = new();
+        private static readonly HttpClient _httpClient = HttpClientFactory.GetHttpClient();
 
         static OpenApiModelFactory()
         {

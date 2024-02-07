@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     public class OpenApiJsonReader : IOpenApiReader
     {
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = HttpClientFactory.GetHttpClient();
 
         /// <summary>
         /// Takes in an input URL and parses it into an Open API document

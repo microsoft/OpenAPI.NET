@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers
 {
     internal class OpenApiYamlReader : IOpenApiReader
     {
-        private static readonly HttpClient _httpClient = new();
+        private static readonly HttpClient _httpClient = HttpClientFactory.GetHttpClient();
 
         public OpenApiDocument Parse(string input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
