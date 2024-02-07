@@ -13,6 +13,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
     public class OpenApiWorkspaceStreamTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiWorkspace/";
+        
+        public OpenApiWorkspaceStreamTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
 
         // Use OpenApiWorkspace to load a document and a referenced document
 
