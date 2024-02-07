@@ -74,7 +74,7 @@ This command accepts the following parameters:
     • --output-folder(--of) - The output directory path for the generated files.
 	• --clean-ouput(--co) - an optional param that allows a user to overwrite an existing file.  
 	• --version(-v) - OpenAPI specification version.
-    • --metadata-version(--mv) - Graph metadata version to use.
+    • --metadata-version(--mv) - the metadata version to use.
 	• --format(-f) - File format 
     • --terse-output(--to) - Produce terse json output
     • --settings-path(--sp) - The configuration file with CSDL conversion settings.
