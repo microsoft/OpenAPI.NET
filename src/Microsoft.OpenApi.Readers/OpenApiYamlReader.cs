@@ -13,7 +13,7 @@ using Microsoft.OpenApi.Reader;
 
 namespace Microsoft.OpenApi.Readers
 {
-    internal class OpenApiYamlReader : IOpenApiReader
+    public class OpenApiYamlReader : IOpenApiReader
     {
         private static readonly HttpClient _httpClient = HttpClientFactory.GetHttpClient();
 
