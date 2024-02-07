@@ -13,16 +13,21 @@ using Microsoft.OpenApi.Reader;
 
 namespace Microsoft.OpenApi.Readers
 {
+    /// <summary>
+    /// Reader for parsing YAML files into an OpenAPI document.
+    /// </summary>
     public class OpenApiYamlReader : IOpenApiReader
     {
         private static readonly HttpClient _httpClient = HttpClientFactory.GetHttpClient();
 
+        /// <inheritdoc/>
         public OpenApiDocument Parse(string input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
             using var reader = new StringReader(input);
             return Read(reader, out diagnostic, settings);
         }
 
+        /// <inheritdoc/>
         public OpenApiDocument Read(string url, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
             Stream stream;
@@ -61,16 +66,19 @@ namespace Microsoft.OpenApi.Readers
             return Read(stream, out diagnostic, settings);
         }
 
+        /// <inheritdoc/>        
         public OpenApiDocument Read(Stream stream, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
             return new OpenApiStreamReader(settings).Read(stream, out diagnostic);
         }
 
+        /// <inheritdoc/>
         public OpenApiDocument Read(TextReader input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
             return new OpenApiTextReaderReader(settings).Read(input, out diagnostic);
         }
 
+        /// <inheritdoc/>
         public async Task<ReadResult> ReadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             Stream stream;
@@ -109,11 +117,13 @@ namespace Microsoft.OpenApi.Readers
             return await ReadAsync(stream, settings, cancellationToken);
         }
 
+        /// <inheritdoc/>
         public async Task<ReadResult> ReadAsync(Stream stream, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             return await new OpenApiStreamReader(settings).ReadAsync(stream, cancellationToken);
         }
 
+        /// <inheritdoc/>
         public async Task<ReadResult> ReadAsync(TextReader input,
                                                 OpenApiReaderSettings settings = null,
                                                 CancellationToken cancellationToken = default)

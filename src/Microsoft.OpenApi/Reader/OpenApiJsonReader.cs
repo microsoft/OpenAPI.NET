@@ -17,13 +17,12 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader.Services;
-using System.Net;
 using System.Security;
 
 namespace Microsoft.OpenApi.Reader
 {
     /// <summary>
-    /// 
+    /// A reader class for parsing JSON files into Open API documents.
     /// </summary>
     public class OpenApiJsonReader : IOpenApiReader
     {
