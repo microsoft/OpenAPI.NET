@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Reader
         {
             var reader = new StreamReader(stream);
             var result = Read(reader, out diagnostic, settings);
-            if (!settings.LeaveStreamOpen)
+            if ((bool)!settings?.LeaveStreamOpen)
             {
                 reader.Dispose();
             }
@@ -241,8 +241,6 @@ namespace Microsoft.OpenApi.Reader
         private JsonNode LoadJsonNodesFromJsonDocument(TextReader input)
         {
             var nodes = JsonNode.Parse(input.ReadToEnd());
-            var jsonDoc = JsonDocument.Parse(input.ReadToEnd());
-
             return nodes;
         }
 
@@ -252,7 +250,7 @@ namespace Microsoft.OpenApi.Reader
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = settings.ExtensionParsers,
-                BaseUrl = settings.BaseUrl
+                BaseUrl = settings?.BaseUrl
             };
 
             OpenApiDocument document = null;
@@ -298,7 +296,7 @@ namespace Microsoft.OpenApi.Reader
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = settings.ExtensionParsers,
-                BaseUrl = settings.BaseUrl
+                BaseUrl = settings?.BaseUrl
             };
 
             OpenApiDocument document = null;
@@ -345,7 +343,7 @@ namespace Microsoft.OpenApi.Reader
             List<OpenApiError> errors = new();
 
             // Resolve References if requested
-            switch (settings.ReferenceResolution)
+            switch (settings?.ReferenceResolution)
             {
                 case ReferenceResolutionSetting.ResolveAllReferences:
                     throw new ArgumentException("Resolving external references is not supported");
@@ -368,7 +366,7 @@ namespace Microsoft.OpenApi.Reader
             var openApiWorkSpace = new OpenApiWorkspace();
 
             // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
+            var streamLoader = new DefaultStreamLoader(settings?.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, OpenApiConstants.Json, null, cancellationToken);
         }

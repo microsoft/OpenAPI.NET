@@ -9,8 +9,8 @@ namespace Microsoft.OpenApi.Reader.Services
 {
     internal class OpenApiWorkspaceLoader
     {
-        private OpenApiWorkspace _workspace;
-        private IStreamLoader _loader;
+        private readonly OpenApiWorkspace _workspace;
+        private readonly IStreamLoader _loader;
         private readonly OpenApiReaderSettings _readerSettings;
 
         public OpenApiWorkspaceLoader(OpenApiWorkspace workspace, IStreamLoader loader, OpenApiReaderSettings readerSettings)
