@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Reader
             settings ??= new OpenApiReaderSettings();
             var reader = new StreamReader(stream);
             var result = Read(reader, out diagnostic, settings);
-            if ((bool)!settings?.LeaveStreamOpen)
+            if (!settings.LeaveStreamOpen)
             {
                 reader.Dispose();
             }
@@ -252,13 +252,13 @@ namespace Microsoft.OpenApi.Reader
             return nodes;
         }
 
-        private OpenApiDocument Read(JsonNode input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
+        private OpenApiDocument Read(JsonNode input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings)
         {
             diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)
             {
-                ExtensionParsers = settings?.ExtensionParsers,
-                BaseUrl = settings?.BaseUrl
+                ExtensionParsers = settings.ExtensionParsers,
+                BaseUrl = settings.BaseUrl
             };
 
             OpenApiDocument document = null;
@@ -267,7 +267,7 @@ namespace Microsoft.OpenApi.Reader
                 // Parse the OpenAPI Document
                 document = context.Parse(input);
 
-                if ((bool)(settings?.LoadExternalRefs))
+                if ((bool)(settings.LoadExternalRefs))
                 {
                     throw new InvalidOperationException("Cannot load external refs using the synchronous Read, use ReadAsync instead.");
                 }
@@ -280,9 +280,9 @@ namespace Microsoft.OpenApi.Reader
             }
 
             // Validate the document
-            if (settings?.RuleSet != null && settings?.RuleSet.Rules.Count() > 0)
+            if (settings.RuleSet != null && settings.RuleSet.Rules.Count() > 0)
             {
-                var openApiErrors = document.Validate(settings?.RuleSet);
+                var openApiErrors = document.Validate(settings.RuleSet);
                 foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
                 {
                     diagnostic.Errors.Add(item);
@@ -297,14 +297,14 @@ namespace Microsoft.OpenApi.Reader
         }
 
         private async Task<ReadResult> ReadAsync(JsonNode jsonNode,
-                                                 OpenApiReaderSettings settings = null,
+                                                 OpenApiReaderSettings settings,
                                                  CancellationToken cancellationToken = default)
         {
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)
             {
-                ExtensionParsers = settings?.ExtensionParsers,
-                BaseUrl = settings?.BaseUrl
+                ExtensionParsers = settings.ExtensionParsers,
+                BaseUrl = settings.BaseUrl
             };
 
             OpenApiDocument document = null;
@@ -313,7 +313,7 @@ namespace Microsoft.OpenApi.Reader
                 // Parse the OpenAPI Document
                 document = context.Parse(jsonNode);
 
-                if ((bool)(settings?.LoadExternalRefs))
+                if (settings.LoadExternalRefs)
                 {
                     await LoadExternalRefs(document, cancellationToken, settings);
                 }
@@ -326,9 +326,9 @@ namespace Microsoft.OpenApi.Reader
             }
 
             // Validate the document
-            if (settings?.RuleSet != null && settings?.RuleSet.Rules.Count() > 0)
+            if (settings.RuleSet != null && settings.RuleSet.Rules.Count() > 0)
             {
-                var openApiErrors = document.Validate(settings?.RuleSet);
+                var openApiErrors = document.Validate(settings.RuleSet);
                 foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
                 {
                     diagnostic.Errors.Add(item);
@@ -351,7 +351,7 @@ namespace Microsoft.OpenApi.Reader
             List<OpenApiError> errors = new();
 
             // Resolve References if requested
-            switch (settings?.ReferenceResolution)
+            switch (settings.ReferenceResolution)
             {
                 case ReferenceResolutionSetting.ResolveAllReferences:
                     throw new ArgumentException("Resolving external references is not supported");
@@ -374,8 +374,8 @@ namespace Microsoft.OpenApi.Reader
             var openApiWorkSpace = new OpenApiWorkspace();
 
             // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings?.BaseUrl);
-            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings?.CustomExternalLoader ?? streamLoader, settings);
+            var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
+            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, OpenApiConstants.Json, null, cancellationToken);
         }
     }

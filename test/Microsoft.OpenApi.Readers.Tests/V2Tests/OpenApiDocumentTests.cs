@@ -148,11 +148,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ShouldAssignSchemaToAllResponses()
         {
             OpenApiDocument document;
-            OpenApiDiagnostic diagnostic;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json")))
-            {
-                document = new OpenApiStreamReader().Read(stream, out diagnostic);
-            }
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json"));
+            document = OpenApiDocument.Load(stream, OpenApiConstants.Json, out var diagnostic);
 
             Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
 
