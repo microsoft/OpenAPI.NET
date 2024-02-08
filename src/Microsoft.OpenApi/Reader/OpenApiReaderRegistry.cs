@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Reader
                 return reader;
             }
 
-            throw new NotSupportedException($"Format '{format}' is not supported.");
+            throw new NotSupportedException($"Format '{format}' is not supported. Register your reader with the OpenApiReaderRegistry class.");
         }
     }
 }
