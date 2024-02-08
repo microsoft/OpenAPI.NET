@@ -29,6 +29,7 @@ namespace Microsoft.OpenApi.Models
                                            out OpenApiDiagnostic diagnostic,
                                            OpenApiReaderSettings settings = null)
         {
+            Utils.CheckArgumentNull(format, nameof(format));
             var reader = OpenApiReaderRegistry.GetReader(format);
             return reader.Read(stream, out diagnostic, settings);
         }
@@ -38,18 +39,21 @@ namespace Microsoft.OpenApi.Models
                                            out OpenApiDiagnostic diagnostic,
                                            OpenApiReaderSettings settings = null)
         {
+            Utils.CheckArgumentNull(format, nameof(format));
             var reader = OpenApiReaderRegistry.GetReader(format);
             return reader.Read(input, out diagnostic, settings);
         }
 
         public static async Task<ReadResult> LoadAsync(Stream stream, string format, OpenApiReaderSettings settings = null)
         {
+            Utils.CheckArgumentNull(format, nameof(format));
             var reader = OpenApiReaderRegistry.GetReader(format);
             return await reader.ReadAsync(stream, settings);
         }
 
         public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings settings = null)
         {
+            Utils.CheckArgumentNull(format, nameof(format));
             var reader = OpenApiReaderRegistry.GetReader(format);
             return await reader.ReadAsync(input, settings);
         }
