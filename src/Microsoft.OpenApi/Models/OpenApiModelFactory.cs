@@ -18,12 +18,27 @@ namespace Microsoft.OpenApi.Models
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Json, new OpenApiJsonReader());
         }
 
+        /// <summary>
+        /// Loads the input URL and parses it into an Open API document.
+        /// </summary>
+        /// <param name="url">The input to read from.</param>
+        /// <param name="diagnostic">The diagnostic entity containing information from the reading process.</param>
+        /// <param name="settings"> The OpenApi reader settings.</param>
+        /// <returns>An OpenAPI document instance.</returns>
         public static OpenApiDocument Load(string url, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
             var format = GetFormat(url);
             return OpenApiReaderRegistry.GetReader(format).Read(url, out diagnostic, settings);
         }
 
+        /// <summary>
+        /// Loads the input stream and parses it into an Open API document.
+        /// </summary>
+        /// <param name="stream"> The input stream.</param>
+        /// <param name="diagnostic">The diagnostic entity containing information from the reading process.</param>
+        /// <param name="settings"> The OpenApi reader settings.</param>
+        /// <param name="format">The OpenAPI format.</param>
+        /// <returns>An OpenAPI document instance.</returns>
         public static OpenApiDocument Load(Stream stream,
                                            string format,
                                            out OpenApiDiagnostic diagnostic,
@@ -34,6 +49,14 @@ namespace Microsoft.OpenApi.Models
             return reader.Read(stream, out diagnostic, settings);
         }
 
+        /// <summary>
+        /// Loads the TextReader input and parses it into an Open API document.
+        /// </summary>
+        /// <param name="input">The TextReader input.</param>
+        /// <param name="diagnostic">The diagnostic entity containing information from the reading process.</param>
+        /// <param name="settings"> The OpenApi reader settings.</param>
+        /// <param name="format">The Open API format</param>
+        /// <returns>An OpenAPI document instance.</returns>
         public static OpenApiDocument Load(TextReader input,
                                            string format,
                                            out OpenApiDiagnostic diagnostic,
@@ -44,6 +67,13 @@ namespace Microsoft.OpenApi.Models
             return reader.Read(input, out diagnostic, settings);
         }
 
+        /// <summary>
+        /// Loads the input stream and parses it into an Open API document.
+        /// </summary>
+        /// <param name="stream">The input stream.</param>
+        /// <param name="settings"> The OpenApi reader settings.</param>
+        /// <param name="format">The Open API format</param>
+        /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(Stream stream, string format, OpenApiReaderSettings settings = null)
         {
             Utils.CheckArgumentNull(format, nameof(format));
@@ -51,6 +81,13 @@ namespace Microsoft.OpenApi.Models
             return await reader.ReadAsync(stream, settings);
         }
 
+        /// <summary>
+        /// Loads the TextReader input and parses it into an Open API document.
+        /// </summary>
+        /// <param name="input">The TextReader input.</param>
+        /// <param name="format">The Open API format</param>
+        /// <param name="settings"> The OpenApi reader settings.</param>
+        /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings settings = null)
         {
             Utils.CheckArgumentNull(format, nameof(format));
@@ -58,6 +95,12 @@ namespace Microsoft.OpenApi.Models
             return await reader.ReadAsync(input, settings);
         }
 
+        /// <summary>
+        /// Loads the input URL and parses it into an Open API document.
+        /// </summary>
+        /// <param name="url">The input URL.</param>
+        /// <param name="settings"> The OpenApi reader settings.</param>
+        /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
         {
             var format = GetFormat(url);
@@ -65,6 +108,14 @@ namespace Microsoft.OpenApi.Models
             return await reader.ReadAsync(url, settings);
         }
 
+        /// <summary>
+        /// Reads the input string and parses it into an Open API document.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="diagnostic">The diagnostic entity containing information from the reading process.</param>
+        /// <param name="format">The Open API format</param>
+        /// <param name="settings">The OpenApi reader settings.</param>
+        /// <returns>An OpenAPI document instance.</returns>
         public static OpenApiDocument Parse(string input,
                                             out OpenApiDiagnostic diagnostic,
                                             string format = null,

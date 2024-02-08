@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Reader
             JsonNode jsonNode;
             settings ??= new OpenApiReaderSettings();
 
-            // Parse the YAML/JSON text in the TextReader into Json Nodes
+            // Parse the JSON text in the TextReader into Json Nodes
             try
             {
                 jsonNode = LoadJsonNodesFromJsonDocument(input);
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Reader
             catch (JsonException ex)
             {
                 diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", ex.Message));
+                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
                 return new OpenApiDocument();
             }
 
@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Reader
             }
             catch (JsonException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", ex.Message));
+                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
                 return new ReadResult
                 {
                     OpenApiDocument = null,
