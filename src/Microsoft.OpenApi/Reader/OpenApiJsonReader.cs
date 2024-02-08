@@ -346,7 +346,7 @@ namespace Microsoft.OpenApi.Reader
             };
         }
 
-        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document, OpenApiReaderSettings settings = null)
+        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document, OpenApiReaderSettings settings)
         {
             List<OpenApiError> errors = new();
 
