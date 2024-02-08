@@ -38,6 +38,7 @@ namespace Microsoft.OpenApi.Reader
         /// <exception cref="ArgumentException"></exception>
         public OpenApiDocument Read(string url, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
+            settings ??= new OpenApiReaderSettings();
             Stream stream;
             if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
             {
@@ -83,6 +84,7 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public OpenApiDocument Read(Stream stream, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings =  null)
         {
+            settings ??= new OpenApiReaderSettings();
             var reader = new StreamReader(stream);
             var result = Read(reader, out diagnostic, settings);
             if ((bool)!settings?.LeaveStreamOpen)
@@ -103,6 +105,7 @@ namespace Microsoft.OpenApi.Reader
         public OpenApiDocument Read(TextReader input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
             JsonNode jsonNode;
+            settings ??= new OpenApiReaderSettings();
 
             // Parse the YAML/JSON text in the TextReader into Json Nodes
             try
@@ -129,6 +132,7 @@ namespace Microsoft.OpenApi.Reader
         /// <exception cref="ArgumentException"></exception>
         public async Task<ReadResult> ReadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
+            settings ??= new OpenApiReaderSettings();
             Stream stream;
             if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
             {
@@ -174,6 +178,8 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public async Task<ReadResult> ReadAsync(Stream input, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
+            settings ??= new OpenApiReaderSettings();
+
             MemoryStream bufferedStream;
             if (input is MemoryStream stream)
             {
@@ -205,6 +211,7 @@ namespace Microsoft.OpenApi.Reader
         {
             JsonNode jsonNode;
             var diagnostic = new OpenApiDiagnostic();
+            settings ??= new OpenApiReaderSettings();
 
             // Parse the YAML/JSON text in the TextReader into the YamlDocument
             try
@@ -233,6 +240,8 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public OpenApiDocument Parse(string input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
+            settings ??= new OpenApiReaderSettings();
+
             using var reader = new StringReader(input);
             return Read(reader, out diagnostic, settings);
         }
@@ -263,7 +272,7 @@ namespace Microsoft.OpenApi.Reader
                     throw new InvalidOperationException("Cannot load external refs using the synchronous Read, use ReadAsync instead.");
                 }
 
-                ResolveReferences(diagnostic, document);
+                ResolveReferences(diagnostic, document, settings);
             }
             catch (OpenApiException ex)
             {
