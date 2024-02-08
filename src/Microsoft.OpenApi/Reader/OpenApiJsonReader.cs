@@ -267,7 +267,7 @@ namespace Microsoft.OpenApi.Reader
                 // Parse the OpenAPI Document
                 document = context.Parse(input);
 
-                if ((bool)(settings.LoadExternalRefs))
+                if (settings.LoadExternalRefs)
                 {
                     throw new InvalidOperationException("Cannot load external refs using the synchronous Read, use ReadAsync instead.");
                 }
@@ -368,7 +368,7 @@ namespace Microsoft.OpenApi.Reader
             }
         }
 
-        private async Task LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings = null)
+        private async Task LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings)
         {
             // Create workspace for all documents to live in.
             var openApiWorkSpace = new OpenApiWorkspace();
