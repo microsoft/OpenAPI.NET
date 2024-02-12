@@ -39,6 +39,7 @@ namespace Microsoft.OpenApi.Reader.V3
             [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV3Deserializer.LoadComponents,
             [typeof(OpenApiContact)] = OpenApiV3Deserializer.LoadContact,
+            [typeof(OpenApiDiscriminator)] = OpenApiV3Deserializer.LoadDiscriminator,
             [typeof(OpenApiEncoding)] = OpenApiV3Deserializer.LoadEncoding,
             [typeof(OpenApiExample)] = OpenApiV3Deserializer.LoadExample,
             [typeof(OpenApiExternalDocs)] = OpenApiV3Deserializer.LoadExternalDocs,

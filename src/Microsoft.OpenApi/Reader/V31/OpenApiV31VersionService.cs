@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V3;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -37,6 +38,7 @@ namespace Microsoft.OpenApi.Reader.V31
             [typeof(OpenApiCallback)] = OpenApiV31Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV31Deserializer.LoadComponents,
             [typeof(OpenApiContact)] = OpenApiV31Deserializer.LoadContact,
+            [typeof(OpenApiDiscriminator)] = OpenApiV3Deserializer.LoadDiscriminator,
             [typeof(OpenApiEncoding)] = OpenApiV31Deserializer.LoadEncoding,
             [typeof(OpenApiExample)] = OpenApiV31Deserializer.LoadExample,
             [typeof(OpenApiExternalDocs)] = OpenApiV31Deserializer.LoadExternalDocs,
