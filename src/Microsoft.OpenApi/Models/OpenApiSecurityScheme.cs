@@ -318,9 +318,9 @@ namespace Microsoft.OpenApi.Models
         /// <param name="diagnostic"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static OpenApiDiscriminator Load(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
+        public static OpenApiSecurityScheme Load(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
-            return OpenApiModelFactory.Load<OpenApiDiscriminator>(url, version, out diagnostic, settings);
+            return OpenApiModelFactory.Load<OpenApiSecurityScheme>(url, version, out diagnostic, settings);
         }
 
         /// <summary>
