@@ -39,39 +39,7 @@ namespace Microsoft.OpenApi.Reader
         public OpenApiDocument Read(string url, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
             settings ??= new OpenApiReaderSettings();
-            Stream stream;
-            if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    stream = _httpClient.GetStreamAsync(new Uri(url)).GetAwaiter().GetResult();
-                }
-                catch (HttpRequestException ex)
-                {
-                    throw new InvalidOperationException($"Could not download the file at {url}", ex);
-                }
-            }
-            else
-            {
-                try
-                {
-                    var fileInput = new FileInfo(url);
-                    stream = fileInput.OpenRead();
-                }
-                catch (Exception ex) when (
-                    ex is
-                        FileNotFoundException or
-                        PathTooLongException or
-                        DirectoryNotFoundException or
-                        IOException or
-                        UnauthorizedAccessException or
-                        SecurityException or
-                        NotSupportedException)
-                {
-                    throw new InvalidOperationException($"Could not open the file at {url}", ex);
-                }
-            }
-
+            var stream = GetStream(url);
             return Read(stream, out diagnostic, settings);
         }
 
@@ -241,9 +209,115 @@ namespace Microsoft.OpenApi.Reader
         public OpenApiDocument Parse(string input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
             settings ??= new OpenApiReaderSettings();
-
             using var reader = new StringReader(input);
             return Read(reader, out diagnostic, settings);
+        }
+
+        /// <summary>
+        /// Parses an input string into an Open API document.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public T Parse<T>(string input,
+                          OpenApiSpecVersion version,
+                          out OpenApiDiagnostic diagnostic,
+                          OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            settings ??= new OpenApiReaderSettings();
+            using var reader = new StringReader(input);
+            return Read<T>(reader, version, out diagnostic, settings);
+        }
+
+        /// <summary>
+        /// Takes in an input URL and parses it into an Open API document
+        /// </summary>
+        /// <param name="url">The path to the Open API file</param>
+        /// <param name="version">The OpenAPI specification version.</param>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
+        /// <param name="settings">The Reader settings to be used during parsing.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public T Read<T>(string url, 
+                         OpenApiSpecVersion version,
+                         out OpenApiDiagnostic diagnostic,
+                         OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            settings ??= new OpenApiReaderSettings();
+            var stream = GetStream(url);
+            return Read<T>(stream, version, out diagnostic, settings);
+        }
+
+        /// <inheritdoc/>
+        public T Read<T>(Stream input,
+                         OpenApiSpecVersion version,
+                         out OpenApiDiagnostic diagnostic,
+                         OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            using var reader = new StreamReader(input);
+            return Read<T>(reader, version, out diagnostic);
+        }
+
+        /// <inheritdoc/>
+        public T Read<T>(TextReader input,
+                         OpenApiSpecVersion version,
+                         out OpenApiDiagnostic diagnostic,
+                         OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            JsonNode jsonNode;
+
+            // Parse the JSON
+            try
+            {
+                jsonNode = LoadJsonNodesFromJsonDocument(input);
+            }
+            catch (JsonException ex)
+            {
+                diagnostic = new();
+                diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
+                return default;
+            }
+
+            return Read<T>(jsonNode, version, out diagnostic);
+        }
+
+        /// <inheritdoc/>
+        public T Read<T>(JsonNode input,
+                         OpenApiSpecVersion version,
+                         out OpenApiDiagnostic diagnostic,
+                         OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            diagnostic = new();
+            settings ??= new OpenApiReaderSettings();
+            var context = new ParsingContext(diagnostic)
+            {
+                ExtensionParsers = settings.ExtensionParsers
+            };
+
+            IOpenApiElement element = null;
+            try
+            {
+                // Parse the OpenAPI element
+                element = context.ParseFragment<T>(input, version);
+            }
+            catch (OpenApiException ex)
+            {
+                diagnostic.Errors.Add(new(ex));
+            }
+
+            // Validate the element
+            if (settings.RuleSet != null && settings.RuleSet.Rules.Any())
+            {
+                var errors = element.Validate(settings.RuleSet);
+                foreach (var item in errors)
+                {
+                    diagnostic.Errors.Add(item);
+                }
+            }
+
+            return (T)element;
         }
 
         private JsonNode LoadJsonNodesFromJsonDocument(TextReader input)
@@ -378,5 +452,43 @@ namespace Microsoft.OpenApi.Reader
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, OpenApiConstants.Json, null, cancellationToken);
         }
+
+        private Stream GetStream(string url)
+        {
+            Stream stream;
+            if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    stream = _httpClient.GetStreamAsync(new Uri(url)).GetAwaiter().GetResult();
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw new InvalidOperationException($"Could not download the file at {url}", ex);
+                }
+            }
+            else
+            {
+                try
+                {
+                    var fileInput = new FileInfo(url);
+                    stream = fileInput.OpenRead();
+                }
+                catch (Exception ex) when (
+                    ex is
+                        FileNotFoundException or
+                        PathTooLongException or
+                        DirectoryNotFoundException or
+                        IOException or
+                        UnauthorizedAccessException or
+                        SecurityException or
+                        NotSupportedException)
+                {
+                    throw new InvalidOperationException($"Could not open the file at {url}", ex);
+                }
+            }
+
+            return stream;
+        }   
     }
 }

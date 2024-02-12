@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -76,5 +77,46 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <returns></returns>
         OpenApiDocument Parse(string input, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null);
+
+        /// <summary>
+        /// Reads the input string and parses it into an Open API document.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        T Parse<T>(string input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
+
+        /// <summary>
+        /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
+        /// </summary>
+        /// <param name="input">Stream containing OpenAPI description to parse.</param>
+        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
+        /// <param name="settings">The OpenApiReader settings.</param>
+        /// <returns>Instance of newly created OpenApiDocument</returns>
+        T Read<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
+
+        /// <summary>
+        /// Reads the TextReader input and parses the fragment of an OpenAPI description into an Open API Element.
+        /// </summary>
+        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
+        /// <param name="settings">The OpenApiReader settings.</param>
+        /// <returns>Instance of newly created OpenApiDocument</returns>
+        T Read<T>(TextReader input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
+
+        /// <summary>
+        /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
+        /// </summary>
+        /// <param name="url">Url pointing to the document.</param>
+        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
+        /// <param name="settings">The OpenApiReader settings.</param>
+        /// <returns>Instance of newly created OpenApiDocument</returns>
+        T Read<T>(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
     }
 }

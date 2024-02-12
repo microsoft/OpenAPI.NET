@@ -3,12 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.IO;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -304,6 +305,74 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Parses a local file path or Url into an OpenApiHeader object.
+        /// </summary>
+        /// <param name="url"> The path to the OpenAPI file.</param>
+        /// <param name="version">The OpenAPI specification version.</param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiHeader Load(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiHeader>(url, version, out diagnostic, settings);
+        }
+
+        /// <summary>
+        /// Reads the stream input and parses it into an OpenApiHeader object.
+        /// </summary>
+        /// <param name="stream">Stream containing OpenAPI description to parse.</param>
+        /// <param name="format">The OpenAPI format to use during parsing.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiHeader Load(Stream stream,
+                                           string format,
+                                           OpenApiSpecVersion version,
+                                           out OpenApiDiagnostic diagnostic,
+                                           OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiHeader>(stream, version, out diagnostic, format, settings);
+        }
+
+        /// <summary>
+        /// Reads the text reader content and parses it into an OpenApiHeader object.
+        /// </summary>
+        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="format"> The OpenAPI format to use during parsing.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiHeader Load(TextReader input,
+                                           string format,
+                                           OpenApiSpecVersion version,
+                                           out OpenApiDiagnostic diagnostic,
+                                           OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiHeader>(input, version, out diagnostic, format, settings);
+        }
+
+
+        /// <summary>
+        /// Parses a string into a <see cref="OpenApiHeader"/> object.
+        /// </summary>
+        /// <param name="input"> The string input.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="format"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiHeader Parse(string input,
+                                            OpenApiSpecVersion version,
+                                            out OpenApiDiagnostic diagnostic,
+                                            string format = null,
+                                            OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Parse<OpenApiHeader>(input, version, out diagnostic, format, settings);
         }
     }
 }

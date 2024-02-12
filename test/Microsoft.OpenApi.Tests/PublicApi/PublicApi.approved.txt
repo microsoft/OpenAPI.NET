@@ -293,9 +293,17 @@ namespace Microsoft.OpenApi.Interfaces
     public interface IOpenApiReader
     {
         Microsoft.OpenApi.Models.OpenApiDocument Parse(string input, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null);
+        T Parse<T>(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
         Microsoft.OpenApi.Models.OpenApiDocument Read(System.IO.Stream stream, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null);
         Microsoft.OpenApi.Models.OpenApiDocument Read(System.IO.TextReader input, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null);
         Microsoft.OpenApi.Models.OpenApiDocument Read(string url, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null);
+        T Read<T>(System.IO.Stream input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
+        T Read<T>(System.IO.TextReader input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
+        T Read<T>(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
         System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.Stream stream, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.TextReader input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(string url, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default);
@@ -424,6 +432,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiCallback Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiCallback Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiCallback Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiCallback Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiComponents : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -443,6 +455,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiComponents Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiComponents Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiComponents Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiComponents Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public static class OpenApiConstants
     {
@@ -592,6 +608,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiContact Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiContact Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiContact Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiContact Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiDiscriminator : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -603,6 +623,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiDiscriminator Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiDiscriminator Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiDiscriminator Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiDiscriminator Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiDocument : Json.Schema.IBaseDocument, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -649,6 +673,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiEncoding Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiEncoding Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiEncoding Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiEncoding Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiError
     {
@@ -677,6 +705,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiExample Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiExample Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiExample Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiExample Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public abstract class OpenApiExtensibleDictionary<T> : System.Collections.Generic.Dictionary<string, T>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
         where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable
@@ -698,6 +730,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiExternalDocs Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiExternalDocs Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiExternalDocs Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiExternalDocs Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiHeader : Microsoft.OpenApi.Interfaces.IEffective<Microsoft.OpenApi.Models.OpenApiHeader>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -724,6 +760,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiHeader Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiHeader Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiHeader Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiHeader Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiInfo : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -740,6 +780,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiInfo Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiInfo Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiInfo Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiInfo Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiLicense : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -752,6 +796,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiLicense Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiLicense Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiLicense Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiLicense Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiLink : Microsoft.OpenApi.Interfaces.IEffective<Microsoft.OpenApi.Models.OpenApiLink>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -773,6 +821,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiLink Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiLink Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiLink Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiLink Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiMediaType : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -786,6 +838,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiMediaType Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiMediaType Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiMediaType Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiMediaType Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiOAuthFlow : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -799,6 +855,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiOAuthFlow Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOAuthFlow Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOAuthFlow Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOAuthFlow Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiOAuthFlows : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -812,6 +872,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiOAuthFlows Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOAuthFlows Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOAuthFlows Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOAuthFlows Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiOperation : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -834,6 +898,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiOperation Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOperation Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOperation Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiOperation Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiParameter : Microsoft.OpenApi.Interfaces.IEffective<Microsoft.OpenApi.Models.OpenApiParameter>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -862,6 +930,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiParameter Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiParameter Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiParameter Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiParameter Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiPathItem : Microsoft.OpenApi.Interfaces.IEffective<Microsoft.OpenApi.Models.OpenApiPathItem>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -883,6 +955,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiPathItem Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiPathItem Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiPathItem Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiPathItem Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiPaths : Microsoft.OpenApi.Models.OpenApiExtensibleDictionary<Microsoft.OpenApi.Models.OpenApiPathItem>
     {
@@ -925,6 +1001,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiRequestBody Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiRequestBody Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiRequestBody Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiRequestBody Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiResponse : Microsoft.OpenApi.Interfaces.IEffective<Microsoft.OpenApi.Models.OpenApiResponse>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -944,6 +1024,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiResponse Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiResponse Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiResponse Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiResponse Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiResponses : Microsoft.OpenApi.Models.OpenApiExtensibleDictionary<Microsoft.OpenApi.Models.OpenApiResponse>
     {
@@ -956,6 +1040,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiSecurityRequirement Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiSecurityRequirement Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiSecurityRequirement Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiSecurityRequirement Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiSecurityScheme : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -978,6 +1066,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiDiscriminator Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiSecurityScheme Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiSecurityScheme Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiSecurityScheme Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiServer : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -990,6 +1082,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiServer Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiServer Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiServer Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiServer Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiServerVariable : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -1002,6 +1098,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiServerVariable Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiServerVariable Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiServerVariable Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiServerVariable Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiTag : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -1019,6 +1119,10 @@ namespace Microsoft.OpenApi.Models
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiTag Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiTag Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiTag Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiTag Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public class OpenApiXml : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -1033,6 +1137,10 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static Microsoft.OpenApi.Models.OpenApiXml Load(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiXml Load(System.IO.Stream stream, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiXml Load(System.IO.TextReader input, string format, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiXml Parse(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public enum OperationType
     {
@@ -1157,9 +1265,19 @@ namespace Microsoft.OpenApi.Reader
     {
         public OpenApiJsonReader() { }
         public Microsoft.OpenApi.Models.OpenApiDocument Parse(string input, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public T Parse<T>(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
         public Microsoft.OpenApi.Models.OpenApiDocument Read(System.IO.Stream stream, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
         public Microsoft.OpenApi.Models.OpenApiDocument Read(System.IO.TextReader input, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
         public Microsoft.OpenApi.Models.OpenApiDocument Read(string url, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
+        public T Read<T>(System.IO.Stream input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
+        public T Read<T>(System.IO.TextReader input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
+        public T Read<T>(string url, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
+        public T Read<T>(System.Text.Json.Nodes.JsonNode input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
         public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.Stream input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default) { }
         public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.TextReader input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default) { }
         public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(string url, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default) { }

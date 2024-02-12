@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -197,6 +199,74 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             // Link object does not exist in V2.
+        }
+
+        /// <summary>
+        /// Parses a local file path or Url into an OpenApiLink object.
+        /// </summary>
+        /// <param name="url"> The path to the OpenAPI file.</param>
+        /// <param name="version">The OpenAPI specification version.</param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiLink Load(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiLink>(url, version, out diagnostic, settings);
+        }
+
+        /// <summary>
+        /// Reads the stream input and parses it into an OpenApiLink object.
+        /// </summary>
+        /// <param name="stream">Stream containing OpenAPI description to parse.</param>
+        /// <param name="format">The OpenAPI format to use during parsing.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiLink Load(Stream stream,
+                                           string format,
+                                           OpenApiSpecVersion version,
+                                           out OpenApiDiagnostic diagnostic,
+                                           OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiLink>(stream, version, out diagnostic, format, settings);
+        }
+
+        /// <summary>
+        /// Reads the text reader content and parses it into an OpenApiLink object.
+        /// </summary>
+        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="format"> The OpenAPI format to use during parsing.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiLink Load(TextReader input,
+                                           string format,
+                                           OpenApiSpecVersion version,
+                                           out OpenApiDiagnostic diagnostic,
+                                           OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiLink>(input, version, out diagnostic, format, settings);
+        }
+
+
+        /// <summary>
+        /// Parses a string into a <see cref="OpenApiLink"/> object.
+        /// </summary>
+        /// <param name="input"> The string input.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="format"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiLink Parse(string input,
+                                            OpenApiSpecVersion version,
+                                            out OpenApiDiagnostic diagnostic,
+                                            string format = null,
+                                            OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Parse<OpenApiLink>(input, version, out diagnostic, format, settings);
         }
     }
 }

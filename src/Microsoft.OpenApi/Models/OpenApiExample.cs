@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -190,6 +192,74 @@ namespace Microsoft.OpenApi.Models
             // Example object of this form does not exist in V2.
             // V2 Example object requires knowledge of media type and exists only
             // in Response object, so it will be serialized as a part of the Response object.
+        }
+
+        /// <summary>
+        /// Parses a local file path or Url into an OpenApiExample object.
+        /// </summary>
+        /// <param name="url"> The path to the OpenAPI file.</param>
+        /// <param name="version">The OpenAPI specification version.</param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiExample Load(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiExample>(url, version, out diagnostic, settings);
+        }
+
+        /// <summary>
+        /// Reads the stream input and parses it into an OpenApiExample object.
+        /// </summary>
+        /// <param name="stream">Stream containing OpenAPI description to parse.</param>
+        /// <param name="format">The OpenAPI format to use during parsing.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiExample Load(Stream stream,
+                                           string format,
+                                           OpenApiSpecVersion version,
+                                           out OpenApiDiagnostic diagnostic,
+                                           OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiExample>(stream, version, out diagnostic, format, settings);
+        }
+
+        /// <summary>
+        /// Reads the text reader content and parses it into an OpenApiExample object.
+        /// </summary>
+        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="format"> The OpenAPI format to use during parsing.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiExample Load(TextReader input,
+                                           string format,
+                                           OpenApiSpecVersion version,
+                                           out OpenApiDiagnostic diagnostic,
+                                           OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Load<OpenApiExample>(input, version, out diagnostic, format, settings);
+        }
+
+
+        /// <summary>
+        /// Parses a string into a <see cref="OpenApiExample"/> object.
+        /// </summary>
+        /// <param name="input"> The string input.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="format"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static OpenApiExample Parse(string input,
+                                            OpenApiSpecVersion version,
+                                            out OpenApiDiagnostic diagnostic,
+                                            string format = null,
+                                            OpenApiReaderSettings settings = null)
+        {
+            return OpenApiModelFactory.Parse<OpenApiExample>(input, version, out diagnostic, format, settings);
         }
     }
 }
