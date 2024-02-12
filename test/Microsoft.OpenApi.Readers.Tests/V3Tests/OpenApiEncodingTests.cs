@@ -19,22 +19,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiEncoding/";
 
+        public OpenApiEncodingTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParseBasicEncodingShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicEncoding.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-                var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
-
             // Act
-            var encoding = OpenApiV3Deserializer.LoadEncoding(node);
+            var encoding = OpenApiEncoding.Load(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             encoding.Should().BeEquivalentTo(
@@ -48,18 +42,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseAdvancedEncodingShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-                var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
 
             // Act
-            var encoding = OpenApiV3Deserializer.LoadEncoding(node);
+            var encoding = OpenApiEncoding.Load(stream, OpenApiConstants.Yaml, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             encoding.Should().BeEquivalentTo(

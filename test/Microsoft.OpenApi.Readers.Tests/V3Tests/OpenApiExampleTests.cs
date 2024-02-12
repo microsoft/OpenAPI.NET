@@ -2,15 +2,11 @@
 // Licensed under the MIT license. 
 
 using System.IO;
-using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Reader;
-using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -20,21 +16,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiExample/";
 
+        public OpenApiExampleTests() 
+        {     
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParseAdvancedExampleShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedExample.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
-
-            var example = OpenApiV3Deserializer.LoadExample(node);
+            var example = OpenApiExample.Load(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
             var expected = new OpenApiExample
             {
                 Value = new OpenApiAny(new JsonObject
@@ -91,8 +81,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseExampleForcedStringSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "explicitString.yaml"));
-            new OpenApiStreamReader().Read(stream, out var diagnostic);
+            _ = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "explicitString.yaml"), out var diagnostic);
             diagnostic.Errors.Should().BeEmpty();
         }
     }

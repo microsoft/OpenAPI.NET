@@ -6,8 +6,7 @@ using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -16,11 +15,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiOperation/";
 
+        public OpenApiOperationTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void OperationWithSecurityRequirementShouldReferenceSecurityScheme()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var openApiDoc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedOperation.yaml"), out var diagnostic);
 
             var securityRequirement = openApiDoc.Paths["/"].Operations[OperationType.Get].Security.First();
 
@@ -30,15 +33,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseOperationWithParameterWithNoLocationShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var operation = OpenApiV3Deserializer.LoadOperation(node);
+            var operation = OpenApiOperation.Load(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             operation.Should().BeEquivalentTo(new OpenApiOperation

@@ -3,15 +3,11 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Reader.V3;
-using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -21,23 +17,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiInfo/";
 
+        public OpenApiInfoTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParseAdvancedInfoShouldSucceed()
         {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedInfo.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
-
             // Act
-            var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
+            var openApiInfo = OpenApiInfo.Load(Path.Combine(SampleFolderPath, "advancedInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(
@@ -93,19 +82,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicInfoShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicInfo.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
-
             // Act
-            var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
+            var openApiInfo = OpenApiInfo.Load(Path.Combine(SampleFolderPath, "basicInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(
@@ -133,18 +111,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseMinimalInfoShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalInfo.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
 
             // Act
-            var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
+            var openApiInfo = OpenApiInfo.Load(stream, "yaml", OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(

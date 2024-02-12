@@ -6,8 +6,7 @@ using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -17,18 +16,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiMediaType/";
 
+        public OpenApiMediaTypeTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParseMediaTypeWithExampleShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var mediaType = OpenApiV3Deserializer.LoadMediaType(node);
+            var mediaType = OpenApiMediaType.Load(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -44,15 +41,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseMediaTypeWithExamplesShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var mediaType = OpenApiV3Deserializer.LoadMediaType(node);
+            var mediaType = OpenApiMediaType.Load(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             mediaType.Should().BeEquivalentTo(

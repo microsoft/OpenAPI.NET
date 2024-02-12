@@ -21,10 +21,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                   "email": "support@swagger.io"
                 }
                 """;
-            var reader = new OpenApiStringReader();
 
             // Act
-            var contact = reader.ReadFragment<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var contact = OpenApiContact.Parse(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic, OpenApiConstants.Json);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());

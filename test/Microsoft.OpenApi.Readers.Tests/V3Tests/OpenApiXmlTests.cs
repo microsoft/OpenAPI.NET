@@ -3,13 +3,9 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Reader.V3;
-using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -19,23 +15,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiXml/";
 
+        public OpenApiXmlTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParseBasicXmlShouldSucceed()
         {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicXml.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
-
             // Act
-            var xml = OpenApiV3Deserializer.LoadXml(node);
+            var xml = OpenApiXml.Load(Resources.GetStream(Path.Combine(SampleFolderPath, "basicXml.yaml")), "yaml", OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             xml.Should().BeEquivalentTo(
