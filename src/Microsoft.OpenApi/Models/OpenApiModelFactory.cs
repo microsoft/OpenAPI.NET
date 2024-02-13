@@ -3,8 +3,8 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
-using System.Runtime;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
@@ -167,16 +167,14 @@ namespace Microsoft.OpenApi.Models
 
         private static string GetContentType(string url)
         {
-            var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
-            var contentType = response.Content.Headers.ContentType.MediaType;
-            if (contentType.EndsWith(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(url))
             {
-                return OpenApiConstants.Json;
+                var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+                var mediaType = response.Content.Headers.ContentType.MediaType;
+                var contentType = mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
+                return contentType.Split('/').LastOrDefault();
             }
-            else if (contentType.EndsWith(OpenApiConstants.Yaml, StringComparison.OrdinalIgnoreCase))
-            {
-                return OpenApiConstants.Yaml;
-            }
+
             return null;
         }
 
@@ -185,34 +183,16 @@ namespace Microsoft.OpenApi.Models
             if (!string.IsNullOrEmpty(url))
             {
                 if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
-                    {
-                    if (url.EndsWith(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase)
-                                    || GetContentType(url).Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return OpenApiConstants.Json;
-                    }
-                    else if (url.EndsWith(OpenApiConstants.Yaml, StringComparison.OrdinalIgnoreCase)
-                        || url.EndsWith(OpenApiConstants.Yml, StringComparison.OrdinalIgnoreCase)
-                                    || GetContentType(url).Equals(OpenApiConstants.Yml, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return OpenApiConstants.Yaml;
-                    }
+                {
+                    // URL examples ---> https://example.com/path/to/file.json, https://example.com/path/to/file.yaml
+                    var path = new Uri(url);
+                    var urlSuffix = path.Segments[path.Segments.Length - 1].Split('.').LastOrDefault();
+
+                    return !string.IsNullOrEmpty(urlSuffix) ? urlSuffix : GetContentType(url);
                 }
                 else
                 {
-                    if (url.EndsWith(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return OpenApiConstants.Json;
-                    }
-                    else if (url.EndsWith(OpenApiConstants.Yaml, StringComparison.OrdinalIgnoreCase) 
-                        || url.EndsWith(OpenApiConstants.Yml, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return OpenApiConstants.Yaml;
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Unsupported file format");
-                    }
+                    return Path.GetExtension(url).Split('.').LastOrDefault();
                 }
             }
             return null;

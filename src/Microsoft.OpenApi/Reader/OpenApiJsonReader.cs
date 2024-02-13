@@ -38,8 +38,7 @@ namespace Microsoft.OpenApi.Reader
         /// <exception cref="ArgumentException"></exception>
         public OpenApiDocument Read(string url, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null)
         {
-            settings ??= new OpenApiReaderSettings();
-            var stream = GetStream(url);
+            var stream = GetStream(url).GetAwaiter().GetResult();
             return Read(stream, out diagnostic, settings);
         }
 
@@ -100,40 +99,7 @@ namespace Microsoft.OpenApi.Reader
         /// <exception cref="ArgumentException"></exception>
         public async Task<ReadResult> ReadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
-            settings ??= new OpenApiReaderSettings();
-            Stream stream;
-            if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    stream = await _httpClient.GetStreamAsync(new Uri(url));
-                }
-                catch (HttpRequestException ex)
-                {
-                    throw new InvalidOperationException($"Could not download the file at {url}", ex);
-                }
-            }
-            else
-            {
-                try
-                {
-                    var fileInput = new FileInfo(url);
-                    stream = fileInput.OpenRead();
-                }
-                catch (Exception ex) when (
-                    ex is
-                        FileNotFoundException or
-                        PathTooLongException or
-                        DirectoryNotFoundException or
-                        IOException or
-                        UnauthorizedAccessException or
-                        SecurityException or
-                        NotSupportedException)
-                {
-                    throw new InvalidOperationException($"Could not open the file at {url}", ex);
-                }
-            }
-
+            var stream = await GetStream(url);
             return await ReadAsync(stream, settings, cancellationToken);
         }
 
@@ -246,7 +212,7 @@ namespace Microsoft.OpenApi.Reader
                          OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             settings ??= new OpenApiReaderSettings();
-            var stream = GetStream(url);
+            var stream = GetStream(url).GetAwaiter().GetResult();
             return Read<T>(stream, version, out diagnostic, settings);
         }
 
@@ -453,14 +419,14 @@ namespace Microsoft.OpenApi.Reader
             await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, OpenApiConstants.Json, null, cancellationToken);
         }
 
-        private Stream GetStream(string url)
+        private async Task<Stream> GetStream(string url)
         {
             Stream stream;
             if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
-                    stream = _httpClient.GetStreamAsync(new Uri(url)).GetAwaiter().GetResult();
+                    stream = await _httpClient.GetStreamAsync(new Uri(url));
                 }
                 catch (HttpRequestException ex)
                 {

@@ -2,7 +2,6 @@
 // Licensed under the MIT license. 
 
 using System.IO;
-using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -82,10 +81,10 @@ namespace Microsoft.OpenApi.Interfaces
         /// Reads the input string and parses it into an Open API document.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="input"></param>
-        /// <param name="version"></param>
-        /// <param name="diagnostic"></param>
-        /// <param name="settings"></param>
+        /// <param name="input">Stream containing OpenAPI description to parse.</param>
+        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
+        /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns></returns>
         T Parse<T>(string input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
 
@@ -110,7 +109,7 @@ namespace Microsoft.OpenApi.Interfaces
         T Read<T>(TextReader input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
 
         /// <summary>
-        /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
+        /// Reads the string input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
         /// <param name="url">Url pointing to the document.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>

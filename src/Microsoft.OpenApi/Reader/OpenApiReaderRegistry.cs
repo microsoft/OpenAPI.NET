@@ -21,10 +21,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="reader">The reader instance.</param>
         public static void RegisterReader(string format, IOpenApiReader reader)
         {
-            if (!_readers.ContainsKey(format))
-            {
-                _readers[format] = reader;
-            }
+            _readers[format] = reader;
         }
 
         /// <summary>
