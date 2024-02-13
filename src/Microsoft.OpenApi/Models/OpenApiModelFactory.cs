@@ -171,8 +171,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
                 var mediaType = response.Content.Headers.ContentType.MediaType;
-                var contentType = mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
-                return contentType.Split('/').LastOrDefault();
+                return mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
             }
 
             return null;
@@ -188,7 +187,7 @@ namespace Microsoft.OpenApi.Models
                     var path = new Uri(url);
                     var urlSuffix = path.Segments[path.Segments.Length - 1].Split('.').LastOrDefault();
 
-                    return !string.IsNullOrEmpty(urlSuffix) ? urlSuffix : GetContentType(url);
+                    return !string.IsNullOrEmpty(urlSuffix) ? urlSuffix : GetContentType(url).Split('/').LastOrDefault();
                 }
                 else
                 {
