@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseHttpSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = OpenApiSecurityScheme.Load(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseApiKeySecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = OpenApiSecurityScheme.Load(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseBearerSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = OpenApiSecurityScheme.Load(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseOAuth2SecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = OpenApiSecurityScheme.Load(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseOpenIdConnectSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = OpenApiSecurityScheme.Load(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(

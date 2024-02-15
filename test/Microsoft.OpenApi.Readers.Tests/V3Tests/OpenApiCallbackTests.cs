@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseBasicCallbackShouldSucceed()
         {
             // Act
-            var callback = OpenApiCallback.Load(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var callback = OpenApiModelFactory.Load<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -70,15 +70,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml"));
 
             // Act
-            var openApiDoc = OpenApiDocument.Load(stream, OpenApiConstants.Yaml, out var diagnostic);
+            var result = OpenApiModelFactory.Load(stream, OpenApiConstants.Yaml);
 
             // Assert
-            var path = openApiDoc.Paths.First().Value;
+            var path = result.OpenApiDocument.Paths.First().Value;
             var subscribeOperation = path.Operations[OperationType.Post];
 
             var callback = subscribeOperation.Callbacks["simpleHook"];
 
-            diagnostic.Should().BeEquivalentTo(
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             callback.Should().BeEquivalentTo(
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = ReferenceType.Callback,
                         Id = "simpleHook",
-                        HostDocument = openApiDoc
+                        HostDocument = result.OpenApiDocument
                     }
                 });
         }
@@ -123,13 +123,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseMultipleCallbacksWithReferenceShouldSucceed()
         {
             // Act
-            var openApiDoc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"), out var diagnostic);
+            var result = OpenApiModelFactory.Load(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
 
             // Assert
-            var path = openApiDoc.Paths.First().Value;
+            var path = result.OpenApiDocument.Paths.First().Value;
             var subscribeOperation = path.Operations[OperationType.Post];
 
-            diagnostic.Should().BeEquivalentTo(
+            result.OpenApiDocument.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             var callback1 = subscribeOperation.Callbacks["simpleHook"];
@@ -167,7 +167,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = ReferenceType.Callback,
                         Id = "simpleHook",
-                        HostDocument = openApiDoc
+                        HostDocument = result.OpenApiDocument
                     }
                 });
 

@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml"));
 
             // Act
-            var parameter = OpenApiParameter.Load(stream, "yaml", OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseQueryParameterShouldSucceed()
         {
             // Act
-            var parameter = OpenApiParameter.Load(Path.Combine(SampleFolderPath, "queryParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseQueryParameterWithObjectTypeShouldSucceed()
         {
             // Act
-            var parameter = OpenApiParameter.Load(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml"));
 
             // Act
-            var parameter = OpenApiParameter.Load(stream, "yaml", OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseHeaderParameterShouldSucceed()
         {
             // Act
-            var parameter = OpenApiParameter.Load(Path.Combine(SampleFolderPath, "headerParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "headerParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseParameterWithNullLocationShouldSucceed()
         {
             // Act
-            var parameter = OpenApiParameter.Load(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml"));
 
             // Act
-            var parameter = OpenApiParameter.Load(stream, "yaml", OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -188,7 +188,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml"));
 
             // Act
-            var parameter = OpenApiParameter.Load(stream, "yaml", OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseParameterWithExampleShouldSucceed()
         {
             // Act
-            var parameter = OpenApiParameter.Load(Path.Combine(SampleFolderPath, "parameterWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -228,7 +228,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseParameterWithExamplesShouldSucceed()
         {
             // Act
-            var parameter = OpenApiParameter.Load(Path.Combine(SampleFolderPath, "parameterWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(

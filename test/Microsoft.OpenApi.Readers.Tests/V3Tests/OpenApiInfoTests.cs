@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseAdvancedInfoShouldSucceed()
         {
             // Act
-            var openApiInfo = OpenApiInfo.Load(Path.Combine(SampleFolderPath, "advancedInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var openApiInfo = OpenApiModelFactory.Load<OpenApiInfo>(Path.Combine(SampleFolderPath, "advancedInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseBasicInfoShouldSucceed()
         {
             // Act
-            var openApiInfo = OpenApiInfo.Load(Path.Combine(SampleFolderPath, "basicInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var openApiInfo = OpenApiModelFactory.Load<OpenApiInfo>(Path.Combine(SampleFolderPath, "basicInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalInfo.yaml"));
 
             // Act
-            var openApiInfo = OpenApiInfo.Load(stream, "yaml", OpenApiSpecVersion.OpenApi3_0, out _);
+            var openApiInfo = OpenApiModelFactory.Load<OpenApiInfo>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(

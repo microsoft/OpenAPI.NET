@@ -2,14 +2,10 @@
 // Licensed under the MIT license.
 
 using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Reader.V3;
-using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -28,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseBasicEncodingShouldSucceed()
         {
             // Act
-            var encoding = OpenApiEncoding.Load(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             encoding.Should().BeEquivalentTo(
@@ -44,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml"));
 
             // Act
-            var encoding = OpenApiEncoding.Load(stream, OpenApiConstants.Yaml, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out _);
 
             // Assert
             encoding.Should().BeEquivalentTo(

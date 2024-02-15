@@ -22,11 +22,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ResponseWithReferencedHeaderShouldReferenceComponent()
         {
-            var openApiDoc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"), out var diagnostic);
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
 
-            var response = openApiDoc.Components.Responses["Test"];
+            var response = result.OpenApiDocument.Components.Responses["Test"];
 
-            Assert.Same(response.Headers.First().Value, openApiDoc.Components.Headers.First().Value);
+            Assert.Same(response.Headers.First().Value, result.OpenApiDocument.Components.Headers.First().Value);
         }
     }
 }

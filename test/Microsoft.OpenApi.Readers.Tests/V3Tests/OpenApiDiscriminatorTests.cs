@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDiscriminator.yaml"));
 
             // Act
-            var discriminator = OpenApiDiscriminator.Load(stream, OpenApiConstants.Yaml, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(stream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out var diagnostic);
 
             // Assert
             discriminator.Should().BeEquivalentTo(

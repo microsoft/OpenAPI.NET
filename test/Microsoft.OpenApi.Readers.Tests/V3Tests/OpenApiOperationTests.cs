@@ -23,18 +23,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void OperationWithSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var openApiDoc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedOperation.yaml"), out var diagnostic);
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
 
-            var securityRequirement = openApiDoc.Paths["/"].Operations[OperationType.Get].Security.First();
+            var securityRequirement = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security.First();
 
-            Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
+            Assert.Same(securityRequirement.Keys.First(), result.OpenApiDocument.Components.SecuritySchemes.First().Value);
         }
 
         [Fact]
         public void ParseOperationWithParameterWithNoLocationShouldSucceed()
         {
             // Act
-            var operation = OpenApiOperation.Load(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var operation = OpenApiModelFactory.Load<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             operation.Should().BeEquivalentTo(new OpenApiOperation
