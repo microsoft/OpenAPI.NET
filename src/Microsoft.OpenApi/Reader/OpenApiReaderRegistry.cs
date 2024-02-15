@@ -15,6 +15,11 @@ namespace Microsoft.OpenApi.Reader
         private static readonly Dictionary<string, IOpenApiReader> _readers = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
+        /// Defines a default OpenAPI reader.
+        /// </summary>
+        public static readonly IOpenApiReader DefaultReader = new OpenApiJsonReader();
+
+        /// <summary>
         /// Registers an IOpenApiReader for a given OpenAPI format.
         /// </summary>
         /// <param name="format">The OpenApi file format.</param>
