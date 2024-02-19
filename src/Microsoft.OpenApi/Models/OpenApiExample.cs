@@ -3,11 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models

@@ -3,11 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 
 

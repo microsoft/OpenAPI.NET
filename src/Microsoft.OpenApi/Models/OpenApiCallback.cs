@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -188,6 +186,6 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             // Callback object does not exist in V2.
-        }        
+        }
     }
 }
