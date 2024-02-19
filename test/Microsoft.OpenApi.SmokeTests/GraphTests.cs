@@ -3,7 +3,6 @@ using Microsoft.OpenApi.Services;
 using System;
 using System.Net;
 using System.Net.Http;
-using Microsoft.OpenApi.Readers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -38,13 +37,13 @@ namespace Microsoft.OpenApi.SmokeTests
 
             var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult(); ;
 
-            var reader = new OpenApiStreamReader();
-            _graphOpenApi = reader.Read(stream, out var diagnostic);
+            var result = OpenApiDocument.Load(stream, "json");
+            _graphOpenApi = result.OpenApiDocument;
 
-            if (diagnostic.Errors.Count > 0)
+            if (result.OpenApiDiagnostic.Errors.Count > 0)
             {
                 _output.WriteLine($"Errors parsing");
-                _output.WriteLine(String.Join('\n', diagnostic.Errors));
+                _output.WriteLine(String.Join('\n', result.OpenApiDiagnostic.Errors));
                 //               Assert.True(false);  // Uncomment to identify descriptions with errors.
             }
         }

@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
 using Microsoft.VisualBasic;
@@ -25,6 +26,11 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiDocumentTests
     {
+        public OpenApiDocumentTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
+
         public static readonly OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
             Schemas =
@@ -857,13 +863,6 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiDocumentTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
@@ -1202,31 +1201,11 @@ paths: { }";
         {
             // Read in the input yaml file
             using FileStream stream = File.OpenRead(filePath);
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var format = OpenApiModelFactory.GetFormat(filePath);
+            var openApiDoc = OpenApiDocument.Load(stream, format).OpenApiDocument;
 
             return openApiDoc;
         }
-
-        //[Fact]
-        //public void CopyConstructorForAdvancedDocumentWorks()
-        //{
-        //    // Arrange & Act
-        //    var doc = new OpenApiDocument(AdvancedDocument);
-
-        //    var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
-        //    var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
-        //    var responseSchemaTypeCopy = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type = "object";
-        //    var advancedDocResponseSchemaType = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type;
-
-        //    // Assert
-        //    Assert.NotNull(doc.Info);
-        //    Assert.NotNull(doc.Servers);
-        //    Assert.NotNull(doc.Paths);
-        //    Assert.Equal(2, doc.Paths.Count);
-        //    Assert.NotNull(doc.Components);
-        //    Assert.NotEqual(docOpId, advancedDocOpId);
-        //    Assert.NotEqual(responseSchemaTypeCopy, advancedDocResponseSchemaType);
-        //}
 
         [Fact]
         public void SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()

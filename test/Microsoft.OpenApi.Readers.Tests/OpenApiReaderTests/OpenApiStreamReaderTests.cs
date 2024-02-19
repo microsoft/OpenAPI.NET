@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System.IO;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
@@ -10,12 +12,17 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
 
+        public OpenApiStreamReaderTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void StreamShouldCloseIfLeaveStreamOpenSettingEqualsFalse()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
-            var reader = new OpenApiStreamReader(new() { LeaveStreamOpen = false });
-            reader.Read(stream, out _);
+            var settings = new OpenApiReaderSettings { LeaveStreamOpen = false };
+            _ = OpenApiDocument.Load(stream, "yaml", settings);
             Assert.False(stream.CanRead);
         }
 
@@ -23,8 +30,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         public void StreamShouldNotCloseIfLeaveStreamOpenSettingEqualsTrue()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
-            var reader = new OpenApiStreamReader(new() { LeaveStreamOpen = true});
-            reader.Read(stream, out _);
+            var settings = new OpenApiReaderSettings { LeaveStreamOpen = true };
+            _ = OpenApiDocument.Load(stream, "yaml", settings);
             Assert.True(stream.CanRead);
         }
     }

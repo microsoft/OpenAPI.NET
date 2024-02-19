@@ -55,16 +55,15 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
                 BaseUrl = new("fie://c:\\")
-            });
+            };
 
             ReadResult result;
-            using var stream = Resources.GetStream("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml");
-            result = await reader.ReadAsync(stream);            
+            result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);            
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));

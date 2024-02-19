@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
@@ -14,10 +16,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     {
         private const string SampleFolderPath = "V2Tests/Samples/";
 
+        public OpenApiDocumentTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }   
+
         [Fact]
         public void ShouldParseProducesInAnyOrder()
         {
-            var doc = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"), out var diagnostic);
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
 
             var okSchema = new JsonSchemaBuilder()
                     .Ref("#/definitions/Item")
@@ -39,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Schema = errorSchema
             };
 
-            doc.Should().BeEquivalentTo(new OpenApiDocument
+            result.OpenApiDocument.Should().BeEquivalentTo(new OpenApiDocument
             {
                 Info = new OpenApiInfo
                 {
@@ -147,11 +154,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ShouldAssignSchemaToAllResponses()
         {
-            OpenApiDocument document;
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json"));
-            document = OpenApiDocument.Load(stream, OpenApiConstants.Json, out var diagnostic);
+            var result = OpenApiDocument.Load(stream, OpenApiConstants.Json);
 
-            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
+            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, result.OpenApiDiagnostic.SpecificationVersion);
 
             var successSchema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Array)
@@ -167,7 +173,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                     .Build();
 
-            var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
+            var responses = result.OpenApiDocument.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)
             {
                 var targetSchema = response.Key == "200" ? successSchema : errorSchema;
@@ -185,13 +191,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ShouldAllowComponentsThatJustContainAReference()
         {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "ComponentRootReference.json"));
-            OpenApiStreamReader reader = new OpenApiStreamReader();
-
             // Act
-            OpenApiDocument doc = reader.Read(stream, out OpenApiDiagnostic diags);
-            JsonSchema schema = doc.Components.Schemas["AllPets"];
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "ComponentRootReference.json"));
+            JsonSchema schema = actual.OpenApiDocument.Components.Schemas["AllPets"];
 
             // Assert
             if (schema.Keywords.Count.Equals(1) && schema.GetRef() != null)
@@ -204,11 +206,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseDocumentWithDefaultContentTypeSettingShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"));
-            var doc = new OpenApiStreamReader(new() { DefaultContentType =  new() { "application/json" } })
-                .Read(stream, out var diags);
-            var mediaType = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
+            var settings = new OpenApiReaderSettings
+            {
+                DefaultContentType = ["application/json"]
+            };
+
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
+            var mediaType = actual.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
+        }
+
+        [Fact]
+        public void testContentType()
+        {
+            var contentType = "application/json; charset = utf-8";
+            var res = contentType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
+            var expected = res.Split('/').LastOrDefault();
+            Assert.Equal("application/json", res);
         }
     }
 }

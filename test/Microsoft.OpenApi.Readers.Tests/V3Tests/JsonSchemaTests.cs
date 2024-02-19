@@ -24,6 +24,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiSchema/";
 
+        public JsonSchemaTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParsePrimitiveSchemaShouldSucceed()
         {
@@ -59,11 +64,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
   ""foo"": ""bar"",
   ""baz"": [ 1,2]
 }";
-            var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -84,11 +88,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
   ""foo"",
   ""baz""
 ]";
-            var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -111,11 +114,10 @@ get:
     '200':
       description: Ok
 ";
-            var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic, "yaml");
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -206,14 +208,13 @@ get:
         [Fact]
         public void ParseBasicSchemaWithReferenceShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
             // Act
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
 
             // Assert
-            var components = openApiDoc.Components;
+            var components = result.OpenApiDocument.Components;
 
-            diagnostic.Should().BeEquivalentTo(
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
                 {
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
@@ -257,9 +258,8 @@ get:
         [Fact]
         public void ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
             // Act
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
 
             var expectedComponents = new OpenApiComponents
             {
@@ -337,7 +337,7 @@ get:
             };
 
             // We serialize so that we can get rid of the schema BaseUri properties which show up as diffs
-            var actual = openApiDoc.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = result.OpenApiDocument.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             var expected = expectedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert

@@ -30,15 +30,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             using var streamReader = new StreamReader(stream);
             var result = streamReader.ReadToEnd();
-            return new OpenApiStringReader().ReadFragment<T>(result, OpenApiSpecVersion.OpenApi3_1, out OpenApiDiagnostic diagnostic4);
+            return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_1, out OpenApiDiagnostic diagnostic4);
         }
 
         [Fact]
         public void ParseDocumentWithWebhooksShouldSucceed()
         {
             // Arrange and Act
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
-            var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
 
             var petSchema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
@@ -176,17 +175,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            var schema = actual.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-            actual.Should().BeEquivalentTo(expected);
+            var schema = actual.OpenApiDocument.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            actual.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public void ParseDocumentsWithReusablePathItemInWebhooksSucceeds()
         {
             // Arrange && Act
-            using var stream = Resources.GetStream("V31Tests/Samples/OpenApiDocument/documentWithReusablePaths.yaml");
-            var actual = new OpenApiStreamReader().Read(stream, out var context);
+            var actual = OpenApiDocument.Load("V31Tests/Samples/OpenApiDocument/documentWithReusablePaths.yaml");
 
             var components = new OpenApiComponents
             {
@@ -302,7 +300,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     {
                         Type = ReferenceType.PathItem,
                         Id = "/pets",
-                        HostDocument = actual
+                        HostDocument = actual.OpenApiDocument
                     }
                 }
             };
@@ -320,8 +318,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            actual.Should().BeEquivalentTo(expected);
-            context.Should().BeEquivalentTo(
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected);
+            actual.OpenApiDiagnostic.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
         }
 
@@ -329,11 +327,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public void ParseDocumentWithDescriptionInDollarRefsShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithSummaryAndDescriptionInReference.yaml"));
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithSummaryAndDescriptionInReference.yaml"));
 
             // Act
-            var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            var header = actual.Components.Responses["Test"].Headers["X-Test"];
+            var header = actual.OpenApiDocument.Components.Responses["Test"].Headers["X-Test"];
 
             // Assert
             Assert.True(header.Description == "A referenced X-Test header"); /*response header #ref's description overrides the header's description*/
@@ -343,12 +340,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public void ParseDocumentWithExampleInSchemaShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithExample.yaml"));
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+
             // Act
-            var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            actual.SerializeAsV31(writer);
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithExample.yaml"));
+            actual.OpenApiDocument.SerializeAsV31(writer);
 
             // Assert
             Assert.NotNull(actual);

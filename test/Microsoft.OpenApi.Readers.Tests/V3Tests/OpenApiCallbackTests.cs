@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var path = result.OpenApiDocument.Paths.First().Value;
             var subscribeOperation = path.Operations[OperationType.Post];
 
-            result.OpenApiDocument.Should().BeEquivalentTo(
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             var callback1 = subscribeOperation.Callbacks["simpleHook"];
