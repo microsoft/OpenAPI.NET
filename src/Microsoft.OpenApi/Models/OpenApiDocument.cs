@@ -636,8 +636,8 @@ namespace Microsoft.OpenApi.Models
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
         public static ReadResult Load(Stream stream,
-                                           string format,
-                                           OpenApiReaderSettings settings = null)
+                                      string format,
+                                      OpenApiReaderSettings settings = null)
         {
             return OpenApiModelFactory.Load(stream, format, settings);
         }

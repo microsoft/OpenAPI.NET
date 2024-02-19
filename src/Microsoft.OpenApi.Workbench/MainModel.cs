@@ -246,8 +246,9 @@ namespace Microsoft.OpenApi.Workbench
                         settings.BaseUrl = new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                     }
                 }
-                var readResult = await new OpenApiStreamReader(settings
-                ).ReadAsync(stream);
+
+                var format = OpenApiModelFactory.GetFormat(_inputFile);
+                var readResult = await OpenApiDocument.LoadAsync(stream, format);
                 var document = readResult.OpenApiDocument;
                 var context = readResult.OpenApiDiagnostic;
 

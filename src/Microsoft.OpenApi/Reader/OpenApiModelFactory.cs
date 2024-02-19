@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,7 +48,15 @@ namespace Microsoft.OpenApi.Reader
                                       string format,
                                       OpenApiReaderSettings settings = null)
         {
-            return LoadAsync(stream, format, settings).GetAwaiter().GetResult();
+            settings ??= new OpenApiReaderSettings();
+
+            var result = LoadAsync(stream, format, settings).GetAwaiter().GetResult();
+            if (!settings.LeaveStreamOpen)
+            {
+                stream.Dispose();
+            }
+
+            return result;
         }
 
         /// <summary>

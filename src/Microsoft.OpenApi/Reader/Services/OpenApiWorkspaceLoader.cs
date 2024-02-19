@@ -34,8 +34,6 @@ namespace Microsoft.OpenApi.Reader.Services
             var collectorWalker = new OpenApiWalker(referenceCollector);
             collectorWalker.Walk(document);
 
-            var reader = OpenApiReaderRegistry.GetReader(format);
-
             diagnostic ??= new();
 
             // Walk references
@@ -45,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.Services
                 if (!_workspace.Contains(item.ExternalResource))
                 {
                     var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
-                    var result = await reader.ReadAsync(input, _readerSettings, cancellationToken);
+                    var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken);
                     // Merge diagnostics
                     if (result.OpenApiDiagnostic != null)
                     {

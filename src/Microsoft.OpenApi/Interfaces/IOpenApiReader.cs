@@ -29,8 +29,9 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
+        /// <param name="format">The OpenAPI format.</param>
         /// <returns></returns>
-        Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, CancellationToken cancellationToken = default);
+        Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Reads the TextReader input and parses the fragment of an OpenAPI description into an Open API Element.

@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
 using SharpYaml.Serialization;
 using System.Linq;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Readers
                 };
             }
 
-            return await ReadAsync(jsonNode, settings, cancellationToken);
+            return await ReadAsync(jsonNode, settings, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -81,9 +82,9 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>        
-        public async Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
+        public async Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null, CancellationToken cancellationToken = default)
         {
-            return await OpenApiReaderRegistry.DefaultReader.ReadAsync(jsonNode, settings, cancellationToken);
+            return await OpenApiReaderRegistry.DefaultReader.ReadAsync(jsonNode, settings, OpenApiConstants.Yaml, cancellationToken);
         }
 
         /// <inheritdoc/>

@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Reader
                 };
             }
 
-            return await ReadAsync(jsonNode, settings, cancellationToken);            
+            return await ReadAsync(jsonNode, settings, cancellationToken: cancellationToken);            
         }
 
         /// <summary>
@@ -62,17 +62,20 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
+        /// <param name="format">The OpenAPI format.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
-        public async Task<ReadResult> ReadAsync(JsonNode jsonNode,
+        public async Task<ReadResult> ReadAsync(JsonNode jsonNode,                                                
                                                 OpenApiReaderSettings settings,
+                                                string format = null,
                                                 CancellationToken cancellationToken = default)
         {
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = settings.ExtensionParsers,
-                BaseUrl = settings.BaseUrl
+                BaseUrl = settings.BaseUrl,
+                DefaultContentType = settings.DefaultContentType
             };
 
             OpenApiDocument document = null;
@@ -83,7 +86,7 @@ namespace Microsoft.OpenApi.Reader
 
                 if (settings.LoadExternalRefs)
                 {
-                    var diagnosticExternalRefs = await LoadExternalRefs(document, cancellationToken, settings);
+                    var diagnosticExternalRefs = await LoadExternalRefs(document, cancellationToken, settings, format);
                     // Merge diagnostics of external reference
                     if (diagnosticExternalRefs != null)
                     {
@@ -208,7 +211,7 @@ namespace Microsoft.OpenApi.Reader
             }
         }
 
-        private async Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings)
+        private async Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
         {
             // Create workspace for all documents to live in.
             var openApiWorkSpace = new OpenApiWorkspace();
@@ -216,7 +219,7 @@ namespace Microsoft.OpenApi.Reader
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
-            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, OpenApiConstants.Json, null, cancellationToken);
+            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
         }
     }
 }
