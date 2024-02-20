@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -156,9 +156,9 @@ namespace Microsoft.OpenApi.Readers.V2
             // Fill in missing information based on the defaultUrl
             if (defaultUrl != null)
             {
-                host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
-                basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
-                schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
+                host ??= defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
+                basePath ??= defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
+                schemes ??= [defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped)];
             }
             else if (String.IsNullOrEmpty(host) && String.IsNullOrEmpty(basePath))
             {
