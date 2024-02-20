@@ -530,7 +530,9 @@ namespace Microsoft.OpenApi.Models
         public const string UniqueItems = "uniqueItems";
         public const string Url = "url";
         public const string V2ReferenceUri = "https://registry/definitions/";
+        public const string V2ReferencedSchemaPath = "/definitions/";
         public const string V3ReferenceUri = "https://registry/components/schemas/";
+        public const string V3ReferencedSchemaPath = "/components/schemas/";
         public const string Value = "value";
         public const string Variables = "variables";
         public const string Version = "version";
