@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -19,7 +19,6 @@ using System.Xml.Linq;
 using System.Xml.Xsl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OpenApi.ApiManifest;
 using Microsoft.OpenApi.ApiManifest.OpenAI;
