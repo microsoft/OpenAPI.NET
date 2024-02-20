@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -40,6 +40,12 @@ namespace Microsoft.OpenApi.Hidi
 {
     internal static class OpenApiService
     {
+        static OpenApiService()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
+        }
+
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
