@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
             // Examples of server url ----> "https://graph.microsoft.com/v1.0", "https://graph.microsoft.com/v1.0-fairfax"
             foreach (var schema in components.Schemas)
             {
-                var refPath = serverUrl != null ? string.Concat(serverUrl, OpenApiConstants.V3ReferencedSchemaPath)
+                var refPath = !string.IsNullOrEmpty(serverUrl) ? string.Concat(serverUrl, OpenApiConstants.V3ReferencedSchemaPath)
                     : OpenApiConstants.V3ReferenceUri;
 
                 var refUri = new Uri(refPath + schema.Key);

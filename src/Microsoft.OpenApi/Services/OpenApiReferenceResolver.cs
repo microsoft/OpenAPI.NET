@@ -254,10 +254,8 @@ namespace Microsoft.OpenApi.Services
         {
             var servers = _currentDocument.Servers;
             var basePath = servers?.FirstOrDefault()?.Url;
-            basePath = basePath.Contains("http://") || basePath.Contains("https://")
-                    ? basePath.Substring(0, basePath.IndexOf("/", basePath.Length - 1))
-                    : null;
 
+            basePath = RemoveTrailingSlash(basePath);
             var refPath = basePath ?? "https://registry";
 
             var refUri = $"{refPath}{reference.OriginalString.Split('#').LastOrDefault()}";
@@ -450,6 +448,16 @@ namespace Microsoft.OpenApi.Services
         private bool IsUnresolvedReference(IOpenApiReferenceable possibleReference)
         {
             return possibleReference != null && possibleReference.UnresolvedReference;
+        }
+
+        private string RemoveTrailingSlash(string url)
+        {
+            if (!string.IsNullOrEmpty(url) && url.EndsWith("/"))
+            {
+                // https://
+                return url.Substring(0, url.Length - 1);
+            }
+            return url;
         }
     }
 }

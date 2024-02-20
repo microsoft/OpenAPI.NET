@@ -326,11 +326,14 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 var servers = context.GetFromTempStorage<IList<OpenApiServer>>(TempStorageKeys.Servers);
                 var serverUrl = servers?.FirstOrDefault()?.Url;
-                serverUrl = serverUrl.Contains("http://") || serverUrl.Contains("https://")
-                    ? serverUrl.Substring(0, serverUrl.IndexOf("/", serverUrl.Length-1))
-                    : null;
 
-                var refPath = serverUrl != null ? string.Concat(serverUrl, OpenApiConstants.V2ReferencedSchemaPath)
+                // Remove any trailing slashes from the server URL
+                if (!string.IsNullOrEmpty(serverUrl) && serverUrl.EndsWith("/"))
+                {
+                    serverUrl = serverUrl.Substring(0, serverUrl.Length - 1);
+                }
+
+                var refPath = !string.IsNullOrEmpty(serverUrl) ? string.Concat(serverUrl, OpenApiConstants.V2ReferencedSchemaPath)
                     : OpenApiConstants.V2ReferenceUri;
 
                 var refUri = new Uri(refPath + schema.Key);
