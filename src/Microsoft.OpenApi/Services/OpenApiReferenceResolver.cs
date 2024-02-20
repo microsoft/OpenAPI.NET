@@ -454,7 +454,6 @@ namespace Microsoft.OpenApi.Services
         {
             if (!string.IsNullOrEmpty(url) && url.EndsWith("/"))
             {
-                // https://
                 return url.Substring(0, url.Length - 1);
             }
             return url;
