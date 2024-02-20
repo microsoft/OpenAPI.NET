@@ -598,6 +598,16 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Field: V3 JsonSchema Reference Uri
         /// </summary>
+        public const string V3ReferencedSchemaPath = "/components/schemas/";
+
+        /// <summary>
+        /// Field: V2 JsonSchema Reference Uri
+        /// </summary>
+        public const string V2ReferencedSchemaPath = "/definitions/";
+
+        /// <summary>
+        /// Field: V3 JsonSchema Reference Uri
+        /// </summary>
         public const string V3ReferenceUri = "https://registry/components/schemas/";
 
         /// <summary>

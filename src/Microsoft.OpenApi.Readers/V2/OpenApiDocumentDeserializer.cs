@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Xml.Linq;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -197,6 +198,8 @@ namespace Microsoft.OpenApi.Readers.V2
                     server.Url = server.Url.Substring(0, server.Url.Length - 1);
                 }
             }
+
+            context.SetTempStorage(TempStorageKeys.Servers, servers);
         }
 
         private static string BuildUrl(string scheme, string host, string basePath)
@@ -211,7 +214,7 @@ namespace Microsoft.OpenApi.Readers.V2
 #if NETSTANDARD2_1_OR_GREATER
             if (!String.IsNullOrEmpty(host) && host.Contains(':', StringComparison.OrdinalIgnoreCase))
 #else
-            if (!String.IsNullOrEmpty(host) && host.Contains(':'))
+            if (!string.IsNullOrEmpty(host) && host.Contains(':'))
 #endif
             {
                 var pieces = host.Split(':');
@@ -263,7 +266,7 @@ namespace Microsoft.OpenApi.Readers.V2
             MakeServers(openApidoc.Servers, openApiNode.Context, rootNode);
 
             FixRequestBodyReferences(openApidoc);
-            RegisterComponentsSchemasInGlobalRegistry(openApidoc.Components?.Schemas);
+            RegisterComponentsSchemasInGlobalRegistry(openApiNode.Context, openApidoc.Components?.Schemas);
 
             return openApidoc;
         }
@@ -312,7 +315,7 @@ namespace Microsoft.OpenApi.Readers.V2
             return Uri.CheckHostName(hostPart) != UriHostNameType.Unknown;
         }
 
-        private static void RegisterComponentsSchemasInGlobalRegistry(IDictionary<string, JsonSchema> schemas)
+        private static void RegisterComponentsSchemasInGlobalRegistry(ParsingContext context, IDictionary<string, JsonSchema> schemas)
         {
             if (schemas == null)
             {
@@ -321,7 +324,16 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var schema in schemas)
             {
-                var refUri = new Uri(OpenApiConstants.V2ReferenceUri + schema.Key);
+                var servers = context.GetFromTempStorage<IList<OpenApiServer>>(TempStorageKeys.Servers);
+                var serverUrl = servers?.FirstOrDefault()?.Url;
+                serverUrl = serverUrl.Contains("http://") || serverUrl.Contains("https://")
+                    ? serverUrl.Substring(0, serverUrl.IndexOf("/", serverUrl.Length-1))
+                    : null;
+
+                var refPath = serverUrl != null ? string.Concat(serverUrl, OpenApiConstants.V2ReferencedSchemaPath)
+                    : OpenApiConstants.V2ReferenceUri;
+
+                var refUri = new Uri(refPath + schema.Key);
                 SchemaRegistry.Global.Register(refUri, schema.Value);
             }
         }

@@ -4,6 +4,7 @@
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Readers.V2;
 
 namespace Microsoft.OpenApi.Readers.V3
 {
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
-            {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
+            {"servers", (o, n) => n.Context.SetTempStorage(TempStorageKeys.Servers, o.Servers = n.CreateList(LoadServer))},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);

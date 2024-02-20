@@ -252,7 +252,15 @@ namespace Microsoft.OpenApi.Services
         /// <returns></returns>
         public JsonSchema ResolveJsonSchemaReference(Uri reference, string description = null, string summary = null)
         {
-            var refUri = $"https://registry{reference.OriginalString.Split('#').LastOrDefault()}";
+            var servers = _currentDocument.Servers;
+            var basePath = servers?.FirstOrDefault()?.Url;
+            basePath = basePath.Contains("http://") || basePath.Contains("https://")
+                    ? basePath.Substring(0, basePath.IndexOf("/", basePath.Length - 1))
+                    : null;
+
+            var refPath = basePath ?? "https://registry";
+
+            var refUri = $"{refPath}{reference.OriginalString.Split('#').LastOrDefault()}";
             var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(refUri));
 
             if (resolvedSchema != null)

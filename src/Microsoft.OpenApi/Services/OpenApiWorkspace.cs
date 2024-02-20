@@ -159,7 +159,11 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var jsonSchema in doc.Components.Schemas)
                     {
-                        var refUri = new Uri(OpenApiConstants.V3ReferenceUri + jsonSchema.Key);
+                        var serverUrl = doc.Servers.FirstOrDefault()?.Url;
+                        var refPath = serverUrl != null ? string.Concat(serverUrl, OpenApiConstants.V3ReferencedSchemaPath)
+                                            : OpenApiConstants.V3ReferenceUri;
+
+                        var refUri = new Uri(refPath + jsonSchema.Key);
                         SchemaRegistry.Global.Register(refUri, jsonSchema.Value);
                     }
 

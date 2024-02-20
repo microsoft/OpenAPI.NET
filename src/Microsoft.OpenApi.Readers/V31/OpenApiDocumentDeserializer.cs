@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Readers.V2;
 
 namespace Microsoft.OpenApi.Readers.V31
 {
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.V31
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
             {"jsonSchemaDialect", (o, n) => o.JsonSchemaDialect = n.GetScalarValue() },
-            {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
+            {"servers", (o, n) => n.Context.SetTempStorage(TempStorageKeys.Servers, o.Servers = n.CreateList(LoadServer))},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
             {"webhooks", (o, n) => o.Webhooks = LoadPaths(n)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
