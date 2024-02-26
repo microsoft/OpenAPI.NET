@@ -1108,5 +1108,73 @@ paths: {}",
             actualSchema.Should().BeEquivalentTo(expectedSchema);
         }
 
+        [Fact]
+        public void ParseDocWithRefsUsingProxyReferencesSucceeds()
+        {
+            // Arrange
+            var expected = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "Pet Store with Referenceable Parameter",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths
+                {
+                    ["/pets"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Summary = "Returns all pets",
+                                Parameters =
+                                [
+                                    new OpenApiParameter
+                                    {
+                                        Name = "limit",
+                                        In = ParameterLocation.Query,
+                                        Description = "Limit the number of pets returned",
+                                        Required = false,
+                                        Schema = new JsonSchemaBuilder()
+                                            .Type(SchemaValueType.Integer)
+                                            .Format("int32")
+                                            .Default(10)
+                                    }
+                                ],
+                                Responses = new OpenApiResponses()
+                            }
+                        }
+                    }
+                },
+                Components = new OpenApiComponents
+                {
+                    Parameters = new Dictionary<string, OpenApiParameter>
+                    {
+                        ["LimitParameter"] = new OpenApiParameter
+                        {
+                            Name = "limit",
+                            In = ParameterLocation.Query,
+                            Description = "Limit the number of pets returned",
+                            Required = false,
+                            Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Integer)
+                                .Format("int32")
+                                .Default(10)
+                        }
+                    }
+                }               
+            };
+
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
+
+            // Act
+            var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
+            var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
+
+            // Assert
+            actualParam.Should().BeEquivalentTo(expectedParam);
+        }
     }
 }
