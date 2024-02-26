@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V3
@@ -63,7 +65,8 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiSecurityScheme>(ReferenceType.SecurityScheme, pointer);
+                var refId = pointer.Split('/').Last();
+                return new OpenApiSecuritySchemeReference(refId, _openApiDocument);
             }
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)

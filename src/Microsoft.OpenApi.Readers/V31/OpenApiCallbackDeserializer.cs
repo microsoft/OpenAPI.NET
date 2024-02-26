@@ -3,6 +3,8 @@ using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Models.References;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.V31
 {
@@ -28,7 +30,8 @@ namespace Microsoft.OpenApi.Readers.V31
 
             if (mapNode.GetReferencePointer() is {} pointer)
             {
-                return mapNode.GetReferencedObject<OpenApiCallback>(ReferenceType.Callback, pointer);
+                var refId = pointer.Split('/').Last();
+                return new OpenApiCallbackReference(refId, _openApiDocument);
             }
 
             var domainObject = new OpenApiCallback();

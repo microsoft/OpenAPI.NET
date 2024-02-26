@@ -1,5 +1,7 @@
-﻿using Microsoft.OpenApi.Extensions;
+﻿using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V31
@@ -86,10 +88,8 @@ namespace Microsoft.OpenApi.Readers.V31
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-
-                return mapNode.GetReferencedObject<OpenApiHeader>(ReferenceType.Header, pointer, summary, description);
+                var refId = pointer.Split('/').Last();
+                return new OpenApiHeaderReference(refId, _openApiDocument);
             }
 
             var header = new OpenApiHeader();

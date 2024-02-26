@@ -13,6 +13,8 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
+
+        private static readonly OpenApiDocument _openApiDocument = new();
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
@@ -46,12 +48,11 @@ namespace Microsoft.OpenApi.Readers.V3
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
         {
-            var openApidoc = new OpenApiDocument();
             var openApiNode = rootNode.GetMap();
 
-            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
+            ParseMap(openApiNode, _openApiDocument, _openApiFixedFields, _openApiPatternFields);
 
-            return openApidoc;
+            return _openApiDocument;
         }
     }
 }

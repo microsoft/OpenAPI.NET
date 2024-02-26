@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V3
@@ -115,7 +116,8 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
+                var refId = pointer.Split('/').Last();
+                return new OpenApiParameterReference(refId, _openApiDocument);
             }
 
             var parameter = new OpenApiParameter();
