@@ -401,6 +401,11 @@ namespace Microsoft.OpenApi.Models
         public const string Properties = "properties";
 
         /// <summary>
+        /// Field: Pattern Properties
+        /// </summary>
+        public const string PatternProperties = "patternProperties";
+
+        /// <summary>
         /// Field: AdditionalProperties
         /// </summary>
         public const string AdditionalProperties = "additionalProperties";

@@ -3,8 +3,10 @@ using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 
@@ -351,6 +353,50 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             Assert.NotNull(actual);
+        }
+
+        [Fact]
+        public void ParseDocumentWithPatternPropertiesInSchemaWorks()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"));
+
+            // Act
+            var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+
+            var actualSchema = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+
+            var expectedSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .Properties(
+                    ("prop1", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    ("prop2", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    ("prop3", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .PatternProperties(
+                    ("^x-.*$", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .Build();
+            
+            // Serialization
+            var mediaType = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
+
+            var expectedMediaType = @"schema:
+  type: object
+  properties:
+    prop1:
+      type: string
+    prop2:
+      type: string
+    prop3:
+      type: string
+  patternProperties:
+    ^x-.*$:
+      type: string";
+            
+            var actualMediaType = mediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actualSchema.Should().BeEquivalentTo(expectedSchema);
+            actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }
