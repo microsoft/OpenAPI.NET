@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Link Object Reference.
     /// </summary>
-    internal class OpenApiLinkReference : OpenApiLink
+    public class OpenApiLinkReference : OpenApiLink
     {
         private OpenApiLink _target;
         private readonly OpenApiReference _reference;

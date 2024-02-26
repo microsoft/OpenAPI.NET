@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,7 +10,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Tag Object Reference
     /// </summary>
-    internal class OpenApiTagReference : OpenApiTag
+    public class OpenApiTagReference : OpenApiTag
     {
         private OpenApiTag _target;
         private readonly OpenApiReference _reference;

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References

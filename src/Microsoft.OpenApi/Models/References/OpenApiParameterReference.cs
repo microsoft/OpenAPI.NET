@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -14,7 +13,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    internal class OpenApiParameterReference : OpenApiParameter
+    public class OpenApiParameterReference : OpenApiParameter
     {
         private OpenApiParameter _target;
         private readonly OpenApiReference _reference;

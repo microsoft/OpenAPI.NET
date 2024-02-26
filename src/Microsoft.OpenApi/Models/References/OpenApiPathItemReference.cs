@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Path Item Object Reference: to describe the operations available on a single path.
     /// </summary>
-    internal class OpenApiPathItemReference : OpenApiPathItem
+    public class OpenApiPathItemReference : OpenApiPathItem
     {
         private OpenApiPathItem _target;
         private readonly OpenApiReference _reference;

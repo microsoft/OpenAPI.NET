@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -13,7 +12,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Example Object Reference.
     /// </summary>
-    internal class OpenApiExampleReference : OpenApiExample
+    public class OpenApiExampleReference : OpenApiExample
     {
         private OpenApiExample _target;
         private readonly OpenApiReference _reference;

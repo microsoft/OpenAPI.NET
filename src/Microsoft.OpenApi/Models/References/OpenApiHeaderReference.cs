@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
 {
-    internal class OpenApiHeaderReference : OpenApiHeader
+    /// <summary>
+    /// Header Object Reference.
+    /// </summary>
+    public class OpenApiHeaderReference : OpenApiHeader
     {
         private OpenApiHeader _target;
         private readonly OpenApiReference _reference;

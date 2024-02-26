@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Response Object Reference.
     /// </summary>
-    internal class OpenApiResponseReference : OpenApiResponse
+    public class OpenApiResponseReference : OpenApiResponse
     {
         private OpenApiResponse _target;
         private readonly OpenApiReference _reference;
