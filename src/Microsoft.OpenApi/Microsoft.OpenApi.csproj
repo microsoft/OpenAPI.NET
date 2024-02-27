@@ -2,6 +2,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>Latest</LangVersion>
+        <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>1.6.11</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
