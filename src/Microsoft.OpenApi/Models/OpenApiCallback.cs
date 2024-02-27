@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A Path Item Object used to define a callback request and expected responses.
         /// </summary>
-        public virtual Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
+        public virtual Dictionary<RuntimeExpression, OpenApiPathItem>? PathItems { get; set; }
             = new();
 
         /// <summary>
@@ -28,12 +28,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public OpenApiReference Reference { get; set; }
+        public OpenApiReference? Reference { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -45,9 +45,9 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiCallback(OpenApiCallback callback)
         {
-            PathItems = callback?.PathItems != null ? new(callback?.PathItems) : null;
+            PathItems = callback?.PathItems != null ? new(callback.PathItems) : null;
             UnresolvedReference = callback?.UnresolvedReference ?? UnresolvedReference;
-            Reference = callback?.Reference != null ? new(callback?.Reference) : null;
+            Reference = callback?.Reference != null ? new(callback.Reference) : null;
             Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
         }
 
@@ -160,13 +160,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // path items
-            foreach (var item in PathItems)
+            if (PathItems != null)
             {
-                writer.WriteRequiredObject(item.Key.Expression, item.Value, callback);
-            }
+                foreach (var item in PathItems)
+                {
+                    writer.WriteRequiredObject(item.Key.Expression, item.Value, callback);
+                }
+            }            
 
             // extensions
-            writer.WriteExtensions(Extensions, version);
+            writer.WriteExtensions(Extensions!, version);
 
             writer.WriteEndObject();
         }
