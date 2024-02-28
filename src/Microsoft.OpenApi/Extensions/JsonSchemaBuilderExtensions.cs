@@ -278,6 +278,7 @@ namespace Microsoft.OpenApi.Extensions
     /// The extensions keyword
     /// </summary>
     [SchemaKeyword(Name)]
+    [SchemaSpecVersion(SpecVersion.Draft202012)]
     public class ExtensionsKeyword : IJsonSchemaKeyword
     {
         /// <summary>
