@@ -391,7 +391,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiCallback callback, bool isComponent = false)
         {
-            if (callback == null || ProcessAsReference(callback, isComponent))
+            if (callback == null || IsProxyReference(callback, isComponent))
             {
                 return;
             }
@@ -415,7 +415,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiTag tag)
         {
-            if (tag == null || ProcessAsReference(tag))
+            if (tag == null || IsProxyReference(tag))
             {
                 return;
             }
@@ -482,7 +482,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiPathItem pathItem, bool isComponent = false)
         {
-            if (pathItem == null || ProcessAsReference(pathItem, isComponent))
+            if (pathItem == null || IsProxyReference(pathItem, isComponent))
             {
                 return;
             }
@@ -599,7 +599,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiParameter parameter, bool isComponent = false)
         {
-            if (parameter == null || ProcessAsReference(parameter, isComponent))
+            if (parameter == null || IsProxyReference(parameter, isComponent))
             {
                 return;
             }
@@ -641,7 +641,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiResponse response, bool isComponent = false)
         {
-            if (response == null || ProcessAsReference(response, isComponent))
+            if (response == null || IsProxyReference(response, isComponent))
             {
                 return;
             }
@@ -658,7 +658,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiRequestBody requestBody, bool isComponent = false)
         {
-            if (requestBody == null || ProcessAsReference(requestBody, isComponent))
+            if (requestBody == null || IsProxyReference(requestBody, isComponent))
             {
                 return;
             }
@@ -935,7 +935,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiExample example, bool isComponent = false)
         {
-            if (example == null || ProcessAsReference(example, isComponent))
+            if (example == null || IsProxyReference(example, isComponent))
             {
                 return;
             }
@@ -1041,7 +1041,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiLink link, bool isComponent = false)
         {
-            if (link == null || ProcessAsReference(link, isComponent))
+            if (link == null || IsProxyReference(link, isComponent))
             {
                 return;
             }
@@ -1056,7 +1056,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiHeader header, bool isComponent = false)
         {
-            if (header == null || ProcessAsReference(header, isComponent))
+            if (header == null || IsProxyReference(header, isComponent))
             {
                 return;
             }
@@ -1088,7 +1088,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiSecurityScheme securityScheme, bool isComponent = false)
         {
-            if (securityScheme == null || ProcessAsReference(securityScheme, isComponent))
+            if (securityScheme == null || IsProxyReference(securityScheme, isComponent))
             {
                 return;
             }
@@ -1164,12 +1164,11 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Identify if an element is just a reference to a component, or an actual component
+        /// Identify whether an element is a proxy reference to a component, or an actual component
         /// </summary>
-        private bool ProcessAsReference(IOpenApiReferenceable referenceable, bool isComponent = false)
+        private bool IsProxyReference(IOpenApiReferenceable referenceable, bool isComponent = false)
         {
-            var isReference = referenceable.Reference != null && 
-                              (!isComponent || referenceable.UnresolvedReference);
+            var isReference = referenceable.GetType().Name.Contains("Reference") && !isComponent;
             if (isReference)
             {
                 Walk(referenceable);
