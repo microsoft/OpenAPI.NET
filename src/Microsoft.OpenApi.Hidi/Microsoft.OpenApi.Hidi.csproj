@@ -35,7 +35,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="Microsoft.OData.Edm" Version="7.20.0" />
-    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.6.0-preview.9" />
+    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.6.0-preview.10" />
     <PackageReference Include="Microsoft.OpenApi.ApiManifest" Version="0.5.0-preview" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
   </ItemGroup>
