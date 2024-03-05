@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Microsoft.OpenApi.Hidi/bin/Debug/net7.0/Microsoft.OpenApi.Hidi.dll",
+            "program": "${workspaceFolder}/src/Microsoft.OpenApi.Hidi/bin/Debug/net8.0/Microsoft.OpenApi.Hidi.dll",
             "args": ["plugin", 
                     "-m","C:\\Users\\darrmi\\src\\github\\microsoft\\openapi.net\\test\\Microsoft.OpenApi.Hidi.Tests\\UtilityFiles\\exampleapimanifest.json", 
                     "--of","./output"],
@@ -28,7 +28,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Microsoft.OpenApi.WorkBench/bin/Debug/net7.0-windows/Microsoft.OpenApi.Workbench.exe",
+            "program": "${workspaceFolder}/src/Microsoft.OpenApi.WorkBench/bin/Debug/net8.0-windows/Microsoft.OpenApi.Workbench.exe",
             "args": [],
             "cwd": "${workspaceFolder}/src/Microsoft.OpenApi.Workbench",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
