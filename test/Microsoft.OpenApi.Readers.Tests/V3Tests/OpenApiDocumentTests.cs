@@ -9,8 +9,10 @@ using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
@@ -1166,15 +1168,41 @@ paths: {}",
                 }               
             };
 
+            var expectedSerializedDoc = @"openapi: 3.0.1
+info:
+  title: Pet Store with Referenceable Parameter
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      summary: Returns all pets
+      parameters:
+        - $ref: '#/components/parameters/LimitParameter'
+      responses: { }
+components:
+  parameters:
+    LimitParameter:
+      name: limit
+      in: query
+      description: Limit the number of pets returned
+      schema:
+        type: integer
+        format: int32
+        default: 10";
+
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
             // Act
             var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
             var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
+            var outputDoc = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0).MakeLineBreaksEnvironmentNeutral();
+            var output = actualParam.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
 
             // Assert
+            doc.Should().BeEquivalentTo(expected);
             actualParam.Should().BeEquivalentTo(expectedParam);
+            outputDoc.Should().BeEquivalentTo(expectedSerializedDoc.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

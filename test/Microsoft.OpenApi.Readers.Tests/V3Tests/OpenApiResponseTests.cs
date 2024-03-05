@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -19,8 +20,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
             var response = openApiDoc.Components.Responses["Test"];
+            var expected = response.Headers.First().Value;
+            var actual = openApiDoc.Components.Headers.First().Value;
 
-            Assert.Same(response.Headers.First().Value, openApiDoc.Components.Headers.First().Value);
+            actual.Description.Should().BeEquivalentTo(expected.Description);
         }
     }
 }

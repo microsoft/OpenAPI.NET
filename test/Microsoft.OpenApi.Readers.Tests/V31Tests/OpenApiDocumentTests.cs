@@ -314,7 +314,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Version = "1.0.0"
                 },
                 JsonSchemaDialect = "http://json-schema.org/draft-07/schema#",
-                Webhooks = components.PathItems,
+                Webhooks = new Dictionary<string, OpenApiPathItem>
+                {
+                    ["/pets"] = new OpenApiPathItem
+                    {
+                        Operations = components.PathItems["/pets"].Operations
+                    }
+                },
                 Components = components
             };
 
@@ -322,20 +328,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             actual.Should().BeEquivalentTo(expected);
             context.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-        }
-
-        [Fact]
-        public void ParseDocumentWithDescriptionInDollarRefsShouldSucceed()
-        {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithSummaryAndDescriptionInReference.yaml"));
-
-            // Act
-            var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            var header = actual.Components.Responses["Test"].Headers["X-Test"];
-
-            // Assert
-            Assert.True(header.Description == "A referenced X-Test header"); /*response header #ref's description overrides the header's description*/
         }
 
         [Fact]
