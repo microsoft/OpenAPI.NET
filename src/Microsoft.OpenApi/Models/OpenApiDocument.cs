@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
         /// </summary>
-        public OpenApiWorkspace Workspace { get; set; }
+        public OpenApiWorkspace Workspace { get; set; } = new();
 
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
@@ -89,10 +89,21 @@ namespace Microsoft.OpenApi.Models
         public Uri BaseUri { get; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public string DocumentID { get; }
+
+        /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiDocument() { }
-
+        public OpenApiDocument() 
+        {
+            var documentId = (Servers.FirstOrDefault()?.Url.ToString())
+                ?? "http://openapi.net/" + HashCode;
+            DocumentID = documentId;
+            Workspace.AddDocument(documentId, this);
+        }
+                
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
         /// </summary>
