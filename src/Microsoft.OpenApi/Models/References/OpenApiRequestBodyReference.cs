@@ -54,6 +54,8 @@ namespace Microsoft.OpenApi.Models.References
                 Type = ReferenceType.RequestBody,
                 ExternalResource = externalResource
             };
+
+            Reference = _reference;
         }
 
         /// <inheritdoc/>

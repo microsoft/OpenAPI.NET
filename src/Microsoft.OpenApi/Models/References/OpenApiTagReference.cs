@@ -47,7 +47,9 @@ namespace Microsoft.OpenApi.Models.References
                 HostDocument = hostDocument,
                 Type = ReferenceType.Tag
             };
-        }
+
+            Reference = _reference;
+       }
 
         /// <inheritdoc/>
         public override string Description

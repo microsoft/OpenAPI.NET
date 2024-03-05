@@ -48,6 +48,8 @@ namespace Microsoft.OpenApi.Models.References
                 HostDocument = hostDocument,
                 Type = ReferenceType.SecurityScheme
             };
+
+            Reference = _reference;
         }
 
         /// <inheritdoc/>
