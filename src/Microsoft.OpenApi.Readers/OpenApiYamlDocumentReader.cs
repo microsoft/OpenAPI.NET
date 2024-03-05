@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -60,8 +59,6 @@ namespace Microsoft.OpenApi.Readers
                 {
                     throw new InvalidOperationException("Cannot load external refs using the synchronous Read, use ReadAsync instead.");
                 }
-
-                ResolveReferences(diagnostic, document);
             }
             catch (OpenApiException ex)
             {
@@ -110,8 +107,6 @@ namespace Microsoft.OpenApi.Readers
                         diagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
                     }
                 }
-
-                ResolveReferences(diagnostic, document);
             }
             catch (OpenApiException ex)
             {
@@ -148,28 +143,6 @@ namespace Microsoft.OpenApi.Readers
             var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
             return workspaceLoader.LoadAsync(new() { ExternalResource = "/" }, document, null, cancellationToken);
-        }
-
-        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
-        {
-            var errors = new List<OpenApiError>();
-
-            // Resolve References if requested
-            switch (_settings.ReferenceResolution)
-            {
-                case ReferenceResolutionSetting.ResolveAllReferences:
-                    throw new ArgumentException("Resolving external references is not supported");
-                case ReferenceResolutionSetting.ResolveLocalReferences:
-                    errors.AddRange(document.ResolveReferences());
-                    break;
-                case ReferenceResolutionSetting.DoNotResolveReferences:
-                    break;
-            }
-
-            foreach (var item in errors)
-            {
-                diagnostic.Errors.Add(item);
-            }
         }
 
         /// <summary>
