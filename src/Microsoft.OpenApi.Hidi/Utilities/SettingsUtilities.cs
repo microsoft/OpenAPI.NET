@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.OData;
@@ -27,7 +28,7 @@ namespace Microsoft.OpenApi.Hidi.Utilities
         
         internal static OpenApiConvertSettings GetOpenApiConvertSettings(IConfiguration config, string? metadataVersion)
         {
-            if (config == null) { throw new System.ArgumentNullException(nameof(config)); }
+            ArgumentNullException.ThrowIfNull(config);
             var settings = new OpenApiConvertSettings();
             if (!string.IsNullOrEmpty(metadataVersion))
                 settings.SemVerVersion = metadataVersion;
