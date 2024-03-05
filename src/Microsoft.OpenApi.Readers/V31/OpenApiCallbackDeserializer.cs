@@ -30,8 +30,12 @@ namespace Microsoft.OpenApi.Readers.V31
 
             if (mapNode.GetReferencePointer() is {} pointer)
             {
-                var refId = pointer.Split('/').Last();
-                return new OpenApiCallbackReference(refId, _openApiDocument);
+                var refSegments = pointer.Split('/');
+                var refId = refSegments.Last();
+                var isExternalResource = !refSegments.First().StartsWith("#");
+
+                string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
+                return new OpenApiCallbackReference(refId, _openApiDocument, externalResource);
             }
 
             var domainObject = new OpenApiCallback();

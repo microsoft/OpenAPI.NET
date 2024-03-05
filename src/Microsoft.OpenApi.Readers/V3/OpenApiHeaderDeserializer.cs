@@ -71,8 +71,12 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var refId = pointer.Split('/').Last();
-                return new OpenApiHeaderReference(refId, _openApiDocument);
+                var refSegments = pointer.Split('/');
+                var refId = refSegments.Last();
+                var isExternalResource = !refSegments.First().StartsWith("#");
+
+                string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
+                return new OpenApiHeaderReference(refId, _openApiDocument, externalResource);
             }
 
             var header = new OpenApiHeader();
