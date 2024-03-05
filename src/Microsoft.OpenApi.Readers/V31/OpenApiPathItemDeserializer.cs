@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.V31
             if (pointer != null)
             {
                 var refId = pointer.Split('/').Last();
-                return new OpenApiPathItemReference(refId, _openApiDocument);
+                return new OpenApiPathItemReference(string.Concat('/', refId), _openApiDocument);
             }
 
             var pathItem = new OpenApiPathItem();
