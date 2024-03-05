@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -21,6 +21,9 @@ namespace Microsoft.OpenApi.Services
         private readonly Dictionary<Uri, IOpenApiReferenceable> _fragments = new();
         private readonly Dictionary<Uri, JsonSchema> _schemaFragments = new();
         private readonly Dictionary<Uri, Stream> _artifacts = new();
+        private IDictionary<string, IOpenApiReferenceable> _referenceableRegistry = new Dictionary<string, IOpenApiReferenceable>();
+        private IDictionary<string, IBaseDocument> _schemaRegistry = new Dictionary<string, IBaseDocument>();
+
 
         /// <summary>
         /// A list of OpenApiDocuments contained in the workspace
@@ -69,6 +72,85 @@ namespace Microsoft.OpenApi.Services
         /// Initializes a copy of an <see cref="OpenApiWorkspace"/> object
         /// </summary>
         public OpenApiWorkspace(OpenApiWorkspace workspace) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="baseDocument"></param>
+        public void RegisterComponent(Uri uri, IBaseDocument baseDocument)
+        {
+            // If reference type is schema, register in IBaseDocument registry
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (baseDocument == null) throw new ArgumentNullException(nameof(baseDocument));
+
+            if (_schemaRegistry.ContainsKey(uri.ToString()))
+            {
+                throw new InvalidOperationException($"Key already exists. {nameof(uri)} needs to be unique");
+            }
+            else
+            {
+                _schemaRegistry.Add(uri.ToString(), baseDocument);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="referenceable"></param>
+        public void RegisterComponent(Uri uri, IOpenApiReferenceable referenceable)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (referenceable == null) throw new ArgumentNullException(nameof(referenceable));
+
+            if (_schemaRegistry.ContainsKey(uri.OriginalString))
+            {
+                throw new InvalidOperationException($"Key already exists. {nameof(uri)} needs to be unique");
+            }
+            else
+            {
+                _referenceableRegistry.Add(uri.OriginalString, referenceable);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="uri"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool TryRetrieveComponent<TValue>(Uri uri, out TValue value)
+        {
+            if (uri == null)
+            {
+                value = default;
+                return false;
+            }
+            
+            if ((typeof(TValue) == typeof(IBaseDocument)))
+            {
+                _schemaRegistry.TryGetValue(uri.OriginalString, out IBaseDocument schema);
+                if (schema != null)
+                {
+                    value = (TValue)schema;
+                    return true;
+                }
+            }
+            else if(typeof(TValue) == typeof(IOpenApiReferenceable))
+            {
+                _referenceableRegistry.TryGetValue(uri.OriginalString, out IOpenApiReferenceable referenceable);
+                if (referenceable != null)
+                {
+                    value = (TValue)referenceable;
+                    return true;
+                }
+            }
+
+            value = default;
+            return false;
+        }
 
         /// <summary>
         /// Verify if workspace contains a document based on its URL.
