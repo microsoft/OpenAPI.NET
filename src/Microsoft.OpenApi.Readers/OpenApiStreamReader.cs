@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Readers
                 bufferedStream.Position = 0;
             }
 
-            using var reader = new StreamReader(bufferedStream);
+            using var reader = new StreamReader(bufferedStream, default, true, -1, leaveOpen: _settings.LeaveStreamOpen);
             return await new OpenApiTextReaderReader(_settings).ReadAsync(reader, cancellationToken);
         }
 
