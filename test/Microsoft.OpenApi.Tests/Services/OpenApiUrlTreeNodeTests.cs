@@ -467,22 +467,36 @@ namespace Microsoft.OpenApi.Tests.Services
             await Verifier.Verify(diagram);
         }
 
-        [Fact]
-        public void SupportsTrailingSlashesInPath()
+        public static TheoryData<string, string[], string, string> SupportsTrailingSlashesInPathData => new TheoryData<string, string[], string, string>
+        {
+            // Path, children up to second to leaf, last expected leaf node name, expected leaf node path
+            { "/cars/{car-id}/build/", ["cars", "{car-id}"], "build/", @"\cars\{car-id}\build/" },
+            { "/cars/", [], "cars/", @"\cars/" },
+        };
+
+        [Theory]
+        [MemberData(nameof(SupportsTrailingSlashesInPathData))]
+        public void SupportsTrailingSlashesInPath(string path, string[] childrenBeforeLastNode, string expectedLeafNodeName, string expectedLeafNodePath)
         {
             var openApiDocument = new OpenApiDocument
             {
                 Paths = new()
                 {
-                    ["/cars/{car-id}/build/"] = new()
+                    [path] = new()
                 }
             };
 
-            var label1 = "trailing-slash";
-            var rootNode = OpenApiUrlTreeNode.Create(openApiDocument, label1);
-            var buildNode = rootNode.Children["cars"].Children["{car-id}"].Children["build"];
+            var label = "trailing-slash";
+            var rootNode = OpenApiUrlTreeNode.Create(openApiDocument, label);
 
-            // Should buildNode have a path of "build/" or should it have a child with an empty string key?
+            var secondToLeafNode = rootNode;
+            foreach (var childName in childrenBeforeLastNode)
+            {
+                secondToLeafNode = secondToLeafNode.Children[childName];
+            }
+
+            Assert.True(secondToLeafNode.Children.TryGetValue(expectedLeafNodeName, out var lastNode));
+            Assert.Equal(expectedLeafNodePath, lastNode.Path);
         }
     }
 }
