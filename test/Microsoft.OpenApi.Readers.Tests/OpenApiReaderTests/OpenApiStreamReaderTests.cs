@@ -27,5 +27,21 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             reader.Read(stream, out _);
             Assert.True(stream.CanRead);
         }
+
+        [Fact]
+        public async void StreamShouldNotBeDisposedIfLeaveStreamOpenSettingIsTrue()
+        {
+            var memoryStream = new MemoryStream();
+            using var fileStream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
+
+            await fileStream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+            var stream = memoryStream;
+
+            var reader = new OpenApiStreamReader(new() { LeaveStreamOpen = true });
+            _ = await reader.ReadAsync(stream);
+            stream.Seek(0, SeekOrigin.Begin); // does not throw an object disposed exception
+            Assert.True(stream.CanRead);
+        }
     }
 }
