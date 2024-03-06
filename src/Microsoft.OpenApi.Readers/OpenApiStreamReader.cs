@@ -41,14 +41,8 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument.</returns>
         public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
-            var reader = new StreamReader(input);
-            var result = new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
-            if (!_settings.LeaveStreamOpen)
-            {
-                reader.Dispose();
-            }
-
-            return result;
+            using var reader = new StreamReader(input, default, true, -1, _settings.LeaveStreamOpen);
+            return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
         }
 
         /// <summary>
@@ -73,7 +67,7 @@ namespace Microsoft.OpenApi.Readers
                 bufferedStream.Position = 0;
             }
 
-            using var reader = new StreamReader(bufferedStream);
+            using var reader = new StreamReader(bufferedStream, default, true, -1, _settings.LeaveStreamOpen);
             return await new OpenApiTextReaderReader(_settings).ReadAsync(reader, cancellationToken);
         }
 
@@ -86,7 +80,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public T ReadFragment<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiReferenceable
         {
-            using var reader = new StreamReader(input);
+            using var reader = new StreamReader(input, default, true, -1, _settings.LeaveStreamOpen);
             return new OpenApiTextReaderReader(_settings).ReadFragment<T>(reader, version, out diagnostic);
         }
     }
