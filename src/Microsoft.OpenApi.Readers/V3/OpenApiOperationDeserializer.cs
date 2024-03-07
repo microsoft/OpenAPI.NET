@@ -3,6 +3,7 @@
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V3
@@ -90,17 +91,7 @@ namespace Microsoft.OpenApi.Readers.V3
             ParsingContext context,
             string tagName)
         {
-            var tagObject = new OpenApiTag
-            {
-                UnresolvedReference = true,
-                Reference = new()
-                {
-                    Type = ReferenceType.Tag,
-                    Id = tagName
-                }
-            };
-
-            return tagObject;
+            return new OpenApiTagReference(tagName, _openApiDocument);
         }
     }
 }
