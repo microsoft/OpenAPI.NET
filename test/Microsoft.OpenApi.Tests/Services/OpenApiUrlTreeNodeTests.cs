@@ -495,8 +495,9 @@ namespace Microsoft.OpenApi.Tests.Services
                 secondToLeafNode = secondToLeafNode.Children[childName];
             }
 
-            Assert.True(secondToLeafNode.Children.TryGetValue(expectedLeafNodeName, out var lastNode));
-            Assert.Equal(expectedLeafNodePath, lastNode.Path);
+            Assert.True(secondToLeafNode.Children.TryGetValue(expectedLeafNodeName, out var leafNode));
+            Assert.Equal(expectedLeafNodePath, leafNode.Path);
+            Assert.Empty(leafNode.Children);
         }
     }
 }
