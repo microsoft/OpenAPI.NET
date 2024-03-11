@@ -52,7 +52,7 @@ jobs:
       - if: steps.conditionals_handler.outputs.is_default_branch == 'true'
         name: Bump GH tag
         id: tag_generator
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.2
         with: 
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
