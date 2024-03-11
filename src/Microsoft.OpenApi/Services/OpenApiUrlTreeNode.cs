@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Services
             }
 
             var segments = path.Split('/');
-            if (path.EndsWith("/"))
+            if (path.EndsWith("/", StringComparison.OrdinalIgnoreCase))
             {
                 // Remove the last element, which is empty, and append the trailing slash to the new last element
                 // This is to support URLs with trailing slashes
