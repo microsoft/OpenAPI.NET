@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                     ["property1"] = "10.0",
                     ["property2"] = "10",
                     ["property3"] = "-5",
-                    ["property4"] = 10.0M,
+                    ["property4"] = (double)10.0M,
                     ["property5"] = 10,
                     ["property6"] = -5,
                     ["property7"] = true,
@@ -168,7 +168,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 property1: '10.0'
                 property2: '10'
                 property3: '-5'
-                property4: 10.0
+                property4: 10
                 property5: 10
                 property6: -5
                 property7: true

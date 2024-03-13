@@ -330,7 +330,7 @@ get:
                                         .Format("int32")
                                         .Description("the size of the pack the dog is from")
                                         .Default(0)
-                                        .Minimum(double.MinValue)
+                                        .Minimum((double)0)
                                     )
                                 )
                         )
