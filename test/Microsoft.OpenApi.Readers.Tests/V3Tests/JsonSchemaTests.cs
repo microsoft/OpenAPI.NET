@@ -234,7 +234,7 @@ get:
                                 .Required("message", "code")
                                 .Properties(
                                     ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600))),
+                                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum((double)100).Maximum((double) 600))),
                             ["ExtendedErrorModel"] = new JsonSchemaBuilder()
                                 .Ref("#/components/schemas/ExtendedErrorModel")
                                 .AllOf(
@@ -242,7 +242,7 @@ get:
                                         .Ref("#/components/schemas/ErrorModel")
                                         .Type(SchemaValueType.Object)
                                         .Properties(
-                                            ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600)),
+                                            ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum((double)100).Maximum((double) 600)),
                                             ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                                         .Required("message", "code"),
                                     new JsonSchemaBuilder()
@@ -330,7 +330,7 @@ get:
                                         .Format("int32")
                                         .Description("the size of the pack the dog is from")
                                         .Default(0)
-                                        .Minimum(0)
+                                        .Minimum(double.MinValue)
                                     )
                                 )
                         )
