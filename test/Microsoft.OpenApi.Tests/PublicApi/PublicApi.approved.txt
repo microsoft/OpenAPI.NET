@@ -160,6 +160,22 @@ namespace Microsoft.OpenApi.Extensions
             where T : System.Attribute { }
         public static string GetDisplayName(this System.Enum enumValue) { }
     }
+    [Json.Schema.SchemaKeyword("exclusiveMaximum")]
+    public class ExclusiveMaximumKeyword : Json.Schema.IJsonSchemaKeyword
+    {
+        public const string Name = "exclusiveMaximum";
+        public ExclusiveMaximumKeyword(double value) { }
+        public double Value { get; }
+        public void Evaluate(Json.Schema.EvaluationContext context) { }
+    }
+    [Json.Schema.SchemaKeyword("exclusiveMinimum")]
+    public class ExclusiveMinimumKeyword : Json.Schema.IJsonSchemaKeyword
+    {
+        public const string Name = "exclusiveMinimum";
+        public ExclusiveMinimumKeyword(double value) { }
+        public double Value { get; }
+        public void Evaluate(Json.Schema.EvaluationContext context) { }
+    }
     [Json.Schema.SchemaKeyword("extensions")]
     public class ExtensionsKeyword : Json.Schema.IJsonSchemaKeyword
     {
@@ -179,8 +195,13 @@ namespace Microsoft.OpenApi.Extensions
         public static Json.Schema.JsonSchemaBuilder AdditionalPropertiesAllowed(this Json.Schema.JsonSchemaBuilder builder, bool additionalPropertiesAllowed) { }
         public static Json.Schema.JsonSchemaBuilder Discriminator(this Json.Schema.JsonSchemaBuilder builder, Microsoft.OpenApi.Models.OpenApiDiscriminator discriminator) { }
         public static Json.Schema.JsonSchemaBuilder ExclusiveMaximum(this Json.Schema.JsonSchemaBuilder builder, bool value) { }
+        public static Json.Schema.JsonSchemaBuilder ExclusiveMaximum(this Json.Schema.JsonSchemaBuilder builder, double value) { }
         public static Json.Schema.JsonSchemaBuilder ExclusiveMinimum(this Json.Schema.JsonSchemaBuilder builder, bool value) { }
+        public static Json.Schema.JsonSchemaBuilder ExclusiveMinimum(this Json.Schema.JsonSchemaBuilder builder, double value) { }
         public static Json.Schema.JsonSchemaBuilder Extensions(this Json.Schema.JsonSchemaBuilder builder, System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> extensions) { }
+        public static Json.Schema.JsonSchemaBuilder Maximum(this Json.Schema.JsonSchemaBuilder builder, double value) { }
+        public static Json.Schema.JsonSchemaBuilder Minimum(this Json.Schema.JsonSchemaBuilder builder, double value) { }
+        public static Json.Schema.JsonSchemaBuilder MultipleOf(this Json.Schema.JsonSchemaBuilder builder, double value) { }
         public static Json.Schema.JsonSchemaBuilder Nullable(this Json.Schema.JsonSchemaBuilder builder, bool value) { }
         public static Json.Schema.JsonSchemaBuilder OpenApiExternalDocs(this Json.Schema.JsonSchemaBuilder builder, Microsoft.OpenApi.Models.OpenApiExternalDocs externalDocs) { }
         public static Json.Schema.JsonSchemaBuilder Remove(this Json.Schema.JsonSchemaBuilder builder, string keyword) { }
@@ -195,7 +216,34 @@ namespace Microsoft.OpenApi.Extensions
         public static bool? GetOpenApiExclusiveMaximum(this Json.Schema.JsonSchema schema) { }
         public static bool? GetOpenApiExclusiveMinimum(this Json.Schema.JsonSchema schema) { }
         public static Microsoft.OpenApi.Models.OpenApiExternalDocs GetOpenApiExternalDocs(this Json.Schema.JsonSchema schema) { }
+        public static double? GetOpenApiMaximum(this Json.Schema.JsonSchema schema) { }
+        public static double? GetOpenApiMinimum(this Json.Schema.JsonSchema schema) { }
+        public static double? GetOpenApiMultipleOf(this Json.Schema.JsonSchema schema) { }
         public static string GetSummary(this Json.Schema.JsonSchema schema) { }
+    }
+    [Json.Schema.SchemaKeyword("maximum")]
+    public class MaximumKeyword : Json.Schema.IJsonSchemaKeyword
+    {
+        public const string Name = "maximum";
+        public MaximumKeyword(double value) { }
+        public double? Value { get; }
+        public void Evaluate(Json.Schema.EvaluationContext context) { }
+    }
+    [Json.Schema.SchemaKeyword("minimum")]
+    public class MinimumKeyword : Json.Schema.IJsonSchemaKeyword
+    {
+        public const string Name = "minimum";
+        public MinimumKeyword(double value) { }
+        public double? Value { get; }
+        public void Evaluate(Json.Schema.EvaluationContext context) { }
+    }
+    [Json.Schema.SchemaKeyword("multipleOf")]
+    public class MultipleOfKeyword : Json.Schema.IJsonSchemaKeyword
+    {
+        public const string Name = "multipleOf";
+        public MultipleOfKeyword(double value) { }
+        public double? Value { get; }
+        public void Evaluate(Json.Schema.EvaluationContext context) { }
     }
     [Json.Schema.SchemaKeyword("nullable")]
     public class NullableKeyword : Json.Schema.IJsonSchemaKeyword
@@ -1491,7 +1539,7 @@ namespace Microsoft.OpenApi.Writers
         void WriteStartArray();
         void WriteStartObject();
         void WriteValue(bool value);
-        void WriteValue(decimal value);
+        void WriteValue(double value);
         void WriteValue(int value);
         void WriteValue(object value);
         void WriteValue(string value);

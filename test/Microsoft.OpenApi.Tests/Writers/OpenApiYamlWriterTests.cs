@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -267,7 +267,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             if (value == null
                 || value.GetType().IsPrimitive
-                || value is decimal
+                || value is double
                 || value is string
                 || value is DateTimeOffset
                 || value is DateTime)
