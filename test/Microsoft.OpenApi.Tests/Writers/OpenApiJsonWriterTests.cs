@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             if (value == null
                 || value.GetType().IsPrimitive
-                || value is decimal
+                || value is double
                 || value is string
                 || value is DateTimeOffset
                 || value is DateTime)

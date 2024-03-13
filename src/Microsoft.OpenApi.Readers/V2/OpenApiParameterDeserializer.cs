@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -72,13 +72,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "minimum", (o, n) =>
                     {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Minimum(double.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "maximum", (o, n) =>
                     {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Maximum(double.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {

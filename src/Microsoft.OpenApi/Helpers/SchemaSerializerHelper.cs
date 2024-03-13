@@ -19,81 +19,85 @@ namespace Microsoft.OpenApi.Helpers
                                                     OpenApiSpecVersion version)
         {
             Utils.CheckArgumentNull(writer);
-            // type
-            if (schema.GetJsonType() != null)
+
+            if (schema != null)
             {
-                writer.WritePropertyName(OpenApiConstants.Type);
-                var type = schema.GetJsonType().Value;
-                writer.WriteValue(OpenApiTypeMapper.ConvertSchemaValueTypeToString(type));
-            }
+                // type
+                if (schema.GetJsonType() != null)
+                {
+                    writer.WritePropertyName(OpenApiConstants.Type);
+                    var type = schema.GetJsonType().Value;
+                    writer.WriteValue(OpenApiTypeMapper.ConvertSchemaValueTypeToString(type));
+                }
 
-            // format
-            var format = schema.GetFormat()?.Key;
-            if (string.IsNullOrEmpty(format))
-            {
-                format = RetrieveFormatFromNestedSchema(schema.GetAllOf()) ?? RetrieveFormatFromNestedSchema(schema.GetOneOf())
-                    ?? RetrieveFormatFromNestedSchema(schema.GetAnyOf());
-            }
-            writer.WriteProperty(OpenApiConstants.Format, format);
+                // format
+                var format = schema.GetFormat()?.Key;
+                if (string.IsNullOrEmpty(format))
+                {
+                    format = RetrieveFormatFromNestedSchema(schema.GetAllOf()) ?? RetrieveFormatFromNestedSchema(schema.GetOneOf())
+                        ?? RetrieveFormatFromNestedSchema(schema.GetAnyOf());
+                }
+                writer.WriteProperty(OpenApiConstants.Format, format);
 
-            // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, schema.GetItems(),
-                (w, s) => w.WriteJsonSchema(s, version));
+                // items
+                writer.WriteOptionalObject(OpenApiConstants.Items, schema.GetItems(),
+                    (w, s) => w.WriteJsonSchema(s, version));
 
-            // collectionFormat
-            // We need information from style in parameter to populate this.
-            // The best effort we can make is to pull this information from the first parameter
-            // that leverages this schema. However, that in itself may not be as simple
-            // as the schema directly under parameter might be referencing one in the Components,
-            // so we will need to do a full scan of the object before we can write the value for
-            // this property. This is not supported yet, so we will skip this property at the moment.
+                // collectionFormat
+                // We need information from style in parameter to populate this.
+                // The best effort we can make is to pull this information from the first parameter
+                // that leverages this schema. However, that in itself may not be as simple
+                // as the schema directly under parameter might be referencing one in the Components,
+                // so we will need to do a full scan of the object before we can write the value for
+                // this property. This is not supported yet, so we will skip this property at the moment.
 
-            // default
-            if (schema.GetDefault() != null)
-            {
-                writer.WritePropertyName(OpenApiConstants.Default);
-                writer.WriteValue(schema.GetDefault());
-            }
+                // default
+                if (schema.GetDefault() != null)
+                {
+                    writer.WritePropertyName(OpenApiConstants.Default);
+                    writer.WriteValue(schema.GetDefault());
+                }
 
-            // maximum
-            writer.WriteProperty(OpenApiConstants.Maximum, schema.GetMaximum());
+                // maximum
+                writer.WriteProperty(OpenApiConstants.Maximum, schema.GetOpenApiMaximum());
 
-            // exclusiveMaximum
-            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, schema.GetExclusiveMaximum());
+                // exclusiveMaximum
+                writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, schema.GetOpenApiExclusiveMaximum());
 
-            // minimum
-            writer.WriteProperty(OpenApiConstants.Minimum, schema.GetMinimum());
+                // minimum
+                writer.WriteProperty(OpenApiConstants.Minimum, schema.GetOpenApiMinimum());
 
-            // exclusiveMinimum
-            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, schema.GetExclusiveMinimum());
+                // exclusiveMinimum
+                writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, schema.GetOpenApiExclusiveMinimum());
 
-            // maxLength
-            writer.WriteProperty(OpenApiConstants.MaxLength, schema.GetMaxLength());
+                // maxLength
+                writer.WriteProperty(OpenApiConstants.MaxLength, schema.GetMaxLength());
 
-            // minLength
-            writer.WriteProperty(OpenApiConstants.MinLength, schema.GetMinLength());
+                // minLength
+                writer.WriteProperty(OpenApiConstants.MinLength, schema.GetMinLength());
 
-            // pattern
-            writer.WriteProperty(OpenApiConstants.Pattern, schema.GetPattern()?.ToString());
+                // pattern
+                writer.WriteProperty(OpenApiConstants.Pattern, schema.GetPattern()?.ToString());
 
-            // maxItems
-            writer.WriteProperty(OpenApiConstants.MaxItems, schema.GetMaxItems());
+                // maxItems
+                writer.WriteProperty(OpenApiConstants.MaxItems, schema.GetMaxItems());
 
-            // minItems
-            writer.WriteProperty(OpenApiConstants.MinItems, schema.GetMinItems());
+                // minItems
+                writer.WriteProperty(OpenApiConstants.MinItems, schema.GetMinItems());
 
-            // enum
-            if (schema.GetEnum() != null)
-            {
-                writer.WritePropertyName(OpenApiConstants.Enum);
-                writer.WriteValue(schema.GetEnum());
-            }
+                // enum
+                if (schema.GetEnum() != null)
+                {
+                    writer.WritePropertyName(OpenApiConstants.Enum);
+                    writer.WriteValue(schema.GetEnum());
+                }
 
-            // multipleOf
-            writer.WriteProperty(OpenApiConstants.MultipleOf, schema.GetMultipleOf());
+                // multipleOf
+                writer.WriteProperty(OpenApiConstants.MultipleOf, schema.GetOpenApiMultipleOf());
 
-            // extensions
-            writer.WriteExtensions(extensions, OpenApiSpecVersion.OpenApi2_0);
+                // extensions
+                writer.WriteExtensions(extensions, OpenApiSpecVersion.OpenApi2_0);
+            }            
         }
 
         private static string RetrieveFormatFromNestedSchema(IReadOnlyCollection<JsonSchema> schema)

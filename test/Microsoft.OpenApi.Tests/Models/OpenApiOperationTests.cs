@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new()
                     {
-                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum((double)5).Maximum((double)10).Build()
                     }
                 }
             },
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum((double)5).Maximum((double)10).Build()
                         }
                     }
                 }
@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new()
                     {
-                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum((double)5).Maximum((double)10).Build()
                     }
                 }
             },
@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum((double)5).Maximum((double)10).Build()
                         }
                     }
                 }

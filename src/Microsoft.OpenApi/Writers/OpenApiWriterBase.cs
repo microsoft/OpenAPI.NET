@@ -472,16 +472,16 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteProperty(OpenApiConstants.Title, schema.GetTitle());
 
             // multipleOf
-            writer.WriteProperty(OpenApiConstants.MultipleOf, schema.GetMultipleOf());
+            writer.WriteProperty(OpenApiConstants.MultipleOf, schema.GetOpenApiMultipleOf());
 
             // maximum
-            writer.WriteProperty(OpenApiConstants.Maximum, schema.GetMaximum());
+            writer.WriteProperty(OpenApiConstants.Maximum, schema.GetOpenApiMaximum());
 
             // exclusiveMaximum
             writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, schema.GetOpenApiExclusiveMaximum());
 
             // minimum
-            writer.WriteProperty(OpenApiConstants.Minimum, schema.GetMinimum());
+            writer.WriteProperty(OpenApiConstants.Minimum, schema.GetOpenApiMinimum());
 
             // exclusiveMinimum
             writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, schema.GetOpenApiExclusiveMinimum());

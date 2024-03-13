@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the decimal value.
         /// </summary>
-        void WriteValue(decimal value);
+        void WriteValue(double value);
 
         /// <summary>
         /// Write the int value.
