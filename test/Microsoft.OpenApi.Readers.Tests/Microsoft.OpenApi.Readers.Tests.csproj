@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -30,6 +30,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
         <ProjectReference Include="..\..\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
+        <ProjectReference Include="..\Microsoft.OpenApi.Tests\Microsoft.OpenApi.Tests.csproj" />
     </ItemGroup>
 
 </Project>
