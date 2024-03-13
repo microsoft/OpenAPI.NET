@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -55,25 +55,25 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "maximum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateHeaderSchemaBuilder().Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Maximum(double.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateHeaderSchemaBuilder().ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().ExclusiveMaximum(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
                 "minimum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateHeaderSchemaBuilder().Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Minimum(double.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateHeaderSchemaBuilder().ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().ExclusiveMinimum(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.Schema = GetOrCreateHeaderSchemaBuilder().MultipleOf(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().MultipleOf(double.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {

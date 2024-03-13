@@ -31,31 +31,31 @@ namespace Microsoft.OpenApi.Readers.V31
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.MultipleOf(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.MultipleOf(double.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "maximum", (o, n) =>
                 {
-                    o.Maximum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.Maximum(double.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.ExclusiveMaximum(double.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minimum", (o, n) =>
                 {
-                    o.Minimum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.Minimum(double.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.ExclusiveMinimum(double.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
