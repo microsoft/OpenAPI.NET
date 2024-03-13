@@ -81,6 +81,66 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="builder"></param>
         /// <param name="value"></param>
         /// <returns></returns>
+        public static JsonSchemaBuilder Maximum(this JsonSchemaBuilder builder, double value)
+        {
+            builder.Add(new MaximumKeyword(value));
+            return builder;
+        }
+
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder Minimum(this JsonSchemaBuilder builder, double value)
+        {
+            builder.Add(new MinimumKeyword(value));
+            return builder;
+        }
+
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder ExclusiveMinimum(this JsonSchemaBuilder builder, double value)
+        {
+            builder.Add(new ExclusiveMinimumKeyword(value));
+            return builder;
+        }
+
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder ExclusiveMaximum(this JsonSchemaBuilder builder, double value)
+        {
+            builder.Add(new ExclusiveMaximumKeyword(value));
+            return builder;
+        }
+
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder MultipleOf(this JsonSchemaBuilder builder, double value)
+        {
+            builder.Add(new MultipleOfKeyword(value));
+            return builder;
+        }
+
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static JsonSchemaBuilder ExclusiveMinimum(this JsonSchemaBuilder builder, bool value)
         {
             builder.Add(new Draft4ExclusiveMinimumKeyword(value));
@@ -319,6 +379,186 @@ namespace Microsoft.OpenApi.Extensions
         internal SummaryKeyword(string summary)
         {
             Summary = summary;
+        }
+
+        /// <summary>
+        /// Implementation of IJsonSchemaKeyword interface
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// The maximum keyword
+    /// </summary>
+    [SchemaKeyword(Name)]
+    public class MaximumKeyword : IJsonSchemaKeyword
+    {
+        /// <summary>
+        /// The schema keyword name
+        /// </summary>
+        public const string Name = "maximum";
+
+        /// <summary>
+        /// The ID.
+        /// </summary>
+        public double? Value { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="MaximumKeyword"/>.
+        /// </summary>
+        /// <param name="value">The 'maximum' value.</param>
+        public MaximumKeyword(double value)
+        {
+            Value = value;
+        }
+
+        /// <summary>
+        /// Implementation of IJsonSchemaKeyword interface
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// The ExclusiveMaximum keyword
+    /// </summary>
+    [SchemaKeyword(Name)]
+    public class ExclusiveMaximumKeyword : IJsonSchemaKeyword
+    {
+        /// <summary>
+        /// The schema keyword name
+        /// </summary>
+        public const string Name = "exclusiveMaximum";
+
+        /// <summary>
+        /// The ID.
+        /// </summary>
+        public double Value { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="ExclusiveMaximumKeyword"/>.
+        /// </summary>
+        /// <param name="value">The 'maximum' value.</param>
+        public ExclusiveMaximumKeyword(double value)
+        {
+            Value = value;
+        }
+
+        /// <summary>
+        /// Implementation of IJsonSchemaKeyword interface
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// The minimum keyword
+    /// </summary>
+    [SchemaKeyword(Name)]
+    public class MinimumKeyword : IJsonSchemaKeyword
+    {
+        /// <summary>
+        /// The schema keyword name
+        /// </summary>
+        public const string Name = "minimum";
+
+        /// <summary>
+        /// The ID.
+        /// </summary>
+        public double? Value { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="MinimumKeyword"/>.
+        /// </summary>
+        /// <param name="value">The`minimum` value.</param>
+        public MinimumKeyword(double value)
+        {
+            Value = value;
+        }
+
+        /// <summary>
+        /// Implementation of IJsonSchemaKeyword interface
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// The exclusive minimum keyword
+    /// </summary>
+    [SchemaKeyword(Name)]
+    public class ExclusiveMinimumKeyword : IJsonSchemaKeyword
+    {
+        /// <summary>
+        /// The schema keyword name
+        /// </summary>
+        public const string Name = "exclusiveMinimum";
+
+        /// <summary>
+        /// The ID.
+        /// </summary>
+        public double Value { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="ExclusiveMinimumKeyword"/>.
+        /// </summary>
+        /// <param name="value">Whether the`minimum` value should be considered exclusive.</param>
+        public ExclusiveMinimumKeyword(double value)
+        {
+            Value = value;
+        }
+
+        /// <summary>
+        /// Implementation of IJsonSchemaKeyword interface
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// The multipleOf keyword
+    /// </summary>
+    [SchemaKeyword(Name)]
+    public class MultipleOfKeyword : IJsonSchemaKeyword
+    {
+        /// <summary>
+        /// The schema keyword name
+        /// </summary>
+        public const string Name = "multipleOf";
+
+        /// <summary>
+        /// The ID.
+        /// </summary>
+        public double? Value { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="MultipleOfKeyword"/>.
+        /// </summary>
+        /// <param name="value">The `multipleOf` value.</param>
+        public MultipleOfKeyword(double value)
+        {
+            Value = value;
         }
 
         /// <summary>

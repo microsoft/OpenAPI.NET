@@ -47,6 +47,36 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
+        /// Gets the minimum value if it exists
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public static double? GetOpenApiMinimum(this JsonSchema schema)
+        {
+            return schema.TryGetKeyword<MinimumKeyword>(MinimumKeyword.Name, out var k) ? k.Value! : null;
+        }
+
+        /// <summary>
+        /// Gets the maximum value if it exists
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public static double? GetOpenApiMaximum(this JsonSchema schema)
+        {
+            return schema.TryGetKeyword<MaximumKeyword>(MaximumKeyword.Name, out var k) ? k.Value! : null;
+        }
+
+        /// <summary>
+        /// Gets the multipleOf value if it exists
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public static double? GetOpenApiMultipleOf(this JsonSchema schema)
+        {
+            return schema.TryGetKeyword<MultipleOfKeyword>(MultipleOfKeyword.Name, out var k) ? k.Value! : null;
+        }
+
+        /// <summary>
         /// Gets the additional properties value if it exists
         /// </summary>
         /// <param name="schema"></param>
