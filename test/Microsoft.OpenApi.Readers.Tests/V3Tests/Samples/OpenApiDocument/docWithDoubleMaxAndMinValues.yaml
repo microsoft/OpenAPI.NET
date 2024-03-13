@@ -1,0 +1,17 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Example API
+paths:
+  /example:
+    get:
+      summary: Example GET request
+      responses:
+        200:
+          description: Successful response
+          headers:
+            X-Rate-Limit:
+                description: The maximum number of requests allowed in a given time window
+                type: integer
+                minimum: -1.7976931348623157E+308
+                maximum: 1.7976931348623157E+308

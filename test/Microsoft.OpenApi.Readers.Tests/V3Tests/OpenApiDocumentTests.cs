@@ -9,8 +9,10 @@ using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
@@ -1108,5 +1110,28 @@ paths: {}",
             actualSchema.Should().BeEquivalentTo(expectedSchema);
         }
 
+        [Fact]
+        public void ParseDocumentWithDoubleMaxAndMinValuesSucceeds()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithDoubleMaxAndMinValues.yaml"));
+
+            // Act
+            var doc = new OpenApiStreamReader(new OpenApiReaderSettings
+            {
+                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
+            }).Read(stream, out var diagnostic);
+            var header = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Headers["X-Rate-Limit"];
+            var actualHeader = header.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var serializedHeader = @"description: The maximum number of requests allowed in a given time window
+type: integer
+maximum: 1.7976931348623157E+308
+minimum: -1.7976931348623157E+308
+";
+
+            // Assert
+            actualHeader.MakeLineBreaksEnvironmentNeutral().Should()
+                .BeEquivalentTo(serializedHeader.MakeLineBreaksEnvironmentNeutral());
+        }
     }
 }
