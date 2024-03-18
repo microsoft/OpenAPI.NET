@@ -31,7 +31,8 @@ namespace Microsoft.OpenApi.Models.References
         /// </summary>
         /// <param name="referenceId">The reference Id.</param>
         /// <param name="hostDocument">The host OpenAPI document.</param>
-        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument hostDocument)
+        /// <param name="externalResource">The externally referenced file.</param>
+        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
         {
             if (string.IsNullOrEmpty(referenceId))
             {
@@ -46,7 +47,8 @@ namespace Microsoft.OpenApi.Models.References
             {
                 Id = referenceId,
                 HostDocument = hostDocument,
-                Type = ReferenceType.SecurityScheme
+                Type = ReferenceType.SecurityScheme,
+                ExternalResource = externalResource
             };
 
             Reference = _reference;
