@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V3
@@ -42,16 +43,7 @@ namespace Microsoft.OpenApi.Readers.V3
             ParsingContext context,
             string schemeName)
         {
-            var securitySchemeObject = new OpenApiSecurityScheme
-            {
-                UnresolvedReference = true,
-                Reference = new()
-                {
-                    Id = schemeName,
-                    Type = ReferenceType.SecurityScheme
-                }
-            };
-
+            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, _openApiDocument);
             return securitySchemeObject;
         }
     }
