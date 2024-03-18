@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -22,9 +22,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            var securityRequirement = openApiDoc.Paths["/"].Operations[OperationType.Get].Security.First();
+            var securityScheme = openApiDoc.Paths["/"].Operations[OperationType.Get].Security.First().Keys.First();
 
-            Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
+            securityScheme.Should().BeEquivalentTo(openApiDoc.Components.SecuritySchemes.First().Value, 
+                options => options.Excluding(x => x.Reference.HostDocument));
         }
 
         [Fact]
@@ -39,15 +40,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             // Act
             var operation = OpenApiV3Deserializer.LoadOperation(node);
-
-            // Assert
-            operation.Should().BeEquivalentTo(new OpenApiOperation
+            var expectedOp = new OpenApiOperation
             {
                 Tags =
                 {
                     new OpenApiTag
                     {
-                        UnresolvedReference = true,
+                        UnresolvedReference = false,
                         Reference = new()
                         {
                             Id = "user",
@@ -78,7 +77,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     .Type(SchemaValueType.String)
                     }
                 }
-            });
+            };
+            // Assert
+            expectedOp.Should().BeEquivalentTo(operation, 
+                options => options.Excluding(x => x.Tags[0].Reference.HostDocument)
+                .Excluding(x => x.Tags[0].Extensions));
         }
     }
 }

@@ -91,7 +91,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseExampleForcedStringSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "explicitString.yaml"));
-            new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var schema = doc.Paths["/test-path"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema;
             diagnostic.Errors.Should().BeEmpty();
         }
     }

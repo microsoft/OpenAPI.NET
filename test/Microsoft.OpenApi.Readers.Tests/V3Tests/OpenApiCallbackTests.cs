@@ -79,25 +79,24 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseCallbackWithReferenceShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml")))
-            {
-                // Act
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml"));
+            // Act
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                // Assert
-                var path = openApiDoc.Paths.First().Value;
-                var subscribeOperation = path.Operations[OperationType.Post];
+            // Assert
+            var path = openApiDoc.Paths.First().Value;
+            var subscribeOperation = path.Operations[OperationType.Post];
 
-                var callback = subscribeOperation.Callbacks["simpleHook"];
+            var callback = subscribeOperation.Callbacks["simpleHook"];
 
-                diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-                callback.Should().BeEquivalentTo(
-                    new OpenApiCallback
+            callback.Should().BeEquivalentTo(
+                new OpenApiCallback
+                {
+                    PathItems =
                     {
-                        PathItems =
-                        {
                             [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                                 Operations = {
                                     [OperationType.Post] = new OpenApiOperation()
@@ -121,9 +120,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                        }
-                    });
-            }
+                    },
+                    Reference = new OpenApiReference
+                    {
+                        Id = "simpleHook",
+                        Type = ReferenceType.Callback
+                    }
+                }, 
+                options => options.Excluding(x => x.Reference.HostDocument));
         }
 
         [Fact]
@@ -170,8 +174,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
+                    },
+                    Reference = new OpenApiReference
+                    {
+                        Id = "simpleHook",
+                        Type = ReferenceType.Callback
                     }
-                });
+                }, options => options.Excluding(x => x.Reference.HostDocument));
 
             var callback2 = subscribeOperation.Callbacks["callback2"];
             callback2.Should().BeEquivalentTo(

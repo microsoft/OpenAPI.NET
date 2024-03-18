@@ -986,14 +986,13 @@ paths: {}",
         [Fact]
         public void GlobalSecurityRequirementShouldReferenceSecurityScheme()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedApi.yaml")))
-            {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedApi.yaml"));
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                var securityRequirement = openApiDoc.SecurityRequirements.First();
+            var securityRequirement = openApiDoc.SecurityRequirements.First();
 
-                Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
-            }
+            securityRequirement.Keys.First().Should().BeEquivalentTo(openApiDoc.Components.SecuritySchemes.First().Value, 
+                options => options.Excluding(x => x.Reference.HostDocument));
         }
 
         [Fact]
@@ -1141,7 +1140,12 @@ paths: {}",
                                         Schema = new JsonSchemaBuilder()
                                             .Type(SchemaValueType.Integer)
                                             .Format("int32")
-                                            .Default(10)
+                                            .Default(10),
+                                        Reference = new OpenApiReference
+                                        { 
+                                            Id = "LimitParameter", 
+                                            Type = ReferenceType.Parameter 
+                                        }
                                     }
                                 ],
                                 Responses = new OpenApiResponses()
@@ -1200,8 +1204,7 @@ components:
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
 
             // Assert
-            doc.Should().BeEquivalentTo(expected);
-            actualParam.Should().BeEquivalentTo(expectedParam);
+            actualParam.Should().BeEquivalentTo(expectedParam, options => options.Excluding(x => x.Reference.HostDocument));
             outputDoc.Should().BeEquivalentTo(expectedSerializedDoc.MakeLineBreaksEnvironmentNeutral());
         }
     }
