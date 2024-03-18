@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(writer);;
 
-            if (Reference != null)
+            if (Reference != null && UnresolvedReference)
             {
                 callback(writer, Reference);
                 return;
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(writer);;
 
-            if (Reference != null)
+            if (Reference != null && UnresolvedReference)
             {
                 Reference.SerializeAsV2(writer);
                 return;

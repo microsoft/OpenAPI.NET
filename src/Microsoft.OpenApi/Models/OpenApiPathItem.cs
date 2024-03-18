@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);;
             var target = this;
 
-            if (Reference != null)
+            if (Reference != null && target.UnresolvedReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Models
 
             var target = this;
 
-            if (Reference != null)
+            if (Reference != null && target.UnresolvedReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {

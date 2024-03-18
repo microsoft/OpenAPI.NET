@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Models
 
             var target = this;
 
-            if (Reference != null)
+            if (Reference != null && target.UnresolvedReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {
@@ -247,11 +247,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
 
-            if (Reference != null)
+            if (Reference != null && target.UnresolvedReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {

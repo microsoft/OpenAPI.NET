@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Models
 
             var target = this;
             
-            if (Reference != null)
+            if (Reference != null && target.UnresolvedReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {
