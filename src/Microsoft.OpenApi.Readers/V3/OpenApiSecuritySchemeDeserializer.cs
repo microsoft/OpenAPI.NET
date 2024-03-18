@@ -65,9 +65,14 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var refId = pointer.Split('/').Last();
-                return new OpenApiSecuritySchemeReference(refId, _openApiDocument);
+                var refSegments = pointer.Split('/');
+                var refId = refSegments.Last();
+                var isExternalResource = !refSegments.First().StartsWith("#");
+
+                string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
+                return new OpenApiSecuritySchemeReference(refId, _openApiDocument, externalResource);
             }
+
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
             {

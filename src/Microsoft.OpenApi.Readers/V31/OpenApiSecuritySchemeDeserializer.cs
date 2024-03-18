@@ -2,8 +2,10 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V31
@@ -76,6 +78,17 @@ namespace Microsoft.OpenApi.Readers.V31
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
         {
             var mapNode = node.CheckMapNode("securityScheme");
+
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                var refSegments = pointer.Split('/');
+                var refId = refSegments.Last();
+                var isExternalResource = !refSegments.First().StartsWith("#");
+
+                string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
+                return new OpenApiSecuritySchemeReference(refId, _openApiDocument, externalResource);
+            }
 
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
