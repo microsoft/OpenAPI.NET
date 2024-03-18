@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
             set => _description = value;
         }
 
