@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -80,7 +80,6 @@ namespace Microsoft.OpenApi.Services
         /// <param name="baseDocument"></param>
         public void RegisterComponent(Uri uri, IBaseDocument baseDocument)
         {
-            // If reference type is schema, register in IBaseDocument registry
             if (uri == null) throw new ArgumentNullException(nameof(uri));
             if (baseDocument == null) throw new ArgumentNullException(nameof(baseDocument));
 
@@ -90,7 +89,7 @@ namespace Microsoft.OpenApi.Services
             }
             else
             {
-                _schemaRegistry.Add(uri.ToString(), baseDocument);
+                _schemaRegistry.Add(uri.OriginalString, baseDocument);
             }
         }
 
@@ -104,7 +103,7 @@ namespace Microsoft.OpenApi.Services
             if (uri == null) throw new ArgumentNullException(nameof(uri));
             if (referenceable == null) throw new ArgumentNullException(nameof(referenceable));
 
-            if (_schemaRegistry.ContainsKey(uri.OriginalString))
+            if (_referenceableRegistry.ContainsKey(uri.OriginalString))
             {
                 throw new InvalidOperationException($"Key already exists. {nameof(uri)} needs to be unique");
             }
