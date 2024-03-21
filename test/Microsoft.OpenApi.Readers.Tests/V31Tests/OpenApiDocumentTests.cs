@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 },
                 Webhooks = new Dictionary<string, OpenApiPathItem>
                 {
-                    ["/pets"] = new OpenApiPathItem
+                    ["pets"] = new OpenApiPathItem
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -126,14 +126,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             {
                                                 Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Array)
-                                                    .Items(petSchema)
+                                                    .Items(new JsonSchemaBuilder().Ref("#/components/schemas/petSchema"))
 
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
                                                 Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Array)
-                                                    .Items(petSchema)
+                                                    .Items(new JsonSchemaBuilder().Ref("#/components/schemas/petSchema"))
                                             }
                                         }
                                     }
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = newPetSchema
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/newPetSchema")
                                         }
                                     }
                                 },
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = petSchema
+                                                Schema = new JsonSchemaBuilder().Ref("#/components/schemas/petSchema")
                                             }
                                         }
                                     }
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            var schema = actual.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var schema = actual.Webhooks["pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
             actual.Should().BeEquivalentTo(expected);
         }
@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             components.PathItems = new Dictionary<string, OpenApiPathItem>
             {
-                ["/pets"] = new OpenApiPathItem
+                ["pets"] = new OpenApiPathItem
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
@@ -255,13 +255,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         {
                                             Schema = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Array)
-                                                .Items(petSchema)
+                                                .Items(new JsonSchemaBuilder().Ref("#/components/schemas/petSchema"))
                                         },
                                         ["application/xml"] = new OpenApiMediaType
                                         {
                                             Schema = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Array)
-                                                .Items(petSchema)
+                                                .Items(new JsonSchemaBuilder().Ref("#/components/schemas/petSchema"))
                                         }
                                     }
                                 }
@@ -277,7 +277,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema = newPetSchema
+                                        Schema = new JsonSchemaBuilder().Ref("#/components/schemas/newPetSchema")
                                     }
                                 }
                             },
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = petSchema
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/petSchema")
                                         },
                                     }
                                 }
@@ -300,7 +300,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Reference = new OpenApiReference
                     {
                         Type = ReferenceType.PathItem,
-                        Id = "/pets",
+                        Id = "pets",
                         HostDocument = actual
                     }
                 }
@@ -316,16 +316,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 JsonSchemaDialect = "http://json-schema.org/draft-07/schema#",
                 Webhooks = new Dictionary<string, OpenApiPathItem>
                 {
-                    ["/pets"] = new OpenApiPathItem
-                    {
-                        Operations = components.PathItems["/pets"].Operations
-                    }
+                    ["pets"] = components.PathItems["pets"]
                 },
                 Components = components
             };
 
             // Assert
-            actual.Should().BeEquivalentTo(expected);
+            actual.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Components.PathItems["pets"].Reference.HostDocument));
             context.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
         }

@@ -99,17 +99,30 @@ paths:
         [Fact]
         public void RequestBodyReferenceResolutionWorks()
         {
-            // Assert
-            var expectedSchema = new JsonSchemaBuilder()
-                .Ref("#/components/schemas/UserSchema")
-                .Type(SchemaValueType.Object)
-                .Properties(
-                    ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    ("email", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                .Build();
-            var actualSchema = _localRequestBodyReference.Content["application/json"].Schema;
+            // Arrange
+            var expectedMediaType = @"{
+  ""schema"": {
+    ""type"": ""object"",
+    ""properties"": {
+      ""name"": {
+        ""type"": ""string""
+      },
+      ""email"": {
+        ""type"": ""string""
+      }
+    }
+  }
+}";
+            var mediaType = _localRequestBodyReference.Content["application/json"];
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
 
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
+            // Act
+            mediaType.SerializeAsV3(new OpenApiJsonWriter(outputStringWriter, 
+                new OpenApiJsonWriterSettings { InlineLocalReferences = true }));
+            var serialized = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            serialized.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
             Assert.Equal("User request body", _localRequestBodyReference.Description);
             Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
             Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);

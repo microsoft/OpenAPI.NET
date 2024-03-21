@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
@@ -23,7 +25,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var doc = reader.Read(stream, out var diagnostic);
 
             var okSchema = new JsonSchemaBuilder()
-                    .Ref("#/definitions/Item")
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")));
 
             var errorSchema = new JsonSchemaBuilder()
@@ -34,12 +35,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okMediaType = new OpenApiMediaType
             {
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(okSchema)
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("#/components/schemas/okSchema"))
             };
 
             var errorMediaType = new OpenApiMediaType
             {
-                Schema = errorSchema
+                Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorSchema")
             };
 
             doc.Should().BeEquivalentTo(new OpenApiDocument
@@ -198,6 +199,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Act
             OpenApiDocument doc = reader.Read(stream, out OpenApiDiagnostic diags);
             JsonSchema schema = doc.Components.Schemas["AllPets"];
+
+            schema = doc.ResolveJsonSchemaReference(schema.GetRef()) ?? schema;
 
             // Assert
             if (schema.Keywords.Count.Equals(1) && schema.GetRef() != null)

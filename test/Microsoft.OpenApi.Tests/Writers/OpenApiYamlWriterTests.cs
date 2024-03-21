@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -390,6 +390,8 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Act
             doc.SerializeAsV3(writer);
+            var mediaType = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
+            //mediaType.SerializeAsV3(writer);
             var actual = outputString.GetStringBuilder().ToString();
 
             // Assert
