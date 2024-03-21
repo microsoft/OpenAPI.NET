@@ -1,22 +1,23 @@
 # Feature Specification: Overlays Support
 
 ## Objective
-Support use of Overlays for enabling developers to enhance existing OpenAPI description files without changing the original file.
+Support use of Overlays for enabling developers to enhance an existing OpenAPI document without changing the original file.
 
 ## Problem Statement
-Existing OpenAPI documents used for AI plugin creation might lack necessary properties or require modifications for them to provide a high quality AI plugin. Direct editing of the original OpenAPI document is often undesirable or impractical.
+OpenAPI documents are crucial for enhancing AI models. They enable the models to interact with web services through plugins and GPTs which in turn elevate the user experience when users are interacting with AI models. For these documents to be effective in providing a robust extensibility to the AI models they often require specific adjustments to existing properties or additional properties. Direct edits to the original documents is usually not feasible or is undisirable. Additionally, teams managing these OpenAPI documents across diverse environments such as development, staging, and production or for different audiences face significant challenges in that maintenance of multiple OpenAPI document versions leads to inefficiency, inconsistency, and increased overhead. This complexity is intensified when modifications or exclusions of certain properties or endpoints are necessary, especially in adapting content for public consumption without exposing sensitive information.
 
 ## Solution Overview
-Overlays provide a flexible mechanism for extending OpenAPI documents without directly modifying the original files. This allows necessary properties to be added, existing values modified, and the OpenAPI description tailored for effective AI plugin development.
+Overlays provide a flexible mechanism for modifying OpenAPI documents without directly modifying the original files. This allows necessary properties to be added, existing values modified, and the OpenAPI document tailored for a specific use case, for example developing a plugin manifest or adopting the document for a specific environment or a select audience group, while leaving the original openAPI document intact.
 
 ## Functional Requirements
 1. **Overlay File Format Support**
    - Support overlay files in accordance with the Overlay Specification (v1.0.0), available at [Overlay Specification](https://github.com/OAI/Overlay-Specification/blob/3f398c6/versions/1.0.0.md).
    - Support both YAML and JSON formats for overlay files.
+   - The target OpenAPI document may be specified in the Overlay file or may be provided separately.
 
 2. **Overlay Application**
-   - Apply overlay file to an existing OpenAPI document to produce a hybrid of the overlay file and the original OpenAPI description file without changing the original file.
-   - Ensure resulting hybrid OpenAPI document remain valid according to the OpenAPI Specification.
+   - Apply overlay file to an existing OpenAPI document to produce a hybrid of the overlay file and the original OpenAPI document without changing the original document.
+   - Ensure the resulting hybrid OpenAPI document remain valid according to the OpenAPI Specification.
 
 3. **Overlay Operations**
    - Support addition, modification, and removal of properties to the target OpenAPI document.
