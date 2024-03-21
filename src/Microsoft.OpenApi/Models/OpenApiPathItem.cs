@@ -112,8 +112,9 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(writer);;
             var target = this;
+            var isProxyReference = target.GetType().Name.Contains("Reference");
 
-            if (Reference != null && target.UnresolvedReference)
+            if (Reference != null && !isProxyReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {
@@ -153,8 +154,9 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);;
 
             var target = this;
+            var isProxyReference = target.GetType().Name.Contains("Reference");
 
-            if (Reference != null && target.UnresolvedReference)
+            if (Reference != null && !isProxyReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {

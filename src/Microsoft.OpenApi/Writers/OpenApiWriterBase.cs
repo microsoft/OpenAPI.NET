@@ -1,10 +1,12 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using System.Xml.Linq;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
@@ -444,6 +446,10 @@ namespace Microsoft.OpenApi.Writers
                     {
                         FindJsonSchemaRefs.ResolveJsonSchema(schema);
                     }
+                    else if (Settings.InlineLocalReferences)
+                    {
+                        schema = FindJsonSchemaRefs.FetchSchemaFromRegistry(schema, reference);
+                    }
                     if (!Settings.LoopDetector.PushLoop(schema))
                     {
                         Settings.LoopDetector.SaveLoop(schema);
@@ -453,7 +459,10 @@ namespace Microsoft.OpenApi.Writers
                 }
             }
 
-            WriteJsonSchemaWithoutReference(this, schema, version);
+            if (schema != null)
+            {
+                WriteJsonSchemaWithoutReference(this, schema, version);
+            }
 
             if (reference != null)
             {
@@ -634,6 +643,13 @@ namespace Microsoft.OpenApi.Writers
             var visitor = new FindJsonSchemaRefs();
             var walker = new OpenApiWalker(visitor);
             walker.Walk(schema);
+        }
+
+        public static JsonSchema FetchSchemaFromRegistry(JsonSchema schema, Uri reference)
+        {
+            var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
+            var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
+            return resolvedSchema ?? schema;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V31
@@ -105,16 +106,7 @@ namespace Microsoft.OpenApi.Readers.V31
 
         private static OpenApiTag LoadTagByReference(string tagName)
         {
-            var tagObject = new OpenApiTag()
-            {
-                UnresolvedReference = true,
-                Reference = new OpenApiReference()
-                {
-                    Type = ReferenceType.Tag,
-                    Id = tagName
-                }
-            };
-
+            var tagObject = new OpenApiTagReference(tagName, _openApiDoc);
             return tagObject;
         }
     }

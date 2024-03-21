@@ -599,6 +599,12 @@ namespace Microsoft.OpenApi.Models
         {
             throw new NotImplementedException();
         }
+
+        internal JsonSchema ResolveJsonSchemaReference(Uri reference)
+        {
+            var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
+            return (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
+        }
     }
 
     internal class FindSchemaReferences : OpenApiVisitorBase

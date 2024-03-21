@@ -1168,7 +1168,8 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private bool IsProxyReference(IOpenApiReferenceable referenceable, bool isComponent = false)
         {
-            var isReference = referenceable.GetType().Name.Contains("Reference") && !isComponent;
+            var isReference = (referenceable.GetType().Name.Contains("Reference") || referenceable.Reference != null) 
+                && (!isComponent || referenceable.UnresolvedReference);
             if (isReference)
             {
                 Walk(referenceable);

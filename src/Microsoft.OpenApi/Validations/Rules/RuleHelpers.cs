@@ -1,7 +1,8 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Schema;
@@ -50,6 +51,15 @@ namespace Microsoft.OpenApi.Validations.Rules
             if (schema == null)
             {
                 return;
+            }
+
+            // Resolve the Json schema in memory before validating the data types.
+            var reference = schema.GetRef();
+            if (reference != null)
+            {
+                var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
+                var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
+                schema = resolvedSchema ?? schema;
             }
 
             var type = schema.GetJsonType().Value.GetDisplayName();
