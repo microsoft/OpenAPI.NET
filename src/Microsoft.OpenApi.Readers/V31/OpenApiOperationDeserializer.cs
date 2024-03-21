@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.V31
 
         private static OpenApiTag LoadTagByReference(string tagName)
         {
-            var tagObject = new OpenApiTagReference(tagName, _openApiDoc);
+            var tagObject = new OpenApiTagReference(tagName, _openApiDocument);
             return tagObject;
         }
     }
