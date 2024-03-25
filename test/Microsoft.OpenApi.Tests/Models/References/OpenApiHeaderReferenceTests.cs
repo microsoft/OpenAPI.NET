@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers;
@@ -18,11 +19,43 @@ namespace Microsoft.OpenApi.Tests.Models.References
     [UsesVerify]
     public class OpenApiHeaderReferenceTests
     {
+        // OpenApi doc with external $ref
         private const string OpenApi= @"
 openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
+servers: 
+  - url: https://myserver.com/v1.0
+paths:
+  /users:
+    post:
+      summary: Create a post
+      responses:
+        '201':
+          description: Post created successfully
+          headers:
+            Location:
+              $ref: 'https://myserver.com/beta##/components/headers/LocationHeader'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+";
+
+        // OpenApi doc with local $ref
+        private const string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+servers: 
+  - url: https://myserver.com/beta
 paths:
   /users:
     post:
@@ -41,23 +74,6 @@ components:
         type: string
 ";
 
-        private const string OpenApi_2 = @"
-openapi: 3.0.0
-info:
-  title: Sample API
-  version: 1.0.0
-paths:
-  /users:
-    post:
-      summary: Create a post
-      responses:
-        '201':
-          description: Post created successfully
-          headers:
-            Location:
-              $ref: '#/components/headers/LocationHeader'
-";
-
         private readonly OpenApiHeaderReference _localHeaderReference;
         private readonly OpenApiHeaderReference _externalHeaderReference;
         private readonly OpenApiDocument _openApiDoc;
@@ -68,17 +84,16 @@ paths:
             var reader = new OpenApiStringReader();
             _openApiDoc = reader.Read(OpenApi, out _);
             _openApiDoc_2 = reader.Read(OpenApi_2, out _);
-            _openApiDoc_2.Workspace = new();
-            _openApiDoc_2.Workspace.AddDocument("http://localhost/headerreference", _openApiDoc);
+            _openApiDoc.Workspace.AddDocument( _openApiDoc_2);
 
-            _localHeaderReference = new OpenApiHeaderReference("LocationHeader", _openApiDoc)
+            _localHeaderReference = new OpenApiHeaderReference("LocationHeader", _openApiDoc_2)
             {
-                Description = "Location of the locally created post"
+                Description = "Location of the locally referenced post"
             };
 
-            _externalHeaderReference = new OpenApiHeaderReference("LocationHeader", _openApiDoc_2, "http://localhost/headerreference")
+            _externalHeaderReference = new OpenApiHeaderReference("LocationHeader", _openApiDoc, "https://myserver.com/beta")
             {
-                Description = "Location of the external created post"
+                Description = "Location of the externally referenced post"
             };
         }
 
@@ -86,10 +101,11 @@ paths:
         public void HeaderReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal("Location of the locally created post", _localHeaderReference.Description);
-            Assert.Equal("Location of the external created post", _externalHeaderReference.Description);
+            Assert.Equal(SchemaValueType.String, _externalHeaderReference.Schema.GetJsonType());
+            Assert.Equal("Location of the locally referenced post", _localHeaderReference.Description);
+            Assert.Equal("Location of the externally referenced post", _externalHeaderReference.Description);
             Assert.Equal("The URL of the newly created post",
-                _openApiDoc.Components.Headers.First().Value.Description); // The main description value shouldn't change
+                _openApiDoc_2.Components.Headers.First().Value.Description); // The main description value shouldn't change
         }
 
         [Theory]

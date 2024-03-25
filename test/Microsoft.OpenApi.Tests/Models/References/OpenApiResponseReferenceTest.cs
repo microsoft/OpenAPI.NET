@@ -1,11 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -25,14 +24,29 @@ openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
+servers: 
+  - url: https://myserver.com/v1.0
+paths:
+  /ping:
+    get:
+      responses:
+        '200':
+          $ref: 'https://myserver.com/beta#/components/responses/OkResponse'
+";
 
+        private const string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+servers: 
+  - url: https://myserver.com/beta
 paths:
   /ping:
     get:
       responses:
         '200':
           $ref: '#/components/responses/OkResponse'
-
 components:
   responses:
     OkResponse:
@@ -41,20 +55,6 @@ components:
         text/plain:
           schema:
             $ref: '#/components/schemas/Pong'
-";
-
-        private const string OpenApi_2 = @"
-openapi: 3.0.0
-info:
-  title: Sample API
-  version: 1.0.0
-
-paths:
-  /ping:
-    get:
-      responses:
-        '200':
-          $ref: '#/components/responses/OkResponse'
 ";
 
         private readonly OpenApiResponseReference _localResponseReference;
@@ -67,15 +67,14 @@ paths:
             var reader = new OpenApiStringReader();
             _openApiDoc = reader.Read(OpenApi, out _);
             _openApiDoc_2 = reader.Read(OpenApi_2, out _);
-            _openApiDoc_2.Workspace = new();
-            _openApiDoc_2.Workspace.AddDocument("http://localhost/responsereference", _openApiDoc);
+            _openApiDoc.Workspace.AddDocument(_openApiDoc_2);
 
-            _localResponseReference = new("OkResponse", _openApiDoc)
+            _localResponseReference = new("OkResponse", _openApiDoc_2)
             {
                 Description = "OK response"
             };
 
-            _externalResponseReference = new("OkResponse", _openApiDoc_2, "http://localhost/responsereference")
+            _externalResponseReference = new("OkResponse", _openApiDoc, "https://myserver.com/beta")
             {
                 Description = "External reference: OK response"
             };
@@ -85,11 +84,17 @@ paths:
         public void ResponseReferenceResolutionWorks()
         {
             // Assert
+            var localContent = _localResponseReference.Content.FirstOrDefault();
+            Assert.Equal("text/plain", localContent.Key);                     
+            Assert.Equal("#/components/schemas/Pong", localContent.Value.Schema.GetRef().OriginalString);
             Assert.Equal("OK response", _localResponseReference.Description);
-            Assert.Equal("text/plain", _localResponseReference.Content.First().Key);
-            Assert.NotNull(_localResponseReference.Content.First().Value.Schema.GetRef());
+
+            var externalContent = _externalResponseReference.Content.FirstOrDefault();
+            Assert.Equal("text/plain", externalContent.Key);
+            Assert.Equal("#/components/schemas/Pong", externalContent.Value.Schema.GetRef().OriginalString);
             Assert.Equal("External reference: OK response", _externalResponseReference.Description);
-            Assert.Equal("OK", _openApiDoc.Components.Responses.First().Value.Description);
+
+            Assert.Equal("OK", _openApiDoc_2.Components.Responses.First().Value.Description);
         }
 
         [Theory]

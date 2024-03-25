@@ -18,11 +18,42 @@ namespace Microsoft.OpenApi.Tests.Models.References
     [UsesVerify]
     public class OpenApiParameterReferenceTests
     {
+        // OpenApi doc with external $ref
         private const string OpenApi = @"
 openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
+servers: 
+  - url: https://myserver.com/v1.0
+paths:
+  /users:
+    get:
+      summary: Get users
+      parameters:
+        - $ref: 'https://myserver.com/beta#/components/parameters/limitParam'
+      responses:
+        200:
+          description: Successful operation
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+";
+
+        // OpenApi doc with local $ref
+        private const string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+servers: 
+  - url: https://myserver.com/beta
 paths:
   /users:
     get:
@@ -43,22 +74,6 @@ components:
         minimum: 1
         maximum: 100
 ";
-
-        private const string OpenApi_2 = @"
-openapi: 3.0.0
-info:
-  title: Sample API
-  version: 1.0.0
-paths:
-  /users:
-    get:
-      summary: Get users
-      parameters:
-        - $ref: '#/components/parameters/limitParam'
-      responses:
-        200:
-          description: Successful operation
-";
         private readonly OpenApiParameterReference _localParameterReference;
         private readonly OpenApiParameterReference _externalParameterReference;
         private readonly OpenApiDocument _openApiDoc;
@@ -69,15 +84,14 @@ paths:
             var reader = new OpenApiStringReader();
             _openApiDoc = reader.Read(OpenApi, out _);
             _openApiDoc_2 = reader.Read(OpenApi_2, out _);
-            _openApiDoc_2.Workspace = new();
-            _openApiDoc_2.Workspace.AddDocument("http://localhost/parameterreference", _openApiDoc);
+            _openApiDoc.Workspace.AddDocument(_openApiDoc_2);
 
-            _localParameterReference = new("limitParam", _openApiDoc)
+            _localParameterReference = new("limitParam", _openApiDoc_2)
             {
                 Description = "Results to return"
             };
 
-            _externalParameterReference = new OpenApiParameterReference("limitParam", _openApiDoc_2, "http://localhost/parameterreference")
+            _externalParameterReference = new OpenApiParameterReference("limitParam", _openApiDoc, "https://myserver.com/beta")
             {
                 Description = "Externally referenced: Results to return"
             };
@@ -89,9 +103,10 @@ paths:
             // Assert
             Assert.Equal("limit", _localParameterReference.Name);
             Assert.Equal("Results to return", _localParameterReference.Description);
+            Assert.Equal("limit", _externalParameterReference.Name);
             Assert.Equal("Externally referenced: Results to return", _externalParameterReference.Description);
             Assert.Equal("Number of results to return",
-                _openApiDoc.Components.Parameters.First().Value.Description); // The main description value shouldn't change
+                _openApiDoc_2.Components.Parameters.First().Value.Description); // The main description value shouldn't change
         }
 
         [Theory]

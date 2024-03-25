@@ -22,7 +22,8 @@ openapi: 3.0.3
 info:
   title: Sample API
   version: 1.0.0
-
+servers: 
+  - url: https://myserver.com/v1.0
 paths:
   /users:
     get:

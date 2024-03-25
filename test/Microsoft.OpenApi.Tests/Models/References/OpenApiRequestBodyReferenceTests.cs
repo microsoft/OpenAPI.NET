@@ -25,7 +25,35 @@ openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
+servers: 
+  - url: https://myserver.com/v1.0
+paths:
+  /users:
+    post:
+      summary: Create a user
+      requestBody:
+        $ref: 'https://myserver.com/beta#/components/requestBodies/UserRequest'  # <---- externally referencing the requestBody here
+      responses:
+        '201':
+          description: User created
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string          
+";
 
+        private readonly string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+servers: 
+  - url: https://myserver.com/beta
 paths:
   /users:
     post:
@@ -35,7 +63,6 @@ paths:
       responses:
         '201':
           description: User created
-          
 components:
   requestBodies:
     UserRequest:
@@ -44,7 +71,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UserSchema'
-
   schemas:
     UserSchema:
       type: object
@@ -53,23 +79,6 @@ components:
           type: string
         email:
           type: string
-";
-
-        private readonly string OpenApi_2 = @"
-openapi: 3.0.0
-info:
-  title: Sample API
-  version: 1.0.0
-
-paths:
-  /users:
-    post:
-      summary: Create a user
-      requestBody:
-        $ref: '#/components/requestBodies/UserRequest'  # <---- referencing the requestBody here
-      responses:
-        '201':
-          description: User created
 ";
 
         private readonly OpenApiRequestBodyReference _localRequestBodyReference;
@@ -82,15 +91,14 @@ paths:
             var reader = new OpenApiStringReader();
             _openApiDoc = reader.Read(OpenApi, out _);
             _openApiDoc_2 = reader.Read(OpenApi_2, out _);
-            _openApiDoc_2.Workspace = new();
-            _openApiDoc_2.Workspace.AddDocument("http://localhost/requestbodyreference", _openApiDoc);
+            _openApiDoc.Workspace.AddDocument(_openApiDoc_2);
 
-            _localRequestBodyReference = new("UserRequest", _openApiDoc)
+            _localRequestBodyReference = new("UserRequest", _openApiDoc_2)
             {
                 Description = "User request body"
             };
 
-            _externalRequestBodyReference = new("UserRequest", _openApiDoc_2, "http://localhost/requestbodyreference")
+            _externalRequestBodyReference = new("UserRequest", _openApiDoc, "https://myserver.com/beta")
             {
                 Description = "External Reference: User request body"
             };
@@ -100,20 +108,18 @@ paths:
         public void RequestBodyReferenceResolutionWorks()
         {
             // Assert
-            var expectedSchema = new JsonSchemaBuilder()
-                .Ref("#/components/schemas/UserSchema")
-                .Type(SchemaValueType.Object)
-                .Properties(
-                    ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    ("email", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                .Build();
-            var actualSchema = _localRequestBodyReference.Content["application/json"].Schema;
-
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
+            var localContent = _localRequestBodyReference.Content.Values.FirstOrDefault();
+            Assert.NotNull(localContent);
+            Assert.Equal("#/components/schemas/UserSchema", localContent.Schema.GetRef().OriginalString);
             Assert.Equal("User request body", _localRequestBodyReference.Description);
             Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
+
+            var externalContent = _externalRequestBodyReference.Content.Values.FirstOrDefault();
+            Assert.NotNull(externalContent);
+            Assert.Equal("#/components/schemas/UserSchema", externalContent.Schema.GetRef().OriginalString);
+
             Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);
-            Assert.Equal("User creation request body", _openApiDoc.Components.RequestBodies.First().Value.Description);
+            Assert.Equal("User creation request body", _openApiDoc_2.Components.RequestBodies.First().Value.Description);
         }
 
         [Theory]

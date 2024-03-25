@@ -18,11 +18,58 @@ namespace Microsoft.OpenApi.Tests.Models.References
     [UsesVerify]
     public class OpenApiCallbackReferenceTests
     {
+        // OpenApi doc with external $ref
         private const string OpenApi = @"
 openapi: 3.0.0
 info:
   title: Callback with ref Example
   version: 1.0.0
+servers: 
+  - url: https://myserver.com/v1.0
+paths:
+  /register:
+    post:
+      summary: Subscribe to a webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                callbackUrl: # Callback URL
+                  type: string
+                  format: uri
+                  example: https://myserver.com/send/callback/here
+              required:
+                - callbackUrl
+      responses:
+        '200':
+          description: subscription successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                description: subscription information
+                required:
+                  - subscriptionId
+                properties:
+                  subscriptionId:
+                    description: unique identifier
+                    type: string
+                    example: 2531329f-fb09-4ef7-887e-84e648214436
+      callbacks:
+        myEvent:
+          $ref: 'https://myserver.com/beta#/components/callbacks/callbackEvent'";
+
+        // OpenApi doc with local $ref
+        private const string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  title: Callback with ref Example
+  version: 1.0.0
+servers: 
+  - url: https://myserver.com/beta
 paths:
   /register:
     post:
@@ -58,6 +105,7 @@ paths:
       callbacks:
         myEvent:
           $ref: '#/components/callbacks/callbackEvent'
+
 components:
   callbacks:
     callbackEvent:
@@ -79,70 +127,34 @@ components:
             '200':
               description: ok";
 
-        private const string OpenApi_2 = @"
-openapi: 3.0.0
-info:
-  title: Callback with ref Example
-  version: 1.0.0
-paths:
-  /register:
-    post:
-      summary: Subscribe to a webhook
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                callbackUrl: # Callback URL
-                  type: string
-                  format: uri
-                  example: https://myserver.com/send/callback/here
-              required:
-                - callbackUrl
-      responses:
-        '200':
-          description: subscription successfully created
-          content:
-            application/json:
-              schema:
-                type: object
-                description: subscription information
-                required:
-                  - subscriptionId
-                properties:
-                  subscriptionId:
-                    description: unique identifier
-                    type: string
-                    example: 2531329f-fb09-4ef7-887e-84e648214436
-      callbacks:
-        myEvent:
-          $ref: '#/components/callbacks/callbackEvent'
-";
-
-        private readonly OpenApiCallbackReference _localCallbackReference;
         private readonly OpenApiCallbackReference _externalCallbackReference;
+        private readonly OpenApiCallbackReference _localCallbackReference;
 
         public OpenApiCallbackReferenceTests()
         {
             var reader = new OpenApiStringReader();
             OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
             OpenApiDocument openApiDoc_2 = reader.Read(OpenApi_2, out _);
-            openApiDoc_2.Workspace = new();
-            openApiDoc_2.Workspace.AddDocument("http://localhost/callbackreference", openApiDoc);
-            _localCallbackReference = new("callbackEvent", openApiDoc);
-            _externalCallbackReference = new("callbackEvent", openApiDoc_2, "http://localhost/callbackreference");
+            openApiDoc.Workspace.AddDocument(openApiDoc_2);
+            _externalCallbackReference = new("callbackEvent", openApiDoc, "https://myserver.com/beta");
+            _localCallbackReference = new("callbackEvent", openApiDoc_2);
         }
 
         [Fact]
         public void CallbackReferenceResolutionWorks()
         {
             // Assert
-            Assert.NotEmpty(_localCallbackReference.PathItems);
+            // External reference resolution works
             Assert.NotEmpty(_externalCallbackReference.PathItems);
-            Assert.Equal("{$request.body#/callbackUrl}", _localCallbackReference.PathItems.First().Key.Expression);
+            Assert.Single(_externalCallbackReference.PathItems);
             Assert.Equal("{$request.body#/callbackUrl}", _externalCallbackReference.PathItems.First().Key.Expression);
+            Assert.Equal(OperationType.Post, _externalCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);;
+
+            // Local reference resolution works
+            Assert.NotEmpty(_localCallbackReference.PathItems);
+            Assert.Single(_localCallbackReference.PathItems);
+            Assert.Equal("{$request.body#/callbackUrl}", _localCallbackReference.PathItems.First().Key.Expression);
+            Assert.Equal(OperationType.Post, _localCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key); ;
         }
 
         [Theory]
@@ -155,7 +167,7 @@ paths:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });            
 
             // Act
-            _localCallbackReference.SerializeAsV3(writer);
+            _externalCallbackReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert            
@@ -172,7 +184,7 @@ paths:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _localCallbackReference.SerializeAsV31(writer);
+            _externalCallbackReference.SerializeAsV31(writer);
             writer.Flush();
 
             // Assert
