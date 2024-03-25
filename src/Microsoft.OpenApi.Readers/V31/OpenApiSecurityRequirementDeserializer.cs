@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.V31
 
         private static OpenApiSecurityScheme LoadSecuritySchemeByReference(string schemeName)
         {
-            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, _openApiDocument);
+            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, null);
             return securitySchemeObject;
         }
     }

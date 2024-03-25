@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Readers.V3
             ParsingContext context,
             string tagName)
         {
-            return new OpenApiTagReference(tagName, _openApiDocument);
+            return new OpenApiTagReference(tagName, null);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.V3
             ParsingContext context,
             string schemeName)
         {
-            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, _openApiDocument);
+            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, null);
             return securitySchemeObject;
         }
     }
