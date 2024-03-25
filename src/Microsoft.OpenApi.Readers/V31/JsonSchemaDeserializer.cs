@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {
                 "required", (o, n) =>
                 {
-                    o.Required(new HashSet<string>(n.CreateSimpleList(n2 => n2.GetScalarValue())));
+                    o.Required(new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue())));
                 }
             },
             {
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Readers.V31
                 {
                     if(n is ListNode)
                     {
-                        o.Type(n.CreateSimpleList(s => SchemaTypeConverter.ConvertToSchemaValueType(s.GetScalarValue())));
+                        o.Type(n.CreateSimpleList((s, p) => SchemaTypeConverter.ConvertToSchemaValueType(s.GetScalarValue())));
                     }
                     else
                     {
@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {
                 "examples", (o, n) =>
                     {
-                        o.Examples(n.CreateSimpleList(s => (JsonNode)s.GetScalarValue()));
+                        o.Examples(n.CreateSimpleList((s, p) =>(JsonNode) s.GetScalarValue()));
                     }
             },
             {
@@ -258,7 +258,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {s => s.StartsWith("x-"), (o, p, n) => o.Extensions(LoadExtensions(p, LoadExtension(p, n)))}
         };
 
-        public static JsonSchema LoadSchema(ParseNode node)
+        public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
             var builder = new JsonSchemaBuilder();

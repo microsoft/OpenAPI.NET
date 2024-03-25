@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
         };
 
-        public static OpenApiLink LoadLink(ParseNode node)
+        public static OpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("link");
             var link = new OpenApiLink();
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiLinkReference(reference.Item1, null, reference.Item2);
+                return new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields);

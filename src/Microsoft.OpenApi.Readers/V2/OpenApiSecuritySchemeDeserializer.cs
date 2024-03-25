@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
+        public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument = null)
         {
             // Reset the local variables every time this method is called.
             // TODO: Change _flow to a tempStorage variable to make the deserializer thread-safe.

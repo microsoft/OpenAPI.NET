@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiHeader LoadHeader(ParseNode node)
+        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("header");
 
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiHeaderReference(reference.Item1, null, reference.Item2);
+                return new OpenApiHeaderReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var header = new OpenApiHeader();

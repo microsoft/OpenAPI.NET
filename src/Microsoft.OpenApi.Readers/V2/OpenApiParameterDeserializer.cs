@@ -196,12 +196,12 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node)
+        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument = null)
         {
-            return LoadParameter(node, false);
+            return LoadParameter(node, false, hostDocument);
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody)
+        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
         {
             // Reset the local variables every time this method is called.
             node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Readers.V2
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiParameterReference(reference.Item1, null, reference.Item2);
+                return new OpenApiParameterReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var parameter = new OpenApiParameter();

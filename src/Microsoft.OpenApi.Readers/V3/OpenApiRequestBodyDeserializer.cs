@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiRequestBody LoadRequestBody(ParseNode node)
+        public static OpenApiRequestBody LoadRequestBody(ParseNode node, OpenApiDocument hostDocument= null)
         {
             var mapNode = node.CheckMapNode("requestBody");
 
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiRequestBodyReference(reference.Item1, null, reference.Item2);
+                return new OpenApiRequestBodyReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var requestBody = new OpenApiRequestBody();

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -21,14 +22,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             _nodeList = jsonArray;
         }
 
-        public override List<T> CreateList<T>(Func<MapNode, T> map)
+        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map)
         {
             if (_nodeList == null)
             {
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject)))
+            return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject), null))
                 .Where(i => i != null)
                 .ToList();
         }
@@ -43,14 +44,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return list;
         }
 
-        public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
+        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map)
         {
             if (_nodeList == null)
             {
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList.Select(n => map(new(Context, n))).ToList();
+            return _nodeList.Select(n => map(new(Context, n), null)).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()

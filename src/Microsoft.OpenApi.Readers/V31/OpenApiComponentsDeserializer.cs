@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        public static OpenApiComponents LoadComponents(ParseNode node)
+        public static OpenApiComponents LoadComponents(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("components");
             var components = new OpenApiComponents();

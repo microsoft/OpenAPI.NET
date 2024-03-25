@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiResponses LoadResponses(ParseNode node)
+        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("Responses");
 

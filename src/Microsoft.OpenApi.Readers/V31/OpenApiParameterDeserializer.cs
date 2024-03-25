@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Readers.V31
             }
         };
 
-        public static OpenApiParameter LoadParameter(ParseNode node)
+        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("parameter");
 
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Readers.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiParameterReference(reference.Item1, null, reference.Item2);
+                return new OpenApiParameterReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var parameter = new OpenApiParameter();

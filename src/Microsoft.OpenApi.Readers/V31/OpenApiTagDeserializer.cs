@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiTag LoadTag(ParseNode n)
+        public static OpenApiTag LoadTag(ParseNode n, OpenApiDocument hostDocument = null)
         {
             var mapNode = n.CheckMapNode("tag");
 

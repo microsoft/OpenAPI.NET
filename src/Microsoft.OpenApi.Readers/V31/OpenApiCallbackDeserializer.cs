@@ -24,14 +24,14 @@ namespace Microsoft.OpenApi.Readers.V31
             {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        public static OpenApiCallback LoadCallback(ParseNode node)
+        public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("callback");
 
             if (mapNode.GetReferencePointer() is {} pointer)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiCallbackReference(reference.Item1, null, reference.Item2);
+                return new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var domainObject = new OpenApiCallback();

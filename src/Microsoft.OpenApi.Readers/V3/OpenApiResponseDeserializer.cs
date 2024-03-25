@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiResponse LoadResponse(ParseNode node)
+        public static OpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("response");
 
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiResponseReference(reference.Item1, null, reference.Item2);
+                return new OpenApiResponseReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var response = new OpenApiResponse();

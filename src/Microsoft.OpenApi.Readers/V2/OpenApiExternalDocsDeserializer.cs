@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
                     };
 
-        public static OpenApiExternalDocs LoadExternalDocs(ParseNode node)
+        public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("externalDocs");
 

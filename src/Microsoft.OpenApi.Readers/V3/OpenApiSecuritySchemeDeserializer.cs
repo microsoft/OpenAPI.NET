@@ -59,14 +59,14 @@ namespace Microsoft.OpenApi.Readers.V3
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
+        public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("securityScheme");
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiSecuritySchemeReference(reference.Item1, null, reference.Item2);
+                return new OpenApiSecuritySchemeReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var securityScheme = new OpenApiSecurityScheme();

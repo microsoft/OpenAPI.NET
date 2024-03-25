@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.V2
             Diagnostic = diagnostic;
         }
 
-        private Dictionary<Type, Func<ParseNode, object>> _loaders = new()
+        private Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new()
         {
             [typeof(OpenApiAny)] = OpenApiV2Deserializer.LoadAny,
             [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
@@ -216,9 +216,9 @@ namespace Microsoft.OpenApi.Readers.V2
             return OpenApiV2Deserializer.LoadOpenApi(rootNode);
         }
 
-        public T LoadElement<T>(ParseNode node) where T : IOpenApiElement
+        public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
         {
-            return (T)_loaders[typeof(T)](node);
+            return (T)_loaders[typeof(T)](node, doc);
         }
 
         /// <inheritdoc />

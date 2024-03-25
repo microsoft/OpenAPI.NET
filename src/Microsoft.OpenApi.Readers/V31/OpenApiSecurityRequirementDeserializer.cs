@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("security");
 
@@ -21,9 +21,9 @@ namespace Microsoft.OpenApi.Readers.V31
 
             foreach (var property in mapNode)
             {
-                var scheme = LoadSecuritySchemeByReference(property.Name);
+                var scheme = LoadSecuritySchemeByReference(property.Name, hostDocument);
 
-                var scopes = property.Value.CreateSimpleList(value => value.GetScalarValue());
+                var scopes = property.Value.CreateSimpleList((value, p) => value.GetScalarValue());
 
                 if (scheme != null)
                 {
@@ -39,9 +39,9 @@ namespace Microsoft.OpenApi.Readers.V31
             return securityRequirement;
         }
 
-        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(string schemeName)
+        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(string schemeName, OpenApiDocument hostDocument)
         {
-            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, null);
+            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, hostDocument);
             return securitySchemeObject;
         }
     }

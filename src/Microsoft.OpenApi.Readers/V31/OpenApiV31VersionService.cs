@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V31
             Diagnostic = diagnostic;
         }
 
-        private readonly IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        private readonly IDictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new Dictionary<Type, Func<ParseNode, OpenApiDocument, object>>
         {
             [typeof(OpenApiAny)] = OpenApiV31Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV31Deserializer.LoadCallback,
@@ -158,9 +158,9 @@ namespace Microsoft.OpenApi.Readers.V31
             return OpenApiV31Deserializer.LoadOpenApi(rootNode);
         }
 
-        public T LoadElement<T>(ParseNode node) where T : IOpenApiElement
+        public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
         {
-            return (T)_loaders[typeof(T)](node);
+            return (T)_loaders[typeof(T)](node, doc);
         }
 
         /// <inheritdoc />

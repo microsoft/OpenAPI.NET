@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Readers.V31
             };
         }
 
-        public static OpenApiAny LoadAny(ParseNode node)
+        public static OpenApiAny LoadAny(ParseNode node, OpenApiDocument hostDocument = null)
         {
             return node.CreateAny();
         }

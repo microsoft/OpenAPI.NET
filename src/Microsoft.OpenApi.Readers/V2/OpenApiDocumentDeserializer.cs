@@ -32,13 +32,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 "schemes", (_, n) => n.Context.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
-                        s => s.GetScalarValue()))
+                        (s, p) => s.GetScalarValue()))
             },
             {
                 "consumes",
                 (_, n) =>
                 {
-                    var consumes = n.CreateSimpleList(s => s.GetScalarValue());
+                    var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue());
                     if (consumes.Count > 0)
                     {
                         n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "produces", (_, n) => {
-                    var produces = n.CreateSimpleList(s => s.GetScalarValue());
+                    var produces = n.CreateSimpleList((s, p) => s.GetScalarValue());
                     if (produces.Count > 0)
                     {
                         n.Context.SetTempStorage(TempStorageKeys.GlobalProduces, produces);
@@ -76,15 +76,10 @@ namespace Microsoft.OpenApi.Readers.V2
                         ReferenceType.Parameter,
                         LoadParameter);
 
-                    o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, p =>
+                    o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, (p, d) =>
                             {
-                                var parameter = LoadParameter(p, loadRequestBody: true);
-                                if (parameter != null)
-                                {
-                                    return CreateRequestBody(n.Context, parameter);
-                                }
-
-                                return null;
+                                var parameter = LoadParameter(node: p, loadRequestBody: true, hostDocument: d);
+                                return parameter != null ? CreateRequestBody(p.Context, parameter) : null;
                             }
                       );
                 }

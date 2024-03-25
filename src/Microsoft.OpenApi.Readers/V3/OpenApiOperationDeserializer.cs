@@ -19,10 +19,10 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
-                        valueNode =>
+                        (valueNode, doc) =>
                             LoadTagByReference(
                                 valueNode.Context,
-                                valueNode.GetScalarValue()))
+                                valueNode.GetScalarValue(), doc))
                 },
                 {
                     "summary",
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node)
+        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("Operation");
 
@@ -89,9 +89,9 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
-            string tagName)
+            string tagName, OpenApiDocument hostDocument)
         {
-            return new OpenApiTagReference(tagName, null);
+            return new OpenApiTagReference(tagName, hostDocument);
         }
     }
 }

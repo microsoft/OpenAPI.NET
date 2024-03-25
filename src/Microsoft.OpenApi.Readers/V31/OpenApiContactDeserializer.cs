@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiContact LoadContact(ParseNode node)
+        public static OpenApiContact LoadContact(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node as MapNode;
             var contact = new OpenApiContact();
