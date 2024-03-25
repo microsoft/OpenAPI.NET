@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Readers.V31
     /// runtime Open API object model.
     /// </summary>
     internal static partial class OpenApiV31Deserializer
-    {
+  {
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
@@ -49,6 +49,11 @@ namespace Microsoft.OpenApi.Readers.V31
             var openApiNode = rootNode.GetMap();
 
             ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
+
+            if (openApidoc.Components != null)
+            {
+                openApidoc.Workspace.RegisterComponents(openApidoc);
+            }
 
             return openApidoc;
         }

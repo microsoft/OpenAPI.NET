@@ -44,13 +44,6 @@ namespace Microsoft.OpenApi.Readers.V3
             var components = new OpenApiComponents();
 
             ParseMap(mapNode, components, _componentsFixedFields, _componentsPatternFields);
-            
-            foreach (var schema in components.Schemas)
-            {
-                var refUri = new Uri(OpenApiConstants.V3ReferenceUri + schema.Key);
-                SchemaRegistry.Global.Register(refUri, schema.Value);
-            }
-
             return components;
         }
     }

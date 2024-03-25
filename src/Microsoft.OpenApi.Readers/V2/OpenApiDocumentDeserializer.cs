@@ -263,7 +263,12 @@ namespace Microsoft.OpenApi.Readers.V2
             MakeServers(openApidoc.Servers, openApiNode.Context, rootNode);
 
             FixRequestBodyReferences(openApidoc);
-            RegisterComponentsSchemasInGlobalRegistry(openApidoc.Components?.Schemas);
+
+            // Register components
+            if (openApidoc.Components != null)
+            {
+                openApidoc.Workspace.RegisterComponents(openApidoc);
+            }
 
             return openApidoc;
         }
