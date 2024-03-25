@@ -453,6 +453,16 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Walks the OpenApiDocument and sets the host document for all referenceable objects
+        /// </summary>
+        public void SetHostDocument()
+        {
+            var resolver = new HostDocumentResolver(this);
+            var walker = new OpenApiWalker(resolver);
+            walker.Walk(this);
+        }
+
+        /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
         internal T ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable

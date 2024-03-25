@@ -59,6 +59,8 @@ namespace Microsoft.OpenApi.Readers
                 {
                     throw new InvalidOperationException("Cannot load external refs using the synchronous Read, use ReadAsync instead.");
                 }
+
+                SetHostDocument(document);
             }
             catch (OpenApiException ex)
             {
@@ -107,6 +109,8 @@ namespace Microsoft.OpenApi.Readers
                         diagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
                     }
                 }
+
+                SetHostDocument(document);
             }
             catch (OpenApiException ex)
             {
@@ -143,6 +147,11 @@ namespace Microsoft.OpenApi.Readers
             var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
             return workspaceLoader.LoadAsync(new() { ExternalResource = "/" }, document, null, cancellationToken);
+        }
+
+        private void SetHostDocument(OpenApiDocument document)
+        {
+            document.SetHostDocument();
         }
 
         /// <summary>
