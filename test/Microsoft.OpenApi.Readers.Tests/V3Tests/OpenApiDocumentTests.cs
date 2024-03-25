@@ -325,11 +325,13 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(petSchema)
+                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array)
+                                                    .Items(new JsonSchemaBuilder().Ref("#/components/schemas/pet1"))
                                                 },
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(petSchema)
+                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array)
+                                                    .Items(new JsonSchemaBuilder().Ref("#/components/schemas/pet1"))
                                                 }
                                             }
                                         },
@@ -340,7 +342,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         },
@@ -351,7 +353,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         }
@@ -369,7 +371,7 @@ paths: {}",
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = newPetSchema
+                                                Schema = new JsonSchemaBuilder().Ref("#/components/schemas/newPet")
                                             }
                                         }
                                     },
@@ -382,7 +384,7 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = petSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet1")
                                                 },
                                             }
                                         },
@@ -393,7 +395,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         },
@@ -404,7 +406,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         }
@@ -441,11 +443,11 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = petSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet1")
                                                 },
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema = petSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet1")
                                                 }
                                             }
                                         },
@@ -456,7 +458,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         },
@@ -467,7 +469,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         }
@@ -501,7 +503,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         },
@@ -512,7 +514,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         }
@@ -616,7 +618,12 @@ paths: {}",
 
                 var tag2 = new OpenApiTag
                 {
-                    Name = "tagName2"
+                    Name = "tagName2",
+                    Reference = new OpenApiReference
+                    {
+                        Id = "tagName2",
+                        Type = ReferenceType.Tag
+                    }
                 };
 
                 var securityScheme1 = CloneSecurityScheme(components.SecuritySchemes["securitySchemeName1"]);
@@ -712,13 +719,13 @@ paths: {}",
                                                 {
                                                     Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
-                                                        .Items(petSchema)
+                                                        .Items(new JsonSchemaBuilder().Ref("#/components/schemas/pet1"))
                                                 },
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
                                                     Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
-                                                        .Items(petSchema)
+                                                        .Items(new JsonSchemaBuilder().Ref("#/components/schemas/pet1"))
                                                 }
                                             }
                                         },
@@ -729,7 +736,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         },
@@ -740,7 +747,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         }
@@ -763,7 +770,7 @@ paths: {}",
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = newPetSchema
+                                                Schema = new JsonSchemaBuilder().Ref("#/components/schemas/newPet")
                                             }
                                         }
                                     },
@@ -776,7 +783,7 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = petSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet1")
                                                 },
                                             }
                                         },
@@ -787,7 +794,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         },
@@ -798,7 +805,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         }
@@ -849,11 +856,11 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = petSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet1")
                                                 },
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema = petSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet1")
                                                 }
                                             }
                                         },
@@ -864,7 +871,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         },
@@ -875,7 +882,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         }
@@ -911,7 +918,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         },
@@ -922,7 +929,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema = errorModelSchema
+                                                    Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                                 }
                                             }
                                         }
@@ -1097,16 +1104,10 @@ paths: {}",
             var actualSchema = doc.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             var expectedSchema = new JsonSchemaBuilder()
-                .Ref("#/components/schemas/User")
-                .Type(SchemaValueType.Object)
-                .Properties(
-                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-                    ("username", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    ("email", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                .Build();
+                .Ref("#/components/schemas/User");
 
             // Assert
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
+            Assert.Equal(expectedSchema, actualSchema);
         }
 
         [Fact]

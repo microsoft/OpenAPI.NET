@@ -6,6 +6,7 @@ using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
 using Xunit;
@@ -44,15 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             {
                 Tags =
                 {
-                    new OpenApiTag
-                    {
-                        UnresolvedReference = false,
-                        Reference = new()
-                        {
-                            Id = "user",
-                            Type = ReferenceType.Tag
-                        }
-                    }
+                    new OpenApiTagReference("user", null)
                 },
                 Summary = "Logs user into the system",
                 Description = "",

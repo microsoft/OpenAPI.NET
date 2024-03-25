@@ -209,7 +209,7 @@ get:
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
             // Act
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+             var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
             // Assert
             var components = openApiDoc.Components;
@@ -220,7 +220,7 @@ get:
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
                     Errors = new List<OpenApiError>()
                     {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                        new OpenApiError("", "Paths is a REQUIRED field at #/")
                     }
                 });
 
@@ -228,27 +228,22 @@ get:
             {
                 Schemas =
                     {
-                            ["ErrorModel"] = new JsonSchemaBuilder()
-                                .Ref("#/components/schemas/ErrorModel")
-                                .Type(SchemaValueType.Object)
-                                .Required("message", "code")
-                                .Properties(
-                                    ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600))),
-                            ["ExtendedErrorModel"] = new JsonSchemaBuilder()
-                                .Ref("#/components/schemas/ExtendedErrorModel")
-                                .AllOf(
-                                    new JsonSchemaBuilder()
-                                        .Ref("#/components/schemas/ErrorModel")
-                                        .Type(SchemaValueType.Object)
-                                        .Properties(
-                                            ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600)),
-                                            ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                        .Required("message", "code"),
-                                    new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.Object)
-                                        .Required("rootCause")
-                                        .Properties(("rootCause", new JsonSchemaBuilder().Type(SchemaValueType.String))))
+                        ["ErrorModel"] = new JsonSchemaBuilder()
+                            .Ref("#/components/schemas/ErrorModel")
+                            .Type(SchemaValueType.Object)
+                            .Required("message", "code")
+                            .Properties(
+                                ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                                ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600))),
+                        ["ExtendedErrorModel"] = new JsonSchemaBuilder()
+                            .Ref("#/components/schemas/ExtendedErrorModel")
+                            .AllOf(
+                                new JsonSchemaBuilder()
+                                    .Ref("#/components/schemas/ErrorModel"),
+                                new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Object)
+                                    .Required("rootCause")
+                                    .Properties(("rootCause", new JsonSchemaBuilder().Type(SchemaValueType.String))))
                     }
             };
 

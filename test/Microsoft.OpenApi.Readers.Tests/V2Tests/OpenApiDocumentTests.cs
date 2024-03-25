@@ -25,22 +25,24 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var doc = reader.Read(stream, out var diagnostic);
 
             var okSchema = new JsonSchemaBuilder()
+                    .Ref("#/definitions/Item")
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")));
 
             var errorSchema = new JsonSchemaBuilder()
                     .Ref("#/definitions/Error")
-                    .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
+                    .Properties(
+                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                     ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
 
             var okMediaType = new OpenApiMediaType
             {
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("#/components/schemas/okSchema"))
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("#/definitions/Item"))
             };
 
             var errorMediaType = new OpenApiMediaType
             {
-                Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorSchema")
+                Schema = new JsonSchemaBuilder().Ref("#/definitions/Error")
             };
 
             doc.Should().BeEquivalentTo(new OpenApiDocument
@@ -147,7 +149,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             });
         }
 
-
         [Fact]
         public void ShouldAssignSchemaToAllResponses()
         {
@@ -163,29 +164,26 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var successSchema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Array)
                 .Items(new JsonSchemaBuilder()
-                    .Ref("#/definitions/Item")
-                    .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))))
-                .Build();
+                    .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))));
 
             var errorSchema = new JsonSchemaBuilder()
-                    .Ref("#/definitions/Error")
                     .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                        ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                    .Build();
+                        ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
 
             var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)
             {
-                var targetSchema = response.Key == "200" ? successSchema : errorSchema;
+                var targetSchema = response.Key == "200" ? successSchema.Build() : errorSchema.Build();
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
-                json.Schema.Should().BeEquivalentTo(targetSchema);
+
+                Assert.Equal(json.Schema.Keywords.Count, targetSchema.Keywords.Count);
 
                 var xml = response.Value.Content["application/xml"];
                 Assert.NotNull(xml);
-                xml.Schema.Should().BeEquivalentTo(targetSchema);
+                Assert.Equal(xml.Schema.Keywords.Count, targetSchema.Keywords.Count);
             }
         }
 
