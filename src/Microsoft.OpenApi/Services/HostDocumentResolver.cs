@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Services
 {
     internal class HostDocumentResolver : OpenApiVisitorBase
     {
-        private OpenApiDocument _currentDocument;
+        private readonly OpenApiDocument _currentDocument;
 
         public HostDocumentResolver(OpenApiDocument currentDocument)
         {
