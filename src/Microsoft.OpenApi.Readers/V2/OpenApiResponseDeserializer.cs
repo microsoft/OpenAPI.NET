@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -138,7 +139,8 @@ namespace Microsoft.OpenApi.Readers.V2
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiResponse>(ReferenceType.Response, pointer);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiResponseReference(reference.Item1, null, reference.Item2);
             }
 
             var response = new OpenApiResponse();

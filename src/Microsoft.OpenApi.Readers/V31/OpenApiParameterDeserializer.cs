@@ -137,12 +137,8 @@ namespace Microsoft.OpenApi.Readers.V31
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var refSegments = pointer.Split('/');
-                var refId = refSegments.Last();
-                var isExternalResource = !refSegments.First().StartsWith("#");
-
-                string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
-                return new OpenApiParameterReference(refId, _openApiDocument, externalResource);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiParameterReference(reference.Item1, null, reference.Item2);
             }
 
             var parameter = new OpenApiParameter();

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,6 +9,7 @@ using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -211,7 +212,8 @@ namespace Microsoft.OpenApi.Readers.V2
 
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiParameterReference(reference.Item1, null, reference.Item2);
             }
 
             var parameter = new OpenApiParameter();

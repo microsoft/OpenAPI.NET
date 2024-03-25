@@ -59,12 +59,8 @@ namespace Microsoft.OpenApi.Readers.V31
 
             if (pointer != null)
             {
-                var refSegments = pointer.Split('/');
-                var refId = refSegments.Last();
-                var isExternalResource = !refSegments.First().StartsWith("#");
-
-                string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
-                return new OpenApiPathItemReference(refId, _openApiDocument, externalResource);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiPathItemReference(reference.Item1, null, reference.Item2);
             }
 
             var pathItem = new OpenApiPathItem();
