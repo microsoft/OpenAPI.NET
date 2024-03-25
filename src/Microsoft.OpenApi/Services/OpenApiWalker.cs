@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -18,6 +19,7 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiWalker
     {
         private readonly OpenApiVisitorBase _visitor;
+        private OpenApiDocument _currentDocument;
         private readonly Stack<JsonSchema> _schemaLoop = new Stack<JsonSchema>();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
 
@@ -40,6 +42,7 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            _currentDocument = doc;
             _schemaLoop.Clear();
             _pathItemLoop.Clear();
 
@@ -391,8 +394,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiCallback callback, bool isComponent = false)
         {
-            if (callback == null || IsProxyReference(callback, isComponent))
+            if (callback == null)
             {
+                return;
+            }
+
+            if (callback is OpenApiCallbackReference)
+            {
+                Walk(callback as IOpenApiReferenceable);
+                callback.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -415,8 +425,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiTag tag)
         {
-            if (tag == null || IsProxyReference(tag))
+            if (tag == null)
             {
+                return;
+            }
+
+            if (tag is OpenApiTagReference)
+            {
+                Walk(tag as IOpenApiReferenceable);
+                tag.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -482,8 +499,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiPathItem pathItem, bool isComponent = false)
         {
-            if (pathItem == null || IsProxyReference(pathItem, isComponent))
+            if (pathItem == null)
             {
+                return;
+            }
+
+            if (pathItem is OpenApiPathItemReference)
+            {
+                Walk(pathItem as IOpenApiReferenceable);
+                pathItem.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -599,8 +623,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiParameter parameter, bool isComponent = false)
         {
-            if (parameter == null || IsProxyReference(parameter, isComponent))
+            if (parameter == null)
             {
+                return;
+            }
+
+            if (parameter is OpenApiParameterReference)
+            {
+                Walk(parameter as IOpenApiReferenceable);
+                parameter.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -641,8 +672,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiResponse response, bool isComponent = false)
         {
-            if (response == null || IsProxyReference(response, isComponent))
+            if (response == null)
             {
+                return;
+            }
+
+            if (response is OpenApiResponseReference)
+            {
+                Walk(response as IOpenApiReferenceable);
+                response.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -658,8 +696,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiRequestBody requestBody, bool isComponent = false)
         {
-            if (requestBody == null || IsProxyReference(requestBody, isComponent))
+            if (requestBody == null)
             {
+                return;
+            }
+
+            if (requestBody is OpenApiRequestBodyReference)
+            {
+                Walk(requestBody as IOpenApiReferenceable);
+                requestBody.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -935,8 +980,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiExample example, bool isComponent = false)
         {
-            if (example == null || IsProxyReference(example, isComponent))
+            if (example == null)
             {
+                return;
+            }
+
+            if (example is OpenApiExampleReference)
+            {
+                Walk(example as IOpenApiReferenceable);
+                example.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -1041,8 +1093,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiLink link, bool isComponent = false)
         {
-            if (link == null || IsProxyReference(link, isComponent))
+            if (link == null)
             {
+                return;
+            }
+
+            if (link is OpenApiLinkReference)
+            {
+                Walk(link as IOpenApiReferenceable);
+                link.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -1056,8 +1115,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiHeader header, bool isComponent = false)
         {
-            if (header == null || IsProxyReference(header, isComponent))
+            if (header == null)
             {
+                return;
+            }
+
+            if (header is OpenApiHeaderReference)
+            {
+                Walk(header as IOpenApiReferenceable);
+                header.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -1079,6 +1145,11 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            foreach(var securityScheme in securityRequirement.Keys)
+            {
+                Walk(securityScheme);
+            }
+
             _visitor.Visit(securityRequirement);
             Walk(securityRequirement as IOpenApiExtensible);
         }
@@ -1088,8 +1159,15 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiSecurityScheme securityScheme, bool isComponent = false)
         {
-            if (securityScheme == null || IsProxyReference(securityScheme, isComponent))
+            if (securityScheme == null)
             {
+                return;
+            }
+
+            if (securityScheme is OpenApiSecuritySchemeReference)
+            {
+                Walk(securityScheme as IOpenApiReferenceable);
+                securityScheme.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -1161,20 +1239,6 @@ namespace Microsoft.OpenApi.Services
             _visitor.Enter(context.Replace("/", "~1"));
             walk();
             _visitor.Exit();
-        }
-
-        /// <summary>
-        /// Identify whether an element is a proxy reference to a component, or an actual component
-        /// </summary>
-        private bool IsProxyReference(IOpenApiReferenceable referenceable, bool isComponent = false)
-        {
-            var isReference = (referenceable.GetType().Name.Contains("Reference") || referenceable.Reference != null) 
-                && (!isComponent || referenceable.UnresolvedReference);
-            if (isReference)
-            {
-                Walk(referenceable);
-            }
-            return isReference;
         }
 
         private bool ProcessSchemaAsReference(IBaseDocument baseDocument, bool isComponent = false)
