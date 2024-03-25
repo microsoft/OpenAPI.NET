@@ -402,7 +402,6 @@ namespace Microsoft.OpenApi.Services
             if (callback is OpenApiCallbackReference)
             {
                 Walk(callback as IOpenApiReferenceable);
-                callback.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -433,7 +432,6 @@ namespace Microsoft.OpenApi.Services
             if (tag is OpenApiTagReference)
             {
                 Walk(tag as IOpenApiReferenceable);
-                tag.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -507,7 +505,6 @@ namespace Microsoft.OpenApi.Services
             if (pathItem is OpenApiPathItemReference)
             {
                 Walk(pathItem as IOpenApiReferenceable);
-                pathItem.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -631,7 +628,6 @@ namespace Microsoft.OpenApi.Services
             if (parameter is OpenApiParameterReference)
             {
                 Walk(parameter as IOpenApiReferenceable);
-                parameter.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -680,7 +676,6 @@ namespace Microsoft.OpenApi.Services
             if (response is OpenApiResponseReference)
             {
                 Walk(response as IOpenApiReferenceable);
-                response.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -704,7 +699,6 @@ namespace Microsoft.OpenApi.Services
             if (requestBody is OpenApiRequestBodyReference)
             {
                 Walk(requestBody as IOpenApiReferenceable);
-                requestBody.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -988,7 +982,6 @@ namespace Microsoft.OpenApi.Services
             if (example is OpenApiExampleReference)
             {
                 Walk(example as IOpenApiReferenceable);
-                example.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -1101,7 +1094,6 @@ namespace Microsoft.OpenApi.Services
             if (link is OpenApiLinkReference)
             {
                 Walk(link as IOpenApiReferenceable);
-                link.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -1123,7 +1115,6 @@ namespace Microsoft.OpenApi.Services
             if (header is OpenApiHeaderReference)
             {
                 Walk(header as IOpenApiReferenceable);
-                header.Reference.HostDocument = _currentDocument;
                 return;
             }
 
@@ -1167,7 +1158,6 @@ namespace Microsoft.OpenApi.Services
             if (securityScheme is OpenApiSecuritySchemeReference)
             {
                 Walk(securityScheme as IOpenApiReferenceable);
-                securityScheme.Reference.HostDocument = _currentDocument;
                 return;
             }
 
