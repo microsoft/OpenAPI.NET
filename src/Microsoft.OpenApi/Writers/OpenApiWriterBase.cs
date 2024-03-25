@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Xml.Linq;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
