@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -32,10 +32,7 @@ namespace Microsoft.OpenApi.Readers.Services
 
             var reader = new OpenApiStreamReader(_readerSettings);
 
-            if (diagnostic is null)
-            {
-                diagnostic = new();
-            }
+            diagnostic ??= new();
 
             // Walk references
             foreach (var item in referenceCollector.References)
