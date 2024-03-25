@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiSecurityScheme>(_reference);
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiSecurityScheme>(_reference);
                 return _target;
             }
         }
@@ -37,10 +37,6 @@ namespace Microsoft.OpenApi.Models.References
             if (string.IsNullOrEmpty(referenceId))
             {
                 Utils.CheckArgumentNullOrEmpty(referenceId);
-            }
-            if (hostDocument == null)
-            {
-                Utils.CheckArgumentNull(hostDocument);
             }
 
             _reference = new OpenApiReference()
