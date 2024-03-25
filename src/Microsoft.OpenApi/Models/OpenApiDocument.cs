@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
         /// </summary>
-        public OpenApiWorkspace Workspace { get; set; } = new();
+        public OpenApiWorkspace Workspace { get; set; }
 
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
@@ -89,19 +89,13 @@ namespace Microsoft.OpenApi.Models
         public Uri BaseUri { get; }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public string DocumentID { get; }
-
-        /// <summary>
         /// Parameter-less constructor
         /// </summary>
         public OpenApiDocument() 
         {
-            var documentId = (Servers.FirstOrDefault()?.Url.ToString())
-                ?? "http://openapi.net/" + HashCode;
-            DocumentID = documentId;
-            Workspace.AddDocument(documentId, this);
+            BaseUri = new Uri ("http://openapi.net/" + Guid.NewGuid());
+            Workspace = new OpenApiWorkspace(BaseUri);
+            Workspace.AddDocument(this);
         }
                 
         /// <summary>
