@@ -356,13 +356,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         [Fact]
         public void ParseDocumentWithPatternPropertiesInSchemaWorks()
         {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"));
-
-            // Act
-            var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
-
-            var actualSchema = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            // Arrange and Act
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"));
+            var actualSchema = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             var expectedSchema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
@@ -375,7 +371,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 .Build();
             
             // Serialization
-            var mediaType = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
+            var mediaType = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
 
             var expectedMediaType = @"schema:
   type: object
