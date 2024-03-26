@@ -168,6 +168,12 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
             },
             {
+                "patternProperties", (o, n) =>
+                {
+                    o.PatternProperties(n.CreateMap(LoadSchema));
+                }
+            },
+            {
                 "additionalProperties", (o, n) =>
                 {
                     if (n is ValueNode)
