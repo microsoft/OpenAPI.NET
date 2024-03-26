@@ -181,6 +181,7 @@ namespace Microsoft.OpenApi.Extensions
         public static string GetDisplayName(this System.Enum enumValue) { }
     }
     [Json.Schema.SchemaKeyword("extensions")]
+    [Json.Schema.SchemaSpecVersion(Json.Schema.SpecVersion.Draft202012)]
     public class ExtensionsKeyword : Json.Schema.IJsonSchemaKeyword
     {
         public const string Name = "extensions";
