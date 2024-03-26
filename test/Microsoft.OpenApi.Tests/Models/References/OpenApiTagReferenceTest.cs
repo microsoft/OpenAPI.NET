@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -62,9 +63,9 @@ tags:
 
         public OpenApiTagReferenceTest()
         {
-            var reader = new OpenApiStringReader();
-            OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            _openApiTagReference = new("user", openApiDoc)
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+            var result = OpenApiDocument.Parse(OpenApi, "yaml");
+            _openApiTagReference = new("user", result.OpenApiDocument)
             {
                 Description = "Users operations"
             };

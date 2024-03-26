@@ -19,12 +19,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void LoadParameterReference()
         {
             // Arrange
-            OpenApiDocument document;
-
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
-            {
-                document = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            }
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
 
             var reference = new OpenApiReference
             {
@@ -33,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReferenceTo<OpenApiParameter>(reference);
+            var referencedObject = result.OpenApiDocument.ResolveReferenceTo<OpenApiParameter>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(
@@ -58,13 +53,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         [Fact]
         public void LoadSecuritySchemeReference()
         {
-            // Arrange
-            OpenApiDocument document;
-
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
-            {
-                document = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            }
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
 
             var reference = new OpenApiReference
             {
@@ -73,7 +62,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReferenceTo<OpenApiSecurityScheme>(reference);
+            var referencedObject = result.OpenApiDocument.ResolveReferenceTo<OpenApiSecurityScheme>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(
@@ -94,13 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         [Fact]
         public void LoadResponseReference()
         {
-            // Arrange
-            OpenApiDocument document;
-
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
-            {
-                document = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            }
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
 
             var reference = new OpenApiReference
             {
@@ -109,7 +92,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReferenceTo<OpenApiResponse>(reference);
+            var referencedObject = result.OpenApiDocument.ResolveReferenceTo<OpenApiResponse>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(
@@ -132,13 +115,8 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         [Fact]
         public void LoadResponseAndSchemaReference()
         {
-            // Arrange
-            OpenApiDocument document;
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
 
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
-            {
-                document = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            }
 
             var reference = new OpenApiReference
             {
@@ -147,7 +125,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReferenceTo<OpenApiResponse>(reference);
+            var referencedObject = result.OpenApiDocument.ResolveReferenceTo<OpenApiResponse>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(

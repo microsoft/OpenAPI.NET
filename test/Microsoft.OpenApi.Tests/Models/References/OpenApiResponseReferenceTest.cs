@@ -1,14 +1,14 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -64,9 +64,9 @@ paths:
 
         public OpenApiResponseReferenceTest()
         {
-            var reader = new OpenApiStringReader();
-            _openApiDoc = reader.Read(OpenApi, out _);
-            _openApiDoc_2 = reader.Read(OpenApi_2, out _);
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+            _openApiDoc = OpenApiDocument.Parse(OpenApi, "yaml").OpenApiDocument;
+            _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, "yaml").OpenApiDocument;
             _openApiDoc_2.Workspace = new();
             _openApiDoc_2.Workspace.AddDocument("http://localhost/responsereference", _openApiDoc);
 

@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;

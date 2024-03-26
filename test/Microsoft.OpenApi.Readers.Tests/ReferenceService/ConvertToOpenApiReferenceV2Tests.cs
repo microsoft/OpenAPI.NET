@@ -3,7 +3,8 @@
 
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.V2;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests

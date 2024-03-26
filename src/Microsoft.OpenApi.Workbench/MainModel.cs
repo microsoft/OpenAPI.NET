@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
@@ -245,8 +246,9 @@ namespace Microsoft.OpenApi.Workbench
                         settings.BaseUrl = new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                     }
                 }
-                var readResult = await new OpenApiStreamReader(settings
-                ).ReadAsync(stream);
+
+                var format = OpenApiModelFactory.GetFormat(_inputFile);
+                var readResult = await OpenApiDocument.LoadAsync(stream, format);
                 var document = readResult.OpenApiDocument;
                 var context = readResult.OpenApiDiagnostic;
 

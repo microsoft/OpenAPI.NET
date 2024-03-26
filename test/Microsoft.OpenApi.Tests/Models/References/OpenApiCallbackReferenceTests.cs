@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -126,9 +127,9 @@ paths:
 
         public OpenApiCallbackReferenceTests()
         {
-            var reader = new OpenApiStringReader();
-            OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            OpenApiDocument openApiDoc_2 = reader.Read(OpenApi_2, out _);
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+            OpenApiDocument openApiDoc = OpenApiDocument.Parse(OpenApi, "yaml").OpenApiDocument;
+            OpenApiDocument openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, "yaml").OpenApiDocument;
             openApiDoc_2.Workspace = new();
             openApiDoc_2.Workspace.AddDocument("http://localhost/callbackreference", openApiDoc);
             _localCallbackReference = new("callbackEvent", openApiDoc);
