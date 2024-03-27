@@ -1137,8 +1137,6 @@ namespace Microsoft.OpenApi.Models.References
         public override System.Collections.Generic.Dictionary<Microsoft.OpenApi.Expressions.RuntimeExpression, Microsoft.OpenApi.Models.OpenApiPathItem> PathItems { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiExampleReference : Microsoft.OpenApi.Models.OpenApiExample
     {
@@ -1150,8 +1148,6 @@ namespace Microsoft.OpenApi.Models.References
         public override Microsoft.OpenApi.Any.OpenApiAny Value { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiHeaderReference : Microsoft.OpenApi.Models.OpenApiHeader
     {
@@ -1170,8 +1166,6 @@ namespace Microsoft.OpenApi.Models.References
         public override Microsoft.OpenApi.Models.ParameterStyle? Style { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiLinkReference : Microsoft.OpenApi.Models.OpenApiLink
     {
@@ -1185,8 +1179,6 @@ namespace Microsoft.OpenApi.Models.References
         public override Microsoft.OpenApi.Models.OpenApiServer Server { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiParameterReference : Microsoft.OpenApi.Models.OpenApiParameter
     {
@@ -1207,8 +1199,6 @@ namespace Microsoft.OpenApi.Models.References
         public override Microsoft.OpenApi.Models.ParameterStyle? Style { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiPathItemReference : Microsoft.OpenApi.Models.OpenApiPathItem
     {
@@ -1221,8 +1211,6 @@ namespace Microsoft.OpenApi.Models.References
         public override string Summary { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiRequestBodyReference : Microsoft.OpenApi.Models.OpenApiRequestBody
     {
@@ -1233,8 +1221,6 @@ namespace Microsoft.OpenApi.Models.References
         public override bool Required { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiResponseReference : Microsoft.OpenApi.Models.OpenApiResponse
     {
@@ -1246,8 +1232,6 @@ namespace Microsoft.OpenApi.Models.References
         public override System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiLink> Links { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiSecuritySchemeReference : Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
@@ -1263,8 +1247,6 @@ namespace Microsoft.OpenApi.Models.References
         public override Microsoft.OpenApi.Models.SecuritySchemeType Type { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiTagReference : Microsoft.OpenApi.Models.OpenApiTag
     {
@@ -1275,8 +1257,6 @@ namespace Microsoft.OpenApi.Models.References
         public override string Name { get; set; }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
 }
 namespace Microsoft.OpenApi.Reader
