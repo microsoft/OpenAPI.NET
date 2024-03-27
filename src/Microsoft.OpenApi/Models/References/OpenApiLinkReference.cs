@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Link Object Reference.
     /// </summary>
-    internal class OpenApiLinkReference : OpenApiLink
+    public class OpenApiLinkReference : OpenApiLink
     {
         private OpenApiLink _target;
         private readonly OpenApiReference _reference;
@@ -22,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiLink>(_reference);
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiLink>(_reference);
                 return _target;
             }
         }
@@ -43,10 +42,6 @@ namespace Microsoft.OpenApi.Models.References
             {
                 Utils.CheckArgumentNullOrEmpty(referenceId);
             }
-            if (hostDocument == null)
-            {
-                Utils.CheckArgumentNull(hostDocument);
-            }
 
             _reference = new OpenApiReference()
             {
@@ -55,6 +50,8 @@ namespace Microsoft.OpenApi.Models.References
                 Type = ReferenceType.Link,
                 ExternalResource = externalResource
             };
+
+            Reference = _reference;
         }
 
         /// <inheritdoc/>
@@ -85,26 +82,30 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV3(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
+            }
         }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, (writer, element) => element.SerializeAsV3(writer));
-        }
-        
-        /// <inheritdoc/>
-        public override void SerializeAsV31WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, (writer, element) => element.SerializeAsV31(writer));
-        }               
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV31(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            }
+        }           
 
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer,

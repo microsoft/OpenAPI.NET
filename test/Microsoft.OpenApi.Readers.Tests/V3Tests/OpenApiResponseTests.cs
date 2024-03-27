@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -25,8 +26,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
 
             var response = result.OpenApiDocument.Components.Responses["Test"];
+            var expected = response.Headers.First().Value;
+            var actual = result.OpenApiDocument.Components.Headers.First().Value;
 
-            Assert.Same(response.Headers.First().Value, result.OpenApiDocument.Components.Headers.First().Value);
+            actual.Description.Should().BeEquivalentTo(expected.Description);
         }
     }
 }

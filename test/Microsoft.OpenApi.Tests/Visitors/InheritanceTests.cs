@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Json.Schema;
@@ -262,10 +262,10 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(tag);
             }
 
-            public override void Visit(OpenApiHeader tag)
+            public override void Visit(OpenApiHeader header)
             {
                 EncodeCall();
-                base.Visit(tag);
+                base.Visit(header);
             }
 
             public override void Visit(OpenApiOAuthFlow openApiOAuthFlow)

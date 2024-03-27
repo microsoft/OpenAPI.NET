@@ -29,10 +29,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Models\Samples\sampleDocument.yaml">
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Models\Samples\sampleDocumentWithWhiteSpaces.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 

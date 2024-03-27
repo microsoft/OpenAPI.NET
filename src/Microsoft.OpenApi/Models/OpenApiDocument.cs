@@ -456,6 +456,16 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Walks the OpenApiDocument and sets the host document for all referenceable objects
+        /// </summary>
+        public void SetHostDocument()
+        {
+            var resolver = new HostDocumentResolver(this);
+            var walker = new OpenApiWalker(resolver);
+            walker.Walk(this);
+        }
+
+        /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
         internal T ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
@@ -562,49 +572,30 @@ namespace Microsoft.OpenApi.Models
                 switch (reference.Type)
                 {
                     case ReferenceType.PathItem:
-                        var resolvedPathItem = this.Components.PathItems[reference.Id];
-                        resolvedPathItem.Description = reference.Description ?? resolvedPathItem.Description;
-                        resolvedPathItem.Summary = reference.Summary ?? resolvedPathItem.Summary;
-                        return resolvedPathItem;
-
+                        return Components.PathItems[reference.Id];
                     case ReferenceType.Response:
-                        var resolvedResponse = this.Components.Responses[reference.Id];
-                        resolvedResponse.Description = reference.Description ?? resolvedResponse.Description;
-                        return resolvedResponse;
+                        return Components.Responses[reference.Id];
 
                     case ReferenceType.Parameter:
-                        var resolvedParameter = this.Components.Parameters[reference.Id];
-                        resolvedParameter.Description = reference.Description ?? resolvedParameter.Description;
-                        return resolvedParameter;
+                        return Components.Parameters[reference.Id];
 
                     case ReferenceType.Example:
-                        var resolvedExample = this.Components.Examples[reference.Id];
-                        resolvedExample.Summary = reference.Summary ?? resolvedExample.Summary;
-                        resolvedExample.Description = reference.Description ?? resolvedExample.Description;
-                        return resolvedExample;
+                        return Components.Examples[reference.Id];
 
                     case ReferenceType.RequestBody:
-                        var resolvedRequestBody = this.Components.RequestBodies[reference.Id];
-                        resolvedRequestBody.Description = reference.Description ?? resolvedRequestBody.Description;
-                        return resolvedRequestBody;
+                        return Components.RequestBodies[reference.Id];
 
                     case ReferenceType.Header:
-                        var resolvedHeader = this.Components.Headers[reference.Id];
-                        resolvedHeader.Description = reference.Description ?? resolvedHeader.Description;
-                        return resolvedHeader;
+                        return Components.Headers[reference.Id];
 
                     case ReferenceType.SecurityScheme:
-                        var resolvedSecurityScheme = this.Components.SecuritySchemes[reference.Id];
-                        resolvedSecurityScheme.Description = reference.Description ?? resolvedSecurityScheme.Description;
-                        return resolvedSecurityScheme;
+                        return Components.SecuritySchemes[reference.Id];
 
                     case ReferenceType.Link:
-                        var resolvedLink = this.Components.Links[reference.Id];
-                        resolvedLink.Description = reference.Description ?? resolvedLink.Description;
-                        return resolvedLink;
+                        return Components.Links[reference.Id];
 
                     case ReferenceType.Callback:
-                        return this.Components.Callbacks[reference.Id];
+                        return Components.Callbacks[reference.Id];
 
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
@@ -715,6 +706,12 @@ namespace Microsoft.OpenApi.Models
         public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
         {
             throw new NotImplementedException();
+        }
+
+        internal JsonSchema ResolveJsonSchemaReference(Uri reference)
+        {
+            var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
+            return (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
         }
     }
 

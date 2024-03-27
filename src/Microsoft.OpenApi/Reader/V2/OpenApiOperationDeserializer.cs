@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -22,10 +23,10 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
-                        valueNode =>
+                        (valueNode, doc) =>
                             LoadTagByReference(
                                 valueNode.Context,
-                                valueNode.GetScalarValue()))
+                                valueNode.GetScalarValue(), doc))
                 },
                 {
                     "summary",
@@ -49,7 +50,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "consumes", (_, n) => {
-                        var consumes = n.CreateSimpleList(s => s.GetScalarValue());
+                        var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue());
                         if (consumes.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
                         }
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "produces", (_, n) => {
-                        var produces = n.CreateSimpleList(s => s.GetScalarValue());
+                        var produces = n.CreateSimpleList((s, p) => s.GetScalarValue());
                         if (produces.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
                         }
@@ -92,7 +93,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node)
+        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
         {
             // Reset these temp storage parameters for each operation.
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
@@ -132,7 +133,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return operation;
         }
 
-        public static OpenApiResponses LoadResponses(ParseNode node)
+        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("Responses");
 
@@ -209,15 +210,9 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
-            string tagName)
+            string tagName, OpenApiDocument hostDocument = null)
         {
-            var tagObject = new OpenApiTag
-            {
-                UnresolvedReference = true,
-                Reference = new() { Id = tagName, Type = ReferenceType.Tag }
-            };
-
-            return tagObject;
+            return new OpenApiTagReference(tagName, hostDocument);
         }
     }
 }

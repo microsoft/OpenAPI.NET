@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Text.Json;
@@ -12,7 +11,6 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Validations;
 using System.Linq;
-using System.Collections.Generic;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader.Services;
@@ -95,7 +93,7 @@ namespace Microsoft.OpenApi.Reader
                     }
                 }
 
-                ResolveReferences(diagnostic, document, settings);
+                SetHostDocument(document);
             }
             catch (OpenApiException ex)
             {
@@ -189,28 +187,6 @@ namespace Microsoft.OpenApi.Reader
             return nodes;
         }
 
-        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document, OpenApiReaderSettings settings)
-        {
-            List<OpenApiError> errors = new();
-
-            // Resolve References if requested
-            switch (settings.ReferenceResolution)
-            {
-                case ReferenceResolutionSetting.ResolveAllReferences:
-                    throw new ArgumentException("Resolving external references is not supported");
-                case ReferenceResolutionSetting.ResolveLocalReferences:
-                    errors.AddRange(document.ResolveReferences());
-                    break;
-                case ReferenceResolutionSetting.DoNotResolveReferences:
-                    break;
-            }
-
-            foreach (var item in errors)
-            {
-                diagnostic.Errors.Add(item);
-            }
-        }
-
         private async Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
         {
             // Create workspace for all documents to live in.
@@ -220,6 +196,11 @@ namespace Microsoft.OpenApi.Reader
             var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
+        }
+
+        private void SetHostDocument(OpenApiDocument document)
+        {
+            document.SetHostDocument();
         }
     }
 }

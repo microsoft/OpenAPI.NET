@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
@@ -18,10 +19,10 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
-                        valueNode =>
+                        (valueNode, doc) =>
                             LoadTagByReference(
                                 valueNode.Context,
-                                valueNode.GetScalarValue()))
+                                valueNode.GetScalarValue(), doc))
                 },
                 {
                     "summary",
@@ -75,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node)
+        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("Operation");
 
@@ -88,19 +89,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
-            string tagName)
+            string tagName, OpenApiDocument hostDocument)
         {
-            var tagObject = new OpenApiTag
-            {
-                UnresolvedReference = true,
-                Reference = new()
-                {
-                    Type = ReferenceType.Tag,
-                    Id = tagName
-                }
-            };
-
-            return tagObject;
+            return new OpenApiTagReference(tagName, hostDocument);
         }
     }
 }

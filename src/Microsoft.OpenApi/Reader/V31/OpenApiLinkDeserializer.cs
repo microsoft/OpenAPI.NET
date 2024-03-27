@@ -1,5 +1,7 @@
-﻿using Microsoft.OpenApi.Extensions;
+using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V31
@@ -50,7 +52,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
         };
 
-        public static OpenApiLink LoadLink(ParseNode node)
+        public static OpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("link");
             var link = new OpenApiLink();
@@ -58,10 +60,8 @@ namespace Microsoft.OpenApi.Reader.V31
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-
-                return mapNode.GetReferencedObject<OpenApiLink>(ReferenceType.Link, pointer, summary, description);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields);

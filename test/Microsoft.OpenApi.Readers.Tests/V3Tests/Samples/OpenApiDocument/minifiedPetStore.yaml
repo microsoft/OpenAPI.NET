@@ -1,0 +1,22 @@
+openapi: 3.0.0
+info:
+  title: Pet Store with Referenceable Parameter
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      summary: Returns all pets
+      parameters:
+        - $ref: '#/components/parameters/LimitParameter'
+      responses: {}
+components:
+  parameters:
+    LimitParameter:
+      name: limit
+      in: query
+      description: Limit the number of pets returned
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 10

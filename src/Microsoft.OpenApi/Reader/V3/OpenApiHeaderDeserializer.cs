@@ -1,8 +1,10 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
@@ -62,14 +64,15 @@ namespace Microsoft.OpenApi.Reader.V3
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiHeader LoadHeader(ParseNode node)
+        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("header");
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiHeader>(ReferenceType.Header, pointer);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiHeaderReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var header = new OpenApiHeader();

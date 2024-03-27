@@ -446,6 +446,10 @@ namespace Microsoft.OpenApi.Writers
                     {
                         FindJsonSchemaRefs.ResolveJsonSchema(schema);
                     }
+                    else if (Settings.InlineLocalReferences)
+                    {
+                        schema = FindJsonSchemaRefs.FetchSchemaFromRegistry(schema, reference);
+                    }
                     if (!Settings.LoopDetector.PushLoop(schema))
                     {
                         Settings.LoopDetector.SaveLoop(schema);
@@ -455,7 +459,10 @@ namespace Microsoft.OpenApi.Writers
                 }
             }
 
-            WriteJsonSchemaWithoutReference(this, schema, version);
+            if (schema != null)
+            {
+                WriteJsonSchemaWithoutReference(this, schema, version);
+            }
 
             if (reference != null)
             {
@@ -646,6 +653,13 @@ namespace Microsoft.OpenApi.Writers
             var visitor = new FindJsonSchemaRefs();
             var walker = new OpenApiWalker(visitor);
             walker.Walk(schema);
+        }
+
+        public static JsonSchema FetchSchemaFromRegistry(JsonSchema schema, Uri reference)
+        {
+            var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
+            var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
+            return resolvedSchema ?? schema;
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
@@ -12,7 +13,7 @@ namespace Microsoft.OpenApi.Reader.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("security");
 
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 var scheme = LoadSecuritySchemeByReference(mapNode.Context, property.Name);
 
-                var scopes = property.Value.CreateSimpleList(value => value.GetScalarValue());
+                var scopes = property.Value.CreateSimpleList((value, p) => value.GetScalarValue());
 
                 if (scheme != null)
                 {
@@ -42,16 +43,7 @@ namespace Microsoft.OpenApi.Reader.V3
             ParsingContext context,
             string schemeName)
         {
-            var securitySchemeObject = new OpenApiSecurityScheme
-            {
-                UnresolvedReference = true,
-                Reference = new()
-                {
-                    Id = schemeName,
-                    Type = ReferenceType.SecurityScheme
-                }
-            };
-
+            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, null);
             return securitySchemeObject;
         }
     }

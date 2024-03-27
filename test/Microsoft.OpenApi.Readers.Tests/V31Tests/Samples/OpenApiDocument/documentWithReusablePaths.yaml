@@ -4,7 +4,7 @@ info:
   version: 1.0.0
 jsonSchemaDialect: "http://json-schema.org/draft-07/schema#"
 webhooks:
-  /pets:
+  pets:
     "$ref": '#/components/pathItems/pets'
 components:
   schemas:
@@ -34,7 +34,7 @@ components:
             tag:
               type: string
   pathItems:
-     /pets:
+     pets:
         get:
           description: Returns all pets from the system that the user has access to
           operationId: findPets

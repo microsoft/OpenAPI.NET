@@ -145,8 +145,9 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);;
 
             var target = this;
+            var isProxyReference = target.GetType().Name.Contains("Reference");
 
-            if (Reference != null)
+            if (Reference != null && !isProxyReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {
@@ -246,11 +247,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
+            var isProxyReference = target.GetType().Name.Contains("Reference");
 
-            if (Reference != null)
+            if (Reference != null && !isProxyReference)
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {

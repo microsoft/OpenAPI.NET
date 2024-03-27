@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Reader.V31
             };
         }
 
-        public static OpenApiAny LoadAny(ParseNode node)
+        public static OpenApiAny LoadAny(ParseNode node, OpenApiDocument hostDocument = null)
         {
             return node.CreateAny();
         }
@@ -142,6 +142,17 @@ namespace Microsoft.OpenApi.Reader.V31
         private static string LoadString(ParseNode node)
         {
             return node.GetScalarValue();
+        }
+
+        private static (string, string) GetReferenceIdAndExternalResource(string pointer)
+        {
+            var refSegments = pointer.Split('/');
+            var refId = refSegments.Last();
+            var isExternalResource = !refSegments.First().StartsWith("#");
+
+            string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
+
+            return (refId, externalResource);
         }
     }
 }

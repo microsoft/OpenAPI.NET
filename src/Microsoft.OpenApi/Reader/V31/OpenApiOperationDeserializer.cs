@@ -1,5 +1,6 @@
-﻿using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V31
@@ -15,8 +16,8 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
-                        valueNode =>
-                            LoadTagByReference(valueNode.GetScalarValue()))
+                        (valueNode, doc) =>
+                            LoadTagByReference(valueNode.GetScalarValue(), doc))
                 },
                 {
                     "summary", (o, n) =>
@@ -92,7 +93,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node)
+        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("Operation");
 
@@ -103,18 +104,9 @@ namespace Microsoft.OpenApi.Reader.V31
             return operation;
         }
 
-        private static OpenApiTag LoadTagByReference(string tagName)
+        private static OpenApiTag LoadTagByReference(string tagName, OpenApiDocument hostDocument = null)
         {
-            var tagObject = new OpenApiTag()
-            {
-                UnresolvedReference = true,
-                Reference = new OpenApiReference()
-                {
-                    Type = ReferenceType.Tag,
-                    Id = tagName
-                }
-            };
-
+            var tagObject = new OpenApiTagReference(tagName, hostDocument);
             return tagObject;
         }
     }

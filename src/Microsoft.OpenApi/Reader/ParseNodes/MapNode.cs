@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
         }
 
-        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, T> map)
+        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             var nodes = jsonMap.Select(
@@ -62,11 +62,11 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     {
                         Context.StartObject(key);
                         value = n.Value is JsonObject jsonObject
-                          ? map(new MapNode(Context, jsonObject))
+                          ? map(new MapNode(Context, jsonObject), null)
                           : default;
                     }
                     finally
-                    {
+                    {    
                         Context.EndObject();
                     }
                     return new
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
 
         public override Dictionary<string, T> CreateMapWithReference<T>(
             ReferenceType referenceType,
-            Func<MapNode, T> map)
+            Func<MapNode, OpenApiDocument, T> map)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
 
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     {
                         Context.StartObject(key);
                         entry = (key,
-                            value: map(new MapNode(Context, (JsonObject)n.Value))
+                            value: map(new MapNode(Context, (JsonObject)n.Value), null)
                         );
                         if (entry.value == null)
                         {
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
 
         public override Dictionary<string, JsonSchema> CreateJsonSchemaMapWithReference(
             ReferenceType referenceType,
-            Func<MapNode, JsonSchema> map,
+            Func<MapNode, OpenApiDocument, JsonSchema> map,
             OpenApiSpecVersion version)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(JsonSchema).Name}", Context);
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     {
                         Context.StartObject(key);
                         entry = (key,
-                            value: map(new MapNode(Context, (JsonObject)n.Value))
+                            value: map(new MapNode(Context, (JsonObject)n.Value), null)
                         );
                         if (entry.value == null)
                         {

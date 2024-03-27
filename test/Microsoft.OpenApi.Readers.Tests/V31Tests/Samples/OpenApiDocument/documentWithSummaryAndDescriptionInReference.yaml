@@ -26,8 +26,6 @@ components:
       headers:
         X-Test:
           $ref: '#/components/headers/X-Test'
-          summary: X-Test header
-          description: A referenced X-Test header
   schemas:
     pet:
       description: A referenced pet in a petstore

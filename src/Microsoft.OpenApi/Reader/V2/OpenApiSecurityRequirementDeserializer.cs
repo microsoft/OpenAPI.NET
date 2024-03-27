@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Reader.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("security");
 
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     mapNode.Context,
                     property.Name);
 
-                var scopes = property.Value.CreateSimpleList(n2 => n2.GetScalarValue());
+                var scopes = property.Value.CreateSimpleList((n2, p)  => n2.GetScalarValue());
 
                 if (scheme != null)
                 {
