@@ -1,15 +1,12 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
-using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
-using SharpYaml.Serialization;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -19,21 +16,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiExample/";
 
+        public OpenApiExampleTests() 
+        {     
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParseAdvancedExampleShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedExample.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
-
-            var example = OpenApiV3Deserializer.LoadExample(node);
+            var example = OpenApiModelFactory.Load<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
             var expected = new OpenApiExample
             {
                 Value = new OpenApiAny(new JsonObject
@@ -90,10 +81,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseExampleForcedStringSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "explicitString.yaml"));
-            var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            var schema = doc.Paths["/test-path"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema;
-            diagnostic.Errors.Should().BeEmpty();
+            var result= OpenApiDocument.Load(Path.Combine(SampleFolderPath, "explicitString.yaml"));
+            result.OpenApiDiagnostic.Errors.Should().BeEmpty();
         }
     }
 }

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 
@@ -29,15 +32,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             using var streamReader = new StreamReader(stream);
             var result = streamReader.ReadToEnd();
-            return new OpenApiStringReader().ReadFragment<T>(result, OpenApiSpecVersion.OpenApi3_1, out OpenApiDiagnostic diagnostic4);
+            return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_1, out OpenApiDiagnostic diagnostic4);
         }
 
         [Fact]
         public void ParseDocumentWithWebhooksShouldSucceed()
         {
             // Arrange and Act
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
-            var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
 
             var petSchema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
@@ -175,17 +177,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            var schema = actual.Webhooks["pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-            actual.Should().BeEquivalentTo(expected);
+            var schema = actual.OpenApiDocument.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            actual.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public void ParseDocumentsWithReusablePathItemInWebhooksSucceeds()
         {
             // Arrange && Act
-            using var stream = Resources.GetStream("V31Tests/Samples/OpenApiDocument/documentWithReusablePaths.yaml");
-            var actual = new OpenApiStreamReader().Read(stream, out var context);
+            var actual = OpenApiDocument.Load("V31Tests/Samples/OpenApiDocument/documentWithReusablePaths.yaml");
 
             var components = new OpenApiComponents
             {
@@ -300,8 +301,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Reference = new OpenApiReference
                     {
                         Type = ReferenceType.PathItem,
-                        Id = "pets",
-                        HostDocument = actual
+                        Id = "/pets",
+                        HostDocument = actual.OpenApiDocument
                     }
                 }
             };
@@ -322,24 +323,77 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            actual.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Components.PathItems["pets"].Reference.HostDocument));
-            context.Should().BeEquivalentTo(
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected);
+            actual.OpenApiDiagnostic.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+        }
+
+        [Fact]
+        public void ParseDocumentWithDescriptionInDollarRefsShouldSucceed()
+        {
+            // Arrange
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithSummaryAndDescriptionInReference.yaml"));
+
+            // Act
+            var header = actual.OpenApiDocument.Components.Responses["Test"].Headers["X-Test"];
+
+            // Assert
+            Assert.True(header.Description == "A referenced X-Test header"); /*response header #ref's description overrides the header's description*/
         }
 
         [Fact]
         public void ParseDocumentWithExampleInSchemaShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithExample.yaml"));
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+
             // Act
-            var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            actual.SerializeAsV31(writer);
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithExample.yaml"));
+            actual.OpenApiDocument.SerializeAsV31(writer);
 
             // Assert
             Assert.NotNull(actual);
+        }
+
+        [Fact]
+        public void ParseDocumentWithPatternPropertiesInSchemaWorks()
+        {
+            // Arrange and Act
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"));
+            var actualSchema = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+
+            var expectedSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .Properties(
+                    ("prop1", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    ("prop2", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    ("prop3", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .PatternProperties(
+                    ("^x-.*$", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .Build();
+            
+            // Serialization
+            var mediaType = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
+
+            var expectedMediaType = @"schema:
+  type: object
+  properties:
+    prop1:
+      type: string
+    prop2:
+      type: string
+    prop3:
+      type: string
+  patternProperties:
+    ^x-.*$:
+      type: string";
+            
+            var actualMediaType = mediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actualSchema.Should().BeEquivalentTo(expectedSchema);
+            actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

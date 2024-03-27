@@ -1,7 +1,7 @@
-using System;
-using System.Linq;
+﻿using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -19,13 +19,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   version: 1.0.0
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
-            {
-            });
 
-            var doc = reader.Read(input, out var diagnostic);
+            var result = OpenApiDocument.Parse(input, "yaml");
 
-            Assert.Empty(doc.Servers);
+            Assert.Empty(result.OpenApiDocument.Servers);
         }
 
         [Fact]
@@ -41,13 +38,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
-            {
-            });
+            var result = OpenApiDocument.Parse(input, "yaml");
 
-            var doc = reader.Read(input, out var diagnostic);
-
-            Assert.Empty(doc.Servers);
+            Assert.Empty(result.OpenApiDocument.Servers);
         }
 
         [Fact]
@@ -62,14 +55,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: www.foo.com
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
-            {
-            });
+            var result = OpenApiDocument.Parse(input, "yaml");
 
-            var doc = reader.Read(input, out var _);
-
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("//www.foo.com", server.Url);
         }
 
@@ -87,15 +76,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://www.foo.com/spec.yaml")
-            });
+            };
 
-            var doc = reader.Read(input, out var diagnostic);
-
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("http://www.foo.com", server.Url);
         }
 
@@ -111,14 +99,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 basePath: /baz
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
-            {
-            });
+            var result = OpenApiDocument.Parse(input, "yaml");
 
-            var doc = reader.Read(input, out var diagnostic);
-
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("/baz", server.Url);
         }
 
@@ -135,15 +119,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://bing.com/foo")
-            });
+            };
 
-            var doc = reader.Read(input, out var diagnostic);
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("http://bing.com/foo", server.Url);
         }
 
@@ -160,15 +144,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://bing.com")
-            });
+            };
 
-            var doc = reader.Read(input, out var diagnostic);
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("http://bing.com", server.Url);
         }
 
@@ -184,15 +168,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 basePath: /api
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://bing.com")
-            });
+            };
 
-            var doc = reader.Read(input, out var diagnostic);
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("https://bing.com/api", server.Url);
         }
 
@@ -208,15 +192,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: www.example.com
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://bing.com")
-            });
+            };
 
-            var doc = reader.Read(input, out var diagnostic);
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("https://www.example.com", server.Url);
         }
 
@@ -232,15 +216,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: prod.bing.com
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://dev.bing.com/api/description.yaml")
-            });
+            };
 
-            var doc = reader.Read(input, out var _);
-
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("https://prod.bing.com", server.Url);
         }
 
@@ -258,17 +242,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - https
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://dev.bing.com/api")
-            });
+            };
 
-            var doc = reader.Read(input, out var diagnostic);
-
-            var server = doc.Servers.First();
-            Assert.Equal(2, doc.Servers.Count);
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Equal(2, result.OpenApiDocument.Servers.Count);
             Assert.Equal("http://dev.bing.com/api", server.Url);
-            Assert.Equal("https://dev.bing.com/api", doc.Servers.Last().Url);
+            Assert.Equal("https://dev.bing.com/api", result.OpenApiDocument.Servers.Last().Url);
         }
 
         [Fact]
@@ -283,15 +267,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: localhost:23232
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://bing.com")
-            });
+            };
 
-            var doc = reader.Read(input, out var diagnostic);
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = doc.Servers.First();
-            Assert.Single(doc.Servers);
+            var server = result.OpenApiDocument.Servers.First();
+            Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("https://localhost:23232", server.Url);
         }
 
@@ -307,14 +292,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: http://test.microsoft.com
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new()
+
+            var settings = new OpenApiReaderSettings
             {
                 BaseUrl = new("https://bing.com")
-            });
+            };
 
-            var doc = reader.Read(input, out var diagnostic);
-            doc.Servers.Count.Should().Be(0);
-            diagnostic.Should().BeEquivalentTo(
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            result.OpenApiDocument.Servers.Count.Should().Be(0);
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic
                 {
                     Errors =

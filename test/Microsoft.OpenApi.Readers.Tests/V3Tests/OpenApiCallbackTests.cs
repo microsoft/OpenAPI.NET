@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
@@ -7,9 +7,7 @@ using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
-using SharpYaml.Serialization;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -18,26 +16,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiCallbackTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiCallback/";
+        public OpenApiCallbackTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
 
         [Fact]
         public void ParseBasicCallbackShouldSucceed()
         {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicCallback.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            // convert yamlNode to Json node
-            var asJsonNode = yamlNode.ToJsonNode();
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, asJsonNode);
-
             // Act
-            var callback = OpenApiV3Deserializer.LoadCallback(node);
+            var callback = OpenApiModelFactory.Load<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -80,16 +68,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseCallbackWithReferenceShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml"));
+
             // Act
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var result = OpenApiModelFactory.Load(stream, OpenApiConstants.Yaml);
 
             // Assert
-            var path = openApiDoc.Paths.First().Value;
+            var path = result.OpenApiDocument.Paths.First().Value;
             var subscribeOperation = path.Operations[OperationType.Post];
 
             var callback = subscribeOperation.Callbacks["simpleHook"];
 
-            diagnostic.Should().BeEquivalentTo(
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             callback.Should().BeEquivalentTo(
@@ -97,51 +86,50 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     PathItems =
                     {
-                            [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
-                                Operations = {
-                                    [OperationType.Post] = new OpenApiOperation()
+                        [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
+                            Operations = {
+                                [OperationType.Post] = new OpenApiOperation()
+                                {
+                                    RequestBody = new OpenApiRequestBody
                                     {
-                                        RequestBody = new OpenApiRequestBody
+                                        Content =
                                         {
-                                            Content =
+                                            ["application/json"] = new OpenApiMediaType
                                             {
-                                                ["application/json"] = new OpenApiMediaType
-                                                {
-                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
-                                                }
+                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                                             }
-                                        },
-                                        Responses = {
-                                            ["200"]= new OpenApiResponse
-                                            {
-                                                Description = "Success"
-                                            }
+                                        }
+                                    },
+                                    Responses = {
+                                        ["200"]= new OpenApiResponse
+                                        {
+                                            Description = "Success"
                                         }
                                     }
                                 }
                             }
+                        }
                     },
                     Reference = new OpenApiReference
                     {
+                        Type = ReferenceType.Callback,
                         Id = "simpleHook",
-                        Type = ReferenceType.Callback
+                        HostDocument = result.OpenApiDocument
                     }
-                }, 
-                options => options.Excluding(x => x.Reference.HostDocument));
+                });
         }
 
         [Fact]
         public void ParseMultipleCallbacksWithReferenceShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
             // Act
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var result = OpenApiModelFactory.Load(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
 
             // Assert
-            var path = openApiDoc.Paths.First().Value;
+            var path = result.OpenApiDocument.Paths.First().Value;
             var subscribeOperation = path.Operations[OperationType.Post];
 
-            diagnostic.Should().BeEquivalentTo(
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             var callback1 = subscribeOperation.Callbacks["simpleHook"];
@@ -151,36 +139,37 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     PathItems =
                     {
-                            [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
-                                Operations = {
-                                    [OperationType.Post] = new OpenApiOperation()
+                        [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
+                            Operations = {
+                                [OperationType.Post] = new OpenApiOperation()
+                                {
+                                    RequestBody = new OpenApiRequestBody
                                     {
-                                        RequestBody = new OpenApiRequestBody
+                                        Content =
                                         {
-                                            Content =
+                                            ["application/json"] = new OpenApiMediaType
                                             {
-                                                ["application/json"] = new OpenApiMediaType
-                                                {
-                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
-                                                }
+                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                                             }
-                                        },
-                                        Responses = {
-                                            ["200"]= new OpenApiResponse
-                                            {
-                                                Description = "Success"
-                                            }
+                                        }
+                                    },
+                                    Responses = {
+                                        ["200"]= new OpenApiResponse
+                                        {
+                                            Description = "Success"
                                         }
                                     }
                                 }
                             }
+                        }
                     },
                     Reference = new OpenApiReference
                     {
+                        Type = ReferenceType.Callback,
                         Id = "simpleHook",
-                        Type = ReferenceType.Callback
+                        HostDocument = result.OpenApiDocument
                     }
-                }, options => options.Excluding(x => x.Reference.HostDocument));
+                });
 
             var callback2 = subscribeOperation.Callbacks["callback2"];
             callback2.Should().BeEquivalentTo(
@@ -188,30 +177,30 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     PathItems =
                     {
-                            [RuntimeExpression.Build("/simplePath")]= new OpenApiPathItem {
-                                Operations = {
-                                    [OperationType.Post] = new OpenApiOperation()
+                        [RuntimeExpression.Build("/simplePath")]= new OpenApiPathItem {
+                            Operations = {
+                                [OperationType.Post] = new OpenApiOperation()
+                                {
+                                    RequestBody = new OpenApiRequestBody
                                     {
-                                        RequestBody = new OpenApiRequestBody
+                                        Description = "Callback 2",
+                                        Content =
                                         {
-                                            Description = "Callback 2",
-                                            Content =
+                                            ["application/json"] = new OpenApiMediaType
                                             {
-                                                ["application/json"] = new OpenApiMediaType
-                                                {
-                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
-                                                }
-                                            }
-                                        },
-                                        Responses = {
-                                            ["400"]= new OpenApiResponse
-                                            {
-                                                Description = "Callback Response"
+                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                                             }
                                         }
+                                    },
+                                    Responses = {
+                                        ["400"]= new OpenApiResponse
+                                        {
+                                            Description = "Callback Response"
+                                        }
                                     }
-                                },
-                            }
+                                }
+                            },
+                        }
                     }
                 });
 
@@ -221,37 +210,37 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     PathItems =
                     {
-                            [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new OpenApiPathItem {
-                                Operations = {
-                                    [OperationType.Post] = new OpenApiOperation()
+                        [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new OpenApiPathItem {
+                            Operations = {
+                                [OperationType.Post] = new OpenApiOperation()
+                                {
+                                    RequestBody = new OpenApiRequestBody
                                     {
-                                        RequestBody = new OpenApiRequestBody
+                                        Content =
                                         {
-                                            Content =
+                                            ["application/xml"] = new OpenApiMediaType
                                             {
-                                                ["application/xml"] = new OpenApiMediaType
-                                                {
-                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
-                                                }
+                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                                             }
+                                        }
+                                    },
+                                    Responses = {
+                                        ["200"]= new OpenApiResponse
+                                        {
+                                            Description = "Success"
                                         },
-                                        Responses = {
-                                            ["200"]= new OpenApiResponse
-                                            {
-                                                Description = "Success"
-                                            },
-                                            ["401"]= new OpenApiResponse
-                                            {
-                                                Description = "Unauthorized"
-                                            },
-                                            ["404"]= new OpenApiResponse
-                                            {
-                                                Description = "Not Found"
-                                            }
+                                        ["401"]= new OpenApiResponse
+                                        {
+                                            Description = "Unauthorized"
+                                        },
+                                        ["404"]= new OpenApiResponse
+                                        {
+                                            Description = "Not Found"
                                         }
                                     }
                                 }
                             }
+                        }
                     }
                 });
         }

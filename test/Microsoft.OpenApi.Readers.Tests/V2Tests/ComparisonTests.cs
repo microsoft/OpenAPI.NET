@@ -3,6 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -20,12 +21,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             using var streamV2 = Resources.GetStream(Path.Combine(SampleFolderPath, $"{fileName}.v2.yaml"));
             using var streamV3 = Resources.GetStream(Path.Combine(SampleFolderPath, $"{fileName}.v3.yaml"));
-            var openApiDocV2 = new OpenApiStreamReader().Read(streamV2, out var diagnosticV2);
-            var openApiDocV3 = new OpenApiStreamReader().Read(streamV3, out var diagnosticV3);
+            var result1 = OpenApiDocument.Load(Path.Combine(SampleFolderPath, $"{fileName}.v2.yaml"));
+            var result2 = OpenApiDocument.Load(Path.Combine(SampleFolderPath, $"{fileName}.v3.yaml"));
 
-            openApiDocV3.Should().BeEquivalentTo(openApiDocV2);
+            result2.OpenApiDocument.Should().BeEquivalentTo(result1.OpenApiDocument);
 
-            diagnosticV2.Errors.Should().BeEquivalentTo(diagnosticV3.Errors);
+            result1.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(result2.OpenApiDiagnostic.Errors);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
@@ -542,6 +543,16 @@ namespace Microsoft.OpenApi.Writers
 
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, (IDictionary<string, JsonSchema>)schema.GetProperties(),
+                (w, key, s) => w.WriteJsonSchema(s, version));
+
+            // pattern properties
+            var patternProperties = schema?.GetPatternProperties();
+            var stringPatternProperties = patternProperties?.ToDictionary(
+                kvp => kvp.Key.ToString(),  // Convert Regex key to string
+                kvp => kvp.Value
+            );
+
+            writer.WriteOptionalMap(OpenApiConstants.PatternProperties, stringPatternProperties,
                 (w, key, s) => w.WriteJsonSchema(s, version));
 
             // additionalProperties

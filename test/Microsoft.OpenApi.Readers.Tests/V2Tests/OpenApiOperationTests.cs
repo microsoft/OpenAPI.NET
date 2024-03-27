@@ -10,8 +10,8 @@ using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V2;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
