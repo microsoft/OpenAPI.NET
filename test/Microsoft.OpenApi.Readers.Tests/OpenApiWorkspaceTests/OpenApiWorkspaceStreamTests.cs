@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Json.Schema;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
@@ -12,6 +13,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
     public class OpenApiWorkspaceStreamTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiWorkspace/";
+        
+        public OpenApiWorkspaceStreamTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
 
         // Use OpenApiWorkspace to load a document and a referenced document
 
@@ -19,12 +25,12 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new MockLoader(),
                 BaseUrl = new("file://c:\\")
-            });
+            };
 
             // Todo: this should be ReadAsync
             var stream = new MemoryStream();
@@ -40,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             wr.Flush();
             stream.Position = 0;
 
-            var result = await reader.ReadAsync(stream);
+            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, settings: settings);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
         }
@@ -49,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
@@ -57,9 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             });
 
             ReadResult result;
-            using var stream = Resources.GetStream("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml");
-            result = await reader.ReadAsync(stream);
-            
+            result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);            
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));
@@ -82,7 +86,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                                         .FirstOrDefault(p => p.Name == "filter");
 
             Assert.Equal(SchemaValueType.String, referencedParameter.Schema.GetJsonType());
-
         }
     }
 
@@ -98,7 +101,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             return null;
         }
     }
-
 
     public class ResourceLoader : IStreamLoader
     {

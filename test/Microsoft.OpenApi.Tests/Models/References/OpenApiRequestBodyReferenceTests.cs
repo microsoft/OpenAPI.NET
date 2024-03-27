@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
@@ -9,6 +9,7 @@ using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;

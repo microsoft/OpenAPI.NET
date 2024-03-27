@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -8,8 +8,8 @@ using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V2;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests

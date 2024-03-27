@@ -8,50 +8,52 @@ using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using Microsoft.OpenApi.Readers.Interface;
 using System.IO;
+using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Reader;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
 {
     [Collection("DefaultSettings")]
     public class OpenApiDiagnosticTests
     {
+        public OpenApiDiagnosticTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
+
         [Fact]
         public void DetectedSpecificationVersionShouldBeV2_0()
         {
-            using var stream = Resources.GetStream("V2Tests/Samples/basic.v2.yaml");
-            new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var actual = OpenApiDocument.Load("V2Tests/Samples/basic.v2.yaml");
 
-            diagnostic.Should().NotBeNull();
-            diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi2_0);
+            actual.OpenApiDiagnostic.Should().NotBeNull();
+            actual.OpenApiDiagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi2_0);
         }
 
         [Fact]
         public void DetectedSpecificationVersionShouldBeV3_0()
         {
-            using var stream = Resources.GetStream("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
-            new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var actual = OpenApiDocument.Load("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
 
-            diagnostic.Should().NotBeNull();
-            diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);
+            actual.OpenApiDiagnostic.Should().NotBeNull();
+            actual.OpenApiDiagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);
         }
 
         [Fact]
         public async Task DiagnosticReportMergedForExternalReference()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
                 BaseUrl = new("fie://c:\\")
-            });
+            };
 
             ReadResult result;
-            using (var stream = Resources.GetStream("OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/TodoMain.yaml"))
-            {
-                result = await reader.ReadAsync(stream);
-            }
+            result = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/TodoMain.yaml", settings);
+
 
             Assert.NotNull(result);
             Assert.NotNull(result.OpenApiDocument.Workspace);
