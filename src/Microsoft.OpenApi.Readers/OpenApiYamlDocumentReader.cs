@@ -142,11 +142,11 @@ namespace Microsoft.OpenApi.Readers
         private Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken = default)
         {
             // Create workspace for all documents to live in.
-            var openApiWorkSpace = new OpenApiWorkspace();
+            // var openApiWorkSpace = new OpenApiWorkspace();
 
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
-            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
+            var workspaceLoader = new OpenApiWorkspaceLoader(document.Workspace, _settings.CustomExternalLoader ?? streamLoader, _settings);
             return workspaceLoader.LoadAsync(new() { ExternalResource = "/" }, document, null, cancellationToken);
         }
 
