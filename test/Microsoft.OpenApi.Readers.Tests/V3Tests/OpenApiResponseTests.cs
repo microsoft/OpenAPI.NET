@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -25,9 +25,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
 
-            var response = openApiDoc.Components.Responses["Test"];
+            var response = result.OpenApiDocument.Components.Responses["Test"];
             var expected = response.Headers.First().Value;
-            var actual = openApiDoc.Components.Headers.First().Value;
+            var actual = result.OpenApiDocument.Components.Headers.First().Value;
 
             actual.Description.Should().BeEquivalentTo(expected.Description);
         }

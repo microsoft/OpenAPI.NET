@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -8,7 +8,6 @@ using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers.V3;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -27,9 +26,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
 
-            var securityScheme = openApiDoc.Paths["/"].Operations[OperationType.Get].Security.First().Keys.First();
+            var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security.First().Keys.First();
 
-            securityScheme.Should().BeEquivalentTo(openApiDoc.Components.SecuritySchemes.First().Value, 
+            securityScheme.Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value, 
                 options => options.Excluding(x => x.Reference.HostDocument));
         }
 
@@ -38,9 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Act
             var operation = OpenApiModelFactory.Load<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, out _);
-
-            // Assert
-            operation.Should().BeEquivalentTo(new OpenApiOperation
+            var expectedOp = new OpenApiOperation
             {
                 Tags =
                 {
@@ -70,6 +67,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     }
                 }
             };
+
             // Assert
             expectedOp.Should().BeEquivalentTo(operation, 
                 options => options.Excluding(x => x.Tags[0].Reference.HostDocument)
