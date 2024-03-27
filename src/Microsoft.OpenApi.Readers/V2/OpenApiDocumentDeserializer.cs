@@ -265,10 +265,10 @@ namespace Microsoft.OpenApi.Readers.V2
             FixRequestBodyReferences(openApidoc);
 
             // Register components
-            if (openApidoc.Components != null)
-            {
-                openApidoc.Workspace.RegisterComponents(openApidoc);
-            }
+            //if (openApidoc.Components != null)
+            //{
+            //    openApidoc.Workspace.RegisterComponents(openApidoc.BaseUri, openApidoc.Components);
+            //}
 
             return openApidoc;
         }
