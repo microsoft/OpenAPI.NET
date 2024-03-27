@@ -51,11 +51,11 @@ namespace Microsoft.OpenApi.Readers.V3
 
             ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
 
-            if (openApidoc.Components != null)
-            {
-                openApidoc.Workspace.RegisterComponents(openApidoc);
-            }
-            
+            //if (openApidoc.Components != null)
+            //{
+            //    openApidoc.Workspace.RegisterComponents(openApidoc);
+            //}
+
             return openApidoc;
         }
     }
