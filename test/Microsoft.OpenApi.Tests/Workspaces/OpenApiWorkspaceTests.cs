@@ -74,13 +74,12 @@ namespace Microsoft.OpenApi.Tests
         {
             var refUri = new Uri("https://everything.json/common#/components/schemas/test");
             var workspace = new OpenApiWorkspace();
-            var doc = CreateCommonDocument(refUri);
-            var location = "common";
-            
-            workspace.AddDocument(location, doc);
+            var externalDoc = CreateCommonDocument(refUri);
+                       
+            workspace.AddDocument("https://everything.json/common", externalDoc);
 
-            var schema = workspace.ResolveJsonSchemaReference(refUri);
-            
+            workspace.TryResolveReference<JsonSchema>("https://everything.json/common#/components/schemas/test", ReferenceType.Schema, out var schema);
+
             Assert.NotNull(schema);
             Assert.Equal("The referenced one", schema.GetDescription());
         }
@@ -148,7 +147,7 @@ namespace Microsoft.OpenApi.Tests
             workspace.AddSchemaFragment("fragment", schemaFragment);
 
             // Act
-            var schema = workspace.ResolveJsonSchemaReference(new Uri("https://everything.json/common#/components/schemas/test"));
+            workspace.TryResolveReference<JsonSchema>("https://everything.json/common#/components/schemas/test", ReferenceType.Schema, out var schema);
 
             // Assert
             Assert.NotNull(schema);
@@ -193,10 +192,11 @@ namespace Microsoft.OpenApi.Tests
                 }
             };
 
-            foreach(var schema in doc.Components.Schemas)
-            {
-                SchemaRegistry.Global.Register(refUri, schema.Value);
-            }
+            //foreach(var schema in doc.Components.Schemas)
+            //{
+            //    SchemaRegistry.Global.Register(refUri, schema.Value);
+            //}
+
 
             return doc;
         }

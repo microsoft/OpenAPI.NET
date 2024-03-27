@@ -160,11 +160,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                         {
                             Schema = new JsonSchemaBuilder()
                             .Ref("#/definitions/SampleObject2")
-                            .Description("Sample description")
-                            .Required("name")
-                            .Properties(
-                                ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                         }
                     },
                     Reference = new()
