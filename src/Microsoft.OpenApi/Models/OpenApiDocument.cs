@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using Json.Schema;
@@ -93,9 +94,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiDocument() 
         {
-            BaseUri = new Uri ("http://openapi.net/" + Guid.NewGuid());
-            Workspace = new OpenApiWorkspace(BaseUri);
-            Workspace.AddDocument(this);
+            // BaseUri = new Uri("http://openapi.net/document/" + Guid.NewGuid());
+            //_docId = Guid.NewGuid().ToString();
+            Workspace = new OpenApiWorkspace();
+            Workspace.AddDocument("/", this);
         }
                 
         /// <summary>
@@ -554,65 +556,13 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            if (this.Components == null)
+            IOpenApiReferenceable resolvedReference = Workspace.ResolveReference<IOpenApiReferenceable>(reference.Id, reference.Type, Components);
+
+            if (resolvedReference != null)
             {
-                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
+                return resolvedReference;
             }
-
-            try
-            {
-                switch (reference.Type)
-                {
-                    case ReferenceType.PathItem:
-                        var resolvedPathItem = this.Components.PathItems[reference.Id];
-                        resolvedPathItem.Description = reference.Description ?? resolvedPathItem.Description;
-                        resolvedPathItem.Summary = reference.Summary ?? resolvedPathItem.Summary;
-                        return resolvedPathItem;
-
-                    case ReferenceType.Response:
-                        var resolvedResponse = this.Components.Responses[reference.Id];
-                        resolvedResponse.Description = reference.Description ?? resolvedResponse.Description;
-                        return resolvedResponse;
-
-                    case ReferenceType.Parameter:
-                        var resolvedParameter = this.Components.Parameters[reference.Id];
-                        resolvedParameter.Description = reference.Description ?? resolvedParameter.Description;
-                        return resolvedParameter;
-
-                    case ReferenceType.Example:
-                        var resolvedExample = this.Components.Examples[reference.Id];
-                        resolvedExample.Summary = reference.Summary ?? resolvedExample.Summary;
-                        resolvedExample.Description = reference.Description ?? resolvedExample.Description;
-                        return resolvedExample;
-
-                    case ReferenceType.RequestBody:
-                        var resolvedRequestBody = this.Components.RequestBodies[reference.Id];
-                        resolvedRequestBody.Description = reference.Description ?? resolvedRequestBody.Description;
-                        return resolvedRequestBody;
-
-                    case ReferenceType.Header:
-                        var resolvedHeader = this.Components.Headers[reference.Id];
-                        resolvedHeader.Description = reference.Description ?? resolvedHeader.Description;
-                        return resolvedHeader;
-
-                    case ReferenceType.SecurityScheme:
-                        var resolvedSecurityScheme = this.Components.SecuritySchemes[reference.Id];
-                        resolvedSecurityScheme.Description = reference.Description ?? resolvedSecurityScheme.Description;
-                        return resolvedSecurityScheme;
-
-                    case ReferenceType.Link:
-                        var resolvedLink = this.Components.Links[reference.Id];
-                        resolvedLink.Description = reference.Description ?? resolvedLink.Description;
-                        return resolvedLink;
-
-                    case ReferenceType.Callback:
-                        return this.Components.Callbacks[reference.Id];
-
-                    default:
-                        throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
-                }
-            }
-            catch (KeyNotFoundException)
+            else
             {
                 throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
