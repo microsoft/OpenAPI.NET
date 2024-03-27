@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Json.Schema;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -21,9 +22,6 @@ namespace Microsoft.OpenApi.Services
         private readonly Dictionary<Uri, IOpenApiReferenceable> _fragments = new();
         private readonly Dictionary<Uri, JsonSchema> _schemaFragments = new();
         private readonly Dictionary<Uri, Stream> _artifacts = new();
-        private IDictionary<string, IOpenApiReferenceable> _referenceableRegistry = new Dictionary<string, IOpenApiReferenceable>();
-        private IDictionary<string, IBaseDocument> _schemaRegistry = new Dictionary<string, IBaseDocument>();
-
 
         /// <summary>
         /// A list of OpenApiDocuments contained in the workspace
@@ -65,7 +63,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public OpenApiWorkspace()
         {
-            BaseUrl = new("file://" + Environment.CurrentDirectory + $"{Path.DirectorySeparatorChar}" );
+            BaseUrl = new("http://openapi.net/workspace/");
         }
 
         /// <summary>
@@ -76,81 +74,51 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// 
         /// </summary>
+        public IDictionary<Uri, OpenApiComponents> ComponentsRegistry { get; } = new Dictionary<Uri, OpenApiComponents>();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="uri"></param>
-        /// <param name="baseDocument"></param>
-        public void RegisterComponent(Uri uri, IBaseDocument baseDocument)
+        /// <param name="components"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void RegisterComponents(Uri uri, OpenApiComponents components)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
-            if (baseDocument == null) throw new ArgumentNullException(nameof(baseDocument));
+            if (components == null) throw new ArgumentNullException(nameof(components));
+            ComponentsRegistry[uri] = components;
+        }
 
-            if (_schemaRegistry.ContainsKey(uri.ToString()))
-            {
-                throw new InvalidOperationException($"Key already exists. {nameof(uri)} needs to be unique");
-            }
-            else
-            {
-                _schemaRegistry.Add(uri.OriginalString, baseDocument);
-            }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="document"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void RegisterComponents(OpenApiDocument document)
+        {
+            if (document == null) throw new ArgumentNullException(nameof(document));
+            if (document.Components == null) throw new ArgumentNullException(nameof(document.Components));
+            ComponentsRegistry[GetDocumentUri(document)] = document.Components;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="uri"></param>
-        /// <param name="referenceable"></param>
-        public void RegisterComponent(Uri uri, IOpenApiReferenceable referenceable)
-        {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
-            if (referenceable == null) throw new ArgumentNullException(nameof(referenceable));
-
-            if (_referenceableRegistry.ContainsKey(uri.OriginalString))
-            {
-                throw new InvalidOperationException($"Key already exists. {nameof(uri)} needs to be unique");
-            }
-            else
-            {
-                _referenceableRegistry.Add(uri.OriginalString, referenceable);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="uri"></param>
-        /// <param name="value"></param>
+        /// <param name="components"></param>
         /// <returns></returns>
-        public bool TryRetrieveComponent<TValue>(Uri uri, out TValue value)
+        public bool TryGetComponents(Uri uri, out OpenApiComponents components)
         {
             if (uri == null)
             {
-                value = default;
+                components = null;
                 return false;
             }
-            
-            if ((typeof(TValue) == typeof(IBaseDocument)))
-            {
-                _schemaRegistry.TryGetValue(uri.OriginalString, out IBaseDocument schema);
-                if (schema != null)
-                {
-                    value = (TValue)schema;
-                    return true;
-                }
-            }
-            else if(typeof(TValue) == typeof(IOpenApiReferenceable))
-            {
-                _referenceableRegistry.TryGetValue(uri.OriginalString, out IOpenApiReferenceable referenceable);
-                if (referenceable != null)
-                {
-                    value = (TValue)referenceable;
-                    return true;
-                }
-            }
 
-            value = default;
-            return false;
+            ComponentsRegistry.TryGetValue(uri, out components);
+            return (components != null);
         }
-
+                
         /// <summary>
         /// Verify if workspace contains a document based on its URL.
         /// </summary>
@@ -165,12 +133,50 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Add an OpenApiDocument to the workspace.
         /// </summary>
-        /// <param name="location"></param>
-        /// <param name="document"></param>
+        /// <param name="location">The string location.</param>
+        /// <param name="document">The OpenAPI document.</param>
         public void AddDocument(string location, OpenApiDocument document)
         {
             document.Workspace = this;
-            _documents.Add(ToLocationUrl(location), document);
+            var locationUrl = ToLocationUrl(location);
+            _documents.Add(locationUrl, document);
+            if (document.Components != null)
+            {
+                RegisterComponents(locationUrl, document.Components);
+            }
+        }
+
+        /// <summary>
+        /// Add an OpenApiDocument to the workspace.
+        /// </summary>
+        /// <param name="document">The OpenAPI document.</param>
+        public void AddDocument(OpenApiDocument document)
+        {
+            // document.Workspace = this; TODO
+
+            // Register components in this doc.
+            if (document.Components != null)
+            {
+                RegisterComponents(GetDocumentUri(document), document.Components);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
+        private Uri GetDocumentUri(OpenApiDocument document)
+        {
+            if (document == null) return null;
+
+            string docUri = (document.Servers.FirstOrDefault() != null) ? document.Servers.First().Url : document.BaseUri.OriginalString;
+            if (!Uri.TryCreate(docUri, UriKind.Absolute, out _))
+            {
+                docUri = $"http://openapi.net/{docUri}";
+            }
+
+            return new Uri(docUri);
         }
 
         /// <summary>
@@ -193,7 +199,11 @@ namespace Microsoft.OpenApi.Services
         /// <param name="fragment"></param>
         public void AddSchemaFragment(string location, JsonSchema fragment)
         {
-            _schemaFragments.Add(ToLocationUrl(location), fragment);
+            var locationUri = ToLocationUrl(location);
+            _schemaFragments.Add(locationUri, fragment);
+            var schemaComponent = new OpenApiComponents();
+            schemaComponent.Schemas.Add(locationUri.OriginalString, fragment);
+            ComponentsRegistry[locationUri] = schemaComponent;
         }
 
         /// <summary>
@@ -213,52 +223,175 @@ namespace Microsoft.OpenApi.Services
         /// <returns></returns>
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
-            if (_documents.TryGetValue(new(BaseUrl, reference.ExternalResource), out var doc))
+            var uri = new Uri(BaseUrl, reference.ExternalResource);
+            if (_documents.TryGetValue(uri, out var doc))
             {
-                return doc.ResolveReference(reference, false);
+                // return doc.ResolveReference(reference, false); // TODO: Resolve internally, don't refer to doc.
+                return ResolveReference<IOpenApiReferenceable>(reference.Id, reference.Type, doc.Components);
             }
-            else if (_fragments.TryGetValue(new(BaseUrl, reference.ExternalResource), out var fragment))
+            else if (_fragments.TryGetValue(uri, out var fragment))
             {
                 var jsonPointer = new JsonPointer($"/{reference.Id ?? string.Empty}");
                 return fragment.ResolveReference(jsonPointer);
             }
             return null;
+
         }
 
-        /// <summary>
-        /// Resolve the target of a JSON schema reference from within the workspace
-        /// </summary>
-        /// <param name="reference">An instance of a JSON schema reference.</param>
-        /// <returns></returns>
-        public JsonSchema ResolveJsonSchemaReference(Uri reference)
-        {
-            var docs = _documents.Values;
-            if (docs.Any())
-            {
-                var doc = docs.FirstOrDefault();
-                if (doc != null)
-                {
-                    foreach (var jsonSchema in doc.Components.Schemas)
-                    {
-                        var refUri = new Uri(OpenApiConstants.V3ReferenceUri + jsonSchema.Key);
-                        SchemaRegistry.Global.Register(refUri, jsonSchema.Value);
-                    }
+        
+        //public JsonSchema ResolveJsonSchemaReference(Uri reference)
+        // {
+        //    TryResolveReference<JsonSchema>(reference.OriginalString, ReferenceType.Schema, document.BaseUri, out var resolvedSchema);
 
-                    var resolver = new OpenApiReferenceResolver(doc);
-                    return resolver.ResolveJsonSchemaReference(reference);
-                }
-                return null;
+        //    if (resolvedSchema != null)
+        //    {
+        //        var resolvedSchemaBuilder = new JsonSchemaBuilder();
+        //        var description = resolvedSchema.GetDescription();
+        //        var summary = resolvedSchema.GetSummary();
+
+        //        foreach (var keyword in resolvedSchema.Keywords)
+        //        {
+        //            resolvedSchemaBuilder.Add(keyword);
+
+        //            // Replace the resolved schema's description with that of the schema reference
+        //            if (!string.IsNullOrEmpty(description))
+        //            {
+        //                resolvedSchemaBuilder.Description(description);
+        //            }
+
+        //            // Replace the resolved schema's summary with that of the schema reference
+        //            if (!string.IsNullOrEmpty(summary))
+        //            {
+        //                resolvedSchemaBuilder.Summary(summary);
+        //            }
+        //        }
+
+        //        return resolvedSchemaBuilder.Build();
+        //    }
+        //    else
+        //    {
+        //        var referenceId = reference.OriginalString.Split('/').LastOrDefault();
+        //        throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, referenceId));
+        //    }
+        //}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="referenceV3"></param>
+        /// <param name="referenceType"></param>
+        /// <param name="docBaseUri"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="OpenApiException"></exception>
+        public bool TryResolveReference<T>(string referenceV3, ReferenceType? referenceType, out T value, Uri docBaseUri = null)
+        {
+            value = default;
+            if (string.IsNullOrEmpty(referenceV3)) return false;
+
+            var referenceId = referenceV3.Split('/').LastOrDefault();
+
+            // The first part of the referenceId before the # should give us our location url
+            // if the 1st part is missing, then the reference is in the entry document
+            var locationUrl = (referenceV3.Contains('#')) ? referenceV3.Substring(0, referenceV3.IndexOf('#')) : null;
+
+            ComponentsRegistry.TryGetValue(docBaseUri, out var componentsTest);
+
+            OpenApiComponents components;
+            if (string.IsNullOrEmpty(locationUrl))
+            {
+                // Get the entry level document components
+                // or the 1st registry component (if entry level has no components)
+                components = ComponentsRegistry.FirstOrDefault().Value;
             }
             else
             {
-                foreach (var jsonSchema in _schemaFragments)
-                {
-                    SchemaRegistry.Global.Register(reference, jsonSchema.Value);
-                }
+                // Try convert to absolute uri
+                Uri uriLocation = ToLocationUrl(locationUrl);                                           
 
-                return FetchSchemaFromRegistry(reference);                
+                ComponentsRegistry.TryGetValue(uriLocation, out components);
+            }
+
+            if (components == null) return false;
+
+            switch (referenceType)
+            {
+                case ReferenceType.PathItem:
+                    value = (T)(IOpenApiReferenceable)components.PathItems[referenceId];
+                    return (value != null);
+
+                case ReferenceType.Response:
+                    value = (T)(IOpenApiReferenceable)components.Responses[referenceId];
+                    return (value != null);
+
+                case ReferenceType.Parameter:
+                    value = (T)(IOpenApiReferenceable)components.Parameters[referenceId];
+                    return (value != null);
+
+                case ReferenceType.Example:
+                    value = (T)(IOpenApiReferenceable)components.Examples[referenceId];
+                    return (value != null);
+
+                case ReferenceType.RequestBody:
+                    value = (T)(IOpenApiReferenceable)components.RequestBodies[referenceId];
+                    return (value != null);
+
+                case ReferenceType.Header:
+                    value = (T)(IOpenApiReferenceable)components.Headers[referenceId];
+                    return (value != null);
+
+                case ReferenceType.SecurityScheme:
+                    value = (T)(IOpenApiReferenceable)components.SecuritySchemes[referenceId];
+                    return (value != null);
+
+                case ReferenceType.Link:
+                    value = (T)(IOpenApiReferenceable)components.Links[referenceId];
+                    return (value != null);
+
+                case ReferenceType.Callback:
+                    value = (T)(IOpenApiReferenceable)components.Callbacks[referenceId];
+                    return (value != null);
+
+                case ReferenceType.Schema:
+                    value = (T)(IBaseDocument)components.Schemas[referenceId];
+                    return (value != null);
+
+                default:
+                    throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="referenceId"></param>
+        /// <param name="referenceType"></param>
+        /// <param name="components"></param>
+        /// <returns></returns>
+        /// <exception cref="OpenApiException"></exception>
+        public T ResolveReference<T>(string referenceId, ReferenceType? referenceType, OpenApiComponents components)
+        {
+            if (string.IsNullOrEmpty(referenceId)) return default;
+            if (components == null) return default;
+
+            return referenceType switch
+            {
+                ReferenceType.PathItem => (T)(IOpenApiReferenceable)components.PathItems[referenceId],
+                ReferenceType.Response => (T)(IOpenApiReferenceable)components.Responses[referenceId],
+                ReferenceType.Parameter => (T)(IOpenApiReferenceable)components.Parameters[referenceId],
+                ReferenceType.Example => (T)(IOpenApiReferenceable)components.Examples[referenceId],
+                ReferenceType.RequestBody => (T)(IOpenApiReferenceable)components.RequestBodies[referenceId],
+                ReferenceType.Header => (T)(IOpenApiReferenceable)components.Headers[referenceId],
+                ReferenceType.SecurityScheme => (T)(IOpenApiReferenceable)components.SecuritySchemes[referenceId],
+                ReferenceType.Link => (T)(IOpenApiReferenceable)components.Links[referenceId],
+                ReferenceType.Callback => (T)(IOpenApiReferenceable)components.Callbacks[referenceId],
+                ReferenceType.Schema => (T)(IBaseDocument)components.Schemas[referenceId],
+                _ => throw new OpenApiException(Properties.SRResource.InvalidReferenceType),
+            };
+        }
+
 
         /// <summary>
         /// 
@@ -272,7 +405,20 @@ namespace Microsoft.OpenApi.Services
 
         private Uri ToLocationUrl(string location)
         {
-            return new(BaseUrl, location);
+            // Try convert to absolute uri
+            return (Uri.TryCreate(location, UriKind.Absolute, out var uri)) == true ? uri : new Uri(BaseUrl, location);
+
+            //if (Uri.TryCreate(location, UriKind.Absolute, out var uri))
+            //   {
+            //    locationUri = new Uri(BaseUrl, uri.LocalPath);
+            //   }
+            //else
+            //{
+            //    locationUri = new Uri(BaseUrl, location);
+            //}
+            //return locationUri;
+
+            // return new(BaseUrl, location);
         }
 
         private static JsonSchema FetchSchemaFromRegistry(Uri reference)
