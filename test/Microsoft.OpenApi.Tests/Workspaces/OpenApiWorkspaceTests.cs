@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Json.Schema;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -74,12 +75,12 @@ namespace Microsoft.OpenApi.Tests
         {
             var refUri = new Uri("https://everything.json/common#/components/schemas/test");
             var workspace = new OpenApiWorkspace();
-            var externalDoc = CreateCommonDocument(refUri);
+            var externalDoc = CreateCommonDocument();
                        
-            workspace.AddDocument("https://everything.json/common", externalDoc);
+            workspace.AddDocument("common", externalDoc);
 
-            workspace.TryResolveReference<JsonSchema>("https://everything.json/common#/components/schemas/test", ReferenceType.Schema, out var schema);
-
+            var schema = workspace.ResolveReference<JsonSchema>("test", ReferenceType.Schema, externalDoc.Components);
+           
             Assert.NotNull(schema);
             Assert.Equal("The referenced one", schema.GetDescription());
         }
@@ -90,7 +91,7 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
 
             var doc = new OpenApiDocument();
-            var reference = "#/components/schemas/test";
+            var reference = "common#/components/schemas/test";
             doc.CreatePathItem("/", p =>
             {
                 p.Description = "Consumer";
@@ -107,7 +108,7 @@ namespace Microsoft.OpenApi.Tests
 
             var refUri = new Uri("https://registry" + reference.Split('#').LastOrDefault());
             workspace.AddDocument("root", doc);
-            workspace.AddDocument("common", CreateCommonDocument(refUri));
+            workspace.AddDocument("common", CreateCommonDocument());
             var errors = doc.ResolveReferences();
             Assert.Empty(errors);
 
@@ -144,10 +145,17 @@ namespace Microsoft.OpenApi.Tests
             // Arrange
             var workspace = new OpenApiWorkspace();
             var schemaFragment = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Schema from a fragment").Build();
-            workspace.AddSchemaFragment("fragment", schemaFragment);
+            workspace.AddSchemaFragment("common", schemaFragment);
 
             // Act
-            workspace.TryResolveReference<JsonSchema>("https://everything.json/common#/components/schemas/test", ReferenceType.Schema, out var schema);
+            var reference = new OpenApiReference()
+            {
+                ExternalResource = "common#/components/schemas/test",
+                Id = "test",
+                Type = ReferenceType.Schema
+            };
+
+            var schema = workspace.ResolveReference<JsonSchema>(reference);
 
             // Assert
             Assert.NotNull(schema);
@@ -169,7 +177,7 @@ namespace Microsoft.OpenApi.Tests
             workspace.AddFragment("fragment", responseFragment);
 
             // Act
-            var resolvedElement = workspace.ResolveReference(new()
+            var resolvedElement = workspace.ResolveReference<IOpenApiReferenceable>(new()
             {
                 Id = "headers/header1",
                 ExternalResource = "fragment"
@@ -180,7 +188,7 @@ namespace Microsoft.OpenApi.Tests
         }
 
         // Test artifacts
-        private static OpenApiDocument CreateCommonDocument(Uri refUri)
+        private static OpenApiDocument CreateCommonDocument()
         {
             var doc =  new OpenApiDocument()
             {
@@ -191,12 +199,6 @@ namespace Microsoft.OpenApi.Tests
                     }
                 }
             };
-
-            //foreach(var schema in doc.Components.Schemas)
-            //{
-            //    SchemaRegistry.Global.Register(refUri, schema.Value);
-            //}
-
 
             return doc;
         }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
@@ -116,10 +116,10 @@ components:
 
         public OpenApiLinkReferenceTests()
         {
-            var reader = new OpenApiStringReader();
-            _openApiDoc = reader.Read(OpenApi, out _);
-            _openApiDoc_2 = reader.Read(OpenApi_2, out _);
-            _openApiDoc.Workspace.AddDocument( _openApiDoc_2);
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+            _openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).OpenApiDocument;
+            _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
+            _openApiDoc.Workspace.AddDocument("https://myserver.com/beta", _openApiDoc_2);
 
             _localLinkReference = new("GetUserByUserId", _openApiDoc_2)
             {

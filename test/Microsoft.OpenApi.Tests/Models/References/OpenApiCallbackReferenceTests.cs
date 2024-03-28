@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
@@ -133,10 +133,10 @@ components:
 
         public OpenApiCallbackReferenceTests()
         {
-            var reader = new OpenApiStringReader();
-            OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            OpenApiDocument openApiDoc_2 = reader.Read(OpenApi_2, out _);
-            openApiDoc.Workspace.AddDocument(openApiDoc_2);
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+            OpenApiDocument openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).OpenApiDocument;
+            OpenApiDocument openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
+            openApiDoc.Workspace.AddDocument("https://myserver.com/beta", openApiDoc_2);
             _externalCallbackReference = new("callbackEvent", openApiDoc, "https://myserver.com/beta");
             _localCallbackReference = new("callbackEvent", openApiDoc_2);
         }

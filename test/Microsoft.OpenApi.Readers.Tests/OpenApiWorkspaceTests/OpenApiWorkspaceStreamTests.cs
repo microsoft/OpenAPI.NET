@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
                 BaseUrl = new("file://c:\\"),
-            });
+            };
 
             ReadResult result;
             result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);            
