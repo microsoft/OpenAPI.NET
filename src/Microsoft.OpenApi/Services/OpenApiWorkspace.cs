@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public OpenApiWorkspace()
         {
-            BaseUrl = new("http://openapi.net/workspace/");
+            BaseUrl = new("file://" + Environment.CurrentDirectory + $"{Path.DirectorySeparatorChar}");
         }
 
         /// <summary>
@@ -75,50 +75,7 @@ namespace Microsoft.OpenApi.Services
         /// 
         /// </summary>
         public IDictionary<Uri, OpenApiComponents> ComponentsRegistry { get; } = new Dictionary<Uri, OpenApiComponents>();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="uri"></param>
-        /// <param name="components"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void RegisterComponents(Uri uri, OpenApiComponents components)
-        {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
-            if (components == null) throw new ArgumentNullException(nameof(components));
-            ComponentsRegistry[uri] = components;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="document"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void RegisterComponents(OpenApiDocument document)
-        {
-            if (document == null) throw new ArgumentNullException(nameof(document));
-            if (document.Components == null) throw new ArgumentNullException(nameof(document.Components));
-            ComponentsRegistry[GetDocumentUri(document)] = document.Components;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="uri"></param>
-        /// <param name="components"></param>
-        /// <returns></returns>
-        public bool TryGetComponents(Uri uri, out OpenApiComponents components)
-        {
-            if (uri == null)
-            {
-                components = null;
-                return false;
-            }
-
-            ComponentsRegistry.TryGetValue(uri, out components);
-            return (components != null);
-        }
-                
+                        
         /// <summary>
         /// Verify if workspace contains a document based on its URL.
         /// </summary>
@@ -127,7 +84,7 @@ namespace Microsoft.OpenApi.Services
         public bool Contains(string location)
         {
             var key = ToLocationUrl(location);
-            return _documents.ContainsKey(key) || _fragments.ContainsKey(key) || _artifacts.ContainsKey(key);
+            return _documents.ContainsKey(key) || _fragments.ContainsKey(key) || _artifacts.ContainsKey(key) || _schemaFragments.ContainsKey(key);
         }
 
         /// <summary>
@@ -139,44 +96,11 @@ namespace Microsoft.OpenApi.Services
         {
             document.Workspace = this;
             var locationUrl = ToLocationUrl(location);
-            _documents.Add(locationUrl, document);
-            if (document.Components != null)
+
+            if (!_documents.ContainsKey(locationUrl))
             {
-                RegisterComponents(locationUrl, document.Components);
+                _documents.Add(locationUrl, document);
             }
-        }
-
-        /// <summary>
-        /// Add an OpenApiDocument to the workspace.
-        /// </summary>
-        /// <param name="document">The OpenAPI document.</param>
-        public void AddDocument(OpenApiDocument document)
-        {
-            // document.Workspace = this; TODO
-
-            // Register components in this doc.
-            if (document.Components != null)
-            {
-                RegisterComponents(GetDocumentUri(document), document.Components);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="document"></param>
-        /// <returns></returns>
-        private Uri GetDocumentUri(OpenApiDocument document)
-        {
-            if (document == null) return null;
-
-            string docUri = (document.Servers.FirstOrDefault() != null) ? document.Servers.First().Url : document.BaseUri.OriginalString;
-            if (!Uri.TryCreate(docUri, UriKind.Absolute, out _))
-            {
-                docUri = $"http://openapi.net/{docUri}";
-            }
-
-            return new Uri(docUri);
         }
 
         /// <summary>
@@ -200,10 +124,10 @@ namespace Microsoft.OpenApi.Services
         public void AddSchemaFragment(string location, JsonSchema fragment)
         {
             var locationUri = ToLocationUrl(location);
-            _schemaFragments.Add(locationUri, fragment);
-            var schemaComponent = new OpenApiComponents();
-            schemaComponent.Schemas.Add(locationUri.OriginalString, fragment);
-            ComponentsRegistry[locationUri] = schemaComponent;
+            if (!_schemaFragments.ContainsKey(locationUri))
+            {
+                _schemaFragments.Add(locationUri, fragment);
+            }           
         }
 
         /// <summary>
@@ -217,151 +141,31 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Returns the target of an OpenApiReference from within the workspace.
+        /// Returns the target of a referenceable item from within the workspace.
         /// </summary>
-        /// <param name="reference">An instance of an OpenApiReference</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reference"></param>
         /// <returns></returns>
-        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        public T ResolveReference<T>(OpenApiReference reference)
         {
             var uri = new Uri(BaseUrl, reference.ExternalResource);
             if (_documents.TryGetValue(uri, out var doc))
             {
-                // return doc.ResolveReference(reference, false); // TODO: Resolve internally, don't refer to doc.
-                return ResolveReference<IOpenApiReferenceable>(reference.Id, reference.Type, doc.Components);
+                return ResolveReference<T>(reference.Id, reference.Type, doc.Components);
             }
             else if (_fragments.TryGetValue(uri, out var fragment))
             {
                 var jsonPointer = new JsonPointer($"/{reference.Id ?? string.Empty}");
-                return fragment.ResolveReference(jsonPointer);
+                return (T)fragment.ResolveReference(jsonPointer);
             }
-            return null;
+            else if (_schemaFragments.TryGetValue(uri, out var schemaFragment))
+            {
+                return (T)(schemaFragment as IBaseDocument);
+            }
+            return default;
 
         }
-
         
-        //public JsonSchema ResolveJsonSchemaReference(Uri reference)
-        // {
-        //    TryResolveReference<JsonSchema>(reference.OriginalString, ReferenceType.Schema, document.BaseUri, out var resolvedSchema);
-
-        //    if (resolvedSchema != null)
-        //    {
-        //        var resolvedSchemaBuilder = new JsonSchemaBuilder();
-        //        var description = resolvedSchema.GetDescription();
-        //        var summary = resolvedSchema.GetSummary();
-
-        //        foreach (var keyword in resolvedSchema.Keywords)
-        //        {
-        //            resolvedSchemaBuilder.Add(keyword);
-
-        //            // Replace the resolved schema's description with that of the schema reference
-        //            if (!string.IsNullOrEmpty(description))
-        //            {
-        //                resolvedSchemaBuilder.Description(description);
-        //            }
-
-        //            // Replace the resolved schema's summary with that of the schema reference
-        //            if (!string.IsNullOrEmpty(summary))
-        //            {
-        //                resolvedSchemaBuilder.Summary(summary);
-        //            }
-        //        }
-
-        //        return resolvedSchemaBuilder.Build();
-        //    }
-        //    else
-        //    {
-        //        var referenceId = reference.OriginalString.Split('/').LastOrDefault();
-        //        throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, referenceId));
-        //    }
-        //}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="referenceV3"></param>
-        /// <param name="referenceType"></param>
-        /// <param name="docBaseUri"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        /// <exception cref="OpenApiException"></exception>
-        public bool TryResolveReference<T>(string referenceV3, ReferenceType? referenceType, out T value, Uri docBaseUri = null)
-        {
-            value = default;
-            if (string.IsNullOrEmpty(referenceV3)) return false;
-
-            var referenceId = referenceV3.Split('/').LastOrDefault();
-
-            // The first part of the referenceId before the # should give us our location url
-            // if the 1st part is missing, then the reference is in the entry document
-            var locationUrl = (referenceV3.Contains('#')) ? referenceV3.Substring(0, referenceV3.IndexOf('#')) : null;
-
-            ComponentsRegistry.TryGetValue(docBaseUri, out var componentsTest);
-
-            OpenApiComponents components;
-            if (string.IsNullOrEmpty(locationUrl))
-            {
-                // Get the entry level document components
-                // or the 1st registry component (if entry level has no components)
-                components = ComponentsRegistry.FirstOrDefault().Value;
-            }
-            else
-            {
-                // Try convert to absolute uri
-                Uri uriLocation = ToLocationUrl(locationUrl);                                           
-
-                ComponentsRegistry.TryGetValue(uriLocation, out components);
-            }
-
-            if (components == null) return false;
-
-            switch (referenceType)
-            {
-                case ReferenceType.PathItem:
-                    value = (T)(IOpenApiReferenceable)components.PathItems[referenceId];
-                    return (value != null);
-
-                case ReferenceType.Response:
-                    value = (T)(IOpenApiReferenceable)components.Responses[referenceId];
-                    return (value != null);
-
-                case ReferenceType.Parameter:
-                    value = (T)(IOpenApiReferenceable)components.Parameters[referenceId];
-                    return (value != null);
-
-                case ReferenceType.Example:
-                    value = (T)(IOpenApiReferenceable)components.Examples[referenceId];
-                    return (value != null);
-
-                case ReferenceType.RequestBody:
-                    value = (T)(IOpenApiReferenceable)components.RequestBodies[referenceId];
-                    return (value != null);
-
-                case ReferenceType.Header:
-                    value = (T)(IOpenApiReferenceable)components.Headers[referenceId];
-                    return (value != null);
-
-                case ReferenceType.SecurityScheme:
-                    value = (T)(IOpenApiReferenceable)components.SecuritySchemes[referenceId];
-                    return (value != null);
-
-                case ReferenceType.Link:
-                    value = (T)(IOpenApiReferenceable)components.Links[referenceId];
-                    return (value != null);
-
-                case ReferenceType.Callback:
-                    value = (T)(IOpenApiReferenceable)components.Callbacks[referenceId];
-                    return (value != null);
-
-                case ReferenceType.Schema:
-                    value = (T)(IBaseDocument)components.Schemas[referenceId];
-                    return (value != null);
-
-                default:
-                    throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
-            }
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -392,7 +196,6 @@ namespace Microsoft.OpenApi.Services
             };
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -405,20 +208,7 @@ namespace Microsoft.OpenApi.Services
 
         private Uri ToLocationUrl(string location)
         {
-            // Try convert to absolute uri
-            return (Uri.TryCreate(location, UriKind.Absolute, out var uri)) == true ? uri : new Uri(BaseUrl, location);
-
-            //if (Uri.TryCreate(location, UriKind.Absolute, out var uri))
-            //   {
-            //    locationUri = new Uri(BaseUrl, uri.LocalPath);
-            //   }
-            //else
-            //{
-            //    locationUri = new Uri(BaseUrl, location);
-            //}
-            //return locationUri;
-
-            // return new(BaseUrl, location);
+            return new(BaseUrl, location);
         }
 
         private static JsonSchema FetchSchemaFromRegistry(Uri reference)
