@@ -97,8 +97,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiDocument() 
         {
-            // BaseUri = new Uri("http://openapi.net/document/" + Guid.NewGuid());
-            //_docId = Guid.NewGuid().ToString();
             Workspace = new OpenApiWorkspace();
             Workspace.AddDocument("/", this);
         }
@@ -486,6 +484,29 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Resolves JsonSchema refs
+        /// </summary>
+        /// <param name="referenceUri"></param>
+        /// <returns>A JsonSchema ref.</returns>
+        public JsonSchema ResolveJsonSchemaReference(Uri referenceUri)
+        {
+            if (referenceUri == null) return null;
+
+            OpenApiReference reference = new OpenApiReference() 
+            {
+                ExternalResource = referenceUri.OriginalString, 
+                Id = referenceUri.OriginalString.Split('/').Last(),
+                Type = ReferenceType.Schema
+            };
+
+            JsonSchema resolvedSchema = reference.ExternalResource.StartsWith("#")
+                ? (JsonSchema)Workspace.ResolveReference<IBaseDocument>(reference.Id, reference.Type, Components) // local ref
+                : Workspace.ResolveReference<JsonSchema>(reference); // external ref
+
+            return resolvedSchema ?? throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
+        }
+
+        /// <summary>
         /// Takes in an OpenApi document instance and generates its hash value
         /// </summary>
         /// <param name="doc">The OpenAPI description to hash.</param>
@@ -536,7 +557,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
                 }
-                return this.Workspace.ResolveReference(reference);
+                return this.Workspace.ResolveReference<IOpenApiReferenceable>(reference);
             }
 
             if (!reference.Type.HasValue)
@@ -559,16 +580,8 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            IOpenApiReferenceable resolvedReference = Workspace.ResolveReference<IOpenApiReferenceable>(reference.Id, reference.Type, Components);
-
-            if (resolvedReference != null)
-            {
-                return resolvedReference;
-            }
-            else
-            {
-                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
-            }
+            return Workspace.ResolveReference<IOpenApiReferenceable>(reference.Id, reference.Type, Components)
+                ?? throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
         }
 
         /// <summary>

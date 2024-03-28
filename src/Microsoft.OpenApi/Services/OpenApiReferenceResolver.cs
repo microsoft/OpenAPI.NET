@@ -18,7 +18,6 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiReferenceResolver : OpenApiVisitorBase
     {
         private OpenApiDocument _currentDocument;
-        private readonly bool _resolveRemoteReferences;
         private List<OpenApiError> _errors = new();
 
         /// <summary>
@@ -251,9 +250,8 @@ namespace Microsoft.OpenApi.Services
         /// <param name="summary">The schema's summary.</param>
         /// <returns></returns>
         public JsonSchema ResolveJsonSchemaReference(Uri reference, string description = null, string summary = null)
-        {
-            var refUri = $"https://registry{reference.OriginalString.Split('#').LastOrDefault()}";
-            var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(refUri));
+        {            
+            var resolvedSchema = _currentDocument.ResolveJsonSchemaReference(reference);
 
             if (resolvedSchema != null)
             {
