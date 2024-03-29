@@ -107,6 +107,14 @@ components:
       parameters:
         userId: '$response.body#/id'
       description: The id value returned in the response can be used as the userId parameter in GET /users/{userId}
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
 ";
 
         private readonly OpenApiLinkReference _localLinkReference;
