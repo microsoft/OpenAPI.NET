@@ -165,6 +165,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))));
 
             var errorSchema = new JsonSchemaBuilder()
+                    .Ref("#/definitions/Error")
                     .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));

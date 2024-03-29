@@ -56,6 +56,12 @@ components:
         text/plain:
           schema:
             $ref: '#/components/schemas/Pong'
+  schemas:
+    Pong:
+      type: object
+      properties:
+        sound:
+          type: string
 ";
 
         private readonly OpenApiResponseReference _localResponseReference;
