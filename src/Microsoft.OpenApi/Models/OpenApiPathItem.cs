@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable, IEffective<OpenApiPathItem>
+    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable
     {
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
@@ -112,63 +112,17 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(writer);;
             var target = this;
-            var isProxyReference = target.GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    callback(writer, Reference);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiPathItem object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiPathItem</returns>
-        public OpenApiPathItem GetEffective(OpenApiDocument doc)
-        {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiPathItem>(Reference);
-            }
-            else
-            {
-                return this;
-            }
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v2.0
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);;
 
             var target = this;
-            var isProxyReference = target.GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    Reference.SerializeAsV2(writer);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
-
             target.SerializeAsV2WithoutReference(writer);
         }
 

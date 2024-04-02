@@ -118,14 +118,6 @@ namespace Microsoft.OpenApi.Models
             Action<IOpenApiWriter> action)
         {
             Utils.CheckArgumentNull(writer);;
-            var isProxyReference = GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                callback(writer, Reference);
-                return;
-            }
-
             action(writer);
         }
 
@@ -195,17 +187,9 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v2.0
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);;
-            var isProxyReference = GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                Reference.SerializeAsV2(writer);
-                return;
-            }
-
             SerializeAsV2WithoutReference(writer);
         }
 

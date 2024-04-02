@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiLink>
+    public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// A relative or absolute reference to an OAS operation.
@@ -106,38 +106,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);
 
             var target = this;
-            var isProxyReference = target.GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    callback(writer, Reference);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiLink object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiLink</returns>
-        public OpenApiLink GetEffective(OpenApiDocument doc)
-        {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiLink>(Reference);
-            }
-            else
-            {
-                return this;
-            }
         }
 
         /// <summary>

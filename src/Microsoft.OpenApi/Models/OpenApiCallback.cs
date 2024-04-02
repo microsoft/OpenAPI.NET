@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiCallback>
+    public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// A Path Item Object used to define a callback request and expected responses.
@@ -61,10 +61,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(expression);
             Utils.CheckArgumentNull(pathItem);
 
-            if (PathItems == null)
-            {
-                PathItems = new();
-            }
+            PathItems ??= new();
 
             PathItems.Add(expression, pathItem);
         }
@@ -102,39 +99,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);
 
             var target = this;
-            var isProxyReference = target.GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    callback(writer, Reference);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
-            
             action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiCallback object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiCallback</returns>
-        public OpenApiCallback GetEffective(OpenApiDocument doc)
-        {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiCallback>(Reference);
-            }
-            else
-            {
-                return this;
-            }
         }
 
         /// <summary>

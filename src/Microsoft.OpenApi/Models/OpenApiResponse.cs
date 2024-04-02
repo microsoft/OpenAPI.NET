@@ -95,20 +95,6 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);;
 
             var target = this;
-            var isProxyReference = target.GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    callback(writer, Reference);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             action(writer, target);
         }
 
@@ -173,25 +159,11 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v2.0.
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
             var target = this;
-            var isProxyReference = target.GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    Reference.SerializeAsV2(writer);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             target.SerializeAsV2WithoutReference(writer);
         }
 

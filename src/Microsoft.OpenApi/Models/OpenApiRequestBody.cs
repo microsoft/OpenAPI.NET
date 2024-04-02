@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiRequestBody>
+    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -90,20 +90,6 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);;
 
             var target = this;
-            var isProxyReference = target.GetType().Name.Contains("Reference");
-
-            if (Reference != null && !isProxyReference)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    callback(writer, Reference);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             action(writer, target);
         }
 
