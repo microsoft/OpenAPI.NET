@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -86,13 +87,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             }
         };
+
+        public static OpenApiResponseReference V2OpenApiResponseReference = new OpenApiResponseReference("example1", ReferencedV2Response);
         public static OpenApiResponse ReferencedV2Response = new OpenApiResponse
         {
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.Response,
-                Id = "example1"
-            },
             Description = "A complex object array response",
             Content =
             {
@@ -117,13 +115,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             }
         };
+        public static OpenApiResponseReference V3OpenApiResponseReference = new OpenApiResponseReference("example1", ReferencedV3Response);
+
         public static OpenApiResponse ReferencedV3Response = new OpenApiResponse
         {
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.Response,
-                Id = "example1"
-            },
             Description = "A complex object array response",
             Content =
             {
@@ -332,7 +327,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedV3Response.SerializeAsV3(writer);
+            V3OpenApiResponseReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -366,7 +361,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedV2Response.SerializeAsV2(writer);
+            V2OpenApiResponseReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert
