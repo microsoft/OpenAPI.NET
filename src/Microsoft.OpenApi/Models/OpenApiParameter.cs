@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
+    public class OpenApiParameter : IOpenApiReferenceable, IOpenApiExtensible
     {
         private bool? _explode;
         private ParameterStyle? _style;
@@ -201,23 +201,6 @@ namespace Microsoft.OpenApi.Models
 
             var target = this; 
             action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiParameter object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiParameter</returns>
-        public OpenApiParameter GetEffective(OpenApiDocument doc)
-        {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiParameter>(Reference);
-            }
-            else
-            {
-                return this;
-            }
         }
 
         /// <summary>

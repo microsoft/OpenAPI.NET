@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiResponse>
+    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. A short description of the response.
@@ -96,23 +96,6 @@ namespace Microsoft.OpenApi.Models
 
             var target = this;
             action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiResponse</returns>
-        public OpenApiResponse GetEffective(OpenApiDocument doc)
-        {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiResponse>(Reference);
-            }
-            else
-            {
-                return this;
-            }
         }
 
         /// <summary>

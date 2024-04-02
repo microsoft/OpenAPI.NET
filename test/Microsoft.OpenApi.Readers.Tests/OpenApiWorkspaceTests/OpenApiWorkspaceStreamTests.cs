@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             var referencedParameter = result.OpenApiDocument
                                         .Paths["/todos"]
                                         .Operations[OperationType.Get]
-                                        .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
+                                        .Parameters.Select(p => p)
                                         .FirstOrDefault(p => p.Name == "filter");
 
             Assert.Equal(SchemaValueType.String, referencedParameter.Schema.GetJsonType());
