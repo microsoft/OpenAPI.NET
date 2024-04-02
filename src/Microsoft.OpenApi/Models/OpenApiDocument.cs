@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Json.Schema;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
@@ -503,7 +502,7 @@ namespace Microsoft.OpenApi.Models
                 ? (JsonSchema)Workspace.ResolveReference<IBaseDocument>(reference.Id, reference.Type, Components) // local ref
                 : Workspace.ResolveReference<JsonSchema>(reference); // external ref
 
-            return resolvedSchema ?? throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
+            return resolvedSchema;
         }
 
         /// <summary>
@@ -553,11 +552,11 @@ namespace Microsoft.OpenApi.Models
             // Todo: Verify if we need to check to see if this external reference is actually targeted at this document.
             if (useExternal)
             {
-                if (this.Workspace == null)
+                if (Workspace == null)
                 {
                     throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
                 }
-                return this.Workspace.ResolveReference<IOpenApiReferenceable>(reference);
+                return Workspace.ResolveReference<IOpenApiReferenceable>(reference);
             }
 
             if (!reference.Type.HasValue)
@@ -580,8 +579,7 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            return Workspace.ResolveReference<IOpenApiReferenceable>(reference.Id, reference.Type, Components)
-                ?? throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
+            return Workspace.ResolveReference<IOpenApiReferenceable>(reference.Id, reference.Type, Components);
         }
 
         /// <summary>
