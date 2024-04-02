@@ -39,21 +39,32 @@ namespace Microsoft.OpenApi.Reader.Services
             // Walk references
             foreach (var item in referenceCollector.References)
             {
+
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
-                    var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
-                    var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken);
-                    // Merge diagnostics
-                    if (result.OpenApiDiagnostic != null)
+                    if (!Guid.TryParse(item.ExternalResource, out _))
                     {
-                        diagnostic.AppendDiagnostic(result.OpenApiDiagnostic, item.ExternalResource);
+                        var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
+                        var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken);
+                        // Merge diagnostics
+                        if (result.OpenApiDiagnostic != null)
+                        {
+                            diagnostic.AppendDiagnostic(result.OpenApiDiagnostic, item.ExternalResource);
+                        }
+                        if (result.OpenApiDocument != null)
+                        {
+                            var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, format, diagnostic, cancellationToken);
+                            diagnostic = loadDiagnostic;
+                        }
                     }
-                    if (result.OpenApiDocument != null)
+                    else // local ref in an external file, add this to the documents registry
                     {
-                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, format,  diagnostic, cancellationToken);
-                        diagnostic = loadDiagnostic;
-                    }
+                        if (!_workspace.Contains(item.ExternalResource))
+                        {
+                            _workspace.AddDocument(reference.ExternalResource, document);
+                        }
+                    }                    
                 }
             }
 
