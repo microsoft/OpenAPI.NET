@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.Services
         private Guid _guid = new();
 
         /// <summary>
-        /// List of external references collected from OpenApiDocument
+        /// List of all internal and external references collected from OpenApiDocument
         /// </summary>
         public IEnumerable<OpenApiReference> References
         {
@@ -34,24 +34,22 @@ namespace Microsoft.OpenApi.Reader.Services
         /// <param name="referenceable"></param>
         public override void Visit(IOpenApiReferenceable referenceable)
         {
-            AddExternalReference(referenceable.Reference);
-            AddLocalReference(referenceable.Reference);
+            AddReferences(referenceable.Reference);
         }
 
         /// <summary>
-        /// Collect external reference
+        /// Collect internal and external references
         /// </summary>
-        private void AddExternalReference(OpenApiReference reference)
+        private void AddReferences(OpenApiReference reference)
         {
+            // External refs
             if (reference is {IsExternal: true} &&
                 !_references.ContainsKey(reference.ExternalResource))
             {
                 _references.Add(reference.ExternalResource, reference);
             }
-        }
 
-        private void AddLocalReference(OpenApiReference reference)
-        {
+            // Local refs
             if (reference is { IsExternal: false } &&
                 !_references.ContainsKey(reference.ReferenceV3))
             {
