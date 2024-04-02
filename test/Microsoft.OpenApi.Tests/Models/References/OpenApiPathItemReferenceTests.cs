@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
     public class OpenApiPathItemReferenceTests
     {
         private const string OpenApi = @"
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: Sample API
   version: 1.0.0
@@ -51,7 +51,7 @@ components:
 ";
 
         private const string OpenApi_2 = @"
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: Sample API
   version: 1.0.0
@@ -107,23 +107,6 @@ paths:
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializePathItemReferenceAsV3JsonWorks(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = true });
-
-            // Act
-            _localPathItemReference.SerializeAsV3(writer);
-            writer.Flush();
-
-            // Assert            
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
         public async Task SerializePathItemReferenceAsV31JsonWorks(bool produceTerseOutput)
         {
             // Arrange
@@ -132,23 +115,6 @@ paths:
 
             // Act
             _localPathItemReference.SerializeAsV31(writer);
-            writer.Flush();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializePathItemReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
-
-            // Act
-            _localPathItemReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert
