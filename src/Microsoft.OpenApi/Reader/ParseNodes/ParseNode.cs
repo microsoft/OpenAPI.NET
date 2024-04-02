@@ -59,14 +59,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, T> CreateMapWithReference<T>(
-            ReferenceType referenceType,
-            Func<MapNode, OpenApiDocument, T> map)
-            where T : class, IOpenApiReferenceable
-        {
-            throw new OpenApiReaderException("Cannot create map from this reference.", Context);
-        }
-
         public virtual Dictionary<string, JsonSchema> CreateJsonSchemaMapWithReference(
             ReferenceType referenceType,
             Func<MapNode, OpenApiDocument, JsonSchema> map,

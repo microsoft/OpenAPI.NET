@@ -72,11 +72,9 @@ namespace Microsoft.OpenApi.Reader.V2
                         o.Components = new();
                     }
 
-                    o.Components.Parameters = n.CreateMapWithReference(
-                        ReferenceType.Parameter,
-                        LoadParameter);
+                    o.Components.Parameters = n.CreateMap(LoadParameter);
 
-                    o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, (p, d) =>
+                    o.Components.RequestBodies = n.CreateMap((p, d) =>
                             {
                                 var parameter = LoadParameter(node: p, loadRequestBody: true, hostDocument: d);
                                 return parameter != null ? CreateRequestBody(p.Context, parameter) : null;
@@ -92,9 +90,7 @@ namespace Microsoft.OpenApi.Reader.V2
                         o.Components = new();
                     }
 
-                    o.Components.Responses = n.CreateMapWithReference(
-                        ReferenceType.Response,
-                        LoadResponse);
+                    o.Components.Responses = n.CreateMap(LoadResponse);
                 }
             },
             {
@@ -105,10 +101,7 @@ namespace Microsoft.OpenApi.Reader.V2
                         o.Components = new();
                     }
 
-                    o.Components.SecuritySchemes = n.CreateMapWithReference(
-                        ReferenceType.SecurityScheme,
-                        LoadSecurityScheme
-                        );
+                    o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme);
                 }
             },
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)},

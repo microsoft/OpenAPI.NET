@@ -79,47 +79,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, T> CreateMapWithReference<T>(
-            ReferenceType referenceType,
-            Func<MapNode, OpenApiDocument, T> map)
-        {
-            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
-
-            var nodes = jsonMap.Select(
-                n =>
-                {
-                    var key = n.Key;
-                    (string key, T value) entry;
-                    try
-                    {
-                        Context.StartObject(key);
-                        entry = (key,
-                            value: map(new MapNode(Context, (JsonObject)n.Value), null)
-                        );
-                        if (entry.value == null)
-                        {
-                            return default;  // Body Parameters shouldn't be converted to Parameters
-                        }
-                        // If the component isn't a reference to another component, then point it to itself.
-                        if (entry.value.Reference == null)
-                        {
-                            entry.value.Reference = new()
-                            {
-                                Type = referenceType,
-                                Id = entry.key
-                            };
-                        }
-                    }
-                    finally
-                    {
-                        Context.EndObject();
-                    }
-                    return entry;
-                }
-                );
-            return nodes.Where(n => n != default).ToDictionary(k => k.key, v => v.value);
-        }
-
         public override Dictionary<string, JsonSchema> CreateJsonSchemaMapWithReference(
             ReferenceType referenceType,
             Func<MapNode, OpenApiDocument, JsonSchema> map,
