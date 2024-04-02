@@ -623,6 +623,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiPathItem> Webhooks { get; set; }
         public Microsoft.OpenApi.Services.OpenApiWorkspace Workspace { get; set; }
         public Json.Schema.JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, Json.Schema.EvaluationOptions options) { }
+        public Json.Schema.JsonSchema ResolveJsonSchemaReference(System.Uri referenceUri) { }
         public Microsoft.OpenApi.Interfaces.IOpenApiReferenceable ResolveReference(Microsoft.OpenApi.Models.OpenApiReference reference) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiError> ResolveReferences() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1397,6 +1398,7 @@ namespace Microsoft.OpenApi.Services
         public OpenApiWorkspace(System.Uri baseUrl) { }
         public System.Collections.Generic.IEnumerable<System.IO.Stream> Artifacts { get; }
         public System.Uri BaseUrl { get; }
+        public System.Collections.Generic.IDictionary<System.Uri, Microsoft.OpenApi.Models.OpenApiComponents> ComponentsRegistry { get; }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiDocument> Documents { get; }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Interfaces.IOpenApiElement> Fragments { get; }
         public void AddArtifact(string location, System.IO.Stream artifact) { }
@@ -1405,8 +1407,8 @@ namespace Microsoft.OpenApi.Services
         public void AddSchemaFragment(string location, Json.Schema.JsonSchema fragment) { }
         public bool Contains(string location) { }
         public System.IO.Stream GetArtifact(string location) { }
-        public Json.Schema.JsonSchema ResolveJsonSchemaReference(System.Uri reference) { }
-        public Microsoft.OpenApi.Interfaces.IOpenApiReferenceable ResolveReference(Microsoft.OpenApi.Models.OpenApiReference reference) { }
+        public T ResolveReference<T>(Microsoft.OpenApi.Models.OpenApiReference reference) { }
+        public T ResolveReference<T>(string referenceId, Microsoft.OpenApi.Models.ReferenceType? referenceType, Microsoft.OpenApi.Models.OpenApiComponents components) { }
     }
     public class OperationSearch : Microsoft.OpenApi.Services.OpenApiVisitorBase
     {
