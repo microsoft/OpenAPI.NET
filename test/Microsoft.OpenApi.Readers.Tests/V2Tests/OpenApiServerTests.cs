@@ -8,6 +8,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
     public class OpenApiServerTests
     {
+        public OpenApiServerTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void NoServer()
         {
