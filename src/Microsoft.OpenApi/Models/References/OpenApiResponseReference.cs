@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }
+        public override IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; set => Target.Content = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiHeader> Headers { get => Target.Headers; set => Target.Headers = value; }
