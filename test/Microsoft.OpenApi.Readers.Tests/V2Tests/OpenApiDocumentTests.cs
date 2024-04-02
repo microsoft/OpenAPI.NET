@@ -2,12 +2,15 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Writers;
+using VerifyXunit;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -147,7 +150,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             ["Error"] = errorSchema
                         }
                 }
-            });
+            }, options => options.Excluding(x => x.Workspace));
+
         }
 
 

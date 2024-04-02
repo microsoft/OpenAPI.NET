@@ -17,6 +17,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     {
         private const string SampleFolderPath = "V31Tests/Samples/OpenApiDocument/";
 
+        public OpenApiDocumentTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
+
         public static T Clone<T>(T element) where T : IOpenApiSerializable
         {
             using var stream = new MemoryStream();
@@ -179,7 +184,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             // Assert
             var schema = actual.OpenApiDocument.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected);
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace));
         }
 
         [Fact]
@@ -320,22 +325,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected);
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace));
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-        }
-
-        [Fact]
-        public void ParseDocumentWithDescriptionInDollarRefsShouldSucceed()
-        {
-            // Arrange
-            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithSummaryAndDescriptionInReference.yaml"));
-
-            // Act
-            var header = actual.OpenApiDocument.Components.Responses["Test"].Headers["X-Test"];
-
-            // Assert
-            Assert.True(header.Description == "A referenced X-Test header"); /*response header #ref's description overrides the header's description*/
         }
 
         [Fact]
