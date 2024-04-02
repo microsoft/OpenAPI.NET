@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // create a dummy ILogger instance for testing
             await OpenApiService.TransformOpenApiDocument(options, _logger);
 
-            var output = await File.ReadAllTextAsync("output.yaml");
+            var output = await File.ReadAllTextAsync("output.yml");
             Assert.NotEmpty(output);
         }
 
