@@ -1398,7 +1398,6 @@ namespace Microsoft.OpenApi.Services
         public OpenApiWorkspace(System.Uri baseUrl) { }
         public System.Collections.Generic.IEnumerable<System.IO.Stream> Artifacts { get; }
         public System.Uri BaseUrl { get; }
-        public System.Collections.Generic.IDictionary<System.Uri, Microsoft.OpenApi.Models.OpenApiComponents> ComponentsRegistry { get; }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiDocument> Documents { get; }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Interfaces.IOpenApiElement> Fragments { get; }
         public void AddArtifact(string location, System.IO.Stream artifact) { }
