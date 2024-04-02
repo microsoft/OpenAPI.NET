@@ -60,8 +60,10 @@ namespace Microsoft.OpenApi.Hidi
                 if (options.Output == null)
                 {
 #pragma warning disable CA1308 // Normalize strings to uppercase
-                    var inputExtension = string.Concat(".", options.OpenApiFormat?.GetDisplayName().ToLowerInvariant())
-                        ?? GetInputPathExtension(options.OpenApi, options.Csdl);
+                    var extension = options.OpenApiFormat?.GetDisplayName().ToLowerInvariant();
+                    var inputExtension = !string.IsNullOrEmpty(extension) ? string.Concat(".", extension) 
+                        : GetInputPathExtension(options.OpenApi, options.Csdl);
+
 #pragma warning restore CA1308 // Normalize strings to uppercase
                     options.Output = new($"./output{inputExtension}");
                 };
