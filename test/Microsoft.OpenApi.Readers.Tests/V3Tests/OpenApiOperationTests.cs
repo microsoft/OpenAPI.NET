@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security.First().Keys.First();
 
             securityScheme.Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value, 
-                options => options.Excluding(x => x.Reference.HostDocument));
+                options => options.Excluding(x => x.Reference));
         }
 
         [Fact]

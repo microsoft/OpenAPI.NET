@@ -302,12 +302,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 }
                             }
                         }
-                    },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.PathItem,
-                        Id = "pets",
-                        HostDocument = actual.OpenApiDocument
                     }
                 }
             };
@@ -328,7 +322,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Components.PathItems["pets"].Reference.HostDocument));
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Webhooks["pets"].Reference));
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
         }

@@ -513,6 +513,7 @@ paths: {}",
         result.OpenApiDiagnostic.Should().BeEquivalentTo(
             new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
+
         [Fact]
         public void ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
@@ -552,34 +553,15 @@ paths: {}",
                     {
                         Type = SecuritySchemeType.ApiKey,
                         Name = "apiKeyName1",
-                        In = ParameterLocation.Header,
-                        Reference = new OpenApiReference
-                        {
-                            Id = "securitySchemeName1",
-                            Type = ReferenceType.SecurityScheme,
-                            HostDocument = actual.OpenApiDocument
-                        }
-
+                        In = ParameterLocation.Header
                     },
                     ["securitySchemeName2"] = new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.OpenIdConnect,
-                        OpenIdConnectUrl = new Uri("http://example.com"),
-                        Reference = new OpenApiReference
-                        {
-                            Id = "securitySchemeName2",
-                            Type = ReferenceType.SecurityScheme,
-                            HostDocument = actual.OpenApiDocument
-                        }
+                        OpenIdConnectUrl = new Uri("http://example.com")
                     }
                 }
             };
-
-            var petSchema = components.Schemas["pet1"];
-
-            var newPetSchema = components.Schemas["newPet"];
-
-            var errorModelSchema = components.Schemas["errorModel"];
 
             var tag1 = new OpenApiTag
             {
@@ -591,7 +573,6 @@ paths: {}",
                     Type = ReferenceType.Tag
                 }
             };
-
 
             var tag2 = new OpenApiTag
             {
@@ -921,12 +902,7 @@ paths: {}",
                     new OpenApiTag
                     {
                         Name = "tagName1",
-                        Description = "tagDescription1",
-                        Reference = new OpenApiReference()
-                        {
-                            Id = "tagName1",
-                            Type = ReferenceType.Tag
-                        }
+                        Description = "tagDescription1"
                     }
                 },
                 SecurityRequirements = new List<OpenApiSecurityRequirement>
@@ -944,8 +920,15 @@ paths: {}",
                 }
             };
 
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(m => m.Name == "HostDocument"));
-            
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options
+            .Excluding(x => x.HashCode)
+            .Excluding(m => m.Tags[0].Reference)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference.HostDocument)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[0].Reference.HostDocument)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[1].Reference.HostDocument)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[1].Reference.HostDocument));
+
 
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
@@ -969,7 +952,7 @@ paths: {}",
             var securityRequirement = result.OpenApiDocument.SecurityRequirements.First();
 
             securityRequirement.Keys.First().Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value,
-                options => options.Excluding(x => x.Reference.HostDocument));
+                options => options.Excluding(x => x.Reference));
         }
 
         [Fact]
@@ -992,14 +975,10 @@ paths: {}",
                     Example = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                                .Format(Formats.Uuid),
-                    Reference = new OpenApiReference()
-                    {
-                        Type = ReferenceType.Header,
-                        Id = "example-header"
-                    }
+                                .Format(Formats.Uuid)
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(e => e.Example.Node.Parent));
+                .Excluding(e => e.Example.Node.Parent)
+                .Excluding(x => x.Reference));
 
             var examplesHeader = result.OpenApiDocument.Components?.Headers?["examples-header"];
             Assert.NotNull(examplesHeader);
@@ -1028,12 +1007,7 @@ paths: {}",
                     },
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                                .Format(Formats.Uuid),
-                    Reference = new OpenApiReference()
-                    {
-                        Type = ReferenceType.Header,
-                        Id = "examples-header"
-                    }
+                                .Format(Formats.Uuid)
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(e => e.Examples["uuid1"].Value.Node.Parent)
                 .Excluding(e => e.Examples["uuid2"].Value.Node.Parent));
