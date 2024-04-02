@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiRequestBodyReference : OpenApiRequestBody
     {
-        private OpenApiRequestBody _target;
+        internal OpenApiRequestBody _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
@@ -52,6 +52,17 @@ namespace Microsoft.OpenApi.Models.References
             };
 
             Reference = _reference;
+        }
+
+        internal OpenApiRequestBodyReference(OpenApiRequestBody target, string referenceId)
+        {
+            _target = target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.RequestBody,
+            };
         }
 
         /// <inheritdoc/>

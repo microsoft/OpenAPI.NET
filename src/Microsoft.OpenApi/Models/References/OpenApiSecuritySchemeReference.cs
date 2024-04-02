@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiSecuritySchemeReference : OpenApiSecurityScheme
     {
-        private OpenApiSecurityScheme _target;
+        internal OpenApiSecurityScheme _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
@@ -48,6 +48,17 @@ namespace Microsoft.OpenApi.Models.References
             };
 
             Reference = _reference;
+        }
+
+        internal OpenApiSecuritySchemeReference(string referenceId, OpenApiSecurityScheme target)
+        {
+            _target = target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.SecurityScheme,
+            };
         }
 
         /// <inheritdoc/>
@@ -107,7 +118,21 @@ namespace Microsoft.OpenApi.Models.References
             {
                 SerializeInternal(writer, SerializeAsV31WithoutReference);
             }
-        }   
+        }
+
+        /// <inheritdoc/>
+        public override void SerializeAsV2(IOpenApiWriter writer)
+        {
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV2(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer, SerializeAsV2WithoutReference);
+            }
+        }
 
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer,

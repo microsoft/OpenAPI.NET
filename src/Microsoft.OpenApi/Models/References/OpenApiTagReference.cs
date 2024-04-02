@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiTagReference : OpenApiTag
     {
-        private OpenApiTag _target;
+        internal OpenApiTag _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
@@ -46,7 +46,18 @@ namespace Microsoft.OpenApi.Models.References
             };
 
             Reference = _reference;
-       }
+        }
+
+        internal OpenApiTagReference(OpenApiTag target, string referenceId)
+        {
+            _target = target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.Tag,
+            };
+        }
 
         /// <inheritdoc/>
         public override string Description
@@ -90,7 +101,21 @@ namespace Microsoft.OpenApi.Models.References
             {
                 SerializeInternal(writer);
             }
-        }               
+        }
+
+        /// <inheritdoc/>
+        public override void SerializeAsV2(IOpenApiWriter writer)
+        {
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV2(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer);
+            }
+        }
 
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer)

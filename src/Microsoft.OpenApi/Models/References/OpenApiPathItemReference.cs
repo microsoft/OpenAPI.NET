@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiPathItemReference : OpenApiPathItem
     {
-        private OpenApiPathItem _target;
+        internal OpenApiPathItem _target;
         private readonly OpenApiReference _reference;
         private string _description;
         private string _summary;
@@ -53,6 +53,17 @@ namespace Microsoft.OpenApi.Models.References
             };
 
             Reference = _reference;
+        }
+
+        internal OpenApiPathItemReference(OpenApiPathItem target, string referenceId)
+        {
+            _target = target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.PathItem,
+            };
         }
 
         /// <inheritdoc/>
@@ -107,7 +118,21 @@ namespace Microsoft.OpenApi.Models.References
             {
                 SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
             }
-        }     
+        }
+
+        /// <inheritdoc/>
+        public override void SerializeAsV2(IOpenApiWriter writer)
+        {
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV2(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV2WithoutReference(writer));
+            }
+        }
 
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer,

@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiCallbackReference : OpenApiCallback
     {
-        private OpenApiCallback _target;
+        internal OpenApiCallback _target;
         private readonly OpenApiReference _reference;
 
         private OpenApiCallback Target
@@ -52,6 +52,17 @@ namespace Microsoft.OpenApi.Models.References
             };
 
             Reference = _reference;
+        }
+
+        internal OpenApiCallbackReference(OpenApiCallback target, string referenceId)
+        {
+            _target = target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.Callback,
+            };
         }
 
         /// <inheritdoc/>

@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiLinkReference : OpenApiLink
     {
-        private OpenApiLink _target;
+        internal OpenApiLink _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
@@ -52,6 +52,17 @@ namespace Microsoft.OpenApi.Models.References
             };
 
             Reference = _reference;
+        }
+
+        internal OpenApiLinkReference(OpenApiLink target, string referenceId)
+        {
+            _target = target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.Link,
+            };
         }
 
         /// <inheritdoc/>

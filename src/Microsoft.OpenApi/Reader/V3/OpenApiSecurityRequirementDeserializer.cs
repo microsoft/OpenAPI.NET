@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Models;
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V3
             ParsingContext context,
             string schemeName)
         {
-            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, null);
+            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, hostDocument: null);
             return securitySchemeObject;
         }
     }

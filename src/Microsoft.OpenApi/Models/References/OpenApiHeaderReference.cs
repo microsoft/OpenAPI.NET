@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiHeaderReference : OpenApiHeader
     {
-        private OpenApiHeader _target;
+        internal OpenApiHeader _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
@@ -54,6 +54,17 @@ namespace Microsoft.OpenApi.Models.References
             };
 
             Reference = _reference;
+        }
+
+        internal OpenApiHeaderReference(OpenApiHeader target, string referenceId)
+        {
+            _target = target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.Header,
+            };
         }
 
         /// <inheritdoc/>
@@ -121,6 +132,20 @@ namespace Microsoft.OpenApi.Models.References
             else
             {
                 SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void SerializeAsV2(IOpenApiWriter writer)
+        {
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV2(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV2WithoutReference(writer));
             }
         }
 

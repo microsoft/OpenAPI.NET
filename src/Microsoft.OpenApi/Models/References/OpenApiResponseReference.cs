@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiResponseReference : OpenApiResponse
     {
-        private OpenApiResponse _target;
+        internal OpenApiResponse _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiResponse>(_reference);
+                _target ??= Reference.HostDocument?.ResolveReferenceTo<OpenApiResponse>(_reference);
                 return _target;
             }
         }
@@ -49,6 +49,19 @@ namespace Microsoft.OpenApi.Models.References
                 HostDocument = hostDocument,
                 Type = ReferenceType.Response,
                 ExternalResource = externalResource
+            };
+
+            Reference = _reference;
+        }
+
+        internal OpenApiResponseReference(string referenceId, OpenApiResponse target)
+        {
+            _target ??= target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.Response,
             };
 
             Reference = _reference;
@@ -98,6 +111,20 @@ namespace Microsoft.OpenApi.Models.References
             else
             {
                 SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void SerializeAsV2(IOpenApiWriter writer)
+        {
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV2(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV2WithoutReference(writer));
             }
         }
 
