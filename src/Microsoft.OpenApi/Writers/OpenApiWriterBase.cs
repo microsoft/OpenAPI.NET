@@ -446,10 +446,6 @@ namespace Microsoft.OpenApi.Writers
                     {
                         FindJsonSchemaRefs.ResolveJsonSchema(schema);
                     }
-                    else if (Settings.InlineLocalReferences)
-                    {
-                        schema = FindJsonSchemaRefs.FetchSchemaFromRegistry(schema, reference);
-                    }
                     if (!Settings.LoopDetector.PushLoop(schema))
                     {
                         Settings.LoopDetector.SaveLoop(schema);
@@ -459,10 +455,7 @@ namespace Microsoft.OpenApi.Writers
                 }
             }
 
-            if (schema != null)
-            {
-                WriteJsonSchemaWithoutReference(this, schema, version);
-            }
+            WriteJsonSchemaWithoutReference(this, schema, version);
 
             if (reference != null)
             {

@@ -97,39 +97,6 @@ paths:
             };
         }
 
-        [Fact]
-        public void RequestBodyReferenceResolutionWorks()
-        {
-            // Arrange
-            var expectedMediaType = @"{
-  ""schema"": {
-    ""type"": ""object"",
-    ""properties"": {
-      ""name"": {
-        ""type"": ""string""
-      },
-      ""email"": {
-        ""type"": ""string""
-      }
-    }
-  }
-}";
-            var mediaType = _localRequestBodyReference.Content["application/json"];
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-
-            // Act
-            mediaType.SerializeAsV3(new OpenApiJsonWriter(outputStringWriter, 
-                new OpenApiJsonWriterSettings { InlineLocalReferences = true }));
-            var serialized = outputStringWriter.GetStringBuilder().ToString();
-
-            // Assert
-            serialized.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
-            Assert.Equal("User request body", _localRequestBodyReference.Description);
-            Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
-            Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);
-            Assert.Equal("User creation request body", _openApiDoc.Components.RequestBodies.First().Value.Description);
-        }
-
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
