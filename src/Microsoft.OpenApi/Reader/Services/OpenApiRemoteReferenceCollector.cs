@@ -15,7 +15,6 @@ namespace Microsoft.OpenApi.Reader.Services
     internal class OpenApiRemoteReferenceCollector : OpenApiVisitorBase
     {
         private readonly Dictionary<string, OpenApiReference> _references = new();
-        private Guid _guid = new();
 
         /// <summary>
         /// List of all internal and external references collected from OpenApiDocument
@@ -34,27 +33,18 @@ namespace Microsoft.OpenApi.Reader.Services
         /// <param name="referenceable"></param>
         public override void Visit(IOpenApiReferenceable referenceable)
         {
-            AddReferences(referenceable.Reference);
+            AddExternalReferences(referenceable.Reference);
         }
 
         /// <summary>
         /// Collect internal and external references
         /// </summary>
-        private void AddReferences(OpenApiReference reference)
+        private void AddExternalReferences(OpenApiReference reference)
         {
-            // External refs
             if (reference is {IsExternal: true} &&
                 !_references.ContainsKey(reference.ExternalResource))
             {
                 _references.Add(reference.ExternalResource, reference);
-            }
-
-            // Local refs
-            if (reference is { IsExternal: false } &&
-                !_references.ContainsKey(reference.ReferenceV3))
-            {
-                reference.ExternalResource = _guid.ToString();
-                _references.Add(reference.ReferenceV3, reference);
             }
         }
     }

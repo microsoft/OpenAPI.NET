@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.Services;
 using VerifyXunit;
 using Xunit;
 
@@ -127,7 +128,8 @@ components:
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
             _openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).OpenApiDocument;
             _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
-            _openApiDoc.Workspace.AddDocument("https://myserver.com/beta", _openApiDoc_2);
+            _openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", _openApiDoc_2.BaseUri);
+            _openApiDoc.Workspace.RegisterComponents(_openApiDoc_2);
 
             _localLinkReference = new("GetUserByUserId", _openApiDoc_2)
             {

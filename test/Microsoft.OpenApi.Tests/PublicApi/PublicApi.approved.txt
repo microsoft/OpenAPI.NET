@@ -457,6 +457,7 @@ namespace Microsoft.OpenApi.Models
         public const string AuthorizationCode = "authorizationCode";
         public const string AuthorizationUrl = "authorizationUrl";
         public const string BasePath = "basePath";
+        public const string BaseRegistryUri = "http://openapi.net/";
         public const string Basic = "basic";
         public const string Bearer = "bearer";
         public const string BearerFormat = "bearerFormat";
@@ -1396,18 +1397,13 @@ namespace Microsoft.OpenApi.Services
         public OpenApiWorkspace() { }
         public OpenApiWorkspace(Microsoft.OpenApi.Services.OpenApiWorkspace workspace) { }
         public OpenApiWorkspace(System.Uri baseUrl) { }
-        public System.Collections.Generic.IEnumerable<System.IO.Stream> Artifacts { get; }
         public System.Uri BaseUrl { get; }
-        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiDocument> Documents { get; }
-        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Interfaces.IOpenApiElement> Fragments { get; }
-        public void AddArtifact(string location, System.IO.Stream artifact) { }
-        public void AddDocument(string location, Microsoft.OpenApi.Models.OpenApiDocument document) { }
-        public void AddFragment(string location, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable fragment) { }
-        public void AddSchemaFragment(string location, Json.Schema.JsonSchema fragment) { }
+        public void AddDocumentId(string key, System.Uri value) { }
+        public int ComponentsCount() { }
         public bool Contains(string location) { }
-        public System.IO.Stream GetArtifact(string location) { }
-        public T ResolveReference<T>(Microsoft.OpenApi.Models.OpenApiReference reference) { }
-        public T ResolveReference<T>(string referenceId, Microsoft.OpenApi.Models.ReferenceType? referenceType, Microsoft.OpenApi.Models.OpenApiComponents components) { }
+        public System.Uri GetDocumentId(string key) { }
+        public bool RegisterComponent<T>(string location, T component) { }
+        public T ResolveReference<T>(string location) { }
     }
     public class OperationSearch : Microsoft.OpenApi.Services.OpenApiVisitorBase
     {

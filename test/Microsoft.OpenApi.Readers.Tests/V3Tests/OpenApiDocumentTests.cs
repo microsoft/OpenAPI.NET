@@ -94,7 +94,7 @@ paths: {}",
                         Version = "0.9.1"
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace));
+                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
@@ -145,7 +145,7 @@ paths: {}",
                         }
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace));
+                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
         [Fact]
         public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
@@ -161,7 +161,7 @@ paths: {}",
                         Version = "0.9"
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace));
+                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic
@@ -189,7 +189,7 @@ paths: {}",
                         Version = "0.9.1"
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace));
+                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
@@ -510,7 +510,7 @@ paths: {}",
                 Components = components
             };
 
-            result.OpenApiDocument.Should().BeEquivalentTo(expectedDoc, options => options.Excluding(x => x.Workspace));
+            result.OpenApiDocument.Should().BeEquivalentTo(expectedDoc, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
@@ -944,7 +944,7 @@ paths: {}",
             };
 
             actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(m => m.Name == "HostDocument")
-            .Excluding(x => x.Workspace));
+            .Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });

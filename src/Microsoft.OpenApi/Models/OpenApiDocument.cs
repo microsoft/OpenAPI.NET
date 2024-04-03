@@ -5,12 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Json.Schema;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDocument() 
         {
             Workspace = new OpenApiWorkspace();
-            Workspace.AddDocument("/", this);
+            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid().ToString());            
         }
                 
         /// <summary>
@@ -488,21 +488,24 @@ namespace Microsoft.OpenApi.Models
         /// <param name="referenceUri"></param>
         /// <returns>A JsonSchema ref.</returns>
         public JsonSchema ResolveJsonSchemaReference(Uri referenceUri)
-        {
-            if (referenceUri == null) return null;
-
-            OpenApiReference reference = new OpenApiReference() 
+        {            
+            string uriLocation;
+            string id = referenceUri.OriginalString.Split('/')?.Last();
+            string relativePath = "/components/" + ReferenceType.Schema.GetDisplayName() + "/" + id;
+            if (referenceUri.OriginalString.StartsWith("#"))
             {
-                ExternalResource = referenceUri.OriginalString, 
-                Id = referenceUri.OriginalString.Split('/').Last(),
-                Type = ReferenceType.Schema
-            };
+                // Local reference
+                uriLocation = BaseUri + relativePath;
+            }
+            else
+            {
+                // External reference
+                var externalUri = referenceUri.OriginalString.Split('#').First();
+                var externalDocId = Workspace.GetDocumentId(externalUri);
+                uriLocation = externalDocId + relativePath;
+            }
 
-            JsonSchema resolvedSchema = reference.ExternalResource.StartsWith("#")
-                ? (JsonSchema)Workspace.ResolveReference<IBaseDocument>(reference.Id, reference.Type, Components) // local ref
-                : Workspace.ResolveReference<JsonSchema>(reference); // external ref
-
-            return resolvedSchema;
+            return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(uriLocation);
         }
 
         /// <summary>
@@ -549,16 +552,6 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            // Todo: Verify if we need to check to see if this external reference is actually targeted at this document.
-            if (useExternal)
-            {
-                if (Workspace == null)
-                {
-                    throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
-                }
-                return Workspace.ResolveReference<IOpenApiReferenceable>(reference);
-            }
-
             if (!reference.Type.HasValue)
             {
                 throw new ArgumentException(Properties.SRResource.LocalReferenceRequiresType);
@@ -579,9 +572,16 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            return Workspace.ResolveReference<IOpenApiReferenceable>(reference.Id, reference.Type, Components);
-        }
+            string uriLocation;
+            string relativePath = "/components/" + reference.Type.GetDisplayName() + "/" + reference.Id;
 
+            uriLocation = useExternal
+                ? Workspace.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
+                : BaseUri + relativePath;
+
+            return Workspace.ResolveReference<IOpenApiReferenceable>(uriLocation);
+        }
+                
         /// <summary>
         /// Parses a local file path or Url into an Open API document.
         /// </summary>

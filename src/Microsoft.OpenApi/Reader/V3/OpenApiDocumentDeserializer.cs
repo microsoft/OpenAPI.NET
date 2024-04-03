@@ -4,6 +4,7 @@
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Reader.V3
 {
@@ -46,17 +47,15 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
         {
-            var openApidoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument();
             var openApiNode = rootNode.GetMap();
 
-            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
+            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields);
 
-            //if (openApidoc.Components != null)
-            //{
-            //    openApidoc.Workspace.RegisterComponents(openApidoc);
-            //}
+            // Register components
+            openApiDoc.Workspace.RegisterComponents(openApiDoc);
 
-            return openApidoc;
+            return openApiDoc;
         }
     }
 }

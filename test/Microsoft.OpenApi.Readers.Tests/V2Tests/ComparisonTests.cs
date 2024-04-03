@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var result2 = OpenApiDocument.Load(Path.Combine(SampleFolderPath, $"{fileName}.v3.yaml"));
 
             result2.OpenApiDocument.Should().BeEquivalentTo(result1.OpenApiDocument,
-                options => options.Excluding(x => x.Workspace));
+                options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
             result1.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(result2.OpenApiDiagnostic.Errors);
         }

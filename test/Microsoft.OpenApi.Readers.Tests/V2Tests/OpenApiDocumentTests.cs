@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             ["Error"] = errorSchema
                         }
                 }
-            }, options => options.Excluding(x => x.Workspace));
+            }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
         }
 

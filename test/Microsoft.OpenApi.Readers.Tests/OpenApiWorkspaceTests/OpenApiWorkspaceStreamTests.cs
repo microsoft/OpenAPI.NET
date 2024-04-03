@@ -66,7 +66,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);            
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
-            Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));
 
             var referencedSchema = result.OpenApiDocument
                                     .Paths["/todos"]

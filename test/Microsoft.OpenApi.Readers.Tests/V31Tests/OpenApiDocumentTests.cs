@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             // Assert
             var schema = actual.OpenApiDocument.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace));
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
 
         [Fact]
@@ -325,7 +325,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace));
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace)
+            .Excluding(y => y.BaseUri));
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
         }

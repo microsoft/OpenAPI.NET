@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -136,7 +137,8 @@ components:
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
             OpenApiDocument openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).OpenApiDocument;
             OpenApiDocument openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
-            openApiDoc.Workspace.AddDocument("https://myserver.com/beta", openApiDoc_2);
+            openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", openApiDoc_2.BaseUri);
+            openApiDoc.Workspace.RegisterComponents(openApiDoc_2);
             _externalCallbackReference = new("callbackEvent", openApiDoc, "https://myserver.com/beta");
             _localCallbackReference = new("callbackEvent", openApiDoc_2);
         }

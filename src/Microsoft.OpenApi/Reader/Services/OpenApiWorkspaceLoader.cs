@@ -26,7 +26,8 @@ namespace Microsoft.OpenApi.Reader.Services
                                                          OpenApiDiagnostic diagnostic = null,
                                                          CancellationToken cancellationToken = default)
         {
-            _workspace.AddDocument(reference.ExternalResource, document);
+            _workspace.AddDocumentId(reference.ExternalResource, document.BaseUri);
+            _workspace.RegisterComponents(document);
             document.Workspace = _workspace;
 
             // Collect remote references by walking document
@@ -43,28 +44,18 @@ namespace Microsoft.OpenApi.Reader.Services
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
-                    if (!Guid.TryParse(item.ExternalResource, out _))
+                    var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
+                    var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken);
+                    // Merge diagnostics
+                    if (result.OpenApiDiagnostic != null)
                     {
-                        var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
-                        var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken);
-                        // Merge diagnostics
-                        if (result.OpenApiDiagnostic != null)
-                        {
-                            diagnostic.AppendDiagnostic(result.OpenApiDiagnostic, item.ExternalResource);
-                        }
-                        if (result.OpenApiDocument != null)
-                        {
-                            var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, format, diagnostic, cancellationToken);
-                            diagnostic = loadDiagnostic;
-                        }
+                        diagnostic.AppendDiagnostic(result.OpenApiDiagnostic, item.ExternalResource);
                     }
-                    else // local ref in an external file, add this to the documents registry
+                    if (result.OpenApiDocument != null)
                     {
-                        if (!_workspace.Contains(item.ExternalResource))
-                        {
-                            _workspace.AddDocument(reference.ExternalResource, document);
-                        }
-                    }                    
+                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, format, diagnostic, cancellationToken);
+                        diagnostic = loadDiagnostic;
+                    }
                 }
             }
 
