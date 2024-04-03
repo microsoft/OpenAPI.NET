@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiResponse>
+    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. A short description of the response.
@@ -95,30 +95,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);;
 
             var target = this;
-
-            if (Reference != null)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    callback(writer, Reference);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiResponse</returns>
-        public OpenApiResponse GetEffective(OpenApiDocument doc)
-        {
-            return Reference != null ? doc.ResolveReferenceTo<OpenApiResponse>(Reference) : this;
         }
 
         /// <summary>
@@ -165,24 +142,11 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v2.0.
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
-
-            if (Reference != null)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    Reference.SerializeAsV2(writer);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             target.SerializeAsV2WithoutReference(writer);
         }
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -256,18 +257,13 @@ namespace Microsoft.OpenApi.Models
                 }
                 else if (RequestBody.Reference != null)
                 {
+                    var hostDocument = RequestBody.Reference.HostDocument;
                     parameters.Add(
-                        new()
-                        {
-                            UnresolvedReference = true,
-                            Reference = RequestBody.Reference
-                        });
+                        new OpenApiParameterReference(RequestBody.Reference.Id, hostDocument));
 
-                    if (RequestBody.Reference.HostDocument != null)
-                    {
-                        var effectiveRequestBody = RequestBody.GetEffective(RequestBody.Reference.HostDocument);
-                        if (effectiveRequestBody != null)
-                            consumes = effectiveRequestBody.Content.Keys.Distinct().ToList();
+                    if (hostDocument != null)
+                    {                        
+                        consumes = RequestBody.Content.Keys.Distinct().ToList();
                     }
                 }
 
@@ -291,7 +287,7 @@ namespace Microsoft.OpenApi.Models
                     .Concat(
                         Responses
                         .Where(static r => r.Value.Reference is {HostDocument: not null})
-                        .SelectMany(static r => r.Value.GetEffective(r.Value.Reference.HostDocument)?.Content?.Keys))
+                        .SelectMany(static r => r.Value.Content?.Keys))
                     .Distinct()
                     .ToList();
 

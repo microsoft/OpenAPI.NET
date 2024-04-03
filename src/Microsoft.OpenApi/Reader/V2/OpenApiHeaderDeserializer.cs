@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return _headerJsonSchemaBuilder;
         }
 
-        public static OpenApiHeader LoadHeader(ParseNode node)
+        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("header");
             var header = new OpenApiHeader();

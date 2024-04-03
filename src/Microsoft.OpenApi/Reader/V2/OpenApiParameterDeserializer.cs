@@ -9,6 +9,7 @@ using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V2
@@ -206,12 +207,12 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node)
+        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument = null)
         {
-            return LoadParameter(node, false);
+            return LoadParameter(node, false, hostDocument);
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody)
+        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
         {
             // Reset the local variables every time this method is called.
             node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
@@ -222,7 +223,8 @@ namespace Microsoft.OpenApi.Reader.V2
 
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiParameterReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var parameter = new OpenApiParameter();

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -26,15 +27,11 @@ namespace Microsoft.OpenApi.Tests.Models
             In = ParameterLocation.Path
         };
 
+        public static OpenApiParameterReference OpenApiParameterReference = new(ReferencedParameter, "example1");
         public static OpenApiParameter ReferencedParameter = new()
         {
             Name = "name1",
-            In = ParameterLocation.Path,
-            Reference = new()
-            {
-                Type = ReferenceType.Parameter,
-                Id = "example1"
-            }
+            In = ParameterLocation.Path
         };
 
         public static OpenApiParameter AdvancedPathParameterWithSchema = new()
@@ -324,7 +321,7 @@ schema:
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedParameter.SerializeAsV3(writer);
+            OpenApiParameterReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -358,7 +355,7 @@ schema:
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedParameter.SerializeAsV2(writer);
+            OpenApiParameterReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

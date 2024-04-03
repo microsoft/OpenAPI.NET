@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -41,6 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static readonly OpenApiLinkReference LinkReference = new(ReferencedLink, "example1");
         public static readonly OpenApiLink ReferencedLink = new()
         {
             Reference = new()
@@ -97,7 +99,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedLink.SerializeAsV3(writer);
+            LinkReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert

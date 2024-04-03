@@ -1,7 +1,8 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V31
@@ -12,7 +13,7 @@ namespace Microsoft.OpenApi.Reader.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("security");
 
@@ -20,9 +21,9 @@ namespace Microsoft.OpenApi.Reader.V31
 
             foreach (var property in mapNode)
             {
-                var scheme = LoadSecuritySchemeByReference(property.Name);
+                var scheme = LoadSecuritySchemeByReference(property.Name, hostDocument);
 
-                var scopes = property.Value.CreateSimpleList(value => value.GetScalarValue());
+                var scopes = property.Value.CreateSimpleList((value, p) => value.GetScalarValue());
 
                 if (scheme != null)
                 {
@@ -38,18 +39,9 @@ namespace Microsoft.OpenApi.Reader.V31
             return securityRequirement;
         }
 
-        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(string schemeName)
+        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(string schemeName, OpenApiDocument hostDocument)
         {
-            var securitySchemeObject = new OpenApiSecurityScheme()
-            {
-                UnresolvedReference = true,
-                Reference = new OpenApiReference()
-                {
-                    Id = schemeName,
-                    Type = ReferenceType.SecurityScheme
-                }
-            };
-
+            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, hostDocument);
             return securitySchemeObject;
         }
     }

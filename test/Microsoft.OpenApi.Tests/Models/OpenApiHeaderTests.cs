@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Globalization;
@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -21,13 +22,10 @@ namespace Microsoft.OpenApi.Tests.Models
             Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
         };
 
+        public static OpenApiHeaderReference OpenApiHeaderReference = new(ReferencedHeader, "example1");
+
         public static OpenApiHeader ReferencedHeader = new()
         {
-            Reference = new()
-            {
-                Type = ReferenceType.Header,
-                Id = "example1",
-            },
             Description = "sampleHeader",
             Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
         };
@@ -59,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedHeader.SerializeAsV3(writer);
+            OpenApiHeaderReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -78,7 +76,6 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedHeader.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -111,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedHeader.SerializeAsV2(writer);
+            OpenApiHeaderReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

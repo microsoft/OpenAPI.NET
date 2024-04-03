@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiExample>
+    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Short description for the example.
@@ -101,37 +101,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);
 
             var target = this;
-
-            if (Reference != null)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    callback(writer, Reference);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiExample object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiExample</returns>
-        public OpenApiExample GetEffective(OpenApiDocument doc)
-        {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiExample>(this.Reference);
-            }
-            else
-            {
-                return this;
-            }
         }
 
         /// <summary>

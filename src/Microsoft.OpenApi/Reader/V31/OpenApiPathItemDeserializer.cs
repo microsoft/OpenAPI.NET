@@ -1,5 +1,7 @@
-﻿using Microsoft.OpenApi.Extensions;
+using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V31
@@ -49,7 +51,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiPathItem LoadPathItem(ParseNode node)
+        public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("PathItem");
 
@@ -57,14 +59,8 @@ namespace Microsoft.OpenApi.Reader.V31
 
             if (pointer != null)
             {
-                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-
-                return new OpenApiPathItem()
-                {
-                    UnresolvedReference = true,
-                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.PathItem, summary, description)
-                };
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiPathItemReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var pathItem = new OpenApiPathItem();
