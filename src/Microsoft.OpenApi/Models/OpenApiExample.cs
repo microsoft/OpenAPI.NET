@@ -152,6 +152,16 @@ namespace Microsoft.OpenApi.Models
         
         internal void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
+            Serialize(writer, OpenApiSpecVersion.OpenApi3_0);
+        }
+
+        /// <summary>
+        /// Writes out existing examples in a mediatype object
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="version"></param>
+        public void Serialize(IOpenApiWriter writer, OpenApiSpecVersion version)
+        {
             writer.WriteStartObject();
 
             // summary

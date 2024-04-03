@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
     public class AlwaysFailRule<T> : ValidationRule<T>
     {
-        public AlwaysFailRule() : base((c, _) => c.CreateError("x", "y"))
+        public AlwaysFailRule() : base("AlwaysFailRule", (c, _) => c.CreateError("x", "y"))
         {
         }
     }

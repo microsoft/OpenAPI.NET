@@ -198,7 +198,8 @@ namespace Microsoft.OpenApi.Reader.V2
                     k => k,
                     _ => new OpenApiMediaType
                     {
-                        Schema = bodyParameter.Schema
+                        Schema = bodyParameter.Schema,
+                        Examples = bodyParameter.Examples
                     }),
                 Extensions = bodyParameter.Extensions
             };

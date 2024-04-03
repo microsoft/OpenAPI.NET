@@ -13,7 +13,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiRequestBodyTests
     {
         public static OpenApiRequestBody AdvancedRequestBody = new()

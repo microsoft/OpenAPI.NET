@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -137,6 +137,44 @@ namespace Microsoft.OpenApi.Tests.Services
                    {
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
                    });
+        }
+
+        [Fact]
+        public void RemoveRuleByName_Invalid()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<IOpenApiAny>(null, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<IOpenApiAny>(string.Empty, (vc, oaa) => { }));
+        }
+
+        [Fact]
+        public void RemoveRuleByName()
+        {
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            int expected = ruleset.Rules.Count - 1;
+            ruleset.Remove("KeyMustBeRegularExpression");
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+            
+            ruleset.Remove("KeyMustBeRegularExpression");
+            ruleset.Remove("UnknownName");
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+        }
+
+        [Fact]
+        public void RemoveRuleByType()
+        {
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            int expected = ruleset.Rules.Count - 1;
+            
+            ruleset.Remove(typeof(OpenApiComponents));
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+
+            ruleset.Remove(typeof(OpenApiComponents));
+            ruleset.Remove(typeof(int));
+
+            Assert.Equal(expected, ruleset.Rules.Count);
         }
     }
 

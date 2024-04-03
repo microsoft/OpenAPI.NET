@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiTag> TagRequiredFields =>
-            new(
+            new(nameof(TagRequiredFields),
                 (context, tag) =>
                 {
                     context.Enter("name");

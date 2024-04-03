@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the data matches with the given data type.
         /// </summary>
         public static ValidationRule<OpenApiMediaType> MediaTypeMismatchedDataType =>
-            new(
+            new(nameof(MediaTypeMismatchedDataType),
                 (context, mediaType) =>
                 {
                     // example

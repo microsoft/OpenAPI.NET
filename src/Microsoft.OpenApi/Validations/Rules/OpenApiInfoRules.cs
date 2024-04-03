@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiInfo> InfoRequiredFields =>
-            new(
+            new(nameof(InfoRequiredFields),
                 (context, item) =>
                 {
                     // title

@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// The Info field is required.
         /// </summary>
         public static ValidationRule<OpenApiDocument> OpenApiDocumentFieldIsMissing =>
-            new(
+            new(nameof(OpenApiDocumentFieldIsMissing),
                 (context, item) =>
                 {
                     // info

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -118,14 +118,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiResponse</returns>
         public OpenApiResponse GetEffective(OpenApiDocument doc)
         {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiResponse>(Reference);
-            }
-            else
-            {
-                return this;
-            }
+            return Reference != null ? doc.ResolveReferenceTo<OpenApiResponse>(Reference) : this;
         }
 
         /// <summary>
@@ -226,6 +219,22 @@ namespace Microsoft.OpenApi.Models
                                 writer.WritePropertyName(mediaTypePair.Key);
                                 writer.WriteAny(mediaTypePair.Value.Example);
                             }
+                        }
+
+                        writer.WriteEndObject();
+                    }
+
+                    if (Content.Values.Any(m => m.Examples != null && m.Examples.Any()))
+                    {
+                        writer.WritePropertyName(OpenApiConstants.ExamplesExtension);
+                        writer.WriteStartObject();
+
+                        foreach (var example in Content
+                            .Where(mediaTypePair => mediaTypePair.Value.Examples != null && mediaTypePair.Value.Examples.Any())
+                            .SelectMany(mediaTypePair => mediaTypePair.Value.Examples))
+                        {
+                            writer.WritePropertyName(example.Key);
+                            example.Value.Serialize(writer, OpenApiSpecVersion.OpenApi2_0);
                         }
 
                         writer.WriteEndObject();

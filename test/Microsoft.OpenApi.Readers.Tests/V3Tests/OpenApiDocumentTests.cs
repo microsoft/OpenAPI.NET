@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -1082,5 +1082,21 @@ paths: {}",
             actualSchema.Should().BeEquivalentTo(expectedSchema);
         }
 
+        [Fact]
+        public void ValidateExampleShouldNotHaveDataTypeMismatch()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"));
+
+            // Act
+            var doc = new OpenApiStreamReader(new()
+            {
+                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
+            }).Read(stream, out var diagnostic);
+
+            // Assert
+            var warnings = diagnostic.Warnings;
+            Assert.False(warnings.Any());
+        }
     }
 }

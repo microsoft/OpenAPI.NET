@@ -484,6 +484,7 @@ namespace Microsoft.OpenApi.Models
         public const string Enum = "enum";
         public const string Example = "example";
         public const string Examples = "examples";
+        public const string ExamplesExtension = "x-examples";
         public const string ExclusiveMaximum = "exclusiveMaximum";
         public const string ExclusiveMinimum = "exclusiveMinimum";
         public const string Explode = "explode";
@@ -672,6 +673,7 @@ namespace Microsoft.OpenApi.Models
         public virtual bool UnresolvedReference { get; set; }
         public virtual Microsoft.OpenApi.Any.OpenApiAny Value { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExample GetEffective(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
+        public void Serialize(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV2WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1495,7 +1497,7 @@ namespace Microsoft.OpenApi.Validations
     }
     public abstract class ValidationRule
     {
-        protected ValidationRule() { }
+        public string Name { get; }
     }
     public sealed class ValidationRuleSet
     {
@@ -1523,7 +1525,9 @@ namespace Microsoft.OpenApi.Validations
     }
     public class ValidationRule<T> : Microsoft.OpenApi.Validations.ValidationRule
     {
+        [System.Obsolete("Please use the other constructor and specify a name")]
         public ValidationRule(System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
+        public ValidationRule(string name, System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
     }
 }
 namespace Microsoft.OpenApi.Validations.Rules

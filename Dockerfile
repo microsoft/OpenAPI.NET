@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
 COPY ./src ./hidi/src
@@ -7,10 +7,10 @@ COPY ./README.md ./hidi/README.md
 WORKDIR /app/hidi
 RUN dotnet publish ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -c Release
 
-FROM mcr.microsoft.com/dotnet/runtime:7.0 AS runtime
+FROM mcr.microsoft.com/dotnet/runtime:8.0-jammy-chiseled AS runtime
 WORKDIR /app
 
-COPY --from=build-env /app/hidi/src/Microsoft.OpenApi.Hidi/bin/Release/net7.0 ./
+COPY --from=build-env /app/hidi/src/Microsoft.OpenApi.Hidi/bin/Release/net8.0 ./
 
 VOLUME /app/output
 VOLUME /app/openapi.yml
