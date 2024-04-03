@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -10,24 +11,24 @@ namespace Microsoft.OpenApi.Validations.Tests
 {
     public class ValidationRuleSetTests
     {
-        private readonly ValidationRule  _contactValidationRule = new ValidationRule<OpenApiContact>(
+        private readonly ValidationRule _contactValidationRule = new ValidationRule<OpenApiContact>(nameof(_contactValidationRule),
                 (context, item) => { });
 
-        private readonly ValidationRule _headerValidationRule = new ValidationRule<OpenApiHeader>(
+        private readonly ValidationRule _headerValidationRule = new ValidationRule<OpenApiHeader>(nameof(_headerValidationRule),
             (context, item) => { });
 
-        private readonly ValidationRule _parameterValidationRule = new ValidationRule<OpenApiParameter>(
+        private readonly ValidationRule _parameterValidationRule = new ValidationRule<OpenApiParameter>(nameof(_parameterValidationRule),
             (context, item) => { });
 
-        private readonly IDictionary<string, IList<ValidationRule>> _rulesDictionary; 
+        private readonly IDictionary<Type, IList<ValidationRule>> _rulesDictionary;
 
         public ValidationRuleSetTests()
         {
-            _rulesDictionary = new Dictionary<string, IList<ValidationRule>>()
+            _rulesDictionary = new Dictionary<Type, IList<ValidationRule>>()
             {
-                {"contact", new List<ValidationRule> { _contactValidationRule } },
-                {"header", new List<ValidationRule> { _headerValidationRule } },
-                {"parameter", new List<ValidationRule> { _parameterValidationRule } }
+                {typeof(OpenApiContact), new List<ValidationRule> { _contactValidationRule } },
+                {typeof(OpenApiHeader), new List<ValidationRule> { _headerValidationRule } },
+                {typeof(OpenApiParameter), new List<ValidationRule> { _parameterValidationRule } }
             };
         }
 
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var ruleSet_4 = new ValidationRuleSet();
 
             // Assert
-            Assert.NotNull(ruleSet_1?.Rules); 
+            Assert.NotNull(ruleSet_1?.Rules);
             Assert.NotNull(ruleSet_2?.Rules);
             Assert.NotNull(ruleSet_3?.Rules);
             Assert.NotNull(ruleSet_4);
@@ -62,7 +63,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             var ruleSet = new ValidationRuleSet(_rulesDictionary);
-            var responseValidationRule = new ValidationRule<OpenApiResponse>((context, item) => { });
+            var responseValidationRule = new ValidationRule<OpenApiResponse>("ValidateResponses", (context, item) => { });
 
             // Act and Assert
             Assert.True(ruleSet.Remove(_contactValidationRule));
@@ -77,9 +78,9 @@ namespace Microsoft.OpenApi.Validations.Tests
             var ruleSet = new ValidationRuleSet(_rulesDictionary);
 
             // Act
-            ruleSet.Remove("contact", _contactValidationRule);
-            ruleSet.Remove("parameter", _headerValidationRule); // validation rule not in parameter key; shouldn't remove
-            ruleSet.Remove("foo", _parameterValidationRule); // key does not exist; shouldn't remove
+            ruleSet.Remove(typeof(OpenApiContact), _contactValidationRule);
+            ruleSet.Remove("parameter"); // validation rule not in parameter key; shouldn't remove
+            ruleSet.Remove("foo"); // key does not exist; shouldn't remove
 
             var rules = ruleSet.Rules;
 
@@ -94,16 +95,16 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             var ruleSet = new ValidationRuleSet(_rulesDictionary);
-            var responseValidationRule = new ValidationRule<OpenApiResponse>((context, item) => { });
-            ruleSet.Add("response", new List<ValidationRule> { responseValidationRule });
-            Assert.True(ruleSet.ContainsKey("response"));
+            var responseValidationRule = new ValidationRule<OpenApiResponse>("ValidateResponses", (context, item) => { });
+            ruleSet.Add(typeof(OpenApiResponse), new List<ValidationRule> { responseValidationRule });
+            Assert.True(ruleSet.ContainsKey(typeof(OpenApiResponse)));
             Assert.True(ruleSet.Rules.Contains(responseValidationRule)); // guard
 
             // Act
-            ruleSet.Remove("response");
+            ruleSet.Remove(typeof(OpenApiResponse));
 
             // Assert
-            Assert.False(ruleSet.ContainsKey("response"));
+            Assert.False(ruleSet.ContainsKey(typeof(OpenApiResponse)));
         }
 
         [Fact]
@@ -111,24 +112,24 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             var ruleSet = new ValidationRuleSet(_rulesDictionary);
-            var responseValidationRule = new ValidationRule<OpenApiResponse>((context, item) => { });
-            var tagValidationRule = new ValidationRule<OpenApiTag>((context, item) => { });
-            var pathsValidationRule = new ValidationRule<OpenApiPaths>((context, item) => { });
+            var responseValidationRule = new ValidationRule<OpenApiResponse>("ValidateResponses", (context, item) => { });
+            var tagValidationRule = new ValidationRule<OpenApiTag>("ValidateTags", (context, item) => { });
+            var pathsValidationRule = new ValidationRule<OpenApiPaths>("ValidatePaths", (context, item) => { });
 
             // Act
-            ruleSet.Add("response", new List<ValidationRule> { responseValidationRule });
-            ruleSet.Add("tag", new List<ValidationRule> { tagValidationRule });
-            var rulesDictionary = new Dictionary<string, IList<ValidationRule>>()
+            ruleSet.Add(typeof(OpenApiResponse), new List<ValidationRule> { responseValidationRule });
+            ruleSet.Add(typeof(OpenApiTag), new List<ValidationRule> { tagValidationRule });
+            var rulesDictionary = new Dictionary<Type, IList<ValidationRule>>()
             {
-                {"paths", new List<ValidationRule> { pathsValidationRule } }
+                {typeof(OpenApiPaths), new List<ValidationRule> { pathsValidationRule } }
             };
 
             ValidationRuleSet.AddValidationRules(ruleSet, rulesDictionary);
-            
+
             // Assert
-            Assert.True(ruleSet.ContainsKey("response"));
-            Assert.True(ruleSet.ContainsKey("tag"));
-            Assert.True(ruleSet.ContainsKey("paths"));
+            Assert.True(ruleSet.ContainsKey(typeof(OpenApiResponse)));
+            Assert.True(ruleSet.ContainsKey(typeof(OpenApiTag)));
+            Assert.True(ruleSet.ContainsKey(typeof(OpenApiPaths)));
             Assert.True(ruleSet.Rules.Contains(responseValidationRule));
             Assert.True(ruleSet.Rules.Contains(tagValidationRule));
             Assert.True(ruleSet.Rules.Contains(pathsValidationRule));
@@ -139,16 +140,16 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             var ruleSet = new ValidationRuleSet(_rulesDictionary);
-            var responseValidationRule = new ValidationRule<OpenApiResponse>((context, item) => { });
-            ruleSet.Add("response", new List<ValidationRule> { responseValidationRule });
+            var responseValidationRule = new ValidationRule<OpenApiResponse>("ValidateResponses", (context, item) => { });
+            ruleSet.Add(typeof(OpenApiResponse), new List<ValidationRule> { responseValidationRule });
 
             // Act
-            var pathsValidationRule = new ValidationRule<OpenApiPaths>((context, item) => { });
-            ruleSet.Update("response", pathsValidationRule, responseValidationRule);
+            var pathsValidationRule = new ValidationRule<OpenApiPaths>("ValidatePaths", (context, item) => { });
+            ruleSet.Update(typeof(OpenApiResponse), pathsValidationRule, responseValidationRule);
 
             // Assert
-            Assert.True(ruleSet.Contains("response", pathsValidationRule));
-            Assert.False(ruleSet.Contains("response", responseValidationRule));
+            Assert.True(ruleSet.Contains(typeof(OpenApiResponse), pathsValidationRule));
+            Assert.False(ruleSet.Contains(typeof(OpenApiResponse), responseValidationRule));
         }
 
         [Fact]
@@ -158,8 +159,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             var ruleSet = new ValidationRuleSet(_rulesDictionary);
 
             // Act
-            ruleSet.TryGetValue("contact", out var validationRules); 
-            
+            ruleSet.TryGetValue(typeof(OpenApiContact), out var validationRules);
+
             // Assert
             Assert.True(validationRules.Any());
             Assert.True(validationRules.Contains(_contactValidationRule));
@@ -170,12 +171,12 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             var ruleSet = new ValidationRuleSet();
-            var tagValidationRule = new ValidationRule<OpenApiTag>((context, item) => { });
-            var pathsValidationRule = new ValidationRule<OpenApiPaths>((context, item) => { });
-            var rulesDictionary = new Dictionary<string, IList<ValidationRule>>()
+            var tagValidationRule = new ValidationRule<OpenApiTag>("ValidateTags", (context, item) => { });
+            var pathsValidationRule = new ValidationRule<OpenApiPaths>("ValidatePaths", (context, item) => { });
+            var rulesDictionary = new Dictionary<Type, IList<ValidationRule>>()
             {
-                {"paths", new List<ValidationRule> { pathsValidationRule } },
-                {"tag", new List<ValidationRule> { tagValidationRule } }
+                {typeof(OpenApiPaths), new List<ValidationRule> { pathsValidationRule } },
+                {typeof(OpenApiTag), new List<ValidationRule> { tagValidationRule } }
             };
 
             ValidationRuleSet.AddValidationRules(ruleSet, rulesDictionary);

@@ -45,8 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             memoryStream.Position = 0;
             var stream = memoryStream;
 
-            var reader = new OpenApiStreamReader(new() { LeaveStreamOpen = true });
-            _ = await reader.ReadAsync(stream);
+            var result = OpenApiDocument.Load(stream, "yaml", new OpenApiReaderSettings { LeaveStreamOpen = true });
             stream.Seek(0, SeekOrigin.Begin); // does not throw an object disposed exception
             Assert.True(stream.CanRead);
         }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -9,10 +9,13 @@ using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
+using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -305,36 +308,30 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Act
             var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var expected = @"{
+  ""produces"": [
+    ""application/octet-stream""
+  ],
+  ""responses"": {
+    ""200"": {
+      ""description"": ""OK"",
+      ""schema"": {
+        ""type"": ""string"",
+        ""description"": ""The content of the file."",
+        ""format"": ""binary"",
+        ""x-ms-summary"": ""File Content""
+      }
+    }
+  }
+}";
+
+            var stringBuilder = new StringBuilder();
+            var jsonWriter = new OpenApiJsonWriter(new StringWriter(stringBuilder));
+            operation.SerializeAsV2(jsonWriter);
 
             // Assert
-            operation.Should().BeEquivalentTo(
-                new OpenApiOperation
-                {
-                    Responses = new()
-                    {
-                        { "200", new()
-                        {
-                            Description = "OK",
-                            Content =
-                            {
-                                ["application/octet-stream"] = new()
-                                {
-                                    Schema = new()
-                                    {
-                                        Format = "binary",
-                                        Description = "The content of the file.",
-                                        Type = "string",
-                                        Extensions =
-                                        {
-                                            ["x-ms-summary"] = new OpenApiString("File Content")
-                                        }
-                                    }
-                                }
-                            }
-                        }}
-                    }
-                }
-            );
+            var actual = stringBuilder.ToString();
+            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());            
         }
 
         [Fact]
@@ -349,7 +346,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]

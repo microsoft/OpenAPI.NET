@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -1085,17 +1085,15 @@ paths: {}",
         [Fact]
         public void ValidateExampleShouldNotHaveDataTypeMismatch()
         {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"));
-
             // Act
-            var doc = new OpenApiStreamReader(new()
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
             {
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
-            }).Read(stream, out var diagnostic);
+
+            });
 
             // Assert
-            var warnings = diagnostic.Warnings;
+            var warnings = result.OpenApiDiagnostic.Warnings;
             Assert.False(warnings.Any());
         }
     }

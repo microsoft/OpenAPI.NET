@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the data matches with the given data type.
         /// </summary>
         public static ValidationRule<JsonSchema> SchemaMismatchedDataType =>
-            new ValidationRule<JsonSchema>(
+            new ValidationRule<JsonSchema>(nameof(SchemaMismatchedDataType),
                 (context, jsonSchema) =>
                 {
                     // default
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validates Schema Discriminator
         /// </summary>
         public static ValidationRule<JsonSchema> ValidateSchemaDiscriminator =>
-            new ValidationRule<JsonSchema>(
+            new ValidationRule<JsonSchema>(nameof(ValidateSchemaDiscriminator),
                 (context, jsonSchema) =>
                 {
                     // discriminator

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Reader.V2
                             example.Description = valueNode.Value.GetScalarValue();
                             break;
                         case "value":
-                            example.Value = OpenApiAnyConverter.GetSpecificOpenApiAny(valueNode.Value.CreateAny());
+                            example.Value = valueNode.Value.CreateAny();
                             break;
                         case "externalValue":
                             example.ExternalValue = valueNode.Value.GetScalarValue();
