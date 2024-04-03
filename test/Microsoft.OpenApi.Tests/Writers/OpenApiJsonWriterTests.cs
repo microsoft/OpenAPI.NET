@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -273,19 +274,12 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void OpenApiJsonWriterOutputsValidJsonValueWhenSchemaHasNanOrInfinityValues()
         {
             // Arrange
-            var schema = new OpenApiSchema
-            {
-                Enum = new List<IOpenApiAny> {
-                        new OpenApiDouble(double.NaN),
-                        new OpenApiDouble(double.PositiveInfinity),
-                        new OpenApiDouble(double.NegativeInfinity) 
-                }
-            };
+            var schema = new JsonSchemaBuilder().Enum("NaN", "Infinity", "-Infinity");
 
             // Act
             var schemaBuilder = new StringBuilder();
             var jsonWriter = new OpenApiJsonWriter(new StringWriter(schemaBuilder));
-            schema.SerializeAsV3(jsonWriter);
+            jsonWriter.WriteJsonSchema(schema, OpenApiSpecVersion.OpenApi3_0);
             var jsonString = schemaBuilder.ToString();
 
             // Assert
