@@ -667,6 +667,7 @@ namespace Microsoft.OpenApi.Models
         public virtual string Summary { get; set; }
         public virtual bool UnresolvedReference { get; set; }
         public virtual Microsoft.OpenApi.Any.OpenApiAny Value { get; set; }
+        public void Serialize(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV2WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
