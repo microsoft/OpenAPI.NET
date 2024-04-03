@@ -1,8 +1,10 @@
-﻿using Microsoft.OpenApi.Expressions;
+using Microsoft.OpenApi.Expressions;
 using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Models.References;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -22,13 +24,14 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        public static OpenApiCallback LoadCallback(ParseNode node)
+        public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("callback");
 
             if (mapNode.GetReferencePointer() is {} pointer)
             {
-                return mapNode.GetReferencedObject<OpenApiCallback>(ReferenceType.Callback, pointer);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var domainObject = new OpenApiCallback();

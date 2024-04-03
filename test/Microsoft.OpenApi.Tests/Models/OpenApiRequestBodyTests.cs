@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Globalization;
@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -29,13 +30,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static OpenApiRequestBodyReference OpenApiRequestBodyReference = new(ReferencedRequestBody, "example1");
         public static OpenApiRequestBody ReferencedRequestBody = new()
         {
-            Reference = new()
-            {
-                Type = ReferenceType.RequestBody,
-                Id = "example1",
-            },
             Description = "description",
             Required = true,
             Content =
@@ -74,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedRequestBody.SerializeAsV3(writer);
+            OpenApiRequestBodyReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert

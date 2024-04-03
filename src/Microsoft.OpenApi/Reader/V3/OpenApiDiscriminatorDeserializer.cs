@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields = new();
 
-        public static OpenApiDiscriminator LoadDiscriminator(ParseNode node)
+        public static OpenApiDiscriminator LoadDiscriminator(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("discriminator");
 

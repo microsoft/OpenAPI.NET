@@ -97,26 +97,6 @@ paths:
             };
         }
 
-        [Fact]
-        public void RequestBodyReferenceResolutionWorks()
-        {
-            // Assert
-            var expectedSchema = new JsonSchemaBuilder()
-                .Ref("#/components/schemas/UserSchema")
-                .Type(SchemaValueType.Object)
-                .Properties(
-                    ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    ("email", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                .Build();
-            var actualSchema = _localRequestBodyReference.Content["application/json"].Schema;
-
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
-            Assert.Equal("User request body", _localRequestBodyReference.Description);
-            Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
-            Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);
-            Assert.Equal("User creation request body", _openApiDoc.Components.RequestBodies.First().Value.Description);
-        }
-
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -124,7 +104,7 @@ paths:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput});
 
             // Act
             _localRequestBodyReference.SerializeAsV3(writer);

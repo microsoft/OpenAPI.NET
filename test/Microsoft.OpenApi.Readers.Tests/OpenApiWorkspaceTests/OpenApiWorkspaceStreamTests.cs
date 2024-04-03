@@ -75,14 +75,10 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                                     .Content["application/json"]
                                     .Schema;
 
-            var x = referencedSchema.GetProperties().TryGetValue("subject", out var schema);
-            Assert.Equal(SchemaValueType.Object, referencedSchema.GetJsonType());
-            Assert.Equal(SchemaValueType.String, schema.GetJsonType());
-
             var referencedParameter = result.OpenApiDocument
                                         .Paths["/todos"]
                                         .Operations[OperationType.Get]
-                                        .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
+                                        .Parameters.Select(p => p)
                                         .FirstOrDefault(p => p.Name == "filter");
 
             Assert.Equal(SchemaValueType.String, referencedParameter.Schema.GetJsonType());

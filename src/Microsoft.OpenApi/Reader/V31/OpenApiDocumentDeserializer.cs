@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {"jsonSchemaDialect", (o, n) => o.JsonSchemaDialect = n.GetScalarValue() },
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
-            {"webhooks", (o, n) => o.Webhooks = LoadPaths(n)},
+            {"webhooks", (o, n) => o.Webhooks = n.CreateMap(LoadPathItem)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
@@ -45,12 +45,12 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
         {
-            var openApidoc = new OpenApiDocument();
             var openApiNode = rootNode.GetMap();
+            var openApiDoc = new OpenApiDocument();
 
-            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
+            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields);
 
-            return openApidoc;
+            return openApiDoc;
         }
     }
 }

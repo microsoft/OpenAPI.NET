@@ -279,7 +279,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiHeader"/>
         /// </summary>
-        public virtual void Visit(OpenApiHeader tag)
+        public virtual void Visit(OpenApiHeader header)
         {
         }
 

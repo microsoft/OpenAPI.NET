@@ -18,15 +18,15 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new()
         {
         {"schemas", (o, n) => o.Schemas = n.CreateMap(LoadSchema)},
-        {"responses", (o, n) => o.Responses = n.CreateMapWithReference(ReferenceType.Response, LoadResponse)},
-        {"parameters", (o, n) => o.Parameters = n.CreateMapWithReference(ReferenceType.Parameter, LoadParameter)},
-        {"examples", (o, n) => o.Examples = n.CreateMapWithReference(ReferenceType.Example, LoadExample)},
-        {"requestBodies", (o, n) => o.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, LoadRequestBody)},
-        {"headers", (o, n) => o.Headers = n.CreateMapWithReference(ReferenceType.Header, LoadHeader)},
-        {"securitySchemes", (o, n) => o.SecuritySchemes = n.CreateMapWithReference(ReferenceType.SecurityScheme, LoadSecurityScheme)},
-        {"links", (o, n) => o.Links = n.CreateMapWithReference(ReferenceType.Link, LoadLink)},
-        {"callbacks", (o, n) => o.Callbacks = n.CreateMapWithReference(ReferenceType.Callback, LoadCallback)},
-        {"pathItems", (o, n) => o.PathItems = n.CreateMapWithReference(ReferenceType.PathItem, LoadPathItem)}
+        {"responses", (o, n) => o.Responses = n.CreateMap(LoadResponse)},
+        {"parameters", (o, n) => o.Parameters = n.CreateMap(LoadParameter)},
+        {"examples", (o, n) => o.Examples = n.CreateMap(LoadExample)},
+        {"requestBodies", (o, n) => o.RequestBodies = n.CreateMap(LoadRequestBody)},
+        {"headers", (o, n) => o.Headers = n.CreateMap(LoadHeader)},
+        {"securitySchemes", (o, n) => o.SecuritySchemes = n.CreateMap(LoadSecurityScheme)},
+        {"links", (o, n) => o.Links = n.CreateMap(LoadLink)},
+        {"callbacks", (o, n) => o.Callbacks = n.CreateMap(LoadCallback)},
+        {"pathItems", (o, n) => o.PathItems = n.CreateMap(LoadPathItem)}
     };
 
         private static readonly PatternFieldMap<OpenApiComponents> _componentsPatternFields =
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        public static OpenApiComponents LoadComponents(ParseNode node)
+        public static OpenApiComponents LoadComponents(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("components");
             var components = new OpenApiComponents();

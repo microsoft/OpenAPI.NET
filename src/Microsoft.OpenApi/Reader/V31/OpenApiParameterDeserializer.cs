@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V31
@@ -129,17 +130,15 @@ namespace Microsoft.OpenApi.Reader.V31
             }
         };
 
-        public static OpenApiParameter LoadParameter(ParseNode node)
+        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("parameter");
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-
-                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer, summary, description);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiParameterReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var parameter = new OpenApiParameter();

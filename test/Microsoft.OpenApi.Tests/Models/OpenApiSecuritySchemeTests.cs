@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -105,17 +106,13 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
+        public static OpenApiSecuritySchemeReference OpenApiSecuritySchemeReference = new(target: ReferencedSecurityScheme, referenceId: "sampleSecurityScheme");
         public static OpenApiSecurityScheme ReferencedSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
             Scheme = OpenApiConstants.Bearer,
-            OpenIdConnectUrl = new("https://example.com/openIdConnect"),
-            Reference = new()
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = "sampleSecurityScheme"
-            }
+            OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
         [Fact]
@@ -318,7 +315,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme
             // as property name.
             writer.WriteStartObject();
-            ReferencedSecurityScheme.SerializeAsV3(writer);
+            OpenApiSecuritySchemeReference.SerializeAsV3(writer);
             writer.WriteNull();
             writer.WriteEndObject();
             writer.Flush();

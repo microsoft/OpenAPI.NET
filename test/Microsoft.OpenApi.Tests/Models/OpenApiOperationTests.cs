@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
@@ -52,14 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Responses = new()
             {
-                ["200"] = new()
-                {
-                    Reference = new()
-                    {
-                        Id = "response1",
-                        Type = ReferenceType.Response
-                    }
-                },
+                ["200"] = new OpenApiResponseReference("response1", hostDocument: null),
                 ["400"] = new()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
@@ -90,14 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Name = "tagName1",
                     Description = "tagDescription1",
                 },
-                new()
-                {
-                    Reference = new()
-                    {
-                        Id = "tagId1",
-                        Type = ReferenceType.Tag
-                    }
-                }
+                new OpenApiTagReference("tagId1", null)
             },
             Summary = "summary1",
             Description = "operationDescription",
@@ -134,14 +121,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Responses = new()
             {
-                ["200"] = new()
-                {
-                    Reference = new()
-                    {
-                        Id = "response1",
-                        Type = ReferenceType.Response
-                    }
-                },
+                ["200"] = new OpenApiResponseReference("response1", hostDocument: null),
                 ["400"] = new()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
@@ -157,22 +137,8 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 new()
                 {
-                    [new()
-                    {
-                        Reference = new()
-                        {
-                            Id = "securitySchemeId1",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    }] = new List<string>(),
-                    [new()
-                    {
-                        Reference = new()
-                        {
-                            Id = "securitySchemeId2",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    }] = new List<string>
+                    [new OpenApiSecuritySchemeReference("securitySchemeId1", hostDocument: null)] = new List<string>(),
+                    [new OpenApiSecuritySchemeReference("securitySchemeId2", hostDocument: null)] = new List<string>
                     {
                         "scopeName1",
                         "scopeName2"

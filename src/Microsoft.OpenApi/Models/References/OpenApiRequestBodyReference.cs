@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,9 +11,9 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Request Body Object Reference.
     /// </summary>
-    internal class OpenApiRequestBodyReference : OpenApiRequestBody
+    public class OpenApiRequestBodyReference : OpenApiRequestBody
     {
-        private OpenApiRequestBody _target;
+        internal OpenApiRequestBody _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
@@ -22,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiRequestBody>(_reference);
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiRequestBody>(_reference);
                 return _target;
             }
         }
@@ -43,10 +42,6 @@ namespace Microsoft.OpenApi.Models.References
             {
                 Utils.CheckArgumentNullOrEmpty(referenceId);
             }
-            if (hostDocument == null)
-            {
-                Utils.CheckArgumentNull(hostDocument);
-            }
 
             _reference = new OpenApiReference()
             {
@@ -54,6 +49,19 @@ namespace Microsoft.OpenApi.Models.References
                 HostDocument = hostDocument,
                 Type = ReferenceType.RequestBody,
                 ExternalResource = externalResource
+            };
+
+            Reference = _reference;
+        }
+
+        internal OpenApiRequestBodyReference(OpenApiRequestBody target, string referenceId)
+        {
+            _target = target;
+
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                Type = ReferenceType.RequestBody,
             };
         }
 
@@ -76,34 +84,36 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV3(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
+            }
         }
         
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
-                (writer, element) => element.SerializeAsV3(writer));
-        }
-        
-        /// <inheritdoc/>
-        public override void SerializeAsV31WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
-                    (writer, element) => element.SerializeAsV31(writer));
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV31(writer);
+                return;
+            }
+            else
+            {
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            }
         }
 
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
             action(writer, Target);
         }
     }

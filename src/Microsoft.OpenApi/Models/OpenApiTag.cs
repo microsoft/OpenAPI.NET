@@ -82,14 +82,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            Utils.CheckArgumentNull(writer);;
-
-            if (Reference != null)
-            {
-                callback(writer, Reference);
-                return;
-            }
-
+            Utils.CheckArgumentNull(writer);
             writer.WriteValue(Name);
         }
 
@@ -134,16 +127,9 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
-
-            if (Reference != null)
-            {
-                Reference.SerializeAsV2(writer);
-                return;
-            }
-
+            Utils.CheckArgumentNull(writer);
             writer.WriteValue(Name);
         }
 
