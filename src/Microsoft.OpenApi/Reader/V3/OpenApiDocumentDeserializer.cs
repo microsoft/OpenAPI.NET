@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -14,6 +14,7 @@ namespace Microsoft.OpenApi.Reader.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
+
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
@@ -49,6 +50,7 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             var openApiDoc = new OpenApiDocument();
             var openApiNode = rootNode.GetMap();
+            var openApiDoc = new OpenApiDocument();
 
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields);
 

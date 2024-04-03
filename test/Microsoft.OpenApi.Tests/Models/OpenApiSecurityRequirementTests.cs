@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
@@ -19,10 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models
             new()
             {
                 [
-                    new()
-                    {
-                        Reference = new() { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
-                    }
+                    new OpenApiSecuritySchemeReference("scheme1", hostDocument: null)
                 ] = new List<string>
                 {
                     "scope1",
@@ -30,20 +28,14 @@ namespace Microsoft.OpenApi.Tests.Models
                     "scope3",
                 },
                 [
-                    new()
-                    {
-                        Reference = new() { Type = ReferenceType.SecurityScheme, Id = "scheme2" }
-                    }
+                    new OpenApiSecuritySchemeReference("scheme2", hostDocument: null)
                 ] = new List<string>
                 {
                     "scope4",
                     "scope5",
                 },
                 [
-                    new()
-                    {
-                        Reference = new() { Type = ReferenceType.SecurityScheme, Id = "scheme3" }
-                    }
+                    new OpenApiSecuritySchemeReference("scheme3", hostDocument: null)
                 ] = new List<string>()
             };
 
@@ -51,10 +43,7 @@ namespace Microsoft.OpenApi.Tests.Models
             new()
             {
                 [
-                    new()
-                    {
-                        Reference = new() { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
-                    }
+                    new OpenApiSecuritySchemeReference("scheme1", hostDocument: null)
                 ] = new List<string>
                 {
                     "scope1",
@@ -73,10 +62,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     "scope5",
                 },
                 [
-                    new()
-                    {
-                        Reference = new() { Type = ReferenceType.SecurityScheme, Id = "scheme3" }
-                    }
+                    new OpenApiSecuritySchemeReference("scheme3", hostDocument: null)
                 ] = new List<string>()
             };
 

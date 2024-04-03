@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -35,18 +35,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var errorSchema = new JsonSchemaBuilder()
                     .Ref("#/definitions/Error")
-                    .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
+                    .Properties(
+                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                     ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
 
             var okMediaType = new OpenApiMediaType
             {
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(okSchema)
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("#/definitions/Item"))
             };
 
             var errorMediaType = new OpenApiMediaType
             {
-                Schema = errorSchema
+                Schema = new JsonSchemaBuilder().Ref("#/definitions/Error")
             };
 
             result.OpenApiDocument.Should().BeEquivalentTo(new OpenApiDocument
@@ -154,7 +155,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
         }
 
-
         [Fact]
         public void ShouldAssignSchemaToAllResponses()
         {
@@ -169,7 +169,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))));
 
             var errorSchema = new JsonSchemaBuilder()
-                    .Ref("#/definitions/Error")
                     .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
@@ -181,6 +180,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
+                Assert.Equal(json.Schema.Keywords.Count, targetSchema.Keywords.Count);
+
                 Assert.Equal(json.Schema.Keywords.Count, targetSchema.Keywords.Count);
 
                 var xml = response.Value.Content["application/xml"];

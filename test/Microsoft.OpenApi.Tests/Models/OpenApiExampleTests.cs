@@ -10,6 +10,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -58,13 +59,9 @@ namespace Microsoft.OpenApi.Tests.Models
             })
         };
 
+        public static OpenApiExampleReference OpenApiExampleReference = new(ReferencedExample, "example1");
         public static OpenApiExample ReferencedExample = new()
         {
-            Reference = new()
-            {
-                Type = ReferenceType.Example,
-                Id = "example1",
-            },
             Value = new OpenApiAny(new JsonObject
             {
                 ["versions"] = new JsonArray
@@ -128,7 +125,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedExample.SerializeAsV3(writer);
+            OpenApiExampleReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert

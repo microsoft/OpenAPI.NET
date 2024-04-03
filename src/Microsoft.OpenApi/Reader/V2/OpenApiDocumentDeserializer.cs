@@ -32,13 +32,13 @@ namespace Microsoft.OpenApi.Reader.V2
                 "schemes", (_, n) => n.Context.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
-                        s => s.GetScalarValue()))
+                        (s, p) => s.GetScalarValue()))
             },
             {
                 "consumes",
                 (_, n) =>
                 {
-                    var consumes = n.CreateSimpleList(s => s.GetScalarValue());
+                    var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue());
                     if (consumes.Count > 0)
                     {
                         n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "produces", (_, n) => {
-                    var produces = n.CreateSimpleList(s => s.GetScalarValue());
+                    var produces = n.CreateSimpleList((s, p) => s.GetScalarValue());
                     if (produces.Count > 0)
                     {
                         n.Context.SetTempStorage(TempStorageKeys.GlobalProduces, produces);
@@ -72,19 +72,12 @@ namespace Microsoft.OpenApi.Reader.V2
                         o.Components = new();
                     }
 
-                    o.Components.Parameters = n.CreateMapWithReference(
-                        ReferenceType.Parameter,
-                        LoadParameter);
+                    o.Components.Parameters = n.CreateMap(LoadParameter);
 
-                    o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, p =>
+                    o.Components.RequestBodies = n.CreateMap((p, d) =>
                             {
-                                var parameter = LoadParameter(p, loadRequestBody: true);
-                                if (parameter != null)
-                                {
-                                    return CreateRequestBody(n.Context, parameter);
-                                }
-
-                                return null;
+                                var parameter = LoadParameter(node: p, loadRequestBody: true, hostDocument: d);
+                                return parameter != null ? CreateRequestBody(p.Context, parameter) : null;
                             }
                       );
                 }
@@ -97,9 +90,7 @@ namespace Microsoft.OpenApi.Reader.V2
                         o.Components = new();
                     }
 
-                    o.Components.Responses = n.CreateMapWithReference(
-                        ReferenceType.Response,
-                        LoadResponse);
+                    o.Components.Responses = n.CreateMap(LoadResponse);
                 }
             },
             {
@@ -110,10 +101,7 @@ namespace Microsoft.OpenApi.Reader.V2
                         o.Components = new();
                     }
 
-                    o.Components.SecuritySchemes = n.CreateMapWithReference(
-                        ReferenceType.SecurityScheme,
-                        LoadSecurityScheme
-                        );
+                    o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme);
                 }
             },
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)},

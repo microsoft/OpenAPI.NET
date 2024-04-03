@@ -647,5 +647,12 @@ namespace Microsoft.OpenApi.Writers
             var walker = new OpenApiWalker(visitor);
             walker.Walk(schema);
         }
+
+        public static JsonSchema FetchSchemaFromRegistry(JsonSchema schema, Uri reference)
+        {
+            var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
+            var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
+            return resolvedSchema ?? schema;
+        }
     }
 }

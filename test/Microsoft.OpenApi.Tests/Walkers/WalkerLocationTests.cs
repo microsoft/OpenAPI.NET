@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
@@ -213,15 +214,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     },
                     SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
                     {
-                        ["test-secScheme"] = new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Id = "reference-to-scheme",
-                                Type = ReferenceType.SecurityScheme
-                            },
-                            UnresolvedReference = true
-                        }
+                        ["test-secScheme"] = new OpenApiSecuritySchemeReference("reference-to-scheme", null, null)
                     }
                 }
             };
@@ -232,7 +225,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             locator.Locations.Where(l => l.StartsWith("referenceAt:")).Should().BeEquivalentTo(new List<string> {
                 "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
-                "referenceAt: #/paths/~1/get/responses/200/headers/test-header",
+                "referenceAt: #/paths/~1/get/responses/200/headers/test-header/schema",
                 "referenceAt: #/components/schemas/derived",
                 "referenceAt: #/components/schemas/derived/anyOf",
                 "referenceAt: #/components/schemas/base",

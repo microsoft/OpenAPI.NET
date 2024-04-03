@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {"jsonSchemaDialect", (o, n) => o.JsonSchemaDialect = n.GetScalarValue() },
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
-            {"webhooks", (o, n) => o.Webhooks = LoadPaths(n)},
+            {"webhooks", (o, n) => o.Webhooks = n.CreateMap(LoadPathItem)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
@@ -49,6 +49,7 @@ namespace Microsoft.OpenApi.Reader.V31
         {
             var openApiDoc = new OpenApiDocument();
             var openApiNode = rootNode.GetMap();
+            var openApiDoc = new OpenApiDocument();
 
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields);
 

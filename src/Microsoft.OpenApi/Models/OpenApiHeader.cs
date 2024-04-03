@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiHeader>
+    public class OpenApiHeader : IOpenApiReferenceable, IOpenApiExtensible
     {
         private JsonSchema _schema;
 
@@ -145,38 +145,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(writer);;
 
             var target = this;
-
-            if (Reference != null)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    callback(writer, Reference);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
-
             action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiHeader object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiHeader</returns>
-        public OpenApiHeader GetEffective(OpenApiDocument doc)
-        {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiHeader>(Reference);
-            }
-            else
-            {
-                return this;
-            }
         }
 
         /// <summary>
@@ -244,24 +213,11 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v2.0
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
-
-            if (Reference != null)
-            {
-                if (!writer.GetSettings().ShouldInlineReference(Reference))
-                {
-                    Reference.SerializeAsV2(writer);
-                    return;
-                }
-                else
-                {
-                    target = GetEffective(Reference.HostDocument);
-                }
-            }
             target.SerializeAsV2WithoutReference(writer);
         }
 

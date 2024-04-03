@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using System;
 using System.IO;
 using FluentAssertions;
 using Json.Schema;
@@ -8,6 +10,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
+using Microsoft.OpenApi.Reader.V3;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -255,6 +258,83 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(p => p.Examples["example1"].Value.Node.Parent)
                 .Excluding(p => p.Examples["example2"].Value.Node.Parent));
+        }
+
+        [Fact]
+        public void ParseParameterWithReferenceWorks()
+        {
+            // Arrange
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Version = "1.0.0",
+                    Title = "Swagger Petstore (Simple)"
+                },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
+                    {
+                        Url = "http://petstore.swagger.io/api"
+                    }
+                },
+                Paths = new OpenApiPaths
+                {
+                    ["/pets"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Description = "Returns all pets from the system that the user has access to",
+                                OperationId = "findPets",
+                                Parameters = new List<OpenApiParameter>
+                                {
+                                    new() {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Parameter,
+                                            Id = "tagsParameter"
+                                        }
+                                    }
+                                },
+                            }
+                        }
+                    }
+                },
+                Components = new OpenApiComponents
+                {
+                    Parameters = new Dictionary<string, OpenApiParameter>()
+                    {
+                        ["tagsParameter"] = new OpenApiParameter
+                        {
+                            Name = "tags",
+                            In = ParameterLocation.Query,
+                            Description = "tags to filter by",
+                            Required = false,
+                            Schema = new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.Array)
+                                        .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)).Build(),
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Parameter,
+                                Id = "tagsParameter"
+                            }
+                        }
+                    }
+                }
+            };
+
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithRef.yaml"));
+            var node = TestHelper.CreateYamlMapNode(stream);
+
+            var expected = document.Components.Parameters["tagsParameter"];
+
+            // Act
+            var param = OpenApiV3Deserializer.LoadParameter(node, document);
+
+            // Assert
+            param.Should().BeEquivalentTo(expected, options => options.Excluding(p => p.Reference.HostDocument));
         }
     }
 }

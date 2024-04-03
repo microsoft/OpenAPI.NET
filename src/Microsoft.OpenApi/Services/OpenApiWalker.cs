@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -391,8 +392,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiCallback callback, bool isComponent = false)
         {
-            if (callback == null || ProcessAsReference(callback, isComponent))
+            if (callback == null)
             {
+                return;
+            }
+
+            if (callback is OpenApiCallbackReference)
+            {
+                Walk(callback as IOpenApiReferenceable);
                 return;
             }
 
@@ -415,8 +422,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiTag tag)
         {
-            if (tag == null || ProcessAsReference(tag))
+            if (tag == null)
             {
+                return;
+            }
+
+            if (tag is OpenApiTagReference)
+            {
+                Walk(tag as IOpenApiReferenceable);
                 return;
             }
 
@@ -482,8 +495,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiPathItem pathItem, bool isComponent = false)
         {
-            if (pathItem == null || ProcessAsReference(pathItem, isComponent))
+            if (pathItem == null)
             {
+                return;
+            }
+
+            if (pathItem is OpenApiPathItemReference)
+            {
+                Walk(pathItem as IOpenApiReferenceable);
                 return;
             }
 
@@ -599,8 +618,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiParameter parameter, bool isComponent = false)
         {
-            if (parameter == null || ProcessAsReference(parameter, isComponent))
+            if (parameter == null)
             {
+                return;
+            }
+
+            if (parameter is OpenApiParameterReference)
+            {
+                Walk(parameter as IOpenApiReferenceable);
                 return;
             }
 
@@ -641,8 +666,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiResponse response, bool isComponent = false)
         {
-            if (response == null || ProcessAsReference(response, isComponent))
+            if (response == null)
             {
+                return;
+            }
+
+            if (response is OpenApiResponseReference)
+            {
+                Walk(response as IOpenApiReferenceable);
                 return;
             }
 
@@ -658,8 +689,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiRequestBody requestBody, bool isComponent = false)
         {
-            if (requestBody == null || ProcessAsReference(requestBody, isComponent))
+            if (requestBody == null)
             {
+                return;
+            }
+
+            if (requestBody is OpenApiRequestBodyReference)
+            {
+                Walk(requestBody as IOpenApiReferenceable);
                 return;
             }
 
@@ -935,8 +972,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiExample example, bool isComponent = false)
         {
-            if (example == null || ProcessAsReference(example, isComponent))
+            if (example == null)
             {
+                return;
+            }
+
+            if (example is OpenApiExampleReference)
+            {
+                Walk(example as IOpenApiReferenceable);
                 return;
             }
 
@@ -1041,8 +1084,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiLink link, bool isComponent = false)
         {
-            if (link == null || ProcessAsReference(link, isComponent))
+            if (link == null)
             {
+                return;
+            }
+
+            if (link is OpenApiLinkReference)
+            {
+                Walk(link as IOpenApiReferenceable);
                 return;
             }
 
@@ -1056,8 +1105,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiHeader header, bool isComponent = false)
         {
-            if (header == null || ProcessAsReference(header, isComponent))
+            if (header == null)
             {
+                return;
+            }
+
+            if (header is OpenApiHeaderReference)
+            {
+                Walk(header as IOpenApiReferenceable);
                 return;
             }
 
@@ -1079,6 +1134,11 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            foreach(var securityScheme in securityRequirement.Keys)
+            {
+                Walk(securityScheme);
+            }
+
             _visitor.Visit(securityRequirement);
             Walk(securityRequirement as IOpenApiExtensible);
         }
@@ -1088,8 +1148,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiSecurityScheme securityScheme, bool isComponent = false)
         {
-            if (securityScheme == null || ProcessAsReference(securityScheme, isComponent))
+            if (securityScheme == null)
             {
+                return;
+            }
+
+            if (securityScheme is OpenApiSecuritySchemeReference)
+            {
+                Walk(securityScheme as IOpenApiReferenceable);
                 return;
             }
 
@@ -1161,20 +1227,6 @@ namespace Microsoft.OpenApi.Services
             _visitor.Enter(context.Replace("/", "~1"));
             walk();
             _visitor.Exit();
-        }
-
-        /// <summary>
-        /// Identify if an element is just a reference to a component, or an actual component
-        /// </summary>
-        private bool ProcessAsReference(IOpenApiReferenceable referenceable, bool isComponent = false)
-        {
-            var isReference = referenceable.Reference != null && 
-                              (!isComponent || referenceable.UnresolvedReference);
-            if (isReference)
-            {
-                Walk(referenceable);
-            }
-            return isReference;
         }
 
         private bool ProcessSchemaAsReference(IBaseDocument baseDocument, bool isComponent = false)

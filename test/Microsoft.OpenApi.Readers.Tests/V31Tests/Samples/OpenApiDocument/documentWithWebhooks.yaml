@@ -3,7 +3,7 @@ info:
   title: Webhook Example
   version: 1.0.0
 webhooks:
-  /pets:
+  pets:
       get:
         description: Returns all pets from the system that the user has access to
         operationId: findPets

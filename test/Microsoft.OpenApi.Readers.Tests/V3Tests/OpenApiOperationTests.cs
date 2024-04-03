@@ -6,6 +6,7 @@ using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -25,9 +26,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
 
-            var securityRequirement = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security.First();
+            var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security.First().Keys.First();
 
-            Assert.Same(securityRequirement.Keys.First(), result.OpenApiDocument.Components.SecuritySchemes.First().Value);
+            securityScheme.Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value, 
+                options => options.Excluding(x => x.Reference));
         }
 
         [Fact]
@@ -35,21 +37,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Act
             var operation = OpenApiModelFactory.Load<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, out _);
-
-            // Assert
-            operation.Should().BeEquivalentTo(new OpenApiOperation
+            var expectedOp = new OpenApiOperation
             {
                 Tags =
                 {
-                    new OpenApiTag
-                    {
-                        UnresolvedReference = true,
-                        Reference = new()
-                        {
-                            Id = "user",
-                            Type = ReferenceType.Tag
-                        }
-                    }
+                    new OpenApiTagReference("user", null)
                 },
                 Summary = "Logs user into the system",
                 Description = "",
@@ -74,7 +66,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     .Type(SchemaValueType.String)
                     }
                 }
-            });
+            };
+
+            // Assert
+            expectedOp.Should().BeEquivalentTo(operation, 
+                options => options.Excluding(x => x.Tags[0].Reference.HostDocument)
+                .Excluding(x => x.Tags[0].Extensions));
         }
     }
 }
