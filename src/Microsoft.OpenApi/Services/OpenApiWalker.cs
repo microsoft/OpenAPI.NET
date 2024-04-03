@@ -19,7 +19,6 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiWalker
     {
         private readonly OpenApiVisitorBase _visitor;
-        private OpenApiDocument _currentDocument;
         private readonly Stack<JsonSchema> _schemaLoop = new Stack<JsonSchema>();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
 
@@ -42,7 +41,6 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            _currentDocument = doc;
             _schemaLoop.Clear();
             _pathItemLoop.Clear();
 
