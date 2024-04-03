@@ -7,7 +7,8 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -87,17 +88,17 @@ namespace Microsoft.OpenApi.SmokeTests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var reader = new OpenApiStreamReader();
-            var openApiDocument = reader.Read(stream, out var diagnostic);
+            var format = OpenApiModelFactory.GetFormat(url);
+            var result = OpenApiDocument.Load(stream, format);
 
-            if (diagnostic.Errors.Count > 0)
+            if (result.OpenApiDiagnostic.Errors.Count > 0)
             {
                 _output.WriteLine($"Errors parsing {url}");
-                _output.WriteLine(String.Join('\n', diagnostic.Errors));
+                _output.WriteLine(String.Join('\n', result.OpenApiDiagnostic.Errors));
                 //               Assert.True(false);  // Uncomment to identify descriptions with errors.
             }
 
-            Assert.NotNull(openApiDocument);
+            Assert.NotNull(result.OpenApiDocument);
             stopwatch.Stop();
             _output.WriteLine($"Parsing {url} took {stopwatch.ElapsedMilliseconds} ms.");
         }

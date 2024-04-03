@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            var type = schema.GetJsonType().Value.GetDisplayName();
+            var type = schema.GetJsonType()?.GetDisplayName();
             var format = schema.GetFormat()?.Key;
             var jsonElement = JsonSerializer.Deserialize<JsonElement>(value);
 

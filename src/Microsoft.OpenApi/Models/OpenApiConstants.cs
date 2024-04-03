@@ -16,6 +16,21 @@ namespace Microsoft.OpenApi.Models
         public const string OpenApi = "openapi";
 
         /// <summary>
+        /// Field: Json
+        /// </summary>
+        public const string Json = "json";
+
+        /// <summary>
+        /// Field: Yaml
+        /// </summary>
+        public const string Yaml = "yaml";
+
+        /// <summary>
+        /// Field: Yml
+        /// </summary>
+        public const string Yml = "yml";
+
+        /// <summary>
         /// Field: Info
         /// </summary>
         public const string Info = "info";
@@ -399,6 +414,11 @@ namespace Microsoft.OpenApi.Models
         /// Field: Properties
         /// </summary>
         public const string Properties = "properties";
+
+        /// <summary>
+        /// Field: Pattern Properties
+        /// </summary>
+        public const string PatternProperties = "patternProperties";
 
         /// <summary>
         /// Field: AdditionalProperties

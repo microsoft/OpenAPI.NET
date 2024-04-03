@@ -11,7 +11,8 @@ using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
-using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Readers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests
@@ -24,8 +25,11 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public OpenApiServiceTests()
         {
             _logger = new Logger<OpenApiServiceTests>(_loggerFactory);
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+
         }
-       
+
         [Theory]
         [InlineData("UtilityFiles/appsettingstest.json")]
         [InlineData(null)]
