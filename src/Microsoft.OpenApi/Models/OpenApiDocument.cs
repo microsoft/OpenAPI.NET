@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -691,12 +691,6 @@ namespace Microsoft.OpenApi.Models
         public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
         {
             throw new NotImplementedException();
-        }
-
-        internal JsonSchema ResolveJsonSchemaReference(Uri reference)
-        {
-            var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
-            return (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
         }
     }
 

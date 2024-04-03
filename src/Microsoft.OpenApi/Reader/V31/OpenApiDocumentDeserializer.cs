@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -49,7 +49,6 @@ namespace Microsoft.OpenApi.Reader.V31
         {
             var openApiDoc = new OpenApiDocument();
             var openApiNode = rootNode.GetMap();
-            var openApiDoc = new OpenApiDocument();
 
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields);
 
