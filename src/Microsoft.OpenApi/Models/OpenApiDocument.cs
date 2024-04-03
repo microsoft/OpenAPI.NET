@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Models
                 if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
                 {
                     var openApiSchemas = schemas.Cast<JsonSchema>().Distinct()
-                        .ToDictionary(k => k.GetRef().ToString());
+                        .ToDictionary(k => k.GetRef()?.ToString());
 
                     foreach (var schema in openApiSchemas.Values.ToList())
                     {
@@ -261,7 +261,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     writer.WriteOptionalMap(
                         OpenApiConstants.Definitions,
-                        Components?.Schemas,
+                        Components?.Schemas!,
                         (w, key, s) =>
                         {
                             var reference = s.GetRef();
@@ -458,7 +458,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal T ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
+        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
         {
             if (reference.IsExternal)
             {
@@ -473,7 +473,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        public IOpenApiReferenceable? ResolveReference(OpenApiReference reference)
         {
             return ResolveReference(reference, false);
         }
@@ -515,7 +515,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
+        internal IOpenApiReferenceable? ResolveReference(OpenApiReference reference, bool useExternal)
         {
             if (reference == null)
             {
@@ -622,7 +622,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="url"> The path to the OpenAPI file.</param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static ReadResult Load(string url, OpenApiReaderSettings settings = null)
+        public static ReadResult Load(string url, OpenApiReaderSettings? settings = null)
         {
             return OpenApiModelFactory.Load(url, settings);
         }
@@ -674,7 +674,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates information about operation cancelling.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream stream, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
+        public static async Task<ReadResult> LoadAsync(Stream stream, string format, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
             return await OpenApiModelFactory.LoadAsync(stream, format, settings, cancellationToken);
         }
@@ -686,7 +686,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="format"> The OpenAPI format to use during parsing.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings settings = null)
+        public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings? settings = null)
         {
             return await OpenApiModelFactory.LoadAsync(input, format, settings);
         }
@@ -699,8 +699,8 @@ namespace Microsoft.OpenApi.Models
         /// <param name="settings"></param>
         /// <returns></returns>
         public static ReadResult Parse(string input,
-                                       string format = null,
-                                       OpenApiReaderSettings settings = null)
+                                       string? format = null,
+                                       OpenApiReaderSettings? settings = null)
         {
             return OpenApiModelFactory.Parse(input, format, settings);
         }
@@ -720,7 +720,7 @@ namespace Microsoft.OpenApi.Models
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, JsonSchema> Schemas;
+        private Dictionary<string, JsonSchema>? Schemas;
 
         public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, JsonSchema> schemas)
         {

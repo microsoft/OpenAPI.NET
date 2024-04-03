@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="url">The path to the OpenAPI file.</param>
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
-        public static ReadResult Load(string url, OpenApiReaderSettings settings = null)
+        public static ReadResult Load(string url, OpenApiReaderSettings? settings = null)
         {
             return LoadAsync(url, settings).GetAwaiter().GetResult();
         }
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>An OpenAPI document instance.</returns>
         public static ReadResult Load(Stream stream,
                                       string format,
-                                      OpenApiReaderSettings settings = null)
+                                      OpenApiReaderSettings? settings = null)
         {
             settings ??= new OpenApiReaderSettings();
 
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>An OpenAPI document instance.</returns>
         public static ReadResult Load(TextReader input,
                                       string format,
-                                      OpenApiReaderSettings settings = null)
+                                      OpenApiReaderSettings? settings = null)
         {
             return LoadAsync(input, format, settings).GetAwaiter().GetResult();
         }
@@ -78,11 +78,11 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="url">The path to the OpenAPI file</param>
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
+        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null)
         {
             var format = GetFormat(url);
             var stream = await GetStream(url);
-            return await LoadAsync(stream, format, settings);
+            return await LoadAsync(stream, format!, settings);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="cancellationToken">Propagates notification that operations should be cancelled.</param>
         /// <param name="format">The Open API format</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream input, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
+        public static async Task<ReadResult> LoadAsync(Stream input, string format, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
             Utils.CheckArgumentNull(format, nameof(format));
             settings ??= new OpenApiReaderSettings();
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates notification that operations should be cancelled.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
+        public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
             Utils.CheckArgumentNull(format, nameof(format));
             var reader = OpenApiReaderRegistry.GetReader(format);
@@ -139,8 +139,8 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
         public static ReadResult Parse(string input,
-                                       string format = null,
-                                       OpenApiReaderSettings settings = null)
+                                       string? format = null,
+                                       OpenApiReaderSettings? settings = null)
         {
             format ??= OpenApiConstants.Json;
             settings ??= new OpenApiReaderSettings();
@@ -160,8 +160,8 @@ namespace Microsoft.OpenApi.Reader
         public static T Parse<T>(string input,
                                  OpenApiSpecVersion version,
                                  out OpenApiDiagnostic diagnostic,
-                                 string format = null,
-                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+                                 string? format = null,
+                                 OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             format ??= OpenApiConstants.Json;
             settings ??= new OpenApiReaderSettings();
@@ -179,12 +179,12 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static T Load<T>(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static T Load<T>(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             var format = GetFormat(url);
             settings ??= new OpenApiReaderSettings();
             var stream = GetStream(url).GetAwaiter().GetResult();
-            return Load<T>(stream, version, format, out diagnostic, settings);
+            return Load<T>(stream, version, format!, out diagnostic, settings);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static T Load<T>(Stream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static T Load<T>(Stream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             format ??= OpenApiConstants.Json;
             using var reader = new StreamReader(input);
@@ -216,14 +216,14 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static T Load<T>(TextReader input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, string format, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static T Load<T>(TextReader input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, string format, OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             format ??= OpenApiConstants.Json;
             return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, out diagnostic, settings);
         }
 
 
-        private static string GetContentType(string url)
+        private static string? GetContentType(string url)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -240,7 +240,7 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="url">The input URL.</param>
         /// <returns>The OpenAPI format.</returns>
-        public static string GetFormat(string url)
+        public static string? GetFormat(string url)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Reader
                     var path = new Uri(url);
                     var urlSuffix = path.Segments[path.Segments.Length - 1].Split('.').LastOrDefault();
 
-                    return !string.IsNullOrEmpty(urlSuffix) ? urlSuffix : GetContentType(url).Split('/').LastOrDefault();
+                    return !string.IsNullOrEmpty(urlSuffix) ? urlSuffix : GetContentType(url)?.Split('/').LastOrDefault();
                 }
                 else
                 {
