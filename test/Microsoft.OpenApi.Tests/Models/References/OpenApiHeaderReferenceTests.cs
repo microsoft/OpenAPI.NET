@@ -18,7 +18,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models.References
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiHeaderReferenceTests
     {
         // OpenApi doc with external $ref

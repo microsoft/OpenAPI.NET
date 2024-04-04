@@ -15,7 +15,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models.References
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiTagReferenceTest
     {
         private const string OpenApi = @"openapi: 3.0.3

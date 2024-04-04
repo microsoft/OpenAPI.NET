@@ -122,12 +122,17 @@ namespace Microsoft.OpenApi.Reader.V2
                     "schema",
                     (o, n) => o.Schema = LoadSchema(n)
                 },
+                {
+                    "x-examples",
+                    LoadParameterExamplesExtension
+                },
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase),
+                    (o, p, n) => o.AddExtension(p, LoadExtension(p, n))} 
             };
 
         private static void LoadStyle(OpenApiParameter p, string v)
@@ -157,6 +162,12 @@ namespace Microsoft.OpenApi.Reader.V2
                     p.Explode = true;
                     return;
             }
+        }
+
+        private static void LoadParameterExamplesExtension(OpenApiParameter parameter, ParseNode node)
+        {
+            var examples = LoadExamplesExtension(node);
+            node.Context.SetTempStorage(TempStorageKeys.Examples, examples, parameter);
         }
         
         private static JsonSchemaBuilder GetOrCreateParameterSchemaBuilder()
@@ -226,6 +237,14 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 parameter.Schema = schema;
                 node.Context.SetTempStorage("schema", null);
+            }
+
+            // load examples from storage and add them to the parameter
+            var examples = node.Context.GetFromTempStorage<Dictionary<string, OpenApiExample>>(TempStorageKeys.Examples, parameter);
+            if (examples != null)
+            {
+                parameter.Examples = examples;
+                node.Context.SetTempStorage("examples", null);
             }
 
             var isBodyOrFormData = (bool)node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);

@@ -9,9 +9,13 @@ using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
+using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -292,6 +296,260 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Root)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Parent)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Root));
+        }
+
+        [Fact]
+        public void ParseOperationWithEmptyProducesArraySetsResponseSchemaIfExists()
+        {
+            // Arrange
+            MapNode node;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithEmptyProducesArrayInResponse.json"));
+            node = TestHelper.CreateYamlMapNode(stream);
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var expected = @"{
+  ""produces"": [
+    ""application/octet-stream""
+  ],
+  ""responses"": {
+    ""200"": {
+      ""description"": ""OK"",
+      ""schema"": {
+        ""type"": ""string"",
+        ""description"": ""The content of the file."",
+        ""format"": ""binary"",
+        ""x-ms-summary"": ""File Content""
+      }
+    }
+  }
+}";
+
+            var stringBuilder = new StringBuilder();
+            var jsonWriter = new OpenApiJsonWriter(new StringWriter(stringBuilder));
+            operation.SerializeAsV2(jsonWriter);
+
+            // Assert
+            var actual = stringBuilder.ToString();
+            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());            
+        }
+
+        [Fact]
+        public void ParseOperationWithBodyAndEmptyConsumesSetsRequestBodySchemaIfExists()
+        {
+            // Arrange
+            MapNode node;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithBodyAndEmptyConsumes.yaml"));
+            node = TestHelper.CreateYamlMapNode(stream);
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+
+            // Assert
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+        }
+
+        [Fact]
+        public void ParseV2ResponseWithExamplesExtensionWorks()
+        {            
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "opWithResponseExamplesExtension.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            var expected = @"summary: Get all pets
+responses:
+  '200':
+    description: Successful response
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              age:
+                type: integer
+        examples:
+          example1:
+            summary: Example - List of Pets
+            value:
+              - name: Buddy
+                age: 2
+              - name: Whiskers
+                age: 1
+          example2:
+            summary: Example - Playful Cat
+            value:
+              name: Whiskers
+              age: 1";
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void LoadV3ExamplesInResponseAsExtensionsWorks()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "v3OperationWithResponseExamples.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV3Deserializer.LoadOperation(node);
+            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            var expected = @"summary: Get all pets
+produces:
+  - application/json
+responses:
+  '200':
+    description: Successful response
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          age:
+            type: integer
+    x-examples:
+      example1:
+        summary: Example - List of Pets
+        value:
+          - name: Buddy
+            age: 2
+          - name: Whiskers
+            age: 1
+      example2:
+        summary: Example - Playful Cat
+        value:
+          name: Whiskers
+          age: 1";
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void LoadV2OperationWithBodyParameterExamplesWorks()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "opWithBodyParameterExamples.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            var expected = @"summary: Get all pets
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            age:
+              type: integer
+      examples:
+        example1:
+          summary: Example - List of Pets
+          value:
+            - name: Buddy
+              age: 2
+            - name: Whiskers
+              age: 1
+        example2:
+          summary: Example - Playful Cat
+          value:
+            name: Whiskers
+            age: 1
+  required: true
+  x-bodyName: body
+responses: { }";
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void LoadV3ExamplesInRequestBodyParameterAsExtensionsWorks()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "v3OperationWithBodyParameterExamples.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV3Deserializer.LoadOperation(node);
+            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            var expected = @"summary: Get all pets
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          age:
+            type: integer
+    x-examples:
+      example1:
+        summary: Example - List of Pets
+        value:
+          - name: Buddy
+            age: 2
+          - name: Whiskers
+            age: 1
+      example2:
+        summary: Example - Playful Cat
+        value:
+          name: Whiskers
+          age: 1
+responses: { }";
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
     }
 }

@@ -479,6 +479,7 @@ namespace Microsoft.OpenApi.Models
         public const string Enum = "enum";
         public const string Example = "example";
         public const string Examples = "examples";
+        public const string ExamplesExtension = "x-examples";
         public const string ExclusiveMaximum = "exclusiveMaximum";
         public const string ExclusiveMinimum = "exclusiveMinimum";
         public const string Explode = "explode";
@@ -667,6 +668,7 @@ namespace Microsoft.OpenApi.Models
         public virtual string Summary { get; set; }
         public virtual bool UnresolvedReference { get; set; }
         public virtual Microsoft.OpenApi.Any.OpenApiAny Value { get; set; }
+        public void Serialize(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV2WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1592,35 +1594,37 @@ namespace Microsoft.OpenApi.Validations
     }
     public abstract class ValidationRule
     {
-        protected ValidationRule() { }
+        public string Name { get; }
     }
     public sealed class ValidationRuleSet
     {
         public ValidationRuleSet() { }
         public ValidationRuleSet(Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet) { }
-        public ValidationRuleSet(System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule>> rules) { }
+        public ValidationRuleSet(System.Collections.Generic.IDictionary<System.Type, System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule>> rules) { }
         public int Count { get; }
-        public System.Collections.Generic.ICollection<string> Keys { get; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> Rules { get; }
-        public void Add(string key, Microsoft.OpenApi.Validations.ValidationRule rule) { }
-        public void Add(string key, System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> rules) { }
+        public void Add(System.Type key, Microsoft.OpenApi.Validations.ValidationRule rule) { }
+        public void Add(System.Type key, System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> rules) { }
         public void Clear() { }
-        public bool Contains(string key, Microsoft.OpenApi.Validations.ValidationRule rule) { }
-        public bool ContainsKey(string key) { }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> FindRules(string key) { }
+        public bool Contains(System.Type key, Microsoft.OpenApi.Validations.ValidationRule rule) { }
+        public bool ContainsKey(System.Type key) { }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> FindRules(System.Type type) { }
         public System.Collections.Generic.IEnumerator<Microsoft.OpenApi.Validations.ValidationRule> GetEnumerator() { }
         public bool Remove(Microsoft.OpenApi.Validations.ValidationRule rule) { }
-        public bool Remove(string key) { }
-        public bool Remove(string key, Microsoft.OpenApi.Validations.ValidationRule rule) { }
-        public bool TryGetValue(string key, out System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> rules) { }
-        public bool Update(string key, Microsoft.OpenApi.Validations.ValidationRule newRule, Microsoft.OpenApi.Validations.ValidationRule oldRule) { }
-        public static void AddValidationRules(Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet, System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule>> rules) { }
+        public void Remove(string ruleName) { }
+        public bool Remove(System.Type key) { }
+        public bool Remove(System.Type key, Microsoft.OpenApi.Validations.ValidationRule rule) { }
+        public bool TryGetValue(System.Type key, out System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> rules) { }
+        public bool Update(System.Type key, Microsoft.OpenApi.Validations.ValidationRule newRule, Microsoft.OpenApi.Validations.ValidationRule oldRule) { }
+        public static void AddValidationRules(Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet, System.Collections.Generic.IDictionary<System.Type, System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule>> rules) { }
         public static Microsoft.OpenApi.Validations.ValidationRuleSet GetDefaultRuleSet() { }
         public static Microsoft.OpenApi.Validations.ValidationRuleSet GetEmptyRuleSet() { }
     }
     public class ValidationRule<T> : Microsoft.OpenApi.Validations.ValidationRule
     {
+        [System.Obsolete("Please use the other constructor and specify a name")]
         public ValidationRule(System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
+        public ValidationRule(string name, System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
     }
 }
 namespace Microsoft.OpenApi.Validations.Rules

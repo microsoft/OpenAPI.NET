@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Reader
                 bufferedStream.Position = 0;
             }
 
-            using var reader = new StreamReader(bufferedStream);
+            using var reader = new StreamReader(bufferedStream, default, true, -1, settings.LeaveStreamOpen);
             return await LoadAsync(reader, format, settings, cancellationToken);
         }
 

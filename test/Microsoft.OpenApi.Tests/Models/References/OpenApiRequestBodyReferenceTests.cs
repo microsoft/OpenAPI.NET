@@ -19,7 +19,6 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models.References
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiRequestBodyReferenceTests
     {
         private readonly string OpenApi = @"

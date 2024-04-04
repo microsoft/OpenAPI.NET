@@ -1,6 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Json.Schema;
@@ -56,9 +57,9 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var rules = new Dictionary<string, IList<ValidationRule>>()
+            var rules = new Dictionary<Type, IList<ValidationRule>>()
             {
-                { typeof(JsonSchema).Name,
+                { typeof(JsonSchema),
                     new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
                 }
             };
@@ -106,9 +107,9 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var rules = new Dictionary<string, IList<ValidationRule>>()
+            var rules = new Dictionary<Type, IList<ValidationRule>>()
             {
-                { typeof(JsonSchema).Name,
+                { typeof(JsonSchema),
                     new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
                 }
             };
@@ -122,7 +123,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
     public class AlwaysFailRule<T> : ValidationRule<T>
     {
-        public AlwaysFailRule() : base((c, _) => c.CreateError("x", "y"))
+        public AlwaysFailRule() : base("AlwaysFailRule", (c, _) => c.CreateError("x", "y"))
         {
         }
     }
