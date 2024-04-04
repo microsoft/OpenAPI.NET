@@ -1382,18 +1382,6 @@ namespace Microsoft.OpenApi.Services
         public string Response { get; set; }
         public string ServerVariable { get; }
     }
-    public class JsonSchemaReferenceResolver : Microsoft.OpenApi.Services.OpenApiVisitorBase
-    {
-        public JsonSchemaReferenceResolver(Microsoft.OpenApi.Models.OpenApiDocument currentDocument) { }
-        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiError> Errors { get; }
-        public Json.Schema.JsonSchema ResolveJsonSchemaReference(System.Uri reference, string description = null, string summary = null) { }
-        public override void Visit(Json.Schema.IBaseDocument document) { }
-        public override void Visit(ref Json.Schema.JsonSchema schema) { }
-        public override void Visit(Microsoft.OpenApi.Interfaces.IOpenApiReferenceable referenceable) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiComponents components) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiMediaType mediaType) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiParameter parameter) { }
-    }
     public enum MermaidNodeShape
     {
         SquareCornerRectangle = 0,
