@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -285,7 +285,7 @@ namespace Microsoft.OpenApi.Hidi
                     predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
 
                 }
-                if (requestUrls.Count != 0)
+                if (requestUrls.Count > 0)
                 {
                     logger.LogTrace("Creating predicate based on the paths and Http methods defined in the Postman collection.");
                     predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: document);

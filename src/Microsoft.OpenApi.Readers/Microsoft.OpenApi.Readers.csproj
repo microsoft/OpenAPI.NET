@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.6.11</Version>
+        <Version>1.6.14</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
@@ -26,7 +26,7 @@
     <ItemGroup>
         <PackageReference Include="JsonSchema.Net" Version="4.1.5" />
         <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0" />
-        <PackageReference Include="SharpYaml" Version="2.1.0" />
+        <PackageReference Include="SharpYaml" Version="2.1.1" />
         <PackageReference Include="System.Text.Json" Version="7.0.2" />
     </ItemGroup>
 

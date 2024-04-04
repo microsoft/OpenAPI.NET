@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// that MUST use keys that match the regular expression: ^[a-zA-Z0-9\.\-_]+$.
         /// </summary>
         public static ValidationRule<OpenApiComponents> KeyMustBeRegularExpression =>
-            new(
+            new(nameof(KeyMustBeRegularExpression),
                 (context, components) =>
                 {
                     ValidateKeys(context, components.Schemas?.Keys, "schemas");

@@ -23,7 +23,6 @@ using Xunit.Abstractions;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    [UsesVerify]
     public class OpenApiDocumentTests
     {
         public OpenApiDocumentTests()

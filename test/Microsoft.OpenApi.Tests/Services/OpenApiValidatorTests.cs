@@ -30,12 +30,13 @@ namespace Microsoft.OpenApi.Tests.Services
                 Title = "foo",
                 Version = "1.2.2"
             };
-            openApiDocument.Paths = new();
-            openApiDocument.Paths.Add(
-                "/test",
-                new()
+            openApiDocument.Paths = new()
+            {
                 {
-                    Operations =
+                    "/test",
+                    new()
+                    {
+                        Operations =
                     {
                         [OperationType.Get] = new()
                         {
@@ -45,7 +46,9 @@ namespace Microsoft.OpenApi.Tests.Services
                             }
                         }
                     }
-                });
+                    }
+                }
+            };
 
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
@@ -98,8 +101,8 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
 
-            ruleset.Add(typeof(OpenApiAny).Name, 
-             new ValidationRule<OpenApiAny>(
+            ruleset.Add(typeof(OpenApiAny), 
+             new ValidationRule<OpenApiAny>("FooExtensionRule",
                  (context, item) =>
                  {
                      if (item.Node["Bar"].ToString() == "hey")
@@ -137,6 +140,44 @@ namespace Microsoft.OpenApi.Tests.Services
                    {
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
                    });
+        }
+
+        [Fact]
+        public void RemoveRuleByName_Invalid()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<OpenApiAny>(null, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<OpenApiAny>(string.Empty, (vc, oaa) => { }));
+        }
+
+        [Fact]
+        public void RemoveRuleByName()
+        {
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            int expected = ruleset.Rules.Count - 1;
+            ruleset.Remove("KeyMustBeRegularExpression");
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+            
+            ruleset.Remove("KeyMustBeRegularExpression");
+            ruleset.Remove("UnknownName");
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+        }
+
+        [Fact]
+        public void RemoveRuleByType()
+        {
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            int expected = ruleset.Rules.Count - 1;
+            
+            ruleset.Remove(typeof(OpenApiComponents));
+
+            Assert.Equal(expected, ruleset.Rules.Count);
+
+            ruleset.Remove(typeof(OpenApiComponents));
+            ruleset.Remove(typeof(int));
+
+            Assert.Equal(expected, ruleset.Rules.Count);
         }
     }
 

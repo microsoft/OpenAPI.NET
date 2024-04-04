@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Extension name MUST start with "x-".
         /// </summary>
         public static ValidationRule<IOpenApiExtensible> ExtensionNameMustStartWithXDash =>
-            new(
+            new(nameof(ExtensionNameMustStartWithXDash),
                 (context, item) =>
                 {
                     context.Enter("extensions");

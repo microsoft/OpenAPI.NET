@@ -7,6 +7,11 @@ on:
   schedule:
     - cron: '0 8 * * *'
 
+permissions:
+  contents: read # these permissions are required to run the codeql analysis
+  actions: read
+  security-events: write
+
 jobs:
   analyze:
     name: CodeQL Analysis
@@ -23,7 +28,7 @@ jobs:
 
       - name: Initialize CodeQL
         id: init_codeql
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           queries: security-and-quality
 
@@ -43,6 +48,6 @@ jobs:
 
       - name: Perform CodeQL Analysis
         id: analyze_codeql
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)

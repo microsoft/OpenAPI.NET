@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using FluentAssertions;
+using Json.Schema;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Newtonsoft.Json;
 using Xunit;
@@ -264,6 +268,23 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Assert
             writtenString.Should().Be(expectedString);
+        }
+
+        [Fact]
+        public void OpenApiJsonWriterOutputsValidJsonValueWhenSchemaHasNanOrInfinityValues()
+        {
+            // Arrange
+            var schema = new JsonSchemaBuilder().Enum("NaN", "Infinity", "-Infinity");
+
+            // Act
+            var schemaBuilder = new StringBuilder();
+            var jsonWriter = new OpenApiJsonWriter(new StringWriter(schemaBuilder));
+            jsonWriter.WriteJsonSchema(schema, OpenApiSpecVersion.OpenApi3_0);
+            var jsonString = schemaBuilder.ToString();
+
+            // Assert
+            var exception = Record.Exception(() => System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString));
+            Assert.Null(exception);
         }
     }
 }

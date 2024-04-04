@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -100,14 +100,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiRequestBody</returns>
         public OpenApiRequestBody GetEffective(OpenApiDocument doc)
         {
-            if (Reference != null)
-            {
-                return doc.ResolveReferenceTo<OpenApiRequestBody>(Reference);
-            }
-            else
-            {
-                return this;
-            }
+            return Reference != null ? doc.ResolveReferenceTo<OpenApiRequestBody>(Reference) : this;
         }
 
         /// <summary>
@@ -173,6 +166,7 @@ namespace Microsoft.OpenApi.Models
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
                 Schema = Content.Values.FirstOrDefault()?.Schema ?? new JsonSchemaBuilder(),
+                Examples = Content.Values.FirstOrDefault()?.Examples,
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
@@ -206,6 +200,7 @@ namespace Microsoft.OpenApi.Models
                     Description = property.Value.GetDescription(),
                     Name = property.Key,
                     Schema = property.Value,
+                    Examples = Content.Values.FirstOrDefault()?.Examples,
                     Required = Content.First().Value.Schema.GetRequired().Contains(property.Key)
                 };
             }

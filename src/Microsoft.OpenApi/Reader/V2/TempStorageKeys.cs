@@ -17,5 +17,6 @@ namespace Microsoft.OpenApi.Reader.V2
         public const string GlobalConsumes = "globalConsumes";
         public const string GlobalProduces = "globalProduces";
         public const string ParameterIsBodyOrFormData = "parameterIsBodyOrFormData";
+        public const string Examples = "examples";
     }
 }

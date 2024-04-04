@@ -1,3 +1,4 @@
+﻿
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
@@ -293,15 +294,15 @@ namespace Microsoft.OpenApi.Validations
             }
 
             // Validate unresolved references as references
-            if (item is IOpenApiReferenceable {UnresolvedReference: true})
+            if (item is IOpenApiReferenceable { UnresolvedReference: true })
             {
                 type = typeof(IOpenApiReferenceable);
             }
 
-            var rules = _ruleSet.FindRules(type.Name);
+            var rules = _ruleSet.FindRules(type);
             foreach (var rule in rules)
             {
-                rule.Evaluate(this as IValidationContext, item);
+                rule.Evaluate(this, item);
             }
         }
     }
