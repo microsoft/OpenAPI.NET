@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -324,6 +325,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     }
                 }
             };
+
+            document.Workspace.RegisterComponents(document);
 
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithRef.yaml"));
             var node = TestHelper.CreateYamlMapNode(stream);

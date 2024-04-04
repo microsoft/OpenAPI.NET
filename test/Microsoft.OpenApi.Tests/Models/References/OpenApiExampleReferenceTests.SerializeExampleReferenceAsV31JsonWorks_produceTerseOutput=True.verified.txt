@@ -1,1 +1,1 @@
-﻿{"summary":"Example of a user","description":"This is is an example of a user","value":[{"id":1,"name":"John Doe"}]}
+﻿{"summary":"Example of a local user","description":"This is an example of a local user","value":[{"id":1,"name":"John Doe"}]}

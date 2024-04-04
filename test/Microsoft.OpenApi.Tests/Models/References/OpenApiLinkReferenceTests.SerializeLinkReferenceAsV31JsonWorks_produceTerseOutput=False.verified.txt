@@ -3,5 +3,5 @@
   "parameters": {
     "userId": "$response.body#/id"
   },
-  "description": "The id value returned in the response can be used as the userId parameter in GET /users/{userId}"
+  "description": "Use the id returned as the userId in `GET /users/{userId}`"
 }

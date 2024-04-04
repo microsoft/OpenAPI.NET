@@ -26,7 +26,9 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiParameter>(_reference);
-                return _target;
+                OpenApiParameter resolved = new OpenApiParameter(_target);
+                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
+                return resolved;
             }
         }
 

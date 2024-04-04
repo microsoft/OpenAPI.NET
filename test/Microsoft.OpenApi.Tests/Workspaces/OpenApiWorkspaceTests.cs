@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Tests
             doc.Workspace.RegisterComponents(doc2);
             doc2.Workspace.RegisterComponents(doc);
             doc.Workspace.AddDocumentId("common", doc2.BaseUri);
-            var errors = doc.ResolveReferences();
+            var errors = doc.ResolveJsonSchemaReferences();
             Assert.Empty(errors);
         }
                 

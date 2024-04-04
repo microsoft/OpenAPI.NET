@@ -14,6 +14,8 @@ using System.Linq;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader.Services;
+using System.Collections.Generic;
+using System;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -94,6 +96,7 @@ namespace Microsoft.OpenApi.Reader
                 }
 
                 SetHostDocument(document);
+                ResolveReferences(diagnostic, document);
             }
             catch (OpenApiException ex)
             {
@@ -201,6 +204,17 @@ namespace Microsoft.OpenApi.Reader
         private void SetHostDocument(OpenApiDocument document)
         {
             document.SetHostDocument();
+        }
+
+        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
+        {
+            List<OpenApiError> errors = new();
+            errors.AddRange(document.ResolveJsonSchemaReferences());
+
+            foreach (var item in errors)
+            {
+                diagnostic.Errors.Add(item);
+            }
         }
     }
 }

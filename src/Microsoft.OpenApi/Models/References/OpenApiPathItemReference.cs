@@ -23,7 +23,10 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiPathItem>(_reference);
-                return _target;
+                OpenApiPathItem resolved = new OpenApiPathItem(_target);
+                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
+                if (!string.IsNullOrEmpty(_summary)) resolved.Summary = _summary;
+                return resolved;
             }
         }
 

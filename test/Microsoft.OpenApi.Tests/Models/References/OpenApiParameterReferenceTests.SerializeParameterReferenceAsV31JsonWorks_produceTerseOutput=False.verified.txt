@@ -1,7 +1,8 @@
 ﻿{
   "name": "limit",
   "in": "query",
-  "description": "Number of results to return",
+  "description": "Results to return",
+  "style": "form",
   "schema": {
     "maximum": 100,
     "minimum": 1,

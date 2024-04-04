@@ -22,7 +22,9 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiLink>(_reference);
-                return _target;
+                OpenApiLink resolved = new OpenApiLink(_target);
+                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
+                return resolved;
             }
         }
 

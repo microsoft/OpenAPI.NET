@@ -451,12 +451,12 @@ namespace Microsoft.OpenApi.Models
         /// This method will be replaced by a LoadExternalReferences in the next major update to this library.
         /// Resolving references at load time is going to go away.
         /// </remarks>
-        public IEnumerable<OpenApiError> ResolveReferences()
+        public IEnumerable<OpenApiError> ResolveJsonSchemaReferences()
         {
-            var resolver = new OpenApiReferenceResolver(this, false);
-            var walker = new OpenApiWalker(resolver);
+            var jsonSchemaResolver = new JsonSchemaReferenceResolver(this);
+            var walker = new OpenApiWalker(jsonSchemaResolver);
             walker.Walk(this);
-            return resolver.Errors;
+            return jsonSchemaResolver.Errors;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
@@ -42,7 +42,7 @@ components:
 ";
 
         private const string OpenApi_2 = @"
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: Sample API
   version: 1.0.0
@@ -85,6 +85,7 @@ components:
             _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
             _openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", _openApiDoc_2.BaseUri);
             _openApiDoc.Workspace.RegisterComponents(_openApiDoc_2);
+            _openApiDoc_2.Workspace.RegisterComponents(_openApiDoc_2);
 
             _localPathItemReference = new OpenApiPathItemReference("userPathItem", _openApiDoc_2)
             {

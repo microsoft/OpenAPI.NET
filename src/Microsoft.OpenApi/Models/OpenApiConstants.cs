@@ -628,7 +628,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The default registry uri for OpenApi documents and workspaces
         /// </summary>
-        public const string BaseRegistryUri = "http://openapi.net/";
+        public const string BaseRegistryUri = "https://openapi.net/";
 
         #region V2.0
 
