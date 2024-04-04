@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Reader.Services
         private readonly Dictionary<string, OpenApiReference> _references = new();
 
         /// <summary>
-        /// List of all internal and external references collected from OpenApiDocument
+        /// List of all external references collected from OpenApiDocument
         /// </summary>
         public IEnumerable<OpenApiReference> References
         {
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Reader.Services
         }
 
         /// <summary>
-        /// Collect internal and external references
+        /// Collect external references
         /// </summary>
         private void AddExternalReferences(OpenApiReference reference)
         {
