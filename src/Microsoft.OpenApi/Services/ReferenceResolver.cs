@@ -12,6 +12,10 @@ using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Services
 {
+    /// <summary>
+    /// This class is used to wallk an OpenApiDocument and sets the host document of OpenApiReferences
+    /// and resolves JsonSchema references.
+    /// </summary>
     internal class ReferenceResolver : OpenApiVisitorBase
     {
         private readonly OpenApiDocument _currentDocument;
@@ -119,7 +123,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Resolves the target to a JSON schema reference by retrieval from Schema registry
+        /// Resolves the target to a JsonSchema reference by retrieval from Schema registry
         /// </summary>
         /// <param name="reference">The JSON schema reference.</param>
         /// <param name="description">The schema's description.</param>
