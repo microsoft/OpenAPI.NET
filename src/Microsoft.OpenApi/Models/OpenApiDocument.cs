@@ -445,28 +445,15 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Walk the OpenApiDocument and resolve unresolved references
+        /// Walks the OpenApiDocument and sets the host document for all IOpenApiReferenceable objects
+        /// and resolves JsonSchema references
         /// </summary>
-        /// <remarks>
-        /// This method will be replaced by a LoadExternalReferences in the next major update to this library.
-        /// Resolving references at load time is going to go away.
-        /// </remarks>
-        public IEnumerable<OpenApiError> ResolveJsonSchemaReferences()
+        public IEnumerable<OpenApiError> ResolveReferences()
         {
-            var jsonSchemaResolver = new JsonSchemaReferenceResolver(this);
-            var walker = new OpenApiWalker(jsonSchemaResolver);
-            walker.Walk(this);
-            return jsonSchemaResolver.Errors;
-        }
-
-        /// <summary>
-        /// Walks the OpenApiDocument and sets the host document for all referenceable objects
-        /// </summary>
-        public void SetHostDocument()
-        {
-            var resolver = new HostDocumentResolver(this);
+            var resolver = new ReferenceResolver(this);
             var walker = new OpenApiWalker(resolver);
             walker.Walk(this);
+            return resolver.Errors;
         }
 
         /// <summary>
@@ -502,6 +489,7 @@ namespace Microsoft.OpenApi.Models
             string uriLocation;
             string id = referenceUri.OriginalString.Split('/')?.Last();
             string relativePath = "/components/" + ReferenceType.Schema.GetDisplayName() + "/" + id;
+            
             if (referenceUri.OriginalString.StartsWith("#"))
             {
                 // Local reference

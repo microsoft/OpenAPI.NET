@@ -95,7 +95,6 @@ namespace Microsoft.OpenApi.Reader
                     }
                 }
 
-                SetHostDocument(document);
                 ResolveReferences(diagnostic, document);
             }
             catch (OpenApiException ex)
@@ -201,15 +200,10 @@ namespace Microsoft.OpenApi.Reader
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
         }
 
-        private void SetHostDocument(OpenApiDocument document)
-        {
-            document.SetHostDocument();
-        }
-
         private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
         {
             List<OpenApiError> errors = new();
-            errors.AddRange(document.ResolveJsonSchemaReferences());
+            errors.AddRange(document.ResolveReferences());
 
             foreach (var item in errors)
             {
