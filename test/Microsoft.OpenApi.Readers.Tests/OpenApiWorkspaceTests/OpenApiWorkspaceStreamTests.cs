@@ -59,14 +59,13 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
-                BaseUrl = new("fie://c:\\")
+                BaseUrl = new("file://c:\\"),
             };
 
             ReadResult result;
             result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);            
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
-            Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));
 
             var referencedSchema = result.OpenApiDocument
                                     .Paths["/todos"]
@@ -74,6 +73,10 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                                     .Responses["200"]
                                     .Content["application/json"]
                                     .Schema;
+
+            var x = referencedSchema.GetProperties().TryGetValue("subject", out var schema);
+            Assert.Equal(SchemaValueType.Object, referencedSchema.GetJsonType());
+            Assert.Equal(SchemaValueType.String, schema.GetJsonType());
 
             var referencedParameter = result.OpenApiDocument
                                         .Paths["/todos"]

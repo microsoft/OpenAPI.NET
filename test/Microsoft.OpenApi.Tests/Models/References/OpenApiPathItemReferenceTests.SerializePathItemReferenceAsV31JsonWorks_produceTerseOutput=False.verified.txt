@@ -1,6 +1,6 @@
 ﻿{
-  "summary": "User path item summary",
-  "description": "User path item description",
+  "summary": "Local reference: User path item summary",
+  "description": "Local reference: User path item description",
   "get": {
     "summary": "Get users",
     "responses": {

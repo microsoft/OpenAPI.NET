@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Json.Schema;
-using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
@@ -94,8 +94,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiDocument() { }
-
+        public OpenApiDocument() 
+        {
+            Workspace = new OpenApiWorkspace();
+            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid().ToString());            
+        }
+                
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
         /// </summary>
@@ -441,28 +445,15 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Walk the OpenApiDocument and resolve unresolved references
+        /// Walks the OpenApiDocument and sets the host document for all IOpenApiReferenceable objects
+        /// and resolves JsonSchema references
         /// </summary>
-        /// <remarks>
-        /// This method will be replaced by a LoadExternalReferences in the next major update to this library.
-        /// Resolving references at load time is going to go away.
-        /// </remarks>
         public IEnumerable<OpenApiError> ResolveReferences()
         {
-            var resolver = new OpenApiReferenceResolver(this, false);
+            var resolver = new ReferenceResolver(this);
             var walker = new OpenApiWalker(resolver);
             walker.Walk(this);
             return resolver.Errors;
-        }
-
-        /// <summary>
-        /// Walks the OpenApiDocument and sets the host document for all referenceable objects
-        /// </summary>
-        public void SetHostDocument()
-        {
-            var resolver = new HostDocumentResolver(this);
-            var walker = new OpenApiWalker(resolver);
-            walker.Walk(this);
         }
 
         /// <summary>
@@ -486,6 +477,33 @@ namespace Microsoft.OpenApi.Models
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
             return ResolveReference(reference, false);
+        }
+
+        /// <summary>
+        /// Resolves JsonSchema refs
+        /// </summary>
+        /// <param name="referenceUri"></param>
+        /// <returns>A JsonSchema ref.</returns>
+        public JsonSchema ResolveJsonSchemaReference(Uri referenceUri)
+        {            
+            string uriLocation;
+            string id = referenceUri.OriginalString.Split('/')?.Last();
+            string relativePath = "/components/" + ReferenceType.Schema.GetDisplayName() + "/" + id;
+            
+            if (referenceUri.OriginalString.StartsWith("#"))
+            {
+                // Local reference
+                uriLocation = BaseUri + relativePath;
+            }
+            else
+            {
+                // External reference
+                var externalUri = referenceUri.OriginalString.Split('#').First();
+                var externalDocId = Workspace.GetDocumentId(externalUri);
+                uriLocation = externalDocId + relativePath;
+            }
+
+            return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(uriLocation);
         }
 
         /// <summary>
@@ -532,16 +550,6 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            // Todo: Verify if we need to check to see if this external reference is actually targeted at this document.
-            if (useExternal)
-            {
-                if (this.Workspace == null)
-                {
-                    throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
-                }
-                return this.Workspace.ResolveReference(reference);
-            }
-
             if (!reference.Type.HasValue)
             {
                 throw new ArgumentException(Properties.SRResource.LocalReferenceRequiresType);
@@ -562,51 +570,16 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            if (this.Components == null)
-            {
-                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
-            }
+            string uriLocation;
+            string relativePath = "/components/" + reference.Type.GetDisplayName() + "/" + reference.Id;
 
-            try
-            {
-                switch (reference.Type)
-                {
-                    case ReferenceType.PathItem:
-                        return Components.PathItems[reference.Id];
-                    case ReferenceType.Response:
-                        return Components.Responses[reference.Id];
+            uriLocation = useExternal
+                ? Workspace.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
+                : BaseUri + relativePath;
 
-                    case ReferenceType.Parameter:
-                        return Components.Parameters[reference.Id];
-
-                    case ReferenceType.Example:
-                        return Components.Examples[reference.Id];
-
-                    case ReferenceType.RequestBody:
-                        return Components.RequestBodies[reference.Id];
-
-                    case ReferenceType.Header:
-                        return Components.Headers[reference.Id];
-
-                    case ReferenceType.SecurityScheme:
-                        return Components.SecuritySchemes[reference.Id];
-
-                    case ReferenceType.Link:
-                        return Components.Links[reference.Id];
-
-                    case ReferenceType.Callback:
-                        return Components.Callbacks[reference.Id];
-
-                    default:
-                        throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
-                }
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
-            }
+            return Workspace.ResolveReference<IOpenApiReferenceable>(uriLocation);
         }
-
+                
         /// <summary>
         /// Parses a local file path or Url into an Open API document.
         /// </summary>
@@ -706,12 +679,6 @@ namespace Microsoft.OpenApi.Models
         public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
         {
             throw new NotImplementedException();
-        }
-
-        internal JsonSchema ResolveJsonSchemaReference(Uri reference)
-        {
-            var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
-            return (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
         }
     }
 

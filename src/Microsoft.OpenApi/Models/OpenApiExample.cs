@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         {
             Summary = example?.Summary ?? Summary;
             Description = example?.Description ?? Description;
-            Value = JsonNodeCloneHelper.Clone(example?.Value);
+            Value = example?.Value ?? JsonNodeCloneHelper.Clone(example?.Value);
             ExternalValue = example?.ExternalValue ?? ExternalValue;
             Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
             Reference = example?.Reference != null ? new(example?.Reference) : null;

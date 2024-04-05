@@ -133,14 +133,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             {
                                                 Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Array)
-                                                    .Items(new JsonSchemaBuilder().Ref("#/components/schemas/petSchema"))
+                                                    .Items(petSchema)
 
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
                                                 Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Array)
-                                                    .Items(new JsonSchemaBuilder().Ref("#/components/schemas/petSchema"))
+                                                    .Items(petSchema)
                                             }
                                         }
                                     }
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/newPetSchema")
+                                            Schema = newPetSchema
                                         }
                                     }
                                 },
@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new JsonSchemaBuilder().Ref("#/components/schemas/petSchema")
+                                                Schema = petSchema
                                             }
                                         }
                                     }
@@ -181,10 +181,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Components = components
             };
 
-            // Assert
-            var schema = actual.OpenApiDocument.Webhooks["pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            // Assert            
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected);
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
 
         [Fact]
@@ -261,13 +260,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         {
                                             Schema = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Array)
-                                                .Items(new JsonSchemaBuilder().Ref("#/components/schemas/petSchema"))
+                                                .Items(petSchema)
                                         },
                                         ["application/xml"] = new OpenApiMediaType
                                         {
                                             Schema = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Array)
-                                                .Items(new JsonSchemaBuilder().Ref("#/components/schemas/petSchema"))
+                                                .Items(petSchema)
                                         }
                                     }
                                 }
@@ -283,7 +282,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema = new JsonSchemaBuilder().Ref("#/components/schemas/newPetSchema")
+                                        Schema = newPetSchema
                                     }
                                 }
                             },
@@ -296,7 +295,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/petSchema")
+                                            Schema = petSchema
                                         },
                                     }
                                 }
@@ -322,7 +321,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Webhooks["pets"].Reference));
+            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options
+            .Excluding(x => x.Webhooks["pets"].Reference)
+            .Excluding(x => x.Workspace)
+            .Excluding(y => y.BaseUri));
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
         }

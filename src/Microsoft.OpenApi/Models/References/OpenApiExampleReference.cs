@@ -24,7 +24,10 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiExample>(_reference);
-                return _target;
+                OpenApiExample resolved = new OpenApiExample(_target);                
+                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
+                if (!string.IsNullOrEmpty(_summary)) resolved.Summary = _summary;
+                return resolved;
             }
         }
 
@@ -71,12 +74,12 @@ namespace Microsoft.OpenApi.Models.References
         public override string Description
         {
             get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
-            set => _description = value; 
+            set => _description = value;
         }
 
         /// <inheritdoc/>
         public override string Summary
-        { 
+        {
             get => string.IsNullOrEmpty(_summary) ? Target.Summary : _summary;
             set => _summary = value;
         }

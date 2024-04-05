@@ -22,7 +22,9 @@ namespace Microsoft.OpenApi.Models.References
             {
                 _target ??= Reference.HostDocument?.ResolveReferenceTo<OpenApiTag>(_reference);
                 _target ??= new OpenApiTag() { Name = _reference.Id };
-                return _target;
+                OpenApiTag resolved = new OpenApiTag(_target);
+                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
+                return resolved;
             }
         }
 

@@ -1,6 +1,8 @@
-﻿using Microsoft.OpenApi.Extensions;
+﻿using System;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -9,7 +11,7 @@ namespace Microsoft.OpenApi.Reader.V31
     /// runtime Open API object model.
     /// </summary>
     internal static partial class OpenApiV31Deserializer
-    {
+  {
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
@@ -45,10 +47,13 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
         {
-            var openApiNode = rootNode.GetMap();
             var openApiDoc = new OpenApiDocument();
+            var openApiNode = rootNode.GetMap();
 
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields);
+
+            // Register components
+            openApiDoc.Workspace.RegisterComponents(openApiDoc);
 
             return openApiDoc;
         }

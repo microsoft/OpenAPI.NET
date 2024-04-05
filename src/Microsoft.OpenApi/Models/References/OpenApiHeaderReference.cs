@@ -24,7 +24,9 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiHeader>(_reference);
-                return _target;
+                OpenApiHeader resolved = new OpenApiHeader(_target);
+                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
+                return resolved;
             }
         }
 
@@ -153,7 +155,7 @@ namespace Microsoft.OpenApi.Models.References
         private void SerializeInternal(IOpenApiWriter writer,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
             action(writer, Target);
         }
     }

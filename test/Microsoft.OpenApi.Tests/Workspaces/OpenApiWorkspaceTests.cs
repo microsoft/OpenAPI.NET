@@ -14,22 +14,9 @@ namespace Microsoft.OpenApi.Tests
     public class OpenApiWorkspaceTests
     {
         [Fact]
-        public void OpenApiWorkspaceCanHoldMultipleDocuments()
+        public void OpenApiWorkspacesCanAddComponentsFromAnotherDocument()
         {
-            var workspace = new OpenApiWorkspace();
-
-            workspace.AddDocument("root", new());
-            workspace.AddDocument("common", new());
-
-            Assert.Equal(2, workspace.Documents.Count());
-        }
-
-        [Fact]
-        public void OpenApiWorkspacesAllowDocumentsToReferenceEachOther()
-        {
-            var workspace = new OpenApiWorkspace();
-
-            workspace.AddDocument("root", new OpenApiDocument()
+            var doc = new OpenApiDocument()
             {
                 Paths = new OpenApiPaths()
                 {
@@ -56,8 +43,9 @@ namespace Microsoft.OpenApi.Tests
                         }
                     }
                 }
-            });
-            workspace.AddDocument("common", new OpenApiDocument()
+            };
+
+            var doc2 = new OpenApiDocument()
             {
                 Components = new OpenApiComponents()
                 {
@@ -65,8 +53,11 @@ namespace Microsoft.OpenApi.Tests
                         ["test"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("The referenced one").Build()
                     }
                 }
-            });
-            Assert.Equal(2, workspace.Documents.Count());
+            };
+
+            doc.Workspace.RegisterComponents(doc2);
+                                    
+            Assert.Equal(1, doc.Workspace.ComponentsCount());
         }
 
         [Fact]
@@ -74,13 +65,12 @@ namespace Microsoft.OpenApi.Tests
         {
             var refUri = new Uri("https://everything.json/common#/components/schemas/test");
             var workspace = new OpenApiWorkspace();
-            var doc = CreateCommonDocument(refUri);
-            var location = "common";
-            
-            workspace.AddDocument(location, doc);
+            var externalDoc = CreateCommonDocument();
+                       
+            workspace.RegisterComponent<IBaseDocument>("https://everything.json/common#/components/schemas/test", externalDoc.Components.Schemas["test"]);
 
-            var schema = workspace.ResolveJsonSchemaReference(refUri);
-            
+            var schema = workspace.ResolveReference<JsonSchema>("https://everything.json/common#/components/schemas/test");
+           
             Assert.NotNull(schema);
             Assert.Equal("The referenced one", schema.GetDescription());
         }
@@ -88,10 +78,8 @@ namespace Microsoft.OpenApi.Tests
         [Fact]
         public void OpenApiWorkspacesAllowDocumentsToReferenceEachOther_short()
         {
-            var workspace = new OpenApiWorkspace();
-
             var doc = new OpenApiDocument();
-            var reference = "#/components/schemas/test";
+            var reference = "common#/components/schemas/test";
             doc.CreatePathItem("/", p =>
             {
                 p.Description = "Consumer";
@@ -106,31 +94,14 @@ namespace Microsoft.OpenApi.Tests
                 );
             });
 
-            var refUri = new Uri("https://registry" + reference.Split('#').LastOrDefault());
-            workspace.AddDocument("root", doc);
-            workspace.AddDocument("common", CreateCommonDocument(refUri));
+            var doc2 = CreateCommonDocument();
+            doc.Workspace.RegisterComponents(doc2);
+            doc2.Workspace.RegisterComponents(doc);
+            doc.Workspace.AddDocumentId("common", doc2.BaseUri);
             var errors = doc.ResolveReferences();
             Assert.Empty(errors);
-
-            var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            //var effectiveSchema = schema.GetEffective(doc);
-            //Assert.False(effectiveSchema.UnresolvedReference);
         }
-
-        [Fact]
-        public void OpenApiWorkspacesShouldNormalizeDocumentLocations()
-        {
-            var workspace = new OpenApiWorkspace();
-            workspace.AddDocument("hello", new());
-            workspace.AddDocument("hi", new());
-
-            Assert.True(workspace.Contains("./hello"));
-            Assert.True(workspace.Contains("./foo/../hello"));
-            Assert.True(workspace.Contains("file://" + Environment.CurrentDirectory + "/./foo/../hello"));
-
-            Assert.False(workspace.Contains("./goodbye"));
-        }
-
+                
         // Enable Workspace to load from any reader, not just streams.
 
         // Test fragments
@@ -145,10 +116,10 @@ namespace Microsoft.OpenApi.Tests
             // Arrange
             var workspace = new OpenApiWorkspace();
             var schemaFragment = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Schema from a fragment").Build();
-            workspace.AddSchemaFragment("fragment", schemaFragment);
+            workspace.RegisterComponent<IBaseDocument>("common#/components/schemas/test", schemaFragment);
 
             // Act
-            var schema = workspace.ResolveJsonSchemaReference(new Uri("https://everything.json/common#/components/schemas/test"));
+            var schema = workspace.ResolveReference<JsonSchema>("common#/components/schemas/test");
 
             // Assert
             Assert.NotNull(schema);
@@ -167,21 +138,18 @@ namespace Microsoft.OpenApi.Tests
                     { "header1", new OpenApiHeader() }
                 }
             };
-            workspace.AddFragment("fragment", responseFragment);
+
+            workspace.RegisterComponent("headers/header1", responseFragment);
 
             // Act
-            var resolvedElement = workspace.ResolveReference(new()
-            {
-                Id = "headers/header1",
-                ExternalResource = "fragment"
-            });
+            var resolvedElement = workspace.ResolveReference<OpenApiResponse>("headers/header1");
 
             // Assert
-            Assert.Same(responseFragment.Headers["header1"], resolvedElement);
+            Assert.Same(responseFragment.Headers["header1"], resolvedElement.Headers["header1"]);
         }
 
         // Test artifacts
-        private static OpenApiDocument CreateCommonDocument(Uri refUri)
+        private static OpenApiDocument CreateCommonDocument()
         {
             var doc =  new OpenApiDocument()
             {
@@ -192,11 +160,6 @@ namespace Microsoft.OpenApi.Tests
                     }
                 }
             };
-
-            foreach(var schema in doc.Components.Schemas)
-            {
-                SchemaRegistry.Global.Register(refUri, schema.Value);
-            }
 
             return doc;
         }

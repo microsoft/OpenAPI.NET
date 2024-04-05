@@ -1,1 +1,1 @@
-﻿{"description":"The URL of the newly created post","type":"string"}
+{"description":"Location of the locally referenced post","type":"string"}

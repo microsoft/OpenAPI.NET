@@ -52,11 +52,7 @@ namespace Microsoft.OpenApi.SmokeTests
         public void LoadOpen()
         {
             var operations = new[] { "foo", "bar" };
-            var workspace = new OpenApiWorkspace();
-            workspace.AddDocument(graphOpenApiUrl, _graphOpenApi);
             var subset = new OpenApiDocument();
-            workspace.AddDocument("subset", subset);
-
             Assert.NotNull(_graphOpenApi);
         }
     }

@@ -2,12 +2,15 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Writers;
+using VerifyXunit;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -39,12 +42,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okMediaType = new OpenApiMediaType
             {
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("#/definitions/Item"))
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(okSchema)
             };
 
             var errorMediaType = new OpenApiMediaType
             {
-                Schema = new JsonSchemaBuilder().Ref("#/definitions/Error")
+                Schema = errorSchema
             };
 
             result.OpenApiDocument.Should().BeEquivalentTo(new OpenApiDocument
@@ -148,7 +151,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             ["Error"] = errorSchema
                         }
                 }
-            });
+            }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+
         }
 
         [Fact]
@@ -165,6 +169,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))));
 
             var errorSchema = new JsonSchemaBuilder()
+                    .Ref("#/definitions/Error")
                     .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
@@ -176,7 +181,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
-
                 Assert.Equal(json.Schema.Keywords.Count, targetSchema.Keywords.Count);
 
                 var xml = response.Value.Content["application/xml"];

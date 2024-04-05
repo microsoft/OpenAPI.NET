@@ -451,6 +451,7 @@ namespace Microsoft.OpenApi.Models
         public const string AuthorizationCode = "authorizationCode";
         public const string AuthorizationUrl = "authorizationUrl";
         public const string BasePath = "basePath";
+        public const string BaseRegistryUri = "https://openapi.net/";
         public const string Basic = "basic";
         public const string Bearer = "bearer";
         public const string BearerFormat = "bearerFormat";
@@ -618,12 +619,12 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiPathItem> Webhooks { get; set; }
         public Microsoft.OpenApi.Services.OpenApiWorkspace Workspace { get; set; }
         public Json.Schema.JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, Json.Schema.EvaluationOptions options) { }
+        public Json.Schema.JsonSchema ResolveJsonSchemaReference(System.Uri referenceUri) { }
         public Microsoft.OpenApi.Interfaces.IOpenApiReferenceable ResolveReference(Microsoft.OpenApi.Models.OpenApiReference reference) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiError> ResolveReferences() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public void SetHostDocument() { }
         public static string GenerateHashValue(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
         public static Microsoft.OpenApi.Reader.ReadResult Load(string url, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
         public static Microsoft.OpenApi.Reader.ReadResult Load(System.IO.Stream stream, string format, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
@@ -1405,28 +1406,6 @@ namespace Microsoft.OpenApi.Services
         public OpenApiReferenceError(Microsoft.OpenApi.Exceptions.OpenApiException exception) { }
         public OpenApiReferenceError(Microsoft.OpenApi.Models.OpenApiReference reference, string message) { }
     }
-    public class OpenApiReferenceResolver : Microsoft.OpenApi.Services.OpenApiVisitorBase
-    {
-        public OpenApiReferenceResolver(Microsoft.OpenApi.Models.OpenApiDocument currentDocument, bool resolveRemoteReferences = true) { }
-        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiError> Errors { get; }
-        public Json.Schema.JsonSchema ResolveJsonSchemaReference(System.Uri reference, string description = null, string summary = null) { }
-        public override void Visit(Json.Schema.IBaseDocument document) { }
-        public override void Visit(ref Json.Schema.JsonSchema schema) { }
-        public override void Visit(Microsoft.OpenApi.Interfaces.IOpenApiReferenceable referenceable) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiComponents components) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiMediaType mediaType) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiOperation operation) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiParameter parameter) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiResponses responses) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiSecurityRequirement securityRequirement) { }
-        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiCallback> callbacks) { }
-        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiExample> examples) { }
-        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiHeader> headers) { }
-        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiLink> links) { }
-        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiPathItem> webhooks) { }
-        public override void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiParameter> parameters) { }
-    }
     public class OpenApiUrlTreeNode
     {
         public static readonly System.Collections.Generic.IReadOnlyDictionary<string, Microsoft.OpenApi.Services.MermaidNodeStyle> MermaidNodeStyles;
@@ -1508,18 +1487,13 @@ namespace Microsoft.OpenApi.Services
         public OpenApiWorkspace() { }
         public OpenApiWorkspace(Microsoft.OpenApi.Services.OpenApiWorkspace workspace) { }
         public OpenApiWorkspace(System.Uri baseUrl) { }
-        public System.Collections.Generic.IEnumerable<System.IO.Stream> Artifacts { get; }
         public System.Uri BaseUrl { get; }
-        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiDocument> Documents { get; }
-        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Interfaces.IOpenApiElement> Fragments { get; }
-        public void AddArtifact(string location, System.IO.Stream artifact) { }
-        public void AddDocument(string location, Microsoft.OpenApi.Models.OpenApiDocument document) { }
-        public void AddFragment(string location, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable fragment) { }
-        public void AddSchemaFragment(string location, Json.Schema.JsonSchema fragment) { }
+        public void AddDocumentId(string key, System.Uri value) { }
+        public int ComponentsCount() { }
         public bool Contains(string location) { }
-        public System.IO.Stream GetArtifact(string location) { }
-        public Json.Schema.JsonSchema ResolveJsonSchemaReference(System.Uri reference) { }
-        public Microsoft.OpenApi.Interfaces.IOpenApiReferenceable ResolveReference(Microsoft.OpenApi.Models.OpenApiReference reference) { }
+        public System.Uri GetDocumentId(string key) { }
+        public bool RegisterComponent<T>(string location, T component) { }
+        public T ResolveReference<T>(string location) { }
     }
     public class OperationSearch : Microsoft.OpenApi.Services.OpenApiVisitorBase
     {

@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <param name="hostDocument">The host OpenAPI document.</param>
         /// <param name="externalResource">Optional: External resource in the reference.
         /// It may be:
-        /// 1. a absolute/relative file path, for example:  ../commons/pet.json
+        /// 1. an absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
         public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)

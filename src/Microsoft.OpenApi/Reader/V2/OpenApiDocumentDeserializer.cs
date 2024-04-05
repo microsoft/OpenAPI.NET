@@ -224,36 +224,38 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
         {
-            var openApidoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument();
 
             var openApiNode = rootNode.GetMap();
 
-            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
+            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields);
 
-            if (openApidoc.Paths != null)
+            if (openApiDoc.Paths != null)
             {
                 ProcessResponsesMediaTypes(
                     rootNode.GetMap(),
-                    openApidoc.Paths.Values
+                    openApiDoc.Paths.Values
                         .SelectMany(path => path.Operations?.Values ?? Enumerable.Empty<OpenApiOperation>())
                         .SelectMany(operation => operation.Responses?.Values ?? Enumerable.Empty<OpenApiResponse>()),
                     openApiNode.Context);
             }
 
-            ProcessResponsesMediaTypes(rootNode.GetMap(), openApidoc.Components?.Responses?.Values, openApiNode.Context);
+            ProcessResponsesMediaTypes(rootNode.GetMap(), openApiDoc.Components?.Responses?.Values, openApiNode.Context);
 
             // Post Process OpenApi Object
-            if (openApidoc.Servers == null)
+            if (openApiDoc.Servers == null)
             {
-                openApidoc.Servers = new List<OpenApiServer>();
+                openApiDoc.Servers = new List<OpenApiServer>();
             }
 
-            MakeServers(openApidoc.Servers, openApiNode.Context, rootNode);
+            MakeServers(openApiDoc.Servers, openApiNode.Context, rootNode);
 
-            FixRequestBodyReferences(openApidoc);
-            RegisterComponentsSchemasInGlobalRegistry(openApidoc.Components?.Schemas);
+            FixRequestBodyReferences(openApiDoc);
 
-            return openApidoc;
+            // Register components
+            openApiDoc.Workspace.RegisterComponents(openApiDoc);
+
+            return openApiDoc;
         }
 
         private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<OpenApiResponse> responses, ParsingContext context)

@@ -26,7 +26,8 @@ namespace Microsoft.OpenApi.Reader.Services
                                                          OpenApiDiagnostic diagnostic = null,
                                                          CancellationToken cancellationToken = default)
         {
-            _workspace.AddDocument(reference.ExternalResource, document);
+            _workspace.AddDocumentId(reference.ExternalResource, document.BaseUri);
+            _workspace.RegisterComponents(document);
             document.Workspace = _workspace;
 
             // Collect remote references by walking document
@@ -39,6 +40,7 @@ namespace Microsoft.OpenApi.Reader.Services
             // Walk references
             foreach (var item in referenceCollector.References)
             {
+
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
@@ -51,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.Services
                     }
                     if (result.OpenApiDocument != null)
                     {
-                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, format,  diagnostic, cancellationToken);
+                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, format, diagnostic, cancellationToken);
                         diagnostic = loadDiagnostic;
                     }
                 }

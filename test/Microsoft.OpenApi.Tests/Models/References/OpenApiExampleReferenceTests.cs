@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.Services;
 using VerifyXunit;
 using Xunit;
 
@@ -18,11 +19,59 @@ namespace Microsoft.OpenApi.Tests.Models.References
     [Collection("DefaultSettings")]
     public class OpenApiExampleReferenceTests
     {
+        // OpenApi doc with external $ref
         private const string OpenApi = @"
 openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
+servers: 
+  - url: https://myserver.com/v1.0
+paths:
+  /users:
+    get:
+      summary: Get users
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'https://myserver.com/beta#/components/schemas/User'
+              examples:
+                - $ref: 'https://myserver.com/beta#/components/examples/UserExample'
+components:
+  callbacks:
+    callbackEvent:
+      '{$request.body#/callbackUrl}':
+        post:
+          requestBody: # Contents of the callback message
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Some event happened
+                  required:
+                    - message
+          responses:
+            '200':
+              description: ok"";
+";
+
+        // OpenApi doc with local $ref
+        private const string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+servers: 
+  - url: https://myserver.com/beta
 paths:
   /users:
     get:
@@ -56,28 +105,6 @@ components:
           name: John Doe
 ";
 
-        private const string OpenApi_2 = @"
-openapi: 3.0.0
-info:
-  title: Sample API
-  version: 1.0.0
-paths:
-  /users:
-    get:
-      summary: Get users
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-              examples:
-                - $ref: '#/components/examples/UserExample'
-";
-
         private readonly OpenApiExampleReference _localExampleReference;
         private readonly OpenApiExampleReference _externalExampleReference;
         private readonly OpenApiDocument _openApiDoc;
@@ -86,18 +113,18 @@ paths:
         public OpenApiExampleReferenceTests()
         {
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            _openApiDoc = OpenApiDocument.Parse(OpenApi, "yaml").OpenApiDocument;
-            _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, "yaml").OpenApiDocument;
-            _openApiDoc_2.Workspace = new();
-            _openApiDoc_2.Workspace.AddDocument("http://localhost/examplereference", _openApiDoc);
+            _openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).OpenApiDocument;
+            _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
+            _openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", _openApiDoc_2.BaseUri);
+            _openApiDoc.Workspace.RegisterComponents(_openApiDoc_2);
 
-            _localExampleReference = new OpenApiExampleReference("UserExample", _openApiDoc)
+            _localExampleReference = new OpenApiExampleReference("UserExample", _openApiDoc_2)
             {
                 Summary = "Example of a local user",
                 Description = "This is an example of a local user"
             };
 
-            _externalExampleReference = new OpenApiExampleReference("UserExample", _openApiDoc_2, "http://localhost/examplereference")
+            _externalExampleReference = new OpenApiExampleReference("UserExample", _openApiDoc, "https://myserver.com/beta")
             {
                 Summary = "Example of an external user",
                 Description = "This is an example of an external user"
@@ -108,18 +135,19 @@ paths:
         public void ExampleReferenceResolutionWorks()
         {
             // Assert
+            Assert.NotNull(_localExampleReference.Value);
+            Assert.Equal("[{\"id\":1,\"name\":\"John Doe\"}]", _localExampleReference.Value.Node.ToJsonString());
             Assert.Equal("Example of a local user", _localExampleReference.Summary);
             Assert.Equal("This is an example of a local user", _localExampleReference.Description);
-            Assert.NotNull(_localExampleReference.Value);
 
-            Assert.Equal("Example of an external user", _externalExampleReference.Summary);
-            Assert.Equal("This is an example of an external user", _externalExampleReference.Description);
             Assert.NotNull(_externalExampleReference.Value);
+            Assert.Equal("Example of an external user", _externalExampleReference.Summary);
+            Assert.Equal("This is an example of an external user", _externalExampleReference.Description);            
 
             // The main description and summary values shouldn't change
-            Assert.Equal("Example of a user", _openApiDoc.Components.Examples.First().Value.Summary);
+            Assert.Equal("Example of a user", _openApiDoc_2.Components.Examples.First().Value.Summary);
             Assert.Equal("This is is an example of a user",
-                _openApiDoc.Components.Examples.First().Value.Description);         
+                _openApiDoc_2.Components.Examples.FirstOrDefault().Value.Description);         
         }
 
         [Theory]
