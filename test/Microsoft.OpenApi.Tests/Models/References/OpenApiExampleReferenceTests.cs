@@ -133,7 +133,7 @@ components:
 
         [Fact]
         public void ExampleReferenceResolutionWorks()
-        {
+         {
             // Assert
             Assert.NotNull(_localExampleReference.Value);
             Assert.Equal("[{\"id\":1,\"name\":\"John Doe\"}]", _localExampleReference.Value.Node.ToJsonString());
