@@ -62,8 +62,8 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
-            _schema = JsonNodeCloneHelper.CloneJsonSchema(mediaType?.Schema);
-            Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
+            Schema = mediaType?.Schema != null ? JsonNodeCloneHelper.CloneJsonSchema(mediaType.Schema) : null;
+            Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
             Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;

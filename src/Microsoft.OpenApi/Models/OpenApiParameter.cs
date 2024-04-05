@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -168,9 +168,9 @@ namespace Microsoft.OpenApi.Models
             Style = parameter?.Style ?? Style;
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
-            Schema = parameter?.Schema != null ? JsonNodeCloneHelper.CloneJsonSchema(parameter?.Schema) : null;
+            Schema = parameter?.Schema != null ? JsonNodeCloneHelper.CloneJsonSchema(parameter.Schema) : null;
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
-            Example = parameter?.Example != null ? JsonNodeCloneHelper.Clone(parameter?.Example) : null;
+            Example = parameter?.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
