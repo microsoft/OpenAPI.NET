@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Models.References
         private void SerializeInternal(IOpenApiWriter writer,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
             action(writer, Target);
         }
     }
