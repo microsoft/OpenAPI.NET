@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDocument() 
         {
             Workspace = new OpenApiWorkspace();
-            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid().ToString());            
+            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());            
         }
                 
         /// <summary>

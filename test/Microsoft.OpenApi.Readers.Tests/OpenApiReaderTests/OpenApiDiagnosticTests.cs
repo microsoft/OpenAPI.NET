@@ -54,7 +54,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             ReadResult result;
             result = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/TodoMain.yaml", settings);
 
-
             Assert.NotNull(result);
             Assert.NotNull(result.OpenApiDocument.Workspace);
             result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
