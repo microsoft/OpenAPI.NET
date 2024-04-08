@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -26,8 +29,16 @@ namespace Microsoft.OpenApi.Reader.Services
             }
         }
 
+        public IEnumerable<OpenApiReference> JsonSchemaReferences
+        {
+            get
+            {
+                return _references.Values;
+            }
+        }
+
         /// <summary>
-        /// Collect reference for each reference
+        /// Collect external OpenApiReferences references
         /// </summary>
         /// <param name="referenceable"></param>
         public override void Visit(IOpenApiReferenceable referenceable)
@@ -36,7 +47,16 @@ namespace Microsoft.OpenApi.Reader.Services
         }
 
         /// <summary>
-        /// Collect external references
+        /// Collect external JsonSchema references
+        /// </summary>
+        /// <param name="value"></param>
+        public override void Visit(IBaseDocument value)
+        {
+            AddExternalJsonSchemaReferences((JsonSchema)value);
+        }
+
+        /// <summary>
+        /// Collect external OpenApiReferences references
         /// </summary>
         private void AddExternalReferences(OpenApiReference reference)
         {
@@ -44,6 +64,28 @@ namespace Microsoft.OpenApi.Reader.Services
                 !_references.ContainsKey(reference.ExternalResource))
             {
                 _references.Add(reference.ExternalResource, reference);
+            }
+        }
+
+        /// <summary>
+        /// Collect external JsonSchema references
+        /// </summary>
+        /// <param name="schema"></param>
+        private void AddExternalJsonSchemaReferences(JsonSchema schema)
+        {
+            var jsonRef = schema.GetRef();
+            if (jsonRef != null && schema.Keywords.Count == 1)
+            {
+                var externalResource = jsonRef.OriginalString.Split('#').FirstOrDefault();
+                if (externalResource != null && !_references.ContainsKey(externalResource))
+                {
+                    var reference = new OpenApiReference()
+                    {
+                        ExternalResource = externalResource
+                    };
+
+                    _references.Add(externalResource, reference);
+                }
             }
         }
     }
