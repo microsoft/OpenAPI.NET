@@ -29,14 +29,6 @@ namespace Microsoft.OpenApi.Reader.Services
             }
         }
 
-        public IEnumerable<OpenApiReference> JsonSchemaReferences
-        {
-            get
-            {
-                return _references.Values;
-            }
-        }
-
         /// <summary>
         /// Collect external OpenApiReferences references
         /// </summary>
