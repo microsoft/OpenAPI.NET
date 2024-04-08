@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Reader.Services
             if (jsonRef != null && schema.Keywords.Count == 1)
             {
                 var externalResource = jsonRef.OriginalString.Split('#').FirstOrDefault();
-                if (externalResource != null && !_references.ContainsKey(externalResource))
+                if (!string.IsNullOrEmpty(externalResource) && !_references.ContainsKey(externalResource))
                 {
                     var reference = new OpenApiReference()
                     {
