@@ -13,6 +13,10 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>
+    <ItemGroup>
+      <None Remove="OpenApiReaderTests\Samples\OpenApiWorkSpaceLoader\TodoMain.yaml" />
+      <None Remove="OpenApiReaderTests\Samples\OpenApiWorkSpaceLoader\TodoReference.yaml" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="JsonSchema.Net" Version="4.1.5" />
