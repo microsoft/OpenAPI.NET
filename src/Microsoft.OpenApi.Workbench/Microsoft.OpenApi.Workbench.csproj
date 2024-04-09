@@ -9,7 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.3" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Themes\Metro\HowToApplyTheme.txt" />
