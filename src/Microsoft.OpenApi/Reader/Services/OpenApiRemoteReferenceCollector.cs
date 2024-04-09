@@ -30,21 +30,21 @@ namespace Microsoft.OpenApi.Reader.Services
         }
 
         /// <summary>
-        /// Collect external OpenApiReferences references
+        /// Collect external OpenApiReferences references.
         /// </summary>
-        /// <param name="referenceable"></param>
+        /// <param name="referenceable">The referenceable object to be visited.</param>
         public override void Visit(IOpenApiReferenceable referenceable)
         {
             AddExternalReferences(referenceable.Reference);
         }
 
         /// <summary>
-        /// Collect external JsonSchema references
+        /// Collect external JsonSchema references.
         /// </summary>
-        /// <param name="value"></param>
-        public override void Visit(IBaseDocument value)
+        /// <param name="value">The JsonSchema to be visited.</param>
+        public override void Visit(ref JsonSchema value)
         {
-            AddExternalJsonSchemaReferences((JsonSchema)value);
+            AddExternalJsonSchemaReferences(value);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Reader.Services
         /// <param name="schema"></param>
         private void AddExternalJsonSchemaReferences(JsonSchema schema)
         {
-            var jsonRef = schema.GetRef();
+            Uri jsonRef = schema.GetRef();
             if (jsonRef != null && schema.Keywords.Count == 1)
             {
                 var externalResource = jsonRef.OriginalString.Split('#').FirstOrDefault();
