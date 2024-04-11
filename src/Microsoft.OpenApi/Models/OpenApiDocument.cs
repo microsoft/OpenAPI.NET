@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Models
         public string HashCode => GenerateHashValue(this);
 
         /// <summary>
-        /// Implements IBaseDocument
+        /// The unique document ID
         /// </summary>
         public Uri BaseUri { get; }
 
@@ -667,18 +667,6 @@ namespace Microsoft.OpenApi.Models
                                        OpenApiReaderSettings settings = null)
         {
             return OpenApiModelFactory.Parse(input, format, settings);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pointer"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
-        {
-            throw new NotImplementedException();
         }
     }
 
