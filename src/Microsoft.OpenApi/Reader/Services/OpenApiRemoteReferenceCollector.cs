@@ -42,9 +42,9 @@ namespace Microsoft.OpenApi.Reader.Services
         /// Collect external JsonSchema references.
         /// </summary>
         /// <param name="value">The JsonSchema to be visited.</param>
-        public override void Visit(ref JsonSchema value)
+        public override void Visit(IBaseDocument value)
         {
-            AddExternalJsonSchemaReferences(value);
+            AddExternalJsonSchemaReferences((JsonSchema)value);
         }
 
         /// <summary>
