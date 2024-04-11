@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Reader.Services
         {
             AddExternalReferences(referenceable.Reference);
         }
-
+        
         /// <summary>
         /// Collect external JsonSchema references.
         /// </summary>

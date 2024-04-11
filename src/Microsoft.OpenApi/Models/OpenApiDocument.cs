@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IBaseDocument
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
@@ -503,7 +503,7 @@ namespace Microsoft.OpenApi.Models
                 uriLocation = externalDocId + relativePath;
             }
 
-            return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(uriLocation);
+            return Workspace.ResolveReference<JsonSchema>(uriLocation);
         }
 
         /// <summary>
