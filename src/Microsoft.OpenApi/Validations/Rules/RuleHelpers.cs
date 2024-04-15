@@ -46,29 +46,30 @@ namespace Microsoft.OpenApi.Validations.Rules
             JsonNode value,
             JsonSchema schema)
         {
-            schema ??= null;
-
-            var results = schema.Evaluate(value, new EvaluationOptions()
+            if ( schema is not null)
             {
-                OutputFormat = OutputFormat.List
-            });
-
-            if (!results.IsValid)
-            {
-                foreach (var detail in results.Details)
+                var results = schema.Evaluate(value, new EvaluationOptions()
                 {
-                    if (detail.Errors != null && detail.Errors.Any())
+                    OutputFormat = OutputFormat.List
+                });
+
+                if (!results.IsValid)
+                {
+                    foreach (var detail in results.Details)
                     {
-                        foreach (var error in detail.Errors)
+                        if (detail.Errors != null && detail.Errors.Any())
                         {
-                            if (!string.IsNullOrEmpty(error.Key) || !string.IsNullOrEmpty(error.Value.Trim()))
+                            foreach (var error in detail.Errors)
                             {
-                                context.CreateWarning(ruleName, string.Format("{0} : {1} at {2}", error.Key, error.Value.Trim(), detail.InstanceLocation));
+                                if (!string.IsNullOrEmpty(error.Key) || !string.IsNullOrEmpty(error.Value.Trim()))
+                                {
+                                    context.CreateWarning(ruleName, string.Format("{0} : {1} at {2}", error.Key, error.Value.Trim(), detail.InstanceLocation));
+                                }
                             }
                         }
                     }
                 }
-            }
+            }            
         }
     }
 }
