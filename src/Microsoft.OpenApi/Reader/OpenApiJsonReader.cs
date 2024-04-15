@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Reader
                     }
                 }
 
-                document.ResolveHostDocument();
+                document.SetReferenceHostDocument();
             }
             catch (OpenApiException ex)
             {

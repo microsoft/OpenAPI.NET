@@ -7,13 +7,13 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// This class is used to walk an OpenApiDocument and sets the host document of OpenApiReferences.
+    /// This class is used to walk an OpenApiDocument and sets the host document of IOpenApiReferenceable objects
     /// </summary>
-    internal class HostDocumentResolver : OpenApiVisitorBase
+    internal class ReferenceHostDocumentSetter : OpenApiVisitorBase
     {
         private readonly OpenApiDocument _currentDocument;
 
-        public HostDocumentResolver(OpenApiDocument currentDocument)
+        public ReferenceHostDocumentSetter(OpenApiDocument currentDocument)
         {
             _currentDocument = currentDocument;
         }

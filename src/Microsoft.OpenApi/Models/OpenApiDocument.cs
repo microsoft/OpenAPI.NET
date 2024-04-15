@@ -447,9 +447,9 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Walks the OpenApiDocument and sets the host document for all IOpenApiReferenceable objects
         /// </summary>
-        public void ResolveHostDocument()
+        public void SetReferenceHostDocument()
         {
-            var resolver = new HostDocumentResolver(this);
+            var resolver = new ReferenceHostDocumentSetter(this);
             var walker = new OpenApiWalker(resolver);
             walker.Walk(this);
         }
