@@ -76,41 +76,6 @@ namespace Microsoft.OpenApi.Tests
         }
 
         [Fact]
-        public void OpenApiWorkspacesAllowDocumentsToReferenceEachOther_short()
-        {
-            var doc = new OpenApiDocument();
-            var reference = "common#/components/schemas/test";
-            doc.CreatePathItem("/", p =>
-            {
-                p.Description = "Consumer";
-                p.CreateOperation(OperationType.Get, op =>
-                  op.CreateResponse("200", re =>
-                  {
-                      re.Description = "Success";
-                      re.CreateContent("application/json", co =>
-                          co.Schema = new JsonSchemaBuilder().Ref(reference).Build()                      
-                      );
-                  })
-                );
-            });
-
-            var doc2 = CreateCommonDocument();
-            doc.Workspace.RegisterComponents(doc2);
-            doc2.Workspace.RegisterComponents(doc);
-            doc.Workspace.AddDocumentId("common", doc2.BaseUri);
-            var errors = doc.ResolveReferences();
-            Assert.Empty(errors);
-        }
-                
-        // Enable Workspace to load from any reader, not just streams.
-
-        // Test fragments
-        internal void OpenApiWorkspacesShouldLoadDocumentFragments()
-        {
-            Assert.True(false);
-        }
-
-        [Fact]
         public void OpenApiWorkspacesCanResolveReferencesToDocumentFragments()
         {
             // Arrange
