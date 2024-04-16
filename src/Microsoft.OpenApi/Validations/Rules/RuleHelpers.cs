@@ -45,8 +45,8 @@ namespace Microsoft.OpenApi.Validations.Rules
             string ruleName,
             JsonNode value,
             JsonSchema schema)
-        {
-            if ( schema is not null)
+        {           
+            if (schema is not null)
             {
                 var results = schema.Evaluate(value, new EvaluationOptions()
                 {
