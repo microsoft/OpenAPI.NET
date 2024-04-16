@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -204,7 +204,13 @@ namespace Microsoft.OpenApi.Extensions
             return result;
         }
 
-        internal static string ConvertSchemaValueTypeToString(SchemaValueType value)
+        /// <summary>
+        /// Converts the Schema value type to its string equivalent
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        public static string ConvertSchemaValueTypeToString(SchemaValueType value)
         {
             return value switch
             {
