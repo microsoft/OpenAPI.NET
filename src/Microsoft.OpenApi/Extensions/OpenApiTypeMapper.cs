@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -29,93 +29,19 @@ namespace Microsoft.OpenApi.Extensions
             [typeof(char)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("string").Build(),
 
             // Nullable types
-            [typeof(bool?)] = () => new JsonSchemaBuilder()
-                .AnyOf(
-                        new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                        new JsonSchemaBuilder().Type(SchemaValueType.Boolean).Build()
-                ).Build(),
-
-            [typeof(byte?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                        new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                        new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
-                )
-            .Format("byte").Build(),
-
-            [typeof(int?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                        new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                        new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()
-                )
-            .Format("int32").Build(),
-
-            [typeof(uint?)] = () => new JsonSchemaBuilder().AnyOf(
-                        new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                        new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()
-                )
-            .Format("int32").Build(),
-
-            [typeof(long?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()
-                )
-            .Format("int64").Build(),
-
-            [typeof(ulong?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()
-                )
-            .Format("int64").Build(),
-
-            [typeof(float?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()
-                )
-            .Format("float").Build(),
-
-            [typeof(double?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.Number).Build())
-            .Format("double").Build(),
-
-            [typeof(decimal?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.Number).Build()
-                )
-            .Format("double").Build(),
-
-            [typeof(DateTime?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
-                )
-            .Format("date-time").Build(),
-
-            [typeof(DateTimeOffset?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
-                )
-            .Format("date-time").Build(),
-
-            [typeof(Guid?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
-                )
-            .Format("string").Build(),
-
-            [typeof(char?)] = () => new JsonSchemaBuilder()
-            .AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Null).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
-                )
-            .Format("string").Build(),
+            [typeof(bool?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Boolean).Build(),
+            [typeof(byte?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("byte").Build(),
+            [typeof(int?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("int32").Build(),
+            [typeof(uint?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("int32").Build(),
+            [typeof(long?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("int64").Build(),
+            [typeof(ulong?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("int64").Build(),
+            [typeof(float?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("float").Build(),
+            [typeof(double?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Number).Format("double").Build(),
+            [typeof(decimal?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("double").Build(),
+            [typeof(DateTime?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("date-time").Build(),
+            [typeof(DateTimeOffset?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("date-time").Build(),
+            [typeof(Guid?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("string").Build(),
+            [typeof(char?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("string").Build(),
 
             [typeof(Uri)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uri").Build(), // Uri is treated as simple string
             [typeof(string)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
