@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -485,22 +485,22 @@ namespace Microsoft.OpenApi.Models
         /// <param name="referenceUri"></param>
         /// <returns>A JsonSchema ref.</returns>
         public JsonSchema ResolveJsonSchemaReference(Uri referenceUri)
-        {            
+        {
+            const char pound = '#';
             string uriLocation;
-            string id = referenceUri.OriginalString.Split('/')?.Last();
-            string relativePath = "/components/" + ReferenceType.Schema.GetDisplayName() + "/" + id;
-            
-            if (referenceUri.OriginalString.StartsWith("#"))
+            int poundIndex = referenceUri.OriginalString.IndexOf(pound);
+
+            if (poundIndex > 0)
             {
-                // Local reference
-                uriLocation = BaseUri + relativePath;
+                // External reference, ex: ./TodoReference.yaml#/components/schemas/todo
+                string externalUri = referenceUri.OriginalString.Split(pound).First();
+                Uri externalDocId = Workspace.GetDocumentId(externalUri);
+                string relativePath = referenceUri.OriginalString.Split(pound).Last();
+                uriLocation = externalDocId + relativePath;                
             }
             else
             {
-                // External reference
-                var externalUri = referenceUri.OriginalString.Split('#').First();
-                var externalDocId = Workspace.GetDocumentId(externalUri);
-                uriLocation = externalDocId + relativePath;
+                uriLocation = BaseUri + referenceUri.ToString().TrimStart(pound);
             }
 
             return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(uriLocation);
