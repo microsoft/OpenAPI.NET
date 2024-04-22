@@ -229,14 +229,12 @@ get:
                 Schemas =
                     {
                             ["ErrorModel"] = new JsonSchemaBuilder()
-                                .Ref("#/components/schemas/ErrorModel")
                                 .Type(SchemaValueType.Object)
                                 .Required("message", "code")
                                 .Properties(
                                     ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                     ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600))),
                             ["ExtendedErrorModel"] = new JsonSchemaBuilder()
-                                .Ref("#/components/schemas/ExtendedErrorModel")
                                 .AllOf(
                                     new JsonSchemaBuilder()
                                         .Ref("#/components/schemas/ErrorModel"),

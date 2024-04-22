@@ -140,10 +140,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Schemas =
                         {
                             ["Item"] = new JsonSchemaBuilder()
-                                            .Ref("#/definitions/Item")
                                             .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))),
                             ["Error"] = new JsonSchemaBuilder()
-                                            .Ref("#/definitions/Error")
                                             .Properties(
                                             ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                                             ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
