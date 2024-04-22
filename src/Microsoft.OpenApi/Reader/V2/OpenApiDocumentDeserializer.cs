@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 (o, n) =>
                 {
                     o.Components ??= new();
-                    o.Components.Schemas = n.CreateJsonSchemaMapWithReference(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi2_0);
+                    o.Components.Schemas = n.CreateJsonSchemaMap(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi2_0);
                 }
             },
             {

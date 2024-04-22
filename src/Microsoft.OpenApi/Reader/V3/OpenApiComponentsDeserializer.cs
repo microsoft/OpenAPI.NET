@@ -1,11 +1,6 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -20,7 +15,7 @@ namespace Microsoft.OpenApi.Reader.V3
     {
         private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new()
         {
-            {"schemas", (o, n) => o.Schemas =  n.CreateJsonSchemaMapWithReference(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi3_0)},
+            {"schemas", (o, n) => o.Schemas =  n.CreateJsonSchemaMap(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi3_0)},
             {"responses", (o, n) => o.Responses = n.CreateMap(LoadResponse)},
             {"parameters", (o, n) => o.Parameters = n.CreateMap(LoadParameter)},
             {"examples", (o, n) => o.Examples = n.CreateMap(LoadExample)},
