@@ -2,15 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Writers;
-using VerifyXunit;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -30,15 +27,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
 
             var okSchema = new JsonSchemaBuilder()
-                    .Ref("#/definitions/Item")
-                    .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")));
+                    .Ref("#/definitions/Item");
 
             var errorSchema = new JsonSchemaBuilder()
-                    .Ref("#/definitions/Error")
-                    .Properties(
-                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
-                    ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
+                    .Ref("#/definitions/Error");
 
             var okMediaType = new OpenApiMediaType
             {
@@ -147,12 +139,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Schemas =
                         {
-                            ["Item"] = okSchema,
-                            ["Error"] = errorSchema
+                            ["Item"] = new JsonSchemaBuilder()
+                                            .Ref("#/definitions/Item")
+                                            .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))),
+                            ["Error"] = new JsonSchemaBuilder()
+                                            .Ref("#/definitions/Error")
+                                            .Properties(
+                                            ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
+                                            ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                                            ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                         }
                 }
             }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
-
         }
 
         [Fact]
@@ -169,10 +167,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))));
 
             var errorSchema = new JsonSchemaBuilder()
-                    .Ref("#/definitions/Error")
-                    .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
-                        ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                        ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
+                    .Ref("#/definitions/Error");
 
             var responses = result.OpenApiDocument.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)

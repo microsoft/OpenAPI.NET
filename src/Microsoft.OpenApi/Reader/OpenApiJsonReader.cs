@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Reader
                     }
                 }
 
-                ResolveReferences(diagnostic, document);
+                document.SetReferenceHostDocument();
             }
             catch (OpenApiException ex)
             {
@@ -198,17 +198,6 @@ namespace Microsoft.OpenApi.Reader
             var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
-        }
-
-        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
-        {
-            List<OpenApiError> errors = new();
-            errors.AddRange(document.ResolveReferences());
-
-            foreach (var item in errors)
-            {
-                diagnostic.Errors.Add(item);
-            }
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         }
 
         [Fact]
-        public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
+        public async Task LoadDocumentWithExternalReferenceShouldLoadExternalDocumentComponentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
             var settings = new OpenApiReaderSettings
@@ -63,28 +63,16 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             };
 
             ReadResult result;
-            result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);            
+            result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);
 
-            Assert.NotNull(result.OpenApiDocument.Workspace);
+            var externalDocBaseUri = result.OpenApiDocument.Workspace.GetDocumentId("./TodoComponents.yaml");
+            var schemasPath = "/components/schemas/";
+            var parametersPath = "/components/parameters/";
 
-            var referencedSchema = result.OpenApiDocument
-                                    .Paths["/todos"]
-                                    .Operations[OperationType.Get]
-                                    .Responses["200"]
-                                    .Content["application/json"]
-                                    .Schema;
-
-            var x = referencedSchema.GetProperties().TryGetValue("subject", out var schema);
-            Assert.Equal(SchemaValueType.Object, referencedSchema.GetJsonType());
-            Assert.Equal(SchemaValueType.String, schema.GetJsonType());
-
-            var referencedParameter = result.OpenApiDocument
-                                        .Paths["/todos"]
-                                        .Operations[OperationType.Get]
-                                        .Parameters.Select(p => p)
-                                        .FirstOrDefault(p => p.Name == "filter");
-
-            Assert.Equal(SchemaValueType.String, referencedParameter.Schema.GetJsonType());
+            Assert.NotNull(externalDocBaseUri);
+            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + schemasPath + "todo"));
+            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + schemasPath + "entity"));
+            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + parametersPath + "filter"));
         }
     }
 

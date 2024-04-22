@@ -446,14 +446,12 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Walks the OpenApiDocument and sets the host document for all IOpenApiReferenceable objects
-        /// and resolves JsonSchema references
         /// </summary>
-        public IEnumerable<OpenApiError> ResolveReferences()
+        public void SetReferenceHostDocument()
         {
-            var resolver = new ReferenceResolver(this);
+            var resolver = new ReferenceHostDocumentSetter(this);
             var walker = new OpenApiWalker(resolver);
             walker.Walk(this);
-            return resolver.Errors;
         }
 
         /// <summary>

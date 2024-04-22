@@ -6,22 +6,20 @@ using System.Collections.Generic;
 using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using System.Linq;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// This class is used to wallk an OpenApiDocument and sets the host document of OpenApiReferences
-    /// and resolves JsonSchema references.
+    /// This class is used to walk an OpenApiDocument and resolves JsonSchema references.
     /// </summary>
-    internal class ReferenceResolver : OpenApiVisitorBase
+    internal class JsonSchemaReferenceResolver : OpenApiVisitorBase
     {
         private readonly OpenApiDocument _currentDocument;
         private readonly List<OpenApiError> _errors = new();
 
-        public ReferenceResolver(OpenApiDocument currentDocument)
+        public JsonSchemaReferenceResolver(OpenApiDocument currentDocument)
         {
             _currentDocument = currentDocument;
         }
@@ -30,18 +28,6 @@ namespace Microsoft.OpenApi.Services
         /// List of errors related to the OpenApiDocument
         /// </summary>
         public IEnumerable<OpenApiError> Errors => _errors;
-
-        /// <summary>
-        /// Visits the referenceable element in the host document
-        /// </summary>
-        /// <param name="referenceable">The referenceable element in the doc.</param>
-        public override void Visit(IOpenApiReferenceable referenceable)
-        {
-            if (referenceable.Reference != null)
-            {
-                referenceable.Reference.HostDocument = _currentDocument;
-            }
-        }
 
         /// <summary>
         /// Resolves schemas in components
