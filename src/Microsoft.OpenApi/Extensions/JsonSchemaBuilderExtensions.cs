@@ -4,7 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Json.More;
 using Json.Schema;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -279,6 +283,7 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     [SchemaKeyword(Name)]
     [SchemaSpecVersion(SpecVersion.Draft202012)]
+    [JsonConverter(typeof(ExtensionsKeywordJsonConverter))]
     public class ExtensionsKeyword : IJsonSchemaKeyword
     {
         /// <summary>
@@ -302,6 +307,47 @@ namespace Microsoft.OpenApi.Extensions
         {
             throw new NotImplementedException();
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class ExtensionsKeywordJsonConverter : JsonConverter<ExtensionsKeyword>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="typeToConvert"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public override ExtensionsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="options"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public override void Write(Utf8JsonWriter writer, ExtensionsKeyword value, JsonSerializerOptions options)
+        {
+            foreach (var item in value.Extensions)
+            {
+                var content = item.Value as OpenApiAny;
+                if (content != null)
+                {
+                    writer.WritePropertyName(item.Key);
+                    content.Node.WriteTo(writer);
+                }
+            }
+                
+        }
+
     }
 
     /// <summary>
