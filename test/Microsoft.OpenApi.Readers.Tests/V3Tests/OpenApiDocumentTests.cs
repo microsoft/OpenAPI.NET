@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -239,11 +239,11 @@ paths: {}",
                                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                 }
             };
-            var petSchema = components.Schemas["pet1"];
+            var petSchema = new JsonSchemaBuilder().Ref("#/components/schemas/pet1");
 
-            var newPetSchema = components.Schemas["newPet"];
+            var newPetSchema = new JsonSchemaBuilder().Ref("#/components/schemas/newPet");
 
-            var errorModelSchema = components.Schemas["errorModel"];
+            var errorModelSchema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel");
 
             var expectedDoc = new OpenApiDocument
             {
@@ -568,11 +568,11 @@ paths: {}",
                 }
             };
 
-            var petSchema = components.Schemas["pet1"];
+            var petSchema = new JsonSchemaBuilder().Ref("#/components/schemas/pet1");
 
-            var newPetSchema = components.Schemas["newPet"];
+            var newPetSchema = new JsonSchemaBuilder().Ref("#/components/schemas/newPet");
 
-            var errorModelSchema = components.Schemas["errorModel"];
+            var errorModelSchema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel");
 
             var tag1 = new OpenApiTag
             {
@@ -1061,11 +1061,6 @@ paths: {}",
 
             var expectedSchema = new JsonSchemaBuilder()
                 .Ref("#/components/schemas/User")
-                .Type(SchemaValueType.Object)
-                .Properties(
-                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-                    ("username", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    ("email", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                 .Build();
 
             // Assert
