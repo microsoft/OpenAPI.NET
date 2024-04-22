@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                RuleHelpers.DataTypeMismatchedErrorMessage
+                "type : Value is \"integer\" but should be \"string\" at "
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
