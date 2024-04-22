@@ -44,40 +44,37 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public void ParseDocumentWithWebhooksShouldSucceed()
         {
             // Arrange and Act
-            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
-
-            var petSchema = new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Object)
-                        .Required("id", "name")
-                        .Properties(
-                            ("id", new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Integer)
-                                .Format("int64")),
-                            ("name", new JsonSchemaBuilder()
-                                .Type(SchemaValueType.String)
-                            ),
-                            ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))
-                        );
-
-            var newPetSchema = new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Object)
-                        .Required("name")
-                        .Properties(
-                            ("id", new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Integer)
-                                .Format("int64")),
-                            ("name", new JsonSchemaBuilder()
-                                .Type(SchemaValueType.String)
-                            ),
-                            ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))
-                        );
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));            
+            var petSchema = new JsonSchemaBuilder().Ref("#/components/schemas/petSchema");
+            var newPetSchema = new JsonSchemaBuilder().Ref("#/components/schemas/newPetSchema");
 
             var components = new OpenApiComponents
             {
                 Schemas =
                 {
-                    ["petSchema"] = petSchema,
-                    ["newPetSchema"] = newPetSchema
+                    ["petSchema"] = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Object)
+                            .Required("id", "name")
+                            .Properties(
+                                ("id", new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Integer)
+                                    .Format("int64")),
+                                ("name", new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.String)
+                                ),
+                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))
+                            ),
+                    ["newPetSchema"] = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Required("name")
+                                .Properties(
+                                    ("id", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.Integer)
+                                        .Format("int64")),
+                                    ("name", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.String)
+                                    ),
+                                    ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                 }
             };
 
@@ -213,9 +210,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 }
             };
 
+
+
             // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = components.Schemas["petSchema"];
-            var newPetSchema = components.Schemas["newPetSchema"];
+            var petSchema = new JsonSchemaBuilder().Ref("#/components/schemas/petSchema");
+            var newPetSchema = new JsonSchemaBuilder().Ref("#/components/schemas/newPetSchema");
 
             components.PathItems = new Dictionary<string, OpenApiPathItem>
             {
