@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Services
 {
     internal static class OpenApiComponentsRegistryExtensions
     {
-        public static void RegisterComponents(this OpenApiWorkspace workspace, OpenApiDocument document)
+        public static void RegisterComponents(this OpenApiWorkspace workspace, OpenApiDocument document, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
             if (document?.Components == null) return;
 
@@ -24,13 +24,16 @@ namespace Microsoft.OpenApi.Services
                 {
                     location = document.BaseUri + item.Value.GetId().ToString();
                 }
-                else if (item.Value.GetRef() != null)
-                {
-                    location = document.BaseUri + item.Value.GetRef().ToString().TrimStart('#');
-                }
                 else
                 {
-                    location = baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
+                    if (version == OpenApiSpecVersion.OpenApi2_0)
+                    {
+                        location = document.BaseUri + "/" + OpenApiConstants.Definitions + "/" + item.Key;
+                    }
+                    else
+                    {
+                        location = baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
+                    }                    
                 }
 
                 workspace.RegisterComponent(location, item.Value);
