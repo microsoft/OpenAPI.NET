@@ -24,9 +24,11 @@ namespace Microsoft.OpenApi.Validations
         /// Create a visitor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
-        public OpenApiValidator(ValidationRuleSet ruleSet)
+        /// <param name="hostDocument"></param>
+        public OpenApiValidator(ValidationRuleSet ruleSet, OpenApiDocument hostDocument = null)
         {
             _ruleSet = ruleSet;
+            HostDocument = hostDocument;
         }
 
         /// <summary>
@@ -38,6 +40,11 @@ namespace Microsoft.OpenApi.Validations
         /// Gets the validation warnings.
         /// </summary>
         public IEnumerable<OpenApiValidatorWarning> Warnings { get => _warnings; }
+
+        /// <summary>
+        /// The host document used for validation.
+        /// </summary>
+        public OpenApiDocument HostDocument { get; set; }
 
         /// <summary>
         /// Register an error with the validation context.

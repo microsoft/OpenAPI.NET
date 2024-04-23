@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.Schema;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -48,22 +49,36 @@ namespace Microsoft.OpenApi.Validations.Rules
         {           
             if (schema is not null)
             {
-                var results = schema.Evaluate(value, new EvaluationOptions()
+                if (context.HostDocument != null)
                 {
-                    OutputFormat = OutputFormat.List
-                });
+                    schema.BaseUri = context.HostDocument.BaseUri;
+                    var options = new EvaluationOptions();
 
-                if (!results.IsValid)
-                {
-                    foreach (var detail in results.Details)
+                    var registry = context.HostDocument.Workspace.GetSchemaRegistry();
+
+                    foreach(var keyValuePair in registry)
                     {
-                        if (detail.Errors != null && detail.Errors.Any())
+                        var jsonShema = keyValuePair.Value;
+                        var schemaKey = keyValuePair.Key;
+                        options.SchemaRegistry.Register(schemaKey, jsonShema);
+                    }
+
+                    options.SchemaRegistry.Register(schema.BaseUri, schema);
+
+                    var results = schema.Evaluate(value, options);
+
+                    if (!results.IsValid)
+                    {
+                        foreach (var detail in results.Details)
                         {
-                            foreach (var error in detail.Errors)
+                            if (detail.Errors != null && detail.Errors.Any())
                             {
-                                if (!string.IsNullOrEmpty(error.Key) || !string.IsNullOrEmpty(error.Value.Trim()))
+                                foreach (var error in detail.Errors)
                                 {
-                                    context.CreateWarning(ruleName, string.Format("{0} : {1} at {2}", error.Key, error.Value.Trim(), detail.InstanceLocation));
+                                    if (!string.IsNullOrEmpty(error.Key) || !string.IsNullOrEmpty(error.Value.Trim()))
+                                    {
+                                        context.CreateWarning(ruleName, string.Format("{0} : {1} at {2}", error.Key, error.Value.Trim(), detail.InstanceLocation));
+                                    }
                                 }
                             }
                         }
