@@ -569,7 +569,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             string uriLocation;
-            string relativePath = "/components/" + reference.Type.GetDisplayName() + "/" + reference.Id;
+            string relativePath = OpenApiConstants.ComponentsSegment + reference.Type.GetDisplayName() + "/" + reference.Id;
 
             uriLocation = useExternal
                 ? Workspace.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
