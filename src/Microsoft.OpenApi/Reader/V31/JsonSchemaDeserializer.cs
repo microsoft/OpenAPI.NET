@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     if (n is ValueNode)
                     {
-                        o.AdditionalPropertiesAllowed(bool.Parse(n.GetScalarValue()));
+                        o.AdditionalProperties(bool.Parse(n.GetScalarValue()));
                     }
                     else
                     {
@@ -274,20 +274,6 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 builder = builder.Ref(pointer);
-
-                // Check for summary and description and append to builder
-                var summary = mapNode.GetSummaryValue();
-                var description = mapNode.GetDescriptionValue();
-                if (!string.IsNullOrEmpty(summary))
-                {
-                    builder.Summary(summary);
-                }
-                if (!string.IsNullOrEmpty(description))
-                {
-                    builder.Description(description);
-                }
-
-                return builder.Build();
             }
 
             foreach (var propertyNode in mapNode)

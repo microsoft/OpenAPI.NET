@@ -348,14 +348,14 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             {
                 schemaBuilder.MinProperties(minProperties);
             }
-            if (schema.GetDiscriminator() == null && newSchema.GetOpenApiDiscriminator() is { } discriminator)
+            if (schema.GetDiscriminator() == null && newSchema.GetDiscriminator() is { } discriminator)
             {
-                schemaBuilder.Discriminator(discriminator);
+                schemaBuilder.Discriminator(discriminator.PropertyName,discriminator.Mapping, discriminator.Extensions);
             }
-            if (schema.GetOpenApiExternalDocs() == null && newSchema.GetOpenApiExternalDocs() is { } externalDocs)
-            {
-                schemaBuilder.OpenApiExternalDocs(externalDocs);
-            }
+            //if (schema.GetExternalDocs() == null && newSchema.GetExternalDocs() is { } externalDocs)
+            //{
+            //    schemaBuilder.ExternalDocs(new Uri(externalDocs), externalDocs.Description);
+            //}
             if (schema.GetEnum() == null && newSchema.GetEnum() is { } enumCollection)
             {
                 schemaBuilder.Enum(enumCollection);

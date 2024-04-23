@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Tests.Models
             .AdditionalProperties(
                 new JsonSchemaBuilder()
                 .Type(SchemaValueType.Integer).Build())
-            .AdditionalPropertiesAllowed(true)
+            .AdditionalProperties(true)
             .Build()
         };
 

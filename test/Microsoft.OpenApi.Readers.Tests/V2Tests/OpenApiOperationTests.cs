@@ -316,9 +316,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     ""200"": {
       ""description"": ""OK"",
       ""schema"": {
-        ""type"": ""string"",
-        ""description"": ""The content of the file."",
         ""format"": ""binary"",
+        ""description"": ""The content of the file."",
+        ""type"": ""string"",
         ""x-ms-summary"": ""File Content""
       }
     }

@@ -172,7 +172,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     if (n is ValueNode)
                     {
-                        o.AdditionalPropertiesAllowed(bool.Parse(n.GetScalarValue()));
+                        o.AdditionalProperties(bool.Parse(n.GetScalarValue()));
                     }
                     else
                     {

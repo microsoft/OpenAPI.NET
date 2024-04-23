@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Json.Schema;
+using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -15,26 +16,26 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         public static DiscriminatorKeyword GetOpenApiDiscriminator(this JsonSchema schema)
         {
-            return schema.TryGetKeyword<DiscriminatorKeyword>(DiscriminatorKeyword.Name, out var k) ? k! : null;
+            return schema.TryGetKeyword<DiscriminatorKeyword>("discriminator", out var k) ? k! : null;
         }
 
-        /// <summary>
-        /// Gets the 'externalDocs' keyword if it exists.
-        /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
-        public static OpenApiExternalDocs GetOpenApiExternalDocs(this JsonSchema schema)
-        {
-            return schema.TryGetKeyword<ExternalDocsKeyword>(ExternalDocsKeyword.Name, out var k) ? k.Value! : null;
-        }
+        ///// <summary>
+        ///// Gets the 'externalDocs' keyword if it exists.
+        ///// </summary>
+        ///// <param name="schema"></param>
+        ///// <returns></returns>
+        //public static OpenApiExternalDocs GetOpenApiExternalDocs(this JsonSchema schema)
+        //{
+        //    return schema.TryGetKeyword<ExternalDocsKeyword>(ExternalDocsKeyword.Name, out var k) ? k.Value! : null;
+        //}
 
-        /// <summary>
-        /// Gets the `summary` keyword if it exists.
-        /// </summary>
-        public static string GetSummary(this JsonSchema schema)
-        {
-            return schema.TryGetKeyword<SummaryKeyword>(SummaryKeyword.Name, out var k) ? k.Summary! : null;
-        }
+        ///// <summary>
+        ///// Gets the `summary` keyword if it exists.
+        ///// </summary>
+        //public static string GetSummary(this JsonSchema schema)
+        //{
+        //    return schema.TryGetKeyword<SummaryKeyword>(SummaryKeyword.Name, out var k) ? k.Summary! : null;
+        //}
 
         /// <summary>
         /// Gets the nullable value if it exists
@@ -46,15 +47,15 @@ namespace Microsoft.OpenApi.Extensions
             return schema.TryGetKeyword<NullableKeyword>(NullableKeyword.Name, out var k) ? k.Value! : null;
         }
 
-        /// <summary>
-        /// Gets the additional properties value if it exists
-        /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
-        public static bool? GetAdditionalPropertiesAllowed(this JsonSchema schema)
-        {
-            return schema.TryGetKeyword<AdditionalPropertiesAllowedKeyword>(AdditionalPropertiesAllowedKeyword.Name, out var k) ? k.AdditionalPropertiesAllowed! : null;
-        }
+        ///// <summary>
+        ///// Gets the additional properties value if it exists
+        ///// </summary>
+        ///// <param name="schema"></param>
+        ///// <returns></returns>
+        //public static bool? GetAdditionalPropertiesAllowed(this JsonSchema schema)
+        //{
+        //    return schema.TryGetKeyword<AdditionalPropertiesAllowedKeyword>(AdditionalPropertiesAllowedKeyword.Name, out var k) ? k.AdditionalPropertiesAllowed! : null;
+        //}
 
         /// <summary>
         /// Gets the exclusive maximum value if it exists

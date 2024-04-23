@@ -76,12 +76,10 @@ namespace Microsoft.OpenApi.Services
         public override void Visit(ref JsonSchema schema)
         {
             var reference = schema.GetRef();
-            var description = schema.GetDescription();
-            var summary = schema.GetSummary();
 
             if (schema.Keywords.Count.Equals(1) && reference != null)
             {
-                schema = ResolveJsonSchemaReference(reference, description, summary);
+                schema = ResolveJsonSchemaReference(reference);
             }
 
             var builder = new JsonSchemaBuilder();
@@ -140,18 +138,6 @@ namespace Microsoft.OpenApi.Services
                 foreach (var keyword in resolvedSchema.Keywords)
                 {
                     resolvedSchemaBuilder.Add(keyword);
-
-                    // Replace the resolved schema's description with that of the schema reference
-                    if (!string.IsNullOrEmpty(description))
-                    {
-                        resolvedSchemaBuilder.Description(description);
-                    }
-
-                    // Replace the resolved schema's summary with that of the schema reference
-                    if (!string.IsNullOrEmpty(summary))
-                    {
-                        resolvedSchemaBuilder.Summary(summary);
-                    }
                 }
 
                 return resolvedSchemaBuilder.Build();
@@ -167,12 +153,10 @@ namespace Microsoft.OpenApi.Services
         {
             if (schema == null) return;
             var reference = schema.GetRef();
-            var description = schema.GetDescription();
-            var summary = schema.GetSummary();
 
             if (reference != null)
             {
-                assign(ResolveJsonSchemaReference(reference, description, summary));
+                assign(ResolveJsonSchemaReference(reference));
             }
         }
 

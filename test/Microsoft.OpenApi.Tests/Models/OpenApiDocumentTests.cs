@@ -1305,7 +1305,6 @@ paths:
                                         Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Object)
                                                     .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build())
-                                                    .AdditionalPropertiesAllowed(true)
                                                     .Build()
                                     }
                                 },
