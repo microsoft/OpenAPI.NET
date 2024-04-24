@@ -80,10 +80,21 @@ namespace Microsoft.OpenApi.Extensions
         public static JsonSchemaBuilder Discriminator(this JsonSchemaBuilder builder, OpenApiDiscriminator discriminator)
         {
 
-            builder.Add(new DiscriminatorKeyword(
+            var extensions = discriminator.Extensions.ToDictionary(kvp => kvp.Key, kvp => ((OpenApiAny)kvp.Value).Node);
+            if (extensions.Count == 0)
+            {
+                extensions = null;
+            }
+            var mapping = (IReadOnlyDictionary<string, string>)discriminator.Mapping;
+            if (mapping.Count == 0)
+            {
+                mapping = null;
+            }
+            var discriminatorKeyword = new DiscriminatorKeyword(
                             discriminator.PropertyName,
-                            (IReadOnlyDictionary<string, string>)discriminator.Mapping, 
-                            discriminator.Extensions.ToDictionary(kvp => kvp.Key, kvp => ((OpenApiAny)kvp.Value).Node)));
+                            mapping, 
+                            extensions);
+            builder.Add(discriminatorKeyword);
             return builder;
         }
 
@@ -155,6 +166,19 @@ namespace Microsoft.OpenApi.Extensions
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -184,6 +208,19 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="context"></param>
         /// <exception cref="NotImplementedException"></exception>
         public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
         {
             throw new NotImplementedException();
         }
@@ -220,6 +257,19 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="context"></param>
         /// <exception cref="NotImplementedException"></exception>
         public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
         {
             throw new NotImplementedException();
         }
@@ -287,6 +337,19 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="context"></param>
         /// <exception cref="NotImplementedException"></exception>
         public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
         {
             throw new NotImplementedException();
         }

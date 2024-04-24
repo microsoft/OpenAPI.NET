@@ -78,17 +78,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
-            var result = OpenApiDocument.Parse(
-                @"
-openapi : 3.0.0
-info:
-    title: Simple Document
-    version: 0.9.1
-paths: {}",
-                OpenApiConstants.Yaml);
-
-            result.OpenApiDocument.Should().BeEquivalentTo(
-                new OpenApiDocument
+            var openApi = new OpenApiDocument
                 {
                     Info = new OpenApiInfo
                     {
@@ -96,7 +86,19 @@ paths: {}",
                         Version = "0.9.1"
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+                };
+
+            var result = OpenApiDocument.Parse(
+                @"
+openapi : 3.0.0
+info:
+    title: Simple Document
+    version: 0.9.1
+paths: {}",
+                OpenApiConstants.Yaml, new OpenApiReaderSettings() { BaseUrl = openApi.BaseUri });
+
+            result.OpenApiDocument.Should().BeEquivalentTo(
+                openApi, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()

@@ -16,6 +16,8 @@ using Xunit;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
+using System.CommandLine;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -44,6 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
+            
             var schema = OpenApiV3Deserializer.LoadSchema(node);
 
             // Assert
@@ -53,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new JsonSchemaBuilder()
                     .Type(SchemaValueType.String)
                     .Format("email")
-                    .Build());
+                    .Build(),options => options.Excluding(x => x.BaseUri));
         }       
 
         [Fact]
@@ -83,11 +86,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseEnumFragmentShouldSucceed()
         {
-            var input = @"
-[ 
-  ""foo"",
-  ""baz""
-]";
+            var input = """
+
+                [ 
+                  "foo",
+                  "baz"
+                ]
+                """;
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
@@ -141,6 +146,37 @@ get:
                     }
                 });
         }
+
+
+        [Fact]
+        public void RoundTripDictionarySchema()
+        {
+            // Arrange
+            var openApiDocument = new OpenApiDocument() {
+                Components = new OpenApiComponents
+                {
+                    Schemas =
+                    {
+                        ["Dictionary"] = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Object)
+                            .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
+                    }
+                }
+            };
+
+            // Act
+            var yaml = openApiDocument.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var result = OpenApiDocument.Parse(yaml,format: "yaml", new OpenApiReaderSettings() { BaseUrl = openApiDocument.BaseUri});
+            var newDocument = result.OpenApiDocument;
+
+            // Assert
+            newDocument.Components.Schemas["Dictionary"].Should().BeEquivalentTo(
+                new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Object)
+                    .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
+                    .Build());
+        }
+
 
         [Fact]
         public void ParseDictionarySchemaShouldSucceed()
