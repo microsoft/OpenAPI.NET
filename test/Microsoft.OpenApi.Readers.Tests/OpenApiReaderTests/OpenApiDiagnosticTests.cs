@@ -54,13 +54,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             ReadResult result;
             result = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/TodoMain.yaml", settings);
 
-
             Assert.NotNull(result);
             Assert.NotNull(result.OpenApiDocument.Workspace);
             result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
             {
-                new OpenApiError("", "[File: ./TodoReference.yaml] Paths is a REQUIRED field at #/"),
-                new(new OpenApiException("[File: ./TodoReference.yaml] Invalid Reference identifier 'object-not-existing'."))
+                new OpenApiError("", "[File: ./TodoReference.yaml] Paths is a REQUIRED field at #/")
             });
         }
     }

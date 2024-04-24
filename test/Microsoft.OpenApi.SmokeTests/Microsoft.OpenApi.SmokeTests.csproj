@@ -21,8 +21,4 @@
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-
 </Project>

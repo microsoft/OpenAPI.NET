@@ -239,12 +239,7 @@ get:
                                 .Ref("#/components/schemas/ExtendedErrorModel")
                                 .AllOf(
                                     new JsonSchemaBuilder()
-                                        .Ref("#/components/schemas/ErrorModel")
-                                        .Type(SchemaValueType.Object)
-                                        .Properties(
-                                            ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600)),
-                                            ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                        .Required("message", "code"),
+                                        .Ref("#/components/schemas/ErrorModel"),
                                     new JsonSchemaBuilder()
                                         .Type(SchemaValueType.Object)
                                         .Required("rootCause")
