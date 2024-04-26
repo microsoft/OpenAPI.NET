@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IBaseDocument
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Models
         public string HashCode => GenerateHashValue(this);
 
         /// <summary>
-        /// Implements IBaseDocument
+        /// The unique document ID
         /// </summary>
         public Uri BaseUri { get; }
 
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDocument() 
         {
             Workspace = new OpenApiWorkspace();
-            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid().ToString());            
+            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());            
         }
                 
         /// <summary>
@@ -501,7 +501,7 @@ namespace Microsoft.OpenApi.Models
                 uriLocation = externalDocId + relativePath;
             }
 
-            return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(uriLocation);
+            return Workspace.ResolveReference<JsonSchema>(uriLocation);
         }
 
         /// <summary>
@@ -665,18 +665,6 @@ namespace Microsoft.OpenApi.Models
                                        OpenApiReaderSettings settings = null)
         {
             return OpenApiModelFactory.Parse(input, format, settings);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pointer"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
-        {
-            throw new NotImplementedException();
         }
     }
 

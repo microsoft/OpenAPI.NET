@@ -1231,11 +1231,11 @@ namespace Microsoft.OpenApi.Services
 
         private bool ProcessSchemaAsReference(IBaseDocument baseDocument, bool isComponent = false)
         {
-            var schema = baseDocument as JsonSchema;
+            var schema = (JsonSchema)baseDocument;
             var isReference = schema?.GetRef() != null && !isComponent;
             if (isReference)
             {
-                _visitor.Visit(baseDocument);
+                _visitor.Visit(schema);
             }
 
             return isReference;

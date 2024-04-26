@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
@@ -40,7 +40,6 @@ namespace Microsoft.OpenApi.Reader.Services
             // Walk references
             foreach (var item in referenceCollector.References)
             {
-
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
