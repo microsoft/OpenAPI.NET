@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -6,10 +6,10 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
-      <EmbeddedResource Include="**\*.yaml">
+      <EmbeddedResource Include="**\*.yaml" Exclude="**\bin\**;**\obj\**">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="**\*.json">
+      <EmbeddedResource Include="**\*.json" Exclude="**\bin\**;**\obj\**">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>
