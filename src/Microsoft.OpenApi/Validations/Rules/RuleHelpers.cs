@@ -51,19 +51,12 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (context.HostDocument != null)
                 {
-                    schema.BaseUri = context.HostDocument.BaseUri;
+                    var visitor = new JsonSchemaReferenceResolver(context.HostDocument);
+                    var walker = new OpenApiWalker(visitor);
+                    schema = walker.Walk(schema);                    
+
                     var options = new EvaluationOptions();
-
-                    var registry = context.HostDocument.Workspace.GetSchemaRegistry();
-
-                    foreach(var keyValuePair in registry)
-                    {
-                        var jsonShema = keyValuePair.Value;
-                        var schemaKey = keyValuePair.Key;
-                        options.SchemaRegistry.Register(schemaKey, jsonShema);
-                    }
-
-                    options.SchemaRegistry.Register(schema.BaseUri, schema);
+                    options.OutputFormat = OutputFormat.List;
 
                     var results = schema.Evaluate(value, options);
 
