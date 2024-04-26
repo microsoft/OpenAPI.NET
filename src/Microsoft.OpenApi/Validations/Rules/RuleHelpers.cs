@@ -53,25 +53,25 @@ namespace Microsoft.OpenApi.Validations.Rules
                 {
                     var visitor = new JsonSchemaReferenceResolver(context.HostDocument);
                     var walker = new OpenApiWalker(visitor);
-                    schema = walker.Walk(schema);                    
+                    schema = walker.Walk(schema);
+                }                 
 
-                    var options = new EvaluationOptions();
-                    options.OutputFormat = OutputFormat.List;
+                var options = new EvaluationOptions();
+                options.OutputFormat = OutputFormat.List;
 
-                    var results = schema.Evaluate(value, options);
+                var results = schema.Evaluate(value, options);
 
-                    if (!results.IsValid)
+                if (!results.IsValid)
+                {
+                    foreach (var detail in results.Details)
                     {
-                        foreach (var detail in results.Details)
+                        if (detail.Errors != null && detail.Errors.Any())
                         {
-                            if (detail.Errors != null && detail.Errors.Any())
+                            foreach (var error in detail.Errors)
                             {
-                                foreach (var error in detail.Errors)
+                                if (!string.IsNullOrEmpty(error.Key) || !string.IsNullOrEmpty(error.Value.Trim()))
                                 {
-                                    if (!string.IsNullOrEmpty(error.Key) || !string.IsNullOrEmpty(error.Value.Trim()))
-                                    {
-                                        context.CreateWarning(ruleName, string.Format("{0} : {1} at {2}", error.Key, error.Value.Trim(), detail.InstanceLocation));
-                                    }
+                                    context.CreateWarning(ruleName, string.Format("{0} : {1} at {2}", error.Key, error.Value.Trim(), detail.InstanceLocation));
                                 }
                             }
                         }

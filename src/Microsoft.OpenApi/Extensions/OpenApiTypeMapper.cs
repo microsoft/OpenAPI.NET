@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="value"></param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        public static string ConvertSchemaValueTypeToString(SchemaValueType value)
+        internal static string ConvertSchemaValueTypeToString(SchemaValueType value)
         {
             return value switch
             {
