@@ -459,6 +459,7 @@ namespace Microsoft.OpenApi.Models
         public const string Callbacks = "callbacks";
         public const string ClientCredentials = "clientCredentials";
         public const string Components = "components";
+        public const string ComponentsSegment = "/components/";
         public const string Consumes = "consumes";
         public const string Contact = "contact";
         public const string Content = "content";

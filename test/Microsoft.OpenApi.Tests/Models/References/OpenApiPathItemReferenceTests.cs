@@ -83,8 +83,8 @@ components:
             _openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).OpenApiDocument;
             _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
             _openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", _openApiDoc_2.BaseUri);
-            _openApiDoc.Workspace.RegisterComponents(_openApiDoc_2);
-            _openApiDoc_2.Workspace.RegisterComponents(_openApiDoc_2);
+            _openApiDoc.Workspace.RegisterComponents(_openApiDoc_2, OpenApiSpecVersion.OpenApi3_1);
+            _openApiDoc_2.Workspace.RegisterComponents(_openApiDoc_2, OpenApiSpecVersion.OpenApi3_1);
 
             _localPathItemReference = new OpenApiPathItemReference("userPathItem", _openApiDoc_2)
             {
