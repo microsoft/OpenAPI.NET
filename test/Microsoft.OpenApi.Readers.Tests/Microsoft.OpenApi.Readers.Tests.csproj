@@ -6,10 +6,10 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
-      <EmbeddedResource Include="**\*.yaml">
+      <EmbeddedResource Include="**\*.yaml" Exclude="**\bin\**;**\obj\**">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="**\*.json">
+      <EmbeddedResource Include="**\*.json" Exclude="**\bin\**;**\obj\**">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>
