@@ -49,15 +49,13 @@ namespace Microsoft.OpenApi.Validations.Rules
         {           
             if (schema is not null)
             {
-                if (context.HostDocument != null)
-                {
-                    var visitor = new JsonSchemaReferenceResolver(context.HostDocument);
-                    var walker = new OpenApiWalker(visitor);
-                    schema = walker.Walk(schema);
-                }                 
-
                 var options = new EvaluationOptions();
                 options.OutputFormat = OutputFormat.List;
+
+                if (context.HostDocument != null)
+                {
+                    options.SchemaRegistry.Register(context.HostDocument.BaseUri, context.HostDocument);
+                }
 
                 var results = schema.Evaluate(value, options);
 
