@@ -902,7 +902,10 @@ namespace Microsoft.OpenApi.Services
                         Walk(key, () => newSchema = Walk(item.Value));
                         props.Add(key, newSchema);
                         schema = builder.Properties(props);
-                        schema.BaseUri = HostDocument.BaseUri;
+                        if (HostDocument != null)
+                        {
+                            schema.BaseUri = HostDocument.BaseUri;
+                        }
                     }
                 });
             }
