@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -116,16 +116,16 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"string\" but should be \"object\" at ", 
-                "type : Value is \"string\" but should be \"integer\" at /y", 
-                "type : Value is \"string\" but should be \"integer\" at /z", 
+                "type : Value is \"string\" but should be \"object\" at ",
+                "type : Value is \"string\" but should be \"integer\" at /y",
+                "type : Value is \"string\" but should be \"integer\" at /z",
                 "type : Value is \"array\" but should be \"object\" at "
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
                 "#/enum/0",
-                "#/enum/1", 
-                "#/enum/1", 
+                "#/enum/1",
+                "#/enum/1",
                 "#/enum/2"
             });
         }
