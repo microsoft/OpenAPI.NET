@@ -234,7 +234,13 @@ namespace Microsoft.OpenApi.Reader.V2
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return schemaBuilder.Ref(pointer);
+                var jsonSchema = schemaBuilder.Ref(pointer).Build();
+                if (hostDocument != null)
+                {
+                    jsonSchema.BaseUri = hostDocument.BaseUri;
+                }
+
+                return jsonSchema;
             }
 
             foreach (var propertyNode in mapNode)
