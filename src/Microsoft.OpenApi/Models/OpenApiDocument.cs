@@ -676,7 +676,8 @@ namespace Microsoft.OpenApi.Models
         /// <exception cref="NotImplementedException"></exception>
         public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
         {
-            throw new NotImplementedException();
+            var locationUri = string.Concat(BaseUri, pointer);
+            return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(locationUri);
         }
     }
 
