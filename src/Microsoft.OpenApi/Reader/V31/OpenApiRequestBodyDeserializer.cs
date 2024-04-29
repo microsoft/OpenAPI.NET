@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -16,19 +16,19 @@ namespace Microsoft.OpenApi.Reader.V31
             new()
             {
                 {
-                    "description", (o, n) =>
+                    "description", (o, n, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
-                    "content", (o, n) =>
+                    "content", (o, n, t) =>
                     {
-                        o.Content = n.CreateMap(LoadMediaType);
+                        o.Content = n.CreateMap(LoadMediaType, t);
                     }
                 },
                 {
-                    "required", (o, n) =>
+                    "required", (o, n, _) =>
                     {
                         o.Required = bool.Parse(n.GetScalarValue());
                     }
@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiRequestBody> _requestBodyPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiRequestBody LoadRequestBody(ParseNode node, OpenApiDocument hostDocument = null)

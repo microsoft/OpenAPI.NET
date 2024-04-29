@@ -17,21 +17,21 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "url",
-                (o, n) => o.Url = n.GetScalarValue()
+                (o, n, _) => o.Url = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n) => o.Description = n.GetScalarValue()
+                (o, n, _) => o.Description = n.GetScalarValue()
             },
             {
                 "variables",
-                (o, n) => o.Variables = n.CreateMap(LoadServerVariable)
+                (o, n, t) => o.Variables = n.CreateMap(LoadServerVariable, t)
             }
         };
 
         private static readonly PatternFieldMap<OpenApiServer> _serverPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiServer LoadServer(ParseNode node, OpenApiDocument hostDocument = null)
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var server = new OpenApiServer();
 
-            ParseMap(mapNode, server, _serverFixedFields, _serverPatternFields);
+            ParseMap(mapNode, server, _serverFixedFields, _serverPatternFields, hostDocument);
 
             return server;
         }

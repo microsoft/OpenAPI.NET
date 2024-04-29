@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Reader.V2
             new()
             {
                 {
-                    "tags", (o, n) => o.Tags = n.CreateSimpleList(
+                    "tags", (o, n, doc) => o.Tags = n.CreateSimpleList(
                         (valueNode, doc) =>
                             LoadTagByReference(
                                 valueNode.Context,
@@ -30,26 +30,26 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "summary",
-                    (o, n) => o.Summary = n.GetScalarValue()
+                    (o, n, _) => o.Summary = n.GetScalarValue()
                 },
                 {
                     "description",
-                    (o, n) => o.Description = n.GetScalarValue()
+                    (o, n, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "externalDocs",
-                    (o, n) => o.ExternalDocs = LoadExternalDocs(n)
+                    (o, n, t) => o.ExternalDocs = LoadExternalDocs(n, t)
                 },
                 {
                     "operationId",
-                    (o, n) => o.OperationId = n.GetScalarValue()
+                    (o, n, _) => o.OperationId = n.GetScalarValue()
                 },
                 {
                     "parameters",
-                    (o, n) => o.Parameters = n.CreateList(LoadParameter)
+                    (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)
                 },
                 {
-                    "consumes", (_, n) => {
+                    "consumes", (_, n, _) => {
                         var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue());
                         if (consumes.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                 },
                 {
-                    "produces", (_, n) => {
+                    "produces", (_, n, _) => {
                         var produces = n.CreateSimpleList((s, p) => s.GetScalarValue());
                         if (produces.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
@@ -66,22 +66,22 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "responses",
-                    (o, n) => o.Responses = LoadResponses(n)
+                    (o, n, t) => o.Responses = LoadResponses(n, t)
                 },
                 {
                     "deprecated",
-                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                    (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
                     "security",
-                    (o, n) => o.Security = n.CreateList(LoadSecurityRequirement)
+                    (o, n, t) => o.Security = n.CreateList(LoadSecurityRequirement, t)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields = new();
@@ -89,8 +89,8 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiResponses> _responsesPatternFields =
             new()
             {
-                {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => !s.StartsWith("x-"), (o, p, n, t) => o.Add(p, LoadResponse(n, t))},
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var operation = new OpenApiOperation();
 
-            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields);
+            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields, doc: hostDocument);
 
             // Build request body based on information determined while parsing OpenApiOperation
             var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var domainObject = new OpenApiResponses();
 
-            ParseMap(mapNode, domainObject, _responsesFixedFields, _responsesPatternFields);
+            ParseMap(mapNode, domainObject, _responsesFixedFields, _responsesPatternFields, doc:hostDocument);
 
             return domainObject;
         }

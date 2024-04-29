@@ -17,21 +17,21 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 OpenApiConstants.Name,
-                (o, n) => o.Name = n.GetScalarValue()
+                (o, n, _) => o.Name = n.GetScalarValue()
             },
             {
                 OpenApiConstants.Description,
-                (o, n) => o.Description = n.GetScalarValue()
+                (o, n, _) => o.Description = n.GetScalarValue()
             },
             {
                 OpenApiConstants.ExternalDocs,
-                (o, n) => o.ExternalDocs = LoadExternalDocs(n)
+                (o, n, t) => o.ExternalDocs = LoadExternalDocs(n, t)
             }
         };
 
         private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiTag LoadTag(ParseNode n, OpenApiDocument hostDocument = null)

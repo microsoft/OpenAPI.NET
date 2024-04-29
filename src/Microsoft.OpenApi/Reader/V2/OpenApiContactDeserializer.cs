@@ -18,21 +18,21 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "name",
-                (o, n) => o.Name = n.GetScalarValue()
+                (o, n, t) => o.Name = n.GetScalarValue()
             },
             {
                 "url",
-                (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                (o, n, t) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
             },
             {
                 "email",
-                (o, n) => o.Email = n.GetScalarValue()
+                (o, n, t) => o.Email = n.GetScalarValue()
             },
         };
 
         private static readonly PatternFieldMap<OpenApiContact> _contactPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         public static OpenApiContact LoadContact(ParseNode node, OpenApiDocument hostDocument = null)

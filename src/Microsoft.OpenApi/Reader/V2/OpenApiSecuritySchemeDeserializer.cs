@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     "type",
-                    (o, n) =>
+                    (o, n, _) =>
                     {
                         var type = n.GetScalarValue();
                         switch (type)
@@ -43,29 +43,29 @@ namespace Microsoft.OpenApi.Reader.V2
                         }
                     }
                 },
-                {"description", (o, n) => o.Description = n.GetScalarValue()},
-                {"name", (o, n) => o.Name = n.GetScalarValue()},
-                {"in", (o, n) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()},
+                {"description", (o, n, _) => o.Description = n.GetScalarValue()},
+                {"name", (o, n, _) => o.Name = n.GetScalarValue()},
+                {"in", (o, n, _) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()},
                 {
-                    "flow", (_, n) => _flowValue = n.GetScalarValue()
+                    "flow", (_, n, _) => _flowValue = n.GetScalarValue()
                 },
                 {
                     "authorizationUrl",
-                    (_, n) => _flow.AuthorizationUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (_, n, _) => _flow.AuthorizationUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {
                     "tokenUrl",
-                    (_, n) => _flow.TokenUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (_, n, _) => _flow.TokenUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {
-                    "scopes", (_, n) => _flow.Scopes = n.CreateSimpleMap(LoadString)
+                    "scopes", (_, n, _) => _flow.Scopes = n.CreateSimpleMap(LoadString)
                 }
             };
 
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument = null)

@@ -1075,6 +1075,7 @@ paths: {}",
             var warnings = result.OpenApiDiagnostic.Warnings;
             Assert.False(warnings.Any());
         }
+
         [Fact]
         public void ParseDocWithRefsUsingProxyReferencesSucceeds()
         {

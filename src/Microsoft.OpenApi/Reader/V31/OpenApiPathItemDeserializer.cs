@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -16,39 +16,39 @@ namespace Microsoft.OpenApi.Reader.V31
         {
 
             {
-                "$ref", (o,n) => {
+                "$ref", (o,n, _) => {
                     o.Reference = new OpenApiReference() { ExternalResource = n.GetScalarValue() };
                     o.UnresolvedReference =true;
                 }
             },
             {
-                "summary", (o, n) =>
+                "summary", (o, n, _) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n) =>
+                "description", (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
-            {"get", (o, n) => o.AddOperation(OperationType.Get, LoadOperation(n))},
-            {"put", (o, n) => o.AddOperation(OperationType.Put, LoadOperation(n))},
-            {"post", (o, n) => o.AddOperation(OperationType.Post, LoadOperation(n))},
-            {"delete", (o, n) => o.AddOperation(OperationType.Delete, LoadOperation(n))},
-            {"options", (o, n) => o.AddOperation(OperationType.Options, LoadOperation(n))},
-            {"head", (o, n) => o.AddOperation(OperationType.Head, LoadOperation(n))},
-            {"patch", (o, n) => o.AddOperation(OperationType.Patch, LoadOperation(n))},
-            {"trace", (o, n) => o.AddOperation(OperationType.Trace, LoadOperation(n))},
-            {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
-            {"parameters", (o, n) => o.Parameters = n.CreateList(LoadParameter)}
+            {"get", (o, n, t) => o.AddOperation(OperationType.Get, LoadOperation(n, t))},
+            {"put", (o, n, t) => o.AddOperation(OperationType.Put, LoadOperation(n, t))},
+            {"post", (o, n, t) => o.AddOperation(OperationType.Post, LoadOperation(n, t))},
+            {"delete", (o, n, t) => o.AddOperation(OperationType.Delete, LoadOperation(n, t))},
+            {"options", (o, n, t) => o.AddOperation(OperationType.Options, LoadOperation(n, t))},
+            {"head", (o, n, t) => o.AddOperation(OperationType.Head, LoadOperation(n, t))},
+            {"patch", (o, n, t) => o.AddOperation(OperationType.Patch, LoadOperation(n, t))},
+            {"trace", (o, n, t) => o.AddOperation(OperationType.Trace, LoadOperation(n, t))},
+            {"servers", (o, n, t) => o.Servers = n.CreateList(LoadServer, t)},
+            {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)}
         };
 
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument = null)
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var pathItem = new OpenApiPathItem();
 
-            ParseMap(mapNode, pathItem, _pathItemFixedFields, _pathItemPatternFields);
+            ParseMap(mapNode, pathItem, _pathItemFixedFields, _pathItemPatternFields, hostDocument);
 
             return pathItem;
         }

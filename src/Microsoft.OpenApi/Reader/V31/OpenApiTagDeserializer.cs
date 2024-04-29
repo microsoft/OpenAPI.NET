@@ -16,28 +16,28 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiTag> _tagFixedFields = new()
         {
             {
-                OpenApiConstants.Name, (o, n) =>
+                OpenApiConstants.Name, (o, n, _) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                OpenApiConstants.Description, (o, n) =>
+                OpenApiConstants.Description, (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                OpenApiConstants.ExternalDocs, (o, n) =>
+                OpenApiConstants.ExternalDocs, (o, n, t) =>
                 {
-                    o.ExternalDocs = LoadExternalDocs(n);
+                    o.ExternalDocs = LoadExternalDocs(n, t);
                 }
             }
         };
 
         private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiTag LoadTag(ParseNode n, OpenApiDocument hostDocument = null)

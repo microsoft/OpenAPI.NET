@@ -18,19 +18,19 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new()
         {
             {
-                "$ref", (o, n) =>
+                "$ref", (o, n, t) =>
                 {
                     o.Reference = new() { ExternalResource = n.GetScalarValue() };
                     o.UnresolvedReference =true;
                 }
             },
-            {"get", (o, n) => o.AddOperation(OperationType.Get, LoadOperation(n))},
-            {"put", (o, n) => o.AddOperation(OperationType.Put, LoadOperation(n))},
-            {"post", (o, n) => o.AddOperation(OperationType.Post, LoadOperation(n))},
-            {"delete", (o, n) => o.AddOperation(OperationType.Delete, LoadOperation(n))},
-            {"options", (o, n) => o.AddOperation(OperationType.Options, LoadOperation(n))},
-            {"head", (o, n) => o.AddOperation(OperationType.Head, LoadOperation(n))},
-            {"patch", (o, n) => o.AddOperation(OperationType.Patch, LoadOperation(n))},
+            {"get", (o, n, t) => o.AddOperation(OperationType.Get, LoadOperation(n, t))},
+            {"put", (o, n, t) => o.AddOperation(OperationType.Put, LoadOperation(n, t))},
+            {"post", (o, n, t) => o.AddOperation(OperationType.Post, LoadOperation(n, t))},
+            {"delete", (o, n, t) => o.AddOperation(OperationType.Delete, LoadOperation(n, t))},
+            {"options", (o, n, t) => o.AddOperation(OperationType.Options, LoadOperation(n, t))},
+            {"head", (o, n, t) => o.AddOperation(OperationType.Head, LoadOperation(n, t))},
+            {"patch", (o, n, t) => o.AddOperation(OperationType.Patch, LoadOperation(n, t))},
             {
                 "parameters",
                 LoadPathParameters
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))},
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))},
             };
 
         public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument = null)
@@ -49,12 +49,12 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var pathItem = new OpenApiPathItem();
 
-            ParseMap(mapNode, pathItem, _pathItemFixedFields, _pathItemPatternFields);
+            ParseMap(mapNode, pathItem, _pathItemFixedFields, _pathItemPatternFields, doc: hostDocument);
 
             return pathItem;
         }
 
-        private static void LoadPathParameters(OpenApiPathItem pathItem, ParseNode node)
+        private static void LoadPathParameters(OpenApiPathItem pathItem, ParseNode node, OpenApiDocument hostDocument = null)
         {
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
             node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);

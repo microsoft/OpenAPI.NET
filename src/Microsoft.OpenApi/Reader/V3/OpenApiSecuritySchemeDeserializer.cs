@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -21,42 +21,42 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "type",
-                    (o, n) => o.Type = n.GetScalarValue().GetEnumFromDisplayName<SecuritySchemeType>()
+                    (o, n, _) => o.Type = n.GetScalarValue().GetEnumFromDisplayName<SecuritySchemeType>()
                 },
                 {
                     "description",
-                    (o, n) => o.Description = n.GetScalarValue()
+                    (o, n, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "name",
-                    (o, n) => o.Name = n.GetScalarValue()
+                    (o, n, _) => o.Name = n.GetScalarValue()
                 },
                 {
                     "in",
-                    (o, n) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()
+                    (o, n, _) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()
                 },
                 {
                     "scheme",
-                    (o, n) => o.Scheme = n.GetScalarValue()
+                    (o, n, _) => o.Scheme = n.GetScalarValue()
                 },
                 {
                     "bearerFormat",
-                    (o, n) => o.BearerFormat = n.GetScalarValue()
+                    (o, n, _) => o.BearerFormat = n.GetScalarValue()
                 },
                 {
                     "openIdConnectUrl",
-                    (o, n) => o.OpenIdConnectUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (o, n, _) => o.OpenIdConnectUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
                 {
                     "flows",
-                    (o, n) => o.Flows = LoadOAuthFlows(n)
+                    (o, n, t) => o.Flows = LoadOAuthFlows(n, t)
                 }
             };
 
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument = null)

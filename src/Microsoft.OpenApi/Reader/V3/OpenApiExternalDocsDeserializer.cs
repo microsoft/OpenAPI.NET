@@ -20,18 +20,18 @@ namespace Microsoft.OpenApi.Reader.V3
                 // $ref
                 {
                     "description",
-                    (o, n) => o.Description = n.GetScalarValue()
+                    (o, n, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "url",
-                    (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (o, n, _) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
             };
 
     private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
             new()
             {
-                    {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                    {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
                     };
 
         public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument hostDocument = null)
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var externalDocs = new OpenApiExternalDocs();
 
-            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields);
+            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, hostDocument);
 
             return externalDocs;
         }

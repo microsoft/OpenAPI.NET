@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -21,10 +21,10 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "name",
-                    (o, n) => o.Name = n.GetScalarValue()
+                    (o, n,_) => o.Name = n.GetScalarValue()
                 },
                 {
-                    "in", (o, n) =>
+                    "in", (o, n, _) =>
                     {
                         var inString = n.GetScalarValue();
 
@@ -35,54 +35,54 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "description",
-                    (o, n) => o.Description = n.GetScalarValue()
+                    (o, n, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "required",
-                    (o, n) => o.Required = bool.Parse(n.GetScalarValue())
+                    (o, n, _) => o.Required = bool.Parse(n.GetScalarValue())
                 },
                 {
                     "deprecated",
-                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                    (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
                     "allowEmptyValue",
-                    (o, n) => o.AllowEmptyValue = bool.Parse(n.GetScalarValue())
+                    (o, n, _) => o.AllowEmptyValue = bool.Parse(n.GetScalarValue())
                 },
                 {
                     "allowReserved",
-                    (o, n) => o.AllowReserved = bool.Parse(n.GetScalarValue())
+                    (o, n, _) => o.AllowReserved = bool.Parse(n.GetScalarValue())
                 },
                 {
                     "style",
-                    (o, n) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
+                    (o, n, _) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
                 },
                 {
                     "explode",
-                    (o, n) => o.Explode = bool.Parse(n.GetScalarValue())
+                    (o, n, _) => o.Explode = bool.Parse(n.GetScalarValue())
                 },
                 {
                     "schema",
-                    (o, n) => o.Schema = LoadSchema(n)
+                    (o, n, t) => o.Schema = LoadSchema(n, t)
                 },
                 {
                     "content",
-                    (o, n) => o.Content = n.CreateMap(LoadMediaType)
+                    (o, n, t) => o.Content = n.CreateMap(LoadMediaType, t)
                 },
                 {
                     "examples",
-                    (o, n) => o.Examples = n.CreateMap(LoadExample)
+                    (o, n, t) => o.Examples = n.CreateMap(LoadExample, t)
                 },
                 {
                     "example",
-                    (o, n) => o.Example = n.CreateAny()
+                    (o, n, _) => o.Example = n.CreateAny()
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new()
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var parameter = new OpenApiParameter();
 
-            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
+            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument);
             ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
             ProcessAnyMapFields(mapNode, parameter, _parameterAnyMapOpenApiExampleFields);
 

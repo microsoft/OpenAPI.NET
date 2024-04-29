@@ -16,28 +16,28 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiServer> _serverFixedFields = new()
         {
             {
-                "url", (o, n) =>
+                "url", (o, n, _) =>
                 {
                     o.Url = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n) =>
+                "description", (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                "variables", (o, n) =>
+                "variables", (o, n, t) =>
                 {
-                    o.Variables = n.CreateMap(LoadServerVariable);
+                    o.Variables = n.CreateMap(LoadServerVariable, t);
                 }
             }
         };
 
         private static readonly PatternFieldMap<OpenApiServer> _serverPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiServer LoadServer(ParseNode node, OpenApiDocument hostDocument = null)
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var server = new OpenApiServer();
 
-            ParseMap(mapNode, server, _serverFixedFields, _serverPatternFields);
+            ParseMap(mapNode, server, _serverFixedFields, _serverPatternFields, hostDocument);
 
             return server;
         }

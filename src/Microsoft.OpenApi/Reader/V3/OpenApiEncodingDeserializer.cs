@@ -17,30 +17,30 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "contentType",
-                (o, n) => o.ContentType = n.GetScalarValue()
+                (o, n, _) => o.ContentType = n.GetScalarValue()
             },
             {
                 "headers",
-                (o, n) => o.Headers = n.CreateMap(LoadHeader)
+                (o, n, t) => o.Headers = n.CreateMap(LoadHeader, t)
             },
             {
                 "style",
-                (o, n) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
+                (o, n, _) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
             },
             {
                 "explode",
-                (o, n) => o.Explode = bool.Parse(n.GetScalarValue())
+                (o, n, _) => o.Explode = bool.Parse(n.GetScalarValue())
             },
             {
                 "allowedReserved", 
-                (o, n) => o.AllowReserved = bool.Parse(n.GetScalarValue())
+                (o, n, _) => o.AllowReserved = bool.Parse(n.GetScalarValue())
             },
         };
 
         private static readonly PatternFieldMap<OpenApiEncoding> _encodingPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiEncoding LoadEncoding(ParseNode node, OpenApiDocument hostDocument = null)

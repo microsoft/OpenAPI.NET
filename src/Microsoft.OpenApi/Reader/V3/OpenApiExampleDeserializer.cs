@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Linq;
@@ -19,26 +19,26 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "summary",
-                (o, n) => o.Summary = n.GetScalarValue()
+                (o, n, _) => o.Summary = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n) => o.Description = n.GetScalarValue()
+                (o, n, _) => o.Description = n.GetScalarValue()
             },
             {
                 "value",
-                (o, n) => o.Value = n.CreateAny()
+                (o, n, _) => o.Value = n.CreateAny()
             },
             {
                 "externalValue",
-                (o, n) => o.ExternalValue = n.GetScalarValue()
+                (o, n, _) => o.ExternalValue = n.GetScalarValue()
             },
         };
 
         private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiExample LoadExample(ParseNode node, OpenApiDocument hostDocument = null)

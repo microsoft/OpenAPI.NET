@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -15,41 +15,41 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiLink> _linkFixedFields = new()
         {
             {
-                "operationRef", (o, n) =>
+                "operationRef", (o, n, _) =>
                 {
                     o.OperationRef = n.GetScalarValue();
                 }
             },
             {
-                "operationId", (o, n) =>
+                "operationId", (o, n, _) =>
                 {
                     o.OperationId = n.GetScalarValue();
                 }
             },
             {
-                "parameters", (o, n) =>
+                "parameters", (o, n, _) =>
                 {
                     o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper);
                 }
             },
             {
-                "requestBody", (o, n) =>
+                "requestBody", (o, n, _) =>
                 {
                     o.RequestBody = LoadRuntimeExpressionAnyWrapper(n);
                 }
             },
             {
-                "description", (o, n) =>
+                "description", (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
-            {"server", (o, n) => o.Server = LoadServer(n)}
+            {"server", (o, n, t) => o.Server = LoadServer(n, t)}
         };
 
         private static readonly PatternFieldMap<OpenApiLink> _linkPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
         };
 
         public static OpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument = null)
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 return new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
             }
 
-            ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields);
+            ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields, hostDocument);
 
             return link;
         }

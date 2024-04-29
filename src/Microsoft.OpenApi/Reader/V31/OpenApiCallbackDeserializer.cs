@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Expressions;
+﻿using Microsoft.OpenApi.Expressions;
 using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -20,8 +20,8 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
             new()
             {
-            {s => !s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n))},
-            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
+            {s => !s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n, t))},
+            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
         public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument = null)
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var domainObject = new OpenApiCallback();
 
-            ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields);
+            ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument);
 
             return domainObject;
         }

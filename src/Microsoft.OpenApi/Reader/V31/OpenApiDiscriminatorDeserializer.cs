@@ -14,13 +14,13 @@ namespace Microsoft.OpenApi.Reader.V31
             new()
             {
                 {
-                    "propertyName", (o, n) =>
+                    "propertyName", (o, n, _) =>
                     {
                         o.PropertyName = n.GetScalarValue();
                     }
                 },
                 {
-                    "mapping", (o, n) =>
+                    "mapping", (o, n, _) =>
                     {
                         o.Mapping = n.CreateSimpleMap(LoadString);
                     }
@@ -30,10 +30,10 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiDiscriminator LoadDiscriminator(ParseNode node)
+        public static OpenApiDiscriminator LoadDiscriminator(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("discriminator");
 
