@@ -574,7 +574,25 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteProperty(OpenApiConstants.Nullable, schema.GetNullable(), false);
 
             // discriminator
-            writer.WriteOptionalObject(OpenApiConstants.Discriminator, schema.GetOpenApiDiscriminator(), (w, d) => d.SerializeAsV3(w));
+            var discriminator = schema.GetDiscriminator();
+            if (discriminator != null)
+            {                
+                writer.WriteStartObject();
+                
+                // propertyName
+                writer.WriteProperty(OpenApiConstants.PropertyName, discriminator.PropertyName);
+
+                // mapping
+                writer.WriteOptionalMap(OpenApiConstants.Mapping, (IDictionary<string, string>)discriminator.Mapping, (w, s) => w.WriteValue(s));
+
+                if (version == OpenApiSpecVersion.OpenApi3_1 && discriminator.Extensions.Any())
+                {
+                    // extensions
+                    writer.WriteExtensions((IDictionary<string, Interfaces.IOpenApiExtension>)discriminator.Extensions, OpenApiSpecVersion.OpenApi3_1);
+                }
+
+                writer.WriteEndObject();
+            }
 
             // readOnly
             writer.WriteProperty(OpenApiConstants.ReadOnly, schema.GetReadOnly(), false);

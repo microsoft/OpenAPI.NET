@@ -84,9 +84,9 @@ namespace Microsoft.OpenApi.Validations.Rules
                     // discriminator
                     context.Enter("discriminator");
 
-                    if (jsonSchema.GetRef() != null && jsonSchema.GetOpenApiDiscriminator() != null)
+                    if (jsonSchema.GetRef() != null && jsonSchema.GetDiscriminator() != null)
                     {
-                        var discriminatorName = jsonSchema.GetOpenApiDiscriminator()?.PropertyName;
+                        var discriminatorName = jsonSchema.GetDiscriminator()?.PropertyName;
 
                         if (!ValidateChildSchemaAgainstDiscriminator(jsonSchema, discriminatorName))
                         {
