@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.V31
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, openApiDoc);
 
             // Register components
-            openApiDoc.Workspace.RegisterComponents(openApiDoc);
+            openApiDoc.Workspace.RegisterComponents(openApiDoc, OpenApiSpecVersion.OpenApi3_1);
 
             return openApiDoc;
         }

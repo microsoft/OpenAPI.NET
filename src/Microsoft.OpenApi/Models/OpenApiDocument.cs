@@ -483,22 +483,22 @@ namespace Microsoft.OpenApi.Models
         /// <param name="referenceUri"></param>
         /// <returns>A JsonSchema ref.</returns>
         public JsonSchema ResolveJsonSchemaReference(Uri referenceUri)
-        {            
+        {
+            const char pound = '#';
             string uriLocation;
-            string id = referenceUri.OriginalString.Split('/')?.Last();
-            string relativePath = "/components/" + ReferenceType.Schema.GetDisplayName() + "/" + id;
-            
-            if (referenceUri.OriginalString.StartsWith("#"))
+            int poundIndex = referenceUri.OriginalString.IndexOf(pound);
+
+            if (poundIndex > 0)
             {
-                // Local reference
-                uriLocation = BaseUri + relativePath;
+                // External reference, ex: ./TodoReference.yaml#/components/schemas/todo
+                string externalUri = referenceUri.OriginalString.Split(pound).First();
+                Uri externalDocId = Workspace.GetDocumentId(externalUri);
+                string relativePath = referenceUri.OriginalString.Split(pound).Last();
+                uriLocation = externalDocId + relativePath;                
             }
             else
             {
-                // External reference
-                var externalUri = referenceUri.OriginalString.Split('#').First();
-                var externalDocId = Workspace.GetDocumentId(externalUri);
-                uriLocation = externalDocId + relativePath;
+                uriLocation = BaseUri + referenceUri.ToString().TrimStart(pound);
             }
 
             return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(uriLocation);
@@ -569,7 +569,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             string uriLocation;
-            string relativePath = "/components/" + reference.Type.GetDisplayName() + "/" + reference.Id;
+            string relativePath = OpenApiConstants.ComponentsSegment + reference.Type.GetDisplayName() + "/" + reference.Id;
 
             uriLocation = useExternal
                 ? Workspace.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
