@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static JsonSchema ResolveOneOfSchema(ref JsonSchema schema)
         {
-            if (schema.GetOneOf()?[0] is {} newSchema)
+            if (schema.GetOneOf()?.FirstOrDefault() is {} newSchema)
             {
                 var schemaBuilder = BuildSchema(schema);
                 schemaBuilder = schemaBuilder.Remove("oneOf");
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static JsonSchema ResolveAnyOfSchema(ref JsonSchema schema)
         {
-            if (schema.GetAnyOf()?[0] is {} newSchema)
+            if (schema.GetAnyOf()?.FirstOrDefault() is {} newSchema)
             {
                 var schemaBuilder = BuildSchema(schema);
                 schemaBuilder = schemaBuilder.Remove("anyOf");
