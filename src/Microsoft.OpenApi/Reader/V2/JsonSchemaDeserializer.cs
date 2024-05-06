@@ -227,6 +227,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
+            Json.Schema.OpenApi.Vocabularies.Register();
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
             var schemaBuilder = new JsonSchemaBuilder();
 
