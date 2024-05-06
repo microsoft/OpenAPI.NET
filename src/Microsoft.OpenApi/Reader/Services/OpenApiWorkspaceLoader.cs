@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
@@ -27,7 +27,8 @@ namespace Microsoft.OpenApi.Reader.Services
                                                          CancellationToken cancellationToken = default)
         {
             _workspace.AddDocumentId(reference.ExternalResource, document.BaseUri);
-            _workspace.RegisterComponents(document);
+            var version = diagnostic?.SpecificationVersion ?? OpenApiSpecVersion.OpenApi3_0;
+            _workspace.RegisterComponents(document, version);
             document.Workspace = _workspace;
 
             // Collect remote references by walking document
@@ -35,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.Services
             var collectorWalker = new OpenApiWalker(referenceCollector);
             collectorWalker.Walk(document);
 
-            diagnostic ??= new();
+            diagnostic ??= new() { SpecificationVersion = version };
 
             // Walk references
             foreach (var item in referenceCollector.References)

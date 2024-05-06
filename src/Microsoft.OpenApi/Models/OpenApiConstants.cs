@@ -635,6 +635,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public const string BaseRegistryUri = "https://openapi.net/";
 
+        /// <summary>
+        /// The components path segment in a $ref value.
+        /// </summary>
+        public const string ComponentsSegment = "/components/";
+
         #region V2.0
 
         /// <summary>
