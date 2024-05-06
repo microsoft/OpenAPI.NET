@@ -76,4 +76,4 @@ jobs:
           dotnet workload restore
           dotnet build
           dotnet test Microsoft.OpenApi.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          ./.sonar/scanner/dotnet-sonarscanner end
