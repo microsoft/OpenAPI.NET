@@ -55,11 +55,11 @@
                 "schema": {
                   "type": "array",
                   "items": {
+                    "type": "object",
                     "required": [
                       "id",
                       "name"
                     ],
-                    "type": "object",
                     "properties": {
                       "id": {
                         "type": "integer",
@@ -79,11 +79,11 @@
                 "schema": {
                   "type": "array",
                   "items": {
+                    "type": "object",
                     "required": [
                       "id",
                       "name"
                     ],
-                    "type": "object",
                     "properties": {
                       "id": {
                         "type": "integer",
@@ -106,11 +106,11 @@
             "content": {
               "text/html": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "code",
                     "message"
                   ],
-                  "type": "object",
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -129,11 +129,11 @@
             "content": {
               "text/html": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "code",
                     "message"
                   ],
-                  "type": "object",
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -157,10 +157,10 @@
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
                 "required": [
                   "name"
                 ],
-                "type": "object",
                 "properties": {
                   "id": {
                     "type": "integer",
@@ -184,11 +184,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "id",
                     "name"
                   ],
-                  "type": "object",
                   "properties": {
                     "id": {
                       "type": "integer",
@@ -210,11 +210,11 @@
             "content": {
               "text/html": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "code",
                     "message"
                   ],
-                  "type": "object",
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -233,11 +233,11 @@
             "content": {
               "text/html": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "code",
                     "message"
                   ],
-                  "type": "object",
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -276,11 +276,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "id",
                     "name"
                   ],
-                  "type": "object",
                   "properties": {
                     "id": {
                       "type": "integer",
@@ -297,11 +297,11 @@
               },
               "application/xml": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "id",
                     "name"
                   ],
-                  "type": "object",
                   "properties": {
                     "id": {
                       "type": "integer",
@@ -323,11 +323,11 @@
             "content": {
               "text/html": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "code",
                     "message"
                   ],
-                  "type": "object",
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -346,11 +346,11 @@
             "content": {
               "text/html": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "code",
                     "message"
                   ],
-                  "type": "object",
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -390,11 +390,11 @@
             "content": {
               "text/html": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "code",
                     "message"
                   ],
-                  "type": "object",
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -413,11 +413,11 @@
             "content": {
               "text/html": {
                 "schema": {
+                  "type": "object",
                   "required": [
                     "code",
                     "message"
                   ],
-                  "type": "object",
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -438,11 +438,11 @@
   "components": {
     "schemas": {
       "pet": {
+        "type": "object",
         "required": [
           "id",
           "name"
         ],
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -457,10 +457,10 @@
         }
       },
       "newPet": {
+        "type": "object",
         "required": [
           "name"
         ],
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -475,11 +475,11 @@
         }
       },
       "errorModel": {
+        "type": "object",
         "required": [
           "code",
           "message"
         ],
-        "type": "object",
         "properties": {
           "code": {
             "type": "integer",

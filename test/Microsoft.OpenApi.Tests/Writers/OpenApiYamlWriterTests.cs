@@ -434,14 +434,14 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
         }
 
         private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
         {
             // Arrange
 
-            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("#/components/schemas/thing").Build();
+            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Build();
 
             var doc = new OpenApiDocument()
             {

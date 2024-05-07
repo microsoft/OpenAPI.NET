@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 (o, n) =>
                 {
                     o.Components ??= new();
-                    o.Components.Schemas = n.CreateJsonSchemaMapWithReference(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi2_0);
+                    o.Components.Schemas = n.CreateJsonSchemaMap(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi2_0);
                 }
             },
             {
@@ -253,7 +253,7 @@ namespace Microsoft.OpenApi.Reader.V2
             FixRequestBodyReferences(openApiDoc);
 
             // Register components
-            openApiDoc.Workspace.RegisterComponents(openApiDoc);
+            openApiDoc.Workspace.RegisterComponents(openApiDoc, OpenApiSpecVersion.OpenApi2_0);
 
             return openApiDoc;
         }

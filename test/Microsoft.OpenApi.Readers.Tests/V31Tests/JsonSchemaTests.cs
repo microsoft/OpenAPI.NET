@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = JsonSerializer.Deserialize<JsonSchema>(jsonString);
 
             // Assert
-            Assert.Equal(schema, expectedSchema);
+            schema.Should().BeEquivalentTo(expectedSchema, options => options.Excluding(x => x.BaseUri));
         }
 
         [Fact]

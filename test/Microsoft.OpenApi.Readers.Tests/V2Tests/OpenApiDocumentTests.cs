@@ -24,8 +24,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ShouldParseProducesInAnyOrder()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
-
             var okSchema = new JsonSchemaBuilder()
                     .Ref("#/definitions/Item");
 
@@ -42,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Schema = errorSchema
             };
 
-            result.OpenApiDocument.Should().BeEquivalentTo(new OpenApiDocument
+            var expected = new OpenApiDocument
             {
                 Info = new OpenApiInfo
                 {
@@ -150,7 +148,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                         }
                 }
-            }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+            };
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
+
+            result.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
 
         [Fact]

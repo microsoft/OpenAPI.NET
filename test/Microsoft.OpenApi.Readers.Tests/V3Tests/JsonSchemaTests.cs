@@ -298,7 +298,7 @@ get:
                 {
                     ["Pet1"] = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
-                        .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
+                        .Discriminator("petType", null, null)
                         .Properties(
                             ("name", new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
@@ -314,7 +314,7 @@ get:
                             new JsonSchemaBuilder()
                                 .Ref("#/components/schemas/Pet1")
                                 .Type(SchemaValueType.Object)
-                                .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
+                                .Discriminator("petType", null, null)
                                 .Properties(
                                     ("name", new JsonSchemaBuilder()
                                         .Type(SchemaValueType.String)
@@ -341,7 +341,7 @@ get:
                             new JsonSchemaBuilder()
                                 .Ref("#/components/schemas/Pet1")
                                 .Type(SchemaValueType.Object)
-                                .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
+                                .Discriminator("petType", null, null)
                                 .Properties(
                                     ("name", new JsonSchemaBuilder()
                                         .Type(SchemaValueType.String)

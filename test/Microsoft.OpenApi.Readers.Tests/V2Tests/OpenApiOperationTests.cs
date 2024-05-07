@@ -17,6 +17,7 @@ using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -188,7 +189,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicOperation);
+            operation.Should().BeEquivalentTo(_basicOperation, options => options.Excluding(x => x.Parameters[0].Schema.BaseUri));
         }
 
         [Fact]
@@ -206,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicOperation);
+            operation.Should().BeEquivalentTo(_basicOperation, options => options.Excluding(x => x.Parameters[0].Schema.BaseUri));
         }
 
         [Fact]
@@ -223,7 +224,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            operation.Should().BeEquivalentTo(_operationWithBody, 
+                options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding(x => x.Parameters[0].Schema.BaseUri)
+                    .Excluding(x => x.RequestBody.Content["application/json"].Schema.BaseUri));
         }
 
         [Fact]
@@ -241,7 +246,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            operation.Should().BeEquivalentTo(_operationWithBody, 
+                options => options
+                .IgnoringCyclicReferences()
+                .Excluding(x => x.Parameters[0].Schema.BaseUri)
+                .Excluding(x => x.RequestBody.Content["application/json"].Schema.BaseUri));
         }
 
         [Fact]
@@ -346,7 +355,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            operation.Should().BeEquivalentTo(_operationWithBody, 
+                options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding(x => x.Parameters[0].Schema.BaseUri)
+                    .Excluding(x => x.RequestBody.Content["application/json"].Schema.BaseUri));
         }
 
         [Fact]

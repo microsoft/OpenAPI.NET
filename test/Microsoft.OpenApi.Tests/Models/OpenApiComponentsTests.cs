@@ -140,7 +140,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 .Type(SchemaValueType.Object)
                 .Properties(
                     ("property1", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                .Ref("#/components/schemas/schema1")
                 .Build(),
 
                 ["schema2"] = new JsonSchemaBuilder()

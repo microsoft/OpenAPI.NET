@@ -4,8 +4,8 @@
   "description": "Results to return",
   "style": "form",
   "schema": {
-    "maximum": 100,
+    "type": "integer",
     "minimum": 1,
-    "type": "integer"
+    "maximum": 100
   }
 }

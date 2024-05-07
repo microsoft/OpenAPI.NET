@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, JsonSchema> CreateJsonSchemaMapWithReference(
+        public virtual Dictionary<string, JsonSchema> CreateJsonSchemaMap(
             ReferenceType referenceType,
             Func<MapNode, OpenApiDocument, JsonSchema> map,
             OpenApiSpecVersion version)

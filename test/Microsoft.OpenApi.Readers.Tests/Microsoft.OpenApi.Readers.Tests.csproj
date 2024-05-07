@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -7,13 +7,12 @@
     </PropertyGroup>
     <ItemGroup>
       <EmbeddedResource Include="**\*.yaml" Exclude="**\bin\**;**\obj\**">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="**\*.json" Exclude="**\bin\**;**\obj\**">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="JsonSchema.Net" Version="6.1.2" />
         <PackageReference Include="JsonSchema.Net.OpenApi" Version="3.0.1" />
