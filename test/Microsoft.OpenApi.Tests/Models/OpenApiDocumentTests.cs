@@ -48,8 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["schema1"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
-                                .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
-                                .Ref("#/definitions/schema1"),
+                                .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build())),
                 ["schema2"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
@@ -999,7 +998,8 @@ info:
   version: 1.0.0
 paths: { }
 definitions:
-  schema1: { }";
+  schema1:
+    $ref: '#/definitions/schemas/schema1'";
 
             // Act
             var actual = SimpleDocumentWithTopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);

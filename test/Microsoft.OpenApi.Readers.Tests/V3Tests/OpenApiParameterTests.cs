@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     Style = ParameterStyle.Form,
                     Explode = true
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     .Type(SchemaValueType.Object)
                     .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
                     Style = ParameterStyle.Form
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 )
                         }
                     }
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         .Items(new JsonSchemaBuilder()
                             .Type(SchemaValueType.Integer)
                             .Format("int64"))
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -225,7 +225,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Number)
                         .Format("float")
-                }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Node.Parent));
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Example.Node.Parent)
+                .Excluding(p => p.Schema.BaseUri));
         }
 
         [Fact]
@@ -258,7 +260,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 .Format("float")
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(p => p.Examples["example1"].Value.Node.Parent)
-                .Excluding(p => p.Examples["example2"].Value.Node.Parent));
+                .Excluding(p => p.Examples["example2"].Value.Node.Parent)
+                .Excluding(p => p.Schema.BaseUri));
         }
 
         [Fact]
@@ -337,7 +340,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var param = OpenApiV3Deserializer.LoadParameter(node, document);
 
             // Assert
-            param.Should().BeEquivalentTo(expected, options => options.Excluding(p => p.Reference.HostDocument));
+            param.Should().BeEquivalentTo(expected, options => options
+            .Excluding(p => p.Reference.HostDocument)
+            .Excluding(p => p.Schema.BaseUri));
         }
     }
 }

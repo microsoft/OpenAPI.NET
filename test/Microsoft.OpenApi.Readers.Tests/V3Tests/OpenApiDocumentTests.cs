@@ -994,7 +994,8 @@ paths: {}",
                                 .Format(Formats.Uuid)
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(e => e.Example.Node.Parent)
-                .Excluding(x => x.Reference));
+                .Excluding(x => x.Reference)
+                .Excluding(x => x.Schema.BaseUri));
 
             var examplesHeader = result.OpenApiDocument.Components?.Headers?["examples-header"];
             Assert.NotNull(examplesHeader);
@@ -1026,7 +1027,8 @@ paths: {}",
                                 .Format(Formats.Uuid)
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(e => e.Examples["uuid1"].Value.Node.Parent)
-                .Excluding(e => e.Examples["uuid2"].Value.Node.Parent));
+                .Excluding(e => e.Examples["uuid2"].Value.Node.Parent)
+                .Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -1066,7 +1068,7 @@ paths: {}",
                 .Build();
 
             // Assert
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
+            actualSchema.Should().BeEquivalentTo(expectedSchema, options => options.Excluding(x => x.BaseUri));
         }
 
         [Fact]

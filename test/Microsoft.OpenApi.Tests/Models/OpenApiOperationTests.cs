@@ -258,9 +258,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "content": {
                       "application/json": {
                         "schema": {
-                          "maximum": 10,
+                          "type": "number",
                           "minimum": 5,
-                          "type": "number"
+                          "maximum": 10
                         }
                       }
                     },
@@ -275,9 +275,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "content": {
                         "application/json": {
                           "schema": {
-                            "maximum": 10,
+                            "type": "number",
                             "minimum": 5,
-                            "type": "number"
+                            "maximum": 10
                           }
                         }
                       }
@@ -334,9 +334,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "content": {
                       "application/json": {
                         "schema": {
-                          "maximum": 10,
+                          "type": "number",
                           "minimum": 5,
-                          "type": "number"
+                          "maximum": 10
                         }
                       }
                     },
@@ -351,9 +351,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "content": {
                         "application/json": {
                           "schema": {
-                            "maximum": 10,
+                            "type": "number",
                             "minimum": 5,
-                            "type": "number"
+                            "maximum": 10
                           }
                         }
                       }
@@ -431,9 +431,6 @@ namespace Microsoft.OpenApi.Tests.Models
                     "content": {
                       "application/x-www-form-urlencoded": {
                         "schema": {
-                          "required": [
-                            "name"
-                          ],
                           "properties": {
                             "name": {
                               "type": "string",
@@ -443,14 +440,14 @@ namespace Microsoft.OpenApi.Tests.Models
                               "type": "string",
                               "description": "Updated status of the pet"
                             }
-                          }
+                          },
+                          "required": [
+                            "name"
+                          ]
                         }
                       },
                       "multipart/form-data": {
                         "schema": {
-                          "required": [
-                            "name"
-                          ],
                           "properties": {
                             "name": {
                               "type": "string",
@@ -460,7 +457,10 @@ namespace Microsoft.OpenApi.Tests.Models
                               "type": "string",
                               "description": "Updated status of the pet"
                             }
-                          }
+                          },
+                          "required": [
+                            "name"
+                          ]
                         }
                       }
                     }
@@ -576,9 +576,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "description": "description2",
                       "required": true,
                       "schema": {
-                        "maximum": 10,
+                        "type": "number",
                         "minimum": 5,
-                        "type": "number"
+                        "maximum": 10
                       }
                     }
                   ],
@@ -589,9 +589,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "400": {
                       "description": null,
                       "schema": {
-                        "maximum": 10,
+                        "type": "number",
                         "minimum": 5,
-                        "type": "number"
+                        "maximum": 10
                       }
                     }
                   },
@@ -649,9 +649,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "description": "description2",
                       "required": true,
                       "schema": {
-                        "maximum": 10,
+                        "type": "number",
                         "minimum": 5,
-                        "type": "number"
+                        "maximum": 10
                       }
                     }
                   ],
@@ -662,9 +662,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "400": {
                       "description": null,
                       "schema": {
-                        "maximum": 10,
+                        "type": "number",
                         "minimum": 5,
-                        "type": "number"
+                        "maximum": 10
                       }
                     }
                   },

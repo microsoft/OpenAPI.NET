@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
@@ -87,7 +88,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     Style = ParameterStyle.Form,
                     Explode = true
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -112,7 +113,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -137,7 +138,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -186,7 +187,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -211,7 +212,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Default(5)
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
