@@ -23,7 +23,7 @@
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="JsonSchema.Net" Version="6.1.2" />
-      <PackageReference Include="JsonSchema.Net.OpenApi" Version="3.0.0.2" />
+      <PackageReference Include="JsonSchema.Net.OpenApi" Version="3.0.1" />
     </ItemGroup>
 
     <ItemGroup>

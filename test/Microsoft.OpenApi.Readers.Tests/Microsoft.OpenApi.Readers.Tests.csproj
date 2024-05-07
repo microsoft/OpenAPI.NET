@@ -16,7 +16,7 @@
 
     <ItemGroup>
         <PackageReference Include="JsonSchema.Net" Version="6.1.2" />
-        <PackageReference Include="JsonSchema.Net.OpenApi" Version="3.0.0.2" />
+        <PackageReference Include="JsonSchema.Net.OpenApi" Version="3.0.1" />
         <PackageReference Include="coverlet.collector" Version="6.0.2" PrivateAssets="all" />
         <PackageReference Include="coverlet.msbuild" Version="6.0.2" PrivateAssets="all" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
