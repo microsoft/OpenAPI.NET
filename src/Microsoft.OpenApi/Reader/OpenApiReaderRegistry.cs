@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="reader">The reader instance.</param>
         public static void RegisterReader(string format, IOpenApiReader reader)
         {
-            _readers[format] = reader;
+            _readers.AddOrUpdate(format, reader, (_, _) => reader);
         }
 
         /// <summary>
