@@ -16,13 +16,13 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 // $ref
                 {
-                    "description", (o, n) =>
+                    "description", (o, n, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
-                    "url", (o, n) =>
+                    "url", (o, n, _) =>
                     {
                         o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 new()
                 {
 
-                    {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                    {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
                     };
 
         public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument hostDocument = null)
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var externalDocs = new OpenApiExternalDocs();
 
-            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields);
+            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, hostDocument);
 
             return externalDocs;
         }

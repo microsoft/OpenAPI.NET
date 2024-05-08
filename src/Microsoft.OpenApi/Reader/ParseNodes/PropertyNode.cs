@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -26,15 +26,16 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
 
         public void ParseField<T>(
             T parentInstance,
-            IDictionary<string, Action<T, ParseNode>> fixedFields,
-            IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields)
+            IDictionary<string, Action<T, ParseNode, OpenApiDocument>> fixedFields,
+            IDictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument>> patternFields,
+            OpenApiDocument hostDocument = null)
         {
             if (fixedFields.TryGetValue(Name, out var fixedFieldMap))
             {
                 try
                 {
                     Context.StartObject(Name);
-                    fixedFieldMap(parentInstance, Value);
+                    fixedFieldMap(parentInstance, Value, hostDocument);
                 }
                 catch (OpenApiReaderException ex)
                 {
@@ -58,7 +59,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     try
                     {
                         Context.StartObject(Name);
-                        map(parentInstance, Name, Value);
+                        map(parentInstance, Name, Value, hostDocument);
                     }
                     catch (OpenApiReaderException ex)
                     {

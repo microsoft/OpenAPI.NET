@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Linq;
@@ -21,8 +21,8 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
             new()
             {
-                {s => !s.StartsWith("x-"), (o, p, n) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n))},
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
+                {s => !s.StartsWith("x-"), (o, p, n, t) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n, t))},
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
         public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument = null)
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var domainObject = new OpenApiCallback();
 
-            ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields);
+            ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument);
 
             return domainObject;
         }

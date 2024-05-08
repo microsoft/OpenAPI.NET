@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -15,27 +15,27 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new()
         {
             {
-                "description", (o, n) =>
+                "description", (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                "headers", (o, n) =>
+                "headers", (o, n, t) =>
                 {
-                    o.Headers = n.CreateMap(LoadHeader);
+                    o.Headers = n.CreateMap(LoadHeader, t);
                 }
             },
             {
-                "content", (o, n) =>
+                "content", (o, n, t) =>
                 {
-                    o.Content = n.CreateMap(LoadMediaType);
+                    o.Content = n.CreateMap(LoadMediaType, t);
                 }
             },
             {
-                "links", (o, n) =>
+                "links", (o, n, t) =>
                 {
-                    o.Links = n.CreateMap(LoadLink);
+                    o.Links = n.CreateMap(LoadLink, t);
                 }
             }
         };
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument = null)
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Reader.V31
             }
 
             var response = new OpenApiResponse();
-            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields);
+            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields, hostDocument);
 
             return response;
         }

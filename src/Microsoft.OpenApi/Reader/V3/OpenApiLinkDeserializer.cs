@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Linq;
@@ -19,30 +19,30 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "operationRef",
-                (o, n) => o.OperationRef = n.GetScalarValue()
+                (o, n, _) => o.OperationRef = n.GetScalarValue()
             },
             {
                 "operationId",
-                (o, n) => o.OperationId = n.GetScalarValue()
+                (o, n, _) => o.OperationId = n.GetScalarValue()
             },
             {
                 "parameters",
-                (o, n) => o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper)
+                (o, n, _) => o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper)
             },
             {
                 "requestBody",
-                (o, n) => o.RequestBody = LoadRuntimeExpressionAnyWrapper(n)
+                (o, n, _) => o.RequestBody = LoadRuntimeExpressionAnyWrapper(n)
             },
             {
                 "description",
-                (o, n) => o.Description = n.GetScalarValue()
+                (o, n, _) => o.Description = n.GetScalarValue()
             },
-            {"server", (o, n) => o.Server = LoadServer(n)}
+            {"server", (o, n, t) => o.Server = LoadServer(n, t)}
         };
 
         private static readonly PatternFieldMap<OpenApiLink> _linkPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
         };
 
         public static OpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument = null)
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 return new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
             }
 
-            ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields);
+            ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields, hostDocument);
 
             return link;
         }

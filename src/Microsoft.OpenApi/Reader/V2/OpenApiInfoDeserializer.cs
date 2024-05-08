@@ -18,33 +18,33 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "title",
-                (o, n) => o.Title = n.GetScalarValue()
+                (o, n, _) => o.Title = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n) => o.Description = n.GetScalarValue()
+                (o, n, _) => o.Description = n.GetScalarValue()
             },
             {
                 "termsOfService",
-                (o, n) => o.TermsOfService = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                (o, n, _) => o.TermsOfService = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
             },
             {
                 "contact",
-                (o, n) => o.Contact = LoadContact(n)
+                (o, n, t) => o.Contact = LoadContact(n, t)
             },
             {
                 "license",
-                (o, n) => o.License = LoadLicense(n)
+                (o, n, t) => o.License = LoadLicense(n, t)
             },
             {
                 "version",
-                (o, n) => o.Version = n.GetScalarValue()
+                (o, n, _) => o.Version = n.GetScalarValue()
             }
         };
 
         private static readonly PatternFieldMap<OpenApiInfo> _infoPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         public static OpenApiInfo LoadInfo(ParseNode node, OpenApiDocument hostDocument = null)

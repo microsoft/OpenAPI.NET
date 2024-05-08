@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -15,61 +15,61 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new()
         {
             {
-                "description", (o, n) =>
+                "description", (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                "required", (o, n) =>
+                "required", (o, n, _) =>
                 {
                     o.Required = bool.Parse(n.GetScalarValue());
                 }
             },
             {
-                "deprecated", (o, n) =>
+                "deprecated", (o, n, _) =>
                 {
                     o.Deprecated = bool.Parse(n.GetScalarValue());
                 }
             },
             {
-                "allowEmptyValue", (o, n) =>
+                "allowEmptyValue", (o, n, _) =>
                 {
                     o.AllowEmptyValue = bool.Parse(n.GetScalarValue());
                 }
             },
             {
-                "allowReserved", (o, n) =>
+                "allowReserved", (o, n, _) =>
                 {
                     o.AllowReserved = bool.Parse(n.GetScalarValue());
                 }
             },
             {
-                "style", (o, n) =>
+                "style", (o, n, _) =>
                 {
                     o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
                 }
             },
             {
-                "explode", (o, n) =>
+                "explode", (o, n, _) =>
                 {
                     o.Explode = bool.Parse(n.GetScalarValue());
                 }
             },
             {
-                "schema", (o, n) =>
+                "schema", (o, n, t) =>
                 {
-                    o.Schema = LoadSchema(n);
+                    o.Schema = LoadSchema(n, t);
                 }
             },
             {
-                "examples", (o, n) =>
+                "examples", (o, n, t) =>
                 {
-                    o.Examples = n.CreateMap(LoadExample);
+                    o.Examples = n.CreateMap(LoadExample, t);
                 }
             },
             {
-                "example", (o, n) =>
+                "example", (o, n, _) =>
                 {
                     o.Example = n.CreateAny();
                 }
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument = null)

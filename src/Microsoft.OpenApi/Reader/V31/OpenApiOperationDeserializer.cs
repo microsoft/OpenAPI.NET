@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Extensions;
+﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -15,74 +15,74 @@ namespace Microsoft.OpenApi.Reader.V31
             new()
             {
                 {
-                    "tags", (o, n) => o.Tags = n.CreateSimpleList(
+                    "tags", (o, n, doc) => o.Tags = n.CreateSimpleList(
                         (valueNode, doc) =>
                             LoadTagByReference(valueNode.GetScalarValue(), doc))
                 },
                 {
-                    "summary", (o, n) =>
+                    "summary", (o, n, _) =>
                     {
                         o.Summary = n.GetScalarValue();
                     }
                 },
                 {
-                    "description", (o, n) =>
+                    "description", (o, n, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
-                    "externalDocs", (o, n) =>
+                    "externalDocs", (o, n, t) =>
                     {
-                        o.ExternalDocs = LoadExternalDocs(n);
+                        o.ExternalDocs = LoadExternalDocs(n, t);
                     }
                 },
                 {
-                    "operationId", (o, n) =>
+                    "operationId", (o, n, _) =>
                     {
                         o.OperationId = n.GetScalarValue();
                     }
                 },
                 {
-                    "parameters", (o, n) =>
+                    "parameters", (o, n, t) =>
                     {
-                        o.Parameters = n.CreateList(LoadParameter);
+                        o.Parameters = n.CreateList(LoadParameter, t);
                     }
                 },
                 {
-                    "requestBody", (o, n) =>
+                    "requestBody", (o, n, t) =>
                     {
-                        o.RequestBody = LoadRequestBody(n);
+                        o.RequestBody = LoadRequestBody(n, t);
                     }
                 },
                 {
-                    "responses", (o, n) =>
+                    "responses", (o, n, t) =>
                     {
-                        o.Responses = LoadResponses(n);
+                        o.Responses = LoadResponses(n, t);
                     }
                 },
                 {
-                    "callbacks", (o, n) =>
+                    "callbacks", (o, n, t) =>
                     {
-                        o.Callbacks = n.CreateMap(LoadCallback);
+                        o.Callbacks = n.CreateMap(LoadCallback, t);
                     }
                 },
                 {
-                    "deprecated", (o, n) =>
+                    "deprecated", (o, n, _) =>
                     {
                         o.Deprecated = bool.Parse(n.GetScalarValue());
                     }
                 },
                 {
-                    "security", (o, n) =>
+                    "security", (o, n, t) =>
                     {
-                        o.Security = n.CreateList(LoadSecurityRequirement);
+                        o.Security = n.CreateList(LoadSecurityRequirement, t);
                     }
                 },
                 {
-                    "servers", (o, n) =>
+                    "servers", (o, n, t) =>
                     {
-                        o.Servers = n.CreateList(LoadServer);
+                        o.Servers = n.CreateList(LoadServer, t);
                     }
                 },
             };
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
         internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var operation = new OpenApiOperation();
 
-            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields);
+            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields, hostDocument);
 
             return operation;
         }

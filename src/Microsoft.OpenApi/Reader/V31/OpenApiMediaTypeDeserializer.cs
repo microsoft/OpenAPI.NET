@@ -14,27 +14,27 @@ namespace Microsoft.OpenApi.Reader.V31
             new()
             {
                 {
-                    OpenApiConstants.Schema, (o, n) =>
+                    OpenApiConstants.Schema, (o, n, t) =>
                     {
-                        o.Schema = LoadSchema(n);
+                        o.Schema = LoadSchema(n, t);
                     }
                 },
                 {
-                    OpenApiConstants.Examples, (o, n) =>
+                    OpenApiConstants.Examples, (o, n, t) =>
                     {
-                        o.Examples = n.CreateMap(LoadExample);
+                        o.Examples = n.CreateMap(LoadExample, t);
                     }
                 },
                 {
-                    OpenApiConstants.Example, (o, n) =>
+                    OpenApiConstants.Example, (o, n, _) =>
                     {
                         o.Example = n.CreateAny();
                     }
                 },
                 {
-                    OpenApiConstants.Encoding, (o, n) =>
+                    OpenApiConstants.Encoding, (o, n, t) =>
                     {
-                        o.Encoding = n.CreateMap(LoadEncoding);
+                        o.Encoding = n.CreateMap(LoadEncoding, t);
                     }
                 },
             };
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new AnyFieldMap<OpenApiMediaType>
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var mediaType = new OpenApiMediaType();
 
-            ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields);
+            ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument);
 
             ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
             ProcessAnyMapFields(mapNode, mediaType, _mediaTypeAnyMapOpenApiExampleFields);

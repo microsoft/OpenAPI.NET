@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
@@ -23,8 +24,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInParameter()
         {
             // Arrange
-            var nameError = String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
-            var inError = String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
+            var nameError = string.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
+            var inError = string.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
             var parameter = new OpenApiParameter();
 
             // Act
@@ -90,7 +91,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                RuleHelpers.DataTypeMismatchedErrorMessage
+                "type : Value is \"integer\" but should be \"string\" at "
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
@@ -159,17 +160,19 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
+                "type : Value is \"string\" but should be \"object\" at ",
+                "type : Value is \"string\" but should be \"integer\" at /y",
+                "type : Value is \"string\" but should be \"integer\" at /z",
+                "type : Value is \"array\" but should be \"object\" at "
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
                 // #enum/0 is not an error since the spec allows
                 // representing an object using a string.
-                "#/{parameter1}/examples/example1/value/y",
-                "#/{parameter1}/examples/example1/value/z",
-                "#/{parameter1}/examples/example2/value"
+               "#/{parameter1}/examples/example0/value",
+               "#/{parameter1}/examples/example1/value",
+               "#/{parameter1}/examples/example1/value",
+               "#/{parameter1}/examples/example2/value"
             });
         }
 

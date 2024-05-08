@@ -22,21 +22,21 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "swagger", (_, _) => {}
+                "swagger", (_, _, _) => {}
                 /* Version is valid field but we already parsed it */
             },
-            {"info", (o, n) => o.Info = LoadInfo(n)},
-            {"host", (_, n) => n.Context.SetTempStorage("host", n.GetScalarValue())},
-            {"basePath", (_, n) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
+            {"info", (o, n, _) => o.Info = LoadInfo(n, o)},
+            {"host", (_, n, _) => n.Context.SetTempStorage("host", n.GetScalarValue())},
+            {"basePath", (_, n, _) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
             {
-                "schemes", (_, n) => n.Context.SetTempStorage(
+                "schemes", (_, n, _) => n.Context.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
                         (s, p) => s.GetScalarValue()))
             },
             {
                 "consumes",
-                (_, n) =>
+                (_, n, _) =>
                 {
                     var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue());
                     if (consumes.Count > 0)
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             },
             {
-                "produces", (_, n) => {
+                "produces", (_, n, _) => {
                     var produces = n.CreateSimpleList((s, p) => s.GetScalarValue());
                     if (produces.Count > 0)
                     {
@@ -54,25 +54,25 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                 }
             },
-            {"paths", (o, n) => o.Paths = LoadPaths(n)},
+            {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
             {
                 "definitions",
-                (o, n) =>
+                (o, n, _) =>
                 {
                     o.Components ??= new();
-                    o.Components.Schemas = n.CreateJsonSchemaMapWithReference(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi2_0);
+                    o.Components.Schemas = n.CreateJsonSchemaMap(ReferenceType.Schema, LoadSchema, OpenApiSpecVersion.OpenApi2_0, o);
                 }
             },
             {
                 "parameters",
-                (o, n) =>
+                (o, n, _) =>
                 {
                     if (o.Components == null)
                     {
                         o.Components = new();
                     }
 
-                    o.Components.Parameters = n.CreateMap(LoadParameter);
+                    o.Components.Parameters = n.CreateMap(LoadParameter, o);
 
                     o.Components.RequestBodies = n.CreateMap((p, d) =>
                             {
@@ -83,36 +83,36 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             },
             {
-                "responses", (o, n) =>
+                "responses", (o, n, _) =>
                 {
                     if (o.Components == null)
                     {
                         o.Components = new();
                     }
 
-                    o.Components.Responses = n.CreateMap(LoadResponse);
+                    o.Components.Responses = n.CreateMap(LoadResponse, o);
                 }
             },
             {
-                "securityDefinitions", (o, n) =>
+                "securityDefinitions", (o, n, _) =>
                 {
                     if (o.Components == null)
                     {
                         o.Components = new();
                     }
 
-                    o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme);
+                    o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme, o);
                 }
             },
-            {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)},
-            {"tags", (o, n) => o.Tags = n.CreateList(LoadTag)},
-            {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)}
+            {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)},
+            {"tags", (o, n, _) => o.Tags = n.CreateList(LoadTag, o)},
+            {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)}
         };
 
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new()
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, RootNode rootNode)

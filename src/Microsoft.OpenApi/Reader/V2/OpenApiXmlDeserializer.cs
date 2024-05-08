@@ -19,10 +19,10 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "name",
-                (o, n) => o.Name = n.GetScalarValue()
+                (o, n, _) => o.Name = n.GetScalarValue()
             },
             {
-                "namespace", (o, n) =>
+                "namespace", (o, n, _) =>
                 {
                     if (Uri.IsWellFormedUriString(n.GetScalarValue(), UriKind.Absolute))
                     {
@@ -36,22 +36,22 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "prefix",
-                (o, n) => o.Prefix = n.GetScalarValue()
+                (o, n, _) => o.Prefix = n.GetScalarValue()
             },
             {
                 "attribute",
-                (o, n) => o.Attribute = bool.Parse(n.GetScalarValue())
+                (o, n, _) => o.Attribute = bool.Parse(n.GetScalarValue())
             },
             {
                 "wrapped",
-                (o, n) => o.Wrapped = bool.Parse(n.GetScalarValue())
+                (o, n, _) => o.Wrapped = bool.Parse(n.GetScalarValue())
             },
         };
 
         private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiXml LoadXml(ParseNode node, OpenApiDocument hostDocument = null)

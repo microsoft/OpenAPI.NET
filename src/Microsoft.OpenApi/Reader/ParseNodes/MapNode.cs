@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
         }
 
-        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map)
+        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument = null)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             var nodes = jsonMap.Select(
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     {
                         Context.StartObject(key);
                         value = n.Value is JsonObject jsonObject
-                          ? map(new MapNode(Context, jsonObject), null)
+                          ? map(new MapNode(Context, jsonObject), hostDocument)
                           : default;
                     }
                     finally
@@ -79,10 +79,11 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, JsonSchema> CreateJsonSchemaMapWithReference(
+        public override Dictionary<string, JsonSchema> CreateJsonSchemaMap(
             ReferenceType referenceType,
             Func<MapNode, OpenApiDocument, JsonSchema> map,
-            OpenApiSpecVersion version)
+            OpenApiSpecVersion version,
+            OpenApiDocument hostDocument = null)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(JsonSchema).Name}", Context);
 
@@ -95,29 +96,11 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     {
                         Context.StartObject(key);
                         entry = (key,
-                            value: map(new MapNode(Context, (JsonObject)n.Value), null)
+                            value: map(new MapNode(Context, (JsonObject)n.Value), hostDocument)
                         );
                         if (entry.value == null)
                         {
                             return default;  // Body Parameters shouldn't be converted to Parameters
-                        }
-                        // If the component isn't a reference to another component, then point it to itself.
-                        if (entry.value.GetRef() == null)
-                        {
-                            var builder = new JsonSchemaBuilder();
-
-                            // construct the Ref and append it to the builder
-                            var reference = version == OpenApiSpecVersion.OpenApi2_0 ? string.Concat("#/definitions/", entry.key) :
-                                string.Concat("#/components/schemas/", entry.key);
-
-                            builder.Ref(reference);
-
-                            // Append all the keywords in original schema to our new schema using a builder instance
-                            foreach (var keyword in entry.value.Keywords)
-                            {
-                                builder.Add(keyword);
-                            }
-                            entry.value = builder.Build();
                         }
                     }
                     finally

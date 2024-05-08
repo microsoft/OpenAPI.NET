@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.V3
             new()
             {
                 {
-                    "tags", (o, n) => o.Tags = n.CreateSimpleList(
+                    "tags", (o, n, doc) => o.Tags = n.CreateSimpleList(
                         (valueNode, doc) =>
                             LoadTagByReference(
                                 valueNode.Context,
@@ -26,54 +26,54 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "summary",
-                    (o, n) => o.Summary = n.GetScalarValue()
+                    (o, n, _) => o.Summary = n.GetScalarValue()
                 },
                 {
                     "description",
-                    (o, n) => o.Description = n.GetScalarValue()
+                    (o, n, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "externalDocs",
-                    (o, n) => o.ExternalDocs = LoadExternalDocs(n)
+                    (o, n, _) => o.ExternalDocs = LoadExternalDocs(n)
                 },
                 {
                     "operationId",
-                    (o, n) => o.OperationId = n.GetScalarValue()
+                    (o, n, _) => o.OperationId = n.GetScalarValue()
                 },
                 {
                     "parameters",
-                    (o, n) => o.Parameters = n.CreateList(LoadParameter)
+                    (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)
                 },
                 {
                     "requestBody",
-                    (o, n) => o.RequestBody = LoadRequestBody(n)
+                    (o, n, t) => o.RequestBody = LoadRequestBody(n, t)
                 },
                 {
                     "responses",
-                    (o, n) => o.Responses = LoadResponses(n)
+                    (o, n, t) => o.Responses = LoadResponses(n, t)
                 },
                 {
                     "callbacks",
-                    (o, n) => o.Callbacks = n.CreateMap(LoadCallback)
+                    (o, n, t) => o.Callbacks = n.CreateMap(LoadCallback, t)
                 },
                 {
                     "deprecated",
-                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                    (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
                     "security",
-                    (o, n) => o.Security = n.CreateList(LoadSecurityRequirement)
+                    (o, n, t) => o.Security = n.CreateList(LoadSecurityRequirement, t)
                 },
                 {
                     "servers",
-                    (o, n) => o.Servers = n.CreateList(LoadServer)
+                    (o, n, t) => o.Servers = n.CreateList(LoadServer, t)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
         internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var operation = new OpenApiOperation();
 
-            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields);
+            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields, hostDocument);
 
             return operation;
         }

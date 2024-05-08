@@ -23,7 +23,8 @@ namespace Microsoft.OpenApi.Reader.V31
             MapNode mapNode,
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
-            PatternFieldMap<T> patternFieldMap)
+            PatternFieldMap<T> patternFieldMap, 
+            OpenApiDocument doc = null)
         {
             if (mapNode == null)
             {
@@ -32,7 +33,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap);
+                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap, doc);
             }
 
         }

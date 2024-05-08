@@ -15,30 +15,30 @@ namespace Microsoft.OpenApi.Reader.V31
             new()
             {
                 {
-                    "authorizationUrl", (o, n) =>
+                    "authorizationUrl", (o, n, _) =>
                     {
                         o.AuthorizationUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
-                    "tokenUrl", (o, n) =>
+                    "tokenUrl", (o, n, _) =>
                     {
                         o.TokenUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
-                    "refreshUrl", (o, n) =>
+                    "refreshUrl", (o, n, _) =>
                     {
                         o.RefreshUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
-                {"scopes", (o, n) => o.Scopes = n.CreateSimpleMap(LoadString)}
+                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiOAuthFlow LoadOAuthFlow(ParseNode node, OpenApiDocument hostDocument = null)

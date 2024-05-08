@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -21,23 +21,21 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "description",
-                (o, n) => o.Description = n.GetScalarValue()
+                (o, n, _) => o.Description = n.GetScalarValue()
             },
             {
                 "headers",
-                (o, n) => o.Headers = n.CreateMap(LoadHeader)
+                (o, n, t) => o.Headers = n.CreateMap(LoadHeader, t)
             },
             {
-                "examples",
-                LoadExamples
+                "examples", LoadExamples
             },
             {
-                "x-examples",
-                LoadResponseExamplesExtension
+                "x-examples", LoadResponseExamplesExtension
             },
             {
                 "schema",
-                (o, n) => n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n), o)
+                (o, n, t) => n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n, t), o)
             },
         };
 
@@ -45,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V2
             new()
             {
                 {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase), 
-                    (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                    (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
@@ -107,7 +105,7 @@ namespace Microsoft.OpenApi.Reader.V2
             context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
         }
 
-        private static void LoadResponseExamplesExtension(OpenApiResponse response, ParseNode node)
+        private static void LoadResponseExamplesExtension(OpenApiResponse response, ParseNode node, OpenApiDocument hostDocument = null)
         {
             var examples = LoadExamplesExtension(node);
             node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
@@ -148,7 +146,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return examples;
         }
 
-        private static void LoadExamples(OpenApiResponse response, ParseNode node)
+        private static void LoadExamples(OpenApiResponse response, ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("examples");
 

@@ -22,103 +22,103 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly FixedFieldMap<JsonSchemaBuilder> _schemaFixedFields = new()
         {
             {
-                "title", (o, n) =>
+                "title", (o, n, _) =>
                 {
                     o.Title(n.GetScalarValue());
                 }
             },
             {
-                "multipleOf", (o, n) =>
+                "multipleOf", (o, n, _) =>
                 {
                     o.MultipleOf(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
-                "maximum", (o, n) =>
+                "maximum", (o, n, _) =>
                 {
                     o.Maximum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
-                "exclusiveMaximum", (o, n) =>
+                "exclusiveMaximum", (o, n, _) =>
                 {
                     o.ExclusiveMaximum(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
-                "minimum", (o, n) =>
+                "minimum", (o, n, _) =>
                 {
                     o.Minimum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
-                "exclusiveMinimum", (o, n) =>
+                "exclusiveMinimum", (o, n, _) =>
                 {
                     o.ExclusiveMinimum(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
-                "maxLength", (o, n) =>
+                "maxLength", (o, n, _) =>
                 {
                     o.MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
-                "minLength", (o, n) =>
+                "minLength", (o, n, _) =>
                 {
                     o.MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
-                "pattern", (o, n) =>
+                "pattern", (o, n, _) =>
                 {
                     o.Pattern(n.GetScalarValue());
                 }
             },
             {
-                "maxItems", (o, n) =>
+                "maxItems", (o, n, _) =>
                 {
                     o.MaxItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
-                "minItems", (o, n) =>
+                "minItems", (o, n, _) =>
                 {
                     o.MinItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
-                "uniqueItems", (o, n) =>
+                "uniqueItems", (o, n, _) =>
                 {
                     o.UniqueItems(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
-                "maxProperties", (o, n) =>
+                "maxProperties", (o, n, _) =>
                 {
                     o.MaxProperties(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
-                "minProperties", (o, n) =>
+                "minProperties", (o, n, _) =>
                 {
                     o.MinProperties(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
-                "required", (o, n) =>
+                "required", (o, n, _) =>
                 {
                     o.Required(new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue())));
                 }
             },
             {
-                "enum", (o, n) =>
+                "enum", (o, n, _) =>
                 {
                     o.Enum(n.CreateListOfAny());
                 }
             },
             {
-                "type", (o, n) =>
+                "type", (o, n, _) =>
                 {
                     if(n is ListNode)
                     {
@@ -131,25 +131,25 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             },
             {
-                "allOf", (o, n) =>
+                "allOf", (o, n, t) =>
                 {
-                    o.AllOf(n.CreateList(LoadSchema));
+                    o.AllOf(n.CreateList(LoadSchema, t));
                 }
             },
             {
-                "items", (o, n) =>
+                "items", (o, n, t) =>
                 {
-                    o.Items(LoadSchema(n));
+                    o.Items(LoadSchema(n, t));
                 }
             },
             {
-                "properties", (o, n) =>
+                "properties", (o, n, t) =>
                 {
-                    o.Properties(n.CreateMap(LoadSchema));
+                    o.Properties(n.CreateMap(LoadSchema, t));
                 }
             },
             {
-                "additionalProperties", (o, n) =>
+                "additionalProperties", (o, n, t) =>
                 {
                     if (n is ValueNode)
                     {
@@ -157,30 +157,30 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                     else
                     {
-                        o.AdditionalProperties(LoadSchema(n));
+                        o.AdditionalProperties(LoadSchema(n, t));
                     }
                 }
             },
             {
-                "description", (o, n) =>
+                "description", (o, n, _) =>
                 {
                     o.Description(n.GetScalarValue());
                 }
             },
             {
-                "format", (o, n) =>
+                "format", (o, n, _) =>
                 {
                     o.Format(n.GetScalarValue());
                 }
             },
             {
-                "default", (o, n) =>
+                "default", (o, n, _) =>
                 {
                     o.Default(n.CreateAny().Node);
                 }
             },
             {
-                "discriminator", (o, n) =>
+                "discriminator", (o, n, _) =>
                 {
                     var discriminator = new OpenApiDiscriminator
                     {
@@ -191,29 +191,29 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             },
             {
-                "readOnly", (o, n) =>
+                "readOnly", (o, n, _) =>
                 {
                     o.ReadOnly(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
-                "xml", (o, n) =>
+                "xml", (o, n, t) =>
                 {
-                    var xml = LoadXml(n);
+                    var xml = LoadXml(n, t);
                     o.Xml(xml.Namespace, xml.Name, xml.Prefix, xml.Attribute, xml.Wrapped,
                         (IReadOnlyDictionary<string, JsonNode>)xml.Extensions);
                 }
             },
             {
-                "externalDocs", (o, n) =>
+                "externalDocs", (o, n, t) =>
                 {
-                   var externalDocs = LoadExternalDocs(n);
+                   var externalDocs = LoadExternalDocs(n, t);
                    o.ExternalDocs(externalDocs.Url, externalDocs.Description,
                        (IReadOnlyDictionary<string, JsonNode>)externalDocs.Extensions);
                 }
             },
             {
-                "example", (o, n) =>
+                "example", (o, n, _) =>
                 {
                     o.Example(n.CreateAny().Node);
                 }
@@ -222,7 +222,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static readonly PatternFieldMap<JsonSchemaBuilder> _schemaPatternFields = new PatternFieldMap<JsonSchemaBuilder>
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.Extensions(LoadExtensions(p, LoadExtension(p, n)))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.Extensions(LoadExtensions(p, LoadExtension(p, n)))}
         };
 
         public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
@@ -234,7 +234,13 @@ namespace Microsoft.OpenApi.Reader.V2
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return schemaBuilder.Ref(pointer);
+                var jsonSchema = schemaBuilder.Ref(pointer).Build();
+                if (hostDocument != null)
+                {
+                    jsonSchema.BaseUri = hostDocument.BaseUri;
+                }
+
+                return jsonSchema;
             }
 
             foreach (var propertyNode in mapNode)
@@ -243,6 +249,11 @@ namespace Microsoft.OpenApi.Reader.V2
             }
 
             var schema = schemaBuilder.Build();
+
+            if (hostDocument != null)
+            {
+                schema.BaseUri = hostDocument.BaseUri;
+            }
             return schema;
         }
 

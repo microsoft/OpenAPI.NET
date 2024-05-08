@@ -1,12 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Schema;
-using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -47,257 +46,36 @@ namespace Microsoft.OpenApi.Validations.Rules
             string ruleName,
             JsonNode value,
             JsonSchema schema)
-        {
-            if (schema == null)
+        {           
+            if (schema is not null)
             {
-                return;
-            }
+                var options = new EvaluationOptions();
+                options.OutputFormat = OutputFormat.List;
 
-            // Resolve the Json schema in memory before validating the data types.
-            var reference = schema.GetRef();
-            if (reference != null)
-            {
-                var referencePath = string.Concat("https://registry", reference.OriginalString.Split('#').Last());
-                var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(referencePath));
-                schema = resolvedSchema ?? schema;
-            }
-
-            var type = schema.GetJsonType()?.GetDisplayName();
-            var format = schema.GetFormat()?.Key;
-            var jsonElement = JsonSerializer.Deserialize<JsonElement>(value);
-
-            // Before checking the type, check first if the schema allows null.
-            // If so and the data given is also null, this is allowed for any type.
-            if (jsonElement.ValueKind is JsonValueKind.Null)
-            {
-                return;
-            }
-
-            if ("object".Equals(type, StringComparison.OrdinalIgnoreCase))
-            {
-                // It is not against the spec to have a string representing an object value.
-                // To represent examples of media types that cannot naturally be represented in JSON or YAML,
-                // a string value can contain the example with escaping where necessary
-                if (jsonElement.ValueKind is JsonValueKind.String)
+                if (context.HostDocument != null)
                 {
-                    return;
+                    options.SchemaRegistry.Register(context.HostDocument.BaseUri, context.HostDocument);
                 }
 
-                // If value is not a string and also not an object, there is a data mismatch.
-                if (jsonElement.ValueKind is not JsonValueKind.Object)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                    return;
-                }
+                var results = schema.Evaluate(value, options);
 
-                if (value is JsonObject anyObject)
+                if (!results.IsValid)
                 {
-                    foreach (var property in anyObject)
+                    foreach (var detail in results.Details)
                     {
-                        context.Enter(property.Key);
-                        if ((schema.GetProperties()?.TryGetValue(property.Key, out var propertyValue)) ?? false)
+                        if (detail.Errors != null && detail.Errors.Any())
                         {
-                            ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], propertyValue);
+                            foreach (var error in detail.Errors)
+                            {
+                                if (!string.IsNullOrEmpty(error.Key) || !string.IsNullOrEmpty(error.Value.Trim()))
+                                {
+                                    context.CreateWarning(ruleName, string.Format("{0} : {1} at {2}", error.Key, error.Value.Trim(), detail.InstanceLocation));
+                                }
+                            }
                         }
-                        else
-                        {
-                            ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], schema.GetAdditionalProperties());
-                        }
-
-                        context.Exit();
                     }
                 }
-
-                return;
-            }
-
-            if ("array".Equals(type, StringComparison.OrdinalIgnoreCase))
-            {
-                // It is not against the spec to have a string representing an array value.
-                // To represent examples of media types that cannot naturally be represented in JSON or YAML,
-                // a string value can contain the example with escaping where necessary
-                if (jsonElement.ValueKind is JsonValueKind.String)
-                {
-                    return;
-                }
-
-                // If value is not a string and also not an array, there is a data mismatch.
-                if (value is not JsonArray)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                    return;
-                }
-
-                var anyArray = value as JsonArray;
-
-                for (int i = 0; i < anyArray.Count; i++)
-                {
-                    context.Enter(i.ToString());
-
-                    ValidateDataTypeMismatch(context, ruleName, anyArray[i], schema.GetItems());
-
-                    context.Exit();
-                }
-
-                return;
-            }
-
-            if ("integer".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                "int32".Equals(format, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.Number)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("integer".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                "int64".Equals(format, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.Number)
-                {
-                    context.CreateWarning(
-                       ruleName,
-                       DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("integer".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                jsonElement.ValueKind is not JsonValueKind.Number)
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.Number)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("number".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                "float".Equals(format, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.Number)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("number".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                "double".Equals(format, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.Number)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("number".Equals(type, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.Number)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                "byte".Equals(format, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.String)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                "date".Equals(format, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.String)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                "date-time".Equals(format, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.String)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase) &&
-                "password".Equals(format, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.String)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.String)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
-
-            if ("boolean".Equals(type, StringComparison.OrdinalIgnoreCase))
-            {
-                if (jsonElement.ValueKind is not JsonValueKind.True and not JsonValueKind.False)
-                {
-                    context.CreateWarning(
-                        ruleName,
-                        DataTypeMismatchedErrorMessage);
-                }
-
-                return;
-            }
+            }            
         }
     }
 }

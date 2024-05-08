@@ -18,6 +18,7 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWalker
     {
+        private OpenApiDocument _hostDocument;
         private readonly OpenApiVisitorBase _visitor;
         private readonly Stack<JsonSchema> _schemaLoop = new Stack<JsonSchema>();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
@@ -41,6 +42,7 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            _hostDocument = doc;
             _schemaLoop.Clear();
             _pathItemLoop.Clear();
 
@@ -900,6 +902,10 @@ namespace Microsoft.OpenApi.Services
                         Walk(key, () => newSchema = Walk(item.Value));
                         props.Add(key, newSchema);
                         schema = builder.Properties(props);
+                        if (_hostDocument != null)
+                        {
+                            schema.BaseUri = _hostDocument.BaseUri;
+                        }
                     }
                 });
             }

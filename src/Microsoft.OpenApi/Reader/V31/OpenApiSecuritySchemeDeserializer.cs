@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -20,51 +20,51 @@ namespace Microsoft.OpenApi.Reader.V31
             new()
             {
                 {
-                    "type", (o, n) =>
+                    "type", (o, n, _) =>
                     {
                         o.Type = n.GetScalarValue().GetEnumFromDisplayName<SecuritySchemeType>();
                     }
                 },
                 {
-                    "description", (o, n) =>
+                    "description", (o, n, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
-                    "name", (o, n) =>
+                    "name", (o, n, _) =>
                     {
                         o.Name = n.GetScalarValue();
                     }
                 },
                 {
-                    "in", (o, n) =>
+                    "in", (o, n, _) =>
                     {
                         o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
                     }
                 },
                 {
-                    "scheme", (o, n) =>
+                    "scheme", (o, n, _) =>
                     {
                         o.Scheme = n.GetScalarValue();
                     }
                 },
                 {
-                    "bearerFormat", (o, n) =>
+                    "bearerFormat", (o, n, _) =>
                     {
                         o.BearerFormat = n.GetScalarValue();
                     }
                 },
                 {
-                    "openIdConnectUrl", (o, n) =>
+                    "openIdConnectUrl", (o, n, _) =>
                     {
                         o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
-                    "flows", (o, n) =>
+                    "flows", (o, n, t) =>
                     {
-                        o.Flows = LoadOAuthFlows(n);
+                        o.Flows = LoadOAuthFlows(n, t);
                     }
                 }
             };
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument = null)
