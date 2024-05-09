@@ -24,6 +24,8 @@ namespace Microsoft.OpenApi.Tests.Extensions
         public static IEnumerable<object[]> OpenApiDataTypes => new List<object[]>
         {
             new object[] { new OpenApiSchema { Type = "integer", Format = "int32"}, typeof(int) },
+            new object[] { new OpenApiSchema { Type = "integer", Format = null, Nullable = false}, typeof(int) },
+            new object[] { new OpenApiSchema { Type = "integer", Format = null, Nullable = true}, typeof(int) },
             new object[] { new OpenApiSchema { Type = "string" }, typeof(string) },
             new object[] { new OpenApiSchema { Type = "number", Format = "double" }, typeof(double) },
             new object[] { new OpenApiSchema { Type = "number", Format = "float", Nullable = true }, typeof(float?) },
