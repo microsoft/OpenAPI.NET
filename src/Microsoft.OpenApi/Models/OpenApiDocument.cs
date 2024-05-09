@@ -266,19 +266,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                         OpenApiConstants.Definitions,
                         Components?.Schemas,
-                        (w, key, s) =>
-                        {
-                            var reference = s.GetRef();
-                            if (reference != null &&
-                                reference.OriginalString.Split('/').Last().Equals(key))
-                            {
-                                w.WriteJsonSchemaWithoutReference(w, s, OpenApiSpecVersion.OpenApi2_0);
-                            }
-                            else
-                            {
-                                w.WriteJsonSchema(s, OpenApiSpecVersion.OpenApi2_0);
-                            }
-                        });
+                        (w, key, s) => w.WriteJsonSchema(s, OpenApiSpecVersion.OpenApi2_0));
                 }
 
                 // parameters

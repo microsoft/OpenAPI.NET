@@ -433,35 +433,8 @@ namespace Microsoft.OpenApi.Writers
                 return;
             }
 
-            var reference = schema.GetRef();
-            if (reference != null)
-            {
-                if (!Settings.ShouldInlineReference())
-                {
-                    WriteJsonSchemaReference(this, reference, version);
-                    return;
-                }
-                else
-                {
-                    if (Settings.InlineExternalReferences)
-                    {
-                        FindJsonSchemaRefs.ResolveJsonSchema(schema);
-                    }
-                    if (!Settings.LoopDetector.PushLoop(schema))
-                    {
-                        Settings.LoopDetector.SaveLoop(schema);
-                        WriteJsonSchemaReference(this, reference, version);
-                        return;
-                    }
-                }
-            }
-
             WriteJsonSchemaWithoutReference(this, schema, version);
 
-            if (reference != null)
-            {
-                Settings.LoopDetector.PopLoop<JsonSchema>();
-            }
         }
 
 

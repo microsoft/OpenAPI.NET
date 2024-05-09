@@ -2,6 +2,8 @@
 // Licensed under the MIT license. 
 
 using System.Text.Json;
+using Json.Schema;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using JsonSchema = Json.Schema.JsonSchema;
@@ -17,6 +19,7 @@ namespace Microsoft.OpenApi.Reader.V31
         public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             Json.Schema.OpenApi.Vocabularies.Register();
+            SchemaKeywordRegistry.Register<ExtensionsKeyword>();
             return JsonSerializer.Deserialize<JsonSchema>(node.JsonNode);
         }
     }

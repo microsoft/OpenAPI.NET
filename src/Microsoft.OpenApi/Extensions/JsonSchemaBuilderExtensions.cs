@@ -98,17 +98,7 @@ namespace Microsoft.OpenApi.Extensions
             return builder;
         }
 
-        ///// <summary>
-        ///// ExternalDocs object.
-        ///// </summary>
-        ///// <param name="builder"></param>
-        ///// <param name="externalDocs"></param>
-        ///// <returns></returns>
-        //public static JsonSchemaBuilder OpenApiExternalDocs(this JsonSchemaBuilder builder, OpenApiExternalDocs externalDocs)
-        //{
-        //    builder.Add(new ExternalDocsKeyword(externalDocs));
-        //    return builder;
-        //}
+
 
         /// <summary>
         /// Removes a keyword
@@ -275,42 +265,6 @@ namespace Microsoft.OpenApi.Extensions
         }
     }
 
-    ///// <summary>
-    ///// The nullable keyword
-    ///// </summary>
-    //[SchemaKeyword(Name)]
-    //public class ExternalDocsKeyword : IJsonSchemaKeyword
-    //{
-    //    /// <summary>
-    //    /// The schema keyword name
-    //    /// </summary>
-    //    public const string Name = "externalDocs";
-
-    //    /// <summary>
-    //    /// The ID.
-    //    /// </summary>
-    //    public OpenApiExternalDocs Value { get; }
-
-    //    /// <summary>
-    //    /// Creates a new <see cref="ExternalDocsKeyword"/>.
-    //    /// </summary>
-    //    /// <param name="value">Whether the `minimum` value should be considered exclusive.</param>
-    //    public ExternalDocsKeyword(OpenApiExternalDocs value)
-    //    {
-    //        Value = value;
-    //    }
-
-    //    /// <summary>
-    //    /// Implementation of IJsonSchemaKeyword interface
-    //    /// </summary>
-    //    /// <param name="context"></param>
-    //    /// <exception cref="NotImplementedException"></exception>
-    //    public void Evaluate(EvaluationContext context)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
     /// <summary>
     /// The extensions keyword
     /// </summary>
@@ -331,15 +285,6 @@ namespace Microsoft.OpenApi.Extensions
             Extensions = extensions;
         }
 
-        /// <summary>
-        /// Implementation of IJsonSchemaKeyword interface
-        /// </summary>
-        /// <param name="context"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Evaluate(EvaluationContext context)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// 
@@ -370,7 +315,10 @@ namespace Microsoft.OpenApi.Extensions
         /// <exception cref="NotImplementedException"></exception>
         public override ExtensionsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            var dict = new Dictionary<string, IOpenApiExtension>();
+            // iterate over the reader and create extensions values
+            //
+            return new ExtensionsKeyword(dict);
         }
 
         /// <summary>
@@ -395,96 +343,5 @@ namespace Microsoft.OpenApi.Extensions
         }
 
     }
-
-    ///// <summary>
-    ///// The summary keyword
-    ///// </summary>
-    //[SchemaKeyword(Name)]
-    //public class SummaryKeyword : IJsonSchemaKeyword
-    //{
-    //    /// <summary>
-    //    /// The schema keyword name
-    //    /// </summary>
-    //    public const string Name = "summary";
-
-    //    internal string Summary { get; }
-
-    //    internal SummaryKeyword(string summary)
-    //    {
-    //        Summary = summary;
-    //    }
-
-    //    /// <summary>
-    //    /// Implementation of IJsonSchemaKeyword interface
-    //    /// </summary>
-    //    /// <param name="context"></param>
-    //    /// <exception cref="NotImplementedException"></exception>
-    //    public void Evaluate(EvaluationContext context)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    ///// <summary>
-    ///// The AdditionalPropertiesAllowed Keyword
-    ///// </summary>
-    //[SchemaKeyword(Name)]
-    //public class AdditionalPropertiesAllowedKeyword : IJsonSchemaKeyword
-    //{
-    //    /// <summary>
-    //    /// The schema keyword name
-    //    /// </summary>
-    //    public const string Name = "additionalPropertiesAllowed";
-        
-    //    internal bool AdditionalPropertiesAllowed { get; }
-
-    //    internal AdditionalPropertiesAllowedKeyword(bool additionalPropertiesAllowed)
-    //    {
-    //        AdditionalPropertiesAllowed = additionalPropertiesAllowed;
-    //    }
-
-    //    /// <summary>
-    //    /// Implementation of IJsonSchemaKeyword interface
-    //    /// </summary>
-    //    /// <param name="context"></param>
-    //    /// <exception cref="NotImplementedException"></exception>
-    //    public void Evaluate(EvaluationContext context)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    ///// <summary>
-    ///// The Discriminator Keyword
-    ///// </summary>
-    //[SchemaKeyword(Name)]
-    //[SchemaSpecVersion(SpecVersion.Draft202012)]
-    //public class DiscriminatorKeyword : OpenApiDiscriminator, IJsonSchemaKeyword
-    //{
-    //    /// <summary>
-    //    /// The schema keyword name
-    //    /// </summary>
-    //    public const string Name = "discriminator";
-
-    //    /// <summary>
-    //    /// Parameter-less constructor
-    //    /// </summary>
-    //    public DiscriminatorKeyword() : base() { }
-
-    //    /// <summary>
-    //    /// Initializes a copy of an <see cref="OpenApiDiscriminator"/> instance
-    //    /// </summary>
-    //    internal DiscriminatorKeyword(OpenApiDiscriminator discriminator) : base(discriminator) { }
-
-    //    /// <summary>
-    //    /// Implementation of IJsonSchemaKeyword interface
-    //    /// </summary>
-    //    /// <param name="context"></param>
-    //    /// <exception cref="NotImplementedException"></exception>
-    //    public void Evaluate(EvaluationContext context)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
 
 }

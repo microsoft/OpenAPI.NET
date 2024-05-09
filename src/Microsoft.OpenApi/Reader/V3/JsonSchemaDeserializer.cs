@@ -268,6 +268,7 @@ namespace Microsoft.OpenApi.Reader.V3
         public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             Json.Schema.OpenApi.Vocabularies.Register();
+            SchemaKeywordRegistry.Register<ExtensionsKeyword>();
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
             var builder = new JsonSchemaBuilder();
 
