@@ -4,6 +4,7 @@
 using System.IO;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         }
 
         [Fact]
-        public async void StreamShouldNotBeDisposedIfLeaveStreamOpenSettingIsTrue()
+        public async Task StreamShouldNotBeDisposedIfLeaveStreamOpenSettingIsTrue()
         {
             var memoryStream = new MemoryStream();
             using var fileStream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
