@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Linq;
@@ -19,26 +19,26 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "description",
-                (o, n) => o.Description = n.GetScalarValue()
+                (o, n, _) => o.Description = n.GetScalarValue()
             },
             {
                 "headers",
-                (o, n) => o.Headers = n.CreateMap(LoadHeader)
+                (o, n, t) => o.Headers = n.CreateMap(LoadHeader, t)
             },
             {
                 "content",
-                 (o, n) => o.Content = n.CreateMap(LoadMediaType)
+                 (o, n, t) => o.Content = n.CreateMap(LoadMediaType, t)
             },
             {
                 "links",
-                (o, n) => o.Links = n.CreateMap(LoadLink)
+                (o, n, t) => o.Links = n.CreateMap(LoadLink, t)
             }
         };
 
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument = null)
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var response = new OpenApiResponse();
-            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields);
+            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields, hostDocument);
 
             return response;
         }

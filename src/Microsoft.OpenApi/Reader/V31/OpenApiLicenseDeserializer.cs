@@ -14,19 +14,19 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiLicense> _licenseFixedFields = new()
         {
             {
-                "name", (o, n) =>
+                "name", (o, n, _) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                "identifier", (o, n) =>
+                "identifier", (o, n, _) =>
                 {
                     o.Identifier = n.GetScalarValue();
                 }
             },
             {
-                "url", (o, n) =>
+                "url", (o, n, _) =>
                 {
                     o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                 }
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static readonly PatternFieldMap<OpenApiLicense> _licensePatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         internal static OpenApiLicense LoadLicense(ParseNode node, OpenApiDocument hostDocument = null)
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var license = new OpenApiLicense();
 
-            ParseMap(mapNode, license, _licenseFixedFields, _licensePatternFields);
+            ParseMap(mapNode, license, _licenseFixedFields, _licensePatternFields, hostDocument);
 
             return license;
         }

@@ -19,18 +19,18 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     OpenApiConstants.Description,
-                    (o, n) => o.Description = n.GetScalarValue()
+                    (o, n, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     OpenApiConstants.Url,
-                    (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (o, n, _) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
                 new()
                 {
-                    {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                    {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
                     };
 
         public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument hostDocument = null)

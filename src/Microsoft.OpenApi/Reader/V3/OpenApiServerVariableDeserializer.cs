@@ -18,22 +18,22 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "enum",
-                    (o, n) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue())
+                    (o, n, _) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue())
                 },
                 {
                     "default",
-                    (o, n) => o.Default = n.GetScalarValue()
+                    (o, n, _) => o.Default = n.GetScalarValue()
                 },
                 {
                     "description",
-                    (o, n) => o.Description = n.GetScalarValue()
+                    (o, n, _) => o.Description = n.GetScalarValue()
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiServerVariable> _serverVariablePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiServerVariable LoadServerVariable(ParseNode node, OpenApiDocument hostDocument = null)
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var serverVariable = new OpenApiServerVariable();
 
-            ParseMap(mapNode, serverVariable, _serverVariableFixedFields, _serverVariablePatternFields);
+            ParseMap(mapNode, serverVariable, _serverVariableFixedFields, _serverVariablePatternFields, hostDocument);
 
             return serverVariable;
         }

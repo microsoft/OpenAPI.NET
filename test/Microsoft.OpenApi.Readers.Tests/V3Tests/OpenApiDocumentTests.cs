@@ -217,7 +217,6 @@ paths: {}",
                 Schemas = new Dictionary<string, JsonSchema>
                 {
                     ["pet1"] = new JsonSchemaBuilder()
-                                .Ref("#/components/schemas/pet1")
                                 .Type(SchemaValueType.Object)
                                 .Required("id", "name")
                                 .Properties(
@@ -225,7 +224,6 @@ paths: {}",
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                     ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                     ["newPet"] = new JsonSchemaBuilder()
-                                    .Ref("#/components/schemas/newPet")
                                     .Type(SchemaValueType.Object)
                                     .Required("name")
                                     .Properties(
@@ -233,7 +231,6 @@ paths: {}",
                                         ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                         ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                     ["errorModel"] = new JsonSchemaBuilder()
-                                    .Ref("#/components/schemas/errorModel")
                                     .Type(SchemaValueType.Object)
                                     .Required("code", "message")
                                     .Properties(
@@ -531,7 +528,6 @@ paths: {}",
                 Schemas = new Dictionary<string, JsonSchema>
                 {
                     ["pet1"] = new JsonSchemaBuilder()
-                        .Ref("#/components/schemas/pet1")
                         .Type(SchemaValueType.Object)
                         .Required("id", "name")
                         .Properties(
@@ -539,7 +535,6 @@ paths: {}",
                             ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                             ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                     ["newPet"] = new JsonSchemaBuilder()
-                        .Ref("#/components/schemas/newPet")
                         .Type(SchemaValueType.Object)
                         .Required("name")
                         .Properties(
@@ -547,7 +542,6 @@ paths: {}",
                             ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                             ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                     ["errorModel"] = new JsonSchemaBuilder()
-                        .Ref("#/components/schemas/errorModel")
                         .Type(SchemaValueType.Object)
                         .Required("code", "message")
                         .Properties(
@@ -1085,6 +1079,7 @@ paths: {}",
             var warnings = result.OpenApiDiagnostic.Warnings;
             Assert.False(warnings.Any());
         }
+
         [Fact]
         public void ParseDocWithRefsUsingProxyReferencesSucceeds()
         {

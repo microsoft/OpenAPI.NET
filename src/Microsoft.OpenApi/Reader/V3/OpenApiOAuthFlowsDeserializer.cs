@@ -16,16 +16,16 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly FixedFieldMap<OpenApiOAuthFlows> _oAuthFlowsFixedFields =
             new()
             {
-                {"implicit", (o, n) => o.Implicit = LoadOAuthFlow(n)},
-                {"password", (o, n) => o.Password = LoadOAuthFlow(n)},
-                {"clientCredentials", (o, n) => o.ClientCredentials = LoadOAuthFlow(n)},
-                {"authorizationCode", (o, n) => o.AuthorizationCode = LoadOAuthFlow(n)}
+                {"implicit", (o, n, t) => o.Implicit = LoadOAuthFlow(n, t)},
+                {"password", (o, n, t) => o.Password = LoadOAuthFlow(n, t)},
+                {"clientCredentials", (o, n, t) => o.ClientCredentials = LoadOAuthFlow(n, t)},
+                {"authorizationCode", (o, n, t) => o.AuthorizationCode = LoadOAuthFlow(n, t)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlows> _oAuthFlowsPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiOAuthFlows LoadOAuthFlows(ParseNode node, OpenApiDocument hostDocument = null)

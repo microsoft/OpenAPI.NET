@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
         }
 
-        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map)
+        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument = null)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             var nodes = jsonMap.Select(
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     {
                         Context.StartObject(key);
                         value = n.Value is JsonObject jsonObject
-                          ? map(new MapNode(Context, jsonObject), null)
+                          ? map(new MapNode(Context, jsonObject), hostDocument)
                           : default;
                     }
                     finally
@@ -82,7 +82,8 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         public override Dictionary<string, JsonSchema> CreateJsonSchemaMap(
             ReferenceType referenceType,
             Func<MapNode, OpenApiDocument, JsonSchema> map,
-            OpenApiSpecVersion version)
+            OpenApiSpecVersion version,
+            OpenApiDocument hostDocument = null)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(JsonSchema).Name}", Context);
 
@@ -95,7 +96,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     {
                         Context.StartObject(key);
                         entry = (key,
-                            value: map(new MapNode(Context, (JsonObject)n.Value), null)
+                            value: map(new MapNode(Context, (JsonObject)n.Value), hostDocument)
                         );
                         if (entry.value == null)
                         {

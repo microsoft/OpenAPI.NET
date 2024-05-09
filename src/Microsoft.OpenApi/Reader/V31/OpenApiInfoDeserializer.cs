@@ -14,59 +14,59 @@ namespace Microsoft.OpenApi.Reader.V31
         public static readonly FixedFieldMap<OpenApiInfo> InfoFixedFields = new()
         {
             {
-                "title", (o, n) =>
+                "title", (o, n, _) =>
                 {
                     o.Title = n.GetScalarValue();
                 }
             },
             {
-                "version", (o, n) =>
+                "version", (o, n, _) =>
                 {
                     o.Version = n.GetScalarValue();
                 }
             },
             {
-                "summary", (o, n) =>
+                "summary", (o, n, _) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n) =>
+                "description", (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                "termsOfService", (o, n) =>
+                "termsOfService", (o, n, _) =>
                 {
                     o.TermsOfService = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                 }
             },
             {
-                "contact", (o, n) =>
+                "contact", (o, n, t) =>
                 {
-                    o.Contact = LoadContact(n);
+                    o.Contact = LoadContact(n, t);
                 }
             },
             {
-                "license", (o, n) =>
+                "license", (o, n, t) =>
                 {
-                    o.License = LoadLicense(n);
+                    o.License = LoadLicense(n, t);
                 }
             }
         };
 
         public static readonly PatternFieldMap<OpenApiInfo> InfoPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, k, n) => o.AddExtension(k,LoadExtension(k, n))}
+            {s => s.StartsWith("x-"), (o, k, n, _) => o.AddExtension(k,LoadExtension(k, n))}
         };
 
         public static OpenApiInfo LoadInfo(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("Info");
             var info = new OpenApiInfo();
-            ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields);
+            ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields, hostDocument);
 
             return info;
         }

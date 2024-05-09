@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "propertyName",
-                    (o, n) => o.PropertyName = n.GetScalarValue()
+                    (o, n, _) => o.PropertyName = n.GetScalarValue()
                 },
                 {
                     "mapping",
-                    (o, n) => o.Mapping = n.CreateSimpleMap(LoadString)
+                    (o, n, _) => o.Mapping = n.CreateSimpleMap(LoadString)
                 }
             };
 

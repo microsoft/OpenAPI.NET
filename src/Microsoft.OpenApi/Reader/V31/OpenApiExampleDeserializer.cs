@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -15,25 +15,25 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiExample> _exampleFixedFields = new()
         {
             {
-                "summary", (o, n) =>
+                "summary", (o, n, _) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n) =>
+                "description", (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                "value", (o, n) =>
+                "value", (o, n, _) =>
                 {
                     o.Value = n.CreateAny();
                 }
             },
             {
-                "externalValue", (o, n) =>
+                "externalValue", (o, n, _) =>
                 {
                     o.ExternalValue = n.GetScalarValue();
                 }
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiExample LoadExample(ParseNode node, OpenApiDocument hostDocument = null)

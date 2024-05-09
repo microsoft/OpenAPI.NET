@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Services
         public bool RegisterComponent<T>(string location, T component)
         {
             var uri = ToLocationUrl(location);
-            if (component is IBaseDocument schema)
+            if (component is JsonSchema schema)
             {
                 if (!_jsonSchemaRegistry.ContainsKey(uri))
                 {
@@ -161,6 +161,11 @@ namespace Microsoft.OpenApi.Services
         private Uri ToLocationUrl(string location)
         {
             return new(BaseUrl, location);
+        }
+
+        internal Dictionary<Uri, IBaseDocument> GetSchemaRegistry()
+        {
+            return _jsonSchemaRegistry;
         }
     }
 }

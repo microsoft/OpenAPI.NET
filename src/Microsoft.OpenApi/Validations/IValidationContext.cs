@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using Microsoft.OpenApi.Models;
+
 namespace Microsoft.OpenApi.Validations
 {
     /// <summary>
@@ -35,5 +37,10 @@ namespace Microsoft.OpenApi.Validations
         /// Pointer to source of validation error in document
         /// </summary>
         string PathString { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        OpenApiDocument HostDocument { get; }
     }
 }

@@ -130,6 +130,12 @@ namespace Microsoft.OpenApi.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Converts the Schema value type to its string equivalent
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         internal static string ConvertSchemaValueTypeToString(SchemaValueType value)
         {
             return value switch

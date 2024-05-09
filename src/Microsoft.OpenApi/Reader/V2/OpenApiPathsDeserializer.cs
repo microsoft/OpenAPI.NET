@@ -17,8 +17,8 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static readonly PatternFieldMap<OpenApiPaths> _pathsPatternFields = new()
         {
-            {s => s.StartsWith("/"), (o, k, n) => o.Add(k, LoadPathItem(n))},
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith("/"), (o, k, n, t) => o.Add(k, LoadPathItem(n, t))},
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         public static OpenApiPaths LoadPaths(ParseNode node, OpenApiDocument hostDocument = null)
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var domainObject = new OpenApiPaths();
 
-            ParseMap(mapNode, domainObject, _pathsFixedFields, _pathsPatternFields);
+            ParseMap(mapNode, domainObject, _pathsFixedFields, _pathsPatternFields, doc: hostDocument);
 
             return domainObject;
         }

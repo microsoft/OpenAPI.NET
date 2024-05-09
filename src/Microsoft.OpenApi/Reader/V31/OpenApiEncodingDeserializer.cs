@@ -13,31 +13,31 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiEncoding> _encodingFixedFields = new()
         {
             {
-                "contentType", (o, n) =>
+                "contentType", (o, n, _) =>
                 {
                     o.ContentType = n.GetScalarValue();
                 }
             },
             {
-                "headers", (o, n) =>
+                "headers", (o, n, t) =>
                 {
-                    o.Headers = n.CreateMap(LoadHeader);
+                    o.Headers = n.CreateMap(LoadHeader, t);
                 }
             },
             {
-                "style", (o, n) =>
+                "style", (o, n, _) =>
                 {
                     o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
                 }
             },
             {
-                "explode", (o, n) =>
+                "explode", (o, n, _) =>
                 {
                     o.Explode = bool.Parse(n.GetScalarValue());
                 }
             },
             {
-                "allowedReserved", (o, n) =>
+                "allowedReserved", (o, n, _) =>
                 {
                     o.AllowReserved = bool.Parse(n.GetScalarValue());
                 }
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiEncoding> _encodingPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiEncoding LoadEncoding(ParseNode node, OpenApiDocument hostDocument = null)

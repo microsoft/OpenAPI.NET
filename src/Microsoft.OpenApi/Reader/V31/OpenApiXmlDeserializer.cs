@@ -17,31 +17,31 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiXml> _xmlFixedFields = new FixedFieldMap<OpenApiXml>
         {
             {
-                "name", (o, n) =>
+                "name", (o, n, _) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                "namespace", (o, n) =>
+                "namespace", (o, n, _) =>
                 {
                     o.Namespace = new Uri(n.GetScalarValue(), UriKind.Absolute);
                 }
             },
             {
-                "prefix", (o, n) =>
+                "prefix", (o, n, _) =>
                 {
                     o.Prefix = n.GetScalarValue();
                 }
             },
             {
-                "attribute", (o, n) =>
+                "attribute", (o, n, _) =>
                 {
                     o.Attribute = bool.Parse(n.GetScalarValue());
                 }
             },
             {
-                "wrapped", (o, n) =>
+                "wrapped", (o, n, _) =>
                 {
                     o.Wrapped = bool.Parse(n.GetScalarValue());
                 }
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =
             new PatternFieldMap<OpenApiXml>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiXml LoadXml(ParseNode node, OpenApiDocument hostDocument = null)

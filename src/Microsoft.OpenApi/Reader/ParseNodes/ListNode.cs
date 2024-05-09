@@ -22,14 +22,14 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             _nodeList = jsonArray;
         }
 
-        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map)
+        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument = null)
         {
             if (_nodeList == null)
             {
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject), null))
+            return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject), hostDocument))
                 .Where(i => i != null)
                 .ToList();
         }

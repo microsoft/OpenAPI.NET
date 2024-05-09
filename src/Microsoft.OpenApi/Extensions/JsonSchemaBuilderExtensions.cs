@@ -220,6 +220,7 @@ namespace Microsoft.OpenApi.Extensions
     /// The nullable keyword
     /// </summary>
     [SchemaKeyword(Name)]
+    [SchemaSpecVersion(SpecVersion.Draft202012)]
     public class NullableKeyword : IJsonSchemaKeyword
     {
         /// <summary>
