@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Extensions
                 ("integer", "int64", false) => typeof(long),
                 ("integer", null, false) => typeof(int),
                 ("number", "float", false) => typeof(float),
-                ("number", "double", false) => typeof(double),                
+                ("number", "double", false) => typeof(double),
                 ("number", "decimal", false) => typeof(decimal),
                 ("number", null, false) => typeof(double),
                 ("string", "byte", false) => typeof(byte),
