@@ -29,7 +29,11 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns></returns>
         public static JsonSchemaBuilder Extensions(this JsonSchemaBuilder builder, IDictionary<string, IOpenApiExtension> extensions)
         {
-            builder.Add(new ExtensionsKeyword(extensions));
+            foreach (var item in extensions)
+            {
+                var jsonNode = JsonNode.Parse(item.Value.ToJsonDocument().RootElement.GetRawText());
+                builder.Add(new UnrecognizedKeyword(item.Key, jsonNode));
+            }
             return builder;
         }
 

@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Schema;
+using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -175,7 +178,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     if (n is ValueNode)
                     {
-                        o.AdditionalPropertiesAllowed(bool.Parse(n.GetScalarValue()));
+                        o.AdditionalProperties(bool.Parse(n.GetScalarValue()));
                     }
                     else
                     {
@@ -258,13 +261,12 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static readonly PatternFieldMap<JsonSchemaBuilder> _schemaPatternFields = new PatternFieldMap<JsonSchemaBuilder>
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.Extensions(LoadExtensions(p, LoadExtension(p, n)))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.Unrecognized(p, n.JsonNode)}
         };
 
         public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             Json.Schema.OpenApi.Vocabularies.Register();
-            SchemaKeywordRegistry.Register<ExtensionsKeyword>();
             return JsonSerializer.Deserialize<JsonSchema>(node.JsonNode);
         }
     }
