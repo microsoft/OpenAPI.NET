@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 
@@ -12,7 +13,7 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     public static class OpenApiReaderRegistry
     {
-        private static readonly Dictionary<string, IOpenApiReader> _readers = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, IOpenApiReader> _readers = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Defines a default OpenAPI reader.
@@ -26,7 +27,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="reader">The reader instance.</param>
         public static void RegisterReader(string format, IOpenApiReader reader)
         {
-            _readers[format] = reader;
+            _readers.AddOrUpdate(format, reader, (_, _) => reader);
         }
 
         /// <summary>
