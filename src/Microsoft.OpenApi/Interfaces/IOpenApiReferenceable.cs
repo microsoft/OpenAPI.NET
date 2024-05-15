@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Reference object.
         /// </summary>
-        OpenApiReference Reference { get; set; }
+        OpenApiReference? Reference { get; set; }
 
         /// <summary>
         /// Serialize to OpenAPI V31 document without using reference.
