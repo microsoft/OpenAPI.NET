@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets a flag indicating whether a file is a valid OpenAPI document or a fragment
         /// </summary>
-        public bool IsFragrament = false;
+        public bool IsFragment = false;
 
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
@@ -231,7 +231,7 @@ namespace Microsoft.OpenApi.Models
         {
             if (Id != null)
             {
-                if (IsFragrament)
+                if (IsFragment)
                 {
                     return ExternalResource + "#" + Id;
                 }

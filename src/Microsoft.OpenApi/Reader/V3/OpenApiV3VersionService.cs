@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                     else
                     {
-                        openApiReference.IsFragrament = true;
+                        openApiReference.IsFragment = true;
                     }
 
                     openApiReference.ExternalResource = segments[0];
