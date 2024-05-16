@@ -31,9 +31,11 @@ namespace Microsoft.OpenApi.Extensions
         {
             foreach (var item in extensions)
             {
-                var jsonNode = JsonNode.Parse(item.Value.ToJsonDocument().RootElement.GetRawText());
+                var element = item.Value as OpenApiAny;
+                var jsonNode = element.Node;
                 builder.Add(new UnrecognizedKeyword(item.Key, jsonNode));
             }
+
             return builder;
         }
 
@@ -83,7 +85,6 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns></returns>
         public static JsonSchemaBuilder Discriminator(this JsonSchemaBuilder builder, OpenApiDiscriminator discriminator)
         {
-
             var extensions = discriminator.Extensions.ToDictionary(kvp => kvp.Key, kvp => ((OpenApiAny)kvp.Value).Node);
             if (extensions.Count == 0)
             {
@@ -290,7 +291,6 @@ namespace Microsoft.OpenApi.Extensions
             Extensions = extensions;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -322,7 +322,6 @@ namespace Microsoft.OpenApi.Extensions
         {
             var dict = new Dictionary<string, IOpenApiExtension>();
             // iterate over the reader and create extensions values
-            //
             return new ExtensionsKeyword(dict);
         }
 
