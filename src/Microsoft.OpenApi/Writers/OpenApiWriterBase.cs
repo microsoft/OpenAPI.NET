@@ -7,12 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.RegularExpressions;
 using Json.Schema;
-using Json.Schema.OpenApi;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
@@ -432,9 +428,17 @@ namespace Microsoft.OpenApi.Writers
             {
                 return;
             }
-
-            WriteJsonSchemaWithoutReference(this, schema, version);
-
+            if (schema.GetRef() != null)
+            {
+                WriteStartObject();
+                WriteJsonSchemaReference(this, schema.GetRef().OriginalString, version);
+                WriteEndObject();
+                return;
+            }
+            else
+            {
+                WriteJsonSchemaWithoutReference(this, schema, version);
+            }
         }
 
 
@@ -443,20 +447,30 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="element"></param>
-        public void WriteJsonElement(IOpenApiWriter writer, JsonElement element) {
+        /// <param name="version"></param>
+        public void WriteJsonElement(IOpenApiWriter writer, JsonElement element, OpenApiSpecVersion version)
+        {
             switch (element.ValueKind) {
                 case JsonValueKind.Array:
                     writer.WriteStartArray();
                     foreach (var item in element.EnumerateArray()) {
-                        WriteJsonElement(writer, item);
+                        WriteJsonElement(writer, item, version);
                     }
                     writer.WriteEndArray();
                     break;
                 case JsonValueKind.Object:
                     writer.WriteStartObject();
                     foreach (var property in element.EnumerateObject()) {
-                        writer.WritePropertyName(property.Name);
-                        WriteJsonElement(writer, property.Value);
+
+                        if (property.Name.Equals("$ref"))
+                        {
+                            WriteJsonSchemaReference(writer, property.Value.GetString(), version);
+                        }
+                        else
+                        {
+                            writer.WritePropertyName(property.Name);
+                            WriteJsonElement(writer, property.Value, version);
+                        }
                     }
                     writer.WriteEndObject();
                     break;
@@ -479,7 +493,6 @@ namespace Microsoft.OpenApi.Writers
                     throw new OpenApiWriterException(string.Format(SRResource.OpenApiUnsupportedValueType, element.ValueKind));
             }
         }
-
 
         /// <summary>
         /// Render a JsonNode using an OpenApiWriter
@@ -517,19 +530,17 @@ namespace Microsoft.OpenApi.Writers
             // Take the schema and convert to either a JsonNode or JsonElement
             var schemaString = JsonSerializer.Serialize(schema);
             var schemaElement = JsonDocument.Parse(schemaString).RootElement;
-            WriteJsonElement(writer, schemaElement);
+            WriteJsonElement(writer, schemaElement, version);
         }
 
         /// <inheritdoc />
-        public void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference, OpenApiSpecVersion version)
+        public void WriteJsonSchemaReference(IOpenApiWriter writer, string reference, OpenApiSpecVersion version)
         {
             var referenceItem = version.Equals(OpenApiSpecVersion.OpenApi2_0)
-                ? reference.OriginalString.Replace("components/schemas", "definitions")
-                : reference.OriginalString;
+                ? reference.Replace("components/schemas", "definitions")
+                : reference;
 
-            WriteStartObject();
             this.WriteProperty(OpenApiConstants.DollarRef, referenceItem);
-            WriteEndObject();
         }
 
         /// <inheritdoc/>
