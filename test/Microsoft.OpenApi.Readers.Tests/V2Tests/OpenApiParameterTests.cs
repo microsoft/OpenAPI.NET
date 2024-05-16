@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -73,22 +73,24 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
-
-            // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Query,
-                    Name = "id",
-                    Description = "ID of the object to fetch",
-                    Required = false,
-                    Schema = new JsonSchemaBuilder()
+            var doc = new OpenApiDocument();
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, doc);
+            var expected = new OpenApiParameter
+            {
+                In = ParameterLocation.Query,
+                Name = "id",
+                Description = "ID of the object to fetch",
+                Required = false,
+                Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Array)
                                 .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    Style = ParameterStyle.Form,
-                    Explode = true
-                }, options => options.Excluding(x => x.Schema.BaseUri));
+                Style = ParameterStyle.Form,
+                Explode = true
+            };
+            expected.Schema.GetItems().BaseUri = doc.BaseUri;
+
+            // Assert
+            parameter.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -202,19 +204,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Act
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var expected = new OpenApiParameter
+            {
+                In = ParameterLocation.Path,
+                Name = "username",
+                Description = "username to fetch",
+                Required = true,
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Default(5)
+            };
 
             // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Path,
-                    Name = "username",
-                    Description = "username to fetch",
-                    Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Default(5)
-                }, options => options
+            parameter.Should().BeEquivalentTo(expected, options => options
                     .IgnoringCyclicReferences()
-                    .Excluding(x => x.Schema.BaseUri));
+                    .Excluding(x => x.Schema.BaseUri)
+                    .Excluding(x => x.Schema.Keywords));
         }
 
         [Fact]

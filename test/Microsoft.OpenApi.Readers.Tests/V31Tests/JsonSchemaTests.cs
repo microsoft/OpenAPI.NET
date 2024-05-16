@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V31;
@@ -28,9 +29,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var asJsonNode = yamlNode.ToJsonNode();
             var node = new MapNode(context, asJsonNode);
+            var doc = new OpenApiDocument();
 
             // Act
-            var schema = OpenApiV31Deserializer.LoadSchema(node);
+            var schema = OpenApiV31Deserializer.LoadSchema(node, doc);
             var jsonString = @"{
    ""type"": ""object"",
    ""properties"": {
@@ -44,6 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
    }
 }";
             var expectedSchema = JsonSerializer.Deserialize<JsonSchema>(jsonString);
+            expectedSchema.GetProperties().First().Value.BaseUri = doc.BaseUri;
 
             // Assert
             schema.Should().BeEquivalentTo(expectedSchema, options => options.Excluding(x => x.BaseUri));
@@ -62,9 +65,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var asJsonNode = yamlNode.ToJsonNode();
             var node = new MapNode(context, asJsonNode);
+            var doc = new OpenApiDocument();
 
             // Act
-            var schema = OpenApiV31Deserializer.LoadSchema(node);
+            var schema = OpenApiV31Deserializer.LoadSchema(node, doc);
             var jsonString = @"{
    ""type"": ""object"",
    ""properties"": {
@@ -135,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = JsonSerializer.Deserialize<JsonSchema>(jsonString);
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedSchema);
+            schema.Should().BeEquivalentTo(expectedSchema, options => options.IgnoringCyclicReferences().Excluding(x => x.BaseUri));
         }
 
         [Fact]

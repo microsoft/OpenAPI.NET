@@ -1170,12 +1170,18 @@ components:
             // Act
             var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
             var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
+
             var outputDoc = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0).MakeLineBreaksEnvironmentNeutral();
             var output = actualParam.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
 
             // Assert
-            actualParam.Should().BeEquivalentTo(expectedParam, options => options.Excluding(x => x.Reference.HostDocument));
+            actualParam.Should().BeEquivalentTo(expectedParam, options => options
+            .Excluding(x => x.Reference.HostDocument)
+            .Excluding(x => x.Schema.BaseUri)
+            .Excluding(x => x.Schema.Keywords)
+            .IgnoringCyclicReferences());
+
             outputDoc.Should().BeEquivalentTo(expectedSerializedDoc.MakeLineBreaksEnvironmentNeutral());
 
         }

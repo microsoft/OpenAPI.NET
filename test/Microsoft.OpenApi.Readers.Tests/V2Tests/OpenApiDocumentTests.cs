@@ -24,6 +24,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ShouldParseProducesInAnyOrder()
         {
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
+
             var okSchema = new JsonSchemaBuilder()
                     .Ref("#/definitions/Item");
 
@@ -147,7 +149,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                 }
             };
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
+            expected.Paths["/items"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Get].Responses["200"].Content["application/xml"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Get].Responses["default"].Content["application/json"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Get].Responses["default"].Content["application/xml"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Post].Responses["200"].Content["html/text"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Post].Responses["default"].Content["html/text"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Patch].Responses["200"].Content["application/json"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Patch].Responses["200"].Content["application/xml"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Patch].Responses["default"].Content["application/json"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Paths["/items"].Operations[OperationType.Patch].Responses["default"].Content["application/xml"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Components.Schemas["Item"].BaseUri = result.OpenApiDocument.BaseUri;
+            expected.Components.Schemas["Error"].BaseUri = result.OpenApiDocument.BaseUri;
 
             result.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }

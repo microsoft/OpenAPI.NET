@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
             var actual = OpenApiTypeMapper.MapTypeToJsonPrimitiveType(type);
 
             // Assert
-            actual.Should().BeEquivalentTo(expected);
+            actual.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.BaseUri));
         }
 
         [Theory]

@@ -100,23 +100,20 @@ namespace Microsoft.OpenApi.Tests.Models
                             .Required("id", "name")
                             .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64").Build()),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()),
-                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
-                            .Ref("#/components/schemas/pet").Build(),
+                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String).Build())),
                 ["newPet"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("name")
                                 .Properties(
                                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64").Build()),
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()),
-                                    ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
-                                .Ref("#/components/schemas/newPet").Build(),
+                                    ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String).Build())),
                 ["errorModel"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("code", "message")
                                 .Properties(
                                     ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()),
                                     ("message", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
-                                .Ref("#/components/schemas/errorModel").Build()
             }
         };
 
@@ -199,13 +196,13 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
-                                                        .Items(PetSchemaWithReference).Build()
+                                                        .Items(new JsonSchemaBuilder().Ref("#/components/schemas/pet")).Build()
                                         },
                                         ["application/xml"] = new OpenApiMediaType
                                         {
                                             Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
-                                                        .Items(PetSchemaWithReference).Build()
+                                                        .Items(new JsonSchemaBuilder().Ref("#/components/schemas/pet"))
                                         }
                                     }
                                 },
@@ -216,7 +213,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
-                                            Schema = ErrorModelSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                         }
                                     }
                                 },
@@ -227,7 +224,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
-                                            Schema = ErrorModelSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                         }
                                     }
                                 }
@@ -245,7 +242,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema = NewPetSchemaWithReference
+                                        Schema = new JsonSchemaBuilder().Ref("#/components/schemas/newPet")
                                     }
                                 }
                             },
@@ -258,7 +255,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = PetSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet")
                                         },
                                     }
                                 },
@@ -269,7 +266,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
-                                            Schema = ErrorModelSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                         }
                                     }
                                 },
@@ -280,7 +277,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
-                                            Schema = ErrorModelSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                         }
                                     }
                                 }
@@ -320,11 +317,11 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = PetSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet")
                                         },
                                         ["application/xml"] = new OpenApiMediaType
                                         {
-                                            Schema = PetSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/pet")
                                         }
                                     }
                                 },
@@ -335,7 +332,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
-                                            Schema = ErrorModelSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                         }
                                     }
                                 },
@@ -346,7 +343,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
-                                            Schema = ErrorModelSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                         }
                                     }
                                 }
@@ -383,7 +380,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
-                                            Schema = ErrorModelSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                         }
                                     }
                                 },
@@ -394,7 +391,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
-                                            Schema = ErrorModelSchemaWithReference
+                                            Schema = new JsonSchemaBuilder().Ref("#/components/schemas/errorModel")
                                         }
                                     }
                                 }
@@ -956,7 +953,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            AdvancedDocumentWithReference.SerializeAsV2(writer);
+              AdvancedDocumentWithReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

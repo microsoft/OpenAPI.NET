@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -210,8 +211,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 }
             };
 
-
-
             // Create a clone of the schema to avoid modifying things in components.
             var petSchema = new JsonSchemaBuilder().Ref("#/components/schemas/petSchema");
             var newPetSchema = new JsonSchemaBuilder().Ref("#/components/schemas/newPetSchema");
@@ -379,8 +378,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var actualMediaType = mediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
-            actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
+            actualSchema.Should().BeEquivalentTo(expectedSchema, options => options.Excluding(x => x.BaseUri));
+            actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(
+                expectedMediaType.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

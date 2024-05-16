@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -39,7 +39,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 .Default(5)
                 },
                 options => options
-                .IgnoringCyclicReferences());
+                .IgnoringCyclicReferences()
+                .Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
