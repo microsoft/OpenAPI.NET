@@ -55,18 +55,6 @@ extends:
           displayName: 'Use .NET 8'
           inputs:
             version: 8.x
-
-        - task: PoliCheck@2
-          displayName: 'Run PoliCheck "/src"'
-          inputs:
-            inputType: CmdLine
-            cmdLineArgs: '/F:$(Build.SourcesDirectory)/src /T:9 /Sev:"1|2" /PE:2 /O:poli_result_src.xml'
-
-        - task: PoliCheck@2
-          displayName: 'Run PoliCheck "/test"'
-          inputs:
-            inputType: CmdLine
-            cmdLineArgs: '/F:$(Build.SourcesDirectory)/test /T:9 /Sev:"1|2" /PE:2 /O:poli_result_test.xml'
         
         # Install the nuget tool.
         - task: NuGetToolInstaller@0
@@ -89,34 +77,11 @@ extends:
             command: test
             projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.sln'
             arguments: '--configuration $(BuildConfiguration) --no-build'
-        
-        - task: AntiMalware@3
-          displayName: 'Run MpCmdRun.exe - ProductBinPath'
-          inputs:
-            FileDirPath: '$(ProductBinPath)'
-          enabled: false
-
-        - task: BinSkim@4
-          displayName: 'Run BinSkim - Product Binaries'
-          inputs:
-            InputType: Basic
-            AnalyzeTargetGlob: '$(ProductBinPath)\**\Microsoft.OpenApi.dll'
-            AnalyzeSymPath: '$(ProductBinPath)'
-            AnalyzeVerbose: true
-            AnalyzeHashes: true
-            AnalyzeEnvironment: true
 
         - task: PublishSecurityAnalysisLogs@3
           displayName: 'Publish Security Analysis Logs'
           inputs:
             ArtifactName: SecurityLogs
-
-        - task: PostAnalysis@2
-          displayName: 'Post Analysis'
-          inputs:
-            BinSkim: true
-            CredScan: true
-            PoliCheck: true
 
         - task: EsrpCodeSigning@2
           displayName: 'ESRP CodeSigning'
@@ -321,7 +286,7 @@ extends:
                   packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.*.nupkg'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
-                  
+
       - deployment: deploy_readers
         dependsOn: deploy_lib
         environment: nuget-org
