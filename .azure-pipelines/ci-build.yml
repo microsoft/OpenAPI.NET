@@ -78,11 +78,6 @@ extends:
             projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.sln'
             arguments: '--configuration $(BuildConfiguration) --no-build'
 
-        - task: PublishSecurityAnalysisLogs@3
-          displayName: 'Publish Security Analysis Logs'
-          inputs:
-            ArtifactName: SecurityLogs
-
         - task: EsrpCodeSigning@2
           displayName: 'ESRP CodeSigning'
           inputs:
