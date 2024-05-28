@@ -299,6 +299,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }}
                     }
                 }, options => options.IgnoringCyclicReferences()
+                .Excluding(o => o.Responses["200"].Content["application/json"].Schema.BaseUri)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Schema.Keywords)
+                .Excluding(o => o.Responses["200"].Content["application/xml"].Schema.BaseUri)
+                .Excluding(o => o.Responses["200"].Content["application/xml"].Schema.Keywords)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Parent)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Root)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Parent)

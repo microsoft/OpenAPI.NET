@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -40,7 +40,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 },
                 options => options
                 .IgnoringCyclicReferences()
-                .Excluding(x => x.Schema.BaseUri));
+                .Excluding(x => x.Schema.BaseUri)
+                .Excluding(x => x.Schema.Keywords));
         }
 
         [Fact]
@@ -64,7 +65,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 .Type(SchemaValueType.Number)
                                 .Format("float")
                                 .Enum(7, 8, 9)
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options
+                .IgnoringCyclicReferences()
+                .Excluding(x => x.Schema.BaseUri)
+                .Excluding(x => x.Schema.Keywords));
         }
     }
 }

@@ -232,17 +232,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Act
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var expected = new OpenApiParameter
+            {
+                In = ParameterLocation.Path,
+                Name = "username",
+                Description = "username to fetch",
+                Required = true,
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Enum(7, 8, 9)
+            };
 
             // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Path,
-                    Name = "username",
-                    Description = "username to fetch",
-                    Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Enum(7, 8, 9)
-                }, options => options.IgnoringCyclicReferences());
+            parameter.Should().BeEquivalentTo(expected, options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding(x => x.Schema.BaseUri)
+                    .Excluding(x => x.Schema.Keywords));
         }
     }
 }

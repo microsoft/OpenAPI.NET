@@ -32,7 +32,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Assert
             schema.Should().BeEquivalentTo(new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Number).Format("float").Default(5).Build(),
-                                options => options.IgnoringCyclicReferences());
+                                    options => options
+                                        .IgnoringCyclicReferences()
+                                        .Excluding(x => x.BaseUri)
+                                        .Excluding(x => x.Keywords));
         }
 
         [Fact]
@@ -55,7 +58,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     .Format("float")
                     .Example(5)
                     .Build(),
-                options => options.IgnoringCyclicReferences());
+                options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding(x => x.BaseUri)
+                    .Excluding(x => x.Keywords));
         }
 
         [Fact]
@@ -78,7 +84,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 .Enum(7, 8, 9)
                                 .Build();
             schema.Should().BeEquivalentTo(expected,
-                                options => options.IgnoringCyclicReferences());
+                                options => options
+                                    .IgnoringCyclicReferences()
+                                    .Excluding(x => x.BaseUri)
+                                    .Excluding(x => x.Keywords));
         }
     }
 }

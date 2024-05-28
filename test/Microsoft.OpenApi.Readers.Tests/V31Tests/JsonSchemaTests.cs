@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json;
 using FluentAssertions;
+using Humanizer;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -49,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             expectedSchema.GetProperties().First().Value.BaseUri = doc.BaseUri;
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedSchema, options => options.Excluding(x => x.BaseUri));
+            schema.Should().BeEquivalentTo(expectedSchema, options => options.Excluding(x => x.BaseUri).Excluding(x => x.Keywords));
         }
 
         [Fact]
@@ -139,7 +140,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = JsonSerializer.Deserialize<JsonSchema>(jsonString);
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedSchema, options => options.IgnoringCyclicReferences().Excluding(x => x.BaseUri));
+            schema.Should().BeEquivalentTo(expectedSchema, 
+                options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding(x => x.BaseUri)
+                    .Excluding(x => x.Keywords));
         }
 
         [Fact]

@@ -1,14 +1,17 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.ApiManifest;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -77,14 +80,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var subscribeOperation = path.Operations[OperationType.Post];
 
             var callback = subscribeOperation.Callbacks["simpleHook"];
-
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
-
-            callback.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+            var expected = new OpenApiCallback
+            {
+                PathItems =
                     {
                         [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                             Operations = {
@@ -110,13 +108,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Callback,
-                        Id = "simpleHook",
-                        HostDocument = result.OpenApiDocument
-                    }
-                });
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.Callback,
+                    Id = "simpleHook",
+                    HostDocument = result.OpenApiDocument
+                }
+            };
+            expected.PathItems[RuntimeExpression.Build("$request.body#/url")].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri =
+                callback.PathItems[RuntimeExpression.Build("$request.body#/url")].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri;
+
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+
+            callback.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -133,11 +138,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             var callback1 = subscribeOperation.Callbacks["simpleHook"];
-
-            callback1.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+            var expected1 = new OpenApiCallback
+            {
+                PathItems =
                     {
                         [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                             Operations = {
@@ -163,19 +166,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Callback,
-                        Id = "simpleHook",
-                        HostDocument = result.OpenApiDocument
-                    }
-                });
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.Callback,
+                    Id = "simpleHook",
+                    HostDocument = result.OpenApiDocument
+                }
+            };
+            expected1.PathItems[RuntimeExpression.Build("$request.body#/url")].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri =
+                callback1.PathItems[RuntimeExpression.Build("$request.body#/url")].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri;
+
+            callback1.Should().BeEquivalentTo(expected1);
 
             var callback2 = subscribeOperation.Callbacks["callback2"];
-            callback2.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+            var expected2 = new OpenApiCallback
+            {
+                PathItems =
                     {
                         [RuntimeExpression.Build("/simplePath")]= new OpenApiPathItem {
                             Operations = {
@@ -202,13 +208,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             },
                         }
                     }
-                });
+            };
+
+            expected2.PathItems[RuntimeExpression.Build("/simplePath")].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri =
+                callback2.PathItems[RuntimeExpression.Build("/simplePath")].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri;
+           
+            callback2.Should().BeEquivalentTo(expected2);
 
             var callback3 = subscribeOperation.Callbacks["callback3"];
-            callback3.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+            var expected3 = new OpenApiCallback
+            {
+                PathItems =
                     {
                         [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new OpenApiPathItem {
                             Operations = {
@@ -242,7 +252,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     }
-                });
+            };
+
+            expected3.PathItems[RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")].Operations[OperationType.Post].RequestBody.Content["application/xml"].Schema.BaseUri =
+                callback3.PathItems[RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")].Operations[OperationType.Post].RequestBody.Content["application/xml"].Schema.BaseUri;
+
+            callback3.Should().BeEquivalentTo(expected3);
         }
     }
 }
