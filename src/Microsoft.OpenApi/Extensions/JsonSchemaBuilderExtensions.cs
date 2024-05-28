@@ -103,8 +103,6 @@ namespace Microsoft.OpenApi.Extensions
             return builder;
         }
 
-
-
         /// <summary>
         /// Removes a keyword
         /// </summary>
@@ -342,10 +340,7 @@ namespace Microsoft.OpenApi.Extensions
                     writer.WritePropertyName(item.Key);
                     content.Node.WriteTo(writer);
                 }
-            }
-                
+            }                
         }
-
     }
-
 }
