@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Json.Schema;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -179,6 +178,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Components = components
             };
 
+            expected.Webhooks["pets"].Operations[OperationType.Get].Parameters[0].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Get].Parameters[1].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Get].Responses["200"].Content["application/xml"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.Schemas["petSchema"].BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.Schemas["newPetSchema"].BaseUri = actual.OpenApiDocument.BaseUri;
+
             // Assert            
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
             actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
@@ -317,6 +325,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 },
                 Components = components
             };
+
+            expected.Webhooks["pets"].Operations[OperationType.Get].Parameters[0].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Get].Parameters[1].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Get].Responses["200"].Content["application/xml"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Webhooks["pets"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.Schemas["petSchema"].BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.Schemas["newPetSchema"].BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.PathItems["pets"].Operations[OperationType.Get].Parameters[0].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.PathItems["pets"].Operations[OperationType.Get].Parameters[1].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.PathItems["pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.PathItems["pets"].Operations[OperationType.Get].Responses["200"].Content["application/xml"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.PathItems["pets"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
+            expected.Components.PathItems["pets"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema.BaseUri = actual.OpenApiDocument.BaseUri;
 
             // Assert
             actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options
