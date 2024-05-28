@@ -267,7 +267,9 @@ namespace Microsoft.OpenApi.Reader.V31
         public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             Json.Schema.OpenApi.Vocabularies.Register();
-            return JsonSerializer.Deserialize<JsonSchema>(node.JsonNode);
+            var schema = JsonSerializer.Deserialize<JsonSchema>(node.JsonNode);
+            schema.BaseUri = hostDocument.BaseUri;
+            return schema;
         }
     }
 
