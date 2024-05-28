@@ -228,7 +228,6 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  useDotNetTask: true
                   packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg'
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
@@ -278,7 +277,6 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  useDotNetTask: true
                   packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.*.nupkg'
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
@@ -301,7 +299,6 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  useDotNetTask: true
                   packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Readers.*.nupkg'
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
