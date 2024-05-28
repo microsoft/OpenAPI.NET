@@ -168,9 +168,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
+            var doc = new OpenApiDocument();
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, doc);
 
             // Assert
             pathItem.Should().BeEquivalentTo(_basicPathItemWithFormData);
