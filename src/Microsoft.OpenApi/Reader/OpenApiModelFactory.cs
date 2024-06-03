@@ -149,14 +149,14 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <summary>
-        /// Reads the input string and parses it into an Open API document.
+        /// Reads the input string and parses it into a DOM of type T.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="version"></param>
         /// <param name="diagnostic">The diagnostic entity containing information from the reading process.</param>
         /// <param name="format">The Open API format</param>
         /// <param name="settings">The OpenApi reader settings.</param>
-        /// <returns>An OpenAPI document instance.</returns>
+        /// <returns>A DOM of type T.</returns>
         public static T Parse<T>(string input,
                                  OpenApiSpecVersion version,
                                  out OpenApiDiagnostic diagnostic,
