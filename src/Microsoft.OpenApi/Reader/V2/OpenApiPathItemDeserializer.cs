@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Reader.V2
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
             node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);
 
-            pathItem.Parameters = node.CreateList(LoadParameter);
+            pathItem.Parameters = node.CreateList(LoadParameter, hostDocument);
 
             // Build request body based on information determined while parsing OpenApiOperation
             var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);
