@@ -203,6 +203,31 @@ namespace Microsoft.OpenApi.Hidi.Tests
             Assert.True(true);
         }
 
+        [Fact]
+        public async Task ValidFileReturnsTrue()
+        {
+            var isValid = await OpenApiService.ValidateOpenApiDocument(Path.Combine("UtilityFiles", "SampleOpenApi.yml"), _logger);
+
+            Assert.True(isValid);
+        }
+
+        [Fact]
+        public async Task InvalidFileReturnsFalse()
+        {
+            var isValid = await OpenApiService.ValidateOpenApiDocument(Path.Combine("UtilityFiles", "InvalidSampleOpenApi.yml"), _logger);
+
+            Assert.False(isValid);
+        }
+
+        [Fact]
+        public async Task CancellingValidationReturnsNull()
+        {
+            using var cts = new CancellationTokenSource();
+            await cts.CancelAsync();
+            var isValid = await OpenApiService.ValidateOpenApiDocument(Path.Combine("UtilityFiles", "SampleOpenApi.yml"), _logger, cts.Token);
+
+            Assert.Null(isValid);
+        }
 
         [Fact]
         public async Task TransformCommandConvertsOpenApi()

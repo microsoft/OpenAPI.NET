@@ -33,8 +33,8 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             try
             {
                 if (hidiOptions.OpenApi is null) throw new InvalidOperationException("OpenApi file is required");
-                await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken).ConfigureAwait(false);
-                return 0;
+                var isValid = await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken).ConfigureAwait(false);
+                return isValid is not false ? 0 : -1;
             }
 #if RELEASE
 #pragma warning disable CA1031 // Do not catch general exception types
