@@ -322,7 +322,8 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Implementation of the validate command
         /// </summary>
-        public static async Task ValidateOpenApiDocument(
+        /// <returns><see langword="true"/> when valid, <see langword="false"/> when invalid and <see langword="null"/> when cancelled</returns>
+        public static async Task<bool?> ValidateOpenApiDocument(
             string openApi,
             ILogger logger,
             CancellationToken cancellationToken = default)
@@ -332,11 +333,13 @@ namespace Microsoft.OpenApi.Hidi
                 throw new ArgumentNullException(nameof(openApi));
             }
 
+            ReadResult? result = null;
+
             try
             {
                 using var stream = await GetStream(openApi, logger, cancellationToken).ConfigureAwait(false);
 
-                var result = await ParseOpenApi(openApi, false, logger, stream, cancellationToken).ConfigureAwait(false);
+                result = await ParseOpenApi(openApi, false, logger, stream, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Calculating statistics"))
                 {
@@ -358,6 +361,10 @@ namespace Microsoft.OpenApi.Hidi
             {
                 throw new InvalidOperationException($"Could not validate the document, reason: {ex.Message}", ex);
             }
+
+            if (result is null) return null;
+
+            return result.OpenApiDiagnostic.Errors.Count == 0;
         }
 
         private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
