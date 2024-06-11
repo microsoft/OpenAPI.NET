@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -21,33 +22,20 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return baseYamlNode;
             }
 
-            try
+            var pointer = baseYamlNode;
+            foreach (var token in currentPointer.Tokens)
             {
-                var pointer = baseYamlNode;
-                foreach (var token in currentPointer.Tokens)
+                if (pointer is YamlSequenceNode sequence && sequence.Children is not null && int.TryParse(token, out var index) && index < sequence.Children.Count)
                 {
-                    if (pointer is YamlSequenceNode sequence)
-                    {
-                        pointer = sequence.Children[Convert.ToInt32(token)];
-                    }
-                    else
-                    {
-                        if (pointer is YamlMappingNode map)
-                        {
-                            if (!map.Children.TryGetValue(new YamlScalarNode(token), out pointer))
-                            {
-                                return null;
-                            }
-                        }
-                    }
+                    pointer = sequence.Children[index];
                 }
+                else if (pointer is YamlMappingNode map && map.Children is not null && !map.Children.TryGetValue(new YamlScalarNode(token), out pointer))
+                {
+                    return null;
+                }
+            }
 
-                return pointer;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return pointer;
         }
     }
 }
