@@ -12,7 +12,7 @@
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/Microsoft.OpenApi.Hidi/bin/Debug/net8.0/Microsoft.OpenApi.Hidi.dll",
             "args": ["plugin", 
-                    "-m","C:\\Users\\darrmi\\src\\github\\microsoft\\openapi.net\\test\\Microsoft.OpenApi.Hidi.Tests\\UtilityFiles\\exampleapimanifest.json", 
+                    "-m","${workspaceFolder}/test/Microsoft.OpenApi.Hidi.Tests/UtilityFiles/exampleapimanifest.json", 
                     "--of","./output"],
             "cwd": "${workspaceFolder}/src/Microsoft.OpenApi.Hidi",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
