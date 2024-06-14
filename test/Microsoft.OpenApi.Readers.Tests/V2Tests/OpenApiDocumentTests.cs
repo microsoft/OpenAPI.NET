@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -49,13 +50,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Title = "Two responses",
                     Version = "1.0.0"
                 },
-                Servers =
-                    {
-                        new OpenApiServer
-                        {
-                            Url = "https://"
-                        }
-                    },
                 Paths = new OpenApiPaths
                 {
                     ["/items"] = new OpenApiPathItem
@@ -149,27 +143,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 }
             };
-            
-            expected.Paths["/items"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.GetItems().BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Get].Responses["200"].Content["application/xml"].Schema.GetItems().BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Post].Responses["200"].Content["html/text"].Schema.GetItems().BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Patch].Responses["200"].Content["application/json"].Schema.GetItems().BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Get].Responses["200"].Content["application/xml"].Schema.GetItems().BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Get].Responses["200"].Content["application/xml"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Get].Responses["default"].Content["application/json"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Get].Responses["default"].Content["application/xml"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Post].Responses["200"].Content["html/text"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Post].Responses["default"].Content["html/text"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Patch].Responses["200"].Content["application/json"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Patch].Responses["200"].Content["application/xml"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Patch].Responses["default"].Content["application/json"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Paths["/items"].Operations[OperationType.Patch].Responses["default"].Content["application/xml"].Schema.BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Components.Schemas["Item"].BaseUri = result.OpenApiDocument.BaseUri;
-            expected.Components.Schemas["Error"].BaseUri = result.OpenApiDocument.BaseUri;
 
-            result.OpenApiDocument.Should().BeEquivalentTo(expected, options => options
-                .Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+            var actualSerialized = result.OpenApiDocument.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var expectedSerialized = expected.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+
+            Assert.Equal(expectedSerialized, actualSerialized);
         }
 
         [Fact]
