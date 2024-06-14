@@ -1,0 +1,14 @@
+﻿@model List<Microsoft.OpenApi.Diff.BusinessObjects.EndpointBO>
+
+<table class="table table-borderless table-sm">
+    <tbody>
+        @foreach (var endpoint in Model)
+        {
+            <tr>
+                <td>
+                    <h7 class="m-0"><span class="badge badge-@(endpoint.Method) mr-2">@endpoint.Method</span><small>@endpoint.PathUrl</small></h7>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
