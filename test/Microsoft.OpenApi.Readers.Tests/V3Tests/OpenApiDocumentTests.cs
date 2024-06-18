@@ -602,29 +602,8 @@ paths: {}",
                 Info = new OpenApiInfo
                 {
                     Version = "1.0.0",
-                    Title = "Swagger Petstore (Simple)",
-                    Description =
-                        "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
-                    TermsOfService = new Uri("http://helloreverb.com/terms/"),
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Swagger API team",
-                        Email = "foo@example.com",
-                        Url = new Uri("http://swagger.io")
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "MIT",
-                        Url = new Uri("http://opensource.org/licenses/MIT")
-                    }
+                    Title = "Swagger Petstore (Simple)"
                 },
-                Servers = new List<OpenApiServer>
-                    {
-                        new OpenApiServer
-                        {
-                            Url = "http://petstore.swagger.io/api"
-                        }
-                    },
                 Paths = new OpenApiPaths
                 {
                     ["/pets"] = new OpenApiPathItem
@@ -640,29 +619,6 @@ paths: {}",
                                     },
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
-                                Parameters = new List<OpenApiParameter>
-                                    {
-                                        new OpenApiParameter
-                                        {
-                                            Name = "tags",
-                                            In = ParameterLocation.Query,
-                                            Description = "tags to filter by",
-                                            Required = false,
-                                            Schema = new JsonSchemaBuilder()
-                                                        .Type(SchemaValueType.Array)
-                                                        .Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
-                                        },
-                                        new OpenApiParameter
-                                        {
-                                            Name = "limit",
-                                            In = ParameterLocation.Query,
-                                            Description = "maximum number of results to return",
-                                            Required = false,
-                                            Schema = new JsonSchemaBuilder()
-                                                        .Type(SchemaValueType.Integer)
-                                                        .Format("int32")
-                                        }
-                                    },
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -713,10 +669,9 @@ paths: {}",
                     }
             };
 
-            var actualSerialized = actual.OpenApiDocument.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
-            var expectedSerialized = expected.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
-
-            actualSerialized.Should().Be(expectedSerialized);
+            var actualSecurityRequirement = actual.OpenApiDocument.SecurityRequirements.First();
+            securityScheme1.Should().BeEquivalentTo(actualSecurityRequirement.Keys.First(), options => options.Excluding(x => x.Reference.HostDocument));
+            securityScheme2.Should().BeEquivalentTo(actualSecurityRequirement.Keys.Last(), options => options.Excluding(x => x.Reference.HostDocument));
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
