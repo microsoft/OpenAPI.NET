@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -42,20 +43,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Schema = errorSchema
             };
 
-            result.OpenApiDocument.Should().BeEquivalentTo(new OpenApiDocument
+            var expected = new OpenApiDocument
             {
                 Info = new OpenApiInfo
                 {
                     Title = "Two responses",
                     Version = "1.0.0"
                 },
-                Servers =
-                    {
-                        new OpenApiServer
-                        {
-                            Url = "https://"
-                        }
-                    },
                 Paths = new OpenApiPaths
                 {
                     ["/items"] = new OpenApiPathItem
@@ -144,11 +138,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             ["Error"] = new JsonSchemaBuilder()
                                             .Properties(
                                             ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
-                                            ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                            ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                        }
+                        ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                        ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                    }
                 }
-            }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+            };
+
+            var actualSerialized = result.OpenApiDocument.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var expectedSerialized = expected.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+
+            Assert.Equal(expectedSerialized, actualSerialized);
         }
 
         [Fact]

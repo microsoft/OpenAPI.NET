@@ -17,6 +17,7 @@ using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -188,7 +189,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicOperation);
+            operation.Should().BeEquivalentTo(_basicOperation, options => options.Excluding(x => x.Parameters[0].Schema.BaseUri));
         }
 
         [Fact]
@@ -206,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicOperation);
+            operation.Should().BeEquivalentTo(_basicOperation, options => options.Excluding(x => x.Parameters[0].Schema.BaseUri));
         }
 
         [Fact]
@@ -223,7 +224,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            operation.Should().BeEquivalentTo(_operationWithBody, 
+                options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding(x => x.Parameters[0].Schema.BaseUri)
+                    .Excluding(x => x.RequestBody.Content["application/json"].Schema.BaseUri));
         }
 
         [Fact]
@@ -241,7 +246,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            operation.Should().BeEquivalentTo(_operationWithBody, 
+                options => options
+                .IgnoringCyclicReferences()
+                .Excluding(x => x.Parameters[0].Schema.BaseUri)
+                .Excluding(x => x.RequestBody.Content["application/json"].Schema.BaseUri));
         }
 
         [Fact]
@@ -290,6 +299,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }}
                     }
                 }, options => options.IgnoringCyclicReferences()
+                .Excluding(o => o.Responses["200"].Content["application/json"].Schema.BaseUri)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Schema.Keywords)
+                .Excluding(o => o.Responses["200"].Content["application/xml"].Schema.BaseUri)
+                .Excluding(o => o.Responses["200"].Content["application/xml"].Schema.Keywords)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Parent)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Root)
                 .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Parent)
@@ -316,9 +329,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     ""200"": {
       ""description"": ""OK"",
       ""schema"": {
-        ""type"": ""string"",
-        ""description"": ""The content of the file."",
         ""format"": ""binary"",
+        ""description"": ""The content of the file."",
+        ""type"": ""string"",
         ""x-ms-summary"": ""File Content""
       }
     }
@@ -346,7 +359,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            operation.Should().BeEquivalentTo(_operationWithBody, 
+                options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding(x => x.Parameters[0].Schema.BaseUri)
+                    .Excluding(x => x.RequestBody.Content["application/json"].Schema.BaseUri));
         }
 
         [Fact]

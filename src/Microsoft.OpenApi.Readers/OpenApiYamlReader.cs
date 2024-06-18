@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers
                 return default;
             }
 
-            return ReadFragment<T>(jsonNode, version, out diagnostic);
+            return ReadFragment<T>(jsonNode, version, out diagnostic, settings);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Readers
         /// <inheritdoc/>
         public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic);
+            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic, settings);
         }
     }
 }

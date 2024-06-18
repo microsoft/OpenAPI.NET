@@ -3,11 +3,11 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using JsonSchema = Json.Schema.JsonSchema;
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     if (n is ValueNode)
                     {
-                        o.AdditionalPropertiesAllowed(bool.Parse(n.GetScalarValue()));
+                        o.AdditionalProperties(bool.Parse(n.GetScalarValue()));
                     }
                     else
                     {
@@ -261,51 +261,15 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static readonly PatternFieldMap<JsonSchemaBuilder> _schemaPatternFields = new PatternFieldMap<JsonSchemaBuilder>
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.Extensions(LoadExtensions(p, LoadExtension(p, n)))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.Unrecognized(p, n.JsonNode)}
         };
 
         public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
-            var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
-            var builder = new JsonSchemaBuilder();
-
-            // check for a $ref and if present, add it to the builder as a Ref keyword
-            var pointer = mapNode.GetReferencePointer();
-            if (pointer != null)
-            {
-                builder = builder.Ref(pointer);
-
-                // Check for summary and description and append to builder
-                var summary = mapNode.GetSummaryValue();
-                var description = mapNode.GetDescriptionValue();
-                if (!string.IsNullOrEmpty(summary))
-                {
-                    builder.Summary(summary);
-                }
-                if (!string.IsNullOrEmpty(description))
-                {
-                    builder.Description(description);
-                }
-
-                return builder.Build();
-            }
-
-            foreach (var propertyNode in mapNode)
-            {
-                propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
-            }
-
-            var schema = builder.Build();
+            Json.Schema.OpenApi.Vocabularies.Register();
+            var schema = JsonSerializer.Deserialize<JsonSchema>(node.JsonNode);
+            schema.BaseUri = hostDocument.BaseUri;
             return schema;
-        }
-
-        private static Dictionary<string, IOpenApiExtension> LoadExtensions(string value, IOpenApiExtension extension)
-        {
-            var extensions = new Dictionary<string, IOpenApiExtension>
-            {
-                { value, extension }
-            };
-            return extensions;
         }
     }
 

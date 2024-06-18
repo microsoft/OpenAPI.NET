@@ -146,26 +146,13 @@ namespace Microsoft.OpenApi.Expressions
 }
 namespace Microsoft.OpenApi.Extensions
 {
-    [Json.Schema.SchemaKeyword("additionalPropertiesAllowed")]
-    public class AdditionalPropertiesAllowedKeyword : Json.Schema.IJsonSchemaKeyword
-    {
-        public const string Name = "additionalPropertiesAllowed";
-        public void Evaluate(Json.Schema.EvaluationContext context) { }
-    }
-    [Json.Schema.SchemaKeyword("discriminator")]
-    [Json.Schema.SchemaSpecVersion(Json.Schema.SpecVersion.Draft202012)]
-    public class DiscriminatorKeyword : Microsoft.OpenApi.Models.OpenApiDiscriminator, Json.Schema.IJsonSchemaKeyword
-    {
-        public const string Name = "discriminator";
-        public DiscriminatorKeyword() { }
-        public void Evaluate(Json.Schema.EvaluationContext context) { }
-    }
     [Json.Schema.SchemaKeyword("exclusiveMaximum")]
     public class Draft4ExclusiveMaximumKeyword : Json.Schema.IJsonSchemaKeyword
     {
         public const string Name = "exclusiveMaximum";
         public bool MaxValue { get; }
         public void Evaluate(Json.Schema.EvaluationContext context) { }
+        public Json.Schema.KeywordConstraint GetConstraint(Json.Schema.SchemaConstraint schemaConstraint, System.Collections.Generic.IReadOnlyList<Json.Schema.KeywordConstraint> localConstraints, Json.Schema.EvaluationContext context) { }
     }
     [Json.Schema.SchemaKeyword("exclusiveMinimum")]
     public class Draft4ExclusiveMinimumKeyword : Json.Schema.IJsonSchemaKeyword
@@ -173,6 +160,7 @@ namespace Microsoft.OpenApi.Extensions
         public const string Name = "exclusiveMinimum";
         public bool MinValue { get; }
         public void Evaluate(Json.Schema.EvaluationContext context) { }
+        public Json.Schema.KeywordConstraint GetConstraint(Json.Schema.SchemaConstraint schemaConstraint, System.Collections.Generic.IReadOnlyList<Json.Schema.KeywordConstraint> localConstraints, Json.Schema.EvaluationContext context) { }
     }
     public static class EnumExtensions
     {
@@ -182,41 +170,34 @@ namespace Microsoft.OpenApi.Extensions
     }
     [Json.Schema.SchemaKeyword("extensions")]
     [Json.Schema.SchemaSpecVersion(Json.Schema.SpecVersion.Draft202012)]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Microsoft.OpenApi.Extensions.ExtensionsKeywordJsonConverter))]
     public class ExtensionsKeyword : Json.Schema.IJsonSchemaKeyword
     {
         public const string Name = "extensions";
-        public void Evaluate(Json.Schema.EvaluationContext context) { }
+        public Json.Schema.KeywordConstraint GetConstraint(Json.Schema.SchemaConstraint schemaConstraint, System.Collections.Generic.IReadOnlyList<Json.Schema.KeywordConstraint> localConstraints, Json.Schema.EvaluationContext context) { }
     }
-    [Json.Schema.SchemaKeyword("externalDocs")]
-    public class ExternalDocsKeyword : Json.Schema.IJsonSchemaKeyword
+    public sealed class ExtensionsKeywordJsonConverter : System.Text.Json.Serialization.JsonConverter<Microsoft.OpenApi.Extensions.ExtensionsKeyword>
     {
-        public const string Name = "externalDocs";
-        public ExternalDocsKeyword(Microsoft.OpenApi.Models.OpenApiExternalDocs value) { }
-        public Microsoft.OpenApi.Models.OpenApiExternalDocs Value { get; }
-        public void Evaluate(Json.Schema.EvaluationContext context) { }
+        public ExtensionsKeywordJsonConverter() { }
+        public override Microsoft.OpenApi.Extensions.ExtensionsKeyword Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) { }
+        public override void Write(System.Text.Json.Utf8JsonWriter writer, Microsoft.OpenApi.Extensions.ExtensionsKeyword value, System.Text.Json.JsonSerializerOptions options) { }
     }
     public static class JsonSchemaBuilderExtensions
     {
-        public static Json.Schema.JsonSchemaBuilder AdditionalPropertiesAllowed(this Json.Schema.JsonSchemaBuilder builder, bool additionalPropertiesAllowed) { }
         public static Json.Schema.JsonSchemaBuilder Discriminator(this Json.Schema.JsonSchemaBuilder builder, Microsoft.OpenApi.Models.OpenApiDiscriminator discriminator) { }
         public static Json.Schema.JsonSchemaBuilder ExclusiveMaximum(this Json.Schema.JsonSchemaBuilder builder, bool value) { }
         public static Json.Schema.JsonSchemaBuilder ExclusiveMinimum(this Json.Schema.JsonSchemaBuilder builder, bool value) { }
         public static Json.Schema.JsonSchemaBuilder Extensions(this Json.Schema.JsonSchemaBuilder builder, System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> extensions) { }
         public static Json.Schema.JsonSchemaBuilder Nullable(this Json.Schema.JsonSchemaBuilder builder, bool value) { }
-        public static Json.Schema.JsonSchemaBuilder OpenApiExternalDocs(this Json.Schema.JsonSchemaBuilder builder, Microsoft.OpenApi.Models.OpenApiExternalDocs externalDocs) { }
         public static Json.Schema.JsonSchemaBuilder Remove(this Json.Schema.JsonSchemaBuilder builder, string keyword) { }
-        public static Json.Schema.JsonSchemaBuilder Summary(this Json.Schema.JsonSchemaBuilder builder, string summary) { }
     }
     public static class JsonSchemaExtensions
     {
-        public static bool? GetAdditionalPropertiesAllowed(this Json.Schema.JsonSchema schema) { }
         public static System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> GetExtensions(this Json.Schema.JsonSchema schema) { }
         public static bool? GetNullable(this Json.Schema.JsonSchema schema) { }
-        public static Microsoft.OpenApi.Extensions.DiscriminatorKeyword GetOpenApiDiscriminator(this Json.Schema.JsonSchema schema) { }
+        public static Json.Schema.OpenApi.DiscriminatorKeyword GetOpenApiDiscriminator(this Json.Schema.JsonSchema schema) { }
         public static bool? GetOpenApiExclusiveMaximum(this Json.Schema.JsonSchema schema) { }
         public static bool? GetOpenApiExclusiveMinimum(this Json.Schema.JsonSchema schema) { }
-        public static Microsoft.OpenApi.Models.OpenApiExternalDocs GetOpenApiExternalDocs(this Json.Schema.JsonSchema schema) { }
-        public static string GetSummary(this Json.Schema.JsonSchema schema) { }
     }
     [Json.Schema.SchemaKeyword("nullable")]
     [Json.Schema.SchemaSpecVersion(Json.Schema.SpecVersion.Draft202012)]
@@ -226,6 +207,7 @@ namespace Microsoft.OpenApi.Extensions
         public NullableKeyword(bool value) { }
         public bool Value { get; }
         public void Evaluate(Json.Schema.EvaluationContext context) { }
+        public Json.Schema.KeywordConstraint GetConstraint(Json.Schema.SchemaConstraint schemaConstraint, System.Collections.Generic.IReadOnlyList<Json.Schema.KeywordConstraint> localConstraints, Json.Schema.EvaluationContext context) { }
     }
     public static class OpenApiElementExtensions
     {
@@ -267,12 +249,6 @@ namespace Microsoft.OpenApi.Extensions
     public static class StringExtensions
     {
         public static T GetEnumFromDisplayName<T>(this string displayName) { }
-    }
-    [Json.Schema.SchemaKeyword("summary")]
-    public class SummaryKeyword : Json.Schema.IJsonSchemaKeyword
-    {
-        public const string Name = "summary";
-        public void Evaluate(Json.Schema.EvaluationContext context) { }
     }
 }
 namespace Microsoft.OpenApi.Interfaces
@@ -1734,8 +1710,7 @@ namespace Microsoft.OpenApi.Writers
         void WriteEndArray();
         void WriteEndObject();
         void WriteJsonSchema(Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version);
-        void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Uri reference, Microsoft.OpenApi.OpenApiSpecVersion version);
-        void WriteJsonSchemaWithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version);
+        void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, string reference, Microsoft.OpenApi.OpenApiSpecVersion version);
         void WriteNull();
         void WritePropertyName(string name);
         void WriteRaw(string value);
@@ -1796,8 +1771,10 @@ namespace Microsoft.OpenApi.Writers
         public abstract void WriteEndArray();
         public abstract void WriteEndObject();
         public virtual void WriteIndentation() { }
+        public void WriteJsonElement(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Text.Json.JsonElement element, Microsoft.OpenApi.OpenApiSpecVersion version) { }
+        public void WriteJsonNode(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Text.Json.Nodes.JsonNode node) { }
         public void WriteJsonSchema(Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version) { }
-        public void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Uri reference, Microsoft.OpenApi.OpenApiSpecVersion version) { }
+        public void WriteJsonSchemaReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, string reference, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public void WriteJsonSchemaWithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Json.Schema.JsonSchema schema, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public abstract void WriteNull();
         public abstract void WritePropertyName(string name);

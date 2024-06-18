@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     Schema = new JsonSchemaBuilder()
                     .Type(SchemaValueType.Integer)
                     .Format("int32")
-                }, options => options.Excluding(x => x.Reference)
+                }, options => options.Excluding(x => x.Reference).Excluding(x => x.Schema.BaseUri)
             );
         }
 
@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                             .Build()
                         }
                     }
-                }, options => options.Excluding(x => x.Reference)
+                }, options => options.Excluding(x => x.Reference).Excluding(x => x.Content["application/json"].Schema.BaseUri)
             );
         }
     }

@@ -4,7 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.Schema;
+using Json.Schema.OpenApi;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -23,33 +27,16 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns></returns>
         public static JsonSchemaBuilder Extensions(this JsonSchemaBuilder builder, IDictionary<string, IOpenApiExtension> extensions)
         {
-            builder.Add(new ExtensionsKeyword(extensions));
+            foreach (var item in extensions)
+            {
+                var element = item.Value as OpenApiAny;
+                var jsonNode = element.Node;
+                builder.Add(new UnrecognizedKeyword(item.Key, jsonNode));
+            }
+
             return builder;
         }
 
-        /// <summary>
-        /// The Schema summary
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="summary"></param>
-        /// <returns></returns>
-        public static JsonSchemaBuilder Summary(this JsonSchemaBuilder builder, string summary)
-        {
-            builder.Add(new SummaryKeyword(summary));
-            return builder;
-        }
-
-        /// <summary>
-        /// Indicates if the schema can contain properties other than those defined by the properties map
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="additionalPropertiesAllowed"></param>
-        /// <returns></returns>
-        public static JsonSchemaBuilder AdditionalPropertiesAllowed(this JsonSchemaBuilder builder, bool additionalPropertiesAllowed)
-        {
-            builder.Add(new AdditionalPropertiesAllowedKeyword(additionalPropertiesAllowed));
-            return builder;
-        }
 
         /// <summary>
         /// Allows sending a null value for the defined schema. Default value is false.
@@ -88,19 +75,6 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate
-        /// between other schemas which may satisfy the payload description.
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="discriminator"></param>
-        /// <returns></returns>
-        public static JsonSchemaBuilder Discriminator(this JsonSchemaBuilder builder, OpenApiDiscriminator discriminator)
-        {
-            builder.Add(new DiscriminatorKeyword(discriminator));
-            return builder;
-        }
-
-        /// <summary>
         /// ExternalDocs object.
         /// </summary>
         /// <param name="builder"></param>
@@ -109,6 +83,33 @@ namespace Microsoft.OpenApi.Extensions
         public static JsonSchemaBuilder OpenApiExternalDocs(this JsonSchemaBuilder builder, OpenApiExternalDocs externalDocs)
         {
             builder.Add(new ExternalDocsKeyword(externalDocs));
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate
+        /// between other schemas which may satisfy the payload description.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="discriminator"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder Discriminator(this JsonSchemaBuilder builder, OpenApiDiscriminator discriminator)
+        {
+            var extensions = discriminator.Extensions.ToDictionary(kvp => kvp.Key, kvp => ((OpenApiAny)kvp.Value).Node);
+            if (extensions.Count == 0)
+            {
+                extensions = null;
+            }
+            var mapping = (IReadOnlyDictionary<string, string>)discriminator.Mapping;
+            if (mapping.Count == 0)
+            {
+                mapping = null;
+            }
+            var discriminatorKeyword = new DiscriminatorKeyword(
+                            discriminator.PropertyName,
+                            mapping, 
+                            extensions);
+            builder.Add(discriminatorKeyword);
             return builder;
         }
 
@@ -168,6 +169,19 @@ namespace Microsoft.OpenApi.Extensions
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -197,6 +211,19 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="context"></param>
         /// <exception cref="NotImplementedException"></exception>
         public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
         {
             throw new NotImplementedException();
         }
@@ -237,6 +264,19 @@ namespace Microsoft.OpenApi.Extensions
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -265,11 +305,14 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// Implementation of IJsonSchemaKeyword interface
+        /// 
         /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
         /// <param name="context"></param>
+        /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public void Evaluate(EvaluationContext context)
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
         {
             throw new NotImplementedException();
         }
@@ -280,6 +323,7 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     [SchemaKeyword(Name)]
     [SchemaSpecVersion(SpecVersion.Draft202012)]
+    [JsonConverter(typeof(ExtensionsKeywordJsonConverter))]
     public class ExtensionsKeyword : IJsonSchemaKeyword
     {
         /// <summary>
@@ -295,105 +339,57 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// Implementation of IJsonSchemaKeyword interface
+        /// 
         /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
         /// <param name="context"></param>
+        /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public void Evaluate(EvaluationContext context)
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
         {
             throw new NotImplementedException();
         }
     }
 
     /// <summary>
-    /// The summary keyword
+    /// 
     /// </summary>
-    [SchemaKeyword(Name)]
-    public class SummaryKeyword : IJsonSchemaKeyword
+    public sealed class ExtensionsKeywordJsonConverter : JsonConverter<ExtensionsKeyword>
     {
         /// <summary>
-        /// The schema keyword name
+        /// 
         /// </summary>
-        public const string Name = "summary";
-
-        internal string Summary { get; }
-
-        internal SummaryKeyword(string summary)
+        /// <param name="reader"></param>
+        /// <param name="typeToConvert"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public override ExtensionsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            Summary = summary;
+            var dict = new Dictionary<string, IOpenApiExtension>();
+            // iterate over the reader and create extensions values
+            return new ExtensionsKeyword(dict);
         }
 
         /// <summary>
-        /// Implementation of IJsonSchemaKeyword interface
+        /// 
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="options"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void Evaluate(EvaluationContext context)
+        public override void Write(Utf8JsonWriter writer, ExtensionsKeyword value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            foreach (var item in value.Extensions)
+            {
+                var content = item.Value as OpenApiAny;
+                if (content != null)
+                {
+                    writer.WritePropertyName(item.Key);
+                    content.Node.WriteTo(writer);
+                }
+            }                
         }
     }
-
-    /// <summary>
-    /// The AdditionalPropertiesAllowed Keyword
-    /// </summary>
-    [SchemaKeyword(Name)]
-    public class AdditionalPropertiesAllowedKeyword : IJsonSchemaKeyword
-    {
-        /// <summary>
-        /// The schema keyword name
-        /// </summary>
-        public const string Name = "additionalPropertiesAllowed";
-        
-        internal bool AdditionalPropertiesAllowed { get; }
-
-        internal AdditionalPropertiesAllowedKeyword(bool additionalPropertiesAllowed)
-        {
-            AdditionalPropertiesAllowed = additionalPropertiesAllowed;
-        }
-
-        /// <summary>
-        /// Implementation of IJsonSchemaKeyword interface
-        /// </summary>
-        /// <param name="context"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Evaluate(EvaluationContext context)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    /// <summary>
-    /// The Discriminator Keyword
-    /// </summary>
-    [SchemaKeyword(Name)]
-    [SchemaSpecVersion(SpecVersion.Draft202012)]
-    public class DiscriminatorKeyword : OpenApiDiscriminator, IJsonSchemaKeyword
-    {
-        /// <summary>
-        /// The schema keyword name
-        /// </summary>
-        public const string Name = "discriminator";
-
-        /// <summary>
-        /// Parameter-less constructor
-        /// </summary>
-        public DiscriminatorKeyword() : base() { }
-
-        /// <summary>
-        /// Initializes a copy of an <see cref="OpenApiDiscriminator"/> instance
-        /// </summary>
-        internal DiscriminatorKeyword(OpenApiDiscriminator discriminator) : base(discriminator) { }
-
-        /// <summary>
-        /// Implementation of IJsonSchemaKeyword interface
-        /// </summary>
-        /// <param name="context"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Evaluate(EvaluationContext context)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }

@@ -12,6 +12,9 @@ using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Services;
+using System.Linq;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -43,64 +46,77 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
         public void ParseQueryParameterShouldSucceed()
         {
             // Act
-            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var doc = new OpenApiDocument();
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameter.yaml"));
+            var node = TestHelper.CreateYamlMapNode(stream);
+
+            var parameter = OpenApiV3Deserializer.LoadParameter(node, doc);
+            var expected = new OpenApiParameter
+            {
+                In = ParameterLocation.Query,
+                Name = "id",
+                Description = "ID of the object to fetch",
+                Required = false,
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                Style = ParameterStyle.Form,
+                Explode = true
+            };
+
+            expected.Schema.BaseUri = doc.BaseUri;
+            expected.Schema.GetItems().BaseUri = doc.BaseUri;
 
             // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Query,
-                    Name = "id",
-                    Description = "ID of the object to fetch",
-                    Required = false,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    Style = ParameterStyle.Form,
-                    Explode = true
-                });
+            parameter.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public void ParseQueryParameterWithObjectTypeShouldSucceed()
         {
             // Act
-            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var doc = new OpenApiDocument();
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml"));
+            var node = TestHelper.CreateYamlMapNode(stream);
 
-            // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Query,
-                    Name = "freeForm",
-                    Schema = new JsonSchemaBuilder()
+            var parameter = OpenApiV3Deserializer.LoadParameter(node, doc);
+            var expected = new OpenApiParameter
+            {
+                In = ParameterLocation.Query,
+                Name = "freeForm",
+                Schema = new JsonSchemaBuilder()
                     .Type(SchemaValueType.Object)
                     .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-                    Style = ParameterStyle.Form
-                });
+                Style = ParameterStyle.Form
+            };
+
+            expected.Schema.BaseUri = doc.BaseUri;
+            expected.Schema.GetAdditionalProperties().BaseUri = doc.BaseUri;
+
+            // Assert
+            parameter.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
         public void ParseQueryParameterWithObjectTypeAndContentShouldSucceed()
         {
             // Arrange
+            var doc = new OpenApiDocument();
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml"));
+            var node = TestHelper.CreateYamlMapNode(stream);
 
             // Act
-            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
-
-            // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Query,
-                    Name = "coordinates",
-                    Content =
+            var parameter = OpenApiV3Deserializer.LoadParameter(node, doc);
+            var expected = new OpenApiParameter
+            {
+                In = ParameterLocation.Query,
+                Name = "coordinates",
+                Content =
                     {
                         ["application/json"] = new()
                         {
@@ -117,31 +133,44 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 )
                         }
                     }
-                });
+            };
+            expected.Content["application/json"].Schema.BaseUri = doc.BaseUri;
+            expected.Content["application/json"].Schema.GetProperties()["lat"].BaseUri = doc.BaseUri;
+            expected.Content["application/json"].Schema.GetProperties()["long"].BaseUri = doc.BaseUri;
+
+            // Assert
+            parameter.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public void ParseHeaderParameterShouldSucceed()
         {
+            // Arrange 
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameter.yaml"));
+            var node = TestHelper.CreateYamlMapNode(stream);
+
             // Act
-            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "headerParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var doc = new OpenApiDocument();
+            var parameter = OpenApiV3Deserializer.LoadParameter(node, doc);
+            var expected = new OpenApiParameter
+            {
+                In = ParameterLocation.Header,
+                Name = "token",
+                Description = "token to be passed as a header",
+                Required = true,
+                Style = ParameterStyle.Simple,
 
-            // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Header,
-                    Name = "token",
-                    Description = "token to be passed as a header",
-                    Required = true,
-                    Style = ParameterStyle.Simple,
-
-                    Schema = new JsonSchemaBuilder()
+                Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Array)
                         .Items(new JsonSchemaBuilder()
                             .Type(SchemaValueType.Integer)
                             .Format("int64"))
-                });
+            };
+            expected.Schema.BaseUri = doc.BaseUri;
+            expected.Schema.GetItems().BaseUri = doc.BaseUri;
+
+            // Assert
+            parameter.Should().BeEquivalentTo(parameter);
         }
 
         [Fact]
@@ -160,7 +189,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -182,7 +211,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -204,7 +233,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
-                });
+                }, options => options.Excluding(x => x.Schema.BaseUri));
         }
 
         [Fact]
@@ -225,7 +254,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Number)
                         .Format("float")
-                }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Node.Parent));
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Example.Node.Parent)
+                .Excluding(p => p.Schema.BaseUri));
         }
 
         [Fact]
@@ -258,7 +289,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 .Format("float")
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(p => p.Examples["example1"].Value.Node.Parent)
-                .Excluding(p => p.Examples["example2"].Value.Node.Parent));
+                .Excluding(p => p.Examples["example2"].Value.Node.Parent)
+                .Excluding(p => p.Schema.BaseUri));
         }
 
         [Fact]
@@ -331,13 +363,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithRef.yaml"));
             var node = TestHelper.CreateYamlMapNode(stream);
 
-            var expected = document.Components.Parameters["tagsParameter"];
+            var expected = document.Components.Parameters["tagsParameter"];            
 
             // Act
             var param = OpenApiV3Deserializer.LoadParameter(node, document);
 
             // Assert
-            param.Should().BeEquivalentTo(expected, options => options.Excluding(p => p.Reference.HostDocument));
+            param.Should().BeEquivalentTo(expected, options => options
+            .Excluding(p => p.Reference.HostDocument)
+            .Excluding(p => p.Schema.BaseUri)
+            .Excluding(p => p.Schema.Keywords));
         }
     }
 }

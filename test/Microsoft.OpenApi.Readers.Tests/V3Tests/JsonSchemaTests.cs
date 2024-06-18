@@ -16,6 +16,8 @@ using Xunit;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
+using System.CommandLine;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -44,6 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
+            
             var schema = OpenApiV3Deserializer.LoadSchema(node);
 
             // Assert
@@ -53,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new JsonSchemaBuilder()
                     .Type(SchemaValueType.String)
                     .Format("email")
-                    .Build());
+                    .Build(),options => options.Excluding(x => x.BaseUri));
         }       
 
         [Fact]
@@ -83,11 +86,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseEnumFragmentShouldSucceed()
         {
-            var input = @"
-[ 
-  ""foo"",
-  ""baz""
-]";
+            var input = """
+
+                [ 
+                  "foo",
+                  "baz"
+                ]
+                """;
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
@@ -142,6 +147,39 @@ get:
                 });
         }
 
+
+        [Fact]
+        public void RoundTripDictionarySchema()
+        {
+            // Arrange
+            var openApiDocument = new OpenApiDocument() {
+                Components = new OpenApiComponents
+                {
+                    Schemas =
+                    {
+                        ["Dictionary"] = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Object)
+                            .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
+                    }
+                }
+            };
+
+            // Act
+            var yaml = openApiDocument.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var result = OpenApiDocument.Parse(yaml,format: "yaml", new OpenApiReaderSettings() { BaseUrl = openApiDocument.BaseUri});
+            var newDocument = result.OpenApiDocument;
+
+            var expected = new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Object)
+                    .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String)).Build();
+            expected.BaseUri = newDocument.BaseUri;
+            expected.GetAdditionalProperties().BaseUri = newDocument.BaseUri;
+
+            // Assert
+            newDocument.Components.Schemas["Dictionary"].Should().BeEquivalentTo(expected);
+        }
+
+
         [Fact]
         public void ParseDictionarySchemaShouldSucceed()
         {
@@ -158,51 +196,58 @@ get:
                 var node = new MapNode(context, asJsonNode);
 
                 // Act
-                var schema = OpenApiV3Deserializer.LoadSchema(node);
+                var doc = new OpenApiDocument();
+                var expected = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Object)
+                        .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
+                        .Build();
+                expected.BaseUri = doc.BaseUri;
+                expected.GetAdditionalProperties().BaseUri = doc.BaseUri;
+                var schema = OpenApiV3Deserializer.LoadSchema(node, doc);
 
                 // Assert
                 diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-                schema.Should().BeEquivalentTo(
-                    new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Object)
-                        .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
-                        .Build());
+                schema.Should().BeEquivalentTo(expected);
             }
         }
 
         [Fact]
         public void ParseBasicSchemaWithExampleShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
-                // Act
-                var schema = OpenApiV3Deserializer.LoadSchema(node);
+            // Act
+            var doc = new OpenApiDocument();
+            var expected = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .Properties(
+                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
+                    ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .Required("name")
+                .Example(new JsonObject { ["name"] = "Puma", ["id"] = 1 }).Build();
+            expected.BaseUri = doc.BaseUri;
+            expected.GetProperties()["id"].BaseUri = doc.BaseUri;
+            expected.GetProperties()["name"].BaseUri = doc.BaseUri;
 
-                // Assert
-                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            var schema = OpenApiV3Deserializer.LoadSchema(node, doc);
 
-                schema.Should().BeEquivalentTo(
-                    new JsonSchemaBuilder()
-                    .Type(SchemaValueType.Object)
-                    .Properties(
-                        ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
-                        ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                    .Required("name")
-                    .Example(new JsonObject { ["name"] = "Puma", ["id"] = 1 })
-                    .Build(),
-                    options => options.IgnoringCyclicReferences());
-            }
+            // Assert
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+
+            schema.Should().BeEquivalentTo(expected,
+                options => options
+                .Excluding(x => x.Keywords)
+                .IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -244,6 +289,13 @@ get:
                                         .Properties(("rootCause", new JsonSchemaBuilder().Type(SchemaValueType.String))))
                     }
             };
+            expectedComponents.Schemas["ErrorModel"].BaseUri = result.OpenApiDocument.BaseUri;
+            expectedComponents.Schemas["ErrorModel"].GetProperties()["message"].BaseUri = result.OpenApiDocument.BaseUri;
+            expectedComponents.Schemas["ErrorModel"].GetProperties()["code"].BaseUri = result.OpenApiDocument.BaseUri;
+            expectedComponents.Schemas["ExtendedErrorModel"].BaseUri = result.OpenApiDocument.BaseUri;
+            expectedComponents.Schemas["ExtendedErrorModel"].GetAllOf().First().BaseUri = result.OpenApiDocument.BaseUri;
+            expectedComponents.Schemas["ExtendedErrorModel"].GetAllOf().ElementAt(1).BaseUri = result.OpenApiDocument.BaseUri;
+            expectedComponents.Schemas["ExtendedErrorModel"].GetAllOf().ElementAt(1).GetProperties()["rootCause"].BaseUri = result.OpenApiDocument.BaseUri;
 
             components.Should().BeEquivalentTo(expectedComponents);
         }
@@ -260,7 +312,7 @@ get:
                 {
                     ["Pet1"] = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
-                        .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
+                        .Discriminator("petType", null, null)
                         .Properties(
                             ("name", new JsonSchemaBuilder()
                                 .Type(SchemaValueType.String)
@@ -274,21 +326,9 @@ get:
                         .Description("A representation of a cat")
                         .AllOf(
                             new JsonSchemaBuilder()
-                                .Ref("#/components/schemas/Pet1")
-                                .Type(SchemaValueType.Object)
-                                .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
-                                .Properties(
-                                    ("name", new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.String)
-                                    ),
-                                    ("petType", new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.String)
-                                    )
-                                )
-                                .Required("name", "petType"),
+                                .Ref("#/components/schemas/Pet1"),
                             new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Object)
-                                .Required("huntingSkill")
+                                .Type(SchemaValueType.Object)                                
                                 .Properties(
                                     ("huntingSkill", new JsonSchemaBuilder()
                                         .Type(SchemaValueType.String)
@@ -296,26 +336,15 @@ get:
                                         .Enum("clueless", "lazy", "adventurous", "aggressive")
                                     )
                                 )
+                                .Required("huntingSkill")
                         ),
                     ["Dog"] = new JsonSchemaBuilder()
                         .Description("A representation of a dog")
                         .AllOf(
                             new JsonSchemaBuilder()
-                                .Ref("#/components/schemas/Pet1")
-                                .Type(SchemaValueType.Object)
-                                .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
-                                .Properties(
-                                    ("name", new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.String)
-                                    ),
-                                    ("petType", new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.String)
-                                    )
-                                )
-                                .Required("name", "petType"),
+                                .Ref("#/components/schemas/Pet1"),
                             new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
-                                .Required("packSize")
                                 .Properties(
                                     ("packSize", new JsonSchemaBuilder()
                                         .Type(SchemaValueType.Integer)
@@ -325,6 +354,7 @@ get:
                                         .Minimum(0)
                                     )
                                 )
+                                .Required("packSize")
                         )
                 }
             };

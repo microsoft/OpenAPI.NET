@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             foreach (var property in mapNode)
             {
-                property.ParseField(response, _responseFixedFields, _responsePatternFields);
+                property.ParseField(response, _responseFixedFields, _responsePatternFields, hostDocument);
             }
 
             foreach (var mediaType in response.Content.Values)

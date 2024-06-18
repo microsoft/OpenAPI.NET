@@ -35,6 +35,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(m => m.Example.Node.Parent)
+                .Excluding(m => m.Schema.BaseUri)
                 );
         }
 
@@ -62,7 +63,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(m => m.Examples["example1"].Value.Node.Parent)
-                .Excluding(m => m.Examples["example2"].Value.Node.Parent));
+                .Excluding(m => m.Examples["example2"].Value.Node.Parent)
+                .Excluding(m => m.Schema.BaseUri));
         }
     }
 }

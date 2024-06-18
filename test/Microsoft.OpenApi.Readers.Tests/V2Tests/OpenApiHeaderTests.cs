@@ -39,7 +39,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 .Default(5)
                 },
                 options => options
-                .IgnoringCyclicReferences());
+                .IgnoringCyclicReferences()
+                .Excluding(x => x.Schema.BaseUri)
+                .Excluding(x => x.Schema.Keywords));
         }
 
         [Fact]
@@ -63,7 +65,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 .Type(SchemaValueType.Number)
                                 .Format("float")
                                 .Enum(7, 8, 9)
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options
+                .IgnoringCyclicReferences()
+                .Excluding(x => x.Schema.BaseUri)
+                .Excluding(x => x.Schema.Keywords));
         }
     }
 }

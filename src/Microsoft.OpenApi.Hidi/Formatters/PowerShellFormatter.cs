@@ -350,7 +350,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             }
             if (schema.GetDiscriminator() == null && newSchema.GetDiscriminator() is { } discriminator)
             {
-                schemaBuilder.Discriminator(discriminator.PropertyName, discriminator.Mapping, discriminator.Extensions);
+                schemaBuilder.Discriminator(discriminator.PropertyName,discriminator.Mapping, discriminator.Extensions);
             }
             if (schema.GetOpenApiExternalDocs() == null && newSchema.GetOpenApiExternalDocs() is { } externalDocs)
             {

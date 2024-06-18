@@ -173,16 +173,7 @@ namespace Microsoft.OpenApi.Models
                 Schemas,
                 (w, key, s) =>
                 {
-                    var reference = s.GetRef();
-                    if (reference != null &&
-                        reference.OriginalString.Split('/').Last().Equals(key))
-                    {
-                        w.WriteJsonSchemaWithoutReference(w, s, version);
-                    }
-                    else
-                    {
-                        w.WriteJsonSchema(s, version);
-                    }
+                    w.WriteJsonSchema(s, version);
                 });
 
             // responses

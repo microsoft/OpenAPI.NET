@@ -4,10 +4,6 @@
         "title": "Two responses",
         "version": "1.0.0"
     },
-    "schemes": [
-        "https"
-    ],
-    "basePath": "/",
     "paths": {
         "/items": {
             "get": {

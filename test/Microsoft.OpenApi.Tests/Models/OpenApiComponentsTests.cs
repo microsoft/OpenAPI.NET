@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -140,7 +140,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 .Type(SchemaValueType.Object)
                 .Properties(
                     ("property1", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                .Ref("#/components/schemas/schema1")
                 .Build(),
 
                 ["schema2"] = new JsonSchemaBuilder()
@@ -252,8 +251,8 @@ namespace Microsoft.OpenApi.Tests.Models
                           "type": "integer"
                         },
                         "property3": {
-                          "maxLength": 15,
-                          "type": "string"
+                          "type": "string",
+                          "maxLength": 15
                         }
                       }
                     }
@@ -360,8 +359,8 @@ namespace Microsoft.OpenApi.Tests.Models
                       property2:
                         type: integer
                       property3:
-                        maxLength: 15
                         type: string
+                        maxLength: 15
                 securitySchemes:
                   securityScheme1:
                     type: oauth2

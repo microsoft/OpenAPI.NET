@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -168,12 +169,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
+            var doc = new OpenApiDocument();
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, doc);
+            var actual = pathItem.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var expected = _basicPathItemWithFormData.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            pathItem.Should().BeEquivalentTo(_basicPathItemWithFormData);
+            actual.Should().BeEquivalentTo(expected);
         }
 
         [Fact]

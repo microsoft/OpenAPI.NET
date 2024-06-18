@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Json.Schema;
@@ -56,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                             }
                     }
-                });
+                }, options => options.Excluding(x => x.Headers["X-Rate-Limit-Limit"].Schema.BaseUri));
         }
     }
 }

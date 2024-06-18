@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Reader.V31
             var header = new OpenApiHeader();
             foreach (var property in mapNode)
             {
-                property.ParseField(header, _headerFixedFields, _headerPatternFields);
+                property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
             }
 
             return header;

@@ -1,10 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using Json.Schema;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -81,14 +78,6 @@ namespace Microsoft.OpenApi.Writers
         void WriteJsonSchema(JsonSchema schema, OpenApiSpecVersion version);
 
         /// <summary>
-        /// Write the JsonSchema object
-        /// </summary>
-        /// <param name="writer">The IOpenApiWriter object</param>
-        /// <param name="schema">The JsonSchema object</param>
-        /// <param name="version"></param>
-        void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema, OpenApiSpecVersion version);
-
-        /// <summary>
         /// Flush the writer.
         /// </summary>
         void Flush();
@@ -99,6 +88,6 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer"></param>
         /// <param name="reference"></param>
         /// <param name="version"></param>
-        void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference, OpenApiSpecVersion version);
+        void WriteJsonSchemaReference(IOpenApiWriter writer, string reference, OpenApiSpecVersion version);
     }
 }

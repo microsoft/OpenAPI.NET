@@ -71,7 +71,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             // Assert
             expectedOp.Should().BeEquivalentTo(operation, 
                 options => options.Excluding(x => x.Tags[0].Reference.HostDocument)
-                .Excluding(x => x.Tags[0].Extensions));
+                .Excluding(x => x.Tags[0].Extensions)
+                .Excluding(x => x.Parameters[0].Schema.BaseUri)
+                .Excluding(x => x.Parameters[1].Schema.BaseUri));
         }
     }
 }

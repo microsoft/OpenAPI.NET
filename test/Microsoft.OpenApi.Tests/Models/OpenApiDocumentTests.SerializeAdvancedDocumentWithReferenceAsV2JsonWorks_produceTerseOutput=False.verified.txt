@@ -194,11 +194,11 @@
   },
   "definitions": {
     "pet": {
+      "type": "object",
       "required": [
         "id",
         "name"
       ],
-      "type": "object",
       "properties": {
         "id": {
           "type": "integer",
@@ -213,10 +213,10 @@
       }
     },
     "newPet": {
+      "type": "object",
       "required": [
         "name"
       ],
-      "type": "object",
       "properties": {
         "id": {
           "type": "integer",
@@ -231,11 +231,11 @@
       }
     },
     "errorModel": {
+      "type": "object",
       "required": [
         "code",
         "message"
       ],
-      "type": "object",
       "properties": {
         "code": {
           "type": "integer",

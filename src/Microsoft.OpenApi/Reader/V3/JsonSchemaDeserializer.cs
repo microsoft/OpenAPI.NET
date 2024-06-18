@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -172,7 +172,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     if (n is ValueNode)
                     {
-                        o.AdditionalPropertiesAllowed(bool.Parse(n.GetScalarValue()));
+                        o.AdditionalProperties(bool.Parse(n.GetScalarValue()));
                     }
                     else
                     {
@@ -267,6 +267,8 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static JsonSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
+            Json.Schema.OpenApi.Vocabularies.Register();
+            SchemaKeywordRegistry.Register<ExtensionsKeyword>();
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
             var builder = new JsonSchemaBuilder();
 

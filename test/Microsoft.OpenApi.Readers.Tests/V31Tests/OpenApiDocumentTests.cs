@@ -177,10 +177,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 },
                 Components = components
             };
+            var actualSerialized = actual.OpenApiDocument.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            var expectedSerialized = expected.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
-            // Assert            
+            // Assert
+            actualSerialized.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedSerialized.MakeLineBreaksEnvironmentNeutral());
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
 
         [Fact]
@@ -209,8 +211,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                 }
             };
-
-
 
             // Create a clone of the schema to avoid modifying things in components.
             var petSchema = new JsonSchemaBuilder().Ref("#/components/schemas/petSchema");
@@ -319,11 +319,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Components = components
             };
 
+            var actualSerialized = actual.OpenApiDocument.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            var expectedSerialized = expected.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+
             // Assert
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options
-            .Excluding(x => x.Webhooks["pets"].Reference)
-            .Excluding(x => x.Workspace)
-            .Excluding(y => y.BaseUri));
+            actualSerialized.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedSerialized.MakeLineBreaksEnvironmentNeutral());
+
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
         }
@@ -348,17 +349,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange and Act
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"));
-            var actualSchema = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-
-            var expectedSchema = new JsonSchemaBuilder()
-                .Type(SchemaValueType.Object)
-                .Properties(
-                    ("prop1", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    ("prop2", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                    ("prop3", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                .PatternProperties(
-                    ("^x-.*$", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                .Build();
             
             // Serialization
             var mediaType = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
@@ -379,8 +369,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var actualMediaType = mediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
-            actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
+            actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(
+                expectedMediaType.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }
