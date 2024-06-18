@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             foreach (var property in mapNode)
             {
-                var scheme = LoadSecuritySchemeByReference(mapNode.Context, property.Name);
+                var scheme = LoadSecuritySchemeByReference(mapNode.Context, property.Name, hostDocument);
 
                 var scopes = property.Value.CreateSimpleList((value, p) => value.GetScalarValue());
 
@@ -41,9 +41,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
             ParsingContext context,
-            string schemeName)
+            string schemeName, OpenApiDocument hostDocument = null)
         {
-            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, hostDocument: null);
+            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, hostDocument);
             return securitySchemeObject;
         }
     }
