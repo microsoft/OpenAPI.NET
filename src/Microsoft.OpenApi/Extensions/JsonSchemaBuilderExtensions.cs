@@ -75,6 +75,18 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
+        /// ExternalDocs object.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="externalDocs"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder OpenApiExternalDocs(this JsonSchemaBuilder builder, OpenApiExternalDocs externalDocs)
+        {
+            builder.Add(new ExternalDocsKeyword(externalDocs));
+            return builder;
+        }
+
+        /// <summary>
         /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate
         /// between other schemas which may satisfy the payload description.
         /// </summary>
@@ -251,6 +263,45 @@ namespace Microsoft.OpenApi.Extensions
         public void Evaluate(EvaluationContext context)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaConstraint"></param>
+        /// <param name="localConstraints"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// The nullable keyword
+    /// </summary>
+    [SchemaKeyword(Name)]
+    public class ExternalDocsKeyword : IJsonSchemaKeyword
+    {
+        /// <summary>
+        /// The schema keyword name
+        /// </summary>
+        public const string Name = "externalDocs";
+
+        /// <summary>
+        /// The ID.
+        /// </summary>
+        public OpenApiExternalDocs Value { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="ExternalDocsKeyword"/>.
+        /// </summary>
+        /// <param name="value">Whether the `minimum` value should be considered exclusive.</param>
+        public ExternalDocsKeyword(OpenApiExternalDocs value)
+        {
+            Value = value;
         }
 
         /// <summary>

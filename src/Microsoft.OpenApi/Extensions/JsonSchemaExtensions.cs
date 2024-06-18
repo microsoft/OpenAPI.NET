@@ -2,6 +2,7 @@
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Extensions
 {
@@ -18,15 +19,15 @@ namespace Microsoft.OpenApi.Extensions
             return schema.TryGetKeyword<DiscriminatorKeyword>("discriminator", out var k) ? k! : null;
         }
 
-        ///// <summary>
-        ///// Gets the 'externalDocs' keyword if it exists.
-        ///// </summary>
-        ///// <param name="schema"></param>
-        ///// <returns></returns>
-        //public static OpenApiExternalDocs GetOpenApiExternalDocs(this JsonSchema schema)
-        //{
-        //    return schema.TryGetKeyword<ExternalDocsKeyword>(ExternalDocsKeyword.Name, out var k) ? k.Value! : null;
-        //}
+        /// <summary>
+        /// Gets the 'externalDocs' keyword if it exists.
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public static OpenApiExternalDocs GetOpenApiExternalDocs(this JsonSchema schema)
+        {
+            return schema.TryGetKeyword<ExternalDocsKeyword>(ExternalDocsKeyword.Name, out var k) ? k.Value! : null;
+        }
 
         /// <summary>
         /// Gets the nullable value if it exists

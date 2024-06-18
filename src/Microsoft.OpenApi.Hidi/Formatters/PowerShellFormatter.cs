@@ -352,10 +352,10 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             {
                 schemaBuilder.Discriminator(discriminator.PropertyName,discriminator.Mapping, discriminator.Extensions);
             }
-            //if (schema.GetExternalDocs() == null && newSchema.GetExternalDocs() is { } externalDocs)
-            //{
-            //    schemaBuilder.ExternalDocs(new Uri(externalDocs), externalDocs.Description);
-            //}
+            if (schema.GetOpenApiExternalDocs() == null && newSchema.GetOpenApiExternalDocs() is { } externalDocs)
+            {
+                schemaBuilder.OpenApiExternalDocs(externalDocs);
+            }
             if (schema.GetEnum() == null && newSchema.GetEnum() is { } enumCollection)
             {
                 schemaBuilder.Enum(enumCollection);
