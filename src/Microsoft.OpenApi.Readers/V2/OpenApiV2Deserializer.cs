@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -113,11 +113,11 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
-            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
+            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser) && parser(
+                   OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()),
+                   OpenApiSpecVersion.OpenApi2_0) is { } result)
             {
-                return parser(
-                    OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()),
-                    OpenApiSpecVersion.OpenApi2_0);
+                return result;
             }
             else
             {

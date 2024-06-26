@@ -78,7 +78,7 @@ public class OpenApiDeprecationExtension : IOpenApiExtension
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
     public static OpenApiDeprecationExtension Parse(IOpenApiAny source)
     {
-        if (source is not OpenApiObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
+        if (source is not OpenApiObject rawObject) return null;
         var extension = new OpenApiDeprecationExtension();
         if (rawObject.TryGetValue(nameof(RemovalDate).ToFirstCharacterLowerCase(), out var removalDate) && removalDate is OpenApiDateTime removalDateValue)
             extension.RemovalDate = removalDateValue.Value;
