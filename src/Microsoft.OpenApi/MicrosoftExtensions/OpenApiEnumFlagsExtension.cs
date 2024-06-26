@@ -45,7 +45,7 @@ public class OpenApiEnumFlagsExtension : IOpenApiExtension
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
     public static OpenApiEnumFlagsExtension Parse(IOpenApiAny source)
     {
-        if (source is not OpenApiObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
+        if (source is not OpenApiObject rawObject) return null;
         var extension = new OpenApiEnumFlagsExtension();
         if (rawObject.TryGetValue(nameof(IsFlags).ToFirstCharacterLowerCase(), out var flagsValue) && flagsValue is OpenApiBoolean isFlags)
         {

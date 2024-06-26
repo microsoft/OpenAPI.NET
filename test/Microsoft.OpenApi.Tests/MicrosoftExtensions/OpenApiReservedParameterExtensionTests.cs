@@ -17,6 +17,19 @@ public class OpenApiReservedParameterExtensionTests
         Assert.NotNull(value);
         Assert.True(value.IsReserved);
     }
+
+    [Fact]
+    public void DoesNotThrowExceptionIfValueIsNull()
+    {
+        var oaiValue = new OpenApiObject
+        {
+            ["foo"] = new OpenApiString("foo")
+        };
+
+        var value = OpenApiReservedParameterExtension.Parse(oaiValue);
+        Assert.Null(value);
+    }
+
     [Fact]
     public void Serializes()
     {
