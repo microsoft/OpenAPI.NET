@@ -57,19 +57,19 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var testSchema = openApiDocument.Components.Schemas["TestSchema"];
-            var averageAudioDegradationProperty = testSchema.Properties["averageAudioDegradation"];
-            var defaultPriceProperty = testSchema.Properties["defaultPrice"];
+            var testSchema = openApiDocument.Components?.Schemas?["TestSchema"];
+            var averageAudioDegradationProperty = testSchema?.Properties["averageAudioDegradation"];
+            var defaultPriceProperty = testSchema?.Properties["defaultPrice"];
 
             // Assert
-            Assert.Null(averageAudioDegradationProperty.AnyOf);
-            Assert.Equal("number", averageAudioDegradationProperty.Type);
-            Assert.Equal("float", averageAudioDegradationProperty.Format);
-            Assert.True(averageAudioDegradationProperty.Nullable);
-            Assert.Null(defaultPriceProperty.OneOf);
-            Assert.Equal("number", defaultPriceProperty.Type);
-            Assert.Equal("double", defaultPriceProperty.Format);
-            Assert.NotNull(testSchema.AdditionalProperties);
+            Assert.Null(averageAudioDegradationProperty?.AnyOf);
+            Assert.Equal("number", averageAudioDegradationProperty?.Type);
+            Assert.Equal("float", averageAudioDegradationProperty?.Format);
+            Assert.True(averageAudioDegradationProperty?.Nullable);
+            Assert.Null(defaultPriceProperty?.OneOf);
+            Assert.Equal("number", defaultPriceProperty?.Type);
+            Assert.Equal("double", defaultPriceProperty?.Format);
+            Assert.NotNull(testSchema?.AdditionalProperties);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var idsParameter = openApiDocument.Paths["/foo"].Operations[OperationType.Get].Parameters.Where(static p => p.Name == "ids").FirstOrDefault();
+            var idsParameter = openApiDocument.Paths?["/foo"].Operations[OperationType.Get].Parameters?.Where(static p => p.Name == "ids").FirstOrDefault();
 
             // Assert
             Assert.Null(idsParameter?.Content);
