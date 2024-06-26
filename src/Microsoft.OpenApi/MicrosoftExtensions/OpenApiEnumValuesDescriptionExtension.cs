@@ -64,7 +64,7 @@ public class OpenApiEnumValuesDescriptionExtension : IOpenApiExtension
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
     public static OpenApiEnumValuesDescriptionExtension Parse(IOpenApiAny source)
     {
-        if (source is not OpenApiObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
+        if (source is not OpenApiObject rawObject) return null;
         var extension = new OpenApiEnumValuesDescriptionExtension();
         if (rawObject.TryGetValue("values", out var values) && values is OpenApiArray valuesArray)
         {

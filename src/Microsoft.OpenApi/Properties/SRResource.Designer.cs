@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid Reference Type..
+        ///   Looks up a localized string similar to Invalid Reference Type &apos;{0}&apos;..
         /// </summary>
         internal static string InvalidReferenceType {
             get {
@@ -340,7 +340,7 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The path signature &apos;{0}&apos; MUST begin be unique..
+        ///   Looks up a localized string similar to The path signature &apos;{0}&apos; MUST be unique..
         /// </summary>
         internal static string Validation_PathSignatureMustBeUnique {
             get {
