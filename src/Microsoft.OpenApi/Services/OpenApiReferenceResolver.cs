@@ -259,6 +259,13 @@ namespace Microsoft.OpenApi.Services
             {
                 try
                 {
+                    var referencedObject = typeof(T).Name;
+                    var referenceType = reference?.Type.ToString();
+                    if (referenceType is not null && !referencedObject.Contains(referenceType))
+                    {
+                        throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceType, referenceType));
+                    }
+
                     return _currentDocument.ResolveReference(reference, false) as T;
                 }
                 catch (OpenApiException ex)

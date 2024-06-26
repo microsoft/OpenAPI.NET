@@ -9,8 +9,10 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
@@ -1354,6 +1356,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             // Assert
             var warnings = diagnostic.Warnings;
             Assert.False(warnings.Any());
+        }
+
+        [Fact]
+        public void ParseDocumetWithWrongReferenceTypeShouldReturnADiagnosticError()
+        {
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithWrongRef.json"));
+            _ = new OpenApiStreamReader().Read(stream, out var diagnostic);
+
+            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
+                new( new OpenApiException("Invalid Reference Type 'Schema'.")) });
         }
     }
 }
