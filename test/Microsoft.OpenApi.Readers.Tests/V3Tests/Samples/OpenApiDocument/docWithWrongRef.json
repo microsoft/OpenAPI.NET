@@ -1,0 +1,27 @@
+{
+    "openapi":"3.0.0",
+    "info":{
+        "title":"some api",
+        "description":"some description",
+        "version": "1"
+    },
+    "servers":[{"url":"https://localhost"}],
+    "paths":{
+        "/count":{
+            "get":{
+                "responses":{
+                    "200":{
+                        "$ref":"#/components/schemas/count"
+                    },
+                },
+            }
+        }
+    },
+    "components":{
+        "schemas":{
+            "count":{
+                "type": "number"
+            }
+        }
+    }
+}

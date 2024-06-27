@@ -171,11 +171,11 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
-            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
+            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser) && parser(
+                   OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()),
+                   OpenApiSpecVersion.OpenApi3_0) is { } result)
             {
-                return parser(
-                    OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()),
-                    OpenApiSpecVersion.OpenApi3_0);
+                return result;
             }
             else
             {

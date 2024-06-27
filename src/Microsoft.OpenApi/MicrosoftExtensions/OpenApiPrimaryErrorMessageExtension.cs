@@ -1,4 +1,4 @@
-// ------------------------------------------------------------
+﻿// ------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
@@ -39,7 +39,7 @@ public class OpenApiPrimaryErrorMessageExtension : IOpenApiExtension
     /// <returns>The <see cref="OpenApiPrimaryErrorMessageExtension"/>.</returns>
     public static OpenApiPrimaryErrorMessageExtension Parse(IOpenApiAny source)
     {
-        if (source is not OpenApiBoolean rawObject) throw new ArgumentOutOfRangeException(nameof(source));
+        if (source is not OpenApiBoolean rawObject) return null;
         return new()
         {
             IsPrimaryErrorMessage = rawObject.Value

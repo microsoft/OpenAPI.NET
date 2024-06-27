@@ -139,7 +139,7 @@
     <value>Invalid Reference identifier '{0}'.</value>
   </data>
   <data name="InvalidReferenceType" xml:space="preserve">
-    <value>Invalid Reference Type.</value>
+    <value>Invalid Reference Type '{0}'.</value>
   </data>
   <data name="LocalReferenceRequiresType" xml:space="preserve">
     <value>Local reference must have type specified.</value>
