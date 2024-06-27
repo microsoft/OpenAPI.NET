@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
+#nullable enable
+
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -24,30 +26,30 @@ namespace Microsoft.OpenApi.Models
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTag>? Tags { get; set; } = new List<OpenApiTag>();
 
         /// <summary>
         /// A short summary of what the operation does.
         /// </summary>
-        public string Summary { get; set; }
+        public string? Summary { get; set; }
 
         /// <summary>
         /// A verbose explanation of the operation behavior.
         /// CommonMark syntax MAY be used for rich text representation.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// Additional external documentation for this operation.
         /// </summary>
-        public OpenApiExternalDocs ExternalDocs { get; set; }
+        public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <summary>
         /// Unique string used to identify the operation. The id MUST be unique among all operations described in the API.
         /// Tools and libraries MAY use the operationId to uniquely identify an operation, therefore,
         /// it is RECOMMENDED to follow common programming naming conventions.
         /// </summary>
-        public string OperationId { get; set; }
+        public string? OperationId { get; set; }
 
         /// <summary>
         /// A list of parameters that are applicable for this operation.
@@ -55,7 +57,7 @@ namespace Microsoft.OpenApi.Models
         /// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
         /// The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
         /// </summary>
-        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        public IList<OpenApiParameter>? Parameters { get; set; } = new List<OpenApiParameter>();
 
         /// <summary>
         /// The request body applicable for this operation.
@@ -63,12 +65,12 @@ namespace Microsoft.OpenApi.Models
         /// has explicitly defined semantics for request bodies.
         /// In other cases where the HTTP spec is vague, requestBody SHALL be ignored by consumers.
         /// </summary>
-        public OpenApiRequestBody RequestBody { get; set; }
+        public OpenApiRequestBody? RequestBody { get; set; }
 
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
         /// </summary>
-        public OpenApiResponses Responses { get; set; } = new();
+        public OpenApiResponses? Responses { get; set; } = new();
 
         /// <summary>
         /// A map of possible out-of band callbacks related to the parent operation.
@@ -78,7 +80,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, OpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -92,19 +94,19 @@ namespace Microsoft.OpenApi.Models
         /// This definition overrides any declared top-level security.
         /// To remove a top-level security declaration, an empty array can be used.
         /// </summary>
-        public IList<OpenApiSecurityRequirement> Security { get; set; } = new List<OpenApiSecurityRequirement>();
+        public IList<OpenApiSecurityRequirement>? Security { get; set; } = new List<OpenApiSecurityRequirement>();
 
         /// <summary>
         /// An alternative server array to service this operation.
         /// If an alternative server object is specified at the Path Item Object or Root level,
         /// it will be overridden by this value.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiServer>? Servers { get; set; } = new List<OpenApiServer>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -114,9 +116,9 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiOperation"/> object
         /// </summary>
-        public OpenApiOperation(OpenApiOperation operation)
+        public OpenApiOperation(OpenApiOperation? operation)
         {
-            Tags = operation?.Tags != null ? new List<OpenApiTag>(operation?.Tags) : null;
+            Tags = operation?.Tags != null ? new List<OpenApiTag>(operation.Tags) : null;
             Summary = operation?.Summary ?? Summary;
             Description = operation?.Description ?? Description;
             ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;

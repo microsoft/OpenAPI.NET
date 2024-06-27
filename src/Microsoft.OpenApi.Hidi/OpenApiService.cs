@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Hidi
                 stopwatch.Start();
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
                 stopwatch.Stop();
-                logger.LogTrace("{Timestamp}ms: Creating filtered OpenApi document with {Paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+                logger.LogTrace("{Timestamp}ms: Creating filtered OpenApi document with {Paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths?.Count);
             }
 
             return document;
@@ -248,7 +248,7 @@ namespace Microsoft.OpenApi.Hidi
 
                     document = await ConvertCsdlToOpenApi(filteredStream ?? stream, format, metadataVersion, options.SettingsConfig, cancellationToken).ConfigureAwait(false);
                     stopwatch.Stop();
-                    logger.LogTrace("{Timestamp}ms: Generated OpenAPI with {Paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+                    logger.LogTrace("{Timestamp}ms: Generated OpenAPI with {Paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths?.Count);
                 }
             }
             else if (!string.IsNullOrEmpty(options.OpenApi))
@@ -659,7 +659,7 @@ namespace Microsoft.OpenApi.Hidi
         {
             var rootNode = OpenApiUrlTreeNode.Create(document, "main");
 
-            writer.WriteLine("# " + document.Info.Title);
+            writer.WriteLine("# " + document.Info?.Title);
             writer.WriteLine();
             writer.WriteLine("API Description: " + openapiUrl);
 
@@ -695,7 +695,7 @@ namespace Microsoft.OpenApi.Hidi
                 </style>
                 <body>
                 """);
-            writer.WriteLine("<h1>" + document.Info.Title + "</h1>");
+            writer.WriteLine("<h1>" + document.Info?.Title + "</h1>");
             writer.WriteLine();
             writer.WriteLine($"<h3> API Description: <a href='{sourceUrl}'>{sourceUrl}</a></h3>");
 
@@ -766,8 +766,8 @@ namespace Microsoft.OpenApi.Hidi
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
             var manifest = new OpenAIPluginManifest
             {
-                NameForHuman = document.Info.Title,
-                DescriptionForHuman = document.Info.Description,
+                NameForHuman = document.Info?.Title,
+                DescriptionForHuman = document.Info?.Description,
                 Api = new()
                 {
                     Type = "openapi",
