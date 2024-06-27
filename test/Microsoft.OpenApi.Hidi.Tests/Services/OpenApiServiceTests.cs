@@ -39,6 +39,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Assert
             Assert.NotNull(openApiDoc);
+            Assert.NotNull(openApiDoc.Paths);
             Assert.NotEmpty(openApiDoc.Paths);
             Assert.Equal(expectedPathCount, openApiDoc.Paths.Count);
         }
@@ -61,6 +62,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Assert
             Assert.NotNull(subsetOpenApiDocument);
+            Assert.NotNull(subsetOpenApiDocument.Paths);
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }

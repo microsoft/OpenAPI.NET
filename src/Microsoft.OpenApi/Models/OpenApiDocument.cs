@@ -12,6 +12,8 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 
+#nullable enable
+
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -22,48 +24,48 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
         /// </summary>
-        public OpenApiWorkspace Workspace { get; set; }
+        public OpenApiWorkspace? Workspace { get; set; }
 
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
         /// </summary>
-        public OpenApiInfo Info { get; set; }
+        public OpenApiInfo? Info { get; set; }
 
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiServer>? Servers { get; set; } = new List<OpenApiServer>();
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
-        public OpenApiPaths Paths { get; set; }
+        public OpenApiPaths? Paths { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
         /// </summary>
-        public OpenApiComponents Components { get; set; }
+        public OpenApiComponents? Components { get; set; }
 
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; } =
+        public IList<OpenApiSecurityRequirement>? SecurityRequirements { get; set; } =
             new List<OpenApiSecurityRequirement>();
 
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTag>? Tags { get; set; } = new List<OpenApiTag>();
 
         /// <summary>
         /// Additional external documentation.
         /// </summary>
-        public OpenApiExternalDocs ExternalDocs { get; set; }
+        public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// The unique hash code of the generated OpenAPI document
@@ -78,7 +80,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
         /// </summary>
-        public OpenApiDocument(OpenApiDocument document)
+        public OpenApiDocument(OpenApiDocument? document)
         {
             Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
             Info = document?.Info != null ? new(document?.Info) : null;
@@ -289,7 +291,7 @@ namespace Microsoft.OpenApi.Models
             return parsedUrl;
         }
 
-        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
+        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer>? servers)
         {
             if (servers == null || !servers.Any())
             {
@@ -373,7 +375,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal T ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
+        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
         {
             if (reference.IsExternal)
             {
@@ -388,7 +390,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        public IOpenApiReferenceable? ResolveReference(OpenApiReference reference)
         {
             return ResolveReference(reference, false);
         }
@@ -430,7 +432,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
+        internal IOpenApiReferenceable? ResolveReference(OpenApiReference? reference, bool useExternal)
         {
             if (reference == null)
             {
@@ -455,7 +457,7 @@ namespace Microsoft.OpenApi.Models
             // Special case for Tag
             if (reference.Type == ReferenceType.Tag)
             {
-                foreach (var tag in this.Tags)
+                foreach (var tag in this.Tags ?? Enumerable.Empty<OpenApiTag>())
                 {
                     if (tag.Name == reference.Id)
                     {
@@ -477,34 +479,34 @@ namespace Microsoft.OpenApi.Models
                 switch (reference.Type)
                 {
                     case ReferenceType.Schema:
-                        return this.Components.Schemas[reference.Id];
+                        return this.Components.Schemas?[reference.Id];
 
                     case ReferenceType.Response:
-                        return this.Components.Responses[reference.Id];
+                        return this.Components.Responses?[reference.Id];
 
                     case ReferenceType.Parameter:
-                        return this.Components.Parameters[reference.Id];
+                        return this.Components.Parameters?[reference.Id];
 
                     case ReferenceType.Example:
-                        return this.Components.Examples[reference.Id];
+                        return this.Components.Examples?[reference.Id];
 
                     case ReferenceType.RequestBody:
-                        return this.Components.RequestBodies[reference.Id];
+                        return this.Components.RequestBodies?[reference.Id];
 
                     case ReferenceType.Header:
-                        return this.Components.Headers[reference.Id];
+                        return this.Components.Headers?[reference.Id];
 
                     case ReferenceType.SecurityScheme:
-                        return this.Components.SecuritySchemes[reference.Id];
+                        return this.Components.SecuritySchemes?[reference.Id];
 
                     case ReferenceType.Link:
-                        return this.Components.Links[reference.Id];
+                        return this.Components.Links?[reference.Id];
 
                     case ReferenceType.Callback:
-                        return this.Components.Callbacks[reference.Id];
+                        return this.Components.Callbacks?[reference.Id];
 
                     case ReferenceType.Path:
-                        return this.Paths[reference.Id];
+                        return this.Paths?[reference.Id];
 
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
@@ -519,9 +521,9 @@ namespace Microsoft.OpenApi.Models
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, OpenApiSchema> Schemas;
+        private Dictionary<string, OpenApiSchema> Schemas = new Dictionary<string, OpenApiSchema>();
 
-        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, OpenApiSchema> schemas )
+        public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, OpenApiSchema> schemas )
         {
             var visitor = new FindSchemaReferences();
             visitor.Schemas = schemas;
