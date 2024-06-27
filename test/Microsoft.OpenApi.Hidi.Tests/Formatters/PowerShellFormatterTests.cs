@@ -59,9 +59,9 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var testSchema = openApiDocument.Components.Schemas["TestSchema"];
-            var averageAudioDegradationProperty = testSchema.GetProperties()?.GetValueOrDefault("averageAudioDegradation");
-            var defaultPriceProperty = testSchema.GetProperties()?.GetValueOrDefault("defaultPrice");
+            var testSchema = openApiDocument.Components.Schemas?["TestSchema"];
+            var averageAudioDegradationProperty = testSchema?.GetProperties()?.GetValueOrDefault("averageAudioDegradation");
+            var defaultPriceProperty = testSchema?.GetProperties()?.GetValueOrDefault("defaultPrice");
 
             // Assert
             Assert.Null(averageAudioDegradationProperty?.GetAnyOf());
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             Assert.Null(defaultPriceProperty?.GetOneOf());
             Assert.Equal(SchemaValueType.Number, defaultPriceProperty?.GetJsonType());
             Assert.Equal("double", defaultPriceProperty?.GetFormat()?.Key);
-            Assert.NotNull(testSchema.GetAdditionalProperties());
+            Assert.NotNull(testSchema?.GetAdditionalProperties());
         }
 
         [Fact]
