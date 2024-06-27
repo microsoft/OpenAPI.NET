@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var testSchema = openApiDocument.Components.Schemas?["TestSchema"];
+            var testSchema = openApiDocument.Components?.Schemas?["TestSchema"];
             var averageAudioDegradationProperty = testSchema?.GetProperties()?.GetValueOrDefault("averageAudioDegradation");
             var defaultPriceProperty = testSchema?.GetProperties()?.GetValueOrDefault("defaultPrice");
 
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var idsParameter = openApiDocument.Paths["/foo"].Operations[OperationType.Get].Parameters.Where(static p => p.Name == "ids").FirstOrDefault();
+            var idsParameter = openApiDocument.Paths?["/foo"].Operations[OperationType.Get].Parameters.Where(static p => p.Name == "ids").FirstOrDefault();
 
             // Assert
             Assert.Null(idsParameter?.Content);

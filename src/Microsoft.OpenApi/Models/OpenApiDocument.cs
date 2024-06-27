@@ -16,6 +16,8 @@ using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 
+#nullable enable
+
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -26,60 +28,60 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
         /// </summary>
-        public OpenApiWorkspace Workspace { get; set; }
+        public OpenApiWorkspace? Workspace { get; set; }
 
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
         /// </summary>
-        public OpenApiInfo Info { get; set; }
+        public OpenApiInfo? Info { get; set; }
 
         /// <summary>
         /// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
         /// </summary>
-        public string JsonSchemaDialect { get; set; }
+        public string? JsonSchemaDialect { get; set; }
 
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiServer>? Servers { get; set; } = new List<OpenApiServer>();
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
-        public OpenApiPaths Paths { get; set; }
+        public OpenApiPaths? Paths { get; set; }
 
         /// <summary>
         /// The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement.
         /// A map of requests initiated other than by an API call, for example by an out of band registration. 
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
-        public IDictionary<string, OpenApiPathItem> Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
+        public IDictionary<string, OpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
 
         /// <summary>
         /// An element to hold various schemas for the specification.
         /// </summary>
-        public OpenApiComponents Components { get; set; }
+        public OpenApiComponents? Components { get; set; }
 
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; } =
+        public IList<OpenApiSecurityRequirement>? SecurityRequirements { get; set; } =
             new List<OpenApiSecurityRequirement>();
 
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTag>? Tags { get; set; } = new List<OpenApiTag>();
 
         /// <summary>
         /// Additional external documentation.
         /// </summary>
-        public OpenApiExternalDocs ExternalDocs { get; set; }
+        public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// The unique hash code of the generated OpenAPI document
@@ -97,13 +99,13 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDocument() 
         {
             Workspace = new OpenApiWorkspace();
-            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid().ToString());            
+            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid().ToString());
         }
                 
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
         /// </summary>
-        public OpenApiDocument(OpenApiDocument document)
+        public OpenApiDocument(OpenApiDocument? document)
         {
             Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
             Info = document?.Info != null ? new(document?.Info) : null;
@@ -116,6 +118,7 @@ namespace Microsoft.OpenApi.Models
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
+            BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid().ToString());
         }
 
         /// <summary>
@@ -242,8 +245,10 @@ namespace Microsoft.OpenApi.Models
 
                 if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
                 {
-                    var openApiSchemas = schemas.Cast<JsonSchema>().Distinct()
-                        .ToDictionary(k => k.GetRef().ToString());
+                    var openApiSchemas = schemas.Cast<JsonSchema>()
+                        .Distinct()
+                        .Where(s => s.GetRef() != null)
+                        .ToDictionary(k => k.GetRef()!.ToString());
 
                     foreach (var schema in openApiSchemas.Values.ToList())
                     {
@@ -377,7 +382,7 @@ namespace Microsoft.OpenApi.Models
             return parsedUrl;
         }
 
-        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
+        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer>? servers)
         {
             if (servers == null || !servers.Any())
             {
@@ -457,7 +462,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal T ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
+        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
         {
             if (reference.IsExternal)
             {
@@ -472,7 +477,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        public IOpenApiReferenceable? ResolveReference(OpenApiReference reference)
         {
             return ResolveReference(reference, false);
         }
@@ -482,7 +487,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="referenceUri"></param>
         /// <returns>A JsonSchema ref.</returns>
-        public JsonSchema ResolveJsonSchemaReference(Uri referenceUri)
+        public JsonSchema? ResolveJsonSchemaReference(Uri referenceUri)
         {
             const char pound = '#';
             string uriLocation;
@@ -492,7 +497,7 @@ namespace Microsoft.OpenApi.Models
             {
                 // External reference, ex: ./TodoReference.yaml#/components/schemas/todo
                 string externalUri = referenceUri.OriginalString.Split(pound).First();
-                Uri externalDocId = Workspace.GetDocumentId(externalUri);
+                Uri? externalDocId = Workspace?.GetDocumentId(externalUri);
                 string relativePath = referenceUri.OriginalString.Split(pound).Last();
                 uriLocation = externalDocId + relativePath;                
             }
@@ -501,7 +506,7 @@ namespace Microsoft.OpenApi.Models
                 uriLocation = BaseUri + referenceUri.ToString().TrimStart(pound);
             }
 
-            return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(uriLocation);
+            return Workspace?.ResolveReference<IBaseDocument>(uriLocation) as JsonSchema;
         }
 
         /// <summary>
@@ -541,7 +546,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
+        internal IOpenApiReferenceable? ResolveReference(OpenApiReference? reference, bool useExternal)
         {
             if (reference == null)
             {
@@ -556,7 +561,7 @@ namespace Microsoft.OpenApi.Models
             // Special case for Tag
             if (reference.Type == ReferenceType.Tag)
             {
-                foreach (var tag in this.Tags)
+                foreach (var tag in this.Tags ?? Enumerable.Empty<OpenApiTag>())
                 {
                     if (tag.Name == reference.Id)
                     {
@@ -572,10 +577,10 @@ namespace Microsoft.OpenApi.Models
             string relativePath = OpenApiConstants.ComponentsSegment + reference.Type.GetDisplayName() + "/" + reference.Id;
 
             uriLocation = useExternal
-                ? Workspace.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
+                ? Workspace?.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
                 : BaseUri + relativePath;
 
-            return Workspace.ResolveReference<IOpenApiReferenceable>(uriLocation);
+            return Workspace?.ResolveReference<IOpenApiReferenceable>(uriLocation);
         }
                 
         /// <summary>
@@ -584,7 +589,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="url"> The path to the OpenAPI file.</param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static ReadResult Load(string url, OpenApiReaderSettings settings = null)
+        public static ReadResult Load(string url, OpenApiReaderSettings? settings = null)
         {
             return OpenApiModelFactory.Load(url, settings);
         }
@@ -598,7 +603,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns></returns>
         public static ReadResult Load(Stream stream,
                                       string format,
-                                      OpenApiReaderSettings settings = null)
+                                      OpenApiReaderSettings? settings = null)
         {
             return OpenApiModelFactory.Load(stream, format, settings);
         }
@@ -612,7 +617,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns></returns>
         public static ReadResult Load(TextReader input,
                                            string format,
-                                           OpenApiReaderSettings settings = null)
+                                           OpenApiReaderSettings? settings = null)
         {
             return OpenApiModelFactory.Load(input, format, settings);
         }
@@ -623,7 +628,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="url"> The path to the OpenAPI file.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
+        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null)
         {
             return await OpenApiModelFactory.LoadAsync(url, settings);
         }
@@ -636,7 +641,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates information about operation cancelling.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream stream, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
+        public static async Task<ReadResult> LoadAsync(Stream stream, string format, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
             return await OpenApiModelFactory.LoadAsync(stream, format, settings, cancellationToken);
         }
@@ -648,7 +653,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="format"> The OpenAPI format to use during parsing.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings settings = null)
+        public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings? settings = null)
         {
             return await OpenApiModelFactory.LoadAsync(input, format, settings);
         }
@@ -661,8 +666,8 @@ namespace Microsoft.OpenApi.Models
         /// <param name="settings"></param>
         /// <returns></returns>
         public static ReadResult Parse(string input,
-                                       string format = null,
-                                       OpenApiReaderSettings settings = null)
+                                       string? format = null,
+                                       OpenApiReaderSettings? settings = null)
         {
             return OpenApiModelFactory.Parse(input, format, settings);
         }
@@ -674,18 +679,18 @@ namespace Microsoft.OpenApi.Models
         /// <param name="options"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
+        public JsonSchema? FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
         {
             var locationUri = string.Concat(BaseUri, pointer);
-            return (JsonSchema)Workspace.ResolveReference<IBaseDocument>(locationUri);
+            return Workspace?.ResolveReference<IBaseDocument>(locationUri) as JsonSchema;
         }
     }
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, JsonSchema> Schemas;
+        private Dictionary<string, JsonSchema>? Schemas;
 
-        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, JsonSchema> schemas)
+        public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, JsonSchema> schemas)
         {
             var visitor = new FindSchemaReferences();
             visitor.Schemas = schemas;
