@@ -45,25 +45,6 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// Gets the enum display name for <see typeparamref="T"/> without the use of reflection. 
-        /// </summary>
-        /// <typeparam name="T">The type of the enum value.</typeparam>
-        /// <param name="enumValue">The enum value.</param>
-        /// <returns>The display string to use.</returns>
-        public static string GetDisplayName<T>(this T enumValue) where T : Enum
-        {
-            return enumValue switch
-            {
-                ParameterStyle parameterStyle => parameterStyle.GetDisplayName(),
-                ParameterLocation parameterLocation => parameterLocation.GetDisplayName(),
-                ReferenceType referenceType => referenceType.GetDisplayName(),
-                OperationType operationType => operationType.GetDisplayName(),
-                SecuritySchemeType securitySchemeType => securitySchemeType.GetDisplayName(),
-                _ => enumValue.ToString()
-            };
-        }
-
-        /// <summary>
         /// Gets the enum display for name <see cref="ParameterStyle" /> without the use of reflection.
         /// </summary>
         /// <param name="parameterStyle">The enum value.</param>
