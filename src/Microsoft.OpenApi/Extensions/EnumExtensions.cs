@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OpenApi.Attributes;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Extensions
 {
@@ -42,5 +43,107 @@ namespace Microsoft.OpenApi.Extensions
             var attribute = enumValue.GetAttributeOfType<DisplayAttribute>();
             return attribute == null ? enumValue.ToString() : attribute.Name;
         }
+
+        /// <summary>
+        /// Gets the enum display name for <see typeparamref="T"/> without the use of reflection. 
+        /// </summary>
+        /// <typeparam name="T">The type of the enum value.</typeparam>
+        /// <param name="enumValue">The enum value.</param>
+        /// <returns>The display string to use.</returns>
+        public static string GetDisplayName<T>(this T enumValue) where T : Enum
+        {
+            return enumValue switch
+            {
+                ParameterStyle parameterStyle => parameterStyle.GetDisplayName(),
+                ParameterLocation parameterLocation => parameterLocation.GetDisplayName(),
+                ReferenceType referenceType => referenceType.GetDisplayName(),
+                OperationType operationType => operationType.GetDisplayName(),
+                SecuritySchemeType securitySchemeType => securitySchemeType.GetDisplayName(),
+                _ => enumValue.ToString()
+            };
+        }
+
+        /// <summary>
+        /// Gets the enum display for name <see cref="ParameterStyle" /> without the use of reflection.
+        /// </summary>
+        /// <param name="parameterStyle">The enum value.</param>
+        /// <returns>The display string to use.</returns>
+        internal static string GetDisplayName(this ParameterStyle parameterStyle) => parameterStyle switch
+            {
+                ParameterStyle.Matrix => "matrix",
+                ParameterStyle.Label => "label",
+                ParameterStyle.Form => "form",
+                ParameterStyle.Simple => "simple",
+                ParameterStyle.SpaceDelimited => "spaceDelimited",
+                ParameterStyle.PipeDelimited => "pipeDelimited",
+                ParameterStyle.DeepObject => "deepObject",
+                _ => parameterStyle.ToString()
+            };
+
+        /// <summary>
+        /// Gets the enum display for name <see cref="ParameterLocation" /> without the use of reflection. 
+        /// </summary>
+        /// <param name="parameterLocation">The enum value.</param>
+        /// <returns>The display string to use.</returns>
+        internal static string GetDisplayName(this ParameterLocation parameterLocation) => parameterLocation switch
+            {
+                ParameterLocation.Query => "query",
+                ParameterLocation.Header => "header",
+                ParameterLocation.Path => "path",
+                ParameterLocation.Cookie => "cookie",
+                _ => parameterLocation.ToString()
+            };
+
+        /// <summary>
+        /// Gets the enum display for name <see cref="ReferenceType" /> without the use of reflection. 
+        /// </summary>
+        /// <param name="referenceType">The enum value.</param>
+        /// <returns>The display string to use.</returns>
+        internal static string GetDisplayName(this ReferenceType referenceType) => referenceType switch
+            {
+                ReferenceType.Schema => "schemas",
+                ReferenceType.Response => "responses",
+                ReferenceType.Parameter => "parameters",
+                ReferenceType.Example => "examples",
+                ReferenceType.RequestBody => "requestBodies",
+                ReferenceType.Header => "headers",
+                ReferenceType.SecurityScheme => "securitySchemes",
+                ReferenceType.Link => "links",
+                ReferenceType.Callback => "callbacks",
+                ReferenceType.Tag => "tags",
+                _ => referenceType.ToString()
+            };
+
+        /// <summary>
+        /// Gets the enum display for name <see cref="OperationType" /> without the use of reflection. 
+        /// </summary>
+        /// <param name="operationType">The enum value.</param>
+        /// <returns>The display string to use.</returns>
+        internal static string GetDisplayName(this OperationType operationType) => operationType switch
+            {
+                OperationType.Get => "get",
+                OperationType.Put => "put",
+                OperationType.Post => "post",
+                OperationType.Delete => "delete",
+                OperationType.Options => "options",
+                OperationType.Head => "head",
+                OperationType.Patch => "patch",
+                OperationType.Trace => "trace",
+                _ => operationType.ToString()
+            };
+
+        /// <summary>
+        /// Gets the enum display for name <see cref="SecuritySchemeType" /> without the use of reflection. 
+        /// </summary>
+        /// <param name="securitySchemeType">The enum value.</param>
+        /// <returns>The display string to use.</returns>
+        internal static string GetDisplayName(this SecuritySchemeType securitySchemeType) => securitySchemeType switch
+            {
+                SecuritySchemeType.ApiKey => "apiKey",
+                SecuritySchemeType.Http => "http",
+                SecuritySchemeType.OAuth2 => "oauth2",
+                SecuritySchemeType.OpenIdConnect => "openIdConnect",
+                _ => securitySchemeType.ToString()
+            };
     }
 }
