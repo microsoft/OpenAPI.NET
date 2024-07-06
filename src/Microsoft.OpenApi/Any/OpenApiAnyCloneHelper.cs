@@ -15,6 +15,29 @@ namespace Microsoft.OpenApi.Any
         /// </summary>
         /// <param name="obj">The object instance.</param>
         /// <returns>A clone copy or the object itself.</returns>
+        public static IOpenApiAny CloneFromCopyConstructor(IOpenApiAny obj)
+        {
+            if (obj != null)
+            {
+                var t = obj.GetType();
+                foreach (var ci in t.GetConstructors())
+                {
+                    var pi = ci.GetParameters();
+                    if (pi.Length == 1 && pi[0].ParameterType == t)
+                    {
+                        return (IOpenApiAny)ci.Invoke(new object[] { obj });
+                    }
+                }
+            }
+
+            return obj;
+        }
+        
+        /// <summary>
+        /// Clones an instance of <see cref="IOpenApiAny"/> object from the copy constructor
+        /// </summary>
+        /// <param name="obj">The object instance.</param>
+        /// <returns>A clone copy or the object itself.</returns>
         public static IOpenApiAny CloneFromCopyConstructor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T obj) where T : IOpenApiAny
         {
             if (obj != null)

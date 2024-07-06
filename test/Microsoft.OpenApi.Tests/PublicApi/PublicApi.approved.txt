@@ -22,6 +22,7 @@ namespace Microsoft.OpenApi.Any
     public class OpenApiAnyCloneHelper
     {
         public OpenApiAnyCloneHelper() { }
+        public static Microsoft.OpenApi.Any.IOpenApiAny CloneFromCopyConstructor(Microsoft.OpenApi.Any.IOpenApiAny obj) { }
         public static Microsoft.OpenApi.Any.IOpenApiAny CloneFromCopyConstructor<T>(T obj)
             where T : Microsoft.OpenApi.Any.IOpenApiAny { }
     }
