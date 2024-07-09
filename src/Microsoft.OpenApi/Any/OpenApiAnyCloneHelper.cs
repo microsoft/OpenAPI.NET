@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.OpenApi.Any
@@ -15,6 +16,7 @@ namespace Microsoft.OpenApi.Any
         /// </summary>
         /// <param name="obj">The object instance.</param>
         /// <returns>A clone copy or the object itself.</returns>
+        [Obsolete("Use native AoT-friendly generic overload of CloneFromCopyConstructor instead.")]
         public static IOpenApiAny CloneFromCopyConstructor(IOpenApiAny obj)
         {
             if (obj != null)

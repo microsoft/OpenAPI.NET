@@ -22,7 +22,9 @@ namespace Microsoft.OpenApi.Tests.Attributes
         [InlineData(ApiLevel.Corporate, "corporate")]
         public void GetDisplayNameExtensionShouldUseDisplayAttribute(ApiLevel apiLevel, string expected)
         {
-            Assert.Equal(expected, apiLevel.GetDisplayName());          
+#pragma warning disable CS0618 // Type or member is obsolete, testing obsolete behavior
+            Assert.Equal(expected, apiLevel.GetDisplayName());
+#pragma warning restore CS0618 // Type or member is obsolete, testing obsolete behavior
         }
     }
 }

@@ -38,6 +38,7 @@ namespace Microsoft.OpenApi.Extensions
         /// Use <see cref="DisplayAttribute"/> if exists.
         /// Otherwise, use the standard string representation.
         /// </returns>
+        [Obsolete("Use native AoT-friendly type-specific overloads GetDisplayName methods instead.")]
         public static string GetDisplayName(this Enum enumValue)
         {
             var attribute = enumValue.GetAttributeOfType<DisplayAttribute>();
@@ -58,7 +59,7 @@ namespace Microsoft.OpenApi.Extensions
                 ParameterStyle.SpaceDelimited => "spaceDelimited",
                 ParameterStyle.PipeDelimited => "pipeDelimited",
                 ParameterStyle.DeepObject => "deepObject",
-                _ => parameterStyle.ToString()
+                _ => throw new InvalidOperationException($"Unknown parameter style: {parameterStyle}")
             };
 
         /// <summary>
@@ -66,13 +67,13 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="parameterLocation">The enum value.</param>
         /// <returns>The display string to use.</returns>
-        internal static string GetDisplayName(this ParameterLocation parameterLocation) => parameterLocation switch
+        public static string GetDisplayName(this ParameterLocation parameterLocation) => parameterLocation switch
             {
                 ParameterLocation.Query => "query",
                 ParameterLocation.Header => "header",
                 ParameterLocation.Path => "path",
                 ParameterLocation.Cookie => "cookie",
-                _ => parameterLocation.ToString()
+                _ => throw new InvalidOperationException($"Unknown parameter location: {parameterLocation}")
             };
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace Microsoft.OpenApi.Extensions
                 ReferenceType.Link => "links",
                 ReferenceType.Callback => "callbacks",
                 ReferenceType.Tag => "tags",
-                _ => referenceType.ToString()
+                _ => throw new InvalidOperationException($"Unknown reference type: {referenceType}")
             };
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace Microsoft.OpenApi.Extensions
                 OperationType.Head => "head",
                 OperationType.Patch => "patch",
                 OperationType.Trace => "trace",
-                _ => operationType.ToString()
+                _ => throw new InvalidOperationException($"Unknown operation type: {operationType}")
             };
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Microsoft.OpenApi.Extensions
                 SecuritySchemeType.Http => "http",
                 SecuritySchemeType.OAuth2 => "oauth2",
                 SecuritySchemeType.OpenIdConnect => "openIdConnect",
-                _ => securitySchemeType.ToString()
+                _ => throw new InvalidOperationException($"Unknown security scheme type: {securitySchemeType}")
             };
     }
 }

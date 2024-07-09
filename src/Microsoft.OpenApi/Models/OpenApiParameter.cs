@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
             Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor<IOpenApiAny>(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
