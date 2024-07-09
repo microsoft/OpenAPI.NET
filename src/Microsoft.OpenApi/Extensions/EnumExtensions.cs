@@ -93,6 +93,7 @@ namespace Microsoft.OpenApi.Extensions
                 ReferenceType.Link => "links",
                 ReferenceType.Callback => "callbacks",
                 ReferenceType.Tag => "tags",
+                ReferenceType.Path => "path",
                 _ => throw new InvalidOperationException($"Unknown reference type: {referenceType}")
             };
 
