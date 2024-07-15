@@ -200,8 +200,11 @@ namespace Microsoft.OpenApi.Models
                 {
                     return ExternalResource + "#" + Id;
                 }
-
-                return ExternalResource + "#/components/" + Type.Value.GetDisplayName() + "/"+ Id;
+                
+                if (Type.HasValue)
+                {
+                    return ExternalResource + "#/components/" + Type.Value.GetDisplayName() + "/"+ Id; 
+                }
             }
 
             return ExternalResource;
