@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: Sample OpenApi
+  version: 1.0.0
+paths:
+  /api/editresource:
+    get:
+      operationId: api.ListEditresource
+    patch:
+      operationId: api.UpdateEditresource
+      responses:
+        '200':
+          description: OK
+  /api/viewresource:
+    get:
+      operationId: api.ListViewresource
+      responses:
+        '200':
+          description: OK
