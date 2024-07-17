@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Any
         /// </summary>
         /// <param name="obj">The object instance.</param>
         /// <returns>A clone copy or the object itself.</returns>
-        public static IOpenApiAny CloneFromCopyConstructor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T obj) where T : IOpenApiAny
+        public static T CloneFromCopyConstructor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T obj) where T : IOpenApiAny
         {
             if (obj != null)
             {
