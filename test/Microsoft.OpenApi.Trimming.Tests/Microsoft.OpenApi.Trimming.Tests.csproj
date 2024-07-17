@@ -15,4 +15,8 @@
     <TrimmerRootAssembly Include="Microsoft.OpenApi" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
+  </ItemGroup>
+
 </Project>
