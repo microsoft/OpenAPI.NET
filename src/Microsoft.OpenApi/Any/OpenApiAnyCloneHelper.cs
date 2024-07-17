@@ -17,6 +17,7 @@ namespace Microsoft.OpenApi.Any
         /// <param name="obj">The object instance.</param>
         /// <returns>A clone copy or the object itself.</returns>
         [Obsolete("Use native AoT-friendly generic overload of CloneFromCopyConstructor instead.")]
+        [RequiresUnreferencedCode("CloneFromCopyConstructor is not trim-compatible. Recommended to use native AoT-friendly type-specific overloads of CloneFromCopyConstructor instead.")]
         public static IOpenApiAny CloneFromCopyConstructor(IOpenApiAny obj)
         {
             if (obj != null)

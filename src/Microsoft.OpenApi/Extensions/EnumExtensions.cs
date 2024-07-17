@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OpenApi.Attributes;
@@ -22,6 +23,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns>
         /// The attribute of the specified type or null.
         /// </returns>
+        [RequiresUnreferencedCode("GetAttributeOfType is not trim-compatible. Recommended to use native AoT-friendly type-specific overloads of GetDisplayName instead.")]
         public static T GetAttributeOfType<T>(this Enum enumValue) where T : Attribute
         {
             var type = enumValue.GetType();
@@ -39,6 +41,7 @@ namespace Microsoft.OpenApi.Extensions
         /// Otherwise, use the standard string representation.
         /// </returns>
         [Obsolete("Use native AoT-friendly type-specific overloads GetDisplayName methods instead.")]
+        [RequiresUnreferencedCode("GetAttributeOfType is not trim-compatible. Recommended to use native AoT-friendly type-specific overloads of GetDisplayName instead.")]
         public static string GetDisplayName(this Enum enumValue)
         {
             var attribute = enumValue.GetAttributeOfType<DisplayAttribute>();
