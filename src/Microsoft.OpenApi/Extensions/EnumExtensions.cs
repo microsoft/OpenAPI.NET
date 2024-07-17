@@ -23,6 +23,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns>
         /// The attribute of the specified type or null.
         /// </returns>
+        [Obsolete("GetAttributeOfType<T> is deprecated and will be removed in a future release.")]
         [RequiresUnreferencedCode("GetAttributeOfType is not trim-compatible. Recommended to use native AoT-friendly type-specific overloads of GetDisplayName instead.")]
         public static T GetAttributeOfType<T>(this Enum enumValue) where T : Attribute
         {

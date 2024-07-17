@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Any
                     var pi = ci.GetParameters();
                     if (pi.Length == 1 && pi[0].ParameterType == typeof(T))
                     {
-                        return (IOpenApiAny)ci.Invoke([obj]);
+                        return (T)ci.Invoke([obj]);
                     }
                 }
             }

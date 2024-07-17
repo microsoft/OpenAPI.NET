@@ -185,12 +185,13 @@ namespace Microsoft.OpenApi.Validations
         private static ValidationRuleSet BuildDefaultRuleSet()
         {
             var ruleSet = new ValidationRuleSet();
+            var validationRuleType = typeof(ValidationRule);
             
             var ruleTypeProperties = GetValidationRuleTypes();
 
             foreach (var property in ruleTypeProperties)
             {
-                if (!typeof(ValidationRule).IsAssignableFrom(property.PropertyType))
+                if (!validationRuleType.IsAssignableFrom(property.PropertyType))
                 {
                     continue;
                 }
