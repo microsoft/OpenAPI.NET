@@ -65,6 +65,46 @@ namespace Microsoft.OpenApi.Hidi.Tests
             Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }
 
+        [Fact]
+        public void CreateFilteredDocumentOnMinimalOpenApi()
+        {
+            // Arrange
+
+            // We create a minimal OpenApiDocument with a single path and operation.
+            var openApiDoc = new OpenApiDocument
+            {
+                Info = new()
+                {
+                    Title = "Test",
+                    Version = "1.0.0"
+                },
+                Paths = new()
+                {
+                    ["/test"] = new OpenApiPathItem()
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation()
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var requestUrls = new Dictionary<string, List<string>>()
+            {
+                { "/test", ["GET"] }
+            };
+            var filterPredicate = OpenApiFilterService.CreatePredicate(null, null, requestUrls, openApiDoc);
+            var filteredDocument = OpenApiFilterService.CreateFilteredDocument(openApiDoc, filterPredicate);
+
+            // Assert
+            Assert.NotNull(filteredDocument);
+            Assert.NotNull(filteredDocument.Paths);
+            Assert.Single(filteredDocument.Paths);
+        }
+
+
         [Theory]
         [InlineData("UtilityFiles/appsettingstest.json")]
         [InlineData(null)]
