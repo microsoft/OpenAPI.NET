@@ -17,6 +17,7 @@ namespace Microsoft.OpenApi.Extensions
         /// Gets the enum value based on the given enum type and display name.
         /// </summary>
         /// <param name="displayName">The display name.</param>
+        [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Fields are never trimmed for enum types.")]
         public static T GetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string displayName)
         {
             var type = typeof(T);
@@ -25,14 +26,12 @@ namespace Microsoft.OpenApi.Extensions
                 return default;
             }
 
-            foreach (var value in Enum.GetValues(type))
+            foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
-                var field = type.GetField(value.ToString());
-
                 var displayAttribute = (DisplayAttribute)field.GetCustomAttribute(typeof(DisplayAttribute));
                 if (displayAttribute != null && displayAttribute.Name == displayName)
                 {
-                    return (T)value;
+                    return (T)field.GetValue(null);
                 }
             }
 

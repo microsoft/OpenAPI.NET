@@ -249,11 +249,8 @@ namespace Microsoft.OpenApi.Extensions
 {
     public static class EnumExtensions
     {
-        [System.Obsolete("GetAttributeOfType<T> is deprecated and will be removed in a future release.")]
         public static T GetAttributeOfType<T>(this System.Enum enumValue)
             where T : System.Attribute { }
-        public static string GetDisplayName(this Microsoft.OpenApi.Models.ParameterLocation parameterLocation) { }
-        [System.Obsolete("Use native AoT-friendly type-specific overloads GetDisplayName methods instead.")]
         public static string GetDisplayName(this System.Enum enumValue) { }
     }
     public static class OpenApiElementExtensions
