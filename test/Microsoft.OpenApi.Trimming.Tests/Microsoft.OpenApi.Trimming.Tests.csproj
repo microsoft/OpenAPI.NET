@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
     <TrimmerRootAssembly Include="Microsoft.OpenApi" />
+    <!-- TODO: Microsoft.OpenApi.Readers has not been configured for native AoT. -->
   </ItemGroup>
 
 </Project>
