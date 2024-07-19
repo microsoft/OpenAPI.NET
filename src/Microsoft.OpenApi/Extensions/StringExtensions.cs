@@ -17,7 +17,6 @@ namespace Microsoft.OpenApi.Extensions
         /// Gets the enum value based on the given enum type and display name.
         /// </summary>
         /// <param name="displayName">The display name.</param>
-        [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Fields are never trimmed for enum types.")]
         public static T GetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string displayName)
         {
             var type = typeof(T);
