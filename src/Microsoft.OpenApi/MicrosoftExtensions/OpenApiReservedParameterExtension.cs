@@ -42,7 +42,7 @@ public class OpenApiReservedParameterExtension : IOpenApiExtension
     /// <returns></returns>
     public static OpenApiReservedParameterExtension Parse(OpenApiAny source)
     {
-        if (source.Node is not JsonNode rawBoolean) throw new ArgumentOutOfRangeException(nameof(source));
+        if (source.Node is not JsonNode rawBoolean) return null;
         return new()
         {
             IsReserved = rawBoolean.GetValue<bool>()

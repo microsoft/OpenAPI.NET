@@ -74,7 +74,7 @@ public class OpenApiPagingExtension : IOpenApiExtension
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
     public static OpenApiPagingExtension Parse(OpenApiAny source)
     {
-        if (source.Node is not JsonObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
+        if (source.Node is not JsonObject rawObject) return null;
         var extension = new OpenApiPagingExtension();
         if (rawObject.TryGetPropertyValue(nameof(NextLinkName).ToFirstCharacterLowerCase(), out var nextLinkName) && nextLinkName is JsonNode nextLinkNameStr)
         {

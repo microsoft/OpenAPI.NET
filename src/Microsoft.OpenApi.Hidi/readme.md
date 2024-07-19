@@ -95,7 +95,7 @@ This command accepts the following parameters:
 	hidi transform --openapi files\People.yml --format yaml --output files\People2.yml --version OpenApi3_0 --filterByCollection Graph-Collection-0017059134807617005.postman_collection.json 
 	 
 	3. CSDL--->OpenAPI conversion and filtering 
-	hidi transform --input Files/Todo.xml --output Files/Todo-subset.yml --format yaml --version OpenApi3_0 --filterByOperationIds Todos.Todo.UpdateTodo 
+	hidi transform --csdl Files/Todo.xml --output Files/Todo-subset.yml --format yaml --version OpenApi3_0 --filterByOperationIds Todos.Todo.UpdateTodo 
 	 
 	4. CSDL Filtering by EntitySets and Singletons 
 	hidi transform --cs dataverse.csdl --csdlFilter "appointments,opportunities" -o appointmentsAndOpportunities.yaml --ll trace 

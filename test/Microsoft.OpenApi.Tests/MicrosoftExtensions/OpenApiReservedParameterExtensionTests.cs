@@ -4,6 +4,7 @@ using Microsoft.OpenApi.MicrosoftExtensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Tests.MicrosoftExtensions;
 
@@ -17,6 +18,7 @@ public class OpenApiReservedParameterExtensionTests
         Assert.NotNull(value);
         Assert.True(value.IsReserved);
     }
+
     [Fact]
     public void Serializes()
     {

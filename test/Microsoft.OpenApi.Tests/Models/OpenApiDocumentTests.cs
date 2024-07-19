@@ -1342,7 +1342,7 @@ paths:
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void SerializeDocumentWithWebhooksAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeDocumentWithWebhooksAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
