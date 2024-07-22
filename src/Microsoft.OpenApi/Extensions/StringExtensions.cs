@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.OpenApi.Attributes;
 
@@ -16,7 +17,7 @@ namespace Microsoft.OpenApi.Extensions
         /// Gets the enum value based on the given enum type and display name.
         /// </summary>
         /// <param name="displayName">The display name.</param>
-        public static T GetEnumFromDisplayName<T>(this string displayName)
+        public static T GetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string displayName)
         {
             var type = typeof(T);
             if (!type.IsEnum)
@@ -24,14 +25,12 @@ namespace Microsoft.OpenApi.Extensions
                 return default;
             }
 
-            foreach (var value in Enum.GetValues(type))
+            foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
-                var field = type.GetField(value.ToString());
-
                 var displayAttribute = (DisplayAttribute)field.GetCustomAttribute(typeof(DisplayAttribute));
                 if (displayAttribute != null && displayAttribute.Name == displayName)
                 {
-                    return (T)value;
+                    return (T)field.GetValue(null);
                 }
             }
 

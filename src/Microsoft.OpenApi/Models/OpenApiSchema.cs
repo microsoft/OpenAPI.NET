@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Models
             MinLength = schema?.MinLength ?? MinLength;
             Pattern = schema?.Pattern ?? Pattern;
             MultipleOf = schema?.MultipleOf ?? MultipleOf;
-            Default = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Default);
+            Default = OpenApiAnyCloneHelper.CloneFromCopyConstructor<IOpenApiAny>(schema?.Default);
             ReadOnly = schema?.ReadOnly ?? ReadOnly;
             WriteOnly = schema?.WriteOnly ?? WriteOnly;
             AllOf = schema?.AllOf != null ? new List<OpenApiSchema>(schema.AllOf) : null;
@@ -281,7 +281,7 @@ namespace Microsoft.OpenApi.Models
             AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
             AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
             Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Example);
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor<IOpenApiAny>(schema?.Example);
             Enum = schema?.Enum != null ? new List<IOpenApiAny>(schema.Enum) : null;
             Nullable = schema?.Nullable ?? Nullable;
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;

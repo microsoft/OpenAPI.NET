@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/components/" + Type.GetDisplayName() + "/" + Id;
+                return "#/components/" + Type.Value.GetDisplayName() + "/" + Id;
             }
         }
 
@@ -200,8 +200,11 @@ namespace Microsoft.OpenApi.Models
                 {
                     return ExternalResource + "#" + Id;
                 }
-
-                return ExternalResource + "#/components/" + Type.GetDisplayName() + "/"+ Id;
+                
+                if (Type.HasValue)
+                {
+                    return ExternalResource + "#/components/" + Type.Value.GetDisplayName() + "/"+ Id; 
+                }
             }
 
             return ExternalResource;
