@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Attributes
         [DisplayAttribute("editor")]
         Editor = 2,
         [DisplayAttribute("publisher")]
-        Publisher = 3
+        Publisher = 3,
         [DisplayAttribute("all")]
         All = Admin | Editor | Publisher
     }
