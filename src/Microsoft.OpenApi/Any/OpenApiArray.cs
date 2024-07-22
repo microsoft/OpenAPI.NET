@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Any
             AnyType = array.AnyType;
             foreach (var item in array)
             {
-                Add(OpenApiAnyCloneHelper.CloneFromCopyConstructor(item));
+                Add(OpenApiAnyCloneHelper.CloneFromCopyConstructor<IOpenApiAny>(item));
             }
         }
 
