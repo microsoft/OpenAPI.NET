@@ -24,6 +24,8 @@ namespace Microsoft.OpenApi.Tests.Attributes
         Editor = 2,
         [DisplayAttribute("publisher")]
         Publisher = 3
+        [DisplayAttribute("all")]
+        All = Admin | Editor | Publisher
     }
 
     public class DisplayAttributeTests
