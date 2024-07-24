@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -43,6 +45,21 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             _ = await reader.ReadAsync(stream);
             stream.Seek(0, SeekOrigin.Begin); // does not throw an object disposed exception
             Assert.True(stream.CanRead);
+        }
+
+        [Fact]
+        public async Task StreamShouldReadWhenInitialized()
+        {
+            var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/")
+            };
+
+            var stream = await httpClient.GetStreamAsync("master/examples/v3.0/petstore.yaml");
+
+            // Read V3 as YAML
+            var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            Assert.NotNull(openApiDocument);
         }
     }
 }
