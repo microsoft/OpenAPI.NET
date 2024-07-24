@@ -186,16 +186,15 @@ namespace Microsoft.OpenApi.Validations
         {
             var ruleSet = new ValidationRuleSet();
             var validationRuleType = typeof(ValidationRule);
+            
+            var ruleTypeProperties = GetValidationRuleTypes();
 
-            var rules = typeof(ValidationRuleSet).Assembly.GetTypes()
-                .Where(t => t.IsClass
-                            && t != typeof(object)
-                            && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
-                .SelectMany(t2 => t2.GetProperties(BindingFlags.Static | BindingFlags.Public)
-                                .Where(p => validationRuleType.IsAssignableFrom(p.PropertyType)));
-
-            foreach (var property in rules)
+            foreach (var property in ruleTypeProperties)
             {
+                if (!validationRuleType.IsAssignableFrom(property.PropertyType))
+                {
+                    continue;
+                }
                 var propertyValue = property.GetValue(null); // static property
                 if (propertyValue is ValidationRule rule)
                 {
@@ -204,6 +203,29 @@ namespace Microsoft.OpenApi.Validations
             }
 
             return ruleSet;
+        }
+
+        internal static PropertyInfo[] GetValidationRuleTypes()
+        {
+            return [
+                ..typeof(OpenApiComponentsRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiContactRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiDocumentRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiExtensibleRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiExternalDocsRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiInfoRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiLicenseRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiMediaTypeRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiOAuthFlowRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiServerRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiResponseRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiResponsesRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiSchemaRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiHeaderRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiTagRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiPathsRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+                ..typeof(OpenApiParameterRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
+            ];
         }
     }
 }

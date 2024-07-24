@@ -61,6 +61,10 @@ namespace Microsoft.OpenApi.Services
         public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, Func<string, OperationType?, OpenApiOperation, bool> predicate)
         {
             // Fetch and copy title, graphVersion and server info from OpenApiDoc
+            var components = source.Components is null 
+                ? null 
+                : new OpenApiComponents() { SecuritySchemes = source.Components.SecuritySchemes };
+
             var subset = new OpenApiDocument
             {
                 Info = new()
@@ -74,7 +78,7 @@ namespace Microsoft.OpenApi.Services
                     Extensions = source.Info.Extensions
                 },
 
-                Components = new() { SecuritySchemes = source.Components.SecuritySchemes },
+                Components = components,
                 SecurityRequirements = source.SecurityRequirements,
                 Servers = source.Servers
             };
