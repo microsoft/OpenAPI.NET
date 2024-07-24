@@ -148,13 +148,6 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            if (Type == ReferenceType.SecurityScheme)
-            {
-                // Write the string as property name
-                writer.WritePropertyName(ReferenceV3);
-                return;
-            }
-
             writer.WriteStartObject();
 
             // $ref
