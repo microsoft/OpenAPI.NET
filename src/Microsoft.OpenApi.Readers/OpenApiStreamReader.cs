@@ -3,7 +3,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
@@ -42,7 +41,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument.</returns>
         public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
-            using var reader = new StreamReader(input, Encoding.UTF8, true, 4096, _settings.LeaveStreamOpen);
+            using var reader = new StreamReader(input, default, true, -1, _settings.LeaveStreamOpen);
             return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
         }
 
@@ -55,7 +54,6 @@ namespace Microsoft.OpenApi.Readers
         public async Task<ReadResult> ReadAsync(Stream input, CancellationToken cancellationToken = default)
         {
             MemoryStream bufferedStream;
-            int bufferSize = 4096;
             if (input is MemoryStream stream)
             {
                 bufferedStream = stream;
@@ -65,12 +63,11 @@ namespace Microsoft.OpenApi.Readers
                 // Buffer stream so that OpenApiTextReaderReader can process it synchronously
                 // YamlDocument doesn't support async reading.
                 bufferedStream = new();
-                bufferSize = 81920;
-                await input.CopyToAsync(bufferedStream, bufferSize, cancellationToken);
+                await input.CopyToAsync(bufferedStream, 81920, cancellationToken);
                 bufferedStream.Position = 0;
             }
 
-            using var reader = new StreamReader(bufferedStream, Encoding.UTF8, true, bufferSize, _settings.LeaveStreamOpen);
+            using var reader = new StreamReader(bufferedStream, default, true, -1, _settings.LeaveStreamOpen);
             return await new OpenApiTextReaderReader(_settings).ReadAsync(reader, cancellationToken);
         }
 
@@ -83,7 +80,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public T ReadFragment<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiReferenceable
         {
-            using var reader = new StreamReader(input, Encoding.UTF8, true, 4096, _settings.LeaveStreamOpen);
+            using var reader = new StreamReader(input, default, true, -1, _settings.LeaveStreamOpen);
             return new OpenApiTextReaderReader(_settings).ReadFragment<T>(reader, version, out diagnostic);
         }
     }

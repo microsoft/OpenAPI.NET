@@ -113,6 +113,12 @@ In order to test the validity of an OpenApi document, we avail the following too
     
     5. Copy and paste your OpenAPI descriptions in the **Input Content** window or paste the path to the descriptions file in the **Input File** textbox and click on `Convert` to render the results.
 
+# Build Status
+
+|**master**|
+|--|
+|[![Build status](https://ci.appveyor.com/api/projects/status/9l6hly3vjeu0tmtx/branch/master?svg=true)](https://ci.appveyor.com/project/MicrosoftOpenAPINETAdmin/openapi-net-54e7i/branch/master)|
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a

@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Models
         {
             Summary = example?.Summary ?? Summary;
             Description = example?.Description ?? Description;
-            Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor<IOpenApiAny>(example?.Value);
+            Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor(example?.Value);
             ExternalValue = example?.ExternalValue ?? ExternalValue;
             Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
             Reference = example?.Reference != null ? new(example?.Reference) : null;

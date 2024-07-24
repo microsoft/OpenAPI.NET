@@ -22,10 +22,7 @@ namespace Microsoft.OpenApi.Any
     public class OpenApiAnyCloneHelper
     {
         public OpenApiAnyCloneHelper() { }
-        [System.Obsolete("Use native AoT-friendly generic overload of CloneFromCopyConstructor instead.")]
         public static Microsoft.OpenApi.Any.IOpenApiAny CloneFromCopyConstructor(Microsoft.OpenApi.Any.IOpenApiAny obj) { }
-        public static T CloneFromCopyConstructor<T>(T obj)
-            where T : Microsoft.OpenApi.Any.IOpenApiAny { }
     }
     public class OpenApiArray : System.Collections.Generic.List<Microsoft.OpenApi.Any.IOpenApiAny>, Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
     {

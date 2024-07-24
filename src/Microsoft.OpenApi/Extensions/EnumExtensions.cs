@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OpenApi.Attributes;
@@ -22,11 +21,10 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns>
         /// The attribute of the specified type or null.
         /// </returns>
-        [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Fields are never trimmed for enum types.")]
         public static T GetAttributeOfType<T>(this Enum enumValue) where T : Attribute
         {
             var type = enumValue.GetType();
-            var memInfo = type.GetField(enumValue.ToString(), BindingFlags.Public | BindingFlags.Static);
+            var memInfo = type.GetMember(enumValue.ToString()).First();
             var attributes = memInfo.GetCustomAttributes<T>(false);
             return attributes.FirstOrDefault();
         }

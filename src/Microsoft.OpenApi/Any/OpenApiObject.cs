@@ -27,10 +27,6 @@ namespace Microsoft.OpenApi.Any
         public OpenApiObject(OpenApiObject obj)
         {
             AnyType = obj.AnyType;
-            foreach (var key in obj.Keys)
-            {
-                this[key] = OpenApiAnyCloneHelper.CloneFromCopyConstructor<IOpenApiAny>(obj[key]);
-            }
         }
 
         /// <summary>

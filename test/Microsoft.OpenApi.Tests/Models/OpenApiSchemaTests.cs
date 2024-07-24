@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -481,45 +483,6 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal("string", actualSchema.Type);
             Assert.Equal("date", actualSchema.Format);
             Assert.True(actualSchema.Nullable);
-        }
-
-        public static TheoryData<IOpenApiAny> SchemaExamples()
-        {
-            return new()
-            {
-                new OpenApiArray() { new OpenApiString("example") },
-                new OpenApiBinary([0, 1, 2]),
-                new OpenApiBoolean(true),
-                new OpenApiByte(42),
-                new OpenApiDate(new(2024, 07, 19, 12, 34, 56)),
-                new OpenApiDateTime(new(2024, 07, 19, 12, 34, 56, new(01, 00, 00))),
-                new OpenApiDouble(42.37),
-                new OpenApiFloat(42.37f),
-                new OpenApiInteger(42),
-                new OpenApiLong(42),
-                new OpenApiNull(),
-                new OpenApiObject() { ["prop"] = new OpenApiString("example") },
-                new OpenApiPassword("secret"),
-                new OpenApiString("example"),
-            };
-        }
-
-        [Theory]
-        [MemberData(nameof(SchemaExamples))]
-        public void CloningSchemaExamplesWorks(IOpenApiAny example)
-        {
-            // Arrange
-            var schema = new OpenApiSchema
-            {
-                Example = example
-            };
-
-            // Act && Assert
-            var schemaCopy = new OpenApiSchema(schema);
-            Assert.NotNull(schemaCopy.Example);
-
-            // Act && Assert
-            Assert.Equivalent(schema.Example, schemaCopy.Example);
         }
 
         [Fact]
