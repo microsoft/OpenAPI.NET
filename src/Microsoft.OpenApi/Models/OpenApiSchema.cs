@@ -263,5 +263,68 @@ namespace Microsoft.OpenApi.Models
         /// Reference object.
         /// </summary>
         public OpenApiReference Reference { get; set; }
+
+        /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiSchema() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiSchema"/> object
+        /// </summary>
+        public OpenApiSchema(OpenApiSchema schema)
+        {
+            Title = schema?.Title ?? Title;
+            Id = schema?.Id ?? Id;
+            Schema = schema?.Schema ?? Schema;
+            Comment = schema?.Comment ?? Comment;
+            Vocabulary = schema?.Vocabulary ?? Vocabulary;
+            DynamicAnchor = schema?.DynamicAnchor ?? DynamicAnchor;
+            DynamicRef = schema?.DynamicRef ?? DynamicRef;
+            RecursiveAnchor = schema?.RecursiveAnchor ?? RecursiveAnchor;
+            RecursiveRef = schema?.RecursiveRef ?? RecursiveRef;
+            Definitions = schema?.Definitions != null ? new Dictionary<string, OpenApiSchema>(schema.Definitions) : null;
+            UnevaluatedProperties = schema?.UnevaluatedProperties ?? UnevaluatedProperties;
+            V31ExclusiveMaximum = schema?.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
+            V31ExclusiveMinimum = schema?.V31ExclusiveMinimum ?? V31ExclusiveMinimum;
+            Type = schema?.Type ?? Type;
+            Format = schema?.Format ?? Format;
+            Description = schema?.Description ?? Description;
+            Maximum = schema?.Maximum ?? Maximum;
+            ExclusiveMaximum = schema?.ExclusiveMaximum ?? ExclusiveMaximum;
+            Minimum = schema?.Minimum ?? Minimum;
+            ExclusiveMinimum = schema?.ExclusiveMinimum ?? ExclusiveMinimum;
+            MaxLength = schema?.MaxLength ?? MaxLength;
+            MinLength = schema?.MinLength ?? MinLength;
+            Pattern = schema?.Pattern ?? Pattern;
+            MultipleOf = schema?.MultipleOf ?? MultipleOf;
+            Default = schema?.Default != null ? new(schema?.Default.Node) : null;
+            ReadOnly = schema?.ReadOnly ?? ReadOnly;
+            WriteOnly = schema?.WriteOnly ?? WriteOnly;
+            AllOf = schema?.AllOf != null ? new List<OpenApiSchema>(schema.AllOf) : null;
+            OneOf = schema?.OneOf != null ? new List<OpenApiSchema>(schema.OneOf) : null;
+            AnyOf = schema?.AnyOf != null ? new List<OpenApiSchema>(schema.AnyOf) : null;
+            Not = schema?.Not != null ? new(schema?.Not) : null;
+            Required = schema?.Required != null ? new HashSet<string>(schema.Required) : null;
+            Items = schema?.Items != null ? new(schema?.Items) : null;
+            MaxItems = schema?.MaxItems ?? MaxItems;
+            MinItems = schema?.MinItems ?? MinItems;
+            UniqueItems = schema?.UniqueItems ?? UniqueItems;
+            Properties = schema?.Properties != null ? new Dictionary<string, OpenApiSchema>(schema.Properties) : null;
+            MaxProperties = schema?.MaxProperties ?? MaxProperties;
+            MinProperties = schema?.MinProperties ?? MinProperties;
+            AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
+            AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
+            Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
+            Example = schema?.Example != null ? new(schema?.Example.Node) : null;
+            Enum = schema?.Enum != null ? new List<OpenApiAny>(schema.Enum) : null;
+            Nullable = schema?.Nullable ?? Nullable;
+            ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
+            Deprecated = schema?.Deprecated ?? Deprecated;
+            Xml = schema?.Xml != null ? new(schema?.Xml) : null;
+            Extensions = schema?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
+            UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
+            Reference = schema?.Reference != null ? new(schema?.Reference) : null;
+        }
     }
 }
