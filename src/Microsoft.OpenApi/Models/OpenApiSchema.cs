@@ -1,40 +1,80 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Models
 {
-    internal class OpenApiSchema
+    /// <summary>
+    /// The Schema Object allows the definition of input and output data types.
+    /// </summary>
+    public class OpenApiSchema : IOpenApiExtensible
     {
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
         /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        /// $schema, a JSON Schema dialect identifier. Value must be a URI
+        /// </summary>
         public string Schema { get; set; }
 
+        /// <summary>
+        /// $id - Identifies a schema resource with its canonical URI.
+        /// </summary>
         public string Id { get; set; }
 
+        /// <summary>
+        /// $comment - reserves a location for comments from schema authors to readers or maintainers of the schema.
+        /// </summary>
         public string Comment { get; set; }
 
+        /// <summary>
+        /// $vocabulary- used in meta-schemas to identify the vocabularies available for use in schemas described by that meta-schema.
+        /// </summary>
         public string Vocabulary { get; set; }
 
+        /// <summary>
+        /// $dynamicRef - an applicator that allows for deferring the full resolution until runtime, at which point it is resolved each time it is encountered while evaluating an instance
+        /// </summary>
         public string DynamicRef { get; set; }
 
+        /// <summary>
+        /// $dynamicAnchor - used to create plain name fragments that are not tied to any particular structural location for referencing purposes, which are taken into consideration for dynamic referencing.
+        /// </summary>
         public string DynamicAnchor { get; set; }
 
+        /// <summary>
+        /// $recursiveAnchor - used to construct recursive schemas i.e one that has a reference to its own root, identified by the empty fragment URI reference ("#")
+        /// </summary>
         public string RecursiveAnchor { get; set; }
 
+        /// <summary>
+        /// $recursiveRef - used to construct recursive schemas i.e one that has a reference to its own root, identified by the empty fragment URI reference ("#")
+        /// </summary>
         public string RecursiveRef { get; set; }
 
+        /// <summary>
+        /// $defs - reserves a location for schema authors to inline re-usable JSON Schemas into a more general schema. 
+        /// The keyword does not directly affect the validation result
+        /// </summary>
         public IDictionary<string, OpenApiSchema> Definitions { get; set; }
 
-        public bool UnevaluatedProperties { get; set; }
-
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public decimal V31ExclusiveMaximum { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public decimal V31ExclusiveMinimum { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool UnEvaluatedProperties { get; set; }     
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -225,12 +265,17 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public IList<OpenApiAny> Enum { get; set; } = new List<OpenApiAny>();
+        public IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
 
         /// <summary>
         /// Allows sending a null value for the defined schema. Default value is false.
         /// </summary>
         public bool Nullable { get; set; }
+
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        public bool UnevaluatedProperties { get; set;}
 
         /// <summary>
         /// Additional external documentation for this schema.
@@ -317,7 +362,7 @@ namespace Microsoft.OpenApi.Models
             AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
             Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
             Example = schema?.Example != null ? new(schema?.Example.Node) : null;
-            Enum = schema?.Enum != null ? new List<OpenApiAny>(schema.Enum) : null;
+            Enum = schema?.Enum != null ? new List<JsonNode>(schema.Enum) : null;
             Nullable = schema?.Nullable ?? Nullable;
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
             Deprecated = schema?.Deprecated ?? Deprecated;
