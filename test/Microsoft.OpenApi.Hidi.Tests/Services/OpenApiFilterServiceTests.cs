@@ -43,6 +43,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Assert
             Assert.NotNull(subsetOpenApiDocument);
+            Assert.NotNull(subsetOpenApiDocument.Paths);
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }
@@ -62,6 +63,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Assert
             Assert.NotNull(subsetOpenApiDocument);
+            Assert.NotNull(subsetOpenApiDocument.Paths);
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(3, subsetOpenApiDocument.Paths.Count);
         }
@@ -150,10 +152,11 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var pathCount = requestUrls.Count;
             var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
-            var subsetPathCount = subsetOpenApiDocument.Paths.Count;
+            var subsetPathCount = subsetOpenApiDocument.Paths?.Count;
 
             // Assert
             Assert.NotNull(subsetOpenApiDocument);
+            Assert.NotNull(subsetOpenApiDocument.Paths);
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(2, subsetPathCount);
             Assert.NotEqual(pathCount, subsetPathCount);
@@ -180,6 +183,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
 
             // Assert
+            Assert.NotNull(subsetOpenApiDocument.Paths);
             foreach (var pathItem in subsetOpenApiDocument.Paths)
             {
                 Assert.True(pathItem.Value.Parameters.Any());

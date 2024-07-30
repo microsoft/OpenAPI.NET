@@ -54,7 +54,8 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         public override void Visit(OpenApiPathItem pathItem)
         {
-            if (pathItem.Operations.TryGetValue(OperationType.Put, out var value))
+            if (pathItem.Operations.TryGetValue(OperationType.Put, out var value) &&
+                value.OperationId != null)
             {
                 var operationId = value.OperationId;
                 pathItem.Operations[OperationType.Put].OperationId = ResolvePutOperationId(operationId);
@@ -69,14 +70,14 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                 throw new ArgumentException($"OperationId is required {PathString}", nameof(operation));
 
             var operationId = operation.OperationId;
-            var operationTypeExtension = operation.Extensions.GetExtension("x-ms-docs-operation-type");
+            var operationTypeExtension = operation.Extensions?.GetExtension("x-ms-docs-operation-type");
             if (operationTypeExtension.IsEquals("function"))
-                operation.Parameters = ResolveFunctionParameters(operation.Parameters);
+                operation.Parameters = ResolveFunctionParameters(operation.Parameters ?? new List<OpenApiParameter>());
 
             // Order matters. Resolve operationId.
             operationId = RemoveHashSuffix(operationId);
             if (operationTypeExtension.IsEquals("action") || operationTypeExtension.IsEquals("function"))
-                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters);
+                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? new List<OpenApiParameter>());
             operationId = SingularizeAndDeduplicateOperationId(operationId.SplitByChar('.'));
             operationId = ResolveODataCastOperationId(operationId);
             operationId = ResolveByRefOperationId(operationId);
