@@ -339,7 +339,7 @@ namespace Microsoft.OpenApi.Models
             V31ExclusiveMaximum = schema?.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
             V31ExclusiveMinimum = schema?.V31ExclusiveMinimum ?? V31ExclusiveMinimum;
             Type = schema?.Type ?? Type;
-            TypeArray = schema.TypeArray != null ? new string[schema.TypeArray.Length] : null;
+            TypeArray = schema?.TypeArray != null ? new string[schema.TypeArray.Length] : null;
             Format = schema?.Format ?? Format;
             Description = schema?.Description ?? Description;
             Maximum = schema?.Maximum ?? Maximum;
