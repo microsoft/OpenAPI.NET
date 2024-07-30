@@ -576,7 +576,7 @@ namespace Microsoft.OpenApi.Models
         internal void WriteV31Properties(IOpenApiWriter writer)
         {
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
-            writer.WriteOptionalCollection(OpenApiConstants.TypeArray, TypeArray, (w, s) => w.WriteRaw(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Type, TypeArray, (w, s) => w.WriteRaw(s));
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
             writer.WriteProperty(OpenApiConstants.Vocabulary, Vocabulary);
