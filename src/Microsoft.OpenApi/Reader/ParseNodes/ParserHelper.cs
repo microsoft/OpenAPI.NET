@@ -4,7 +4,7 @@
 using System;
 using System.Globalization;
 
-namespace Microsoft.OpenApi.Readers.ParseNodes
+namespace Microsoft.OpenApi.Reader.ParseNodes
 {
     /// <summary>
     /// Useful tools to parse data
