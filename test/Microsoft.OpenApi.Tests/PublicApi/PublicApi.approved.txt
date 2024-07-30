@@ -459,6 +459,7 @@ namespace Microsoft.OpenApi.Models
         public const string BodyName = "x-bodyName";
         public const string Callbacks = "callbacks";
         public const string ClientCredentials = "clientCredentials";
+        public const string Comment = "$comment";
         public const string Components = "components";
         public const string ComponentsSegment = "/components/";
         public const string Consumes = "consumes";
@@ -471,11 +472,15 @@ namespace Microsoft.OpenApi.Models
         public const string DefaultName = "Default Name";
         public const string DefaultTitle = "Default Title";
         public const string Definitions = "definitions";
+        public const string Defs = "$defs";
         public const string Delete = "delete";
         public const string Deprecated = "deprecated";
         public const string Description = "description";
         public const string Discriminator = "discriminator";
         public const string DollarRef = "$ref";
+        public const string DollarSchema = "$schema";
+        public const string DynamicAnchor = "$dynamicAnchor";
+        public const string DynamicRef = "$dynamicRef";
         public const string Email = "email";
         public const string Encoding = "encoding";
         public const string Enum = "enum";
@@ -495,6 +500,7 @@ namespace Microsoft.OpenApi.Models
         public const string Head = "head";
         public const string Headers = "headers";
         public const string Host = "host";
+        public const string Id = "$id";
         public const string Identifier = "identifier";
         public const string Implicit = "implicit";
         public const string In = "in";
@@ -539,6 +545,8 @@ namespace Microsoft.OpenApi.Models
         public const string PropertyName = "propertyName";
         public const string Put = "put";
         public const string ReadOnly = "readOnly";
+        public const string RecursiveAnchor = "$recursiveAnchor";
+        public const string RecursiveRef = "$recursiveRef";
         public const string RefreshUrl = "refreshUrl";
         public const string RequestBodies = "requestBodies";
         public const string RequestBody = "requestBody";
@@ -563,13 +571,17 @@ namespace Microsoft.OpenApi.Models
         public const string TokenUrl = "tokenUrl";
         public const string Trace = "trace";
         public const string Type = "type";
+        public const string UnevaluatedProperties = "unevaluatedProperties";
         public const string UniqueItems = "uniqueItems";
         public const string Url = "url";
         public const string V2ReferenceUri = "https://registry/definitions/";
+        public const string V31ExclusiveMaximum = "exclusiveMaximum";
+        public const string V31ExclusiveMinimum = "exclusiveMinimum";
         public const string V3ReferenceUri = "https://registry/components/schemas/";
         public const string Value = "value";
         public const string Variables = "variables";
         public const string Version = "version";
+        public const string Vocabulary = "$vocabulary";
         public const string Webhooks = "webhooks";
         public const string Wrapped = "wrapped";
         public const string WriteOnly = "writeOnly";
@@ -944,6 +956,71 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiResponses() { }
         public OpenApiResponses(Microsoft.OpenApi.Models.OpenApiResponses openApiResponses) { }
+    }
+    public class OpenApiSchema : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    {
+        public OpenApiSchema() { }
+        public OpenApiSchema(Microsoft.OpenApi.Models.OpenApiSchema schema) { }
+        public Microsoft.OpenApi.Models.OpenApiSchema AdditionalProperties { get; set; }
+        public bool AdditionalPropertiesAllowed { get; set; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AllOf { get; set; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AnyOf { get; set; }
+        public string Comment { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiAny Default { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> Definitions { get; set; }
+        public bool Deprecated { get; set; }
+        public string Description { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiDiscriminator Discriminator { get; set; }
+        public string DynamicAnchor { get; set; }
+        public string DynamicRef { get; set; }
+        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Enum { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiAny Example { get; set; }
+        public bool? ExclusiveMaximum { get; set; }
+        public bool? ExclusiveMinimum { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; set; }
+        public string Format { get; set; }
+        public string Id { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiSchema Items { get; set; }
+        public int? MaxItems { get; set; }
+        public int? MaxLength { get; set; }
+        public int? MaxProperties { get; set; }
+        public decimal? Maximum { get; set; }
+        public int? MinItems { get; set; }
+        public int? MinLength { get; set; }
+        public int? MinProperties { get; set; }
+        public decimal? Minimum { get; set; }
+        public decimal? MultipleOf { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiSchema Not { get; set; }
+        public bool Nullable { get; set; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> OneOf { get; set; }
+        public string Pattern { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> Properties { get; set; }
+        public bool ReadOnly { get; set; }
+        public string RecursiveAnchor { get; set; }
+        public string RecursiveRef { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiReference Reference { get; set; }
+        public System.Collections.Generic.ISet<string> Required { get; set; }
+        public string Schema { get; set; }
+        public string Title { get; set; }
+        public string Type { get; set; }
+        public string[] TypeArray { get; set; }
+        public bool UnEvaluatedProperties { get; set; }
+        public bool UnevaluatedProperties { get; set; }
+        public bool? UniqueItems { get; set; }
+        public bool UnresolvedReference { get; set; }
+        public decimal V31ExclusiveMaximum { get; set; }
+        public decimal V31ExclusiveMinimum { get; set; }
+        public string Vocabulary { get; set; }
+        public bool WriteOnly { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiXml Xml { get; set; }
+        public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public void SerializeAsV2WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV31WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV3WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public void SerializeInternalWithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion version, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, Microsoft.OpenApi.Interfaces.IOpenApiSerializable> callback) { }
     }
     public class OpenApiSecurityRequirement : System.Collections.Generic.Dictionary<Microsoft.OpenApi.Models.OpenApiSecurityScheme, System.Collections.Generic.IList<string>>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
