@@ -4,7 +4,6 @@
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Readers.ParseNodes;
 using System.Collections.Generic;
 using System.Globalization;
 

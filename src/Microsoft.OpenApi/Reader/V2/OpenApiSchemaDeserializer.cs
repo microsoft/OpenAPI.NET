@@ -6,7 +6,6 @@ using System.Globalization;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
