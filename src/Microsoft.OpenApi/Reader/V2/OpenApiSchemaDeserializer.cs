@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -17,91 +16,91 @@ namespace Microsoft.OpenApi.Reader.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiSchema> _schemaFixedFields = new()
+        private static readonly FixedFieldMap<OpenApiSchema> _openApiSchemaFixedFields = new()
         {
             {
                 "title",
-                (o, n) => o.Title = n.GetScalarValue()
+                (o, n, _) => o.Title = n.GetScalarValue()
             },
             {
                 "multipleOf",
-                (o, n) => o.MultipleOf = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture)
+                (o, n, _) => o.MultipleOf = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture)
             },
             {
                 "maximum",
-                (o, n) => o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n,_) => o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "exclusiveMaximum",
-                (o, n) => o.ExclusiveMaximum = bool.Parse(n.GetScalarValue())
+                (o, n, _) => o.ExclusiveMaximum = bool.Parse(n.GetScalarValue())
             },
             {
                 "minimum",
-                (o, n) => o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
+                (o, n, _) => o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
             },
             {
                 "exclusiveMinimum",
-                (o, n) => o.ExclusiveMinimum = bool.Parse(n.GetScalarValue())
+                (o, n, _) => o.ExclusiveMinimum = bool.Parse(n.GetScalarValue())
             },
             {
                 "maxLength",
-                (o, n) => o.MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) => o.MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
                 "minLength",
-                (o, n) => o.MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) => o.MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
                 "pattern",
-                (o, n) => o.Pattern = n.GetScalarValue()
+                (o, n, _) => o.Pattern = n.GetScalarValue()
             },
             {
                 "maxItems",
-                (o, n) => o.MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) => o.MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
                 "minItems",
-                (o, n) => o.MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) => o.MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
                 "uniqueItems",
-                (o, n) => o.UniqueItems = bool.Parse(n.GetScalarValue())
+                (o, n, _) => o.UniqueItems = bool.Parse(n.GetScalarValue())
             },
             {
                 "maxProperties",
-                (o, n) => o.MaxProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) => o.MaxProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
                 "minProperties",
-                (o, n) => o.MinProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) => o.MinProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
             },
             {
                 "required",
-                (o, n) => o.Required = new HashSet<string>(n.CreateSimpleList(n2 => n2.GetScalarValue()))
+                (o, n, _) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue()))
             },
             {
                 "enum",
-                (o, n) => o.Enum = n.CreateListOfAny()
+                (o, n, _) => o.Enum = n.CreateListOfAny()
             },
 
             {
                 "type",
-                (o, n) => o.Type = n.GetScalarValue()
+                (o, n, _) => o.Type = n.GetScalarValue()
             },
             {
                 "allOf",
-                (o, n) => o.AllOf = n.CreateList(LoadSchema)
+                (o, n, t) => o.AllOf = n.CreateList(LoadOpenApiSchema, t)
             },
             {
                 "items",
-                (o, n) => o.Items = LoadSchema(n)
+                (o, n, _) => o.Items = LoadOpenApiSchema(n)
             },
             {
                 "properties",
-                (o, n) => o.Properties = n.CreateMap(LoadSchema)
+                (o, n, t) => o.Properties = n.CreateMap(LoadOpenApiSchema, t)
             },
             {
-                "additionalProperties", (o, n) =>
+                "additionalProperties", (o, n, _) =>
                 {
                     if (n is ValueNode)
                     {
@@ -109,24 +108,24 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                     else
                     {
-                        o.AdditionalProperties = LoadSchema(n);
+                        o.AdditionalProperties = LoadOpenApiSchema(n);
                     }
                 }
             },
             {
                 "description",
-                (o, n) => o.Description = n.GetScalarValue()
+                (o, n, _) => o.Description = n.GetScalarValue()
             },
             {
                 "format",
-                (o, n) => o.Format = n.GetScalarValue()
+                (o, n, _) => o.Format = n.GetScalarValue()
             },
             {
                 "default",
-                (o, n) => o.Default = n.CreateAny()
+                (o, n, _) => o.Default = n.CreateAny()
             },
             {
-                "discriminator", (o, n) =>
+                "discriminator", (o, n, _) =>
                 {
                     o.Discriminator = new()
                     {
@@ -136,28 +135,28 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "readOnly",
-                (o, n) => o.ReadOnly = bool.Parse(n.GetScalarValue())
+                (o, n, _) => o.ReadOnly = bool.Parse(n.GetScalarValue())
             },
             {
                 "xml",
-                (o, n) => o.Xml = LoadXml(n)
+                (o, n, _) => o.Xml = LoadXml(n)
             },
             {
                 "externalDocs",
-                (o, n) => o.ExternalDocs = LoadExternalDocs(n)
+                (o, n, _) => o.ExternalDocs = LoadExternalDocs(n)
             },
             {
                 "example",
-                (o, n) => o.Example = n.CreateAny()
+                (o, n, _) => o.Example = n.CreateAny()
             },
         };
 
-        private static readonly PatternFieldMap<OpenApiSchema> _schemaPatternFields = new PatternFieldMap<OpenApiSchema>
+        private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new PatternFieldMap<OpenApiSchema>
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        public static OpenApiSchema LoadSchema(ParseNode node)
+        public static OpenApiSchema LoadOpenApiSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("schema");
 
@@ -171,19 +170,10 @@ namespace Microsoft.OpenApi.Reader.V2
  
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(schema, _schemaFixedFields, _schemaPatternFields);
+                propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields);
             }
 
             return schema;
-        }
-
-        private static Dictionary<string, IOpenApiExtension> LoadExtensions(string value, IOpenApiExtension extension)
-        {
-            var extensions = new Dictionary<string, IOpenApiExtension>
-            {
-                { value, extension }
-            };
-            return extensions;
         }
     }
 }
