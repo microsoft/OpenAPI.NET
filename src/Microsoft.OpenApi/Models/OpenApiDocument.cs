@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDocument() 
         {
             Workspace = new OpenApiWorkspace();
-            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid().ToString());
+            BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
         }
                 
         /// <summary>
