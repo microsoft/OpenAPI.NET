@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -376,6 +376,384 @@ namespace Microsoft.OpenApi.Models
             Extensions = schema?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.1
+        /// </summary>
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
+                (writer, element) => element.SerializeAsV31WithoutReference(writer));
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0
+        /// </summary>
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
+                (writer, element) => element.SerializeAsV3WithoutReference(writer));
+        }
+
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+            Action<IOpenApiWriter, IOpenApiReferenceable> action)
+        {
+            Utils.CheckArgumentNull(writer);
+            var target = this;
+            action(writer, target);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer)
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
+                (writer, element) => element.SerializeAsV31(writer));
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
+                (writer, element) => element.SerializeAsV3(writer));
+        }
+
+/// <inheritdoc/>
+
+        public void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
+            Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        {
+            writer.WriteStartObject();
+
+            if (version == OpenApiSpecVersion.OpenApi3_1)
+            {
+                WriteV31Properties(writer);
+            }
+
+            // title
+            writer.WriteProperty(OpenApiConstants.Title, Title);
+
+            // multipleOf
+            writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
+
+            // maximum
+            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
+
+            // exclusiveMaximum
+            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+
+            // minimum
+            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
+
+            // exclusiveMinimum
+            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+
+            // maxLength
+            writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
+
+            // minLength
+            writer.WriteProperty(OpenApiConstants.MinLength, MinLength);
+
+            // pattern
+            writer.WriteProperty(OpenApiConstants.Pattern, Pattern);
+
+            // maxItems
+            writer.WriteProperty(OpenApiConstants.MaxItems, MaxItems);
+
+            // minItems
+            writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
+
+            // uniqueItems
+            writer.WriteProperty(OpenApiConstants.UniqueItems, UniqueItems);
+
+            // maxProperties
+            writer.WriteProperty(OpenApiConstants.MaxProperties, MaxProperties);
+
+            // minProperties
+            writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
+
+            // required
+            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
+
+            // enum
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(new OpenApiAny(s)));
+
+            // type
+            writer.WriteProperty(OpenApiConstants.Type, Type);
+
+            // allOf
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV3(w));
+
+            // anyOf
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => s.SerializeAsV3(w));
+
+            // oneOf
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => s.SerializeAsV3(w));
+
+            // not
+            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.SerializeAsV3(w));
+
+            // items
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV3(w));
+
+            // properties
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
+
+            // additionalProperties
+            if (AdditionalPropertiesAllowed)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.AdditionalProperties,
+                    AdditionalProperties,
+                    (w, s) => s.SerializeAsV3(w));
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
+            }
+
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
+
+            // format
+            writer.WriteProperty(OpenApiConstants.Format, Format);
+
+            // default
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
+
+            // nullable
+            writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
+
+            // discriminator
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.SerializeAsV3(w));
+
+            // readOnly
+            writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
+
+            // writeOnly
+            writer.WriteProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
+
+            // xml
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
+
+            // externalDocs
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV3(w));
+
+            // example
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
+
+            // deprecated
+            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
+
+            // extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            writer.WriteEndObject();
+        }
+
+/// <inheritdoc/>
+
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        {
+            SerializeAsV2WithoutReference(
+                            writer: writer,
+                            parentRequiredProperties: new HashSet<string>(),
+                            propertyName: null);
+        }
+
+/// <inheritdoc/>
+
+        public void SerializeAsV2(IOpenApiWriter writer)
+        {
+            SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
+        }
+
+        internal void WriteV31Properties(IOpenApiWriter writer)
+        {
+            writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
+            writer.WriteProperty(OpenApiConstants.Id, Id);
+            writer.WriteProperty(OpenApiConstants.Comment, Comment);
+            writer.WriteProperty(OpenApiConstants.Vocabulary, Vocabulary);
+            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV3(w));
+            writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
+            writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
+            writer.WriteProperty(OpenApiConstants.RecursiveAnchor, RecursiveAnchor);
+            writer.WriteProperty(OpenApiConstants.RecursiveRef, RecursiveRef);
+            writer.WriteProperty(OpenApiConstants.V31ExclusiveMaximum, V31ExclusiveMaximum);
+            writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);
+            writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property
+        /// as readonly if its included in the provided list of required properties of parent schema.
+        /// </summary>
+        /// <param name="writer">The open api writer.</param>
+        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
+        /// <param name="propertyName">The property name that will be serialized.</param>
+        internal void SerializeAsV2(
+            IOpenApiWriter writer,
+            ISet<string> parentRequiredProperties,
+            string propertyName)
+        {
+            var target = this;
+            parentRequiredProperties ??= new HashSet<string>();
+
+            target.SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference and handles not marking the provided property
+        /// as readonly if its included in the provided list of required properties of parent schema.
+        /// </summary>
+        /// <param name="writer">The open api writer.</param>
+        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
+        /// <param name="propertyName">The property name that will be serialized.</param>
+        internal void SerializeAsV2WithoutReference(
+            IOpenApiWriter writer,
+            ISet<string> parentRequiredProperties,
+            string propertyName)
+        {
+            writer.WriteStartObject();
+            WriteAsSchemaProperties(writer, parentRequiredProperties, propertyName);
+            writer.WriteEndObject();
+        }
+
+        internal void WriteAsSchemaProperties(
+            IOpenApiWriter writer,
+            ISet<string> parentRequiredProperties,
+            string propertyName)
+        {
+            // format
+            if (string.IsNullOrEmpty(Format))
+            {
+                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
+
+            writer.WriteProperty(OpenApiConstants.Format, Format);
+
+            // title
+            writer.WriteProperty(OpenApiConstants.Title, Title);
+
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
+
+            // default
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
+
+            // multipleOf
+            writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
+
+            // maximum
+            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
+
+            // exclusiveMaximum
+            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+
+            // minimum
+            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
+
+            // exclusiveMinimum
+            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+
+            // maxLength
+            writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
+
+            // minLength
+            writer.WriteProperty(OpenApiConstants.MinLength, MinLength);
+
+            // pattern
+            writer.WriteProperty(OpenApiConstants.Pattern, Pattern);
+
+            // maxItems
+            writer.WriteProperty(OpenApiConstants.MaxItems, MaxItems);
+
+            // minItems
+            writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
+
+            // uniqueItems
+            writer.WriteProperty(OpenApiConstants.UniqueItems, UniqueItems);
+
+            // maxProperties
+            writer.WriteProperty(OpenApiConstants.MaxProperties, MaxProperties);
+
+            // minProperties
+            writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
+
+            // required
+            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
+
+            // enum
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(new OpenApiAny(s)));
+
+            // type
+            writer.WriteProperty(OpenApiConstants.Type, Type);
+
+            // items
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
+
+            // allOf
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
+
+            // If there isn't already an allOf, and the schema contains a oneOf or anyOf write an allOf with the first
+            // schema in the list as an attempt to guess at a graceful downgrade situation.
+            if (AllOf == null || AllOf.Count == 0)
+            {
+                // anyOf (Not Supported in V2)  - Write the first schema only as an allOf.
+                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf?.Take(1), (w, s) => s.SerializeAsV2(w));
+
+                if (AnyOf == null || AnyOf.Count == 0)
+                {
+                    // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
+                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf?.Take(1), (w, s) => s.SerializeAsV2(w));
+                }
+            }
+
+            // properties
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, key, s) =>
+                s.SerializeAsV2(w, Required, key));
+
+            // additionalProperties
+            if (AdditionalPropertiesAllowed)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.AdditionalProperties,
+                    AdditionalProperties,
+                    (w, s) => s.SerializeAsV2(w));
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
+            }
+
+            // discriminator
+            writer.WriteProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
+
+            // readOnly
+            // In V2 schema if a property is part of required properties of parent schema,
+            // it cannot be marked as readonly.
+            if (!parentRequiredProperties.Contains(propertyName))
+            {
+                writer.WriteProperty(name: OpenApiConstants.ReadOnly, value: ReadOnly, defaultValue: false);
+            }
+
+            // xml
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
+
+            // externalDocs
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV2(w));
+
+            // example
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
+
+            // extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
     }
 }
