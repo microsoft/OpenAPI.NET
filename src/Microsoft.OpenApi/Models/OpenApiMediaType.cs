@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -76,7 +77,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // examples
-            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
+            SerializeExamples(writer, Examples);
 
             // encoding
             writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, (w, e) => e.SerializeAsV3(w));
@@ -93,6 +94,37 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Media type does not exist in V2.
+        }
+
+        private void SerializeExamples(IOpenApiWriter writer, IDictionary<string, OpenApiExample> examples)
+        {
+            /* Special case for writing out empty arrays as valid response examples
+            * Check if there is any example with an empty array as its value
+            * */
+            var hasEmptyArray = examples.Values.Any(example =>
+                example.Value is OpenApiArray arr && arr.Count == 0
+            );
+
+            if (hasEmptyArray)
+            {
+                writer.WritePropertyName(OpenApiConstants.Examples);
+                writer.WriteStartObject();
+                foreach (var kvp in examples)
+                {
+                    if (kvp.Value.Value is OpenApiArray arr && arr.Count == 0)
+                    {
+                        writer.WritePropertyName(kvp.Key);
+                        writer.WriteStartObject();
+                        writer.WriteRequiredObject(OpenApiConstants.Value, kvp.Value.Value, (w, v) => w.WriteAny(v));
+                        writer.WriteEndObject();
+                    }
+                }
+                writer.WriteEndObject();
+            }
+            else
+            {
+                writer.WriteOptionalMap(OpenApiConstants.Examples, examples, (w, e) => e.SerializeAsV3(w));
+            }
         }
     }
 }
