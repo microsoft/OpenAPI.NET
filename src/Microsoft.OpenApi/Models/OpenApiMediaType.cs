@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Models
         private void SerializeExamples(IOpenApiWriter writer, IDictionary<string, OpenApiExample> examples)
         {
             /* Special case for writing out empty arrays as valid response examples
-            * Check if there is any example with an empty array as its value
+            * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true
             * */
             var hasEmptyArray = examples.Values.Any(example =>
                 example.Value is OpenApiArray arr && arr.Count == 0
