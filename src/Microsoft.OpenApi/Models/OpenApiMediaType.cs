@@ -109,15 +109,12 @@ namespace Microsoft.OpenApi.Models
             {
                 writer.WritePropertyName(OpenApiConstants.Examples);
                 writer.WriteStartObject();
-                foreach (var kvp in examples)
+                foreach (var kvp in examples.Where(kvp => kvp.Value.Value is OpenApiArray arr && arr.Count == 0))
                 {
-                    if (kvp.Value.Value is OpenApiArray arr && arr.Count == 0)
-                    {
-                        writer.WritePropertyName(kvp.Key);
-                        writer.WriteStartObject();
-                        writer.WriteRequiredObject(OpenApiConstants.Value, kvp.Value.Value, (w, v) => w.WriteAny(v));
-                        writer.WriteEndObject();
-                    }
+                    writer.WritePropertyName(kvp.Key);
+                    writer.WriteStartObject();
+                    writer.WriteRequiredObject(OpenApiConstants.Value, kvp.Value.Value, (w, v) => w.WriteAny(v));
+                    writer.WriteEndObject();
                 }
                 writer.WriteEndObject();
             }
