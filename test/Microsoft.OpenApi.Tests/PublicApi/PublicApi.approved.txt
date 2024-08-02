@@ -302,6 +302,10 @@ namespace Microsoft.OpenApi.Interfaces
     {
         T GetEffective(Microsoft.OpenApi.Models.OpenApiDocument document);
     }
+    public interface IOpenApiAnnotatable
+    {
+        System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
+    }
     public interface IOpenApiElement { }
     public interface IOpenApiExtensible : Microsoft.OpenApi.Interfaces.IOpenApiElement
     {
@@ -592,10 +596,11 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiDocument : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiDocument : Microsoft.OpenApi.Interfaces.IOpenApiAnnotatable, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         public OpenApiDocument() { }
         public OpenApiDocument(Microsoft.OpenApi.Models.OpenApiDocument document) { }
+        public System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
         public Microsoft.OpenApi.Models.OpenApiComponents Components { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; set; }
@@ -774,11 +779,12 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiOperation : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiOperation : Microsoft.OpenApi.Interfaces.IOpenApiAnnotatable, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         public const bool DeprecatedDefault = false;
         public OpenApiOperation() { }
         public OpenApiOperation(Microsoft.OpenApi.Models.OpenApiOperation operation) { }
+        public System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiCallback> Callbacks { get; set; }
         public bool Deprecated { get; set; }
         public string Description { get; set; }
@@ -900,13 +906,14 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponses() { }
         public OpenApiResponses(Microsoft.OpenApi.Models.OpenApiResponses openApiResponses) { }
     }
-    public class OpenApiSchema : Microsoft.OpenApi.Interfaces.IEffective<Microsoft.OpenApi.Models.OpenApiSchema>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiSchema : Microsoft.OpenApi.Interfaces.IEffective<Microsoft.OpenApi.Models.OpenApiSchema>, Microsoft.OpenApi.Interfaces.IOpenApiAnnotatable, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         public OpenApiSchema() { }
         public OpenApiSchema(Microsoft.OpenApi.Models.OpenApiSchema schema) { }
         public Microsoft.OpenApi.Models.OpenApiSchema AdditionalProperties { get; set; }
         public bool AdditionalPropertiesAllowed { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AllOf { get; set; }
+        public System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AnyOf { get; set; }
         public Microsoft.OpenApi.Any.IOpenApiAny Default { get; set; }
         public bool Deprecated { get; set; }
