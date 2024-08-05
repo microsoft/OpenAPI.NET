@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Schema Object.
     /// </summary>
-    public class OpenApiSchema : IOpenApiReferenceable, IEffective<OpenApiSchema>, IOpenApiExtensible
+    public class OpenApiSchema : IOpenApiReferenceable, IEffective<OpenApiSchema>, IOpenApiExtensible, IOpenApiAnnotatable
     {
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
@@ -241,6 +241,9 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiReference Reference { get; set; }
 
+        /// <inheritdoc />
+        public IDictionary<string, object> Annotations { get; set; }
+
         /// <summary>
         /// Parameterless constructor
         /// </summary>
@@ -290,6 +293,7 @@ namespace Microsoft.OpenApi.Models
             Extensions = schema?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
+            Annotations = schema?.Annotations != null ? new Dictionary<string, object>(schema?.Annotations) : null;
         }
 
         /// <summary>

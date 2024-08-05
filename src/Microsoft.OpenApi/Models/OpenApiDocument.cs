@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
     {
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
@@ -70,6 +70,9 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public string HashCode => GenerateHashValue(this);
 
+        /// <inheritdoc />
+        public IDictionary<string, object> Annotations { get; set; }
+
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
@@ -89,6 +92,7 @@ namespace Microsoft.OpenApi.Models
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
+            Annotations = document?.Annotations != null ? new Dictionary<string, object>(document.Annotations) : null;
         }
 
         /// <summary>

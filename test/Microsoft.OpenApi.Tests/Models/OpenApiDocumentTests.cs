@@ -29,7 +29,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema2"
-                    }
+                    },
+                    Annotations = new Dictionary<string, object> { { "x-foo", "bar" } }
                 },
                 ["schema2"] = new()
                 {
@@ -38,7 +39,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = "string",
+                            Annotations = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     }
                 },
@@ -56,9 +58,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = "string",
+                            Annotations = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     },
+                    Annotations = new Dictionary<string, object> { { "key1", "value" } },
                     Reference = new()
                     {
                         Type = ReferenceType.Schema,
@@ -100,6 +104,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelReferencingComponents
         };
 
@@ -109,6 +114,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponentsWithOtherProperties
         };
 
@@ -118,6 +124,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponents
         };
 
@@ -509,6 +516,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponentsWithReference
         };
 
@@ -884,6 +892,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1272,6 +1281,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1826,6 +1836,27 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void OpenApiDocumentCopyConstructorWithAnnotationsSucceeds()
+        {
+            var baseDocument = new OpenApiDocument
+            {
+                Annotations = new Dictionary<string, object>
+                {
+                    ["key1"] = "value1",
+                    ["key2"] = 2
+                }
+            };
+
+            var actualDocument = new OpenApiDocument(baseDocument);
+
+            Assert.Equal(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
+
+            baseDocument.Annotations["key1"] = "value2";
+
+            Assert.NotEqual(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
         }
     }
 }

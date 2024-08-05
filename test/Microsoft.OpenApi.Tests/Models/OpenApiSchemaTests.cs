@@ -36,7 +36,8 @@ namespace Microsoft.OpenApi.Tests.Models
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
-            }
+            },
+            Annotations = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } }
         };
 
         public static readonly OpenApiSchema AdvancedSchemaObject = new()
@@ -481,6 +482,27 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal("string", actualSchema.Type);
             Assert.Equal("date", actualSchema.Format);
             Assert.True(actualSchema.Nullable);
+        }
+
+        [Fact]
+        public void OpenApiSchemaCopyConstructorWithAnnotationsSucceeds()
+        {
+            var baseSchema = new OpenApiSchema
+            {
+                Annotations = new Dictionary<string, object>
+                {
+                    ["key1"] = "value1",
+                    ["key2"] = 2
+                }
+            };
+
+            var actualSchema = new OpenApiSchema(baseSchema);
+
+            Assert.Equal(baseSchema.Annotations["key1"], actualSchema.Annotations["key1"]);
+
+            baseSchema.Annotations["key1"] = "value2";
+
+            Assert.NotEqual(baseSchema.Annotations["key1"], actualSchema.Annotations["key1"]);
         }
 
         public static TheoryData<IOpenApiAny> SchemaExamples()
