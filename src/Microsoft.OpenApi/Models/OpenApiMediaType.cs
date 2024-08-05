@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Models
             /* Special case for writing out empty arrays as valid response examples
             * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true
             * */
-            var hasEmptyArray = examples.Values.Any(example =>
+            var hasEmptyArray = examples.Values.Any( static example =>
                 example.Value is OpenApiArray arr && arr.Count == 0
             );
 
