@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Models
             // Media type does not exist in V2.
         }
 
-        private void SerializeExamples(IOpenApiWriter writer, IDictionary<string, OpenApiExample> examples)
+        private static void SerializeExamples(IOpenApiWriter writer, IDictionary<string, OpenApiExample> examples)
         {
             /* Special case for writing out empty arrays as valid response examples
             * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true
