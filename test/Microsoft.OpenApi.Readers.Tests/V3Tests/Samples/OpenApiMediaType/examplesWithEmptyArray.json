@@ -1,0 +1,18 @@
+{
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "examples": {
+    "Success response - no results": {
+      "value": []
+    }
+  }
+}
