@@ -314,12 +314,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme
-            // as property name.
-            writer.WriteStartObject();
             ReferencedSecurityScheme.SerializeAsV3(writer);
-            writer.WriteNull();
-            writer.WriteEndObject();
             writer.Flush();
 
             // Assert

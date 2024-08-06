@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Models
                     continue;
                 }
 
-                securityScheme.SerializeAsV3(writer);
+                writer.WritePropertyName(securityScheme.Reference.ReferenceV3);
 
                 writer.WriteStartArray();
 
