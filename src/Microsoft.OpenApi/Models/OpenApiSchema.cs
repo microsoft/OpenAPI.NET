@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -14,8 +14,11 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiReferenceable
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
     {
+        private string[] _typeArray;
+        private string _type;
+
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
         /// </summary>
@@ -86,13 +89,21 @@ namespace Microsoft.OpenApi.Models
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Value MUST be a string in V2 and V3.
         /// </summary>
-        public string Type { get; set; }
-
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Multiple types via an array are supported in V31.
-        /// </summary>
-        public string[] TypeArray { get; set; }
+        public object Type 
+        {
+            get => _type;
+            set
+            {
+                if (value is string || value is JsonNode)
+                {
+                    _type = (string)value;
+                }
+                else
+                {
+                    _typeArray = (string[])value;
+                }
+            }
+        }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -484,7 +495,14 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(new OpenApiAny(s)));
 
             // type
-            writer.WriteProperty(OpenApiConstants.Type, Type);
+            if (Type.GetType() == typeof(string))
+            {
+                writer.WriteProperty(OpenApiConstants.Type, _type);
+            }
+            else
+            {
+                writer.WriteOptionalCollection(OpenApiConstants.Type, _typeArray, (w, s) => w.WriteRaw(s));
+            }
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV3(w));
@@ -695,7 +713,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(new OpenApiAny(s)));
 
             // type
-            writer.WriteProperty(OpenApiConstants.Type, Type);
+            writer.WriteProperty(OpenApiConstants.Type, _type);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
