@@ -119,8 +119,17 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "type",
-                (o, n, _) => o.TypeArray = n.CreateSimpleList((n2, p) => n2.GetScalarValue()).ToArray()
-
+                (o, n, _) => 
+                {
+                    if (n is ValueNode)
+                    {
+                        o.Type = n.GetScalarValue();
+                    }
+                    else
+                    {
+                        o.Type = n.CreateSimpleList((n2, p) => n2.GetScalarValue()).ToArray();
+                    }
+                }
             },
             {
                 "allOf",
