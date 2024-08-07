@@ -57,6 +57,7 @@ namespace Microsoft.OpenApi.Reader.V31
             [typeof(OpenApiResponse)] = OpenApiV31Deserializer.LoadResponse,
             [typeof(OpenApiResponses)] = OpenApiV31Deserializer.LoadResponses,
             [typeof(JsonSchema)] = OpenApiV31Deserializer.LoadSchema,
+            [typeof(OpenApiSchema)] = OpenApiV31Deserializer.LoadOpenApiSchema,
             [typeof(OpenApiSecurityRequirement)] = OpenApiV31Deserializer.LoadSecurityRequirement,
             [typeof(OpenApiSecurityScheme)] = OpenApiV31Deserializer.LoadSecurityScheme,
             [typeof(OpenApiServer)] = OpenApiV31Deserializer.LoadServer,
