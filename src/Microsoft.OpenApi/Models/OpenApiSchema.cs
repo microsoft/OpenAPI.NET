@@ -73,12 +73,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public decimal V31ExclusiveMaximum { get; set; }
+        public decimal? V31ExclusiveMaximum { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public decimal V31ExclusiveMinimum { get; set; }
+        public decimal? V31ExclusiveMinimum { get; set; }
 
         /// <summary>
         /// 
@@ -593,9 +593,8 @@ namespace Microsoft.OpenApi.Models
 
         internal void WriteV31Properties(IOpenApiWriter writer)
         {
-            writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
-            writer.WriteOptionalCollection(OpenApiConstants.Type, TypeArray, (w, s) => w.WriteRaw(s));
             writer.WriteProperty(OpenApiConstants.Id, Id);
+            writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
             writer.WriteProperty(OpenApiConstants.Vocabulary, Vocabulary);
             writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV3(w));
@@ -604,8 +603,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.RecursiveAnchor, RecursiveAnchor);
             writer.WriteProperty(OpenApiConstants.RecursiveRef, RecursiveRef);
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMaximum, V31ExclusiveMaximum);
-            writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);
-            writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties);
+            writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);            
+            writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
         }
 
         /// <summary>
