@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -16,9 +16,6 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiSchema : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
     {
-        private string[] _typeArray;
-        private string _type;
-
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
         /// </summary>
@@ -81,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         public decimal? V31ExclusiveMinimum { get; set; }
 
         /// <summary>
-        /// 
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
         public bool UnEvaluatedProperties { get; set; }     
 
@@ -89,21 +86,7 @@ namespace Microsoft.OpenApi.Models
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Value MUST be a string in V2 and V3.
         /// </summary>
-        public object Type 
-        {
-            get => _type;
-            set
-            {
-                if (value is string || value is JsonNode)
-                {
-                    _type = (string)value;
-                }
-                else
-                {
-                    _typeArray = (string[])value;
-                }
-            }
-        }
+        public object Type { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -349,8 +332,7 @@ namespace Microsoft.OpenApi.Models
             UnevaluatedProperties = schema?.UnevaluatedProperties ?? UnevaluatedProperties;
             V31ExclusiveMaximum = schema?.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
             V31ExclusiveMinimum = schema?.V31ExclusiveMinimum ?? V31ExclusiveMinimum;
-            Type = schema?.Type ?? Type;
-            TypeArray = schema?.TypeArray != null ? new string[schema.TypeArray.Length] : null;
+            Type = DeepCloneType(schema?.Type);
             Format = schema?.Format ?? Format;
             Description = schema?.Description ?? Description;
             Maximum = schema?.Maximum ?? Maximum;
@@ -497,11 +479,11 @@ namespace Microsoft.OpenApi.Models
             // type
             if (Type.GetType() == typeof(string))
             {
-                writer.WriteProperty(OpenApiConstants.Type, _type);
+                writer.WriteProperty(OpenApiConstants.Type, (string)Type);
             }
             else
             {
-                writer.WriteOptionalCollection(OpenApiConstants.Type, _typeArray, (w, s) => w.WriteRaw(s));
+                writer.WriteOptionalCollection(OpenApiConstants.Type, (string[])Type, (w, s) => w.WriteRaw(s));
             }
 
             // allOf
@@ -712,7 +694,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(new OpenApiAny(s)));
 
             // type
-            writer.WriteProperty(OpenApiConstants.Type, _type);
+            writer.WriteProperty(OpenApiConstants.Type, (string)Type);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
@@ -773,6 +755,29 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        private object DeepCloneType(object type)
+        {
+            if (type == null)
+                return null;
+
+            if (type is string)
+            {
+                return type; // Return the string as is
+            }
+
+            else
+            {
+                var array = type as Array;
+                Type elementType = type.GetType().GetElementType();
+                Array copiedArray = Array.CreateInstance(elementType, array.Length);
+                for (int i = 0; i < array.Length; i++)
+                {
+                    copiedArray.SetValue(DeepCloneType(array.GetValue(i)), i);
+                }
+                return copiedArray;
+            }
         }
     }
 }
