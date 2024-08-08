@@ -61,6 +61,66 @@ namespace Microsoft.OpenApi.Models
         public const string Format = "format";
 
         /// <summary>
+        /// Field: Schema
+        /// </summary>
+        public const string DollarSchema = "$schema";
+
+        /// <summary>
+        /// Field: Id
+        /// </summary>
+        public const string Id = "$id";
+
+        /// <summary>
+        /// Field: Comment
+        /// </summary>
+        public const string Comment = "$comment";
+
+        /// <summary>
+        /// Field: Vocabulary
+        /// </summary>
+        public const string Vocabulary = "$vocabulary";
+
+        /// <summary>
+        /// Field: DynamicRef
+        /// </summary>
+        public const string DynamicRef = "$dynamicRef";
+
+        /// <summary>
+        /// Field: DynamicAnchor
+        /// </summary>
+        public const string DynamicAnchor = "$dynamicAnchor";
+
+        /// <summary>
+        /// Field: RecursiveRef
+        /// </summary>
+        public const string RecursiveRef = "$recursiveRef";
+
+        /// <summary>
+        /// Field: RecursiveAnchor
+        /// </summary>
+        public const string RecursiveAnchor = "$recursiveAnchor";
+
+        /// <summary>
+        /// Field: Definitions
+        /// </summary>
+        public const string Defs = "$defs";
+
+        /// <summary>
+        /// Field: V31ExclusiveMaximum
+        /// </summary>
+        public const string V31ExclusiveMaximum = "exclusiveMaximum";
+
+        /// <summary>
+        /// Field: V31ExclusiveMinimum
+        /// </summary>
+        public const string V31ExclusiveMinimum = "exclusiveMinimum";
+
+        /// <summary>
+        /// Field: UnevaluatedProperties
+        /// </summary>
+        public const string UnevaluatedProperties = "unevaluatedProperties";
+
+        /// <summary>
         /// Field: Version
         /// </summary>
         public const string Version = "version";
