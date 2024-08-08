@@ -767,17 +767,18 @@ namespace Microsoft.OpenApi.Models
                 return type; // Return the string as is
             }
 
-            else
+            if (type is Array array)
             {
-                var array = type as Array;
                 Type elementType = type.GetType().GetElementType();
                 Array copiedArray = Array.CreateInstance(elementType, array.Length);
-                for (int i = 0; i < array.Length; i++)
+                for (int i = 0; i < array?.Length; i++)
                 {
-                    copiedArray.SetValue(DeepCloneType(array.GetValue(i)), i);
+                    copiedArray.SetValue(DeepCloneType(array?.GetValue(i)), i);
                 }
                 return copiedArray;
             }
+
+            return null;
         }
     }
 }
