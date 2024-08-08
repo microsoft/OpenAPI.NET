@@ -1003,14 +1003,13 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.ISet<string> Required { get; set; }
         public string Schema { get; set; }
         public string Title { get; set; }
-        public string Type { get; set; }
-        public string[] TypeArray { get; set; }
+        public object Type { get; set; }
         public bool UnEvaluatedProperties { get; set; }
         public bool UnevaluatedProperties { get; set; }
         public bool? UniqueItems { get; set; }
         public bool UnresolvedReference { get; set; }
-        public decimal V31ExclusiveMaximum { get; set; }
-        public decimal V31ExclusiveMinimum { get; set; }
+        public decimal? V31ExclusiveMaximum { get; set; }
+        public decimal? V31ExclusiveMinimum { get; set; }
         public string Vocabulary { get; set; }
         public bool WriteOnly { get; set; }
         public Microsoft.OpenApi.Models.OpenApiXml Xml { get; set; }
