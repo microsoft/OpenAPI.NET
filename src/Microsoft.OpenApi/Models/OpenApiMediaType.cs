@@ -77,7 +77,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // examples
-            SerializeExamples(writer, Examples);
+            if (Examples != null && Examples.Any())
+            {
+                SerializeExamples(writer, Examples);
+            }
 
             // encoding
             writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, (w, e) => e.SerializeAsV3(w));
