@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -1670,27 +1671,6 @@ namespace Microsoft.OpenApi.Tests.Models
             return openApiDoc;
         }
 
-        //[Fact]
-        //public void CopyConstructorForAdvancedDocumentWorks()
-        //{
-        //    // Arrange & Act
-        //    var doc = new OpenApiDocument(AdvancedDocument);
-
-        //    var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
-        //    var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
-        //    var responseSchemaTypeCopy = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type = "object";
-        //    var advancedDocResponseSchemaType = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type;
-
-        //    // Assert
-        //    Assert.NotNull(doc.Info);
-        //    Assert.NotNull(doc.Servers);
-        //    Assert.NotNull(doc.Paths);
-        //    Assert.Equal(2, doc.Paths.Count);
-        //    Assert.NotNull(doc.Components);
-        //    Assert.NotEqual(docOpId, advancedDocOpId);
-        //    Assert.NotEqual(responseSchemaTypeCopy, advancedDocResponseSchemaType);
-        //}
-
         [Fact]
         public void SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()
         {
@@ -1858,5 +1838,38 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Assert.NotEqual(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
         }
-    }
+
+        [Fact]
+        public void SerializeExamplesDoesNotThrowNullReferenceException()
+        {
+            OpenApiDocument doc = new OpenApiDocument
+            {
+                Paths = new OpenApiPaths
+                {
+                    ["test"] = new OpenApiPathItem()
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>()
+                        {
+                            [OperationType.Post] = new OpenApiOperation
+                            {
+                                RequestBody = new OpenApiRequestBody()
+                                {
+                                    Content =
+                                    {
+                                        ["application/json"] = new OpenApiMediaType()
+                                        {
+                                            Examples = null,
+                                        },
+                                    }
+                                }
+                            },
+                        }
+                    },
+                }
+            };
+
+            OpenApiJsonWriter apiWriter = new OpenApiJsonWriter(new StringWriter());
+            doc.Invoking(d => d.SerializeAsV3(apiWriter)).Should().NotThrow();
+        }
+    }    
 }
