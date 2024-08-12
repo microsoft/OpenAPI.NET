@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -168,7 +168,7 @@ namespace Microsoft.OpenApi.Models
                 if (mediatype.Value != null)
                 {
                     // schema
-                    writer.WriteOptionalObject(OpenApiConstants.Schema, mediatype.Value.Schema, (w, s) => writer.WriteJsonSchema(s, OpenApiSpecVersion.OpenApi2_0));
+                    writer.WriteOptionalObject(OpenApiConstants.Schema, mediatype.Value.Schema, (w, s) => s.SerializeAsV2(w));
 
                     // examples
                     if (Content.Values.Any(m => m.Example != null))

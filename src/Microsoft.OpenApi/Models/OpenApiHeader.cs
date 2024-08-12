@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
@@ -18,7 +17,7 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiHeader : IOpenApiReferenceable, IOpenApiExtensible
     {
-        private JsonSchema _schema;
+        private OpenApiSchema _schema;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -69,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual JsonSchema Schema 
+        public virtual OpenApiSchema Schema 
         { 
             get => _schema; 
             set => _schema = value;  
@@ -114,7 +113,7 @@ namespace Microsoft.OpenApi.Models
             Style = header?.Style ?? Style;
             Explode = header?.Explode ?? Explode;
             AllowReserved = header?.AllowReserved ?? AllowReserved;
-            Schema = header?.Schema != null ? JsonNodeCloneHelper.CloneJsonSchema(header.Schema) : null;
+            Schema = header?.Schema != null ? new(header.Schema) : null;
             Example = header?.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
@@ -193,7 +192,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteJsonSchema(s, version));
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
@@ -250,7 +249,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            SchemaSerializerHelper.WriteAsItemsProperties(Schema, writer, Extensions, OpenApiSpecVersion.OpenApi2_0);
+            Schema.WriteAsItemsProperties(writer);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));

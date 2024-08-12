@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -17,9 +16,9 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
-        /// An object to hold reusable <see cref="JsonSchema"/> Objects.
+        /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, JsonSchema> Schemas { get; set; } = new Dictionary<string, JsonSchema>();
+        public IDictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
@@ -84,7 +83,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas = components?.Schemas != null ? new Dictionary<string, JsonSchema>(components.Schemas) : null;
+            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
             Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
             Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
             Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
@@ -109,7 +108,7 @@ namespace Microsoft.OpenApi.Models
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                RenderComponents(writer, OpenApiSpecVersion.OpenApi3_1);
+                RenderComponents(writer, (writer, element) => element.SerializeAsV31(writer));
                 return;
             }
 
@@ -149,7 +148,7 @@ namespace Microsoft.OpenApi.Models
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                RenderComponents(writer, OpenApiSpecVersion.OpenApi3_0);
+                RenderComponents(writer, (writer, element) => element.SerializeAsV3(writer));
                 return;
             }
 
@@ -171,17 +170,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(
                 OpenApiConstants.Schemas,
                 Schemas,
-                (w, key, s) =>
+                (w, key, component) =>
                 {
-                    var reference = s.GetRef();
-                    if (reference != null &&
-                        reference.OriginalString.Split('/').Last().Equals(key))
+                    if (component.Reference is { Type: ReferenceType.Schema } &&
+                        component.Reference.Id == key)
                     {
-                        w.WriteJsonSchemaWithoutReference(w, s, version);
+                        component.SerializeAsV3WithoutReference(w);
                     }
                     else
                     {
-                        w.WriteJsonSchema(s, version);
+                        component.SerializeAsV3(w);
                     }
                 });
 
@@ -335,16 +333,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private void RenderComponents(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void RenderComponents(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             var loops = writer.GetSettings().LoopDetector.Loops;
             writer.WriteStartObject();
-            if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
+            if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
             {
-                writer.WriteOptionalMap(
-                   OpenApiConstants.Schemas,
-                   Schemas,
-                   (w, key, s) => { w.WriteJsonSchema(s, version); });
+                var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
+                       .ToDictionary(k => k.Reference.Id);
+
+                writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, callback);
             }
             writer.WriteEndObject();
         }

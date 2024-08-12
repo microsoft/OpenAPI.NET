@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -189,7 +188,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static string BuildUrl(string scheme, string host, string basePath)
         {
-            if (String.IsNullOrEmpty(scheme) && !String.IsNullOrEmpty(host))
+            if (string.IsNullOrEmpty(scheme) && !string.IsNullOrEmpty(host))
             {
                 host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
             }
@@ -300,20 +299,6 @@ namespace Microsoft.OpenApi.Reader.V2
             //Check if the host (excluding port number) is a valid dns/ip address.
             var hostPart = host.Split(':').First();
             return Uri.CheckHostName(hostPart) != UriHostNameType.Unknown;
-        }
-
-        private static void RegisterComponentsSchemasInGlobalRegistry(IDictionary<string, JsonSchema> schemas)
-        {
-            if (schemas == null)
-            {
-                return;
-            }
-
-            foreach (var schema in schemas)
-            {
-                var refUri = new Uri(OpenApiConstants.V2ReferenceUri + schema.Key);
-                SchemaRegistry.Global.Register(refUri, schema.Value);
-            }
         }
     }
 
