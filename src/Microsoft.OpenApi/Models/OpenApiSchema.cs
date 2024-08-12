@@ -624,6 +624,72 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
+        internal void WriteAsItemsProperties(IOpenApiWriter writer)
+        {
+            // type
+            writer.WriteProperty(OpenApiConstants.Type, (string)Type);
+
+            // format
+            if (string.IsNullOrEmpty(Format))
+            {
+                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
+
+            writer.WriteProperty(OpenApiConstants.Format, Format);
+
+            // items
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
+
+            // collectionFormat
+            // We need information from style in parameter to populate this.
+            // The best effort we can make is to pull this information from the first parameter
+            // that leverages this schema. However, that in itself may not be as simple
+            // as the schema directly under parameter might be referencing one in the Components,
+            // so we will need to do a full scan of the object before we can write the value for
+            // this property. This is not supported yet, so we will skip this property at the moment.
+
+            // default
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
+
+            // maximum
+            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
+
+            // exclusiveMaximum
+            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+
+            // minimum
+            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
+
+            // exclusiveMinimum
+            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+
+            // maxLength
+            writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
+
+            // minLength
+            writer.WriteProperty(OpenApiConstants.MinLength, MinLength);
+
+            // pattern
+            writer.WriteProperty(OpenApiConstants.Pattern, Pattern);
+
+            // maxItems
+            writer.WriteProperty(OpenApiConstants.MaxItems, MaxItems);
+
+            // minItems
+            writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
+
+            // enum
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(new OpenApiAny(s)));
+
+            // multipleOf
+            writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
+
+            // extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
         internal void WriteAsSchemaProperties(
             IOpenApiWriter writer,
             ISet<string> parentRequiredProperties,
