@@ -1,10 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
 {
@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             Func<T, IDictionary<string, U>> propertyMapGetter,
             Func<U, OpenApiAny> propertyGetter,
             Action<U, OpenApiAny> propertySetter,
-            Func<T, JsonSchema> schemaGetter)
+            Func<T, OpenApiSchema> schemaGetter)
         {
             this.PropertyMapGetter = propertyMapGetter;
             this.PropertyGetter = propertyGetter;
@@ -43,6 +43,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// <summary>
         /// Function to get the schema to apply to the property.
         /// </summary>
-        public Func<T, JsonSchema> SchemaGetter { get; }
+        public Func<T, OpenApiSchema> SchemaGetter { get; }
     }
 }

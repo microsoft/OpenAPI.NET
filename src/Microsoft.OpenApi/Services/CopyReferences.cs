@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -26,12 +25,12 @@ namespace Microsoft.OpenApi.Services
         {
             switch (referenceable)
             {
-                case JsonSchema schema:
+                case OpenApiSchema schema:
                     EnsureComponentsExists();
                     EnsureSchemasExists();
-                    if (!Components.Schemas.ContainsKey(schema.GetRef().OriginalString))
+                    if (!Components.Schemas.ContainsKey(schema.Reference.Id))
                     {
-                        Components.Schemas.Add(schema.GetRef().OriginalString, schema);
+                        Components.Schemas.Add(schema.Reference.Id, schema);
                     }
                     break;
 
@@ -70,22 +69,22 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="JsonSchema"/>
+        /// Visits <see cref="OpenApiSchema"/>
         /// </summary>
         /// <param name="schema">The OpenApiSchema to be visited.</param>
-        public override void Visit(ref JsonSchema schema)
+        public override void Visit(OpenApiSchema schema)
         {
             // This is needed to handle schemas used in Responses in components
-            if (schema.GetRef() != null)
+            if (schema.Reference != null)
             {
                 EnsureComponentsExists();
                 EnsureSchemasExists();
-                if (!Components.Schemas.ContainsKey(schema.GetRef().OriginalString))
+                if (!Components.Schemas.ContainsKey(schema.Reference.Id))
                 {
-                    Components.Schemas.Add(schema.GetRef().OriginalString, schema);
+                    Components.Schemas.Add(schema.Reference.Id, schema);
                 }
             }
-            base.Visit(ref schema);
+            base.Visit(schema);
         }
 
         private void EnsureComponentsExists()
@@ -100,7 +99,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (_target.Components.Schemas == null)
             {
-                _target.Components.Schemas = new Dictionary<string, JsonSchema>();
+                _target.Components.Schemas = new Dictionary<string, OpenApiSchema>();
             }
         }
 

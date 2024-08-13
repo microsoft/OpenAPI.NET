@@ -4,10 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
@@ -59,15 +57,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, JsonSchema> CreateJsonSchemaMap(
-            ReferenceType referenceType,
-            Func<MapNode, OpenApiDocument, JsonSchema> map,
-            OpenApiSpecVersion version,
-            OpenApiDocument hostDocument = null)
-        {
-            throw new OpenApiReaderException("Cannot create map from this reference.", Context);
-        }
-
         public virtual List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map)
         {
             throw new OpenApiReaderException("Cannot create simple list from this type of node.", Context);
@@ -96,6 +85,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         public virtual List<JsonNode> CreateListOfAny()
         {
             throw new OpenApiReaderException("Cannot create a list from this type of node.", Context);
-        }
+        }      
     }
 }

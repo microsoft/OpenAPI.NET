@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -56,8 +55,7 @@ namespace Microsoft.OpenApi.Reader.V31
             [typeof(OpenApiRequestBody)] = OpenApiV31Deserializer.LoadRequestBody,
             [typeof(OpenApiResponse)] = OpenApiV31Deserializer.LoadResponse,
             [typeof(OpenApiResponses)] = OpenApiV31Deserializer.LoadResponses,
-            [typeof(JsonSchema)] = OpenApiV31Deserializer.LoadSchema,
-            [typeof(OpenApiSchema)] = OpenApiV31Deserializer.LoadOpenApiSchema,
+            [typeof(OpenApiSchema)] = OpenApiV31Deserializer.LoadSchema,
             [typeof(OpenApiSecurityRequirement)] = OpenApiV31Deserializer.LoadSecurityRequirement,
             [typeof(OpenApiSecurityScheme)] = OpenApiV31Deserializer.LoadSecurityScheme,
             [typeof(OpenApiServer)] = OpenApiV31Deserializer.LoadServer,
