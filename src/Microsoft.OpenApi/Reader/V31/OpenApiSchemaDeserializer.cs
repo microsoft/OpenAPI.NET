@@ -151,6 +151,10 @@ namespace Microsoft.OpenApi.Reader.V31
                 (o, n, t) => o.Properties = n.CreateMap(LoadOpenApiSchema, t)
             },
             {
+                "patternProperties",
+                (o, n, t) => o.PatternProperties = n.CreateMap(LoadOpenApiSchema, t)
+            },
+            {
                 "additionalProperties", (o, n, _) =>
                 {
                     if (n is ValueNode)
