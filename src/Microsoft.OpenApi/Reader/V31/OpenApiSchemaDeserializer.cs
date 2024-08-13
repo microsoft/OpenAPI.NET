@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -202,6 +202,10 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 "example",
                 (o, n, _) => o.Example = n.CreateAny()
+            },
+            {
+                "examples",
+                (o, n, _) => o.Examples = n.CreateListOfAny()
             },
             {
                 "deprecated",

@@ -263,6 +263,13 @@ namespace Microsoft.OpenApi.Models
         public OpenApiAny Example { get; set; }
 
         /// <summary>
+        /// A free-form property to include examples of an instance for this schema. 
+        /// To represent examples that cannot be naturally represented in JSON or YAML, 
+        /// a list of values can be used to contain the examples with escaping where necessary.
+        /// </summary>
+        public IList<JsonNode> Examples { get; set; }
+
+        /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
         public IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
@@ -362,6 +369,7 @@ namespace Microsoft.OpenApi.Models
             AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
             Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
             Example = schema?.Example != null ? new(schema?.Example.Node) : null;
+            Examples = schema?.Examples != null ? new List<JsonNode>(schema.Examples) : null;
             Enum = schema?.Enum != null ? new List<JsonNode>(schema.Enum) : null;
             Nullable = schema?.Nullable ?? Nullable;
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
@@ -587,6 +595,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMaximum, V31ExclusiveMaximum);
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);            
             writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
+            writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(new OpenApiAny(s)));
         }
 
         /// <summary>
