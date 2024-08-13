@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -440,8 +439,16 @@ namespace Microsoft.OpenApi.Tests.Writers
         private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
         {
             // Arrange
-
-            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("#/components/schemas/thing").Build();
+            var thingSchema = new OpenApiSchema
+            {
+                Type = "object",
+                UnresolvedReference = false,
+                Reference = new()
+                {
+                    Id = "thing",
+                    Type = ReferenceType.Schema
+                }
+            };
 
             var doc = new OpenApiDocument()
             {

@@ -8,8 +8,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -21,15 +21,14 @@ namespace Microsoft.OpenApi.Tests.Writers
     [Collection("DefaultSettings")]
     public class OpenApiJsonWriterTests
     {
-        static bool[] shouldProduceTerseOutputValues = new[] { true, false };
+        static bool[] shouldProduceTerseOutputValues = [true, false];
 
         public static IEnumerable<object[]> WriteStringListAsJsonShouldMatchExpectedTestCases()
         {
             return
                 from input in new[]
                 {
-                    new[]
-                    {
+                    [
                         "string1",
                         "string2",
                         "string3",
@@ -38,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                         "string6",
                         "string7",
                         "string8"
-                    },
+                    ],
                     new[] {"string1", "string1", "string1", "string1"}
                 }
                 from shouldBeTerse in shouldProduceTerseOutputValues
@@ -274,12 +273,20 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void OpenApiJsonWriterOutputsValidJsonValueWhenSchemaHasNanOrInfinityValues()
         {
             // Arrange
-            var schema = new JsonSchemaBuilder().Enum("NaN", "Infinity", "-Infinity");
+            var schema = new OpenApiSchema
+            {
+                Enum = new List<JsonNode>
+                {
+                    new OpenApiAny("NaN").Node,
+                    new OpenApiAny("Infinity").Node,
+                    new OpenApiAny("-Infinity").Node
+                }
+            };
 
             // Act
             var schemaBuilder = new StringBuilder();
             var jsonWriter = new OpenApiJsonWriter(new StringWriter(schemaBuilder));
-            jsonWriter.WriteJsonSchema(schema, OpenApiSpecVersion.OpenApi3_0);
+            schema.SerializeAsV3(jsonWriter);
             var jsonString = schemaBuilder.ToString();
 
             // Assert

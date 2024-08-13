@@ -1,7 +1,6 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -84,7 +83,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 Name = "period",
                                                 In = ParameterLocation.Path,
                                                 Required = true,
-                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                                                Schema = new()
+                                                {
+                                                    Type = "string"
+                                                }
                                             }
                                         }
                                     },
@@ -100,7 +102,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         applicationJsonMediaType,
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array)
+                                                            Schema = new()
+                                                            {
+                                                                Type = "array"
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -118,7 +123,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Name = "period",
                                     In = ParameterLocation.Path,
                                     Required = true,
-                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                                    Schema = new()
+                                    {
+                                        Type = "string"
+                                    }
                                 }
                             }
                         }
@@ -149,7 +157,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 Name = "period",
                                                 In = ParameterLocation.Path,
                                                 Required = true,
-                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                                                Schema = new()
+                                                {
+                                                    Type = "string"
+                                                }
                                             }
                                         }
                                     },
@@ -165,7 +176,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         applicationJsonMediaType,
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array)
+                                                            Schema = new()
+                                                            {
+                                                                Type = "array"
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -182,7 +196,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 Name = "period",
                                 In = ParameterLocation.Path,
                                 Required = true,
-                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                                Schema = new()
+                                {
+                                    Type = "string"
+                                }
                             }
                         }
                     },
@@ -216,17 +233,29 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         applicationJsonMediaType,
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new JsonSchemaBuilder()
-                                                                        .Title("Collection of user")
-                                                                        .Type(SchemaValueType.Object)
-                                                                        .Properties(("value",
-                                                                            new JsonSchemaBuilder()
-                                                                                .Type(SchemaValueType.Array)
-                                                                                .Items(new JsonSchemaBuilder()
-                                                                                    .Ref("microsoft.graph.user")
-                                                                                    .Build())
-                                                                            .Build()))
-                                                                        .Build()
+                                                            Schema = new()
+                                                            {
+                                                                Title = "Collection of user",
+                                                                Type = "object",
+                                                                Properties = new Dictionary<string, OpenApiSchema>
+                                                                {
+                                                                    {
+                                                                        "value",
+                                                                        new OpenApiSchema
+                                                                        {
+                                                                            Type = "array",
+                                                                            Items = new()
+                                                                            {
+                                                                                Reference = new()
+                                                                                {
+                                                                                    Type = ReferenceType.Schema,
+                                                                                    Id = "microsoft.graph.user"
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -267,7 +296,14 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         applicationJsonMediaType,
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new JsonSchemaBuilder().Ref("microsoft.graph.user").Build()
+                                                            Schema = new()
+                                                            {
+                                                                Reference = new()
+                                                                {
+                                                                    Type = ReferenceType.Schema,
+                                                                    Id = "microsoft.graph.user"
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -330,7 +366,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             In = ParameterLocation.Query,
                                             Required = true,
                                             Description = "Select properties to be returned",
-                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Build()
+                                            Schema = new()
+                                            {
+                                                Type = "array"
+                                            }
                                             // missing explode parameter
                                         }
                                     },
@@ -346,7 +385,14 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         applicationJsonMediaType,
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new JsonSchemaBuilder().Ref("microsoft.graph.message").Build()
+                                                            Schema = new()
+                                                            {
+                                                                Reference = new()
+                                                                {
+                                                                    Type = ReferenceType.Schema,
+                                                                    Id = "microsoft.graph.message"
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -384,7 +430,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 In = ParameterLocation.Path,
                                                 Required = true,
                                                 Description = "key: id of administrativeUnit",
-                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                                                Schema = new()
+                                                {
+                                                    Type = "string"
+                                                }
                                             }
                                         }
                                     },
@@ -400,12 +449,17 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         applicationJsonMediaType,
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new JsonSchemaBuilder()
-                                                                        .AnyOf(
-                                                                            new JsonSchemaBuilder()
-                                                                                .Type(SchemaValueType.String)
-                                                                                .Build())
-                                                                        .Build()
+                                                            Schema = new()
+                                                            {
+                                                                AnyOf = new List<OpenApiSchema>
+                                                                {
+                                                                    new()
+                                                                    {
+                                                                        Type = "string"
+                                                                    }
+                                                                },
+                                                                Nullable = true
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -477,14 +531,29 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         applicationJsonMediaType,
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new JsonSchemaBuilder()
-                                                                        .Title("Collection of hostSecurityProfile")
-                                                                        .Type(SchemaValueType.Object)
-                                                                        .Properties(("value1",
-                                                                            new JsonSchemaBuilder()
-                                                                                .Type(SchemaValueType.Array)
-                                                                                .Items(new JsonSchemaBuilder().Ref("microsoft.graph.networkInterface"))))
-                                                                        .Build()
+                                                            Schema = new()
+                                                            {
+                                                                Title = "Collection of hostSecurityProfile",
+                                                                Type = "object",
+                                                                Properties = new Dictionary<string, OpenApiSchema>
+                                                                {
+                                                                    {
+                                                                        "value",
+                                                                        new OpenApiSchema
+                                                                        {
+                                                                            Type = "array",
+                                                                            Items = new()
+                                                                            {
+                                                                                Reference = new()
+                                                                                {
+                                                                                    Type = ReferenceType.Schema,
+                                                                                    Id = "microsoft.graph.networkInterface"
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -521,7 +590,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             In = ParameterLocation.Path,
                                             Description = "key: id of call",
                                             Required = true,
-                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
+                                            Schema = new()
+                                            {
+                                                Type = "string"
+                                            },
                                             Extensions = new Dictionary<string, IOpenApiExtension>
                                             {
                                                 {
@@ -573,8 +645,16 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             In = ParameterLocation.Path,
                                             Description = "key: id of group",
                                             Required = true,
-                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
-                                            Extensions = new Dictionary <string, IOpenApiExtension> { { "x-ms-docs-key-type", new OpenApiAny("group") } }
+                                            Schema = new()
+                                            {
+                                                Type = "string"
+                                            },
+                                            Extensions = new Dictionary<string, IOpenApiExtension>
+                                            {
+                                                {
+                                                    "x-ms-docs-key-type", new OpenApiAny("group")
+                                                }
+                                            }
                                         },
                                         new()
                                         {
@@ -582,8 +662,16 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             In = ParameterLocation.Path,
                                             Description = "key: id of event",
                                             Required = true,
-                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
-                                            Extensions = new Dictionary <string, IOpenApiExtension> { { "x-ms-docs-key-type", new OpenApiAny("event") } }
+                                            Schema = new()
+                                            {
+                                                Type = "string"
+                                            },
+                                            Extensions = new Dictionary<string, IOpenApiExtension>
+                                            {
+                                                {
+                                                    "x-ms-docs-key-type", new OpenApiAny("event")
+                                                }
+                                            }
                                         }
                                     },
                                     Responses = new()
@@ -598,7 +686,15 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         applicationJsonMediaType,
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Ref("microsoft.graph.event").Build()
+                                                            Schema = new()
+                                                            {
+                                                                Type = "array",
+                                                                Reference = new()
+                                                                {
+                                                                    Type = ReferenceType.Schema,
+                                                                    Id = "microsoft.graph.event"
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -638,17 +734,25 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, JsonSchema>
+                    Schemas = new Dictionary<string, OpenApiSchema>
                     {
                         {
-                            "microsoft.graph.networkInterface", new JsonSchemaBuilder()
-                            .Title("networkInterface")
-                            .Type(SchemaValueType.Object)
-                            .Properties(
-                                ("description", new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.String)
-                                    .Description("Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).")))
-                            .Build()
+                            "microsoft.graph.networkInterface", new OpenApiSchema
+                            {
+                                Title = "networkInterface",
+                                Type = "object",
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    {
+                                        "description", new OpenApiSchema
+                                        {
+                                            Type = "string",
+                                            Description = "Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).",
+                                            Nullable = true
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

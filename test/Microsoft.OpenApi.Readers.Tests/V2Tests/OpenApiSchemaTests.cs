@@ -3,16 +3,18 @@
 
 using System.IO;
 using FluentAssertions;
-using Json.Schema;
-using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Reader.V2;
 using Xunit;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
+using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
     [Collection("DefaultSettings")]
-    public class JsonSchemaTests
+    public class OpenApiSchemaTests
     {
         private const string SampleFolderPath = "V2Tests/Samples/OpenApiSchema/";
 
@@ -30,9 +32,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            schema.Should().BeEquivalentTo(new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Number).Format("float").Default(5).Build(),
-                                options => options.IgnoringCyclicReferences());
+            schema.Should().BeEquivalentTo(new OpenApiSchema
+            {
+                Type = "number",
+                Format = "float",
+                Default = new OpenApiAny(5)
+            });
         }
 
         [Fact]
@@ -50,12 +55,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             schema.Should().BeEquivalentTo(
-                new JsonSchemaBuilder()
-                    .Type(SchemaValueType.Number)
-                    .Format("float")
-                    .Example(5)
-                    .Build(),
-                options => options.IgnoringCyclicReferences());
+                new OpenApiSchema
+                {
+                    Type = "number",
+                    Format = "float",
+                    Example = new OpenApiAny(5)
+                });
         }
 
         [Fact]
@@ -72,11 +77,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            var expected = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Number)
-                                .Format("float")
-                                .Enum(7, 8, 9)
-                                .Build();
+            var expected = new OpenApiSchema
+            {
+                Type = "number",
+                Format = "float",
+                Enum = new List<JsonNode>
+                {
+                    new OpenApiAny(7).Node,
+                    new OpenApiAny(8).Node,
+                    new OpenApiAny(9).Node
+                }
+            };
             schema.Should().BeEquivalentTo(expected,
                                 options => options.IgnoringCyclicReferences());
         }

@@ -1,11 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -23,7 +22,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             var mediaType = new OpenApiMediaType
             {
                 Example = new OpenApiAny(55),
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
+                Schema = new()
+                {
+                    Type = "string",
+                }
             };
 
             // Act
@@ -55,11 +57,14 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             var mediaType = new OpenApiMediaType
             {
-                Schema = new JsonSchemaBuilder()
-                .Type(SchemaValueType.Object)
-                .AdditionalProperties(new JsonSchemaBuilder()
-                    .Type(SchemaValueType.Integer).Build())
-                .Build(),
+                Schema = new()
+                {
+                    Type = "object",
+                    AdditionalProperties = new()
+                    {
+                        Type = "integer",
+                    }
+                },
                 Examples =
                     {
                         ["example0"] = new()

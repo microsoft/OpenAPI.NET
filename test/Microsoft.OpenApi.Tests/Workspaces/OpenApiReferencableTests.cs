@@ -1,9 +1,8 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -20,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiLink _linkFragment = new();
         private static readonly OpenApiHeader _headerFragment = new()
         {
-            Schema = new JsonSchemaBuilder().Build(),
+            Schema = new OpenApiSchema(),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 { "example1", new OpenApiExample() }
@@ -28,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         };
         private static readonly OpenApiParameter _parameterFragment = new()
         {
-            Schema = new JsonSchemaBuilder().Build(),
+            Schema = new OpenApiSchema(),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 { "example1", new OpenApiExample() }
@@ -46,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
                 { "link1", new OpenApiLink() }
             }
         };
-        private static readonly JsonSchema _schemaFragment = new JsonSchemaBuilder().Build();
+        private static readonly OpenApiSchema _schemaFragment = new OpenApiSchema();
         private static readonly OpenApiSecurityScheme _securitySchemeFragment = new OpenApiSecurityScheme();
         private static readonly OpenApiTag _tagFragment = new OpenApiTag();
 

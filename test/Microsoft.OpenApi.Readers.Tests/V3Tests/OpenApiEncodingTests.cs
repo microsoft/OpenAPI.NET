@@ -3,7 +3,6 @@
 
 using System.IO;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -53,7 +52,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             new()
                             {
                                 Description = "The number of allowed requests in the current period",
-                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                                Schema = new()
+                                { 
+                                    Type = "integer"
+                                }
                             }
                     }
                 });

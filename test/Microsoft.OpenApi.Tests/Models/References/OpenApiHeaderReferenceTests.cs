@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
@@ -103,7 +102,7 @@ components:
         public void HeaderReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal(SchemaValueType.String, _externalHeaderReference.Schema.GetJsonType());
+            Assert.Equal("string", _externalHeaderReference.Schema.Type);
             Assert.Equal("Location of the locally referenced post", _localHeaderReference.Description);
             Assert.Equal("Location of the externally referenced post", _externalHeaderReference.Description);
             Assert.Equal("The URL of the newly created post",

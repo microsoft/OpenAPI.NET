@@ -1,15 +1,13 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -25,7 +23,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Required = true,
                 Example = new OpenApiAny(55),
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                Schema = new OpenApiSchema
+                { 
+                    Type = "string"
+                }
             };
 
             // Act
@@ -58,42 +59,43 @@ namespace Microsoft.OpenApi.Validations.Tests
             var header = new OpenApiHeader
             {
                 Required = true,
-                Schema = new JsonSchemaBuilder()
-                .Type(SchemaValueType.Object)
-                .AdditionalProperties(
-                    new JsonSchemaBuilder()
-                    .Type(SchemaValueType.Integer)
-                    .Build())
-                .Build(),
-                Examples =
+                Schema = new OpenApiSchema
+                {
+                    Type = "object",
+                    AdditionalProperties = new OpenApiSchema
                     {
-                        ["example0"] = new()
-                        {
-                            Value = new OpenApiAny("1"),
-                        },
-                        ["example1"] = new()
-                        {
-                           Value = new OpenApiAny(new JsonObject()
-                            {
-                                ["x"] = 2,
-                                ["y"] = "20",
-                                ["z"] = "200"
-                            })
-                        },
-                        ["example2"] = new()
-                        {
-                            Value =new OpenApiAny(
-                            new JsonArray(){3})
-                        },
-                        ["example3"] = new()
-                        {
-                            Value = new OpenApiAny(new JsonObject()
-                            {
-                                ["x"] = 4,
-                                ["y"] = 40
-                            })
-                        },
+                        Type = "integer"
                     }
+                },
+                Examples =
+                {
+                    ["example0"] = new()
+                    {
+                        Value = new OpenApiAny("1"),
+                    },
+                    ["example1"] = new()
+                    {
+                        Value = new OpenApiAny(new JsonObject()
+                        {
+                            ["x"] = 2,
+                            ["y"] = "20",
+                            ["z"] = "200"
+                        })
+                    },
+                    ["example2"] = new()
+                    {
+                        Value =new OpenApiAny(
+                        new JsonArray(){3})
+                    },
+                    ["example3"] = new()
+                    {
+                        Value = new OpenApiAny(new JsonObject()
+                        {
+                            ["x"] = 4,
+                            ["y"] = 40
+                        })
+                    },
+                }
             };
 
             // Act
