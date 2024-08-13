@@ -3,7 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
-using Json.Schema;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -56,8 +56,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 });
         }
 
@@ -82,9 +84,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Array)
-                                .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    Schema = new()
+                    {
+                        Type = "array",
+                        Items = new()
+                        {
+                            Type = "string"
+                        }
+                    },
                     Style = ParameterStyle.Form,
                     Explode = true
                 });
@@ -111,7 +118,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 });
         }
 
@@ -136,7 +146,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 });
         }
 
@@ -185,7 +198,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 });
         }
 
@@ -210,7 +226,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Default(5)
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Default = new OpenApiAny(5)
+                    }
                 }, options => options.IgnoringCyclicReferences());
         }
 
@@ -235,7 +256,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Enum(7, 8, 9)
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Enum =
+                        {
+                            new OpenApiAny(7).Node,
+                            new OpenApiAny(8).Node,
+                            new OpenApiAny(9).Node
+                        }
+                    }
                 }, options => options.IgnoringCyclicReferences());
         }
     }

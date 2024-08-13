@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -43,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(IDictionary<string, OpenApiExample>));
             visitor.Visit(default(OpenApiComponents));
             visitor.Visit(default(OpenApiExternalDocs));
-           // visitor.Visit(default(JsonSchema));
+            visitor.Visit(default(OpenApiSchema));
             visitor.Visit(default(IDictionary<string, OpenApiLink>));
             visitor.Visit(default(OpenApiLink));
             visitor.Visit(default(OpenApiCallback));
@@ -232,10 +231,10 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(externalDocs);
             }
 
-            public override void Visit(ref JsonSchema schema)
+            public override void Visit(OpenApiSchema schema)
             {
                 EncodeCall();
-                base.Visit(ref schema);
+                base.Visit(schema);
             }
 
             public override void Visit(IDictionary<string, OpenApiLink> links)

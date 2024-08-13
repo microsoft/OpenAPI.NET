@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -29,7 +28,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet to use",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    Schema = new()
+                    {
+                        Type = "array",
+                        Items = new()
+                        {
+                            Type = "string"
+                        }
+                    },
                     Style = ParameterStyle.Simple
                 }
             },
@@ -48,7 +54,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "ID of pet that needs to be updated",
                             Required = true,
-                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                            Schema = new()
+                            {
+                                Type = "string"
+                            }
                         }
                     },
                     RequestBody = new()
@@ -57,19 +66,51 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
-                                Schema = new JsonSchemaBuilder()
-                                .Properties(
-                                    ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
-                                    ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
-                                .Required("name")
+                                Schema = new()
+                                {
+                                    Type = "object",
+                                    Properties =
+                                    {
+                                        ["name"] = new()
+                                        {
+                                            Description = "Updated name of the pet",
+                                            Type = "string"
+                                        },
+                                        ["status"] = new()
+                                        {
+                                            Description = "Updated status of the pet",
+                                            Type = "string"
+                                        }
+                                    },
+                                    Required = new HashSet<string>
+                                    {
+                                        "name"
+                                    }
+                                }
                             },
                             ["multipart/form-data"] = new()
                             {
-                                Schema = new JsonSchemaBuilder()
-                                .Properties(
-                                    ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
-                                    ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
-                                .Required("name")
+                               Schema = new()
+                                {
+                                    Type = "object",
+                                    Properties =
+                                    {
+                                        ["name"] = new()
+                                        {
+                                            Description = "Updated name of the pet",
+                                            Type = "string"
+                                        },
+                                        ["status"] = new()
+                                        {
+                                            Description = "Updated status of the pet",
+                                            Type = "string"
+                                        }
+                                    },
+                                    Required = new HashSet<string>
+                                    {
+                                        "name"
+                                    }
+                                }
                             }
                         }
                     },
@@ -108,7 +149,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "ID of pet that needs to be updated",
                             Required = true,
-                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                            Schema = new()
+                            {
+                                Type = "string"
+                            }
                         },
                         new()
                         {
@@ -116,7 +160,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "Name of pet that needs to be updated",
                             Required = true,
-                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                            Schema = new()
+                            {
+                                Type = "string"
+                            }
                         }
                     },
                     RequestBody = new()
@@ -125,21 +172,61 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
-                                Schema = new JsonSchemaBuilder()
-                                .Properties(
-                                    ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
-                                    ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)),
-                                    ("skill", new JsonSchemaBuilder().Description("Updated skill of the pet").Type(SchemaValueType.String)))
-                                .Required("name")
+                                Schema = new()
+                                {
+                                    Type = "object",
+                                    Properties =
+                                    {
+                                        ["name"] = new()
+                                        {
+                                            Description = "Updated name of the pet",
+                                            Type = "string"
+                                        },
+                                        ["status"] = new()
+                                        {
+                                            Description = "Updated status of the pet",
+                                            Type = "string"
+                                        },
+                                        ["skill"] = new()
+                                        {
+                                            Description = "Updated skill of the pet",
+                                            Type = "string"
+                                        }
+                                    },
+                                    Required = new HashSet<string>
+                                    {
+                                        "name"
+                                    }
+                                }
                             },
                             ["multipart/form-data"] = new()
                             {
-                                Schema = new JsonSchemaBuilder()
-                                .Properties(
-                                    ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
-                                    ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)),
-                                    ("skill", new JsonSchemaBuilder().Description("Updated skill of the pet").Type(SchemaValueType.String)))
-                                .Required("name")
+                                Schema = new()
+                                {
+                                    Type = "object",
+                                    Properties =
+                                    {
+                                        ["name"] = new()
+                                        {
+                                            Description = "Updated name of the pet",
+                                            Type = "string"
+                                        },
+                                        ["status"] = new()
+                                        {
+                                            Description = "Updated status of the pet",
+                                            Type = "string"
+                                        },
+                                        ["skill"] = new()
+                                        {
+                                            Description = "Updated skill of the pet",
+                                            Type = "string"
+                                        }
+                                    },
+                                    Required = new HashSet<string>
+                                    {
+                                        "name"
+                                    }
+                                }
                             }
                         }
                     },

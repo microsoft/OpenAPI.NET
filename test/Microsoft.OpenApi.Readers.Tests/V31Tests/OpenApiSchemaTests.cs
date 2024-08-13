@@ -3,9 +3,15 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V31;
+using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
@@ -132,6 +138,131 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             simpleSchemaCopy.Type.Should().NotBeEquivalentTo(simpleSchema.Type);
             simpleSchema.Type = "string";
+        }
+
+        [Fact]
+        public void ParseV31SchemaShouldSucceed()
+        {
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "schema.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
+
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
+
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+
+            // Act
+            var schema = OpenApiV31Deserializer.LoadSchema(node);
+            var expectedSchema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["one"] = new()
+                    {
+                        Description = "type array",
+                        Type = new HashSet<string> { "integer", "string" }
+                    }
+                }
+            };
+
+            // Assert
+            Assert.Equal(schema, expectedSchema);
+        }
+
+        [Fact]
+        public void ParseAdvancedV31SchemaShouldSucceed()
+        {
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedSchema.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
+
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
+
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+
+            // Act
+            var schema = OpenApiV31Deserializer.LoadSchema(node);
+
+            var expectedSchema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["one"] = new()
+                    {
+                        Description = "type array",
+                        Type = new HashSet<string> { "integer", "string" }
+                    },
+                    ["two"] = new()
+                    {
+                        Description = "type 'null'",
+                        Type = "null"
+                    },
+                    ["three"] = new()
+                    {
+                        Description = "type array including 'null'",
+                        Type = new HashSet<string> { "string", "null" }
+                    },
+                    ["four"] = new()
+                    {
+                        Description = "array with no items",
+                        Type = "array"
+                    },
+                    ["five"] = new()
+                    {
+                        Description = "singular example",
+                        Type = "string",
+                        Examples = new List<JsonNode>
+                        {
+                            new OpenApiAny("exampleValue").Node
+                        }
+                    },
+                    ["six"] = new()
+                    {
+                        Description = "exclusiveMinimum true",
+                        V31ExclusiveMinimum = 10
+                    },
+                    ["seven"] = new()
+                    {
+                        Description = "exclusiveMinimum false",
+                        Minimum = 10
+                    },
+                    ["eight"] = new()
+                    {
+                        Description = "exclusiveMaximum true",
+                        V31ExclusiveMaximum = 20
+                    },
+                    ["nine"] = new()
+                    {
+                        Description = "exclusiveMaximum false",
+                        Maximum = 20
+                    },
+                    ["ten"] = new()
+                    {
+                        Description = "nullable string",
+                        Type = new HashSet<string> { "string", "null" }
+                    },
+                    ["eleven"] = new()
+                    {
+                        Description = "x-nullable string",
+                        Type = new HashSet<string> { "string", "null" }
+                    },
+                    ["twelve"] = new()
+                    {
+                        Description = "file/binary"
+                    }
+                }
+            };
+
+            // Assert
+            schema.Should().BeEquivalentTo(expectedSchema);
         }
     }
 }

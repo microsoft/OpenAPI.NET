@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Json.Schema;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -33,7 +33,14 @@ namespace Microsoft.OpenApi.Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
-                                                Schema = new JsonSchemaBuilder().Ref("test").Build()
+                                                Schema = new()
+                                                {
+                                                    Reference = new()
+                                                    {
+                                                        Id = "test",
+                                                        Type = ReferenceType.Schema
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -49,7 +56,11 @@ namespace Microsoft.OpenApi.Tests
                 Components = new OpenApiComponents()
                 {
                     Schemas = {
-                        ["test"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("The referenced one").Build()
+                        ["test"] = new()
+                        {
+                            Type = "string",
+                            Description = "The referenced one"
+                        }
                     }
                 }
             };
@@ -66,12 +77,12 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
             var externalDoc = CreateCommonDocument();
                        
-            workspace.RegisterComponent<IBaseDocument>("https://everything.json/common#/components/schemas/test", externalDoc.Components.Schemas["test"]);
+            workspace.RegisterComponent<IOpenApiReferenceable>("https://everything.json/common#/components/schemas/test", externalDoc.Components.Schemas["test"]);
 
-            var schema = workspace.ResolveReference<JsonSchema>("https://everything.json/common#/components/schemas/test");
+            var schema = workspace.ResolveReference<OpenApiSchema>("https://everything.json/common#/components/schemas/test");
            
             Assert.NotNull(schema);
-            Assert.Equal("The referenced one", schema.GetDescription());
+            Assert.Equal("The referenced one", schema.Description);
         }
 
         [Fact]
@@ -79,15 +90,19 @@ namespace Microsoft.OpenApi.Tests
         {
             // Arrange
             var workspace = new OpenApiWorkspace();
-            var schemaFragment = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Schema from a fragment").Build();
-            workspace.RegisterComponent<IBaseDocument>("common#/components/schemas/test", schemaFragment);
+            var schemaFragment = new OpenApiSchema()
+            {
+                Type = "string",
+                Description = "Schema from a fragment"
+            };
+            workspace.RegisterComponent<IOpenApiReferenceable>("common#/components/schemas/test", schemaFragment);
 
             // Act
-            var schema = workspace.ResolveReference<JsonSchema>("common#/components/schemas/test");
+            var schema = workspace.ResolveReference<OpenApiSchema>("common#/components/schemas/test");
 
             // Assert
             Assert.NotNull(schema);
-            Assert.Equal("Schema from a fragment", schema.GetDescription());
+            Assert.Equal("Schema from a fragment", schema.Description);
         }
 
         [Fact]
@@ -119,8 +134,13 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new()
                 {
-                    Schemas = {
-                        ["test"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("The referenced one").Build()
+                    Schemas = 
+                    {
+                        ["test"] = new()
+                        {
+                            Type = "string",
+                            Description = "The referenced one"
+                        }
                     }
                 }
             };

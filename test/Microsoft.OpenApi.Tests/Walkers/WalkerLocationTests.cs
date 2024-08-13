@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -82,7 +81,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                 {
                                     ["application/json"] = new()
                                     {
-                                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Type = "string"
+                                        }
                                     }
                                 }
                             }
@@ -116,18 +118,23 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void WalkDOMWithCycles()
         {
-            var loopySchema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Object)
-                                .Properties(("name", new JsonSchemaBuilder().Type(SchemaValueType.String)));
+            var loopySchema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["name"] = new() { Type = "string" }
+                }
+            };
 
-            loopySchema.Properties(("parent", loopySchema));
+            loopySchema.Properties.Add("parent", loopySchema);
 
             var doc = new OpenApiDocument
             {
                 Paths = new(),
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, JsonSchema>
+                    Schemas = new Dictionary<string, OpenApiSchema>
                     {
                         ["loopy"] = loopySchema
                     }
@@ -155,10 +162,26 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateReferences()
         {
+            var baseSchema = new OpenApiSchema
+            {
+                Reference = new()
+                {
+                    Id = "base",
+                    Type = ReferenceType.Schema
+                },
+                UnresolvedReference = false
+            };
 
-            var baseSchema = new JsonSchemaBuilder().Ref("base").Build();
-
-            var derivedSchema = new JsonSchemaBuilder().AnyOf(baseSchema).Ref("derived").Build();
+            var derivedSchema = new OpenApiSchema
+            {
+                AnyOf = new List<OpenApiSchema> { baseSchema },
+                Reference = new()
+                {
+                    Id = "derived",
+                    Type = ReferenceType.Schema
+                },
+                UnresolvedReference = false
+            };
             var testHeader = new OpenApiHeader()
             {
                 Schema = derivedSchema,
@@ -203,7 +226,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, JsonSchema>()
+                    Schemas = new Dictionary<string, OpenApiSchema>
                     {
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
@@ -297,15 +320,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(IBaseDocument document)
+        public override void Visit(OpenApiSchema schema)
         {
-            var schema = document as JsonSchema;
-            VisitJsonSchema(schema);
-        }
-
-        public override void Visit(ref JsonSchema schema)
-        {
-            VisitJsonSchema(schema);
+            Locations.Add(this.PathString);
         }
 
         public override void Visit(IList<OpenApiTag> openApiTags)
@@ -321,18 +338,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
         public override void Visit(OpenApiServer server)
         {
             Locations.Add(this.PathString);
-        }
-
-        private void VisitJsonSchema(JsonSchema schema)
-        {
-            if (schema.GetRef() != null)
-            {
-                Locations.Add("referenceAt: " + this.PathString);
-            }
-            else
-            {
-                Locations.Add(this.PathString);
-            }
         }
     }
 }

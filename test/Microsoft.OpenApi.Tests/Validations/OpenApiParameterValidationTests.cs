@@ -1,20 +1,16 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
@@ -75,7 +71,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                 In = ParameterLocation.Path,
                 Required = true,
                 Example = new OpenApiAny(55),
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                Schema = new()
+                {
+                    Type = "string",
+                }
             };
 
             // Act
@@ -110,13 +109,14 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new JsonSchemaBuilder()
-                            .Type(SchemaValueType.Object)
-                            .AdditionalProperties(
-                                new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Integer)
-                                .Build())
-                            .Build(),
+                Schema = new()
+                {
+                    Type = "object",
+                    AdditionalProperties = new()
+                    {
+                        Type = "integer",
+                    }
+                },
                 Examples =
                     {
                         ["example0"] = new()
@@ -187,7 +187,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                Schema = new()
+                {
+                    Type = "string",
+                }
             };
 
             // Act
@@ -222,7 +225,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                Schema = new()
+                {
+                    Type = "string",
+                }
             };
 
             // Act

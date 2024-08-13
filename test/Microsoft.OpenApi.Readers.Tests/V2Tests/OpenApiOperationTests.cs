@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using System.Text.Json.Nodes;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -38,7 +37,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 }
             },
             Responses = new OpenApiResponses
@@ -69,8 +71,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema = new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.String)
+                        Schema = new()
+                        {
+                            Type = "string"
+                        }
                     }
                 },
                 RequestBody = new OpenApiRequestBody
@@ -79,19 +83,51 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         ["application/x-www-form-urlencoded"] = new OpenApiMediaType
                         {
-                            Schema = new JsonSchemaBuilder()
-                                .Properties(
-                                ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
-                                ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
-                            .Required("name")
+                            Schema = new()
+                            {
+                                Type = "object",
+                                Properties =
+                                {
+                                    ["name"] = new()
+                                    {
+                                        Description = "Updated name of the pet",
+                                        Type = "string"
+                                    },
+                                    ["status"] = new()
+                                    {
+                                        Description = "Updated status of the pet",
+                                        Type = "string"
+                                    }
+                                },
+                                Required = new HashSet<string>
+                                {
+                                    "name"
+                                }
+                            }
                         },
                         ["multipart/form-data"] = new OpenApiMediaType
                         {
-                             Schema = new JsonSchemaBuilder()
-                                .Properties(
-                                ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
-                                ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
-                            .Required("name")
+                             Schema = new()
+                            {
+                                Type = "object",
+                                Properties =
+                                {
+                                    ["name"] = new()
+                                    {
+                                        Description = "Updated name of the pet",
+                                        Type = "string"
+                                    },
+                                    ["status"] = new()
+                                    {
+                                        Description = "Updated status of the pet",
+                                        Type = "string"
+                                    }
+                                },
+                                Required = new HashSet<string>
+                                {
+                                    "name"
+                                }
+                            }
                         }
                     }
                 },
@@ -132,7 +168,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 },
             },
             RequestBody = new OpenApiRequestBody
@@ -143,7 +182,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                        Schema = new()
+                        {
+                            Type = "object"
+                        }
                     }
                 },
                 Extensions = {
@@ -270,9 +312,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 ["application/json"] = new OpenApiMediaType()
                                 {
-                                    Schema = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.Array)
-                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")),
+                                    Schema = new()
+                                    {
+                                        Type = "array",
+                                        Items = new()
+                                        {
+                                            Type = "number",
+                                            Format = "float"
+                                        }
+                                    },
                                     Example = new OpenApiAny(new JsonArray()
                                     {
                                         5.0,
@@ -282,9 +330,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {
-                                    Schema = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.Array)
-                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float"))
+                                    Schema = new()
+                                    {
+                                        Type = "array",
+                                        Items = new()
+                                        {
+                                            Type = "number",
+                                            Format = "float"
+                                        }
+                                    }
                                 }
                             }
                         }}

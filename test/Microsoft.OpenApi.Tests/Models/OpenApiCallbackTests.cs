@@ -4,7 +4,6 @@
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using Json.Schema;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -35,7 +34,10 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["application/json"] = new()
                                     {
-                                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Build()
+                                        Schema = new()
+                                        {
+                                            Type = "object"
+                                        }
                                     }
                                 }
                             },
@@ -72,7 +74,10 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["application/json"] = new()
                                     {
-                                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Build()
+                                        Schema = new()
+                                        {
+                                            Type = "object"
+                                        }
                                     }
                                 }
                             },

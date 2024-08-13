@@ -3,7 +3,6 @@
 
 using System.IO;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -32,7 +31,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiMediaType
                 {
                     Example = new OpenApiAny(5),
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float"
+                    }
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(m => m.Example.Node.Parent)
                 );
@@ -59,7 +62,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Value = new OpenApiAny(7.5)
                         }
                     },
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float"
+                    }
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(m => m.Examples["example1"].Value.Node.Parent)
                 .Excluding(m => m.Examples["example2"].Value.Node.Parent));
