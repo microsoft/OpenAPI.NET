@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -149,10 +149,6 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 "properties",
                 (o, n, t) => o.Properties = n.CreateMap(LoadOpenApiSchema, t)
-            },
-            {
-                "patternProperties",
-                (o, n, t) => o.PatternProperties = n.CreateMap(LoadOpenApiSchema, t)
             },
             {
                 "additionalProperties", (o, n, _) =>

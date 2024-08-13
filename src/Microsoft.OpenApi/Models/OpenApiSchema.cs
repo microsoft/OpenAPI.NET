@@ -229,15 +229,6 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// PatternProperty definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced)
-        /// Each property name of this object SHOULD be a valid regular expression according to the ECMA 262 r
-        /// egular expression dialect. Each property value of this object MUST be an object, and each object MUST 
-        /// be a valid Schema Object not a standard JSON Schema.
-        /// </summary>
-        public IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
-
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
         public int? MaxProperties { get; set; }
 
@@ -372,12 +363,11 @@ namespace Microsoft.OpenApi.Models
             MinItems = schema?.MinItems ?? MinItems;
             UniqueItems = schema?.UniqueItems ?? UniqueItems;
             Properties = schema?.Properties != null ? new Dictionary<string, OpenApiSchema>(schema.Properties) : null;
-            PatternProperties = schema?.PatternProperties != null ? new Dictionary<string, OpenApiSchema>(schema.PatternProperties) : null;
             MaxProperties = schema?.MaxProperties ?? MaxProperties;
             MinProperties = schema?.MinProperties ?? MinProperties;
             AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
             AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
-            Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null; 
+            Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
             Example = schema?.Example != null ? new(schema?.Example.Node) : null;
             Examples = schema?.Examples != null ? new List<JsonNode>(schema.Examples) : null;
             Enum = schema?.Enum != null ? new List<JsonNode>(schema.Enum) : null;
@@ -606,7 +596,6 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);            
             writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(new OpenApiAny(s)));
-            writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
         }
 
         /// <summary>
