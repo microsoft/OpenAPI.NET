@@ -4,7 +4,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Helpers
@@ -26,18 +25,6 @@ namespace Microsoft.OpenApi.Helpers
 
             var result = JsonSerializer.Deserialize<JsonNode>(jsonString, options);
             return new OpenApiAny(result);
-        }
-
-        internal static JsonSchema CloneJsonSchema(JsonSchema schema)
-        {
-            var jsonString = Serialize(schema);
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                return null;
-            }
-
-            var result = JsonSerializer.Deserialize<JsonSchema>(jsonString, options);
-            return result;
         }
 
         private static string Serialize(object obj)

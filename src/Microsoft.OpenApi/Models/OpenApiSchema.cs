@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -715,6 +715,12 @@ namespace Microsoft.OpenApi.Models
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
+            // type
+            writer.WriteProperty(OpenApiConstants.Type, (string)Type);
+
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
+
             // format
             if (string.IsNullOrEmpty(Format))
             {
@@ -727,9 +733,6 @@ namespace Microsoft.OpenApi.Models
 
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
@@ -778,9 +781,6 @@ namespace Microsoft.OpenApi.Models
 
             // enum
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(new OpenApiAny(s)));
-
-            // type
-            writer.WriteProperty(OpenApiConstants.Type, (string)Type);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));

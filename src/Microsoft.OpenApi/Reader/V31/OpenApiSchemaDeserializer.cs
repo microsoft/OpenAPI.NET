@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$defs",
-                (o, n, t) => o.Definitions = n.CreateMap(LoadOpenApiSchema, t)
+                (o, n, t) => o.Definitions = n.CreateMap(LoadSchema, t)
             },
             {
                 "multipleOf",
@@ -128,31 +128,31 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "allOf",
-                (o, n, t) => o.AllOf = n.CreateList(LoadOpenApiSchema, t)
+                (o, n, t) => o.AllOf = n.CreateList(LoadSchema, t)
             },
             {
                 "oneOf",
-                (o, n, t) => o.OneOf = n.CreateList(LoadOpenApiSchema, t)
+                (o, n, t) => o.OneOf = n.CreateList(LoadSchema, t)
             },
             {
                 "anyOf",
-                (o, n, t) => o.AnyOf = n.CreateList(LoadOpenApiSchema, t)
+                (o, n, t) => o.AnyOf = n.CreateList(LoadSchema, t)
             },
             {
                 "not",
-                (o, n, _) => o.Not = LoadOpenApiSchema(n)
+                (o, n, _) => o.Not = LoadSchema(n)
             },
             {
                 "items",
-                (o, n, _) => o.Items = LoadOpenApiSchema(n)
+                (o, n, _) => o.Items = LoadSchema(n)
             },
             {
                 "properties",
-                (o, n, t) => o.Properties = n.CreateMap(LoadOpenApiSchema, t)
+                (o, n, t) => o.Properties = n.CreateMap(LoadSchema, t)
             },
             {
                 "patternProperties",
-                (o, n, t) => o.PatternProperties = n.CreateMap(LoadOpenApiSchema, t)
+                (o, n, t) => o.PatternProperties = n.CreateMap(LoadSchema, t)
             },
             {
                 "additionalProperties", (o, n, _) =>
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                     else
                     {
-                        o.AdditionalProperties = LoadOpenApiSchema(n);
+                        o.AdditionalProperties = LoadSchema(n);
                     }
                 }
             },
@@ -222,7 +222,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiSchema LoadOpenApiSchema(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 

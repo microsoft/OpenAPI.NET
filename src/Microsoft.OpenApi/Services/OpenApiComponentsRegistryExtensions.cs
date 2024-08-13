@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 
@@ -19,9 +18,9 @@ namespace Microsoft.OpenApi.Services
             // Register Schema
             foreach (var item in document.Components.Schemas)
             {
-                if (item.Value.GetId() != null)
+                if (item.Value.Id != null)
                 {
-                    location = document.BaseUri + item.Value.GetId().ToString();
+                    location = document.BaseUri + item.Value.Id;
                 }
                 else
                 {
