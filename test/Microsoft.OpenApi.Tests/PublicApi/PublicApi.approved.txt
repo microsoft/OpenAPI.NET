@@ -995,6 +995,7 @@ namespace Microsoft.OpenApi.Models
         public bool Nullable { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> OneOf { get; set; }
         public string Pattern { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> PatternProperties { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> Properties { get; set; }
         public bool ReadOnly { get; set; }
         public string RecursiveAnchor { get; set; }
