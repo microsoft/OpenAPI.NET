@@ -17,7 +17,9 @@ public static class OpenApiServerExtensions
     /// <param name="values">The server variable values that will be used to replace the default values.</param>
     /// <returns>A URL with the provided variables substituted.</returns>
     /// <exception cref="ArgumentException">
-    /// If a substitution has no value in the supplied dictionary or the default
+    /// Thrown when:
+    ///   1. A substitution has no valid value in both the supplied dictionary and the default
+    ///   2. A substitution's value is not available in the enum provided
     /// </exception>
     public static string ReplaceServerUrlVariables(this OpenApiServer server, IDictionary<string, string> values)
     {
@@ -34,6 +36,12 @@ public static class OpenApiServerExtensions
                 // This code path should be hit when a value isn't provided & a default value isn't available
                 throw new ArgumentException(
                     string.Format(SRResource.ParseServerUrlDefaultValueNotAvailable, variable.Key), nameof(server));
+            }
+
+            if (variable.Value.Enum?.Contains(actualValue) != true)
+            {
+                throw new ArgumentException(
+                    string.Format(SRResource.ParseServerUrlValueNotValid, actualValue, variable.Key), nameof(values));
             }
             parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", actualValue);
         }

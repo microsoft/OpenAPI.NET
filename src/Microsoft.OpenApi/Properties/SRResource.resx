@@ -228,4 +228,7 @@
   <data name="ParseServerUrlDefaultValueNotAvailable" xml:space="preserve">
       <value>Invalid server variable '{0}'. A value was not provided and no default value was provided.</value>
   </data>
+  <data name="ParseServerUrlValueNotValid" xml:space="preserve">
+      <value>Value '{0}' is not a valid value for variable '{1}'.</value>
+  </data>
 </root>

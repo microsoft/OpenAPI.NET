@@ -79,7 +79,7 @@ public class OpenApiServerExtensionsTests
 
         Assert.Throws<ArgumentException>(() =>
         {
-            variable.ReplaceServerUrlVariables(new Dictionary<string, string> {{"version", "v2"}});
+            variable.ReplaceServerUrlVariables(new Dictionary<string, string> {{"version", "v3"}});
         });
     }
 }

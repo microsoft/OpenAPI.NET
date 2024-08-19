@@ -231,6 +231,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value &apos;{0}&apos; is not a valid value for variable &apos;{1}&apos;..
+        /// </summary>
+        internal static string ParseServerUrlValueNotValid {
+            get {
+                return ResourceManager.GetString("ParseServerUrlValueNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given primitive type &apos;{0}&apos; is not supported..
         /// </summary>
         internal static string PrimitiveTypeNotSupported {
