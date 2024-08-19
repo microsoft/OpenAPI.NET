@@ -1413,7 +1413,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 });
         }
 
-        [Fact(Skip = "This test requires a validation for the Server variable object to be added.")]
+        [Fact]
         public void ParseBasicDocumentWithServerVariableAndNoDefaultShouldFail()
         {
             var openApiDoc = new OpenApiStringReader().Read("""
