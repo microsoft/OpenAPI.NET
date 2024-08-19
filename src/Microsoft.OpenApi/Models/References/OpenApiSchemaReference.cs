@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Any;
@@ -100,7 +100,11 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Format { get => Target.Format; set => Target.Format = value; }
         /// <inheritdoc/>
-        public override string Description { get => Target.Description; set => Target.Description = value; }
+        public override string Description
+        {
+            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            set => _description = value;
+        }
         /// <inheritdoc/>
         public override decimal? Maximum { get => Target.Maximum; set => Target.Maximum = value; }
         /// <inheritdoc/>

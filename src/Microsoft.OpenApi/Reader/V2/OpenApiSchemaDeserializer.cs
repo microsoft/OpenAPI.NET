@@ -6,6 +6,7 @@ using System.Globalization;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -162,7 +163,8 @@ namespace Microsoft.OpenApi.Reader.V2
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiSchema>(ReferenceType.Schema, pointer);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var schema = new OpenApiSchema();

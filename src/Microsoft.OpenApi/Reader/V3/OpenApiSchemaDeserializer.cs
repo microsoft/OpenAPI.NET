@@ -3,6 +3,7 @@
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using System.Collections.Generic;
 using System.Globalization;
@@ -181,11 +182,8 @@ namespace Microsoft.OpenApi.Reader.V3
 
             if (pointer != null)
             {
-                return new()
-                {
-                    UnresolvedReference = true,
-                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema)
-                };
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var schema = new OpenApiSchema();
