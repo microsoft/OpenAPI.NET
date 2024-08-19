@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -462,14 +462,6 @@ namespace Microsoft.OpenApi.Models
             {
                 return ResolveReference(reference, false) as T;
             }
-        }
-
-        /// <summary>
-        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
-        /// </summary>
-        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
-        {
-            return ResolveReference(reference, false);
         }
 
         /// <summary>

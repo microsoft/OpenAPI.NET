@@ -93,16 +93,6 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiRequestBody</returns>
-        public OpenApiRequestBody GetEffective(OpenApiDocument doc)
-        {
-            return Reference != null ? doc.ResolveReferenceTo<OpenApiRequestBody>(Reference) : this;
-        }
-
-        /// <summary>
         /// Serialize to OpenAPI V31 document without using reference.
         /// </summary>
         public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 

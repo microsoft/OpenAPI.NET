@@ -495,7 +495,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(new OpenApiAny(s)));
 
             // type
-            if (Type.GetType() == typeof(string))
+            if (Type?.GetType() == typeof(string))
             {
                 writer.WriteProperty(OpenApiConstants.Type, (string)Type);
             }
