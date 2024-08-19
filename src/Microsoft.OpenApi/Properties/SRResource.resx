@@ -225,4 +225,7 @@
   <data name="WorkspaceRequredForExternalReferenceResolution" xml:space="preserve">
     <value>OpenAPI document must be added to an OpenApiWorkspace to be able to resolve external references.</value>
   </data>
+  <data name="ParseServerUrlDefaultValueNotAvailable" xml:space="preserve">
+      <value>Invalid server variable '{0}'. A value was not provided and no default value was provided.</value>
+  </data>
 </root>

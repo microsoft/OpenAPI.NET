@@ -1367,5 +1367,70 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
                 new( new OpenApiException("Invalid Reference Type 'Schema'.")) });
         }
+
+        [Fact]
+        public void ParseBasicDocumentWithServerVariableShouldSucceed()
+        {
+            var openApiDoc = new OpenApiStringReader().Read("""
+                                                            openapi : 3.0.0
+                                                            info:
+                                                                title: The API
+                                                                version: 0.9.1
+                                                            servers:
+                                                              - url: http://www.example.org/api/{version}
+                                                                description: The http endpoint
+                                                                variables:
+                                                                  version:
+                                                                    default: v2
+                                                                    enum: [v1, v2]
+                                                            paths: {}
+                                                            """, out var diagnostic);
+
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+
+            openApiDoc.Should().BeEquivalentTo(
+                new OpenApiDocument
+                {
+                    Info = new()
+                    {
+                        Title = "The API",
+                        Version = "0.9.1",
+                    },
+                    Servers =
+                    {
+                        new OpenApiServer
+                        {
+                            Url = "http://www.example.org/api/{version}",
+                            Description = "The http endpoint",
+                            Variables = new Dictionary<string, OpenApiServerVariable>
+                            {
+                                {"version", new OpenApiServerVariable {Default = "v2", Enum = ["v1", "v2"]}}
+                            }
+                        }
+                    },
+                    Paths = new()
+                });
+        }
+
+        [Fact(Skip = "This test requires a validation for the Server variable object to be added.")]
+        public void ParseBasicDocumentWithServerVariableAndNoDefaultShouldFail()
+        {
+            var openApiDoc = new OpenApiStringReader().Read("""
+                                                            openapi : 3.0.0
+                                                            info:
+                                                                title: The API
+                                                                version: 0.9.1
+                                                            servers:
+                                                              - url: http://www.example.org/api/{version}
+                                                                description: The http endpoint
+                                                                variables:
+                                                                  version:
+                                                                    enum: [v1, v2]
+                                                            paths: {}
+                                                            """, out var diagnostic);
+
+            diagnostic.Errors.Should().NotBeEmpty();
+        }
     }
 }
