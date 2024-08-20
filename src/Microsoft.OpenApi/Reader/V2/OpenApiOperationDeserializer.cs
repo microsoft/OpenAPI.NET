@@ -173,6 +173,9 @@ namespace Microsoft.OpenApi.Reader.V2
                     _ => mediaType)
             };
 
+            foreach (var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && string.IsNullOrEmpty((string)x.Schema.Type)))
+                value.Schema.Type = "object";
+
             return formBody;
         }
 

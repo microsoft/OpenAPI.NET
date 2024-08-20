@@ -24,9 +24,7 @@ namespace Microsoft.OpenApi.Services
                 }
                 else
                 {
-                    location = version == OpenApiSpecVersion.OpenApi2_0
-                        ? document.BaseUri + "/" + OpenApiConstants.Definitions + "/" + item.Key
-                        : baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
+                    location = baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
                 }
 
                 workspace.RegisterComponent(location, item.Value);
