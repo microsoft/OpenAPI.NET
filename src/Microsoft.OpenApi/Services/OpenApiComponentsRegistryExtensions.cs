@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Services
             {
                 if (item.Value.Id != null)
                 {
-                    location = document.BaseUri + item.Value.Id;
+                    location = item.Value.Id;
                 }
                 else
                 {

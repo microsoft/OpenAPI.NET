@@ -147,11 +147,19 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static (string, string) GetReferenceIdAndExternalResource(string pointer)
         {
+            /* Check whether the reference pointer is a URL
+             * (id keyword allows you to supply a URL for the schema as a target for referencing)
+             * E.g. $ref: 'https://example.com/schemas/resource.json' 
+             * or its a normal json pointer fragment syntax
+             * E.g. $ref: '#/components/schemas/pet'
+             */
             var refSegments = pointer.Split('/');
-            var refId = refSegments.Last();
-            var isExternalResource = !refSegments.First().StartsWith("#");
+            string refId = !pointer.Contains('#') ? pointer : refSegments.Last();
 
-            string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
+            var isExternalResource = !refSegments.First().StartsWith("#");
+            string externalResource = isExternalResource
+                ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}"
+                : null;
 
             return (refId, externalResource);
         }
