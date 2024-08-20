@@ -32,9 +32,10 @@ namespace Microsoft.OpenApi.Validations.Rules
                     foreach (var variable in server.Variables)
                     {
                         context.Enter(variable.Key);
-                        ValidateServerVariableRequiredFields(context, variable.Value);
+                        ValidateServerVariableRequiredFields(context, variable.Key, variable.Value);
                         context.Exit();
                     }
+                    context.Exit();
                 });
 
         // add more rules
@@ -42,13 +43,13 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate required fields in server variable
         /// </summary>
-        private static void ValidateServerVariableRequiredFields(IValidationContext context, OpenApiServerVariable item)
+        private static void ValidateServerVariableRequiredFields(IValidationContext context, string key, OpenApiServerVariable item)
         {
             context.Enter("default");
             if (string.IsNullOrEmpty(item.Default))
             {
                 context.CreateError("ServerVariableMustHaveDefaultValue",
-                    String.Format(SRResource.Validation_FieldIsRequired, "default", "variables"));
+                    String.Format(SRResource.Validation_FieldIsRequired, "default", key));
             }
             context.Exit();
         }

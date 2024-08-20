@@ -30,6 +30,7 @@ public static class OpenApiServerExtensions
             values.TryGetValue(variable.Key, out var actualValue);
             // Fall back to the default value
             if (string.IsNullOrEmpty(actualValue)) { actualValue = variable.Value.Default; }
+
             if (string.IsNullOrEmpty(actualValue))
             {
                 // According to the spec, the variable's default value is required.
@@ -38,13 +39,15 @@ public static class OpenApiServerExtensions
                     string.Format(SRResource.ParseServerUrlDefaultValueNotAvailable, variable.Key), nameof(server));
             }
 
-            if (variable.Value.Enum?.Contains(actualValue) != true)
+            if (variable.Value.Enum is { Count: > 0 } e && !e.Contains(actualValue))
             {
                 throw new ArgumentException(
                     string.Format(SRResource.ParseServerUrlValueNotValid, actualValue, variable.Key), nameof(values));
             }
+
             parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", actualValue);
         }
+
         return parsedUrl;
     }
 }
