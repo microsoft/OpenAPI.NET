@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -529,15 +529,22 @@ namespace Microsoft.OpenApi.Models
             }
 
             string uriLocation;
-            string relativePath = OpenApiConstants.ComponentsSegment + reference.Type.GetDisplayName() + "/" + reference.Id;
+            if (reference.Id.Contains("/")) // this means its a URL reference
+            {
+                uriLocation = reference.Id;
+            }
+            else
+            {
+                string relativePath = OpenApiConstants.ComponentsSegment + reference.Type.GetDisplayName() + "/" + reference.Id;
 
-            uriLocation = useExternal
-                ? Workspace.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
-                : BaseUri + relativePath;
+                uriLocation = useExternal
+                    ? Workspace.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
+                    : BaseUri + relativePath;
+            }
 
             return Workspace.ResolveReference<IOpenApiReferenceable>(uriLocation);
         }
-                
+
         /// <summary>
         /// Parses a local file path or Url into an Open API document.
         /// </summary>
