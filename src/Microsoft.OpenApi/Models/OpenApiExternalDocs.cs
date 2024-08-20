@@ -13,20 +13,22 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiExternalDocs : IOpenApiSerializable, IOpenApiExtensible
     {
+        private const string DefaultUrl = "https://example.com";
+
         /// <summary>
         /// A short description of the target documentation.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// REQUIRED. The URL for the target documentation. Value MUST be in the format of a URL.
         /// </summary>
-        public Uri Url { get; set; }
+        public Uri Url { get; set; } = new Uri(DefaultUrl);
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -39,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiExternalDocs(OpenApiExternalDocs externalDocs)
         {
             Description = externalDocs?.Description ?? Description;
-            Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString, UriKind.RelativeOrAbsolute) : new Uri(DefaultUrl);
             Extensions = externalDocs?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions) : null;
         }
 
@@ -74,13 +76,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
+            if (!string.IsNullOrEmpty(Description))
+            {
+                writer.WriteProperty(OpenApiConstants.Description, Description!);
+            }
 
             // url
-            writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);
+            writer.WriteProperty(OpenApiConstants.Url, Url.OriginalString);
 
             // extensions
-            writer.WriteExtensions(Extensions, specVersion);
+            writer.WriteExtensions(Extensions!, specVersion);
 
             writer.WriteEndObject();
         }

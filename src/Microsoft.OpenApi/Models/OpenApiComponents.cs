@@ -19,60 +19,60 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="JsonSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, JsonSchema> Schemas { get; set; } = new Dictionary<string, JsonSchema>();
+        public IDictionary<string, JsonSchema>? Schemas { get; set; } = new Dictionary<string, JsonSchema>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public virtual IDictionary<string, OpenApiResponse>? Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiParameter"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiParameter> Parameters { get; set; } =
+        public virtual IDictionary<string, OpenApiParameter>? Parameters { get; set; } =
             new Dictionary<string, OpenApiParameter>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public virtual IDictionary<string, OpenApiExample>? Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiRequestBody"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; } =
+        public virtual IDictionary<string, OpenApiRequestBody>? RequestBodies { get; set; } =
             new Dictionary<string, OpenApiRequestBody>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiHeader"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
+        public virtual IDictionary<string, OpenApiHeader>? Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } =
+        public virtual IDictionary<string, OpenApiSecurityScheme>? SecuritySchemes { get; set; } =
             new Dictionary<string, OpenApiSecurityScheme>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiLink"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
+        public virtual IDictionary<string, OpenApiLink>? Links { get; set; } = new Dictionary<string, OpenApiLink>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public virtual IDictionary<string, OpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
         /// </summary>
-        public virtual IDictionary<string, OpenApiPathItem> PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+        public virtual IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Models
             // pathItems - only present in v3.1
             writer.WriteOptionalMap(
             OpenApiConstants.PathItems,
-            PathItems,
+            PathItems!,
             (w, key, component) =>
             {
                 if (component.Reference != null &&
@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Models
             // schemas
             writer.WriteOptionalMap(
                 OpenApiConstants.Schemas,
-                Schemas,
+                Schemas!,
                 (w, key, s) =>
                 {
                     var reference = s.GetRef();
@@ -188,7 +188,7 @@ namespace Microsoft.OpenApi.Models
             // responses
             writer.WriteOptionalMap(
                 OpenApiConstants.Responses,
-                Responses,
+                Responses!,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Models
             // parameters
             writer.WriteOptionalMap(
                 OpenApiConstants.Parameters,
-                Parameters,
+                Parameters!,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Models
             // examples
             writer.WriteOptionalMap(
                 OpenApiConstants.Examples,
-                Examples,
+                Examples!,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Models
             // requestBodies
             writer.WriteOptionalMap(
                 OpenApiConstants.RequestBodies,
-                RequestBodies,
+                RequestBodies!,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -261,7 +261,7 @@ namespace Microsoft.OpenApi.Models
             // headers
             writer.WriteOptionalMap(
                 OpenApiConstants.Headers,
-                Headers,
+                Headers!,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -279,7 +279,7 @@ namespace Microsoft.OpenApi.Models
             // securitySchemes
             writer.WriteOptionalMap(
                 OpenApiConstants.SecuritySchemes,
-                SecuritySchemes,
+                SecuritySchemes!,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -297,7 +297,7 @@ namespace Microsoft.OpenApi.Models
             // links
             writer.WriteOptionalMap(
                 OpenApiConstants.Links,
-                Links,
+                Links!,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -315,7 +315,7 @@ namespace Microsoft.OpenApi.Models
             // callbacks
             writer.WriteOptionalMap(
                 OpenApiConstants.Callbacks,
-                Callbacks,
+                Callbacks!,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -331,7 +331,7 @@ namespace Microsoft.OpenApi.Models
                 });
 
             // extensions
-            writer.WriteExtensions(Extensions, version);
+            writer.WriteExtensions(Extensions!, version);
             writer.WriteEndObject();
         }
 
@@ -343,7 +343,7 @@ namespace Microsoft.OpenApi.Models
             {
                 writer.WriteOptionalMap(
                    OpenApiConstants.Schemas,
-                   Schemas,
+                   Schemas!,
                    (w, key, s) => { w.WriteJsonSchema(s, version); });
             }
             writer.WriteEndObject();
