@@ -14,6 +14,8 @@ using Xunit;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
+using FluentAssertions.Equivalency;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -177,30 +179,29 @@ get:
         [Fact]
         public void ParseBasicSchemaWithExampleShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml")))
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
+
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
+
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+
+            // Act
+            var schema = OpenApiV3Deserializer.LoadSchema(node);
+
+            // Assert
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+
+            schema.Should().BeEquivalentTo(
+            new OpenApiSchema
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
-
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
-
-                var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
-
-                // Act
-                var schema = OpenApiV3Deserializer.LoadSchema(node);
-
-                // Assert
-                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
-
-                schema.Should().BeEquivalentTo(
-                new OpenApiSchema
+                Type = "object",
+                Properties =
                 {
-                    Type = "object",
-                    Properties =
-                    {
                         ["id"] = new()
                         {
                             Type = "integer",
@@ -210,18 +211,22 @@ get:
                         {
                             Type = "string"
                         }
-                    },
-                    Required =
-                    {
+                },
+                Required =
+                {
                         "name"
-                    },
-                    Example = new OpenApiAny(new JsonObject
-                    {
-                        ["name"] = new OpenApiAny("Puma").Node,
-                        ["id"] = new OpenApiAny(1).Node
-                    })
-                });
-            }
+                },
+                Example = new OpenApiAny(new JsonObject
+                {
+                    ["name"] = new OpenApiAny("Puma").Node,
+                    ["id"] = new OpenApiAny(1).Node
+                })
+            }, options => options
+            .IgnoringCyclicReferences()
+            .Excluding((IMemberInfo memberInfo) =>
+                memberInfo.Path.EndsWith("Parent"))
+            .Excluding((IMemberInfo memberInfo) =>
+                memberInfo.Path.EndsWith("Root")));
         }
 
         [Fact]
@@ -263,12 +268,6 @@ get:
                                 Type = "string"
                             }
                         },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "ErrorModel",
-                            HostDocument = result.OpenApiDocument
-                        },
                         Required =
                         {
                             "message",
@@ -277,44 +276,9 @@ get:
                     },
                     ["ExtendedErrorModel"] = new()
                     {
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "ExtendedErrorModel",
-                            HostDocument = result.OpenApiDocument
-                        },
                         AllOf =
                         {
-                            new OpenApiSchema
-                            {
-                                Reference = new()
-                                {
-                                    Type = ReferenceType.Schema,
-                                    Id = "ErrorModel",
-                                    HostDocument = result.OpenApiDocument
-                                },
-                                // Schema should be dereferenced in our model, so all the properties
-                                // from the ErrorModel above should be propagated here.
-                                Type = "object",
-                                Properties =
-                                {
-                                    ["code"] = new()
-                                    {
-                                        Type = "integer",
-                                        Minimum = 100,
-                                        Maximum = 600
-                                    },
-                                    ["message"] = new()
-                                    {
-                                        Type = "string"
-                                    }
-                                },
-                                Required =
-                                {
-                                    "message",
-                                    "code"
-                                }
-                            },
+                            new OpenApiSchemaReference("ErrorModel", result.OpenApiDocument),
                             new OpenApiSchema
                             {
                                 Type = "object",
@@ -367,12 +331,6 @@ get:
                         {
                             "name",
                             "petType"
-                        },
-                        Reference = new()
-                        {
-                            Id= "Pet",
-                            Type = ReferenceType.Schema,
-                            HostDocument = result.OpenApiDocument
                         }
                     },
                     ["Cat"] = new()
@@ -380,38 +338,7 @@ get:
                         Description = "A representation of a cat",
                         AllOf =
                         {
-                            new OpenApiSchema
-                            {
-                                Reference = new()
-                                {
-                                    Type = ReferenceType.Schema,
-                                    Id = "Pet",
-                                    HostDocument = result.OpenApiDocument
-                                },
-                                // Schema should be dereferenced in our model, so all the properties
-                                // from the Pet above should be propagated here.
-                                Type = "object",
-                                Discriminator = new()
-                                {
-                                    PropertyName = "petType"
-                                },
-                                Properties =
-                                {
-                                    ["name"] = new()
-                                    {
-                                        Type = "string"
-                                    },
-                                    ["petType"] = new()
-                                    {
-                                        Type = "string"
-                                    }
-                                },
-                                Required =
-                                {
-                                    "name",
-                                    "petType"
-                                }
-                            },
+                            new OpenApiSchemaReference("Pet", result.OpenApiDocument),
                             new OpenApiSchema
                             {
                                 Type = "object",
@@ -432,12 +359,6 @@ get:
                                     }
                                 }
                             }
-                        },
-                        Reference = new()
-                        {
-                            Id= "Cat",
-                            Type = ReferenceType.Schema,
-                            HostDocument = result.OpenApiDocument
                         }
                     },
                     ["Dog"] = new()
@@ -445,38 +366,7 @@ get:
                         Description = "A representation of a dog",
                         AllOf =
                         {
-                            new OpenApiSchema
-                            {
-                                Reference = new()
-                                {
-                                    Type = ReferenceType.Schema,
-                                    Id = "Pet",
-                                    HostDocument = result.OpenApiDocument
-                                },
-                                // Schema should be dereferenced in our model, so all the properties
-                                // from the Pet above should be propagated here.
-                                Type = "object",
-                                Discriminator = new()
-                                {
-                                    PropertyName = "petType"
-                                },
-                                Properties =
-                                {
-                                    ["name"] = new()
-                                    {
-                                        Type = "string"
-                                    },
-                                    ["petType"] = new()
-                                    {
-                                        Type = "string"
-                                    }
-                                },
-                                Required =
-                                {
-                                    "name",
-                                    "petType"
-                                }
-                            },
+                            new OpenApiSchemaReference("Pet", result.OpenApiDocument),
                             new OpenApiSchema
                             {
                                 Type = "object",
@@ -493,12 +383,6 @@ get:
                                     }
                                 }
                             }
-                        },
-                        Reference = new()
-                        {
-                            Id= "Dog",
-                            Type = ReferenceType.Schema,
-                            HostDocument = result.OpenApiDocument
                         }
                     }
                 }

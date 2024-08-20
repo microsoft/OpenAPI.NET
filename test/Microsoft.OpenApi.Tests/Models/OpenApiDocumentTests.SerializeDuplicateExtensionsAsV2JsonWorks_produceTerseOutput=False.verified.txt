@@ -41,11 +41,11 @@
             "schema": {
               "type": "array",
               "items": {
+                "type": "object",
                 "required": [
                   "id",
                   "name"
                 ],
-                "type": "object",
                 "properties": {
                   "id": {
                     "type": "integer",

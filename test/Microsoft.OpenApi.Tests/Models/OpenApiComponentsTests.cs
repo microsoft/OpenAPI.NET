@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
@@ -74,19 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Type = "integer"
                         },
-                        ["property3"] = new()
-                        {
-                            Reference = new()
-                            {
-                                Type = ReferenceType.Schema,
-                                Id = "schema2"
-                            }
-                        }
-                    },
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
+                        ["property3"] = new OpenApiSchemaReference("schema2", null)                        
                     }
                 },
                 ["schema2"] = new()
@@ -173,14 +162,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new()
-                {
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema2"
-                    }
-                },
+                ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new()
                 {
                     Type = "object",
@@ -191,7 +173,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             Type = "string"
                         }
                     }
-                },
+                }
             }
         };
 
@@ -208,11 +190,6 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Type = "string"
                         }
-                    },
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
                     }
                 },
                 ["schema2"] = new()
@@ -233,14 +210,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new()
-                {
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
-                    }
-                }
+                ["schema1"] = new OpenApiSchemaReference("schema1", null)
             }
         };
 
@@ -256,14 +226,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Type = "integer"
                         },
-                        ["property3"] = new OpenApiSchema()
-                        {
-                            Reference = new OpenApiReference()
-                            {
-                                Type = ReferenceType.Schema,
-                                Id = "schema2"
-                            }
-                        }
+                        ["property3"] = new OpenApiSchemaReference("schema2", null)
                     }
                 },                
 
@@ -293,14 +256,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema = new OpenApiSchema 
-                                        {
-                                            Reference = new OpenApiReference
-                                            {
-                                                Type = ReferenceType.Schema,
-                                                Id = "schema1"
-                                            }
-                                        }
+                                        Schema = new OpenApiSchemaReference("schema1", null)
                                     }
                                 }
                             },
@@ -314,7 +270,6 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 }
-
             }
         };
 
@@ -543,21 +498,29 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBrokenComponentsAsJsonV3Works()
         {
             // Arrange
-            var expected = @"{
-  ""schemas"": {
-    ""schema1"": {
-      ""type"": ""string""
-    },
-    ""schema4"": {
-      ""type"": ""string"",
-      ""allOf"": [
-        {
-          ""type"": ""string""
-        }
-      ]
-    }
-  }
-}";
+            var expected = """
+                {
+                  "schemas": {
+                    "schema1": {
+                      "type": "string"
+                    },
+                    "schema2": null,
+                    "schema3": null,
+                    "schema4": {
+                      "type": "string",
+                      "allOf": [
+                        null,
+                        null,
+                        {
+                          "type": "string"
+                        },
+                        null,
+                        null
+                      ]
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = BrokenComponents.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -572,13 +535,22 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBrokenComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    type: string
-  schema4:
-    type: string
-    allOf:
-      - type: string";
+            var expected =
+                """
+                schemas:
+                  schema1:
+                    type: string
+                  schema2:
+                  schema3:
+                  schema4:
+                    type: string
+                    allOf:
+                      -
+                      -
+                      - type: string
+                      -
+                      -
+                """;
 
             // Act
             var actual = BrokenComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -592,6 +564,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Fact]
         public void SerializeTopLevelReferencingComponentsAsYamlV3Works()
         {
+            // Arrange
             // Arrange
             var expected =
                 """

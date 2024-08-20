@@ -626,9 +626,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "description": "description2",
                       "required": true,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   ],
@@ -639,9 +639,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "400": {
                       "description": null,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   },
@@ -699,9 +699,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "description": "description2",
                       "required": true,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   ],
@@ -712,9 +712,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "400": {
                       "description": null,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   },
