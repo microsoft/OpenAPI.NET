@@ -21,17 +21,19 @@ public static class OpenApiServerExtensions
     ///   1. A substitution has no valid value in both the supplied dictionary and the default
     ///   2. A substitution's value is not available in the enum provided
     /// </exception>
-    public static string ReplaceServerUrlVariables(this OpenApiServer server, IDictionary<string, string> values)
+    public static string ReplaceServerUrlVariables(this OpenApiServer server, IDictionary<string, string> values = null)
     {
         var parsedUrl = server.Url;
         foreach (var variable in server.Variables)
         {
-            // Try to get the value from the passed in values
-            values.TryGetValue(variable.Key, out var actualValue);
-            // Fall back to the default value
-            if (string.IsNullOrEmpty(actualValue)) { actualValue = variable.Value.Default; }
+            // Try to get the value from the provided values
+            if (values is not { } v || !v.TryGetValue(variable.Key, out var value) || string.IsNullOrEmpty(value))
+            {
+                // Fall back to the default value
+                value = variable.Value.Default;
+            }
 
-            if (string.IsNullOrEmpty(actualValue))
+            if (string.IsNullOrEmpty(value))
             {
                 // According to the spec, the variable's default value is required.
                 // This code path should be hit when a value isn't provided & a default value isn't available
@@ -39,13 +41,13 @@ public static class OpenApiServerExtensions
                     string.Format(SRResource.ParseServerUrlDefaultValueNotAvailable, variable.Key), nameof(server));
             }
 
-            if (variable.Value.Enum is { Count: > 0 } e && !e.Contains(actualValue))
+            if (variable.Value.Enum is { Count: > 0 } e && !e.Contains(value))
             {
                 throw new ArgumentException(
-                    string.Format(SRResource.ParseServerUrlValueNotValid, actualValue, variable.Key), nameof(values));
+                    string.Format(SRResource.ParseServerUrlValueNotValid, value, variable.Key), nameof(values));
             }
 
-            parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", actualValue);
+            parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", value);
         }
 
         return parsedUrl;
