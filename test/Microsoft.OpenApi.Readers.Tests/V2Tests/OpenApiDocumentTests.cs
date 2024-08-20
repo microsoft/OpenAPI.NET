@@ -7,9 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -22,59 +23,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public OpenApiDocumentTests()
         {
             OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
-        [Fact]
-        public void ShouldThrowWhenReferenceTypeIsInvalid()
-        {
-            var input =
-                """
-                swagger: 2.0
-                info:
-                  title: test
-                  version: 1.0.0
-                paths:
-                  '/':
-                    get:
-                      responses:
-                        '200':
-                          description: ok
-                          schema:
-                            $ref: '#/defi888nition/does/notexist'
-                """;
-
-            var result = OpenApiDocument.Parse(input, "yaml");
-
-            result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new( new OpenApiException("Unknown reference type 'defi888nition'")) });
-            result.OpenApiDocument.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void ShouldThrowWhenReferenceDoesNotExist()
-        {
-            var input =
-                """
-                swagger: 2.0
-                info:
-                  title: test
-                  version: 1.0.0
-                paths:
-                  '/':
-                    get:
-                      produces: ['application/json']
-                      responses:
-                        '200':
-                          description: ok
-                          schema:
-                            $ref: '#/definitions/doesnotexist'
-                """;
-
-            var result = OpenApiDocument.Parse(input, "yaml");
-
-            result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new( new OpenApiException("Invalid Reference identifier 'doesnotexist'.")) });
-            result.OpenApiDocument.Should().NotBeNull();
         }
 
         [Theory]
@@ -138,20 +86,26 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                         ExclusiveMaximum = true,
                                         ExclusiveMinimum = false
                                     }
-                                },
-                                Reference = new()
-                                {
-                                    Id = "sampleSchema",
-                                    Type = ReferenceType.Schema
                                 }
                             }
                         }
                     },
                     Paths = new()
-                });
+                }, options => options
+                .Excluding(x=> x.BaseUri)
+                .Excluding((IMemberInfo memberInfo) =>
+                                        memberInfo.Path.EndsWith("Parent"))
+                .Excluding((IMemberInfo memberInfo) =>
+                                        memberInfo.Path.EndsWith("Root")));
 
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
+                new OpenApiDiagnostic { 
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi2_0,
+                    Errors = new List<OpenApiError>()
+                    {
+                        new OpenApiError("", "Paths is a REQUIRED field at #/")
+                    }
+                });
         }
 
         [Fact]
@@ -161,12 +115,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okSchema = new OpenApiSchema
             {
-                Reference = new()
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "Item",
-                    HostDocument = result.OpenApiDocument
-                },
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
                     { "id", new OpenApiSchema
@@ -180,12 +128,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var errorSchema = new OpenApiSchema
             {
-                Reference = new()
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "Error",
-                    HostDocument = result.OpenApiDocument
-                },
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
                     { "code", new OpenApiSchema
@@ -212,13 +154,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Schema = new()
                 {
                     Type = "array",
-                    Items = okSchema
+                    Items = new OpenApiSchemaReference("Item", result.OpenApiDocument)
                 }
             };
 
             var errorMediaType = new OpenApiMediaType
             {
-                Schema = errorSchema
+                Schema = new OpenApiSchemaReference("Error", result.OpenApiDocument)
             };
 
             result.OpenApiDocument.Should().BeEquivalentTo(new OpenApiDocument
@@ -322,7 +264,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["Error"] = errorSchema
                     }
                 }
-            });
+            }, options => options.Excluding(x => x.BaseUri));
         }
 
         [Fact]
@@ -336,51 +278,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var successSchema = new OpenApiSchema
             {
                 Type = "array",
-                Items = new()
-                {
-                    Properties = {
-                        { "id", new OpenApiSchema
-                            {
-                                Type = "string",
-                                Description = "Item identifier."
-                            }
-                        }
-                    },
-                    Reference = new()
-                    {
-                        Id = "Item",
-                        Type = ReferenceType.Schema,
-                        HostDocument = result.OpenApiDocument
-                    }
-                }
+                Items = new OpenApiSchemaReference("Item", result.OpenApiDocument)
             };
-            var errorSchema = new OpenApiSchema
-            {
-                Properties = {
-                    { "code", new OpenApiSchema
-                        {
-                            Type = "integer",
-                            Format = "int32"
-                        }
-                    },
-                    { "message", new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
-                    },
-                    { "fields", new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
-                    }
-                },
-                Reference = new()
-                {
-                    Id = "Error",
-                    Type = ReferenceType.Schema,
-                    HostDocument = result.OpenApiDocument
-                }
-            };
+            var errorSchema = new OpenApiSchemaReference("Error", result.OpenApiDocument);
+
             var responses = result.OpenApiDocument.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)
             {

@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
@@ -213,7 +214,7 @@ paths: {}",
             {
                 Schemas = new Dictionary<string, OpenApiSchema>
                 {
-                    ["pet"] = new()
+                    ["pet1"] = new()
                     {
                         Type = "object",
                         Required = new HashSet<string>
@@ -236,12 +237,6 @@ paths: {}",
                             {
                                 Type = "string"
                             },
-                        },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "pet",
-                            HostDocument = actual.OpenApiDocument
                         }
                     },
                     ["newPet"] = new()
@@ -266,12 +261,6 @@ paths: {}",
                             {
                                 Type = "string"
                             },
-                        },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "newPet",
-                            HostDocument = actual.OpenApiDocument
                         }
                     },
                     ["errorModel"] = new()
@@ -293,44 +282,15 @@ paths: {}",
                             {
                                 Type = "string"
                             }
-                        },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "errorModel",
-                            HostDocument = actual.OpenApiDocument
                         }
                     },
                 }
             };
 
-            // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = Clone(components.Schemas["pet"]);
+            var petSchema = new OpenApiSchemaReference("pet1", actual.OpenApiDocument);
+            var newPetSchema = new OpenApiSchemaReference("newPet", actual.OpenApiDocument);
 
-            petSchema.Reference = new()
-            {
-                Id = "pet",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.OpenApiDocument
-            };
-
-            var newPetSchema = Clone(components.Schemas["newPet"]);
-
-            newPetSchema.Reference = new()
-            {
-                Id = "newPet",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.OpenApiDocument
-            };
-
-            var errorModelSchema = Clone(components.Schemas["errorModel"]);
-
-            errorModelSchema.Reference = new()
-            {
-                Id = "errorModel",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.OpenApiDocument
-            };
+            var errorModelSchema = new OpenApiSchemaReference("errorModel", actual.OpenApiDocument);
 
             var expectedDoc = new OpenApiDocument
             {
@@ -640,7 +600,7 @@ paths: {}",
             {
                 Schemas = new Dictionary<string, OpenApiSchema>
                 {
-                    ["pet"] = new()
+                    ["pet1"] = new()
                     {
                         Type = "object",
                         Required = new HashSet<string>
@@ -663,12 +623,6 @@ paths: {}",
                             {
                                 Type = "string"
                             },
-                        },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "pet",
-                            HostDocument = actual.OpenApiDocument
                         }
                     },
                     ["newPet"] = new()
@@ -693,12 +647,6 @@ paths: {}",
                             {
                                 Type = "string"
                             },
-                        },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "newPet",
-                            HostDocument = actual.OpenApiDocument
                         }
                     },
                     ["errorModel"] = new()
@@ -720,11 +668,6 @@ paths: {}",
                             {
                                 Type = "string"
                             }
-                        },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "errorModel"
                         }
                     },
                 },
@@ -745,11 +688,12 @@ paths: {}",
             };
 
             // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = Clone(components.Schemas["pet"]);
+            var petSchema = Clone(components.Schemas["pet1"]);
             petSchema.Reference = new()
             {
-                Id = "pet",
-                Type = ReferenceType.Schema
+                Id = "pet1",
+                Type = ReferenceType.Schema,
+                HostDocument = actual.OpenApiDocument
             };
 
             var newPetSchema = Clone(components.Schemas["newPet"]);
@@ -757,7 +701,8 @@ paths: {}",
             newPetSchema.Reference = new()
             {
                 Id = "newPet",
-                Type = ReferenceType.Schema
+                Type = ReferenceType.Schema,
+                HostDocument = actual.OpenApiDocument
             };
 
             var errorModelSchema = Clone(components.Schemas["errorModel"]);
@@ -765,7 +710,8 @@ paths: {}",
             errorModelSchema.Reference = new()
             {
                 Id = "errorModel",
-                Type = ReferenceType.Schema
+                Type = ReferenceType.Schema,
+                HostDocument = actual.OpenApiDocument
             };
 
             var tag1 = new OpenApiTag
@@ -1272,15 +1218,7 @@ paths: {}",
 
             var actualSchema = result.OpenApiDocument.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
-            var expectedSchema = new OpenApiSchema()
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = "User",
-                    Type = ReferenceType.Schema
-                }
-            };
-
+            var expectedSchema = new OpenApiSchemaReference("User", result.OpenApiDocument);
             // Assert
             actualSchema.Should().BeEquivalentTo(expectedSchema);
         }
@@ -1399,7 +1337,10 @@ components:
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
 
             // Assert
-            actualParam.Should().BeEquivalentTo(expectedParam, options => options.Excluding(x => x.Reference.HostDocument));
+            actualParam.Should().BeEquivalentTo(expectedParam, options => options
+                .Excluding(x => x.Reference.HostDocument)
+                .Excluding(x => x.Schema.Default.Node.Parent)
+                .IgnoringCyclicReferences());
             outputDoc.Should().BeEquivalentTo(expectedSerializedDoc.MakeLineBreaksEnvironmentNeutral());
         }
     }

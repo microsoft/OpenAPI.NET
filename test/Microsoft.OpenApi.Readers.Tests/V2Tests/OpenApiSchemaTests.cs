@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
 using System.Text.Json.Nodes;
 using System.Collections.Generic;
+using FluentAssertions.Equivalency;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -37,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Type = "number",
                 Format = "float",
                 Default = new OpenApiAny(5)
-            });
+            }, options => options.IgnoringCyclicReferences().Excluding(x => x.Default.Node.Parent));
         }
 
         [Fact]
@@ -60,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Type = "number",
                     Format = "float",
                     Example = new OpenApiAny(5)
-                });
+                }, options => options.IgnoringCyclicReferences().Excluding(x => x.Example.Node.Parent));
         }
 
         [Fact]
@@ -88,8 +89,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     new OpenApiAny(9).Node
                 }
             };
-            schema.Should().BeEquivalentTo(expected,
-                                options => options.IgnoringCyclicReferences());
+
+            schema.Should().BeEquivalentTo(expected, options =>
+                       options.IgnoringCyclicReferences()
+                              .Excluding((IMemberInfo memberInfo) =>
+                                    memberInfo.Path.EndsWith("Parent")));
         }
     }
 }

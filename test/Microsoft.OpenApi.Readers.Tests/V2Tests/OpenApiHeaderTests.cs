@@ -3,6 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -41,7 +42,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 },
                 options => options
-                .IgnoringCyclicReferences());
+                .IgnoringCyclicReferences()
+                .Excluding(x => x.Schema.Default.Node.Parent));
         }
 
         [Fact]
@@ -73,7 +75,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                     }
                 }, options => options.IgnoringCyclicReferences()
-            );
+                                     .Excluding((IMemberInfo memberInfo) =>
+                                        memberInfo.Path.EndsWith("Parent")));
         }
     }
 }

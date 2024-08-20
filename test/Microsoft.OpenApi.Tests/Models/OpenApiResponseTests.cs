@@ -33,10 +33,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Schema = new()
                     {
                         Type = "array",
-                        Items = new()
-                        {
-                            Reference = new() {Type = ReferenceType.Schema, Id = "customType"}
-                        }
+                        Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = new OpenApiAny("Blabla"),
                     Extensions = new Dictionary<string, IOpenApiExtension>
@@ -75,10 +72,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Schema = new()
                     {
                         Type = "array",
-                        Items = new()
-                        {
-                            Reference = new() {Type = ReferenceType.Schema, Id = "customType"}
-                        }
+                        Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = new OpenApiAny("Blabla"),
                     Extensions = new Dictionary<string, IOpenApiExtension>
@@ -119,10 +113,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Schema = new()
                     {
                         Type = "array",
-                        Items = new()
-                        {
-                            Reference = new() {Type = ReferenceType.Schema, Id = "customType"}
-                        }
+                        Items = new OpenApiSchemaReference("customType", null)
                     }
                 }
             },
@@ -158,10 +149,7 @@ namespace Microsoft.OpenApi.Tests.Models
                      Schema = new()
                     {
                         Type = "array",
-                        Items = new()
-                        {
-                            Reference = new() {Type = ReferenceType.Schema, Id = "customType"}
-                        }
+                        Items = new OpenApiSchemaReference("customType", null)
                     }
                 }
             },

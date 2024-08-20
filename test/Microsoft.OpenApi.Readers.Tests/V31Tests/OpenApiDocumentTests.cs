@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
@@ -43,24 +44,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public void ParseDocumentWithWebhooksShouldSucceed()
         {
             // Arrange and Act
-            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));            
-            var petSchema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "petSchema"
-                }
-            };
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
+            var petSchema = new OpenApiSchemaReference("petSchema", actual.OpenApiDocument);
 
-            var newPetSchema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "newPetSchema"
-                }
-            };
+            var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.OpenApiDocument);
 
             var components = new OpenApiComponents
             {
@@ -113,12 +100,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Type = "string"
                             },
-                        },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "newPet",
-                            HostDocument = actual.OpenApiDocument
                         }
                     }
                 }
@@ -295,35 +276,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Type = "string"
                             },
-                        },
-                        Reference = new()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "newPet",
-                            HostDocument = actual.OpenApiDocument
                         }
                     }
                 }
             };
 
             // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "petSchema"
-                }
-            };
+            var petSchema = new OpenApiSchemaReference("petSchema", actual.OpenApiDocument);
 
-            var newPetSchema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "newPetSchema"
-                }
-            };
+            var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.OpenApiDocument);
 
             components.PathItems = new Dictionary<string, OpenApiPathItem>
             {
@@ -502,6 +463,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var mediaType = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
 
             var expectedMediaType = @"schema:
+  patternProperties:
+    ^x-.*$:
+      type: string
   type: object
   properties:
     prop1:
@@ -509,9 +473,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     prop2:
       type: string
     prop3:
-      type: string
-  patternProperties:
-    ^x-.*$:
       type: string";
             
             var actualMediaType = mediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);

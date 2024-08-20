@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -170,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            Assert.Equal(schema, expectedSchema);
+            schema.Should().BeEquivalentTo(expectedSchema);
         }
 
         [Fact]
@@ -262,7 +263,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedSchema);
+            schema.Should().BeEquivalentTo(expectedSchema, options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding((IMemberInfo memberInfo) =>
+                            memberInfo.Path.EndsWith("Parent")));
         }
     }
 }

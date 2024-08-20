@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
@@ -33,14 +34,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new()
-                {
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema2"
-                    },
-                },
+                ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new()
                 {
                     Type = "object",
@@ -159,11 +153,6 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Type = "string"
                         },
-                    },
-                    Reference = new()
-                    {
-                        Id = "pet",
-                        Type = ReferenceType.Schema
                     }
                 },
                 ["newPet"] = new()
@@ -188,11 +177,6 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Type = "string"
                         },
-                    },
-                    Reference = new()
-                    {
-                        Id = "newPet",
-                        Type = ReferenceType.Schema
                     }
                 },
                 ["errorModel"] = new()
@@ -214,11 +198,6 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Type = "string"
                         }
-                    },
-                    Reference = new()
-                    {
-                        Id = "errorModel",
-                        Type = ReferenceType.Schema
                     }
                 },
             }
@@ -920,14 +899,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema = new() 
-                                        {
-                                            Reference = new OpenApiReference
-                                            {
-                                                Id = "Pet",
-                                                Type = ReferenceType.Schema
-                                            }
-                                        }
+                                        Schema = new OpenApiSchemaReference("Pet", null)
                                     }
                                 }
                             },

@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"integer\" but should be \"string\" at "
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
@@ -75,11 +75,11 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"integer\" but should be \"string\" at "
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/example"
+                "#/example",
             });
         }
 
@@ -125,16 +125,16 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"string\" but should be \"object\" at ",
-                "type : Value is \"string\" but should be \"integer\" at /y",
-                "type : Value is \"string\" but should be \"integer\" at /z",
-                "type : Value is \"array\" but should be \"object\" at "
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/enum/0",
-                "#/enum/1",
-                "#/enum/1",
+                // #enum/0 is not an error since the spec allows
+                // representing an object using a string.
+                "#/enum/1/y",
+                "#/enum/1/z",
                 "#/enum/2"
             });
         }
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         }
                     },
                     ["property3"] = "123",
-                    ["property4"] = DateTime.UtcNow.ToString()
+                    ["property4"] = DateTime.UtcNow
                 })
             };
 
@@ -209,21 +209,21 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(schema);
 
             warnings = validator.Warnings;
-            bool result = warnings.Any();
+            bool result = !warnings.Any();
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"string\" but should be \"integer\" at /property1/2",
-                "type : Value is \"integer\" but should be \"object\" at /property2/0",
-                "type : Value is \"string\" but should be \"boolean\" at /property2/1/z",
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/default",
-                "#/default",
-                "#/default"
+                "#/default/property1/2",
+                "#/default/property2/0",
+                "#/default/property2/1/z"
             });
         }
 

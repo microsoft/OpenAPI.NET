@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Tests.Models
             In = ParameterLocation.Query,
             Schema = new()
             {
-                Type = "array",
+                Type = "object",
                 AdditionalProperties = new OpenApiSchema
                 {
                     Type = "integer"

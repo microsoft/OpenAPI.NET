@@ -150,8 +150,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths",
                 "#/components",
                 "#/components/schemas/loopy",
-                "#/components/schemas/loopy/properties/parent",
-                "#/components/schemas/loopy/properties/parent/properties/name",
+                "#/components/schemas/loopy/properties/name",
                 "#/tags"
             });
         }
@@ -162,15 +161,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateReferences()
         {
-            var baseSchema = new OpenApiSchema
-            {
-                Reference = new()
-                {
-                    Id = "base",
-                    Type = ReferenceType.Schema
-                },
-                UnresolvedReference = false
-            };
+            var baseSchema = new OpenApiSchemaReference("base", null);
 
             var derivedSchema = new OpenApiSchema
             {
@@ -249,9 +240,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             locator.Locations.Where(l => l.StartsWith("referenceAt:")).Should().BeEquivalentTo(new List<string> {
                 "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
                 "referenceAt: #/paths/~1/get/responses/200/headers/test-header/schema",
-                "referenceAt: #/components/schemas/derived",
-                "referenceAt: #/components/schemas/derived/anyOf",
-                "referenceAt: #/components/schemas/base",
+                "referenceAt: #/components/schemas/derived/anyOf/0",
                 "referenceAt: #/components/securitySchemes/test-secScheme",
                 "referenceAt: #/components/headers/test-header/schema"
             });
