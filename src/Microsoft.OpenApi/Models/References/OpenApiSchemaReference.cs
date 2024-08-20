@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Any;
@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiSchema>(_reference);
+                _target ??= Reference.HostDocument?.ResolveReferenceTo<OpenApiSchema>(_reference);
                 OpenApiSchema resolved = new OpenApiSchema(_target);
                 if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
                 return resolved;
