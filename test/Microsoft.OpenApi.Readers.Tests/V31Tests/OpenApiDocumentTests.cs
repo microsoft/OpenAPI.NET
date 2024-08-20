@@ -481,5 +481,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             actualSchema.Should().BeEquivalentTo(expectedSchema);
             actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
         }
+
+        [Fact]
+        public void ParseDocumentWithReferenceByIdGetsResolved()
+        {
+            // Arrange and Act
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithReferenceById.yaml"));
+
+            var responseSchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var requestBodySchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema;
+            var parameterSchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Parameters[0].Schema;
+
+            // Assert
+            Assert.Equal("object", responseSchema.Type);
+            Assert.Equal("object", requestBodySchema.Type);
+            Assert.Equal("string", parameterSchema.Type);
+        }
     }
 }
