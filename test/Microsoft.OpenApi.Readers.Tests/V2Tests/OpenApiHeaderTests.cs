@@ -38,12 +38,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Default = new OpenApiAny(5)
+                        Default = new OpenApiAny(5).Node
                     }
                 },
                 options => options
                 .IgnoringCyclicReferences()
-                .Excluding(x => x.Schema.Default.Node.Parent));
+                .Excluding(x => x.Schema.Default.Parent));
         }
 
         [Fact]

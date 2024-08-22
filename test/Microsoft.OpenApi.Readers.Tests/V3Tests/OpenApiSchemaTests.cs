@@ -216,11 +216,11 @@ get:
                 {
                         "name"
                 },
-                Example = new OpenApiAny(new JsonObject
+                Example = new JsonObject
                 {
                     ["name"] = new OpenApiAny("Puma").Node,
                     ["id"] = new OpenApiAny(1).Node
-                })
+                }
             }, options => options
             .IgnoringCyclicReferences()
             .Excluding((IMemberInfo memberInfo) =>
@@ -378,7 +378,7 @@ get:
                                         Type = "integer",
                                         Format = "int32",
                                         Description = "the size of the pack the dog is from",
-                                        Default = new OpenApiAny(0),
+                                        Default = 0,
                                         Minimum = 0
                                     }
                                 }

@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Reader.V31
             };
         }
 
-        public static OpenApiAny LoadAny(ParseNode node, OpenApiDocument hostDocument = null)
+        public static JsonNode LoadAny(ParseNode node, OpenApiDocument hostDocument = null)
         {
             return node.CreateAny();
         }
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Reader.V31
         {
             return node.Context.ExtensionParsers.TryGetValue(name, out var parser)
                 ? parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_1)
-                : node.CreateAny();
+                : new OpenApiAny(node.CreateAny());
         }
 
         private static string LoadString(ParseNode node)

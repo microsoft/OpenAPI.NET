@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (schema.Default != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Default.Node, schema);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Default, schema);
                     }
 
                     context.Exit();
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (schema.Example != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Example.Node, schema);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Example, schema);
                     }
 
                     context.Exit();

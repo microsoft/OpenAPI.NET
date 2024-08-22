@@ -30,14 +30,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             mediaType.Should().BeEquivalentTo(
                 new OpenApiMediaType
                 {
-                    Example = new OpenApiAny(5),
+                    Example = 5,
                     Schema = new()
                     {
                         Type = "number",
                         Format = "float"
                     }
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(m => m.Example.Node.Parent)
+                .Excluding(m => m.Example.Parent)
                 );
         }
 
@@ -55,11 +55,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["example1"] = new()
                         {
-                            Value = new OpenApiAny(5)
+                            Value = 5
                         },
                         ["example2"] = new()
                         {
-                            Value = new OpenApiAny(7.5)
+                            Value = 7.5
                         }
                     },
                     Schema = new()
@@ -68,8 +68,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Format = "float"
                     }
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(m => m.Examples["example1"].Value.Node.Parent)
-                .Excluding(m => m.Examples["example2"].Value.Node.Parent));
+                .Excluding(m => m.Examples["example1"].Value.Parent)
+                .Excluding(m => m.Examples["example2"].Value.Parent));
         }
     }
 }

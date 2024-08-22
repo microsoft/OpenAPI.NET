@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override decimal? MultipleOf { get => Target.MultipleOf; set => Target.MultipleOf = value; }
         /// <inheritdoc/>
-        public override OpenApiAny Default { get => Target.Default; set => Target.Default = value; }
+        public override JsonNode Default { get => Target.Default; set => Target.Default = value; }
         /// <inheritdoc/>
         public override bool ReadOnly { get => Target.ReadOnly; set => Target.ReadOnly = value; }
         /// <inheritdoc/>
@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override OpenApiDiscriminator Discriminator { get => Target.Discriminator; set => Target.Discriminator = value; }
         /// <inheritdoc/>
-        public override OpenApiAny Example { get => Target.Example; set => Target.Example = value; }
+        public override JsonNode Example { get => Target.Example; set => Target.Example = value; }
         /// <inheritdoc/>
         public override IList<JsonNode> Examples { get => Target.Examples; set => Target.Examples = value; }
         /// <inheritdoc/>

@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class RuntimeExpressionAnyWrapper : IOpenApiElement
     {
-        private OpenApiAny _any;
+        private JsonNode _any;
         private RuntimeExpression _expression;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets/Sets the <see cref="JsonNode"/>
         /// </summary>
-        public OpenApiAny Any
+        public JsonNode Any
         {
             get
             {

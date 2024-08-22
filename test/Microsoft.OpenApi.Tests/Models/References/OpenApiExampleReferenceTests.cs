@@ -136,7 +136,7 @@ components:
          {
             // Assert
             Assert.NotNull(_localExampleReference.Value);
-            Assert.Equal("[{\"id\":1,\"name\":\"John Doe\"}]", _localExampleReference.Value.Node.ToJsonString());
+            Assert.Equal("[{\"id\":1,\"name\":\"John Doe\"}]", _localExampleReference.Value.ToJsonString());
             Assert.Equal("Example of a local user", _localExampleReference.Summary);
             Assert.Equal("This is an example of a local user", _localExampleReference.Description);
 

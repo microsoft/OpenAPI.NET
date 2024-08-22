@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create simple map from this type of node.", Context);
         }
 
-        public virtual OpenApiAny CreateAny()
+        public virtual JsonNode CreateAny()
         {
             throw new OpenApiReaderException("Cannot create an Any object this type of node.", Context);
         }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -97,7 +98,7 @@ namespace Microsoft.OpenApi.Models.References
         public override bool AllowReserved { get => Target.AllowReserved; set => Target.AllowReserved = value; }
 
         /// <inheritdoc/>
-        public override OpenApiAny Example { get => Target.Example; set => Target.Example = value; }
+        public override JsonNode Example { get => Target.Example; set => Target.Example = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }

@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema
             {
-                Default = new OpenApiAny(55),
+                Default = 55,
                 Type = "string",
             };
 
@@ -57,8 +57,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema
             {
-                Example = new OpenApiAny(55),
-                Default = new OpenApiAny("1234"),
+                Example = 55,
+                Default = "1234",
                 Type = "string",
             };
 
@@ -180,7 +180,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         Type = "string"
                     }
                 },
-                Default = new OpenApiAny(new JsonObject()
+                Default = new JsonObject()
                 {
                     ["property1"] = new JsonArray()
                     {
@@ -200,7 +200,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                     },
                     ["property3"] = "123",
                     ["property4"] = DateTime.UtcNow
-                })
+                }
             };
 
             // Act

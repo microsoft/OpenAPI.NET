@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiExample AdvancedExample = new()
         {
-            Value = new OpenApiAny(new JsonObject
+            Value = new JsonObject
             {
                 ["versions"] = new JsonArray
                 {
@@ -55,13 +55,13 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 }
-            })
+            }
         };
 
         public static OpenApiExampleReference OpenApiExampleReference = new(ReferencedExample, "example1");
         public static OpenApiExample ReferencedExample = new()
         {
-            Value = new OpenApiAny(new JsonObject
+            Value = new JsonObject
             {
                 ["versions"] = new JsonArray
                 {
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 },
                 ["aDate"] = JsonSerializer.Serialize(DateTime.Parse("12/12/2022 00:00:00").ToString("yyyy-MM-dd"))
-            })
+            }
         };
 
         [Theory]

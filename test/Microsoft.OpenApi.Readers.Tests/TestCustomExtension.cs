@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var settings = new OpenApiReaderSettings
             {
                 ExtensionParsers = { { "x-foo", (a,v) => {
-                        var fooNode = (JsonObject)a.Node;
+                        var fooNode = (JsonObject)a;
                         return new FooExtension() {
                               Bar = (fooNode["bar"].ToString()),
                               Baz = (fooNode["baz"].ToString())

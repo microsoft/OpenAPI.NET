@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var mediaType = new OpenApiMediaType
             {
-                Example = new OpenApiAny(55),
+                Example = 55,
                 Schema = new()
                 {
                     Type = "string",
@@ -70,29 +70,28 @@ namespace Microsoft.OpenApi.Validations.Tests
                     {
                         ["example0"] = new()
                         {
-                            Value = new OpenApiAny("1"),
+                            Value = "1",
                         },
                         ["example1"] = new()
                         {
-                           Value = new OpenApiAny(new JsonObject()
+                           Value = new JsonObject()
                             {
                                 ["x"] = 2,
                                 ["y"] = "20",
                                 ["z"] = "200"
-                            })
+                            }
                         },
                         ["example2"] = new()
                         {
-                            Value =new OpenApiAny(
-                            new JsonArray(){3})
+                            Value = new JsonArray(){3}
                         },
                         ["example3"] = new()
                         {
-                            Value = new OpenApiAny(new JsonObject()
+                            Value = new JsonObject()
                             {
                                 ["x"] = 4,
                                 ["y"] = 40
-                            })
+                            }
                         },
                     }
             };

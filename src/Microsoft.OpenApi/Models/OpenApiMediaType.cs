@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -30,7 +31,7 @@ namespace Microsoft.OpenApi.Models
         /// Example of the media type.
         /// The example object SHOULD be in the correct format as specified by the media type.
         /// </summary>
-        public OpenApiAny Example { get; set; }
+        public JsonNode Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.

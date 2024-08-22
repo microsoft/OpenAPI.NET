@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -15,8 +16,8 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// </summary>
         public AnyMapFieldMapParameter(
             Func<T, IDictionary<string, U>> propertyMapGetter,
-            Func<U, OpenApiAny> propertyGetter,
-            Action<U, OpenApiAny> propertySetter,
+            Func<U, JsonNode> propertyGetter,
+            Action<U, JsonNode> propertySetter,
             Func<T, OpenApiSchema> schemaGetter)
         {
             this.PropertyMapGetter = propertyMapGetter;
@@ -33,12 +34,12 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// <summary>
         /// Function to retrieve the value of the property from an inner element.
         /// </summary>
-        public Func<U, OpenApiAny> PropertyGetter { get; }
+        public Func<U, JsonNode> PropertyGetter { get; }
 
         /// <summary>
         /// Function to set the value of the property.
         /// </summary>
-        public Action<U, OpenApiAny> PropertySetter { get; }
+        public Action<U, JsonNode> PropertySetter { get; }
 
         /// <summary>
         /// Function to get the schema to apply to the property.

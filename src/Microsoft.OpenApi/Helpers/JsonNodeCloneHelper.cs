@@ -15,16 +15,16 @@ namespace Microsoft.OpenApi.Helpers
             ReferenceHandler = ReferenceHandler.IgnoreCycles
         };
 
-        internal static OpenApiAny Clone(OpenApiAny value)
+        internal static JsonNode Clone(JsonNode value)
         {
-            var jsonString = Serialize(value?.Node);
+            var jsonString = Serialize(value);
             if (string.IsNullOrEmpty(jsonString))
             {
                 return null;
             }
 
             var result = JsonSerializer.Deserialize<JsonNode>(jsonString, options);
-            return new OpenApiAny(result);
+            return result;
         }
 
         private static string Serialize(object obj)

@@ -321,12 +321,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Format = "float"
                                         }
                                     },
-                                    Example = new OpenApiAny(new JsonArray()
+                                    Example = new JsonArray()
                                     {
                                         5.0,
                                         6.0,
                                         7.0
-                                    })
+                                    }
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {
@@ -344,12 +344,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }}
                     }
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Parent)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Root)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Parent)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Root)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Parent)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Root));
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[0].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[0].Root)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[1].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[1].Root)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[2].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[2].Root));
         }
 
         [Fact]

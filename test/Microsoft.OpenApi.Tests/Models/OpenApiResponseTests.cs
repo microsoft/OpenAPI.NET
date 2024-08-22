@@ -35,11 +35,11 @@ namespace Microsoft.OpenApi.Tests.Models
                         Type = "array",
                         Items = new OpenApiSchemaReference("customType", null)
                     },
-                    Example = new OpenApiAny("Blabla"),
+                    Example = "Blabla",
                     Extensions = new Dictionary<string, IOpenApiExtension>
                     {
                         ["myextension"] = new OpenApiAny("myextensionvalue"),
-                    },
+                    }, 
                 }
             },
             Headers =
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Type = "array",
                         Items = new OpenApiSchemaReference("customType", null)
                     },
-                    Example = new OpenApiAny("Blabla"),
+                    Example = "Blabla",
                     Extensions = new Dictionary<string, IOpenApiExtension>
                     {
                         ["myextension"] = new OpenApiAny("myextensionvalue"),

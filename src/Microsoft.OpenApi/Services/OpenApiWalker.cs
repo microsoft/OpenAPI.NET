@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -931,7 +932,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiAny"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiAny example)
+        internal void Walk(JsonNode example)
         {
             if (example == null)
             {

@@ -47,7 +47,7 @@ public class OpenApiPrimaryErrorMessageExtensionTests
     public void ParsesValue()
     {
         // Arrange
-        var value = new OpenApiAny(true);
+        var value = true;
 
         // Act
         var extension = MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Parse(value);

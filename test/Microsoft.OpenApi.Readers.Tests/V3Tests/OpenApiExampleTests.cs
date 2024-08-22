@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var example = OpenApiModelFactory.Load<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
             var expected = new OpenApiExample
             {
-                Value = new OpenApiAny(new JsonObject
+                Value = new JsonObject
                 {
                     ["versions"] = new JsonArray
                             {
@@ -59,23 +59,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                })
+                }
             };
 
-            var actualRoot = example.Value.Node["versions"][0]["status"].Root;
-            var expectedRoot = expected.Value.Node["versions"][0]["status"].Root;
+            var actualRoot = example.Value["versions"][0]["status"].Root;
+            var expectedRoot = expected.Value["versions"][0]["status"].Root;
 
             diagnostic.Errors.Should().BeEmpty();
 
             example.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences()
-            .Excluding(e => e.Value.Node["versions"][0]["status"].Root)
-            .Excluding(e => e.Value.Node["versions"][0]["id"].Root)
-            .Excluding(e => e.Value.Node["versions"][0]["links"][0]["href"].Root)
-            .Excluding(e => e.Value.Node["versions"][0]["links"][0]["rel"].Root)
-            .Excluding(e => e.Value.Node["versions"][1]["status"].Root)
-            .Excluding(e => e.Value.Node["versions"][1]["id"].Root)
-            .Excluding(e => e.Value.Node["versions"][1]["links"][0]["href"].Root)
-            .Excluding(e => e.Value.Node["versions"][1]["links"][0]["rel"].Root));
+            .Excluding(e => e.Value["versions"][0]["status"].Root)
+            .Excluding(e => e.Value["versions"][0]["id"].Root)
+            .Excluding(e => e.Value["versions"][0]["links"][0]["href"].Root)
+            .Excluding(e => e.Value["versions"][0]["links"][0]["rel"].Root)
+            .Excluding(e => e.Value["versions"][1]["status"].Root)
+            .Excluding(e => e.Value["versions"][1]["id"].Root)
+            .Excluding(e => e.Value["versions"][1]["links"][0]["href"].Root)
+            .Excluding(e => e.Value["versions"][1]["links"][0]["rel"].Root));
         }
 
         [Fact]

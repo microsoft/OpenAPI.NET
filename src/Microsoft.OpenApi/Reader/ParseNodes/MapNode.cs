@@ -171,9 +171,9 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// Create an <see cref="OpenApiAny"/>
         /// </summary>
         /// <returns>The created Json object.</returns>
-        public override OpenApiAny CreateAny()
+        public override JsonNode CreateAny()
         {
-            return new OpenApiAny(_node);
+            return _node;
         }
     }
 }

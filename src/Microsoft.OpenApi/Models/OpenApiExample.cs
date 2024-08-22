@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         /// exclusive. To represent examples of media types that cannot naturally represented
         /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
         /// </summary>
-        public virtual OpenApiAny Value { get; set; }
+        public virtual JsonNode Value { get; set; }
 
         /// <summary>
         /// A URL that points to the literal example.

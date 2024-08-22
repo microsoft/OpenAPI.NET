@@ -37,8 +37,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 Type = "number",
                 Format = "float",
-                Default = new OpenApiAny(5)
-            }, options => options.IgnoringCyclicReferences().Excluding(x => x.Default.Node.Parent));
+                Default = 5
+            }, options => options.IgnoringCyclicReferences().Excluding(x => x.Default.Parent));
         }
 
         [Fact]
@@ -60,8 +60,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Type = "number",
                     Format = "float",
-                    Example = new OpenApiAny(5)
-                }, options => options.IgnoringCyclicReferences().Excluding(x => x.Example.Node.Parent));
+                    Example = 5
+                }, options => options.IgnoringCyclicReferences().Excluding(x => x.Example.Parent));
         }
 
         [Fact]

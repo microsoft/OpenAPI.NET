@@ -1141,14 +1141,14 @@ paths: {}",
                     AllowReserved = true,
                     Style = ParameterStyle.Simple,
                     Explode = true,
-                    Example = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
+                    Example = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721",
                     Schema = new()
                     {
                         Type = "string",
                         Format = "uuid"
                     },
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(e => e.Example.Node.Parent)
+                .Excluding(e => e.Example.Parent)
                 .Excluding(x => x.Reference));
 
             var examplesHeader = result.OpenApiDocument.Components?.Headers?["examples-header"];
@@ -1167,12 +1167,12 @@ paths: {}",
                     {
                             { "uuid1", new OpenApiExample()
                                 {
-                                    Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                    Value = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
                                 }
                             },
                             { "uuid2", new OpenApiExample()
                                 {
-                                    Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                    Value = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
                                 }
                             }
                     },
@@ -1182,8 +1182,8 @@ paths: {}",
                         Format = "uuid"
                     },
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(e => e.Examples["uuid1"].Value.Node.Parent)
-                .Excluding(e => e.Examples["uuid2"].Value.Node.Parent));
+                .Excluding(e => e.Examples["uuid1"].Value.Parent)
+                .Excluding(e => e.Examples["uuid2"].Value.Parent));
         }
 
         [Fact]
@@ -1270,7 +1270,7 @@ paths: {}",
                                         { 
                                             Type = "integer",
                                             Format = "int32",
-                                            Default = new OpenApiAny(10)
+                                            Default = 10
                                         },
                                         Reference = new OpenApiReference
                                         {
@@ -1298,7 +1298,7 @@ paths: {}",
                             {
                                 Type = "integer",
                                 Format = "int32",
-                                Default = new OpenApiAny(10)
+                                Default = 10
                             },
                         }
                     }
@@ -1339,7 +1339,8 @@ components:
             // Assert
             actualParam.Should().BeEquivalentTo(expectedParam, options => options
                 .Excluding(x => x.Reference.HostDocument)
-                .Excluding(x => x.Schema.Default.Node.Parent)
+                .Excluding(x => x.Schema.Default.Parent)
+                .Excluding(x => x.Schema.Default.Options)
                 .IgnoringCyclicReferences());
             outputDoc.Should().BeEquivalentTo(expectedSerializedDoc.MakeLineBreaksEnvironmentNeutral());
         }

@@ -30,10 +30,10 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             RequestBody = new()
             {
-                Any = new OpenApiAny(new JsonObject
+                Any = new JsonObject
                 {
                     ["property1"] = true
-                })
+                }
             },
             Description = "description1",
             Server = new()
@@ -60,10 +60,10 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             RequestBody = new()
             {
-                Any = new OpenApiAny(new JsonObject
+                Any = new JsonObject
                 {
                     ["property1"] = true
-                })
+                }
             },
             Description = "description1",
             Server = new()

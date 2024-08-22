@@ -18,8 +18,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiMediaType BasicMediaType = new();
 
         public static OpenApiMediaType AdvanceMediaType = new()
-        {
-            Example = new OpenApiAny(42),
+            {
+                Example = 42,
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithObjectExample = new()
         {
-            Example = new OpenApiAny(new JsonObject
+            Example = new JsonObject
             {
                 ["versions"] = new JsonArray
                 {
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 }
-            }),
+            },
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithXmlExample = new()
         {
-            Example = new OpenApiAny("<xml>123</xml>"),
+            Example = "<xml>123</xml>",
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Examples = {
                 ["object1"] = new()
                 {
-                    Value = new OpenApiAny(new JsonObject
+                    Value = new JsonObject
                     {
                         ["versions"] = new JsonArray
                         {
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         }
-                    })
+                    }
                 }
             },
             Encoding = new Dictionary<string, OpenApiEncoding>
