@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = "string",
                         Examples = new List<JsonNode>
                         {
-                            new OpenApiAny("exampleValue").Node
+                            "exampleValue"
                         }
                     },
                     ["six"] = new()
@@ -265,6 +265,29 @@ examples:
 
             // Assert
             schema.Examples.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void CloningSchemaWithExamplesAndEnumsShouldSucceed()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = "int",
+                Default = 5,
+                Examples = [2, 3],
+                Enum = [1, 2, 3]
+            };
+
+            var clone = new OpenApiSchema(schema);
+            clone.Examples.Add(4);
+            clone.Enum.Add(4);
+            clone.Default = 6;
+
+            // Assert
+            clone.Enum.Should().NotBeEquivalentTo(schema.Enum);
+            clone.Examples.Should().NotBeEquivalentTo(schema.Examples);
+            clone.Default.Should().NotBeEquivalentTo(schema.Default);
         }
     }
 }

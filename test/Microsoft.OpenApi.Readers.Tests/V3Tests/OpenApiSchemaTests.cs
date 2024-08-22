@@ -351,10 +351,10 @@ get:
                                         Description = "The measured skill for hunting",
                                         Enum =
                                         {
-                                            new OpenApiAny("clueless").Node,
-                                            new OpenApiAny("lazy").Node,
-                                            new OpenApiAny("adventurous").Node,
-                                            new OpenApiAny("aggressive").Node
+                                            "clueless",
+                                            "lazy",
+                                            "adventurous",
+                                            "aggressive"
                                         }
                                     }
                                 }
