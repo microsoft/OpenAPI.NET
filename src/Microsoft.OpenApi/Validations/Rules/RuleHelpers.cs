@@ -61,12 +61,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             // Before checking the type, check first if the schema allows null.
             // If so and the data given is also null, this is allowed for any type.
-            if (nullable)
+            if (nullable && jsonElement.ValueKind is JsonValueKind.Null)
             {
-                if (jsonElement.ValueKind is JsonValueKind.Null)
-                {
-                    return;
-                }
+                return;
             }
 
             if (type == "object")

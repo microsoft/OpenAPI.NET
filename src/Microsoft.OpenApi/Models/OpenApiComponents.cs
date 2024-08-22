@@ -339,9 +339,6 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
             if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
             {
-                var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
-                       .ToDictionary(k => k.Reference.Id);
-
                 writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, callback);
             }
             writer.WriteEndObject();

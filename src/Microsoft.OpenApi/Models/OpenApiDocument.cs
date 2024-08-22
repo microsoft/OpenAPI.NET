@@ -667,12 +667,9 @@ namespace Microsoft.OpenApi.Models
         public override void Visit(OpenApiSchema schema)
         {
             // This is needed to handle schemas used in Responses in components
-            if (schema.Reference != null)
+            if (schema.Reference != null && !Schemas.ContainsKey(schema.Reference.Id))
             {
-                if (!Schemas.ContainsKey(schema.Reference.Id))
-                {
-                    Schemas.Add(schema.Reference.Id, schema);
-                }
+                Schemas.Add(schema.Reference.Id, schema);
             }
             base.Visit(schema);
         }
