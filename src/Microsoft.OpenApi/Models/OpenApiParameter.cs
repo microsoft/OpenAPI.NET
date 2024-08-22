@@ -168,7 +168,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter?.Style ?? Style;
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
-            Schema = parameter?.Schema != null ? new(parameter.Schema) : null;
+            _schema = parameter?.Schema != null ? new(parameter.Schema) : null;
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = parameter?.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
