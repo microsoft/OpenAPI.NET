@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Xunit;
 using Xunit.Abstractions;
@@ -425,6 +426,22 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void MediaTypeCopyConstructorWorks()
+        {
+            var clone = new OpenApiMediaType(MediaTypeWithObjectExamples)
+            {
+                Example = 42,
+                Examples = new Dictionary<string, OpenApiExample>(),
+                Encoding = new Dictionary<string, OpenApiEncoding>(),
+                Extensions = new Dictionary<string, IOpenApiExtension>()
+            };
+
+            // Assert
+            MediaTypeWithObjectExamples.Examples.Should().NotBeEquivalentTo(clone.Examples);
+            MediaTypeWithObjectExamples.Example.Should().Be(null);
         }
     }
 }
