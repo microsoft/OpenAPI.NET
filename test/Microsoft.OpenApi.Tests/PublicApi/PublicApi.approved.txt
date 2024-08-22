@@ -285,6 +285,10 @@ namespace Microsoft.OpenApi.Extensions
         public static void SerializeAsYaml<T>(this T element, System.IO.Stream stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
     }
+    public static class OpenApiServerExtensions
+    {
+        public static string ReplaceServerUrlVariables(this Microsoft.OpenApi.Models.OpenApiServer server, System.Collections.Generic.IDictionary<string, string> values = null) { }
+    }
     public static class OpenApiTypeMapper
     {
         public static System.Type MapOpenApiPrimitiveTypeToSimpleType(this Microsoft.OpenApi.Models.OpenApiSchema schema) { }
