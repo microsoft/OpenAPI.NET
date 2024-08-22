@@ -26,7 +26,10 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An enumeration of string values to be used if the substitution options are from a limited set.
         /// </summary>
-        public List<string> Enum { get; set; } = new();
+        /// <remarks>
+        /// If the server variable in the OpenAPI document has no <code>enum</code> member, this property will be null.
+        /// </remarks>
+        public List<string> Enum { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
