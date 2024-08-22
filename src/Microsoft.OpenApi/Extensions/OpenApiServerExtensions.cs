@@ -33,6 +33,7 @@ public static class OpenApiServerExtensions
                 value = variable.Value.Default;
             }
 
+            // Validate value
             if (string.IsNullOrEmpty(value))
             {
                 // According to the spec, the variable's default value is required.
@@ -41,7 +42,8 @@ public static class OpenApiServerExtensions
                     string.Format(SRResource.ParseServerUrlDefaultValueNotAvailable, variable.Key), nameof(server));
             }
 
-            if (variable.Value.Enum is { Count: > 0 } e && !e.Contains(value))
+            // If an enum is provided, the array should not be empty & the value should exist in the enum
+            if (variable.Value.Enum is {} e && (e.Count == 0 || !e.Contains(value)))
             {
                 throw new ArgumentException(
                     string.Format(SRResource.ParseServerUrlValueNotValid, value, variable.Key), nameof(values));

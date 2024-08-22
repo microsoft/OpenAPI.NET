@@ -231,7 +231,7 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Value &apos;{0}&apos; is not a valid value for variable &apos;{1}&apos;..
+        ///   Looks up a localized string similar to Value &apos;{0}&apos; is not a valid value for variable &apos;{1}&apos;. If an enum is provided, it should not be empty and the value provided should exist in the enum.
         /// </summary>
         internal static string ParseServerUrlValueNotValid {
             get {

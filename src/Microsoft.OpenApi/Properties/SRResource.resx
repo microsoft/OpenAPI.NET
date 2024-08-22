@@ -229,6 +229,6 @@
       <value>Invalid server variable '{0}'. A value was not provided and no default value was provided.</value>
   </data>
   <data name="ParseServerUrlValueNotValid" xml:space="preserve">
-      <value>Value '{0}' is not a valid value for variable '{1}'.</value>
+      <value>Value '{0}' is not a valid value for variable '{1}'. If an enum is provided, it should not be empty and the value provided should exist in the enum</value>
   </data>
 </root>

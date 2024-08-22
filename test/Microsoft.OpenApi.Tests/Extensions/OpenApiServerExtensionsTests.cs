@@ -82,4 +82,23 @@ public class OpenApiServerExtensionsTests
             variable.ReplaceServerUrlVariables(new Dictionary<string, string> {{"version", "v3"}});
         });
     }
+
+    [Fact]
+    public void ShouldFailIfEnumIsEmpty()
+    {
+        var variable = new OpenApiServer
+        {
+            Url = "http://example.com/api/{version}",
+            Description = string.Empty,
+            Variables = new Dictionary<string, OpenApiServerVariable>
+            {
+                { "version", new OpenApiServerVariable { Enum = []} }
+            }
+        };
+
+        Assert.Throws<ArgumentException>(() =>
+        {
+            variable.ReplaceServerUrlVariables(new Dictionary<string, string> {{"version", "v1"}});
+        });
+    }
 }
