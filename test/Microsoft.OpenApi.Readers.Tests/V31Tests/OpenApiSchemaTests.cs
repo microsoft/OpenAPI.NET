@@ -2,17 +2,12 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Reader.V31;
-using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
@@ -20,6 +15,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     public class OpenApiSchemaTests
     {
         private const string SampleFolderPath = "V31Tests/Samples/OpenApiSchema/";
+
+        public OpenApiSchemaTests()
+        {
+           OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
 
         [Fact]
         public void ParseBasicV31SchemaShouldSucceed()
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var schema = OpenApiModelFactory.Load<OpenApiSchema>(
-                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, out _);
+                System.IO.Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, out _);
 
             // Assert
             schema.Should().BeEquivalentTo(expectedObject);
@@ -144,19 +144,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         [Fact]
         public void ParseV31SchemaShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "schema.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var path = System.IO.Path.Combine(SampleFolderPath, "schema.yaml");
 
             // Act
-            var schema = OpenApiV31Deserializer.LoadSchema(node);
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
             var expectedSchema = new OpenApiSchema
             {
                 Type = "object",
@@ -177,19 +168,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         [Fact]
         public void ParseAdvancedV31SchemaShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedSchema.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
-
-            // Act
-            var schema = OpenApiV31Deserializer.LoadSchema(node);
+            // Arrange and Act
+            var path = System.IO.Path.Combine(SampleFolderPath, "advancedSchema.yaml");
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
 
             var expectedSchema = new OpenApiSchema
             {
@@ -267,6 +248,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     .IgnoringCyclicReferences()
                     .Excluding((IMemberInfo memberInfo) =>
                             memberInfo.Path.EndsWith("Parent")));
+        }
+
+        [Fact]
+        public void ParseSchemaWithExamplesShouldSucceed()
+        {
+            // Arrange
+            var input = @"
+type: string
+examples: 
+ - fedora
+ - ubuntu
+";
+            // Act
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, out _, "yaml");
+
+            // Assert
+            schema.Examples.Should().HaveCount(2);
         }
     }
 }
