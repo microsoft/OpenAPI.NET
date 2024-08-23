@@ -9,7 +9,7 @@
     <Nullable>enable</Nullable>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.4.7</Version>
+    <Version>1.4.8</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <SignAssembly>true</SignAssembly>
     <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
@@ -35,7 +35,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="Microsoft.OData.Edm" Version="8.0.1" />
-    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.6.8" />
+    <PackageReference Include="Microsoft.OpenApi.OData" Version="2.0.0-preview.2" />
     <PackageReference Include="Microsoft.OpenApi.ApiManifest" Version="0.5.0-preview" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
   </ItemGroup>
