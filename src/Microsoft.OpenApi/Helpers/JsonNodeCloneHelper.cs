@@ -4,7 +4,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Helpers
@@ -16,27 +15,15 @@ namespace Microsoft.OpenApi.Helpers
             ReferenceHandler = ReferenceHandler.IgnoreCycles
         };
 
-        internal static OpenApiAny Clone(OpenApiAny value)
+        internal static JsonNode Clone(JsonNode value)
         {
-            var jsonString = Serialize(value?.Node);
+            var jsonString = Serialize(value);
             if (string.IsNullOrEmpty(jsonString))
             {
                 return null;
             }
 
             var result = JsonSerializer.Deserialize<JsonNode>(jsonString, options);
-            return new OpenApiAny(result);
-        }
-
-        internal static JsonSchema CloneJsonSchema(JsonSchema schema)
-        {
-            var jsonString = Serialize(schema);
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                return null;
-            }
-
-            var result = JsonSerializer.Deserialize<JsonSchema>(jsonString, options);
             return result;
         }
 

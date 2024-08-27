@@ -3,6 +3,7 @@
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using System.Collections.Generic;
 using System.Globalization;
@@ -87,27 +88,27 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "allOf",
-                (o, n, t) => o.AllOf = n.CreateList(LoadOpenApiSchema, t)
+                (o, n, t) => o.AllOf = n.CreateList(LoadSchema, t)
             },
             {
                 "oneOf",
-                (o, n, _) => o.OneOf = n.CreateList(LoadOpenApiSchema)
+                (o, n, _) => o.OneOf = n.CreateList(LoadSchema)
             },
             {
                 "anyOf",
-                (o, n, t) => o.AnyOf = n.CreateList(LoadOpenApiSchema, t)
+                (o, n, t) => o.AnyOf = n.CreateList(LoadSchema, t)
             },
             {
                 "not",
-                (o, n, _) => o.Not = LoadOpenApiSchema(n)
+                (o, n, _) => o.Not = LoadSchema(n)
             },
             {
                 "items",
-                (o, n, _) => o.Items = LoadOpenApiSchema(n)
+                (o, n, _) => o.Items = LoadSchema(n)
             },
             {
                 "properties",
-                (o, n, t) => o.Properties = n.CreateMap(LoadOpenApiSchema, t)
+                (o, n, t) => o.Properties = n.CreateMap(LoadSchema, t)
             },
             {
                 "additionalProperties", (o, n, _) =>
@@ -118,7 +119,7 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                     else
                     {
-                        o.AdditionalProperties = LoadOpenApiSchema(n);
+                        o.AdditionalProperties = LoadSchema(n);
                     }
                 }
             },
@@ -173,7 +174,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiSchema LoadOpenApiSchema(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 
@@ -181,11 +182,8 @@ namespace Microsoft.OpenApi.Reader.V3
 
             if (pointer != null)
             {
-                return new()
-                {
-                    UnresolvedReference = true,
-                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema)
-                };
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var schema = new OpenApiSchema();

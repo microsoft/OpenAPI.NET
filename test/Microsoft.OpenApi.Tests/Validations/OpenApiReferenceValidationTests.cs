@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
@@ -19,12 +18,20 @@ namespace Microsoft.OpenApi.Tests.Validations
         {
             // Arrange
 
-            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test");
+            var sharedSchema = new OpenApiSchema
+            {
+                Type = "string",
+                Reference = new()
+                {
+                    Id = "test"
+                },
+                UnresolvedReference = false
+            };
 
             var document = new OpenApiDocument();
             document.Components = new()
             {
-                Schemas = new Dictionary<string, JsonSchema>()
+                Schemas = new Dictionary<string, OpenApiSchema>()
                 {
                     ["test"] = sharedSchema
                 }
@@ -59,8 +66,8 @@ namespace Microsoft.OpenApi.Tests.Validations
             // Act
             var rules = new Dictionary<Type, IList<ValidationRule>>()
             {
-                { typeof(JsonSchema),
-                    new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
+                { typeof(OpenApiSchema),
+                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
                 }
             };
 
@@ -76,7 +83,15 @@ namespace Microsoft.OpenApi.Tests.Validations
         {
             // Arrange
 
-            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test").Build();
+            var sharedSchema = new OpenApiSchema
+            {
+                Type = "string",
+                Reference = new()
+                {
+                    Id = "test"
+                },
+                UnresolvedReference = true
+            };
 
             var document = new OpenApiDocument();
 
@@ -109,8 +124,8 @@ namespace Microsoft.OpenApi.Tests.Validations
             // Act
             var rules = new Dictionary<Type, IList<ValidationRule>>()
             {
-                { typeof(JsonSchema),
-                    new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
+                { typeof(OpenApiSchema),
+                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
                 }
             };
 

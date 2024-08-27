@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
@@ -94,12 +93,12 @@ components:
             // Assert
             var localContent = _localResponseReference.Content.FirstOrDefault();
             Assert.Equal("text/plain", localContent.Key);                     
-            Assert.Equal("#/components/schemas/Pong", localContent.Value.Schema.GetRef().OriginalString);
+            Assert.Equal("Pong", localContent.Value.Schema.Reference.Id);
             Assert.Equal("OK response", _localResponseReference.Description);
 
             var externalContent = _externalResponseReference.Content.FirstOrDefault();
             Assert.Equal("text/plain", externalContent.Key);
-            Assert.Equal("#/components/schemas/Pong", externalContent.Value.Schema.GetRef().OriginalString);
+            Assert.Equal("Pong", externalContent.Value.Schema.Reference.Id);
             Assert.Equal("External reference: OK response", _externalResponseReference.Description);
 
             Assert.Equal("OK", _openApiDoc_2.Components.Responses.First().Value.Description);

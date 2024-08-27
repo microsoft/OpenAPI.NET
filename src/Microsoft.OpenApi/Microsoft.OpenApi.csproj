@@ -22,10 +22,6 @@
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="JsonSchema.Net" Version="4.1.5" />
-      <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0" />
-    </ItemGroup>
-    <ItemGroup>
       <PackageReference Include="System.Text.Json" Version="8.0.4" />
     </ItemGroup>
 

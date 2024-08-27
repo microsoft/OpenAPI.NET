@@ -1,12 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -14,7 +12,6 @@ using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
@@ -74,8 +71,11 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Example = new OpenApiAny(55),
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                Example = 55,
+                Schema = new()
+                {
+                    Type = "string",
+                }
             };
 
             // Act
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"integer\" but should be \"string\" at "
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
@@ -110,39 +110,40 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new JsonSchemaBuilder()
-                            .Type(SchemaValueType.Object)
-                            .AdditionalProperties(
-                                new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Integer)
-                                .Build())
-                            .Build(),
+                Schema = new()
+                {
+                    Type = "object",
+                    AdditionalProperties = new()
+                    {
+                        Type = "integer",
+                    }
+                },
                 Examples =
                     {
                         ["example0"] = new()
                         {
-                            Value = new OpenApiAny("1"),
+                            Value = "1",
                         },
                         ["example1"] = new()
                         {
-                           Value = new OpenApiAny(new JsonObject()
+                           Value = new JsonObject()
                             {
                                 ["x"] = 2,
                                 ["y"] = "20",
                                 ["z"] = "200"
-                            })
+                            }
                         },
                         ["example2"] = new()
                         {
-                            Value = new OpenApiAny(new JsonArray(){3})
+                            Value = new JsonArray(){3}
                         },
                         ["example3"] = new()
                         {
-                            Value = new OpenApiAny(new JsonObject()
+                            Value = new JsonObject()
                             {
                                 ["x"] = 4,
                                 ["y"] = 40
-                            })
+                            }
                         },
                     }
             };
@@ -160,19 +161,17 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"string\" but should be \"object\" at ",
-                "type : Value is \"string\" but should be \"integer\" at /y",
-                "type : Value is \"string\" but should be \"integer\" at /z",
-                "type : Value is \"array\" but should be \"object\" at "
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
                 // #enum/0 is not an error since the spec allows
                 // representing an object using a string.
-               "#/{parameter1}/examples/example0/value",
-               "#/{parameter1}/examples/example1/value",
-               "#/{parameter1}/examples/example1/value",
-               "#/{parameter1}/examples/example2/value"
+                "#/{parameter1}/examples/example1/value/y",
+                "#/{parameter1}/examples/example1/value/z",
+                "#/{parameter1}/examples/example2/value"
             });
         }
 
@@ -187,7 +186,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                Schema = new()
+                {
+                    Type = "string",
+                }
             };
 
             // Act
@@ -222,7 +224,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                Schema = new()
+                {
+                    Type = "string",
+                }
             };
 
             // Act

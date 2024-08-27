@@ -91,8 +91,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
-                (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -100,38 +99,17 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
-                (writer, element) => element.SerializeAsV3WithoutReference(writer));
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
-        /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
-        {
-            Utils.CheckArgumentNull(writer);;
-            var target = this;
-            action(writer, target);
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiPathItem"/> to Open Api v2.0
-        /// </summary>
-        public virtual void SerializeAsV2(IOpenApiWriter writer)
-        {
-            Utils.CheckArgumentNull(writer);;
-
-            var target = this;
-            target.SerializeAsV2WithoutReference(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
         /// <summary>
         /// Serialize inline PathItem in OpenAPI V2
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
+            Utils.CheckArgumentNull(writer);
+
             writer.WriteStartObject();
 
             // operations except "trace"
@@ -163,28 +141,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        /// <summary>
-        /// Serialize inline PathItem in OpenAPI V31
-        /// </summary>
-        /// <param name="writer"></param>
-        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
-        }
-
-        /// <summary>
-        /// Serialize inline PathItem in OpenAPI V3
-        /// </summary>
-        /// <param name="writer"></param>
-        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
-
-        }
-
-        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
+        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

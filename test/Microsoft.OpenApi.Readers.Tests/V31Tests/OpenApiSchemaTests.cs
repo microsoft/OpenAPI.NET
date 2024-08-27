@@ -2,8 +2,10 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using System.IO;
+using System.Text.Json.Nodes;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -13,6 +15,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     public class OpenApiSchemaTests
     {
         private const string SampleFolderPath = "V31Tests/Samples/OpenApiSchema/";
+
+        public OpenApiSchemaTests()
+        {
+           OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
 
         [Fact]
         public void ParseBasicV31SchemaShouldSucceed()
@@ -67,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var schema = OpenApiModelFactory.Load<OpenApiSchema>(
-                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, out _);
+                System.IO.Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, out _);
 
             // Assert
             schema.Should().BeEquivalentTo(expectedObject);
@@ -132,6 +139,155 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             simpleSchemaCopy.Type.Should().NotBeEquivalentTo(simpleSchema.Type);
             simpleSchema.Type = "string";
+        }
+
+        [Fact]
+        public void ParseV31SchemaShouldSucceed()
+        {
+            var path = System.IO.Path.Combine(SampleFolderPath, "schema.yaml");
+
+            // Act
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
+            var expectedSchema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["one"] = new()
+                    {
+                        Description = "type array",
+                        Type = new HashSet<string> { "integer", "string" }
+                    }
+                }
+            };
+
+            // Assert
+            schema.Should().BeEquivalentTo(expectedSchema);
+        }
+
+        [Fact]
+        public void ParseAdvancedV31SchemaShouldSucceed()
+        {
+            // Arrange and Act
+            var path = System.IO.Path.Combine(SampleFolderPath, "advancedSchema.yaml");
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
+
+            var expectedSchema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["one"] = new()
+                    {
+                        Description = "type array",
+                        Type = new HashSet<string> { "integer", "string" }
+                    },
+                    ["two"] = new()
+                    {
+                        Description = "type 'null'",
+                        Type = "null"
+                    },
+                    ["three"] = new()
+                    {
+                        Description = "type array including 'null'",
+                        Type = new HashSet<string> { "string", "null" }
+                    },
+                    ["four"] = new()
+                    {
+                        Description = "array with no items",
+                        Type = "array"
+                    },
+                    ["five"] = new()
+                    {
+                        Description = "singular example",
+                        Type = "string",
+                        Examples = new List<JsonNode>
+                        {
+                            "exampleValue"
+                        }
+                    },
+                    ["six"] = new()
+                    {
+                        Description = "exclusiveMinimum true",
+                        V31ExclusiveMinimum = 10
+                    },
+                    ["seven"] = new()
+                    {
+                        Description = "exclusiveMinimum false",
+                        Minimum = 10
+                    },
+                    ["eight"] = new()
+                    {
+                        Description = "exclusiveMaximum true",
+                        V31ExclusiveMaximum = 20
+                    },
+                    ["nine"] = new()
+                    {
+                        Description = "exclusiveMaximum false",
+                        Maximum = 20
+                    },
+                    ["ten"] = new()
+                    {
+                        Description = "nullable string",
+                        Type = new HashSet<string> { "string", "null" }
+                    },
+                    ["eleven"] = new()
+                    {
+                        Description = "x-nullable string",
+                        Type = new HashSet<string> { "string", "null" }
+                    },
+                    ["twelve"] = new()
+                    {
+                        Description = "file/binary"
+                    }
+                }
+            };
+
+            // Assert
+            schema.Should().BeEquivalentTo(expectedSchema, options => options
+                    .IgnoringCyclicReferences()
+                    .Excluding((IMemberInfo memberInfo) =>
+                            memberInfo.Path.EndsWith("Parent")));
+        }
+
+        [Fact]
+        public void ParseSchemaWithExamplesShouldSucceed()
+        {
+            // Arrange
+            var input = @"
+type: string
+examples: 
+ - fedora
+ - ubuntu
+";
+            // Act
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, out _, "yaml");
+
+            // Assert
+            schema.Examples.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void CloningSchemaWithExamplesAndEnumsShouldSucceed()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = "int",
+                Default = 5,
+                Examples = [2, 3],
+                Enum = [1, 2, 3]
+            };
+
+            var clone = new OpenApiSchema(schema);
+            clone.Examples.Add(4);
+            clone.Enum.Add(4);
+            clone.Default = 6;
+
+            // Assert
+            clone.Enum.Should().NotBeEquivalentTo(schema.Enum);
+            clone.Examples.Should().NotBeEquivalentTo(schema.Examples);
+            clone.Default.Should().NotBeEquivalentTo(schema.Default);
         }
     }
 }

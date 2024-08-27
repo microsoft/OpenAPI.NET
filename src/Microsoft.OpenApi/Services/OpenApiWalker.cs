@@ -3,8 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Json.Schema;
-using Json.Schema.OpenApi;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -20,8 +19,8 @@ namespace Microsoft.OpenApi.Services
     {
         private OpenApiDocument _hostDocument;
         private readonly OpenApiVisitorBase _visitor;
-        private readonly Stack<JsonSchema> _schemaLoop = new Stack<JsonSchema>();
-        private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
+        private readonly Stack<OpenApiSchema> _schemaLoop = new();
+        private readonly Stack<OpenApiPathItem> _pathItemLoop = new();
 
         /// <summary>
         /// Initializes the <see cref="OpenApiWalker"/> class.
@@ -130,7 +129,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Schemas)
                     {
-                        Walk(item.Key, () => components.Schemas[item.Key] = Walk(item.Value, isComponent: true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -790,7 +789,7 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(mediaType);
 
             Walk(OpenApiConstants.Example, () => Walk(mediaType.Examples));
-            Walk(OpenApiConstants.Schema, () => mediaType.Schema = Walk(mediaType.Schema));
+            Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
             Walk(OpenApiConstants.Encoding, () => Walk(mediaType.Encoding));
             Walk(mediaType as IOpenApiExtensible);
         }
@@ -838,104 +837,74 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="JsonSchema"/> and child objects
+        /// Visits <see cref="OpenApiSchema"/> and child objects
         /// </summary>
-        internal JsonSchema Walk(JsonSchema schema, bool isComponent = false)
+        internal void Walk(OpenApiSchema schema, bool isComponent = false)
         {
-            if (schema == null
-                || ProcessSchemaAsReference(schema, isComponent))
+            if (schema == null || ProcessAsReference(schema, isComponent))
             {
-                return schema;
+                return;
             }
 
             if (_schemaLoop.Contains(schema))
             {
-                return schema;  // Loop detected, this schema has already been walked.
+                return;  // Loop detected, this schema has already been walked.
             }
             else
             {
                 _schemaLoop.Push(schema);
             }
 
-            _visitor.Visit(ref schema);
+            _visitor.Visit(schema);
 
-            if (schema.GetItems() != null)
+            if (schema.Items != null)
             {
-                Walk("items", () => Walk(schema.GetItems()));
+                Walk("items", () => Walk(schema.Items));
             }
 
-            if (schema.GetNot() != null)
+            if (schema.Not != null)
             {
-                Walk("not", () => Walk(schema.GetNot()));
+                Walk("not", () => Walk(schema.Not));
             }
 
-            if (schema.GetAllOf() != null)
+            if (schema.AllOf != null)
             {
-                Walk("allOf", () => Walk(schema.GetAllOf()));
+                Walk("allOf", () => Walk(schema.AllOf));
             }
 
-            if (schema.GetAnyOf() != null)
+            if (schema.AnyOf != null)
             {
-                Walk("anyOf", () => Walk(schema.GetAnyOf()));
+                Walk("anyOf", () => Walk(schema.AnyOf));
             }
 
-            if (schema.GetOneOf() != null)
+            if (schema.OneOf != null)
             {
-                Walk("oneOf", () => Walk(schema.GetOneOf()));
+                Walk("oneOf", () => Walk(schema.OneOf));
             }
 
-            if (schema.GetProperties() != null)
+            if (schema.Properties != null)
             {
                 Walk("properties", () =>
                 {
-                    var props = new Dictionary<string, JsonSchema>();
-                    var builder = new JsonSchemaBuilder();
-                    foreach(var keyword in schema.Keywords)
+                    foreach (var item in schema.Properties)
                     {
-                        builder.Add(keyword);
-                    }
-
-                    foreach (var item in schema.GetProperties())
-                    {
-                        var key = item.Key;
-                        JsonSchema newSchema = null;
-                        Walk(key, () => newSchema = Walk(item.Value));
-                        props.Add(key, newSchema);
-                        schema = builder.Properties(props);
-                        if (_hostDocument != null)
-                        {
-                            schema.BaseUri = _hostDocument.BaseUri;
-                        }
+                        Walk(item.Key, () => Walk(item.Value));
                     }
                 });
             }
 
-            if (schema.GetAdditionalProperties() != null)
+            if (schema.AdditionalProperties != null)
             {
-                Walk("additionalProperties", () => Walk(schema.GetAdditionalProperties()));
+                Walk("additionalProperties", () => Walk(schema.AdditionalProperties));
             }
 
-            Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.GetExternalDocs()));
+            Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.ExternalDocs));
 
             Walk(schema as IOpenApiExtensible);
 
             _schemaLoop.Pop();
-            return schema;
         }
 
-        internal void Walk(IReadOnlyCollection<JsonSchema> schemaCollection, bool isComponent = false)
-        {
-            if (schemaCollection is null)
-            {
-                return;
-            }
-
-            _visitor.Visit(schemaCollection);
-            foreach (var schema in schemaCollection)
-            {
-                Walk(schema);
-            }
-        }
 
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiExample"/>
@@ -963,7 +932,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiAny"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiAny example)
+        internal void Walk(JsonNode example)
         {
             if (example == null)
             {
@@ -1016,9 +985,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits a list of <see cref="JsonSchema"/> and child objects
+        /// Visits a list of <see cref="OpenApiSchema"/> and child objects
         /// </summary>
-        internal void Walk(IList<JsonSchema> schemas)
+        internal void Walk(IList<OpenApiSchema> schemas)
         {
             if (schemas == null)
             {
@@ -1211,7 +1180,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiPaths e: Walk(e); break;
                 case OpenApiRequestBody e: Walk(e); break;
                 case OpenApiResponse e: Walk(e); break;
-                case JsonSchema e: Walk(e); break;
+                case OpenApiSchema e: Walk(e); break;
                 case OpenApiSecurityRequirement e: Walk(e); break;
                 case OpenApiSecurityScheme e: Walk(e); break;
                 case OpenApiServer e: Walk(e); break;
@@ -1235,15 +1204,17 @@ namespace Microsoft.OpenApi.Services
             _visitor.Exit();
         }
 
-        private bool ProcessSchemaAsReference(IBaseDocument baseDocument, bool isComponent = false)
+        /// <summary>
+        /// Identify if an element is just a reference to a component, or an actual component
+        /// </summary>
+        private bool ProcessAsReference(IOpenApiReferenceable referenceable, bool isComponent = false)
         {
-            var schema = baseDocument as JsonSchema;
-            var isReference = schema?.GetRef() != null && !isComponent;
+            var isReference = referenceable.Reference != null &&
+                              (!isComponent || referenceable.UnresolvedReference);
             if (isReference)
             {
-                _visitor.Visit(baseDocument);
+                Walk(referenceable);
             }
-
             return isReference;
         }
     }

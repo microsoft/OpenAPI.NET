@@ -6,6 +6,7 @@ using System.Globalization;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -88,15 +89,15 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "allOf",
-                (o, n, t) => o.AllOf = n.CreateList(LoadOpenApiSchema, t)
+                (o, n, t) => o.AllOf = n.CreateList(LoadSchema, t)
             },
             {
                 "items",
-                (o, n, _) => o.Items = LoadOpenApiSchema(n)
+                (o, n, _) => o.Items = LoadSchema(n)
             },
             {
                 "properties",
-                (o, n, t) => o.Properties = n.CreateMap(LoadOpenApiSchema, t)
+                (o, n, t) => o.Properties = n.CreateMap(LoadSchema, t)
             },
             {
                 "additionalProperties", (o, n, _) =>
@@ -107,7 +108,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                     else
                     {
-                        o.AdditionalProperties = LoadOpenApiSchema(n);
+                        o.AdditionalProperties = LoadSchema(n);
                     }
                 }
             },
@@ -155,14 +156,15 @@ namespace Microsoft.OpenApi.Reader.V2
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        public static OpenApiSchema LoadOpenApiSchema(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
         {
             var mapNode = node.CheckMapNode("schema");
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiSchema>(ReferenceType.Schema, pointer);
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
             }
 
             var schema = new OpenApiSchema();

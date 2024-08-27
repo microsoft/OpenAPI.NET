@@ -2,10 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
-using Json.Schema;
-using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <returns>True if it's an email address. Otherwise False.</returns>
         public static bool IsEmailAddress(this string input)
         {
-            if (String.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input))
             {
                 return false;
             }
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return false;
             }
 
-            if (String.IsNullOrEmpty(splits[0]) || String.IsNullOrEmpty(splits[1]))
+            if (string.IsNullOrEmpty(splits[0]) || string.IsNullOrEmpty(splits[1]))
             {
                 return false;
             }
@@ -45,37 +45,241 @@ namespace Microsoft.OpenApi.Validations.Rules
             IValidationContext context,
             string ruleName,
             JsonNode value,
-            JsonSchema schema)
-        {           
-            if (schema is not null)
+            OpenApiSchema schema)
+        {
+            if (schema == null)
             {
-                var options = new EvaluationOptions();
-                options.OutputFormat = OutputFormat.List;
+                return;
+            }
 
-                if (context.HostDocument != null)
+            // convert value to JsonElement and access the ValueKind property to determine the type.
+            var jsonElement = JsonDocument.Parse(JsonSerializer.Serialize(value)).RootElement;
+
+            var type = (string)schema.Type;
+            var format = schema.Format;
+            var nullable = schema.Nullable;
+
+            // Before checking the type, check first if the schema allows null.
+            // If so and the data given is also null, this is allowed for any type.
+            if (nullable && jsonElement.ValueKind is JsonValueKind.Null)
+            {
+                return;
+            }
+
+            if (type == "object")
+            {
+                // It is not against the spec to have a string representing an object value.
+                // To represent examples of media types that cannot naturally be represented in JSON or YAML,
+                // a string value can contain the example with escaping where necessary
+                if (jsonElement.ValueKind is JsonValueKind.String)
                 {
-                    options.SchemaRegistry.Register(context.HostDocument.BaseUri, context.HostDocument);
+                    return;
                 }
 
-                var results = schema.Evaluate(value, options);
-
-                if (!results.IsValid)
+                // If value is not a string and also not an object, there is a data mismatch.
+                if (value is not JsonObject anyObject)
                 {
-                    foreach (var detail in results.Details)
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                    return;
+                }
+
+                foreach (var kvp in anyObject)
+                {
+                    var key = kvp.Key;
+                    context.Enter(key);
+
+                    if (schema.Properties != null &&
+                        schema.Properties.TryGetValue(key, out var property))
                     {
-                        if (detail.Errors != null && detail.Errors.Any())
-                        {
-                            foreach (var error in detail.Errors)
-                            {
-                                if (!string.IsNullOrEmpty(error.Key) || !string.IsNullOrEmpty(error.Value.Trim()))
-                                {
-                                    context.CreateWarning(ruleName, string.Format("{0} : {1} at {2}", error.Key, error.Value.Trim(), detail.InstanceLocation));
-                                }
-                            }
-                        }
+                        ValidateDataTypeMismatch(context, ruleName, anyObject[key], property);
                     }
+                    else
+                    {
+                        ValidateDataTypeMismatch(context, ruleName, anyObject[key], schema.AdditionalProperties);
+                    }
+
+                    context.Exit();
                 }
-            }            
+
+                return;
+            }
+
+            if (type == "array")
+            {
+                // It is not against the spec to have a string representing an array value.
+                // To represent examples of media types that cannot naturally be represented in JSON or YAML,
+                // a string value can contain the example with escaping where necessary
+                if (jsonElement.ValueKind is JsonValueKind.String)
+                {
+                    return;
+                }
+
+                // If value is not a string and also not an array, there is a data mismatch.
+                if (value is not JsonArray anyArray)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                    return;
+                }
+
+                for (var i = 0; i < anyArray.Count; i++)
+                {
+                    context.Enter(i.ToString());
+
+                    ValidateDataTypeMismatch(context, ruleName, anyArray[i], schema.Items);
+
+                    context.Exit();
+                }
+
+                return;
+            }
+
+            if (type == "integer" && format == "int32")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "integer" && format == "int64")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
+                {
+                    context.CreateWarning(
+                       ruleName,
+                       DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "integer" && jsonElement.ValueKind is not JsonValueKind.Number)
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "number" && format == "float")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "number" && format == "double")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "number")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "string" && format == "byte")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.String)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "string" && format == "date")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.String)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "string" && format == "date-time")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.String)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "string" && format == "password")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.String)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "string")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.String)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
+
+            if (type == "boolean")
+            {
+                if (jsonElement.ValueKind is not JsonValueKind.True && jsonElement.ValueKind is not JsonValueKind.False)
+                {
+                    context.CreateWarning(
+                        ruleName,
+                        DataTypeMismatchedErrorMessage);
+                }
+
+                return;
+            }
         }
     }
 }

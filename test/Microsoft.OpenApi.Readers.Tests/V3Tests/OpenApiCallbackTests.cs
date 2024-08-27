@@ -1,10 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -96,7 +95,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                                                Schema = new()
+                                                {
+                                                    Type = "object"
+                                                }
                                             }
                                         }
                                     },
@@ -149,7 +151,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                                                Schema = new()
+                                                {
+                                                    Type = "object"
+                                                }
                                             }
                                         }
                                     },
@@ -188,7 +193,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                                                Schema = new()
+                                                {
+                                                    Type = "string"
+                                                }
                                             }
                                         }
                                     },
@@ -220,7 +228,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                                                Schema = new()
+                                                {
+                                                    Type = "object"
+                                                }
                                             }
                                         }
                                     },

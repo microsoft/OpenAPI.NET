@@ -1,9 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using Json.Schema;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Extensions
 {
@@ -12,41 +12,40 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class OpenApiTypeMapper
     {
-        private static readonly Dictionary<Type, Func<JsonSchema>> _simpleTypeToJsonSchema = new()
+        private static readonly Dictionary<Type, Func<OpenApiSchema>> _simpleTypeToOpenApiSchema = new()
         {
-            [typeof(bool)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Boolean).Build(),
-            [typeof(byte)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("byte").Build(),
-            [typeof(int)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build(),
-            [typeof(uint)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build(),
-            [typeof(long)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64").Build(),
-            [typeof(ulong)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64").Build(),
-            [typeof(float)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Build(),
-            [typeof(double)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("double").Build(),
-            [typeof(decimal)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("double").Build(),
-            [typeof(DateTime)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("date-time").Build(),
-            [typeof(DateTimeOffset)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("date-time").Build(),
-            [typeof(Guid)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uuid").Build(),
-            [typeof(char)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("string").Build(),
+            [typeof(bool)] = () => new() { Type = "boolean" },
+            [typeof(byte)] = () => new() { Type = "string", Format = "byte" },
+            [typeof(int)] = () => new() { Type = "integer", Format = "int32" },
+            [typeof(uint)] = () => new() { Type = "integer", Format = "int32" },
+            [typeof(long)] = () => new() { Type = "integer", Format = "int64" },
+            [typeof(ulong)] = () => new() { Type = "integer", Format = "int64" },
+            [typeof(float)] = () => new() { Type = "number", Format = "float" },
+            [typeof(double)] = () => new() { Type = "number", Format = "double" },
+            [typeof(decimal)] = () => new() { Type = "number", Format = "double" },
+            [typeof(DateTime)] = () => new() { Type = "string", Format = "date-time" },
+            [typeof(DateTimeOffset)] = () => new() { Type = "string", Format = "date-time" },
+            [typeof(Guid)] = () => new() { Type = "string", Format = "uuid" },
+            [typeof(char)] = () => new() { Type = "string" },
 
             // Nullable types
-            [typeof(bool?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Boolean).Build(),
-            [typeof(byte?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("byte").Build(),
-            [typeof(int?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("int32").Build(),
-            [typeof(uint?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("int32").Build(),
-            [typeof(long?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("int64").Build(),
-            [typeof(ulong?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("int64").Build(),
-            [typeof(float?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("float").Build(),
-            [typeof(double?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Number).Format("double").Build(),
-            [typeof(decimal?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.Integer).Format("double").Build(),
-            [typeof(DateTime?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("date-time").Build(),
-            [typeof(DateTimeOffset?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("date-time").Build(),
-            [typeof(Guid?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("string").Build(),
-            [typeof(char?)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Null | SchemaValueType.String).Format("string").Build(),
+            [typeof(bool?)] = () => new() { Type = "boolean", Nullable = true },
+            [typeof(byte?)] = () => new() { Type = "string", Format = "byte", Nullable = true },
+            [typeof(int?)] = () => new() { Type = "integer", Format = "int32", Nullable = true },
+            [typeof(uint?)] = () => new() { Type = "integer", Format = "int32", Nullable = true },
+            [typeof(long?)] = () => new() { Type = "integer", Format = "int64", Nullable = true },
+            [typeof(ulong?)] = () => new() { Type = "integer", Format = "int64", Nullable = true },
+            [typeof(float?)] = () => new() { Type = "number", Format = "float", Nullable = true },
+            [typeof(double?)] = () => new() { Type = "number", Format = "double", Nullable = true },
+            [typeof(decimal?)] = () => new() { Type = "number", Format = "double", Nullable = true },
+            [typeof(DateTime?)] = () => new() { Type = "string", Format = "date-time", Nullable = true },
+            [typeof(DateTimeOffset?)] = () => new() { Type = "string", Format = "date-time", Nullable = true },
+            [typeof(Guid?)] = () => new() { Type = "string", Format = "uuid", Nullable = true },
+            [typeof(char?)] = () => new() { Type = "string", Nullable = true },
 
-            [typeof(Uri)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uri").Build(), // Uri is treated as simple string
-            [typeof(string)] = () => new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
-            [typeof(object)] = () => new JsonSchemaBuilder().Type(SchemaValueType.Object).Build(),
-
+            [typeof(Uri)] = () => new() { Type = "string", Format = "uri" }, // Uri is treated as simple string
+            [typeof(string)] = () => new() { Type = "string" },
+            [typeof(object)] = () => new() { Type = "object" }
         };
 
         /// <summary>
@@ -71,16 +70,16 @@ namespace Microsoft.OpenApi.Extensions
         /// password         string  password    Used to hint UIs the input needs to be obscured.
         /// If the type is not recognized as "simple", System.String will be returned.
         /// </remarks>
-        public static JsonSchema MapTypeToJsonPrimitiveType(this Type type)
+        public static OpenApiSchema MapTypeToOpenApiPrimitiveType(this Type type)
         {
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return _simpleTypeToJsonSchema.TryGetValue(type, out var result)
+            return _simpleTypeToOpenApiSchema.TryGetValue(type, out var result)
                 ? result()
-                : new JsonSchemaBuilder().Type(SchemaValueType.String).Build();
+                : new() { Type = "string" };
         }
 
         /// <summary>
@@ -89,66 +88,47 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="schema">The OpenApi data type</param>
         /// <returns>The simple type</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static Type MapJsonSchemaValueTypeToSimpleType(this JsonSchema schema)
+        public static Type MapOpenApiPrimitiveTypeToSimpleType(this OpenApiSchema schema)
         {
             if (schema == null)
             {
                 throw new ArgumentNullException(nameof(schema));
             }
 
-            var type = schema.GetJsonType();
-            var format = schema.GetFormat().Key;
-            var result = (type, format) switch
+            var type = (schema.Type?.ToString().ToLowerInvariant(), schema.Format?.ToLowerInvariant(), schema.Nullable) switch
             {
-                (SchemaValueType.Boolean, null) => typeof(bool),
-                (SchemaValueType.Integer, "int32") => typeof(int),
-                (SchemaValueType.Integer, "int64") => typeof(long),
-                (SchemaValueType.Number, "float") => typeof(float),
-                (SchemaValueType.Number, "double") => typeof(double),
-                (SchemaValueType.Number, "decimal") => typeof(decimal),
-                (SchemaValueType.String, "byte") => typeof(byte),
-                (SchemaValueType.String, "date-time") => typeof(DateTimeOffset),
-                (SchemaValueType.String, "uuid") => typeof(Guid),
-                (SchemaValueType.String, "duration") => typeof(TimeSpan),
-                (SchemaValueType.String, "char") => typeof(char),
-                (SchemaValueType.String, null) => typeof(string),
-                (SchemaValueType.Object, null) => typeof(object),
-                (SchemaValueType.String, "uri") => typeof(Uri),
-                (SchemaValueType.Integer or null, "int32") => typeof(int?),
-                (SchemaValueType.Integer or null, "int64") => typeof(long?),
-                (SchemaValueType.Number or null, "float") => typeof(float?),
-                (SchemaValueType.Number or null, "double") => typeof(double?),
-                (SchemaValueType.Number or null, "decimal") => typeof(decimal?),
-                (SchemaValueType.String or null, "byte") => typeof(byte?),
-                (SchemaValueType.String or null, "date-time") => typeof(DateTimeOffset?),
-                (SchemaValueType.String or null, "uuid") => typeof(Guid?),
-                (SchemaValueType.String or null, "char") => typeof(char?),
-                (SchemaValueType.Boolean or null, null) => typeof(bool?),
+                ("boolean", null, false) => typeof(bool),
+                ("integer", "int32", false) => typeof(int),
+                ("integer", "int64", false) => typeof(long),
+                ("integer", null, false) => typeof(int),
+                ("number", "float", false) => typeof(float),
+                ("number", "double", false) => typeof(double),
+                ("number", "decimal", false) => typeof(decimal),
+                ("number", null, false) => typeof(double),
+                ("string", "byte", false) => typeof(byte),
+                ("string", "date-time", false) => typeof(DateTimeOffset),
+                ("string", "uuid", false) => typeof(Guid),
+                ("string", "duration", false) => typeof(TimeSpan),
+                ("string", "char", false) => typeof(char),
+                ("string", null, false) => typeof(string),
+                ("object", null, false) => typeof(object),
+                ("string", "uri", false) => typeof(Uri),
+                ("integer", "int32", true) => typeof(int?),
+                ("integer", "int64", true) => typeof(long?),
+                ("integer", null, true) => typeof(int?),
+                ("number", "float", true) => typeof(float?),
+                ("number", "double", true) => typeof(double?),
+                ("number", null, true) => typeof(double?),
+                ("number", "decimal", true) => typeof(decimal?),
+                ("string", "byte", true) => typeof(byte?),
+                ("string", "date-time", true) => typeof(DateTimeOffset?),
+                ("string", "uuid", true) => typeof(Guid?),
+                ("string", "char", true) => typeof(char?),
+                ("boolean", null, true) => typeof(bool?),
                 _ => typeof(string),
             };
 
-            return result;
-        }
-
-        /// <summary>
-        /// Converts the Schema value type to its string equivalent
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        /// <exception cref="NotSupportedException"></exception>
-        internal static string ConvertSchemaValueTypeToString(SchemaValueType value)
-        {
-            return value switch
-            {
-                SchemaValueType.String => "string",
-                SchemaValueType.Number => "number",
-                SchemaValueType.Integer => "integer",
-                SchemaValueType.Boolean => "boolean",
-                SchemaValueType.Array => "array",
-                SchemaValueType.Object => "object",
-                SchemaValueType.Null => "null",
-                _ => throw new NotSupportedException(),
-            };
+            return type;
         }
     }
 }

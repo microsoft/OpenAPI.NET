@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Writers
@@ -250,25 +249,6 @@ namespace Microsoft.OpenApi.Writers
             Action<IOpenApiWriter, string> action)
         {
             writer.WriteMapInternal(name, elements, action);
-        }
-
-        /// <summary>
-        /// Write the optional Open API element map.
-        /// </summary>
-        /// <param name="writer">The Open API writer.</param>
-        /// <param name="name">The property name.</param>
-        /// <param name="elements">The map values.</param>
-        /// <param name="action">The map element writer action with writer and value as input.</param>
-        public static void WriteOptionalMap(
-            this IOpenApiWriter writer,
-            string name,
-            IDictionary<string, JsonSchema> elements,
-            Action<IOpenApiWriter, string, JsonSchema> action)
-        {
-            if (elements != null && elements.Any())
-            {
-                writer.WriteMapInternal(name, elements, action);
-            }
         }
 
         /// <summary>

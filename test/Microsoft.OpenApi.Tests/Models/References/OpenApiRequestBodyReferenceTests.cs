@@ -1,12 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
@@ -112,13 +110,13 @@ components:
             // Assert
             var localContent = _localRequestBodyReference.Content.Values.FirstOrDefault();
             Assert.NotNull(localContent);
-            Assert.Equal("#/components/schemas/UserSchema", localContent.Schema.GetRef().OriginalString);
+            Assert.Equal("UserSchema", localContent.Schema.Reference.Id);
             Assert.Equal("User request body", _localRequestBodyReference.Description);
             Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
 
             var externalContent = _externalRequestBodyReference.Content.Values.FirstOrDefault();
             Assert.NotNull(externalContent);
-            Assert.Equal("#/components/schemas/UserSchema", externalContent.Schema.GetRef().OriginalString);
+            Assert.Equal("UserSchema", externalContent.Schema.Reference.Id);
 
             Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);
             Assert.Equal("User creation request body", _openApiDoc_2.Components.RequestBodies.First().Value.Description);

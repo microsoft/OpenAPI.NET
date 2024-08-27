@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -47,7 +46,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new()
                     {
-                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                        Schema = new()
+                        {
+                            Type = "number",
+                            Minimum = 5,
+                            Maximum = 10
+                        }
                     }
                 }
             },
@@ -60,7 +64,12 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                            Schema = new()
+                            {
+                                Type = "number",
+                                Minimum = 5,
+                                Maximum = 10
+                            }
                         }
                     }
                 }
@@ -115,7 +124,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new()
                     {
-                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                        Schema = new()
+                        {
+                            Type = "number",
+                            Minimum = 5,
+                            Maximum = 10
+                        }
                     }
                 }
             },
@@ -128,7 +142,12 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                            Schema = new()
+                            {
+                                Type = "number",
+                                Minimum = 5,
+                                Maximum = 10
+                            }
                         }
                     }
                 }
@@ -169,7 +188,10 @@ namespace Microsoft.OpenApi.Tests.Models
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                        Schema = new()
+                        {
+                            Type = "string"
+                        }
                     }
                 },
                 RequestBody = new()
@@ -178,21 +200,49 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/x-www-form-urlencoded"] = new()
                         {
-                            Schema = new JsonSchemaBuilder()
-                            .Properties(
-                                ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated name of the pet")),
-                                ("status", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated status of the pet")))
-                            .Required("name")
-                            .Build()
+                            Schema = new()
+                            {
+                                Properties =
+                                {
+                                    ["name"] = new()
+                                    {
+                                        Description = "Updated name of the pet",
+                                        Type = "string"
+                                    },
+                                    ["status"] = new()
+                                    {
+                                        Description = "Updated status of the pet",
+                                        Type = "string"
+                                    }
+                                },
+                                Required = new HashSet<string>
+                                {
+                                    "name"
+                                }
+                            }
                         },
                         ["multipart/form-data"] = new()
                         {
-                            Schema = new JsonSchemaBuilder()
-                            .Properties(
-                                ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated name of the pet")),
-                                ("status", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated status of the pet")))
-                            .Required("name")
-                            .Build()
+                            Schema = new()
+                            {
+                                Properties =
+                                {
+                                    ["name"] = new()
+                                    {
+                                        Description = "Updated name of the pet",
+                                        Type = "string"
+                                    },
+                                    ["status"] = new()
+                                    {
+                                        Description = "Updated status of the pet",
+                                        Type = "string"
+                                    }
+                                },
+                                Required = new HashSet<string>
+                                {
+                                    "name"
+                                }
+                            }
                         }
                     }
                 },
@@ -576,9 +626,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "description": "description2",
                       "required": true,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   ],
@@ -589,9 +639,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "400": {
                       "description": null,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   },
@@ -649,9 +699,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "description": "description2",
                       "required": true,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   ],
@@ -662,9 +712,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "400": {
                       "description": null,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   },

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -17,7 +16,6 @@ namespace Microsoft.OpenApi.Services
     {
         private readonly Dictionary<string, Uri> _documentsIdRegistry = new();
         private readonly Dictionary<Uri, Stream> _artifactsRegistry = new();        
-        private readonly Dictionary<Uri, IBaseDocument> _jsonSchemaRegistry = new();
         private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new();
 
         /// <summary>
@@ -53,7 +51,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns></returns>
         public int ComponentsCount()
         {
-            return _IOpenApiReferenceableRegistry.Count + _jsonSchemaRegistry.Count + _artifactsRegistry.Count;
+            return _IOpenApiReferenceableRegistry.Count + _artifactsRegistry.Count;
         }
 
         /// <summary>
@@ -65,15 +63,7 @@ namespace Microsoft.OpenApi.Services
         public bool RegisterComponent<T>(string location, T component)
         {
             var uri = ToLocationUrl(location);
-            if (component is JsonSchema schema)
-            {
-                if (!_jsonSchemaRegistry.ContainsKey(uri))
-                {
-                    _jsonSchemaRegistry[uri] = schema;
-                    return true;
-                }
-            }
-            else if (component is IOpenApiReferenceable referenceable)
+            if (component is IOpenApiReferenceable referenceable)
             {
                 if (!_IOpenApiReferenceableRegistry.ContainsKey(uri))
                 {
@@ -128,7 +118,7 @@ namespace Microsoft.OpenApi.Services
         public bool Contains(string location)
         {
             var key = ToLocationUrl(location);
-            return _IOpenApiReferenceableRegistry.ContainsKey(key) || _jsonSchemaRegistry.ContainsKey(key) || _artifactsRegistry.ContainsKey(key);
+            return _IOpenApiReferenceableRegistry.ContainsKey(key) || _artifactsRegistry.ContainsKey(key);
         }
 
         /// <summary>
@@ -146,10 +136,6 @@ namespace Microsoft.OpenApi.Services
             {
                 return (T)referenceableValue;
             }
-            else if (_jsonSchemaRegistry.TryGetValue(uri, out var schemaValue))
-            {
-                return (T)schemaValue;
-            }
             else if (_artifactsRegistry.TryGetValue(uri, out var artifact))
             {
                 return (T)(object)artifact;
@@ -161,11 +147,6 @@ namespace Microsoft.OpenApi.Services
         private Uri ToLocationUrl(string location)
         {
             return new(BaseUrl, location);
-        }
-
-        internal Dictionary<Uri, IBaseDocument> GetSchemaRegistry()
-        {
-            return _jsonSchemaRegistry;
         }
     }
 }

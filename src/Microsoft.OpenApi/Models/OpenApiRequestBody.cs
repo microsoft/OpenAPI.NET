@@ -1,10 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -71,8 +70,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
-                (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -80,50 +78,14 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
-                (writer, element) => element.SerializeAsV3WithoutReference(writer));
-        }
-
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
-        {
-            Utils.CheckArgumentNull(writer);;
-
-            var target = this;
-            action(writer, target);
-        }
-
-        /// <summary>
-        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref
-        /// </summary>
-        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
-        /// <returns>OpenApiRequestBody</returns>
-        public OpenApiRequestBody GetEffective(OpenApiDocument doc)
-        {
-            return Reference != null ? doc.ResolveReferenceTo<OpenApiRequestBody>(Reference) : this;
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V31 document without using reference.
-        /// </summary>
-        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
-                    (writer, element) => element.SerializeAsV31(writer));
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
-                (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
         
-        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
+        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
+            Utils.CheckArgumentNull(writer);
+
             writer.WriteStartObject();
 
             // description
@@ -149,14 +111,6 @@ namespace Microsoft.OpenApi.Models
             // RequestBody object does not exist in V2.
         }
 
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
-            // RequestBody object does not exist in V2.
-        }
-
         internal OpenApiBodyParameter ConvertToBodyParameter()
         {
             var bodyParameter = new OpenApiBodyParameter
@@ -165,7 +119,7 @@ namespace Microsoft.OpenApi.Models
                 // V2 spec actually allows the body to have custom name.
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
-                Schema = Content.Values.FirstOrDefault()?.Schema ?? new JsonSchemaBuilder(),
+                Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
                 Examples = Content.Values.FirstOrDefault()?.Examples,
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
@@ -184,24 +138,23 @@ namespace Microsoft.OpenApi.Models
             if (Content == null || !Content.Any())
                 yield break;
 
-            foreach (var property in Content.First().Value.Schema.GetProperties())
+            foreach (var property in Content.First().Value.Schema.Properties)
             {
                 var paramSchema = property.Value;
-                if (paramSchema.GetType().Equals(SchemaValueType.String)
-                    && ("binary".Equals(paramSchema.GetFormat().Key, StringComparison.OrdinalIgnoreCase)
-                    || "base64".Equals(paramSchema.GetFormat().Key, StringComparison.OrdinalIgnoreCase)))
+                if ("string".Equals(paramSchema.Type.ToString(), StringComparison.OrdinalIgnoreCase)
+                    && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
+                    || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
                 {
-                    // JsonSchema is immutable so these can't be set
-                    //paramSchema.Type("file");
-                    //paramSchema.Format(null);
+                    paramSchema.Type = "file";
+                    paramSchema.Format = null;
                 }
                 yield return new()
                 {
-                    Description = property.Value.GetDescription(),
+                    Description = property.Value.Description,
                     Name = property.Key,
                     Schema = property.Value,
                     Examples = Content.Values.FirstOrDefault()?.Examples,
-                    Required = Content.First().Value.Schema.GetRequired().Contains(property.Key)
+                    Required = Content.First().Value.Schema.Required?.Contains(property.Key) ?? false
                 };
             }
         }

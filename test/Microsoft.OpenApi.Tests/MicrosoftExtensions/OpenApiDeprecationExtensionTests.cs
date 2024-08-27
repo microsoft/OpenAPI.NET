@@ -80,7 +80,7 @@ public class OpenApiDeprecationExtensionTests
             { "version", new OpenApiAny("v1.0").Node},
             { "description", new OpenApiAny("removing").Node}
         };
-        var value = OpenApiDeprecationExtension.Parse(new OpenApiAny(oaiValue));
+        var value = OpenApiDeprecationExtension.Parse(oaiValue);
         Assert.NotNull(value);
         Assert.Equal("v1.0", value.Version);
         Assert.Equal("removing", value.Description);

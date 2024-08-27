@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -32,9 +32,9 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// Create a <see cref="JsonNode"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override OpenApiAny CreateAny()
+        public override JsonNode CreateAny()
         {
-            return new OpenApiAny(_node);
+            return _node;
         }
     }
 }

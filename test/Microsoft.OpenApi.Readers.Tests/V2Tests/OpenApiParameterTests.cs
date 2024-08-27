@@ -3,7 +3,8 @@
 
 using System.IO;
 using FluentAssertions;
-using Json.Schema;
+using FluentAssertions.Equivalency;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -56,8 +57,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 });
         }
 
@@ -82,9 +85,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Array)
-                                .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    Schema = new()
+                    {
+                        Type = "array",
+                        Items = new()
+                        {
+                            Type = "string"
+                        }
+                    },
                     Style = ParameterStyle.Form,
                     Explode = true
                 });
@@ -111,7 +119,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 });
         }
 
@@ -136,7 +147,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 });
         }
 
@@ -185,7 +199,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 });
         }
 
@@ -210,8 +227,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Default(5)
-                }, options => options.IgnoringCyclicReferences());
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Default = new OpenApiAny(5).Node
+                    }
+                }, options => options.IgnoringCyclicReferences().Excluding(x => x.Schema.Default.Parent));
         }
 
         [Fact]
@@ -226,17 +248,30 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Act
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var expected = new OpenApiParameter
+            {
+                In = ParameterLocation.Path,
+                Name = "username",
+                Description = "username to fetch",
+                Required = true,
+                Schema = new()
+                {
+                    Type = "number",
+                    Format = "float",
+                    Enum =
+                        {
+                            new OpenApiAny(7).Node,
+                            new OpenApiAny(8).Node,
+                            new OpenApiAny(9).Node
+                        }
+                }
+            };
 
             // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Path,
-                    Name = "username",
-                    Description = "username to fetch",
-                    Required = true,
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Enum(7, 8, 9)
-                }, options => options.IgnoringCyclicReferences());
+            parameter.Should().BeEquivalentTo(expected, options => options
+                                .IgnoringCyclicReferences()
+                                .Excluding((IMemberInfo memberInfo) =>
+                                    memberInfo.Path.EndsWith("Parent")));
         }
     }
 }

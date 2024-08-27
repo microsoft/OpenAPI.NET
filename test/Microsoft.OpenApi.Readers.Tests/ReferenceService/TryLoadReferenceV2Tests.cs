@@ -3,9 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
@@ -38,9 +36,12 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     In = ParameterLocation.Query,
                     Description = "number of items to skip",
                     Required = true,
-                    Schema = new JsonSchemaBuilder()
-                    .Type(SchemaValueType.Integer)
-                    .Format("int32")
+                    Schema = new()
+                    {
+                        Type = "integer",
+                        Format = "int32"
+                    }
+                    
                 }, options => options.Excluding(x => x.Reference)
             );
         }
@@ -98,10 +99,34 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new JsonSchemaBuilder()
-                            .Ref("#/definitions/SampleObject2")
-                            .Build()
+                            Schema = new()
+                            {
+                                Description = "Sample description",
+                                Required = new HashSet<string> {"name" },
+                                Properties = {
+                                    ["name"] = new()
+                                    {
+                                        Type = "string"
+                                    },
+                                    ["tag"] = new()
+                                    {
+                                        Type = "string"
+                                    }
+                                },
+
+                                Reference = new()
+                                {
+                                    Type = ReferenceType.Schema,
+                                    Id = "SampleObject2",
+                                    HostDocument = result.OpenApiDocument
+                                }
+                            }
                         }
+                    },
+                    Reference = new()
+                    {
+                        Type = ReferenceType.Response,
+                        Id = "GeneralError"
                     }
                 }, options => options.Excluding(x => x.Reference)
             );

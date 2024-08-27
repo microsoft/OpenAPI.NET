@@ -83,7 +83,7 @@ public class OpenApiPagingExtensionsTests
         };
 
         // Act
-        var extension = OpenApiPagingExtension.Parse(new OpenApiAny(obj));
+        var extension = OpenApiPagingExtension.Parse(obj);
 
         // Assert
         Assert.Equal("@odata.nextLink", extension.NextLinkName);
