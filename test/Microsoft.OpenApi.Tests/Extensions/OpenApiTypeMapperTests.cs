@@ -15,17 +15,36 @@ namespace Microsoft.OpenApi.Tests.Extensions
         public static IEnumerable<object[]> PrimitiveTypeData => new List<object[]>
         {
             new object[] { typeof(int), new OpenApiSchema { Type = "integer", Format = "int32" } },
+            new object[] { typeof(decimal), new OpenApiSchema { Type = "number", Format = "double" } },
+            new object[] { typeof(bool?), new OpenApiSchema { Type = "boolean", Nullable = true } },
+            new object[] { typeof(Guid), new OpenApiSchema { Type = "string", Format = "uuid" } },
+            new object[] { typeof(uint), new OpenApiSchema { Type = "integer", Format = "int32" } },
+            new object[] { typeof(long), new OpenApiSchema { Type = "integer", Format = "int64" } },
+            new object[] { typeof(ulong), new OpenApiSchema { Type = "integer", Format = "int64" } },
             new object[] { typeof(string), new OpenApiSchema { Type = "string" } },
             new object[] { typeof(double), new OpenApiSchema { Type = "number", Format = "double" } },
             new object[] { typeof(float?), new OpenApiSchema { Type = "number", Format = "float", Nullable = true } },
+            new object[] { typeof(byte?), new OpenApiSchema { Type = "string", Format = "byte", Nullable = true } },
+            new object[] { typeof(int?), new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true } },
+            new object[] { typeof(uint?), new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true } },
+            new object[] { typeof(DateTimeOffset?), new OpenApiSchema { Type = "string", Format = "date-time", Nullable = true } },
+            new object[] { typeof(double?), new OpenApiSchema { Type = "number", Format = "double", Nullable = true } },
+            new object[] { typeof(char?), new OpenApiSchema { Type = "string", Nullable = true } },
             new object[] { typeof(DateTimeOffset), new OpenApiSchema { Type = "string", Format = "date-time" } }
         };
 
         public static IEnumerable<object[]> OpenApiDataTypes => new List<object[]>
         {
             new object[] { new OpenApiSchema { Type = "integer", Format = "int32"}, typeof(int) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "decimal"}, typeof(decimal) },
+            new object[] { new OpenApiSchema { Type = "number", Format = null, Nullable = false}, typeof(double) },
             new object[] { new OpenApiSchema { Type = "integer", Format = null, Nullable = false}, typeof(int) },
             new object[] { new OpenApiSchema { Type = "integer", Format = null, Nullable = true}, typeof(int?) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "decimal", Nullable = true}, typeof(decimal?) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "double", Nullable = true}, typeof(double?) },
+            new object[] { new OpenApiSchema { Type = "string", Format = "date-time", Nullable = true}, typeof(DateTimeOffset?) },
+            new object[] { new OpenApiSchema { Type = "string", Format = "char", Nullable = true}, typeof(char?) },
+            new object[] { new OpenApiSchema { Type = "string", Format = "uuid", Nullable = true}, typeof(Guid?) },
             new object[] { new OpenApiSchema { Type = "string" }, typeof(string) },
             new object[] { new OpenApiSchema { Type = "number", Format = "double" }, typeof(double) },
             new object[] { new OpenApiSchema { Type = "number", Format = "float", Nullable = true }, typeof(float?) },
