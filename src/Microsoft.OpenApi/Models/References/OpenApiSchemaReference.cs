@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using System;
 using System.Collections.Generic;
+using System.Runtime;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Models.References
@@ -186,10 +187,16 @@ namespace Microsoft.OpenApi.Models.References
                 _reference.SerializeAsV31(writer);
                 return;
             }
-            else
+            // If Loop is detected then just Serialize as a reference.
+            else if (!writer.GetSettings().LoopDetector.PushLoop<OpenApiSchema>(this))
             {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
+                writer.GetSettings().LoopDetector.SaveLoop(this);
+                _reference.SerializeAsV31(writer);
+                return;
             }
+
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
+            writer.GetSettings().LoopDetector.PopLoop<OpenApiSchema>();
         }
 
         /// <inheritdoc/>
@@ -200,10 +207,16 @@ namespace Microsoft.OpenApi.Models.References
                 _reference.SerializeAsV3(writer);
                 return;
             }
-            else
+            // If Loop is detected then just Serialize as a reference.
+            else if (!writer.GetSettings().LoopDetector.PushLoop<OpenApiSchema>(this))
             {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
+                writer.GetSettings().LoopDetector.SaveLoop(this);
+                _reference.SerializeAsV3(writer);
+                return;
             }
+               
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
+            writer.GetSettings().LoopDetector.PopLoop<OpenApiSchema>();
         }
 
         /// <inheritdoc/>
@@ -216,7 +229,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV2WithoutReference(writer));
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV2(writer));
             }
         }
 

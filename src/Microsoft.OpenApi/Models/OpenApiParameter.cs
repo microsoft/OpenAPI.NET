@@ -182,8 +182,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
-                (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -191,40 +190,14 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
-                (writer, element) => element.SerializeAsV3WithoutReference(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
-        {
-            Utils.CheckArgumentNull(writer);;
-
-            var target = this; 
-            action(writer, target);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
-                (writer, element) => element.SerializeAsV31(writer));
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
-                (writer, element) => element.SerializeAsV3(writer));
-        }
-
-        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
+            Utils.CheckArgumentNull(writer);
+
             writer.WriteStartObject();
 
             // name
@@ -276,21 +249,12 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiParameter"/> to Open Api v2.0
+        /// Serialize to OpenAPI V2 document without using reference.
         /// </summary>
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
-            var target = this;
-            target.SerializeAsV2WithoutReference(writer);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
             writer.WriteStartObject();
 
             // in
@@ -395,7 +359,7 @@ namespace Microsoft.OpenApi.Models
                 foreach (var example in Examples)
                 {
                     writer.WritePropertyName(example.Key);
-                    example.Value.Serialize(writer, OpenApiSpecVersion.OpenApi2_0);
+                    example.Value.SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0);
                 }
                 writer.WriteEndObject();
             }

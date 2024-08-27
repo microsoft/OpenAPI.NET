@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
@@ -133,8 +134,7 @@ namespace Microsoft.OpenApi.Models
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
 
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w),
-                (w, element) => element.SerializeAsV31WithoutReference(w));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w));
 
             // webhooks
             writer.WriteOptionalMap(
@@ -142,11 +142,9 @@ namespace Microsoft.OpenApi.Models
             Webhooks,
             (w, key, component) =>
             {
-                if (component.Reference != null &&
-                    component.Reference.Type == ReferenceType.PathItem &&
-                    component.Reference.Id == key)
+                if (component is OpenApiPathItemReference reference)
                 {
-                    component.SerializeAsV31WithoutReference(w);
+                    reference.SerializeAsV31(w);
                 }
                 else
                 {
@@ -168,8 +166,7 @@ namespace Microsoft.OpenApi.Models
 
             // openapi
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w),
-                (w, element) => element.SerializeAsV3WithoutReference(w));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
             writer.WriteEndObject();
         }
 
@@ -179,10 +176,8 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         /// <param name="version"></param>
         /// <param name="callback"></param>
-        /// <param name="action"></param>
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
-            Action<IOpenApiWriter, IOpenApiSerializable> callback,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
+            Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, callback);
@@ -190,7 +185,7 @@ namespace Microsoft.OpenApi.Models
             // servers
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, callback);
 
-            // paths
+            // paths            
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, callback);
 
             // components
@@ -203,7 +198,7 @@ namespace Microsoft.OpenApi.Models
                 callback);
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => action(w, t));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => callback(w, t));
 
             // external docs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
@@ -252,7 +247,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
                        openApiSchemas,
-                       (w, _, component) => component.SerializeAsV2WithoutReference(w));
+                       (w, _, component) => component.SerializeAsV2(w));
                 }
             }
             else
@@ -265,10 +260,9 @@ namespace Microsoft.OpenApi.Models
                     Components?.Schemas,
                     (w, key, component) =>
                     {
-                        if (component.Reference is { Type: ReferenceType.Schema } &&
-                            component.Reference.Id == key)
+                        if (component is OpenApiSchemaReference reference)
                         {
-                            component.SerializeAsV2WithoutReference(w);
+                            reference.SerializeAsV2(w);
                         }
                         else
                         {
@@ -293,11 +287,9 @@ namespace Microsoft.OpenApi.Models
                     parameters,
                     (w, key, component) =>
                     {
-                        if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.Parameter &&
-                            component.Reference.Id == key)
+                        if (component is OpenApiParameterReference reference)
                         {
-                            component.SerializeAsV2WithoutReference(w);
+                            reference.SerializeAsV2(w);
                         }
                         else
                         {
@@ -311,11 +303,9 @@ namespace Microsoft.OpenApi.Models
                     Components?.Responses,
                     (w, key, component) =>
                     {
-                        if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.Response &&
-                            component.Reference.Id == key)
+                        if (component is OpenApiResponseReference reference)
                         {
-                            component.SerializeAsV2WithoutReference(w);
+                            reference.SerializeAsV2(w);
                         }
                         else
                         {
@@ -329,11 +319,9 @@ namespace Microsoft.OpenApi.Models
                     Components?.SecuritySchemes,
                     (w, key, component) =>
                     {
-                        if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.SecurityScheme &&
-                            component.Reference.Id == key)
+                        if (component is OpenApiSecuritySchemeReference reference)
                         {
-                            component.SerializeAsV2WithoutReference(w);
+                            reference.SerializeAsV2(w);
                         }
                         else
                         {
@@ -348,7 +336,7 @@ namespace Microsoft.OpenApi.Models
                     (w, s) => s.SerializeAsV2(w));
 
                 // tags
-                writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2WithoutReference(w));
+                writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2(w));
 
                 // externalDocs
                 writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));

@@ -411,8 +411,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
-                (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -420,39 +419,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
-                (writer, element) => element.SerializeAsV3WithoutReference(writer));
-        }
-
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
-        {
-            Utils.CheckArgumentNull(writer);
-            var target = this;
-            action(writer, target);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
-                (writer, element) => element.SerializeAsV31(writer));
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
-                (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
 /// <inheritdoc/>
 
-        public void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
+        public void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
@@ -592,16 +564,6 @@ namespace Microsoft.OpenApi.Models
 
 /// <inheritdoc/>
 
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeAsV2WithoutReference(
-                            writer: writer,
-                            parentRequiredProperties: new HashSet<string>(),
-                            propertyName: null);
-        }
-
-/// <inheritdoc/>
-
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
@@ -623,41 +585,6 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
             writer.WriteOptionalCollection(OpenApiConstants.Examples, _examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property
-        /// as readonly if its included in the provided list of required properties of parent schema.
-        /// </summary>
-        /// <param name="writer">The open api writer.</param>
-        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
-        /// <param name="propertyName">The property name that will be serialized.</param>
-        internal void SerializeAsV2(
-            IOpenApiWriter writer,
-            ISet<string> parentRequiredProperties,
-            string propertyName)
-        {
-            var target = this;
-            parentRequiredProperties ??= new HashSet<string>();
-
-            target.SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference and handles not marking the provided property
-        /// as readonly if its included in the provided list of required properties of parent schema.
-        /// </summary>
-        /// <param name="writer">The open api writer.</param>
-        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
-        /// <param name="propertyName">The property name that will be serialized.</param>
-        internal void SerializeAsV2WithoutReference(
-            IOpenApiWriter writer,
-            ISet<string> parentRequiredProperties,
-            string propertyName)
-        {
-            writer.WriteStartObject();
-            WriteAsSchemaProperties(writer, parentRequiredProperties, propertyName);
-            writer.WriteEndObject();
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
@@ -726,11 +653,22 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
 
-        internal void WriteAsSchemaProperties(
+        /// <summary>
+        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property
+        /// as readonly if its included in the provided list of required properties of parent schema.
+        /// </summary>
+        /// <param name="writer">The open api writer.</param>
+        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
+        /// <param name="propertyName">The property name that will be serialized.</param>
+        internal void SerializeAsV2(
             IOpenApiWriter writer,
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
+            parentRequiredProperties ??= new HashSet<string>();
+
+            writer.WriteStartObject();
+
             // type
             writer.WriteProperty(OpenApiConstants.Type, (string)Type);
 
@@ -857,6 +795,8 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+            writer.WriteEndObject();
         }
 
         private object DeepCloneType(object type)

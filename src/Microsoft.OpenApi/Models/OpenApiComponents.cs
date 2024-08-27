@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
 
@@ -120,11 +121,9 @@ namespace Microsoft.OpenApi.Models
             PathItems,
             (w, key, component) =>
             {
-                if (component.Reference != null &&
-                    component.Reference.Type == ReferenceType.Schema &&
-                    component.Reference.Id == key)
+                if (component is OpenApiPathItemReference reference)
                 {
-                    component.SerializeAsV31WithoutReference(w);
+                    reference.SerializeAsV31(w);
                 }
                 else
                 {
@@ -133,7 +132,7 @@ namespace Microsoft.OpenApi.Models
             });
 
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer),
-               (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));
+               (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -154,7 +153,7 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer),
-                (writer, referenceElement) => referenceElement.SerializeAsV3WithoutReference(writer));
+                (writer, referenceElement) => referenceElement.SerializeAsV3(writer));
         }
 
         /// <summary>
@@ -172,14 +171,13 @@ namespace Microsoft.OpenApi.Models
                 Schemas,
                 (w, key, component) =>
                 {
-                    if (component.Reference is { Type: ReferenceType.Schema } &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiSchemaReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -189,11 +187,9 @@ namespace Microsoft.OpenApi.Models
                 Responses,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Response &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                    if (component is OpenApiResponseReference reference)
                     {
-                        action(w, component);
+                        action(w, reference);
                     }
                     else
                     {
@@ -207,11 +203,9 @@ namespace Microsoft.OpenApi.Models
                 Parameters,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Parameter &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                    if (component is OpenApiParameterReference reference)
                     {
-                        action(w, component);
+                        action(w, reference);
                     }
                     else
                     {
@@ -225,11 +219,9 @@ namespace Microsoft.OpenApi.Models
                 Examples,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Example &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                    if (component is OpenApiExampleReference reference)
                     {
-                        action(writer, component);
+                        action(w, reference);
                     }
                     else
                     {
@@ -243,12 +235,9 @@ namespace Microsoft.OpenApi.Models
                 RequestBodies,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.RequestBody &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
-
+                    if (component is OpenApiRequestBodyReference reference)
                     {
-                        action(w, component);
+                        action(w, reference);
                     }
                     else
                     {
@@ -262,11 +251,9 @@ namespace Microsoft.OpenApi.Models
                 Headers,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Header &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                    if (component is OpenApiHeaderReference reference)
                     {
-                        action(w, component);
+                        action(w, reference);
                     }
                     else
                     {
@@ -280,11 +267,9 @@ namespace Microsoft.OpenApi.Models
                 SecuritySchemes,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.SecurityScheme &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                    if (component is OpenApiSecuritySchemeReference reference)
                     {
-                        action(w, component);
+                        action(w, reference);
                     }
                     else
                     {
@@ -298,11 +283,9 @@ namespace Microsoft.OpenApi.Models
                 Links,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Link &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                    if (component is OpenApiLinkReference reference)
                     {
-                        action(w, component);
+                        action(w, reference);
                     }
                     else
                     {
@@ -316,11 +299,9 @@ namespace Microsoft.OpenApi.Models
                 Callbacks,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Callback &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                    if (component is OpenApiCallbackReference reference)
                     {
-                        action(w, component);
+                        action(w, reference);
                     }
                     else
                     {

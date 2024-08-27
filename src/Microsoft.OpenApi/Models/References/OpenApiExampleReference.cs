@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, (writer, referenceElement) => referenceElement.SerializeAsV3WithoutReference(writer));
+                SerializeInternal(writer, (writer, referenceElement) => referenceElement.SerializeAsV3(writer));
             }
         }
 
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));
+                SerializeInternal(writer, (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
             }
         }
 
