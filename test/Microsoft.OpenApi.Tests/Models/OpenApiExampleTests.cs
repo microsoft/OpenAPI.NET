@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedExample.SerializeAsV3WithoutReference(writer);
+            ReferencedExample.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert

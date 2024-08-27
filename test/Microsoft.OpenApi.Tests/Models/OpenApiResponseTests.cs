@@ -374,7 +374,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedV3Response.SerializeAsV3WithoutReference(writer);
+            ReferencedV3Response.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -408,7 +408,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedV2Response.SerializeAsV2WithoutReference(writer);
+            ReferencedV2Response.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

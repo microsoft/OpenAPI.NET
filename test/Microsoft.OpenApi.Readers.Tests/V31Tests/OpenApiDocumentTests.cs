@@ -22,24 +22,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
         }
 
-        public static T Clone<T>(T element) where T : IOpenApiSerializable
-        {
-            using var stream = new MemoryStream();
-            IOpenApiWriter writer;
-            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-            writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
-            {
-                InlineLocalReferences = true
-            });
-            element.SerializeAsV31(writer);
-            writer.Flush();
-            stream.Position = 0;
-
-            using var streamReader = new StreamReader(stream);
-            var result = streamReader.ReadToEnd();
-            return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_1, out OpenApiDiagnostic diagnostic4);
-        }
-
         [Fact]
         public void ParseDocumentWithWebhooksShouldSucceed()
         {
@@ -408,6 +390,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             .Excluding(y => y.BaseUri));
             actual.OpenApiDiagnostic.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+
+            var outputWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputWriter, new() { InlineLocalReferences = true } );
+            actual.OpenApiDocument.SerializeAsV31(writer);
+            var serialized = outputWriter.ToString();
         }
 
         [Fact]

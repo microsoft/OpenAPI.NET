@@ -390,7 +390,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Act
             doc.SerializeAsV3(writer);
             var mediaType = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
-            //mediaType.SerializeAsV3(writer);
             var actual = outputString.GetStringBuilder().ToString();
 
             // Assert

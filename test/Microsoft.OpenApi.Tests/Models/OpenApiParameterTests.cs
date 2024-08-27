@@ -352,7 +352,7 @@ schema:
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedParameter.SerializeAsV3WithoutReference(writer);
+            ReferencedParameter.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -386,7 +386,7 @@ schema:
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedParameter.SerializeAsV2WithoutReference(writer);
+            ReferencedParameter.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert
@@ -420,7 +420,7 @@ schema:
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ParameterWithFormStyleAndExplodeFalse.SerializeAsV3WithoutReference(writer);
+            ParameterWithFormStyleAndExplodeFalse.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -437,7 +437,7 @@ schema:
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ParameterWithFormStyleAndExplodeTrue.SerializeAsV3WithoutReference(writer);
+            ParameterWithFormStyleAndExplodeTrue.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
