@@ -1,0 +1,26 @@
+openapi : 3.1.0
+info:
+  title: Webhook Example
+  version: 1.0.0
+jsonSchemaDialect: "http://json-schema.org/draft-07/schema#"
+webhooks:
+  pets:
+    $ref: '#/components/pathItems/pets'
+components:
+  schemas:
+    petSchema:
+        type: object
+  pathItems:
+     pets:
+        get:
+          description: Returns all pets from the system that the user has access to
+          operationId: findPets
+          responses:
+            '200':
+               description: pet response
+               content:
+                 application/json:
+                   schema:
+                     type: array
+                     items:
+                       $ref: '#/components/schemas/petSchema'

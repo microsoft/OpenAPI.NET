@@ -1614,7 +1614,33 @@ paths: { }";
             var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void SerializeV31DocumentWithRefsInWebhooksWorks()
+        {
+            var expected = @"description: Returns all pets from the system that the user has access to
+operationId: findPets
+responses:
+  '200':
+    description: pet response
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: object";
+
+            var doc = OpenApiDocument.Load("Models/Samples/docWithReusableWebhooks.yaml").OpenApiDocument;
+
+            var stringWriter = new StringWriter();
+            var writer = new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true });
+            var webhooks = doc.Webhooks["pets"].Operations;
+
+            webhooks[OperationType.Get].SerializeAsV31(writer);
+            var actual = stringWriter.ToString();
+            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }
