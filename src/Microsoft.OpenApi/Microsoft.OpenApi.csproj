@@ -35,4 +35,8 @@
     <ItemGroup>
         <None Include="../../README.md" Pack="true" PackagePath="" />
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.11.20" />
+    </ItemGroup>
 </Project>

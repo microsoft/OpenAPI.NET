@@ -11,18 +11,14 @@ using Microsoft.OpenApi.Hidi.Options;
 
 namespace Microsoft.OpenApi.Hidi.Handlers
 {
-    internal class PluginCommandHandler : ICommandHandler
+    internal class PluginCommandHandler : AsyncCommandHandler
     {
         public CommandOptions CommandOptions { get; }
         public PluginCommandHandler(CommandOptions commandOptions)
         {
             CommandOptions = commandOptions;
         }
-        public int Invoke(InvocationContext context)
-        {
-            return InvokeAsync(context).GetAwaiter().GetResult();
-        }
-        public async Task<int> InvokeAsync(InvocationContext context)
+        public override async Task<int> InvokeAsync(InvocationContext context)
         {
             var hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
             var cancellationToken = (CancellationToken)context.BindingContext.GetRequiredService(typeof(CancellationToken));
@@ -31,7 +27,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             var logger = loggerFactory.CreateLogger<PluginCommandHandler>();
             try
             {
-                await OpenApiService.PluginManifest(hidiOptions, logger, cancellationToken).ConfigureAwait(false);
+                await OpenApiService.PluginManifestAsync(hidiOptions, logger, cancellationToken).ConfigureAwait(false);
 
                 return 0;
             }

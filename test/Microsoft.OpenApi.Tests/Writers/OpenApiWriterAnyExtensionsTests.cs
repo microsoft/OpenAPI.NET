@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task WriteOpenApiObjectAsJsonWorks(bool produceTerseOutput)
+        public async Task WriteOpenApiObjectAsJsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var openApiObject = new OpenApiObject
@@ -226,7 +226,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task WriteOpenApiArrayAsJsonWorks(bool produceTerseOutput)
+        public async Task WriteOpenApiArrayAsJsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var openApiObject = new OpenApiObject
