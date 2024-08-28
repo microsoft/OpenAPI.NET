@@ -1,1 +1,1 @@
-{"operationId":"operationId1","parameters":{"parameter1":"$request.path.id"},"requestBody":{"property1":true},"description":"description1","server":{"description":"serverDescription1"}}
+﻿{"operationId":"operationId1","parameters":{"parameter1":"$request.path.id"},"requestBody":{"property1":true},"description":"description1","server":{"description":"serverDescription1"}}

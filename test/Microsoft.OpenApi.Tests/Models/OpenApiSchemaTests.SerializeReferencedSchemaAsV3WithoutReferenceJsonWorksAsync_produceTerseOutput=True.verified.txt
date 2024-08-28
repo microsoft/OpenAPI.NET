@@ -1,1 +1,1 @@
-{"title":"title1","multipleOf":3,"maximum":42,"minimum":10,"exclusiveMinimum":true,"type":"integer","default":15,"nullable":true,"externalDocs":{"url":"http://example.com/externalDocs"}}
+﻿{"title":"title1","multipleOf":3,"maximum":42,"minimum":10,"exclusiveMinimum":true,"type":"integer","default":15,"nullable":true,"externalDocs":{"url":"http://example.com/externalDocs"}}

@@ -1,1 +1,1 @@
-{"$ref":"sampleSecurityScheme"}
+﻿{"$ref":"sampleSecurityScheme"}

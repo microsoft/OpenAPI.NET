@@ -1,4 +1,4 @@
-{
+﻿{
   "description": "A complex object array response",
   "headers": {
     "X-Rate-Limit-Limit": {

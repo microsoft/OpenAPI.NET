@@ -1,1 +1,1 @@
-﻿
+﻿{"$ref":"#/components/callbacks/simpleHook"}

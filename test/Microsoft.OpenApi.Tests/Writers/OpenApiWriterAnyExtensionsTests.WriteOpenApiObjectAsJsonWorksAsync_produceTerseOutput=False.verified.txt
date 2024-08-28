@@ -1,1 +1,7 @@
-﻿
+﻿{
+  "stringProp": "stringValue1",
+  "objProp": { },
+  "arrayProp": [
+    false
+  ]
+}

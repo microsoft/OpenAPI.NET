@@ -1,1 +1,1 @@
-{"$ref":"#/components/schemas/schemaObject1"}
+﻿{"$ref":"#/components/schemas/schemaObject1"}

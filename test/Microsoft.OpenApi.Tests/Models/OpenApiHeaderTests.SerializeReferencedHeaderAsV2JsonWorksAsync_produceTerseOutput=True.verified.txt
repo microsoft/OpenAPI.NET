@@ -1,1 +1,1 @@
-﻿
+﻿{"$ref":"#/headers/example1"}
