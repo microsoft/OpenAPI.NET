@@ -1,1 +1,0 @@
-{"$ref":"#/components/headers/example1"}
