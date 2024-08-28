@@ -382,24 +382,24 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public void InvokeTransformCommand()
+        public async Task InvokeTransformCommandAsync()
         {
             var rootCommand = Program.CreateRootCommand();
             var openapi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
             var args = new[] { "transform", "-d", openapi, "-o", "sample.json", "--co" };
             var parseResult = rootCommand.Parse(args);
-            var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
+            var handler = rootCommand.Subcommands.First(c => c.Name == "transform").Handler;
             var context = new InvocationContext(parseResult);
 
-            handler!.Invoke(context);
+            await handler!.InvokeAsync(context);
 
-            var output = File.ReadAllText("sample.json");
+            var output = await File.ReadAllTextAsync("sample.json");
             Assert.NotEmpty(output);
         }
 
 
         [Fact]
-        public void InvokeShowCommand()
+        public async Task InvokeShowCommandAsync()
         {
             var rootCommand = Program.CreateRootCommand();
             var openApi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
@@ -408,14 +408,14 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
             var context = new InvocationContext(parseResult);
 
-            handler!.Invoke(context);
+            await handler!.InvokeAsync(context);
 
-            var output = File.ReadAllText("sample.md");
+            var output = await File.ReadAllTextAsync("sample.md");
             Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
         [Fact]
-        public void InvokePluginCommand()
+        public async Task InvokePluginCommandAsync()
         {
             var rootCommand = Program.CreateRootCommand();
             var manifest = Path.Combine(".", "UtilityFiles", "exampleapimanifest.json");
@@ -424,9 +424,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var handler = rootCommand.Subcommands.Where(c => c.Name == "plugin").First().Handler;
             var context = new InvocationContext(parseResult);
 
-            handler!.Invoke(context);
+            await handler!.InvokeAsync(context);
 
-            using var jsDoc = JsonDocument.Parse(File.ReadAllText("ai-plugin.json"));
+            using var jsDoc = JsonDocument.Parse(await File.ReadAllTextAsync("ai-plugin.json"));
             var openAiManifest = OpenAIPluginManifest.Load(jsDoc.RootElement);
             
             Assert.NotNull(openAiManifest);
