@@ -174,12 +174,12 @@ namespace Microsoft.OpenApi.Services
 
         private void EnsureLinksExist()
         {
-            _target.Components.Callbacks ??= new Dictionary<string, OpenApiCallback>();
+            _target.Components.Links ??= new Dictionary<string, OpenApiLink>();
         }
 
         private void EnsureSecuritySchemesExist()
         {
-            _target.Components.Callbacks ??= new Dictionary<string, OpenApiCallback>();
+            _target.Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
         }
     }
 }
