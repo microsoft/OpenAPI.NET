@@ -87,8 +87,6 @@ extends:
             AuthCertName: 'ReferenceLibraryPrivateCert'
             AuthSignCertName: 'ReferencePackagePublisherCertificate'
             FolderPath: '$(Build.SourcesDirectory)\src'
-            Pattern: '*.dll'
-            UseMinimatch: true
             signConfigType: 'inlineSignParams'
             inlineOperation: |
               [
