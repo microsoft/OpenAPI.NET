@@ -9,7 +9,7 @@
     <Nullable>enable</Nullable>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.4.8</Version>
+    <Version>1.4.9</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <SignAssembly>true</SignAssembly>
     <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
