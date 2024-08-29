@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -25,6 +26,8 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// </summary>
         /// <param name="uri"></param>
         /// <returns></returns>
+        [Obsolete("Use the Async overload")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         Stream Load(Uri uri);
     }
 }

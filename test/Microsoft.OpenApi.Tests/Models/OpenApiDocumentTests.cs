@@ -1289,7 +1289,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        public async Task SerializeAdvancedDocumentAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1306,7 +1306,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentWithReferenceAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentWithReferenceAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1323,7 +1323,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentWithServerVariableAsV2JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentWithServerVariableAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1340,7 +1340,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentAsV2JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1357,7 +1357,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeDuplicateExtensionsAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeDuplicateExtensionsAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1374,7 +1374,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeDuplicateExtensionsAsV2JsonWorks(bool produceTerseOutput)
+        public async Task SerializeDuplicateExtensionsAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1391,7 +1391,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentWithReferenceAsV2JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentWithReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);

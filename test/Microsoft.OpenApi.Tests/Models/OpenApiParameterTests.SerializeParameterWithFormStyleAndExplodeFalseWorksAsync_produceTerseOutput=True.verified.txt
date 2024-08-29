@@ -1,1 +1,1 @@
-{"name":"name1","in":"query","description":"description1","style":"form","explode":false,"schema":{"type":"array","items":{"enum":["value1","value2"]}}}
+﻿{"name":"name1","in":"query","description":"description1","style":"form","explode":false,"schema":{"type":"array","items":{"enum":["value1","value2"]}}}

@@ -19,11 +19,13 @@ namespace Microsoft.OpenApi.Workbench
             DataContext = _mainModel;
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void Button_Click(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
             {
-                await _mainModel.ParseDocument();
+                await _mainModel.ParseDocumentAsync();
             } catch (Exception ex)
             {
                 _mainModel.Errors = ex.Message;

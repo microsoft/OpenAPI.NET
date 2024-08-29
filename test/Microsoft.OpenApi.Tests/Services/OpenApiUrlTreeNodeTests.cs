@@ -452,7 +452,7 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
-        public async Task VerifyDiagramFromSampleOpenAPI()
+        public async Task VerifyDiagramFromSampleOpenAPIAsync()
         {
             var doc1 = OpenApiDocumentSample_1;
 
@@ -461,7 +461,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var writer = new StringWriter();
             rootNode.WriteMermaid(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var diagram = writer.GetStringBuilder().ToString();
 
             await Verifier.Verify(diagram);

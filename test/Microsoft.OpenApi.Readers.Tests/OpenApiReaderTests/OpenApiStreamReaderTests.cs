@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         }
 
         [Fact]
-        public async Task StreamShouldNotBeDisposedIfLeaveStreamOpenSettingIsTrue()
+        public async Task StreamShouldNotBeDisposedIfLeaveStreamOpenSettingIsTrueAsync()
         {
             var memoryStream = new MemoryStream();
             using var fileStream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         }
 
         [Fact]
-        public async Task StreamShouldReadWhenInitialized()
+        public async Task StreamShouldReadWhenInitializedAsync()
         {
             var httpClient = new HttpClient
             {

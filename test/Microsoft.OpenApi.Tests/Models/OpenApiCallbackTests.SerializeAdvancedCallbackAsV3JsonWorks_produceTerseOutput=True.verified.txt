@@ -1,1 +1,0 @@
-{"$request.body#/url":{"post":{"requestBody":{"content":{"application/json":{"schema":{"type":"object"}}}},"responses":{"200":{"description":"Success"}}}}}

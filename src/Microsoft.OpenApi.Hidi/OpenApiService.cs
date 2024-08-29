@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
-        public static async Task TransformOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
+        public static async Task TransformOpenApiDocumentAsync(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(options.OpenApi) && string.IsNullOrEmpty(options.Csdl) && string.IsNullOrEmpty(options.FilterOptions?.FilterByApiManifest))
             {
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Hidi
                 var openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_0;
 
                 // If ApiManifest is provided, set the referenced OpenAPI document
-                var apiDependency = await FindApiDependency(options.FilterOptions.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
+                var apiDependency = await FindApiDependencyAsync(options.FilterOptions.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
                 if (apiDependency != null)
                 {
                     options.OpenApi = apiDependency.ApiDescripionUrl;
@@ -80,12 +80,12 @@ namespace Microsoft.OpenApi.Hidi
                 JsonDocument? postmanCollection = null;
                 if (!string.IsNullOrEmpty(options.FilterOptions?.FilterByCollection))
                 {
-                    using var collectionStream = await GetStream(options.FilterOptions.FilterByCollection, logger, cancellationToken).ConfigureAwait(false);
+                    using var collectionStream = await GetStreamAsync(options.FilterOptions.FilterByCollection, logger, cancellationToken).ConfigureAwait(false);
                     postmanCollection = await JsonDocument.ParseAsync(collectionStream, cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
 
                 // Load OpenAPI document
-                var document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApiAsync(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
                 {
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static async Task<ApiDependency?> FindApiDependency(string? apiManifestPath, ILogger logger, CancellationToken cancellationToken = default)
+        private static async Task<ApiDependency?> FindApiDependencyAsync(string? apiManifestPath, ILogger logger, CancellationToken cancellationToken = default)
         {
             ApiDependency? apiDependency = null;
             // If API Manifest is provided, load it, use it get the OpenAPI path
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     apiDependencyName = apiManifestRef[1];
                 }
-                using (var fileStream = await GetStream(apiManifestRef[0], logger, cancellationToken).ConfigureAwait(false))
+                using (var fileStream = await GetStreamAsync(apiManifestRef[0], logger, cancellationToken).ConfigureAwait(false))
                 {
                     var document = await JsonDocument.ParseAsync(fileStream, cancellationToken: cancellationToken).ConfigureAwait(false);
                     apiManifest = ApiManifestDocument.Load(document.RootElement);
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL
-        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
+        private static async Task<OpenApiDocument> GetOpenApiAsync(HidiOptions options, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
         {
             OpenApiDocument document;
             Stream stream;
@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Hidi
                 using (logger.BeginScope("Convert CSDL: {Csdl}", options.Csdl))
                 {
                     stopwatch.Start();
-                    stream = await GetStream(options.Csdl, logger, cancellationToken).ConfigureAwait(false);
+                    stream = await GetStreamAsync(options.Csdl, logger, cancellationToken).ConfigureAwait(false);
                     Stream? filteredStream = null;
                     if (!string.IsNullOrEmpty(options.CsdlFilter))
                     {
@@ -233,15 +233,15 @@ namespace Microsoft.OpenApi.Hidi
                         await stream.DisposeAsync().ConfigureAwait(false);
                     }
 
-                    document = await ConvertCsdlToOpenApi(filteredStream ?? stream, metadataVersion, options.SettingsConfig, cancellationToken).ConfigureAwait(false);
+                    document = await ConvertCsdlToOpenApiAsync(filteredStream ?? stream, metadataVersion, options.SettingsConfig, cancellationToken).ConfigureAwait(false);
                     stopwatch.Stop();
                     logger.LogTrace("{Timestamp}ms: Generated OpenAPI with {Paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                 }
             }
             else if (!string.IsNullOrEmpty(options.OpenApi))
             {
-                stream = await GetStream(options.OpenApi, logger, cancellationToken).ConfigureAwait(false);
-                var result = await ParseOpenApi(options.OpenApi, options.InlineExternal, logger, stream, cancellationToken).ConfigureAwait(false);
+                stream = await GetStreamAsync(options.OpenApi, logger, cancellationToken).ConfigureAwait(false);
+                var result = await ParseOpenApiAsync(options.OpenApi, options.InlineExternal, logger, stream, cancellationToken).ConfigureAwait(false);
                 document = result.OpenApiDocument;
             }
             else throw new InvalidOperationException("No input file path or URL provided");
@@ -323,7 +323,7 @@ namespace Microsoft.OpenApi.Hidi
         /// Implementation of the validate command
         /// </summary>
         /// <returns><see langword="true"/> when valid, <see langword="false"/> when invalid and <see langword="null"/> when cancelled</returns>
-        public static async Task<bool?> ValidateOpenApiDocument(
+        public static async Task<bool?> ValidateOpenApiDocumentAsync(
             string openApi,
             ILogger logger,
             CancellationToken cancellationToken = default)
@@ -337,9 +337,9 @@ namespace Microsoft.OpenApi.Hidi
 
             try
             {
-                using var stream = await GetStream(openApi, logger, cancellationToken).ConfigureAwait(false);
+                using var stream = await GetStreamAsync(openApi, logger, cancellationToken).ConfigureAwait(false);
 
-                result = await ParseOpenApi(openApi, false, logger, stream, cancellationToken).ConfigureAwait(false);
+                result = await ParseOpenApiAsync(openApi, false, logger, stream, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Calculating statistics"))
                 {
@@ -367,7 +367,7 @@ namespace Microsoft.OpenApi.Hidi
             return result.OpenApiDiagnostic.Errors.Count == 0;
         }
 
-        private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
+        private static async Task<ReadResult> ParseOpenApiAsync(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
         {
             ReadResult result;
             var stopwatch = Stopwatch.StartNew();
@@ -398,7 +398,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string? metadataVersion = null, IConfiguration? settings = null, CancellationToken token = default)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApiAsync(Stream csdl, string? metadataVersion = null, IConfiguration? settings = null, CancellationToken token = default)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync(token).ConfigureAwait(false);
@@ -486,7 +486,7 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Reads stream from file system or makes HTTP request depending on the input string
         /// </summary>
-        private static async Task<Stream> GetStream(string input, ILogger logger, CancellationToken cancellationToken = default)
+        private static async Task<Stream> GetStreamAsync(string input, ILogger logger, CancellationToken cancellationToken = default)
         {
             Stream stream;
             using (logger.BeginScope("Reading input stream"))
@@ -562,7 +562,7 @@ namespace Microsoft.OpenApi.Hidi
             return extension;
         }
 
-        internal static async Task<string?> ShowOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
+        internal static async Task<string?> ShowOpenApiDocumentAsync(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -571,7 +571,7 @@ namespace Microsoft.OpenApi.Hidi
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var document = await GetOpenApi(options, logger, null, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApiAsync(options, logger, null, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
@@ -722,17 +722,17 @@ namespace Microsoft.OpenApi.Hidi
             writer.WriteLine("</html");
         }
 
-        internal static async Task PluginManifest(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
+        internal static async Task PluginManifestAsync(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             // If ApiManifest is provided, set the referenced OpenAPI document
-            var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
+            var apiDependency = await FindApiDependencyAsync(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
             if (apiDependency != null)
             {
                 options.OpenApi = apiDependency.ApiDescripionUrl;
             }
 
             // Load OpenAPI document
-            var document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+            var document = await GetOpenApiAsync(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
 
