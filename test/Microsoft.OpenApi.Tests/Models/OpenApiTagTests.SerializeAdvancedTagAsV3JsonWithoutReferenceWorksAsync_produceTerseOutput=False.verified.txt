@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "pet",
   "description": "Pets operations",
   "externalDocs": {

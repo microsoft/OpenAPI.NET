@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Readers
 
                 if (_settings.LoadExternalRefs)
                 {
-                    var diagnosticExternalRefs = await LoadExternalRefs(document, cancellationToken);
+                    var diagnosticExternalRefs = await LoadExternalRefsAsync(document, cancellationToken);
                     // Merge diagnostics of external reference
                     if (diagnosticExternalRefs != null)
                     {
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers
             };
         }
 
-        private Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken = default)
+        private Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, CancellationToken cancellationToken = default)
         {
             // Create workspace for all documents to live in.
             var openApiWorkSpace = new OpenApiWorkspace();

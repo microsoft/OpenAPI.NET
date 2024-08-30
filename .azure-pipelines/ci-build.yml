@@ -79,6 +79,7 @@ extends:
             arguments: '--configuration $(BuildConfiguration) --no-build'
 
         - task: EsrpCodeSigning@5
+          displayName: 'ESRP CodeSigning binaries'
           inputs:
             ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
             AppRegistrationClientId: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
@@ -87,8 +88,6 @@ extends:
             AuthCertName: 'ReferenceLibraryPrivateCert'
             AuthSignCertName: 'ReferencePackagePublisherCertificate'
             FolderPath: '$(Build.SourcesDirectory)\src'
-            Pattern: '*.dll'
-            UseMinimatch: true
             signConfigType: 'inlineSignParams'
             inlineOperation: |
               [
@@ -146,6 +145,7 @@ extends:
           displayName: 'pack Hidi'
 
         - task: EsrpCodeSigning@5
+          displayName: 'ESRP CodeSigning Nuget Packages'
           inputs:
             ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
             AppRegistrationClientId: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'

@@ -3,9 +3,11 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
 using Moq;
+using SharpYaml.Tokens;
 using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests
@@ -168,6 +170,33 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             var message2 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate("users.user.ListUser", "users.user")).Message;
             Assert.Equal("Cannot specify both operationIds and tags at the same time.", message2);
+        }
+
+        [Fact]
+        public void CopiesOverAllReferencedComponentsToTheSubsetDocumentCorrectly()
+        {
+            // Arrange
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "docWithReusableHeadersAndExamples.yaml");
+            var operationIds = "getItems";
+
+            // Act
+            using var stream = File.OpenRead(filePath);
+            var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            
+            var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
+
+            var response = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get].Responses["200"];
+            var responseHeader = response.Headers["x-custom-header"];
+            var mediaTypeExample = response.Content["application/json"].Examples.First().Value;
+            var targetHeaders = subsetOpenApiDocument.Components.Headers;
+            var targetExamples = subsetOpenApiDocument.Components.Examples;
+
+            // Assert
+            Assert.False(responseHeader.UnresolvedReference);
+            Assert.False(mediaTypeExample.UnresolvedReference);
+            Assert.Single(targetHeaders);
+            Assert.Single(targetExamples);
         }
 
         [Theory]

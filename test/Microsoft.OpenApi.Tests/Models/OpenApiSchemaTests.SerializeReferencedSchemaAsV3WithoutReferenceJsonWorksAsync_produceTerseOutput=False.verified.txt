@@ -1,4 +1,4 @@
-{
+﻿{
   "title": "title1",
   "multipleOf": 3,
   "maximum": 42,

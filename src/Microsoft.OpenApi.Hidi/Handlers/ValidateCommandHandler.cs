@@ -11,7 +11,7 @@ using Microsoft.OpenApi.Hidi.Options;
 
 namespace Microsoft.OpenApi.Hidi.Handlers
 {
-    internal class ValidateCommandHandler : ICommandHandler
+    internal class ValidateCommandHandler : AsyncCommandHandler
     {
         public CommandOptions CommandOptions { get; }
 
@@ -19,12 +19,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
         {
             CommandOptions = commandOptions;
         }
-
-        public int Invoke(InvocationContext context)
-        {
-            return InvokeAsync(context).GetAwaiter().GetResult();
-        }
-        public async Task<int> InvokeAsync(InvocationContext context)
+        public override async Task<int> InvokeAsync(InvocationContext context)
         {
             var hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
             var cancellationToken = (CancellationToken)context.BindingContext.GetRequiredService(typeof(CancellationToken));
@@ -33,7 +28,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             try
             {
                 if (hidiOptions.OpenApi is null) throw new InvalidOperationException("OpenApi file is required");
-                var isValid = await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken).ConfigureAwait(false);
+                var isValid = await OpenApiService.ValidateOpenApiDocumentAsync(hidiOptions.OpenApi, logger, cancellationToken).ConfigureAwait(false);
                 return isValid is not false ? 0 : -1;
             }
 #if RELEASE
