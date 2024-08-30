@@ -110,6 +110,7 @@ namespace Microsoft.OpenApi.Services
                 default:
                     break;
             }
+
             base.Visit(referenceable);
         }
 
