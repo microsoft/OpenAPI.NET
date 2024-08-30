@@ -278,6 +278,42 @@ namespace Microsoft.OpenApi.Services
                 moreStuff = true;
                 target.RequestBodies.Add(item);
             }
+
+            foreach (var item in newComponents.Headers
+                                        .Where(item => !target.Headers.ContainsKey(item.Key)))
+            {
+                moreStuff = true;
+                target.Headers.Add(item);
+            }
+
+            foreach (var item in newComponents.Links
+                                        .Where(item => !target.Links.ContainsKey(item.Key)))
+            {
+                moreStuff = true;
+                target.Links.Add(item);
+            }
+
+            foreach (var item in newComponents.Callbacks
+                                        .Where(item => !target.Callbacks.ContainsKey(item.Key)))
+            {
+                moreStuff = true;
+                target.Callbacks.Add(item);
+            }
+
+            foreach (var item in newComponents.Examples
+                                        .Where(item => !target.Examples.ContainsKey(item.Key)))
+            {
+                moreStuff = true;
+                target.Examples.Add(item);
+            }
+
+            foreach (var item in newComponents.SecuritySchemes
+                                        .Where(item => !target.SecuritySchemes.ContainsKey(item.Key)))
+            {
+                moreStuff = true;
+                target.SecuritySchemes.Add(item);
+            }
+
             return moreStuff;
         }
 
