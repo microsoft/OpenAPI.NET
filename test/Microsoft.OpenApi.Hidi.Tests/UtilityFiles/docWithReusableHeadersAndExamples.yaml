@@ -2,6 +2,8 @@ openapi: 3.0.1
 info:
   title: Example with Multiple Operations and Local $refs
   version: 1.0.0
+servers:
+- url: https://api.github.com
 paths:
   /items:
     get:
