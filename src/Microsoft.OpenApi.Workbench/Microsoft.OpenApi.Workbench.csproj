@@ -10,6 +10,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.11.20" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.8" />
+    <!-- Microsoft.Windows.Compatibility 8.0.8 depends on 8.0.0 this dependency can be removed once they update theirs -->
+    <PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Themes\Metro\HowToApplyTheme.txt" />
