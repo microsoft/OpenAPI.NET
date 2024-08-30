@@ -57,10 +57,10 @@ extends:
             version: 8.x
         
         # Install the nuget tool.
-        - task: NuGetToolInstaller@0
-          displayName: 'Use NuGet >=5.2.0'
+        - task: NuGetToolInstaller@1
+          displayName: 'Use NuGet >=6.11.0'
           inputs:
-            versionSpec: '>=5.2.0'
+            versionSpec: '>=6.11.0'
             checkLatest: true
 
         # Build the Product project
