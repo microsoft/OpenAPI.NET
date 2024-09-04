@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -48,8 +48,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; } =
-            new List<OpenApiSecurityRequirement>();
+        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; }
 
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
