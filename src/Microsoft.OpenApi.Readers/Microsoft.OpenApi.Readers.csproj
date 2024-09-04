@@ -18,16 +18,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.11.20" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.11.20">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+
         <PackageReference Include="SharpYaml" Version="2.1.1" />
     </ItemGroup>
-
-    <!-- Workaround to disable Microsoft.VisualStudio.Threading.Analyzers -->
-    <Target Name="DisableVSAnalyzers" BeforeTargets="CoreCompile" Condition=" '$(RunStaticAnalysis)' == '' OR '$(RunStaticAnalysis)' == 'false' ">
-        <ItemGroup>
-            <Analyzer Remove="@(Analyzer)" Condition=" '%(Filename)' == 'Microsoft.VisualStudio.Threading.Analyzers' OR '%(Filename)' == 'Microsoft.VisualStudio.Threading.Analyzers.CSharp' " />
-        </ItemGroup>
-    </Target>
 
     <ItemGroup>
         <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
