@@ -193,6 +193,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var targetExamples = subsetOpenApiDocument.Components.Examples;
 
             // Assert
+            Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
             Assert.False(responseHeader.UnresolvedReference);
             Assert.False(mediaTypeExample.UnresolvedReference);
             Assert.Single(targetHeaders);
