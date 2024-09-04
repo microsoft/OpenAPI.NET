@@ -3,7 +3,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.6.19</Version>
+        <Version>1.6.20</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
@@ -21,6 +21,13 @@
         <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.11.20" />
         <PackageReference Include="SharpYaml" Version="2.1.1" />
     </ItemGroup>
+
+    <!-- Workaround to disable Microsoft.VisualStudio.Threading.Analyzers -->
+    <Target Name="DisableVSAnalyzers" BeforeTargets="CoreCompile" Condition=" '$(RunStaticAnalysis)' == '' OR '$(RunStaticAnalysis)' == 'false' ">
+        <ItemGroup>
+            <Analyzer Remove="@(Analyzer)" Condition=" '%(Filename)' == 'Microsoft.VisualStudio.Threading.Analyzers' OR '%(Filename)' == 'Microsoft.VisualStudio.Threading.Analyzers.CSharp' " />
+        </ItemGroup>
+    </Target>
 
     <ItemGroup>
         <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />

@@ -3,7 +3,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>Latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.6.19</Version>
+        <Version>1.6.20</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
@@ -39,4 +39,11 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.11.20" />
     </ItemGroup>
+
+    <!-- Workaround to disable Microsoft.VisualStudio.Threading.Analyzers -->
+    <Target Name="DisableVSAnalyzers" BeforeTargets="CoreCompile" Condition=" '$(RunStaticAnalysis)' == '' OR '$(RunStaticAnalysis)' == 'false' ">
+        <ItemGroup>
+            <Analyzer Remove="@(Analyzer)" Condition=" '%(Filename)' == 'Microsoft.VisualStudio.Threading.Analyzers' OR '%(Filename)' == 'Microsoft.VisualStudio.Threading.Analyzers.CSharp' " />
+        </ItemGroup>
+    </Target>
 </Project>
