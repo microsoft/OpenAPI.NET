@@ -529,11 +529,11 @@ namespace Microsoft.OpenApi.Models
                 string relativePath = OpenApiConstants.ComponentsSegment + reference.Type.GetDisplayName() + "/" + reference.Id;
 
                 uriLocation = useExternal
-                    ? Workspace.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
+                    ? Workspace?.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
                     : BaseUri + relativePath;
             }
 
-            return Workspace.ResolveReference<IOpenApiReferenceable>(uriLocation);
+            return Workspace?.ResolveReference<IOpenApiReferenceable>(uriLocation);
         }
 
         /// <summary>
@@ -628,9 +628,9 @@ namespace Microsoft.OpenApi.Models
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, OpenApiSchema> Schemas;
+        private Dictionary<string, OpenApiSchema> Schemas = new();
 
-        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, OpenApiSchema> schemas)
+        public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, OpenApiSchema> schemas)
         {
             var visitor = new FindSchemaReferences();
             visitor.Schemas = schemas;
