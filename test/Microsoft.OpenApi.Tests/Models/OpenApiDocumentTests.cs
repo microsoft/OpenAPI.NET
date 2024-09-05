@@ -1732,7 +1732,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var expected =
                 """
-                openapi: 3.0.1
+                openapi: 3.0.4
                 info:
                   title: magic style
                   version: 1.0.0

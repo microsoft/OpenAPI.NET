@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
+            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.4");
 
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV3(w));
