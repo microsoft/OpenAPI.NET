@@ -4,7 +4,6 @@
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
@@ -19,7 +18,11 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiHeader AdvancedHeader = new()
         {
             Description = "sampleHeader",
-            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
+            Schema = new()
+            {
+                Type = "integer",
+                Format = "int32"
+            }
         };
 
         public static OpenApiHeaderReference OpenApiHeaderReference = new(ReferencedHeader, "example1");
@@ -27,7 +30,11 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiHeader ReferencedHeader = new()
         {
             Description = "sampleHeader",
-            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
+            Schema = new()
+            {
+                Type = "integer",
+                Format = "int32"
+            }
         };
 
         [Theory]
@@ -74,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedHeader.SerializeAsV3WithoutReference(writer);
+            ReferencedHeader.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -125,7 +132,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedHeader.SerializeAsV2WithoutReference(writer);
+            ReferencedHeader.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Humanizer;
-using Json.Schema;
-using Json.Schema.OpenApi;
+using Humanizer.Inflections;
 using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Hidi.Formatters
 {
@@ -17,7 +15,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
     {
         private const string DefaultPutPrefix = ".Update";
         private const string PowerShellPutPrefix = ".Set";
-        private readonly Stack<JsonSchema> _schemaLoop = new();
+        private readonly Stack<OpenApiSchema> _schemaLoop = new();
         private static readonly Regex s_oDataCastRegex = new("(.*(?<=[a-z]))\\.(As(?=[A-Z]).*)", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         private static readonly Regex s_hashSuffixRegex = new(@"^[^-]+", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         private static readonly Regex s_oDataRefRegex = new("(?<=[a-z])Ref(?=[A-Z])", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
@@ -26,11 +24,11 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         {
             // Add singularization exclusions.
             // Enhancement: Read exclusions from a user provided file.
-            Humanizer.Inflections.Vocabularies.Default.AddSingular("(drive)s$", "$1"); // drives does not properly singularize to drive.
-            Humanizer.Inflections.Vocabularies.Default.AddSingular("(data)$", "$1"); // exclude the following from singularization.
-            Humanizer.Inflections.Vocabularies.Default.AddSingular("(delta)$", "$1");
-            Humanizer.Inflections.Vocabularies.Default.AddSingular("(quota)$", "$1");
-            Humanizer.Inflections.Vocabularies.Default.AddSingular("(statistics)$", "$1");
+            Vocabularies.Default.AddSingular("(drive)s$", "$1"); // drives does not properly singularize to drive.
+            Vocabularies.Default.AddSingular("(data)$", "$1"); // exclude the following from singularization.
+            Vocabularies.Default.AddSingular("(delta)$", "$1");
+            Vocabularies.Default.AddSingular("(quota)$", "$1");
+            Vocabularies.Default.AddSingular("(statistics)$", "$1");
         }
 
         //FHL task for PS
@@ -43,13 +41,13 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         // 5. Fix anyOf and oneOf schema.
         // 6. Add AdditionalProperties to object schemas.
 
-        public override void Visit(ref JsonSchema schema)
-         {
-            AddAdditionalPropertiesToSchema(ref schema);
-            schema = ResolveAnyOfSchema(ref schema);
-            schema = ResolveOneOfSchema(ref schema);
+        public override void Visit(OpenApiSchema schema)
+        {
+            AddAdditionalPropertiesToSchema(schema);
+            ResolveAnyOfSchema(schema);
+            ResolveOneOfSchema(schema);
 
-            base.Visit(ref schema);
+            base.Visit(schema);
         }
 
         public override void Visit(OpenApiPathItem pathItem)
@@ -166,237 +164,97 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                 // Replace content with a schema object of type array
                 // for structured or collection-valued function parameters
                 parameter.Content = null;
-                parameter.Schema = new JsonSchemaBuilder()
-                    .Type(SchemaValueType.Array)
-                    .Items(new JsonSchemaBuilder()
-                        .Type(SchemaValueType.String))
-                ;
+                parameter.Schema = new()
+                {
+                    Type = "array",
+                    Items = new()
+                    {
+                        Type = "string"
+                    }
+                };
             }
             return parameters;
         }
 
-        private void AddAdditionalPropertiesToSchema(ref JsonSchema schema)
+        private void AddAdditionalPropertiesToSchema(OpenApiSchema schema)
         {
-            if (schema != null && !_schemaLoop.Contains(schema) && schema.GetJsonType().Equals(SchemaValueType.Object))
+            if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals((string)schema.Type, StringComparison.OrdinalIgnoreCase))
             {
-                var schemaBuilder = new JsonSchemaBuilder();
-                if (schema.Keywords != null)
-                {
-                    foreach (var keyword in schema.Keywords)
-                    {
-                        schemaBuilder.Add(keyword);
-                    }
-                }
-
-                schema = schemaBuilder.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Object));
+                schema.AdditionalProperties = new() { Type = "object" };
 
                 /* Because 'additionalProperties' are now being walked,
                  * we need a way to keep track of visited schemas to avoid
                  * endlessly creating and walking them in an infinite recursion.
                  */
-                var additionalProps = schema.GetAdditionalProperties();
-
-                if (additionalProps != null)
-                {
-                    _schemaLoop.Push(additionalProps);
-                }
+                _schemaLoop.Push(schema.AdditionalProperties);
             }
-            
         }
 
-        private static JsonSchema ResolveOneOfSchema(ref JsonSchema schema)
+        private static void ResolveOneOfSchema(OpenApiSchema schema)
         {
-            if (schema.GetOneOf()?.FirstOrDefault() is {} newSchema)
+            if (schema.OneOf?.FirstOrDefault() is { } newSchema)
             {
-                var schemaBuilder = BuildSchema(schema);
-                schemaBuilder = schemaBuilder.Remove("oneOf");
-                schema = schemaBuilder.Build();
-
-                schema = FlattenSchema(schema, newSchema);
+                schema.OneOf = null;
+                FlattenSchema(schema, newSchema);
             }
-
-            return schema;
         }
 
-        private static JsonSchema ResolveAnyOfSchema(ref JsonSchema schema)
+        private static void ResolveAnyOfSchema(OpenApiSchema schema)
         {
-            if (schema.GetAnyOf()?.FirstOrDefault() is {} newSchema)
+            if (schema.AnyOf?.FirstOrDefault() is { } newSchema)
             {
-                var schemaBuilder = BuildSchema(schema);
-                schemaBuilder = schemaBuilder.Remove("anyOf");
-                schema = schemaBuilder.Build();
-
-                schema = FlattenSchema(schema, newSchema);
+                schema.AnyOf = null;
+                FlattenSchema(schema, newSchema);
             }
-
-            return schema;
         }
 
-        private static JsonSchema FlattenSchema(JsonSchema schema, JsonSchema newSchema)
+        private static void FlattenSchema(OpenApiSchema schema, OpenApiSchema newSchema)
         {
             if (newSchema != null)
             {
-                var newSchemaRef = newSchema.GetRef();
-
-                if (newSchemaRef != null)
+                if (newSchema.Reference != null)
                 {
-                    var schemaBuilder = BuildSchema(schema);
-                    schema = schemaBuilder.Ref(newSchemaRef);
+                    schema.Reference = newSchema.Reference;
+                    schema.UnresolvedReference = true;
                 }
                 else
                 {
                     // Copies schema properties based on https://github.com/microsoft/OpenAPI.NET.OData/pull/264.
-                    schema = CopySchema(schema, newSchema);
+                    CopySchema(schema, newSchema);
                 }
             }
-
-            return schema;
         }
 
-        private static JsonSchema CopySchema(JsonSchema schema, JsonSchema newSchema)
+        private static void CopySchema(OpenApiSchema schema, OpenApiSchema newSchema)
         {
-            var schemaBuilder = new JsonSchemaBuilder();
-            var keywords = schema.Keywords;
-            if (keywords != null)
-            {
-                foreach (var keyword in keywords)
-                {
-                    schemaBuilder.Add(keyword);
-                }
-            }
-
-            if (schema.GetTitle() == null && newSchema.GetTitle() is { } title)
-            {
-                schemaBuilder.Title(title);
-            }
-            if (schema.GetJsonType() == null && newSchema.GetJsonType() is { } type)
-            {
-                schemaBuilder.Type(type);
-            }
-            if (schema.GetFormat() == null && newSchema.GetFormat() is { } format)
-            {
-                schemaBuilder.Format(format);
-            }
-            if (schema.GetDescription() == null && newSchema.GetDescription() is { } description)
-            {
-                schemaBuilder.Description(description);
-            }
-            if (schema.GetMaximum() == null && newSchema.GetMaximum() is { } max)
-            {
-                schemaBuilder.Maximum(max);
-            }
-            if (schema.GetExclusiveMaximum() == null && newSchema.GetExclusiveMaximum() is { } exclusiveMaximum)
-            {
-                schemaBuilder.ExclusiveMaximum(exclusiveMaximum);
-            }
-            if (schema.GetMinimum() == null && newSchema.GetMinimum() is { } min)
-            {
-                schemaBuilder.Minimum(min);
-            }
-            if (schema.GetExclusiveMinimum() == null && newSchema.GetExclusiveMinimum() is { } exclusiveMinimum)
-            {
-                schemaBuilder.ExclusiveMinimum(exclusiveMinimum);
-            }
-            if (schema.GetMaxLength() == null && newSchema.GetMaxLength() is { } maxLength)
-            {
-                schemaBuilder.MaxLength(maxLength);
-            }
-            if (schema.GetMinLength() == null && newSchema.GetMinLength() is { } minLength)
-            {
-                schemaBuilder.MinLength(minLength);
-            }
-            if (schema.GetPattern() == null && newSchema.GetPattern() is { } pattern)
-            {
-                schemaBuilder.Pattern(pattern);
-            }
-            if (schema.GetMultipleOf() == null && newSchema.GetMultipleOf() is { } multipleOf)
-            {
-                schemaBuilder.MultipleOf(multipleOf);
-            }
-            if (schema.GetNot() == null && newSchema.GetNot() is { } not)
-            {
-                schemaBuilder.Not(not);
-            }
-            if (schema.GetRequired() == null && newSchema.GetRequired() is { } required)
-            {
-                schemaBuilder.Required(required);
-            }
-            if (schema.GetItems() == null && newSchema.GetItems() is { } items)
-            {
-                schemaBuilder.Items(items);
-            }
-            if (schema.GetMaxItems() == null && newSchema.GetMaxItems() is { } maxItems)
-            {
-                schemaBuilder.MaxItems(maxItems);
-            }
-            if (schema.GetMinItems() == null && newSchema.GetMinItems() is { } minItems)
-            {
-                schemaBuilder.MinItems(minItems);
-            }
-            if (schema.GetUniqueItems() == null && newSchema.GetUniqueItems() is { } uniqueItems)
-            {
-                schemaBuilder.UniqueItems(uniqueItems);
-            }
-            if (schema.GetProperties() == null && newSchema.GetProperties() is { } properties)
-            {
-                schemaBuilder.Properties(properties);
-            }
-            if (schema.GetMaxProperties() == null && newSchema.GetMaxProperties() is { } maxProperties)
-            {
-                schemaBuilder.MaxProperties(maxProperties);
-            }
-            if (schema.GetMinProperties() == null && newSchema.GetMinProperties() is { } minProperties)
-            {
-                schemaBuilder.MinProperties(minProperties);
-            }
-            if (schema.GetDiscriminator() == null && newSchema.GetDiscriminator() is { } discriminator)
-            {
-                schemaBuilder.Discriminator(discriminator.PropertyName, discriminator.Mapping, discriminator.Extensions);
-            }
-            if (schema.GetOpenApiExternalDocs() == null && newSchema.GetOpenApiExternalDocs() is { } externalDocs)
-            {
-                schemaBuilder.OpenApiExternalDocs(externalDocs);
-            }
-            if (schema.GetEnum() == null && newSchema.GetEnum() is { } enumCollection)
-            {
-                schemaBuilder.Enum(enumCollection);
-            }
-
-            if (!schema.GetReadOnly() is { } && newSchema.GetReadOnly() is { } newValue)
-            {
-                schemaBuilder.ReadOnly(newValue);
-            }
-
-            if (!schema.GetWriteOnly() is { } && newSchema.GetWriteOnly() is { } newWriteOnlyValue)
-            {
-                schemaBuilder.WriteOnly(newWriteOnlyValue);
-            }
-
-            if (!schema.GetNullable() is { } && newSchema.GetNullable() is { } newNullableValue)
-            {
-                schemaBuilder.Nullable(newNullableValue);
-            }
-
-            if (!schema.GetDeprecated() is { } && newSchema.GetDeprecated() is { } newDepracatedValue)
-            {
-                schemaBuilder.Deprecated(newDepracatedValue);
-            }
-
-            return schemaBuilder;            
-        }
-
-        private static JsonSchemaBuilder BuildSchema(JsonSchema schema)
-        {
-            var schemaBuilder = new JsonSchemaBuilder();
-            if (schema.Keywords != null)
-            {
-                foreach (var keyword in schema.Keywords)
-                {
-                    schemaBuilder.Add(keyword);
-                }
-            }
-
-            return schemaBuilder;
+            schema.Title ??= newSchema.Title;
+            schema.Type ??= newSchema.Type;
+            schema.Format ??= newSchema.Format;
+            schema.Description ??= newSchema.Description;
+            schema.Maximum ??= newSchema.Maximum;
+            schema.ExclusiveMaximum ??= newSchema.ExclusiveMaximum;
+            schema.Minimum ??= newSchema.Minimum;
+            schema.ExclusiveMinimum ??= newSchema.ExclusiveMinimum;
+            schema.MaxLength ??= newSchema.MaxLength;
+            schema.MinLength ??= newSchema.MinLength;
+            schema.Pattern ??= newSchema.Pattern;
+            schema.MultipleOf ??= newSchema.MultipleOf;
+            schema.Not ??= newSchema.Not;
+            schema.Required ??= newSchema.Required;
+            schema.Items ??= newSchema.Items;
+            schema.MaxItems ??= newSchema.MaxItems;
+            schema.MinItems ??= newSchema.MinItems;
+            schema.UniqueItems ??= newSchema.UniqueItems;
+            schema.Properties ??= newSchema.Properties;
+            schema.MaxProperties ??= newSchema.MaxProperties;
+            schema.MinProperties ??= newSchema.MinProperties;
+            schema.Discriminator ??= newSchema.Discriminator;
+            schema.ExternalDocs ??= newSchema.ExternalDocs;
+            schema.Enum ??= newSchema.Enum;
+            schema.ReadOnly = !schema.ReadOnly ? newSchema.ReadOnly : schema.ReadOnly;
+            schema.WriteOnly = !schema.WriteOnly ? newSchema.WriteOnly : schema.WriteOnly;
+            schema.Nullable = !schema.Nullable ? newSchema.Nullable : schema.Nullable;
+            schema.Deprecated = !schema.Deprecated ? newSchema.Deprecated : schema.Deprecated;
         }
     }
 }

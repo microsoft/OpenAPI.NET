@@ -77,9 +77,9 @@ public class OpenApiDeprecationExtension : IOpenApiExtension
     /// <param name="source">The source object.</param>
     /// <returns>The <see cref="OpenApiDeprecationExtension"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
-    public static OpenApiDeprecationExtension Parse(OpenApiAny source)
+    public static OpenApiDeprecationExtension Parse(JsonNode source)
     {
-        if (source.Node is not JsonObject rawObject) return null;
+        if (source is not JsonObject rawObject) return null;
         var extension = new OpenApiDeprecationExtension();
         if (rawObject.TryGetPropertyValue(nameof(RemovalDate).ToFirstCharacterLowerCase(), out var removalDate) && removalDate is JsonNode removalDateValue)
             extension.RemovalDate = removalDateValue.GetValue<DateTimeOffset>();

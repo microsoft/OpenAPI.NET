@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -31,14 +30,16 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Array)
-                                .Items(new JsonSchemaBuilder().Ref("#/definitions/customType")),
-                    Example = new OpenApiAny("Blabla"),
+                    Schema = new()
+                    {
+                        Type = "array",
+                        Items = new OpenApiSchemaReference("customType", null)
+                    },
+                    Example = "Blabla",
                     Extensions = new Dictionary<string, IOpenApiExtension>
                     {
                         ["myextension"] = new OpenApiAny("myextensionvalue"),
-                    },
+                    }, 
                 }
             },
             Headers =
@@ -46,12 +47,18 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new()
+                    {
+                        Type = "integer"
+                    }
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new()
+                    {
+                        Type = "integer"
+                    }
                 },
             }
         };
@@ -62,10 +69,12 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Array)
-                                .Items(new JsonSchemaBuilder().Ref("#/components/schemas/customType")),
-                    Example = new OpenApiAny("Blabla"),
+                    Schema = new()
+                    {
+                        Type = "array",
+                        Items = new OpenApiSchemaReference("customType", null)
+                    },
+                    Example = "Blabla",
                     Extensions = new Dictionary<string, IOpenApiExtension>
                     {
                         ["myextension"] = new OpenApiAny("myextensionvalue"),
@@ -77,12 +86,18 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new()
+                    {
+                        Type = "integer"
+                    }
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new()
+                    {
+                        Type = "integer"
+                    }
                 },
             }
         };
@@ -95,9 +110,11 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.Array)
-                                    .Items(new JsonSchemaBuilder().Ref("#/definitions/customType"))
+                    Schema = new()
+                    {
+                        Type = "array",
+                        Items = new OpenApiSchemaReference("customType", null)
+                    }
                 }
             },
             Headers =
@@ -105,12 +122,18 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new()
+                    {
+                        Type = "integer"
+                    }
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new()
+                    {
+                        Type = "integer"
+                    }
                 },
             }
         };
@@ -123,9 +146,11 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.Array)
-                                    .Items(new JsonSchemaBuilder().Ref("#/components/schemas/customType"))
+                     Schema = new()
+                    {
+                        Type = "array",
+                        Items = new OpenApiSchemaReference("customType", null)
+                    }
                 }
             },
             Headers =
@@ -133,12 +158,18 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new()
+                    {
+                        Type = "integer"
+                    }
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new()
+                    {
+                        Type = "integer"
+                    }
                 },
             }
         };
@@ -343,7 +374,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedV3Response.SerializeAsV3WithoutReference(writer);
+            ReferencedV3Response.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -377,7 +408,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedV2Response.SerializeAsV2WithoutReference(writer);
+            ReferencedV2Response.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

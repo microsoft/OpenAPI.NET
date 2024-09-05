@@ -72,9 +72,9 @@ public class OpenApiPagingExtension : IOpenApiExtension
     /// <param name="source">The source element to parse.</param>
     /// <returns>The <see cref="OpenApiPagingExtension"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
-    public static OpenApiPagingExtension Parse(OpenApiAny source)
+    public static OpenApiPagingExtension Parse(JsonNode source)
     {
-        if (source.Node is not JsonObject rawObject) return null;
+        if (source is not JsonObject rawObject) return null;
         var extension = new OpenApiPagingExtension();
         if (rawObject.TryGetPropertyValue(nameof(NextLinkName).ToFirstCharacterLowerCase(), out var nextLinkName) && nextLinkName is JsonNode nextLinkNameStr)
         {

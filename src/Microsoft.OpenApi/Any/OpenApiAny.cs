@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Any
         /// <param name="specVersion"></param>
         public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            writer.WriteAny(new OpenApiAny(Node));
+            writer.WriteAny(Node);
         }
     }
 }

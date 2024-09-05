@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
-using Json.Schema;
-using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -26,7 +24,11 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new JsonSchemaBuilder().Default(new OpenApiAny(55).Node).Type(SchemaValueType.String);
+            var schema = new OpenApiSchema
+            {
+                Default = 55,
+                Type = "string",
+            };
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
@@ -40,7 +42,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"integer\" but should be \"string\" at "
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
@@ -53,12 +55,13 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new JsonSchemaBuilder()
-                .Default(new OpenApiAny("1234").Node)
-                .Type(SchemaValueType.String)
-                .Example(new OpenApiAny(55).Node)
-                .Build();
-            
+            var schema = new OpenApiSchema
+            {
+                Example = 55,
+                Default = "1234",
+                Type = "string",
+            };
+
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
@@ -72,11 +75,11 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"integer\" but should be \"string\" at "
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/example"
+                "#/example",
             });
         }
 
@@ -85,8 +88,10 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new JsonSchemaBuilder()
-                .Enum(
+            var schema = new OpenApiSchema()
+            {
+                Enum = 
+                {
                     new OpenApiAny("1").Node,
                     new OpenApiAny(new JsonObject()
                     {
@@ -99,10 +104,14 @@ namespace Microsoft.OpenApi.Validations.Tests
                     {
                         ["x"] = 4,
                         ["y"] = 40,
-                    }).Node)
-                .Type(SchemaValueType.Object)
-                .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build())
-                .Build();
+                    }).Node
+                },
+                Type = "object",
+                AdditionalProperties = new()
+                {
+                    Type = "integer"
+                }
+            };
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
@@ -116,16 +125,16 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"string\" but should be \"object\" at ",
-                "type : Value is \"string\" but should be \"integer\" at /y",
-                "type : Value is \"string\" but should be \"integer\" at /z",
-                "type : Value is \"array\" but should be \"object\" at "
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/enum/0",
-                "#/enum/1",
-                "#/enum/1",
+                // #enum/0 is not an error since the spec allows
+                // representing an object using a string.
+                "#/enum/1/y",
+                "#/enum/1/z",
                 "#/enum/2"
             });
         }
@@ -135,32 +144,43 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new JsonSchemaBuilder()
-                .Type(SchemaValueType.Object)
-                .Properties(
-                    ("property1",
-                    new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Array)
-                        .Items(new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Integer).Format("int64").Build()).Build()),
-                    ("property2",
-                    new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Array)
-                        .Items(new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Object)
-                                .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Boolean).Build())
-                                .Build())
-                        .Build()),
-                    ("property3",
-                    new JsonSchemaBuilder()
-                        .Type(SchemaValueType.String)
-                        .Format("password")
-                        .Build()),
-                    ("property4",
-                    new JsonSchemaBuilder()
-                        .Type(SchemaValueType.String)
-                        .Build()))
-                .Default(new JsonObject()
+            var schema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties =
+                {
+                    ["property1"] = new()
+                    {
+                        Type = "array",
+                        Items = new()
+                        {
+                            Type = "integer",
+                            Format = "int64"
+                        }
+                    },
+                    ["property2"] = new()
+                    {
+                        Type = "array",
+                        Items = new()
+                        {
+                            Type = "object",
+                            AdditionalProperties = new()
+                            {
+                                Type = "boolean"
+                            }
+                        }
+                    },
+                    ["property3"] = new()
+                    {
+                        Type = "string",
+                        Format = "password"
+                    },
+                    ["property4"] = new()
+                    {
+                        Type = "string"
+                    }
+                },
+                Default = new JsonObject()
                 {
                     ["property1"] = new JsonArray()
                     {
@@ -179,8 +199,9 @@ namespace Microsoft.OpenApi.Validations.Tests
                         }
                     },
                     ["property3"] = "123",
-                    ["property4"] = DateTime.UtcNow.ToString()
-                }).Build();
+                    ["property4"] = DateTime.UtcNow
+                }
+            };
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
@@ -188,21 +209,21 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(schema);
 
             warnings = validator.Warnings;
-            bool result = warnings.Any();
+            bool result = !warnings.Any();
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "type : Value is \"string\" but should be \"integer\" at /property1/2",
-                "type : Value is \"integer\" but should be \"object\" at /property2/0",
-                "type : Value is \"string\" but should be \"boolean\" at /property2/1/z",
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/default",
-                "#/default",
-                "#/default"
+                "#/default/property1/2",
+                "#/default/property2/0",
+                "#/default/property2/1/z"
             });
         }
 
@@ -215,11 +236,12 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Schemas = {
                     {
                         "schema1",
-                        new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Object)
-                        .Discriminator(new OpenApiDiscriminator() { PropertyName = "property1" })
-                        .Ref("schema1")
-                        .Build()
+                        new OpenApiSchema
+                        {
+                            Type = "object",
+                            Discriminator = new() { PropertyName = "property1" },
+                            Reference = new() { Id = "schema1" }
+                        }
                     }
                 }
             };
@@ -235,7 +257,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             errors.Should().BeEquivalentTo(new List<OpenApiValidatorError>
             {
-                    new OpenApiValidatorError(nameof(JsonSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
                         string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                     "schema1", "property1"))
             });
@@ -251,17 +273,36 @@ namespace Microsoft.OpenApi.Validations.Tests
                 {
                     {
                         "Person",
-                        new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Array)
-                        .Discriminator(new OpenApiDiscriminator
-                         {
-                            PropertyName = "type"
-                         })
-                        .OneOf(new JsonSchemaBuilder()
-                            .Properties(("type", new JsonSchemaBuilder().Type(SchemaValueType.Array).Ref("Person").Build()))
-                            .Build())
-                        .Ref("Person")
-                        .Build()
+                        new OpenApiSchema
+                        {
+                            Type = "array",
+                            Discriminator = new()
+                            {
+                                PropertyName = "type"
+                            },
+                            OneOf = new List<OpenApiSchema>
+                            {
+                                new()
+                                {
+                                    Properties =
+                                    {
+                                        {
+                                            "type",
+                                            new OpenApiSchema
+                                            {
+                                                Type = "array"
+                                            }
+                                        }
+                                    },
+                                    Reference = new()
+                                    {
+                                        Type = ReferenceType.Schema,
+                                        Id = "Person"
+                                    }
+                                }
+                            },
+                            Reference = new() { Id = "Person" }
+                        }
                     }
                 }
             };

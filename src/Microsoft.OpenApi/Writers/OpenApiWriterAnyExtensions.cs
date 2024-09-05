@@ -46,18 +46,17 @@ namespace Microsoft.OpenApi.Writers
         /// Write the <see cref="JsonNode"/> value.
         /// </summary>
         /// <param name="writer">The Open API writer.</param>
-        /// <param name="any">The Any value</param>
-        public static void WriteAny(this IOpenApiWriter writer, OpenApiAny any)
+        /// <param name="node">The JsonNode value</param>
+        public static void WriteAny(this IOpenApiWriter writer, JsonNode node)
         {
             Utils.CheckArgumentNull(writer);;
 
-            if (any.Node == null)
+            if (node == null)
             {
                 writer.WriteNull();
                 return;
             }
 
-            var node = any.Node;
             var element = JsonDocument.Parse(node.ToJsonString()).RootElement;
             switch (element.ValueKind)
             {
@@ -90,7 +89,7 @@ namespace Microsoft.OpenApi.Writers
 
             foreach (var item in array)
             {
-                writer.WriteAny(new OpenApiAny(item));
+                writer.WriteAny(item);
             }
 
             writer.WriteEndArray();
@@ -103,7 +102,7 @@ namespace Microsoft.OpenApi.Writers
             foreach (var item in entity)
             {
                 writer.WritePropertyName(item.Key);
-                writer.WriteAny(new OpenApiAny(item.Value));
+                writer.WriteAny(item.Value);
             }
 
             writer.WriteEndObject();

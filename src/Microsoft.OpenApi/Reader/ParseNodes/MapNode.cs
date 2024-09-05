@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
@@ -77,40 +76,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                 });
 
             return nodes.ToDictionary(k => k.key, v => v.value);
-        }
-
-        public override Dictionary<string, JsonSchema> CreateJsonSchemaMap(
-            ReferenceType referenceType,
-            Func<MapNode, OpenApiDocument, JsonSchema> map,
-            OpenApiSpecVersion version,
-            OpenApiDocument hostDocument = null)
-        {
-            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(JsonSchema).Name}", Context);
-
-            var nodes = jsonMap.Select(
-                n =>
-                {
-                    var key = n.Key;
-                    (string key, JsonSchema value) entry;
-                    try
-                    {
-                        Context.StartObject(key);
-                        entry = (key,
-                            value: map(new MapNode(Context, (JsonObject)n.Value), hostDocument)
-                        );
-                        if (entry.value == null)
-                        {
-                            return default;  // Body Parameters shouldn't be converted to Parameters
-                        }
-                    }
-                    finally
-                    {
-                        Context.EndObject();
-                    }
-                    return entry;
-                }
-                );
-            return nodes.Where(n => n != default).ToDictionary(k => k.key, v => v.value);
         }
 
         public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
@@ -206,9 +171,9 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// Create an <see cref="OpenApiAny"/>
         /// </summary>
         /// <returns>The created Json object.</returns>
-        public override OpenApiAny CreateAny()
+        public override JsonNode CreateAny()
         {
-            return new OpenApiAny(_node);
+            return _node;
         }
     }
 }

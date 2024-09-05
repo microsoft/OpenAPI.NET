@@ -4,7 +4,6 @@
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
@@ -24,7 +23,10 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new()
                 {
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 }
             }
         };
@@ -38,7 +40,10 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new()
                 {
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                    Schema = new()
+                    {
+                        Type = "string"
+                    }
                 }
             }
         };
@@ -87,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedRequestBody.SerializeAsV3WithoutReference(writer);
+            ReferencedRequestBody.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert

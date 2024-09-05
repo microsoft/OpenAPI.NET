@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
         }
 
-        public override OpenApiAny CreateAny()
+        public override JsonNode CreateAny()
         {
             throw new NotImplementedException();
         }

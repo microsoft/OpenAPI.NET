@@ -1,4 +1,4 @@
-// ------------------------------------------------------------
+﻿// ------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
@@ -44,9 +44,9 @@ public class OpenApiEnumFlagsExtension : IOpenApiExtension
     /// <param name="source">The source element to parse.</param>
     /// <returns>The <see cref="OpenApiEnumFlagsExtension"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
-    public static OpenApiEnumFlagsExtension Parse(OpenApiAny source)
+    public static OpenApiEnumFlagsExtension Parse(JsonNode source)
     {
-        if (source.Node is not JsonObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
+        if (source is not JsonObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
         var extension = new OpenApiEnumFlagsExtension();
         if (rawObject.TryGetPropertyValue(nameof(IsFlags).ToFirstCharacterLowerCase(), out var flagsValue) && flagsValue is JsonNode isFlags)
         {

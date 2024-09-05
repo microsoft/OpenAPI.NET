@@ -3,8 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Json.Schema;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -18,12 +17,12 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible
     {
-        private JsonSchema? _schema;
+        private OpenApiSchema? _schema;
 
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual JsonSchema? Schema
+        public virtual OpenApiSchema? Schema
         {
             get => _schema;
             set => _schema = value;
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         /// Example of the media type.
         /// The example object SHOULD be in the correct format as specified by the media type.
         /// </summary>
-        public OpenApiAny? Example { get; set; }
+        public JsonNode? Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.
@@ -64,7 +63,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType? mediaType)
         {
-            Schema = mediaType?.Schema != null ? JsonNodeCloneHelper.CloneJsonSchema(mediaType.Schema) : null;
+            _schema = mediaType?.Schema != null ? new(mediaType.Schema) : null;
             Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
@@ -98,7 +97,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteJsonSchema(s, version));
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));

@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static OpenApiAny LoadAny(ParseNode node, OpenApiDocument hostDocument = null)
         {
-            return node.CreateAny();
+            return new OpenApiAny(node.CreateAny());
         }
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
             else
             {
-                return node.CreateAny();
+                return new OpenApiAny(node.CreateAny());
             }
         }
 

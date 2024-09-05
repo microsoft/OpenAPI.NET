@@ -55,11 +55,11 @@
             "schema": {
               "type": "array",
               "items": {
+                "type": "object",
                 "required": [
                   "id",
                   "name"
                 ],
-                "type": "object",
                 "properties": {
                   "id": {
                     "type": "integer",
@@ -78,11 +78,11 @@
           "4XX": {
             "description": "unexpected client error",
             "schema": {
+              "type": "object",
               "required": [
                 "code",
                 "message"
               ],
-              "type": "object",
               "properties": {
                 "code": {
                   "type": "integer",
@@ -97,11 +97,11 @@
           "5XX": {
             "description": "unexpected server error",
             "schema": {
+              "type": "object",
               "required": [
                 "code",
                 "message"
               ],
-              "type": "object",
               "properties": {
                 "code": {
                   "type": "integer",
@@ -132,10 +132,10 @@
             "description": "Pet to add to the store",
             "required": true,
             "schema": {
+              "type": "object",
               "required": [
                 "name"
               ],
-              "type": "object",
               "properties": {
                 "id": {
                   "type": "integer",
@@ -155,11 +155,11 @@
           "200": {
             "description": "pet response",
             "schema": {
+              "type": "object",
               "required": [
                 "id",
                 "name"
               ],
-              "type": "object",
               "properties": {
                 "id": {
                   "type": "integer",
@@ -177,11 +177,11 @@
           "4XX": {
             "description": "unexpected client error",
             "schema": {
+              "type": "object",
               "required": [
                 "code",
                 "message"
               ],
-              "type": "object",
               "properties": {
                 "code": {
                   "type": "integer",
@@ -196,11 +196,11 @@
           "5XX": {
             "description": "unexpected server error",
             "schema": {
+              "type": "object",
               "required": [
                 "code",
                 "message"
               ],
-              "type": "object",
               "properties": {
                 "code": {
                   "type": "integer",
@@ -238,11 +238,11 @@
           "200": {
             "description": "pet response",
             "schema": {
+              "type": "object",
               "required": [
                 "id",
                 "name"
               ],
-              "type": "object",
               "properties": {
                 "id": {
                   "type": "integer",
@@ -260,11 +260,11 @@
           "4XX": {
             "description": "unexpected client error",
             "schema": {
+              "type": "object",
               "required": [
                 "code",
                 "message"
               ],
-              "type": "object",
               "properties": {
                 "code": {
                   "type": "integer",
@@ -279,11 +279,11 @@
           "5XX": {
             "description": "unexpected server error",
             "schema": {
+              "type": "object",
               "required": [
                 "code",
                 "message"
               ],
-              "type": "object",
               "properties": {
                 "code": {
                   "type": "integer",
@@ -320,11 +320,11 @@
           "4XX": {
             "description": "unexpected client error",
             "schema": {
+              "type": "object",
               "required": [
                 "code",
                 "message"
               ],
-              "type": "object",
               "properties": {
                 "code": {
                   "type": "integer",
@@ -339,11 +339,11 @@
           "5XX": {
             "description": "unexpected server error",
             "schema": {
+              "type": "object",
               "required": [
                 "code",
                 "message"
               ],
-              "type": "object",
               "properties": {
                 "code": {
                   "type": "integer",
@@ -361,11 +361,11 @@
   },
   "definitions": {
     "pet": {
+      "type": "object",
       "required": [
         "id",
         "name"
       ],
-      "type": "object",
       "properties": {
         "id": {
           "type": "integer",
@@ -380,10 +380,10 @@
       }
     },
     "newPet": {
+      "type": "object",
       "required": [
         "name"
       ],
-      "type": "object",
       "properties": {
         "id": {
           "type": "integer",
@@ -398,11 +398,11 @@
       }
     },
     "errorModel": {
+      "type": "object",
       "required": [
         "code",
         "message"
       ],
-      "type": "object",
       "properties": {
         "code": {
           "type": "integer",

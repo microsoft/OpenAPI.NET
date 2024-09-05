@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Json.Schema;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -94,13 +94,13 @@ namespace Microsoft.OpenApi.Models.References
         public override bool AllowReserved { get => Target.AllowReserved; set => Target.AllowReserved = value; }
 
         /// <inheritdoc/>
-        public override JsonSchema Schema { get => Target.Schema; set => Target.Schema = value; }
+        public override OpenApiSchema Schema { get => Target.Schema; set => Target.Schema = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }
 
         /// <inheritdoc/>
-        public override OpenApiAny Example { get => Target.Example; set => Target.Example = value; }
+        public override JsonNode Example { get => Target.Example; set => Target.Example = value; }
 
         /// <inheritdoc/>
         public override ParameterLocation? In { get => Target.In; set => Target.In = value; }
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
             }
         }
 
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
             }
         }
 
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV2WithoutReference(writer));
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV2(writer));
             }
         }
 

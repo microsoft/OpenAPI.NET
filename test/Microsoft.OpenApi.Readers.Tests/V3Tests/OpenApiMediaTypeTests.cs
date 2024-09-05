@@ -3,7 +3,6 @@
 
 using System.IO;
 using FluentAssertions;
-using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -31,10 +30,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             mediaType.Should().BeEquivalentTo(
                 new OpenApiMediaType
                 {
-                    Example = new OpenApiAny(5),
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")
+                    Example = 5,
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float"
+                    }
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(m => m.Example.Node.Parent)
+                .Excluding(m => m.Example.Parent)
                 );
         }
 
@@ -52,17 +55,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["example1"] = new()
                         {
-                            Value = new OpenApiAny(5)
+                            Value = 5
                         },
                         ["example2"] = new()
                         {
-                            Value = new OpenApiAny(7.5)
+                            Value = 7.5
                         }
                     },
-                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float"
+                    }
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(m => m.Examples["example1"].Value.Node.Parent)
-                .Excluding(m => m.Examples["example2"].Value.Node.Parent));
+                .Excluding(m => m.Examples["example1"].Value.Parent)
+                .Excluding(m => m.Examples["example2"].Value.Parent));
         }
     }
 }

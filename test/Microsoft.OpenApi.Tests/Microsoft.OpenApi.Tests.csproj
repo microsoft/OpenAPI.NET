@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -40,6 +40,10 @@
       
     <None Update="Models\References\OpenApiCallbackReferenceTests.SerializeReferencedCallbackAsV3JsonWorks_produceTerseOutput=False.verified.txt">
       <DependentUpon>OpenApiCallbackReferenceTests.cs</DependentUpon>
+    </None>
+      
+    <None Update="Models\Samples\docWithReusableWebhooks.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
       
     <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />

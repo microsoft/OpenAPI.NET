@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, SerializeAsV3WithoutReference);
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
             }
         }
         
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, SerializeAsV31WithoutReference);
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
             }
         }
 
@@ -132,16 +132,16 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, SerializeAsV2WithoutReference);
+                SerializeInternal(writer, (writer, element) => element.SerializeAsV2(writer));
             }
         }
 
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter> action)
+            Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             Utils.CheckArgumentNull(writer);;
-            action(writer);
+            action(writer, Target);
         }
     }
 }

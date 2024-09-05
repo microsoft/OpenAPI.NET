@@ -1,12 +1,9 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Json.Schema;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -20,7 +17,6 @@ namespace Microsoft.OpenApi.Reader.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static JsonSchemaBuilder _parameterJsonSchemaBuilder;
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new()
             {
@@ -49,74 +45,52 @@ namespace Microsoft.OpenApi.Reader.V2
                     (o, n, t) => o.AllowEmptyValue = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "type", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue()));
-                    }
+                    "type",
+                    (o, n, t) => GetOrCreateSchema(o).Type = n.GetScalarValue()
                 },
                 {
-                    "items", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Items(LoadSchema(n, t));
-                    }
+                    "items",
+                    (o, n, t) => GetOrCreateSchema(o).Items = LoadSchema(n)
                 },
                 {
                     "collectionFormat",
                     (o, n, t) => LoadStyle(o, n.GetScalarValue())
                 },
                 {
-                    "format", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Format(n.GetScalarValue());
-                    }
+                    "format",
+                    (o, n, t) => GetOrCreateSchema(o).Format = n.GetScalarValue()
                 },
                 {
-                    "minimum", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
-                    }
+                    "minimum",
+                    (o, n, t) => GetOrCreateSchema(o).Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
                 },
                 {
-                    "maximum", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
-                    }
+                    "maximum",
+                    (o, n, t) => GetOrCreateSchema(o).Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
                 },
                 {
-                    "maxLength", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
-                    }
+                    "maxLength",
+                    (o, n, t) => GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
                 },
                 {
-                    "minLength", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
-                    }
+                    "minLength",
+                    (o, n, t) => GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
                 },
                 {
-                    "readOnly", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().ReadOnly(bool.Parse(n.GetScalarValue()));
-                    }
+                    "readOnly",
+                    (o, n, t) => GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "default", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Default(n.CreateAny().Node);
-                    }
+                    "default",
+                    (o, n, t) => GetOrCreateSchema(o).Default = n.CreateAny()
                 },
                 {
-                    "pattern", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Pattern(n.GetScalarValue());
-                    }
+                    "pattern",
+                    (o, n, t) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
                 },
                 {
-                    "enum", (o, n, t) =>
-                    {
-                        o.Schema = GetOrCreateParameterSchemaBuilder().Enum(n.CreateListOfAny()).Build();
-                    }
+                    "enum",
+                    (o, n, t) => GetOrCreateSchema(o).Enum = n.CreateListOfAny()
                 },
                 {
                     "schema",
@@ -169,11 +143,10 @@ namespace Microsoft.OpenApi.Reader.V2
             var examples = LoadExamplesExtension(node);
             node.Context.SetTempStorage(TempStorageKeys.Examples, examples, parameter);
         }
-        
-        private static JsonSchemaBuilder GetOrCreateParameterSchemaBuilder()
+
+        private static OpenApiSchema GetOrCreateSchema(OpenApiParameter p)
         {
-            _parameterJsonSchemaBuilder ??= new JsonSchemaBuilder();
-            return _parameterJsonSchemaBuilder;
+            return p.Schema ??= new();
         }
 
         private static void ProcessIn(OpenApiParameter o, ParseNode n, OpenApiDocument hostDocument = null)
@@ -212,7 +185,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return LoadParameter(node, false, hostDocument);
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
+        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument = null)
         {
             // Reset the local variables every time this method is called.
             node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
@@ -228,11 +201,10 @@ namespace Microsoft.OpenApi.Reader.V2
             }
 
             var parameter = new OpenApiParameter();
-            _parameterJsonSchemaBuilder = null;
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, doc: hostDocument);
 
-            var schema = node.Context.GetFromTempStorage<JsonSchema>("schema");
+            var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
             if (schema != null)
             {
                 parameter.Schema = schema;

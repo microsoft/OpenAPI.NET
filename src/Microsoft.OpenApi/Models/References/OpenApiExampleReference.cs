@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -91,7 +92,7 @@ namespace Microsoft.OpenApi.Models.References
         public override string ExternalValue { get => Target.ExternalValue; set => Target.ExternalValue = value; }
 
         /// <inheritdoc/>
-        public override OpenApiAny Value { get => Target.Value; set => Target.Value = value; }
+        public override JsonNode Value { get => Target.Value; set => Target.Value = value; }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
@@ -103,7 +104,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, (writer, referenceElement) => referenceElement.SerializeAsV3WithoutReference(writer));
+                SerializeInternal(writer, (writer, referenceElement) => referenceElement.SerializeAsV3(writer));
             }
         }
 
@@ -117,7 +118,7 @@ namespace Microsoft.OpenApi.Models.References
             }
             else
             {
-                SerializeInternal(writer, (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));
+                SerializeInternal(writer, (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
             }
         }
 

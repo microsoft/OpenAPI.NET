@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Extension parsers
         /// </summary>
-        public Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = 
+        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = 
             new();
 
         internal RootNode RootNode { get; set; }

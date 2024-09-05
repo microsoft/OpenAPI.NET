@@ -1,0 +1,45 @@
+openapi: 3.1.0
+info:
+  title: ReferenceById
+  version: 1.0.0
+paths:
+  /resource:
+    get:
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            $ref: 'https://example.com/schemas/id.json'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'https://example.com/schemas/resource.json'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'https://example.com/schemas/resource.json'
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Resource:
+      $id: 'https://example.com/schemas/resource.json'
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        reference:
+          $ref: '#/components/schemas/Resource'
+    Id:
+      $id: 'https://example.com/schemas/id.json'
+      type: string

@@ -3,7 +3,8 @@
 
 using System.IO;
 using FluentAssertions;
-using Json.Schema;
+using FluentAssertions.Equivalency;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -33,13 +34,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Number)
-                                .Format("float")
-                                .Default(5)
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Default = new OpenApiAny(5).Node
+                    }
                 },
                 options => options
-                .IgnoringCyclicReferences());
+                .IgnoringCyclicReferences()
+                .Excluding(x => x.Schema.Default.Parent));
         }
 
         [Fact]
@@ -59,11 +63,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Number)
-                                .Format("float")
-                                .Enum(7, 8, 9)
-                }, options => options.IgnoringCyclicReferences());
+                    Schema = new()
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Enum =
+                        {
+                            new OpenApiAny(7).Node,
+                            new OpenApiAny(8).Node,
+                            new OpenApiAny(9).Node
+                        }
+                    }
+                }, options => options.IgnoringCyclicReferences()
+                                     .Excluding((IMemberInfo memberInfo) =>
+                                        memberInfo.Path.EndsWith("Parent")));
         }
     }
 }
