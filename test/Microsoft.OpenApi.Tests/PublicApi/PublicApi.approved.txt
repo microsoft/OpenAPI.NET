@@ -437,7 +437,9 @@ namespace Microsoft.OpenApi.Models
         public const string Name = "name";
         public const string Namespace = "namespace";
         public const string Not = "not";
+        public const string Null = "null";
         public const string Nullable = "nullable";
+        public const string NullableExtension = "x-nullable";
         public const string OneOf = "oneOf";
         public const string OpenApi = "openapi";
         public const string OpenIdConnectUrl = "openIdConnectUrl";
