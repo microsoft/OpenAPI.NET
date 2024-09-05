@@ -483,14 +483,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
-            if (Type?.GetType() == typeof(string))
-            {
-                writer.WriteProperty(OpenApiConstants.Type, (string)Type);
-            }
-            else
-            {
-                writer.WriteOptionalCollection(OpenApiConstants.Type, (string[])Type, (w, s) => w.WriteRaw(s));
-            }
+            SerializeTypeProperty(Type, writer, version);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV3(w));
@@ -533,7 +526,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // nullable
-            writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
+            if (version is OpenApiSpecVersion.OpenApi3_0)
+            {
+                writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
+            }
 
             // discriminator
             writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.SerializeAsV3(w));
@@ -557,6 +553,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // extensions
+            if (Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+            {
+                Extensions.Remove(OpenApiConstants.NullableExtension);
+            }
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
@@ -670,7 +670,14 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // type
-            writer.WriteProperty(OpenApiConstants.Type, (string)Type);
+            if (Type is string[] array)
+            {
+                DowncastTypeArrayToV2OrV3(array, writer, OpenApiSpecVersion.OpenApi2_0);
+            }
+            else 
+            {
+                writer.WriteProperty(OpenApiConstants.Type, (string)Type);
+            }
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -799,6 +806,35 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
+        private void SerializeTypeProperty(object type, IOpenApiWriter writer, OpenApiSpecVersion version)
+        {
+            if (type?.GetType() == typeof(string))
+            {
+                // check whether nullable is true for upcasting purposes
+                if (Nullable || Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+                {
+                    // create a new array and insert the type and "null" as values
+                    Type = new[] { (string)Type, OpenApiConstants.Null };
+                }
+                else
+                {
+                    writer.WriteProperty(OpenApiConstants.Type, (string)Type);
+                }
+            }
+            if (Type is string[] array)
+            {
+                // type
+                if (version is OpenApiSpecVersion.OpenApi3_0)
+                {
+                    DowncastTypeArrayToV2OrV3(array, writer, OpenApiSpecVersion.OpenApi3_0);
+                }
+                else
+                {
+                    writer.WriteOptionalCollection(OpenApiConstants.Type, (string[])Type, (w, s) => w.WriteRaw(s));
+                }
+            }
+        }
+
         private object DeepCloneType(object type)
         {
             if (type == null)
@@ -821,6 +857,39 @@ namespace Microsoft.OpenApi.Models
             }
 
             return null;
+        }
+
+        private void DowncastTypeArrayToV2OrV3(string[] array, IOpenApiWriter writer, OpenApiSpecVersion version)
+        {
+            /* If the array has one non-null value, emit Type as string
+            * If the array has one null value, emit x-nullable as true
+            * If the array has two values, one null and one non-null, emit Type as string and x-nullable as true
+            * If the array has more than two values or two non-null values, do not emit type
+            * */
+
+            var nullableProp = version.Equals(OpenApiSpecVersion.OpenApi2_0) 
+                ? OpenApiConstants.NullableExtension
+                : OpenApiConstants.Nullable;
+
+            if (array.Length is 1)
+            {
+                var value = array[0];
+                if (value is OpenApiConstants.Null)
+                {
+                    writer.WriteProperty(nullableProp, true);
+                }
+                else
+                {
+                    writer.WriteProperty(OpenApiConstants.Type, value);
+                }
+            }
+            else if (array.Length is 2 && array.Contains(OpenApiConstants.Null))
+            {
+                // Find the non-null value and write it out
+                var nonNullValue = array.First(v => v != OpenApiConstants.Null);
+                writer.WriteProperty(OpenApiConstants.Type, nonNullValue);
+                writer.WriteProperty(nullableProp, true);
+            }
         }
     }
 }
