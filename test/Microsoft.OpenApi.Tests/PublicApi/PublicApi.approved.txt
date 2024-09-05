@@ -537,9 +537,9 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; set; }
         public string HashCode { get; }
-        public Microsoft.OpenApi.Models.OpenApiInfo? Info { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiInfo Info { get; set; }
         public string? JsonSchemaDialect { get; set; }
-        public Microsoft.OpenApi.Models.OpenApiPaths? Paths { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiPaths Paths { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSecurityRequirement>? SecurityRequirements { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer>? Servers { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiTag>? Tags { get; set; }

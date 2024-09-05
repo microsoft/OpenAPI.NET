@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
         /// </summary>
-        public OpenApiInfo? Info { get; set; }
+        public OpenApiInfo Info { get; set; }
 
         /// <summary>
         /// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
-        public OpenApiPaths? Paths { get; set; }
+        public OpenApiPaths Paths { get; set; }
 
         /// <summary>
         /// The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement.
@@ -100,6 +100,8 @@ namespace Microsoft.OpenApi.Models
         {
             Workspace = new OpenApiWorkspace();
             BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
+            Info = new OpenApiInfo();
+            Paths = new OpenApiPaths();
         }
                 
         /// <summary>
@@ -108,10 +110,10 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDocument(OpenApiDocument? document)
         {
             Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
-            Info = document?.Info != null ? new(document?.Info) : null;
+            Info = document?.Info != null ? new(document?.Info) : new OpenApiInfo();
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
-            Paths = document?.Paths != null ? new(document?.Paths) : null;
+            Paths = document?.Paths != null ? new(document?.Paths) : new OpenApiPaths();
             Webhooks = document?.Webhooks != null ? new Dictionary<string, OpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
