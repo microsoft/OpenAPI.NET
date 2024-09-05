@@ -1,13 +1,15 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
@@ -288,6 +290,84 @@ examples:
             clone.Enum.Should().NotBeEquivalentTo(schema.Enum);
             clone.Examples.Should().NotBeEquivalentTo(schema.Examples);
             clone.Default.Should().NotBeEquivalentTo(schema.Default);
+        }
+
+        [Fact]
+        public void SerializeV31SchemaWithMultipleTypesAsV3Works()
+        {
+            // Arrange
+            var expected = @"type: string
+nullable: true";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
+
+            // Act
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
+
+            var writer = new StringWriter();
+            schema.SerializeAsV3(new OpenApiYamlWriter(writer));
+            var schema1String = writer.ToString();
+
+            schema1String.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void SerializeV31SchemaWithMultipleTypesAsV2Works()
+        {
+            // Arrange
+            var expected = @"type: string
+x-nullable: true";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
+
+            // Act
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
+
+            var writer = new StringWriter();
+            schema.SerializeAsV2(new OpenApiYamlWriter(writer));
+            var schema1String = writer.ToString();
+
+            schema1String.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void SerializeV3SchemaWithNullableAsV31Works()
+        {
+            // Arrange
+            var expected = @"type:
+  - string
+  - null";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
+
+            // Act
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, out _);
+
+            var writer = new StringWriter();
+            schema.SerializeAsV31(new OpenApiYamlWriter(writer));
+            var schemaString = writer.ToString();
+
+            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void SerializeV2SchemaWithNullableExtensionAsV31Works()
+        {
+            // Arrange
+            var expected = @"type:
+  - string
+  - null";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
+
+            // Act
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, out _);
+
+            var writer = new StringWriter();
+            schema.SerializeAsV31(new OpenApiYamlWriter(writer));
+            var schemaString = writer.ToString();
+
+            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }
