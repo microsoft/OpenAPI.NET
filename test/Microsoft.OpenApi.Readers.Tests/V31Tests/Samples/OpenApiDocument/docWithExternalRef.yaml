@@ -1,0 +1,21 @@
+openapi: 3.1.0
+info:
+  title: ReferenceById
+  version: 1.0.0
+paths:
+  /resource:
+    get:
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            $ref: 'https://example.com/schemas/user.json'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './externalResource.yaml#/components/schemas/todo'
+components: {}
