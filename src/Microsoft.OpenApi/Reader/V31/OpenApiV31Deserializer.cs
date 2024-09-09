@@ -158,12 +158,9 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var isExternalResource = !refSegments.First().StartsWith("#");
             string externalResource = null;
-            if (isExternalResource)
+            if (isExternalResource && pointer.Contains('#'))
             {
-                if (pointer.Contains('#'))
-                {
-                    externalResource = $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}";
-                }
+                externalResource = $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}";
             }
 
             return (refId, externalResource);
