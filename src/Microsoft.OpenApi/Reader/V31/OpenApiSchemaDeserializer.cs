@@ -182,7 +182,14 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "nullable",
-                (o, n, _) => o.Nullable = bool.Parse(n.GetScalarValue())
+                (o, n, _) => 
+                {
+                    var nullable = bool.Parse(n.GetScalarValue());
+                    if (nullable) // if nullable, convert type into an array of type and null
+                    {
+                        o.Type = new string[]{o.Type.ToString(), OpenApiConstants.Null};
+                    }
+                }
             },
             {
                 "discriminator",
@@ -240,6 +247,13 @@ namespace Microsoft.OpenApi.Reader.V31
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields);
+            }
+
+            if (schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+            {
+                var type = schema.Type;                
+                schema.Type = new string[] {(string)type, OpenApiConstants.Null};
+                schema.Extensions.Remove(OpenApiConstants.NullableExtension);
             }
 
             return schema;

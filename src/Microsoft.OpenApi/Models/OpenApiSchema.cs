@@ -553,10 +553,6 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // extensions
-            if (Extensions.ContainsKey(OpenApiConstants.NullableExtension))
-            {
-                Extensions.Remove(OpenApiConstants.NullableExtension);
-            }
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
