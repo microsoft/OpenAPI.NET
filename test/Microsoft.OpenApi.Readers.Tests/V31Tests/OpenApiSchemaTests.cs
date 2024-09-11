@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -356,7 +356,8 @@ x-nullable: true";
             // Arrange
             var expected = @"type:
   - string
-  - null";
+  - null
+x-nullable: true";
 
             var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
 
@@ -368,6 +369,21 @@ x-nullable: true";
             var schemaString = writer.ToString();
 
             schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Theory]
+        [InlineData("schemaWithNullable.yaml")]
+        [InlineData("schemaWithNullableExtension.yaml")]
+        public void LoadSchemaWithNullableExtensionAsV31Works(string filePath)
+        {
+            // Arrange
+            var path = Path.Combine(SampleFolderPath, filePath);
+
+            // Act
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
+
+            // Assert
+            schema.Type.Should().BeEquivalentTo(new string[] { "string", "null" });
         }
     }
 }
