@@ -470,8 +470,8 @@ namespace Microsoft.OpenApi.Tests.Services
         public static TheoryData<string, string[], string, string> SupportsTrailingSlashesInPathData => new TheoryData<string, string[], string, string>
         {
             // Path, children up to second to leaf, last expected leaf node name, expected leaf node path
-            { "/cars/{car-id}/build/", ["cars", "{car-id}"], "build/", @"\cars\{car-id}\build/" },
-            { "/cars/", [], "cars/", @"\cars/" },
+            { "/cars/{car-id}/build/", ["cars", "{car-id}"], @"build\", @"\cars\{car-id}\build\" },
+            { "/cars/", [], @"cars\", @"\cars\" },
         };
 
         [Theory]

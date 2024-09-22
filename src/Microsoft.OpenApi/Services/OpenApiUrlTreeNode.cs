@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Services
                 // Remove the last element, which is empty, and append the trailing slash to the new last element
                 // This is to support URLs with trailing slashes
                 Array.Resize(ref segments, segments.Length - 1);
-                segments[segments.Length - 1] += "/";
+                segments[segments.Length - 1] += @"\";
             }
 
             return Attach(segments: segments,
