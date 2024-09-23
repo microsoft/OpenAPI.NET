@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
-        private Dictionary<Uri, OpenApiDocument> _documents = new();
+        private readonly Dictionary<Uri, OpenApiDocument> _documents = new();
         private readonly Dictionary<string, Uri> _documentsIdRegistry = new();
         private readonly Dictionary<Uri, Stream> _artifactsRegistry = new();        
         private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new();
