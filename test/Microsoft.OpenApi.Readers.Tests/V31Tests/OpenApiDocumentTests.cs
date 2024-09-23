@@ -500,7 +500,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExternalRef.yaml"), settings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefByJsonPointer.yaml"), settings);
             var responseSchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             // Assert
@@ -521,10 +521,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExternalRef.yaml"), settings);
-            var externalDoc = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalResource.yaml"), settings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefById.yaml"), settings);
+            var doc2 = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "externalResource.yaml")).OpenApiDocument;
 
             var requestBodySchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Parameters.First().Schema;
+            result.OpenApiDocument.Workspace.RegisterComponents(doc2);
 
             // Assert
             requestBodySchema.Properties.Count.Should().Be(2); // reference has been resolved
