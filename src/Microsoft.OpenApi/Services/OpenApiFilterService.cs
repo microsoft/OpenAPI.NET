@@ -112,7 +112,10 @@ namespace Microsoft.OpenApi.Services
                     {
                         foreach (var parameter in result.Parameters)
                         {
-                            pathItem.Parameters.Add(parameter);
+                            if (!pathItem.Parameters.Contains(parameter))
+                            {
+                                pathItem.Parameters.Add(parameter);
+                            }                          
                         }
                     }
                 }
