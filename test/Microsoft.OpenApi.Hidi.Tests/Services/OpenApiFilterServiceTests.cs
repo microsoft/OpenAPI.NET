@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.Extensions.Logging;
@@ -103,6 +103,57 @@ namespace Microsoft.OpenApi.Hidi.Tests
             Assert.True(predicate("/foo", OperationType.Get, null));
             Assert.True(predicate("/foo", OperationType.Post, null));
             Assert.False(predicate("/foo", OperationType.Patch, null));
+        }
+
+        [Fact]
+        public void CreateFilteredDocumentUsingPredicateFromRequestUrl()
+        {
+            // Arrange
+            var openApiDocument = new OpenApiDocument
+            {
+                Info = new() { Title = "Test", Version = "1.0" },
+                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Paths = new()
+                {
+                    ["/test/{id}"] = new()
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            { OperationType.Get, new() },
+                            { OperationType.Patch, new() }
+                        },
+                        Parameters = new List<OpenApiParameter>
+                        {
+                            new()
+                            {
+                                Name = "id",
+                                In = ParameterLocation.Path,
+                                Required = true,
+                                Schema = new()
+                                {
+                                    Type = "string"
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            };
+
+            var requestUrls = new Dictionary<string, List<string>>
+            {
+                    {"/test/{id}", new List<string> {"GET","PATCH"}}
+            };
+
+            // Act
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: openApiDocument);
+            var subsetDoc = OpenApiFilterService.CreateFilteredDocument(openApiDocument, predicate);
+
+            // Assert that there's only 1 parameter in the subset document
+            Assert.NotNull(subsetDoc);
+            Assert.NotEmpty(subsetDoc.Paths);
+            Assert.Single(subsetDoc.Paths.First().Value.Parameters);
         }
 
         [Fact]
