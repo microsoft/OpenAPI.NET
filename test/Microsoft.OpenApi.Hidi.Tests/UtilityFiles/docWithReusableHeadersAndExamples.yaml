@@ -1,0 +1,81 @@
+openapi: 3.0.1
+info:
+  title: Example with Multiple Operations and Local $refs
+  version: 1.0.0
+servers:
+- url: https://api.github.com
+paths:
+  /items:
+    get:
+      operationId: getItems
+      summary: Get a list of items
+      responses:
+        '200':
+          description: A list of items
+          headers:
+            x-custom-header:
+               $ref: '#/components/headers/CustomHeader'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                ItemExample:
+                  $ref: '#/components/examples/ItemExample'
+    post:
+      operationId: createItem
+      summary: Create a new item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              example:
+                $ref: '#/components/examples/ItemExample'
+      responses:
+        '201':
+          description: Item created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+              example:
+                $ref: '#/components/examples/ItemExample'
+components:
+  schemas:
+    pet:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+           type: string
+  headers:
+    CustomHeader:
+      description: Custom header for authentication
+      required: true
+      schema:
+        type: string
+  examples:
+    ItemExample:
+      summary: Example of a new item to be created
+      value:
+        name: "New Item"
+

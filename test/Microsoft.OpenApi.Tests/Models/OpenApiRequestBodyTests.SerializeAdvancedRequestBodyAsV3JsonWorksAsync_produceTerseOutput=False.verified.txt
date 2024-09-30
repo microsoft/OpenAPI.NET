@@ -1,4 +1,4 @@
-{
+﻿{
   "description": "description",
   "content": {
     "application/json": {

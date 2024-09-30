@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -43,6 +43,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         ["property1"] = new()
                         {
                             Type = "string",
+                            Annotations = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     }
                 },
@@ -61,8 +62,10 @@ namespace Microsoft.OpenApi.Tests.Models
                         ["property1"] = new()
                         {
                             Type = "string",
+                            Annotations = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     },
+                    Annotations = new Dictionary<string, object> { { "key1", "value" } },
                     Reference = new()
                     {
                         Type = ReferenceType.Schema,
@@ -105,6 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelReferencingComponents
         };
 
@@ -114,6 +118,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponentsWithOtherProperties
         };
 
@@ -123,6 +128,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponents
         };
 
@@ -499,6 +505,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponentsWithReference
         };
 
@@ -874,6 +881,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1031,13 +1039,15 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 }
-            }
+            },
+            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Components = AdvancedComponents
         };
 
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        public async Task SerializeAdvancedDocumentAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1054,7 +1064,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentWithReferenceAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentWithReferenceAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1071,7 +1081,24 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentAsV2JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentWithServerVariableAsV2JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
+
+            // Act
+            AdvancedDocumentWithServerVariable.SerializeAsV2(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeAdvancedDocumentAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1088,7 +1115,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeDuplicateExtensionsAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeDuplicateExtensionsAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1105,7 +1132,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeDuplicateExtensionsAsV2JsonWorks(bool produceTerseOutput)
+        public async Task SerializeDuplicateExtensionsAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1122,7 +1149,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentWithReferenceAsV2JsonWorks(bool produceTerseOutput)
+        public async Task SerializeAdvancedDocumentWithReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1525,6 +1552,61 @@ paths:
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
+
+        [Fact]
+        public void OpenApiDocumentCopyConstructorWithAnnotationsSucceeds()
+        {
+            var baseDocument = new OpenApiDocument
+            {
+                Annotations = new Dictionary<string, object>
+                {
+                    ["key1"] = "value1",
+                    ["key2"] = 2
+                }
+            };
+
+            var actualDocument = new OpenApiDocument(baseDocument);
+
+            Assert.Equal(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
+
+            baseDocument.Annotations["key1"] = "value2";
+
+            Assert.NotEqual(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
+        }
+
+        [Fact]
+        public void SerializeExamplesDoesNotThrowNullReferenceException()
+        {
+            OpenApiDocument doc = new OpenApiDocument
+            {
+                Paths = new OpenApiPaths
+                {
+                    ["test"] = new OpenApiPathItem()
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>()
+                        {
+                            [OperationType.Post] = new OpenApiOperation
+                            {
+                                RequestBody = new OpenApiRequestBody()
+                                {
+                                    Content =
+                                    {
+                                        ["application/json"] = new OpenApiMediaType()
+                                        {
+                                            Examples = null,
+                                        },
+                                    }
+                                }
+                            },
+                        }
+                    },
+                }
+            };
+
+            OpenApiJsonWriter apiWriter = new OpenApiJsonWriter(new StringWriter());
+            doc.Invoking(d => d.SerializeAsV3(apiWriter)).Should().NotThrow();
+        }
+    }    
 
         [Theory]
         [InlineData(true)]

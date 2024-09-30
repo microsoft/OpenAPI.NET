@@ -1,10 +1,12 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
+using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -187,6 +189,26 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
             Assert.Empty(ruleSet.Rules);
+        }
+
+        [Fact]
+        public void GetValidationRuleTypesReturnsAllSupportedTypes()
+        {
+            var declaredRuleTypeProperties = typeof(ValidationRuleSet).Assembly.GetTypes()
+                .Where(t => t.IsClass
+                            && t != typeof(object)
+                            && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
+                .SelectMany(t2 => t2.GetProperties(BindingFlags.Static | BindingFlags.Public))
+                .ToList();
+            
+            var resolvedRuleTypeProperties = ValidationRuleSet.GetValidationRuleTypes();
+
+            foreach (var ruleTypeProperty in resolvedRuleTypeProperties)
+            {
+                Assert.True(declaredRuleTypeProperties.Remove(ruleTypeProperty));
+            }
+
+            Assert.Empty(declaredRuleTypeProperties);
         }
     }
 }

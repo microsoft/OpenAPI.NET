@@ -1,1 +1,1 @@
-{"$ref":"#/components/links/example1"}
+﻿{"$ref":"#/components/links/example1"}

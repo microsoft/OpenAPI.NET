@@ -1,0 +1,27 @@
+﻿{
+  "value": {
+    "versions": [
+      {
+        "status": "Status1",
+        "id": "v1",
+        "links": [
+          {
+            "href": "http://example.com/1",
+            "rel": "sampleRel1"
+          }
+        ]
+      },
+      {
+        "status": "Status2",
+        "id": "v2",
+        "links": [
+          {
+            "href": "http://example.com/2",
+            "rel": "sampleRel2"
+          }
+        ]
+      }
+    ],
+    "aDate": "\"2022-12-12\""
+  }
+}

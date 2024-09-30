@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Workbench
         /// The core method of the class.
         /// Runs the parsing and serializing.
         /// </summary>
-        internal async Task ParseDocument()
+        internal async Task ParseDocumentAsync()
         {
             Stream stream = null;
             try
@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Workbench
                 if (stream != null)
                 {
                     stream.Close();
-                    stream.Dispose();
+                    await stream.DisposeAsync();
                 }
 
             }

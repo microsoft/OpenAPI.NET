@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -19,13 +19,14 @@ namespace Microsoft.OpenApi.Workbench
             DataContext = _mainModel;
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void Button_Click(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
             {
-                await _mainModel.ParseDocument();
-            }
-            catch (Exception ex)
+                await _mainModel.ParseDocumentAsync();
+            } catch (Exception ex)
             {
                 _mainModel.Errors = ex.Message;
             }

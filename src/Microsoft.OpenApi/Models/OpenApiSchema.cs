@@ -341,6 +341,9 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public virtual OpenApiReference Reference { get; set; }
 
+        /// <inheritdoc />
+        public IDictionary<string, object> Annotations { get; set; }
+
         /// <summary>
         /// Parameterless constructor
         /// </summary>
@@ -404,6 +407,7 @@ namespace Microsoft.OpenApi.Models
             Extensions = schema?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
+            Annotations = schema?.Annotations != null ? new Dictionary<string, object>(schema?.Annotations) : null;
         }
 
         /// <summary>

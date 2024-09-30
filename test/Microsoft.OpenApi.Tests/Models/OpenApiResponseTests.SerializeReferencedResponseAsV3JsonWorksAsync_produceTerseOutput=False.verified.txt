@@ -1,3 +1,3 @@
-{
+﻿{
   "$ref": "#/components/responses/example1"
 }

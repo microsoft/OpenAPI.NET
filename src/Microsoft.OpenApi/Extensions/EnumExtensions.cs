@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OpenApi.Attributes;
@@ -13,6 +15,9 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class EnumExtensions
     {
+        // Cache to store display names of enum values
+        private static readonly ConcurrentDictionary<Enum, string> DisplayNameCache = new();
+
         /// <summary>
         /// Gets an attribute on an enum field value.
         /// </summary>
@@ -21,10 +26,17 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns>
         /// The attribute of the specified type or null.
         /// </returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Fields are never trimmed for enum types.")]
         public static T GetAttributeOfType<T>(this Enum enumValue) where T : Attribute
         {
             var type = enumValue.GetType();
-            var memInfo = type.GetMember(enumValue.ToString()).First();
+            // Use GetField to get the field info for the enum value
+            var memInfo = type.GetField(enumValue.ToString(), BindingFlags.Public | BindingFlags.Static);
+
+            if (memInfo == null)
+                return null;
+
+            // Retrieve the custom attributes of type T
             var attributes = memInfo.GetCustomAttributes<T>(false);
             return attributes.FirstOrDefault();
         }
@@ -34,13 +46,20 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="enumValue">The enum value.</param>
         /// <returns>
-        /// Use <see cref="DisplayAttribute"/> if exists.
+        /// Use <see cref="DisplayAttribute"/> if it exists.
         /// Otherwise, use the standard string representation.
         /// </returns>
         public static string GetDisplayName(this Enum enumValue)
         {
-            var attribute = enumValue.GetAttributeOfType<DisplayAttribute>();
-            return attribute == null ? enumValue.ToString() : attribute.Name;
+            // Retrieve the display name from the cache if it exists
+            return DisplayNameCache.GetOrAdd(enumValue, e =>
+            {
+                // Get the DisplayAttribute
+                var attribute = e.GetAttributeOfType<DisplayAttribute>();
+
+                // Return the DisplayAttribute name if it exists, otherwise return the enum's string representation
+                return attribute == null ? e.ToString() : attribute.Name;
+            });
         }
     }
 }

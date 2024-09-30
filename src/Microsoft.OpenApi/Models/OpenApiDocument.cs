@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
     {
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
@@ -63,8 +63,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; } =
-            new List<OpenApiSecurityRequirement>();
+        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; } = new List<OpenApiSecurityRequirement>();
 
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
@@ -85,6 +84,9 @@ namespace Microsoft.OpenApi.Models
         /// The unique hash code of the generated OpenAPI document
         /// </summary>
         public string HashCode => GenerateHashValue(this);
+
+        /// <inheritdoc />
+        public IDictionary<string, object> Annotations { get; set; }
 
         /// <summary>
         /// Implements IBaseDocument
@@ -116,6 +118,7 @@ namespace Microsoft.OpenApi.Models
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
+            Annotations = document?.Annotations != null ? new Dictionary<string, object>(document.Annotations) : null;
         }
 
         /// <summary>
@@ -350,14 +353,7 @@ namespace Microsoft.OpenApi.Models
 
         private static string ParseServerUrl(OpenApiServer server)
         {
-            var parsedUrl = server.Url;
-
-            var variables = server.Variables;
-            foreach (var variable in variables.Where(static x => !string.IsNullOrEmpty(x.Value.Default)))
-            {
-                parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", variable.Value.Default);
-            }
-            return parsedUrl;
+            return server.ReplaceServerUrlVariables(new Dictionary<string, string>(0));
         }
 
         private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)

@@ -1,0 +1,3 @@
+﻿{
+  "$ref": "#/components/schemas/schemaObject1"
+}

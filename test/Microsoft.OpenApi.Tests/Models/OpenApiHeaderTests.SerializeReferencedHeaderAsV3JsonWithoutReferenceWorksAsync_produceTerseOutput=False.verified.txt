@@ -1,0 +1,7 @@
+﻿{
+  "description": "sampleHeader",
+  "schema": {
+    "type": "integer",
+    "format": "int32"
+  }
+}
