@@ -1507,8 +1507,6 @@ namespace Microsoft.OpenApi.Services
         public OpenApiWorkspace(Microsoft.OpenApi.Services.OpenApiWorkspace workspace) { }
         public OpenApiWorkspace(System.Uri baseUrl) { }
         public System.Uri BaseUrl { get; }
-        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiDocument> Documents { get; }
-        public void AddDocument(string location, Microsoft.OpenApi.Models.OpenApiDocument document) { }
         public void AddDocumentId(string key, System.Uri value) { }
         public int ComponentsCount() { }
         public bool Contains(string location) { }

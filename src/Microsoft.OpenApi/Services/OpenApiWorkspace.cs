@@ -14,21 +14,9 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
-        private readonly Dictionary<Uri, OpenApiDocument> _documents = new();
         private readonly Dictionary<string, Uri> _documentsIdRegistry = new();
         private readonly Dictionary<Uri, Stream> _artifactsRegistry = new();        
         private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new();
-
-        /// <summary>
-        /// A list of OpenApiDocuments contained in the workspace
-        /// </summary>
-        public IEnumerable<OpenApiDocument> Documents
-        {
-            get
-            {
-                return _documents.Values;
-            }
-        }
 
         /// <summary>
         /// The base location from where all relative references are resolved
@@ -106,17 +94,6 @@ namespace Microsoft.OpenApi.Services
             {
                 _documentsIdRegistry[key] = value;
             }
-        }
-
-        /// <summary>
-        /// Add an OpenApiDocument to the workspace.
-        /// </summary>
-        /// <param name="location"></param>
-        /// <param name="document"></param>
-        public void AddDocument(string location, OpenApiDocument document)
-        {
-            document.Workspace = this;
-            _documents.Add(ToLocationUrl(location), document);
         }
 
         /// <summary>
