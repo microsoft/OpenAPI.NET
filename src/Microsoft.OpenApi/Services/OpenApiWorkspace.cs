@@ -69,14 +69,7 @@ namespace Microsoft.OpenApi.Services
             // Register Schema
             foreach (var item in document.Components.Schemas)
             {
-                if (item.Value.Id != null)
-                {
-                    location = item.Value.Id;
-                }
-                else
-                {
-                    location = baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
-                }
+                location = item.Value.Id ?? baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
 
                 RegisterComponent(location, item.Value);
             }
