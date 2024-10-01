@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Reader.Services
         {
             _workspace.AddDocumentId(reference.ExternalResource, document.BaseUri);
             var version = diagnostic?.SpecificationVersion ?? OpenApiSpecVersion.OpenApi3_0;
-            _workspace.RegisterComponents(document, version);
+            _workspace.RegisterComponents(document);
             document.Workspace = _workspace;
 
             // Collect remote references by walking document

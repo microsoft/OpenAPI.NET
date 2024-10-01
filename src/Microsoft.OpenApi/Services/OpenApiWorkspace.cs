@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -53,6 +54,97 @@ namespace Microsoft.OpenApi.Services
         {
             return _IOpenApiReferenceableRegistry.Count + _artifactsRegistry.Count;
         }
+
+        /// <summary>
+        /// Registers a document's components into the workspace
+        /// </summary>
+        /// <param name="document"></param>
+        public void RegisterComponents(OpenApiDocument document)
+        {
+            if (document?.Components == null) return;
+
+            string baseUri = document.BaseUri + OpenApiConstants.ComponentsSegment;
+            string location;
+
+            // Register Schema
+            foreach (var item in document.Components.Schemas)
+            {
+                if (item.Value.Id != null)
+                {
+                    location = item.Value.Id;
+                }
+                else
+                {
+                    location = baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
+                }
+
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Parameters
+            foreach (var item in document.Components.Parameters)
+            {
+                location = baseUri + ReferenceType.Parameter.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Responses
+            foreach (var item in document.Components.Responses)
+            {
+                location = baseUri + ReferenceType.Response.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register RequestBodies
+            foreach (var item in document.Components.RequestBodies)
+            {
+                location = baseUri + ReferenceType.RequestBody.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Links
+            foreach (var item in document.Components.Links)
+            {
+                location = baseUri + ReferenceType.Link.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Callbacks
+            foreach (var item in document.Components.Callbacks)
+            {
+                location = baseUri + ReferenceType.Callback.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register PathItems
+            foreach (var item in document.Components.PathItems)
+            {
+                location = baseUri + ReferenceType.PathItem.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Examples
+            foreach (var item in document.Components.Examples)
+            {
+                location = baseUri + ReferenceType.Example.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Headers
+            foreach (var item in document.Components.Headers)
+            {
+                location = baseUri + ReferenceType.Header.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register SecuritySchemes
+            foreach (var item in document.Components.SecuritySchemes)
+            {
+                location = baseUri + ReferenceType.SecurityScheme.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+        }
+
 
         /// <summary>
         /// Registers a component in the component registry.
