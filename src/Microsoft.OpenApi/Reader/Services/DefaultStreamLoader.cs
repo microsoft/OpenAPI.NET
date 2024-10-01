@@ -56,7 +56,16 @@ namespace Microsoft.OpenApi.Reader.Services
         /// <exception cref="ArgumentException"></exception>
         public async Task<Stream> LoadAsync(Uri uri)
         {
-            var absoluteUri = new Uri(baseUrl, uri);
+            Uri absoluteUri;
+            if (baseUrl.Equals(OpenApiConstants.BaseRegistryUri))
+            {
+                // use current working directory
+                absoluteUri = new Uri(Directory.GetCurrentDirectory() + uri);
+            }
+            else
+            {
+                absoluteUri = new Uri(baseUrl, uri);
+            }
 
             switch (absoluteUri.Scheme)
             {
