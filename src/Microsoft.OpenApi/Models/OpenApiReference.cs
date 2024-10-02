@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     return Id;
                 }
-                if (Id.StartsWith("https"))
+                if (Id.StartsWith("http"))
                 {
                     return Id;
                 }
