@@ -185,9 +185,17 @@ namespace Microsoft.OpenApi.Reader.V31
                 (o, n, _) => 
                 {
                     var nullable = bool.Parse(n.GetScalarValue());
-                    if (nullable) // if nullable, convert type into an array of type and null
+                    if (nullable) // if nullable, convert type into an array of type(s) and null
                     {
-                        o.Type = new string[]{o.Type.ToString(), OpenApiConstants.Null};
+                        if (o.Type is string[] typeArray)
+                        {
+                            var typeList = new List<string>(typeArray) { OpenApiConstants.Null };
+                            o.Type = typeList.ToArray();
+                        }
+                        else if (o.Type is string typeString)
+                        {
+                            o.Type = new string[]{typeString, OpenApiConstants.Null};
+                        }
                     }
                 }
             },
