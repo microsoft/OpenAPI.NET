@@ -240,7 +240,7 @@ namespace Microsoft.OpenApi.Models
                     return ExternalResource + "#" + Id;
                 }
 
-                if (Id.StartsWith("https"))
+                if (Id.StartsWith("http"))
                 {
                     return Id;
                 }
