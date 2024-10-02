@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Hidi
 
                 // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
                 var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
-                var openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_0;
+                var openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_1;
 
                 // If ApiManifest is provided, set the referenced OpenAPI document
                 var apiDependency = await FindApiDependency(options.FilterOptions.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
@@ -768,7 +768,7 @@ namespace Microsoft.OpenApi.Hidi
             // Write OpenAPI to Output folder
             options.Output = new(Path.Combine(options.OutputFolder, "openapi.json"));
             options.TerseOutput = true;
-            WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
+            WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_1, document, logger);
 
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
             var manifest = new OpenAIPluginManifest
