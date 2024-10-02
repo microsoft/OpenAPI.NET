@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -369,6 +369,25 @@ x-nullable: true";
             var schemaString = writer.ToString();
 
             schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void SerializeSchemaWithTypeArrayAndNullableDoesntEmitType()
+        {
+            var input = @"type:
+- ""string""
+- ""int""
+nullable: true";
+
+            var expected = @"{ }";
+
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, out _, "yaml");
+
+            var writer = new StringWriter();
+            schema.SerializeAsV2(new OpenApiYamlWriter(writer));
+            var schemaString = writer.ToString();
+
+            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral()); 
         }
 
         [Theory]
