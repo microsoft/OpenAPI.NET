@@ -1642,5 +1642,54 @@ responses:
             var actual = stringWriter.ToString();
             actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
         }
+
+        [Fact]
+        public void SerializeDocWithDollarIdInDollarRefSucceeds()
+        {
+            var expected = @"openapi: '3.1.0'
+info:
+  title: Simple API
+  version: 1.0.0
+paths:
+  /box:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: https://foo.bar/Box
+  /circle:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: https://foo.bar/Circle
+components:
+  schemas:
+    Box:
+      $id: https://foo.bar/Box
+      type: object
+      properties:
+        width:
+          type: number
+        height:
+          type: number
+    Circle:
+      $id: https://foo.bar/Circle
+      type: object
+      properties:
+        radius:
+          type: number
+";
+            var doc = OpenApiDocument.Load("Models/Samples/docWithDollarId.yaml").OpenApiDocument;
+
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+        }
     }
 }

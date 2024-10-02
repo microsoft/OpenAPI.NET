@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using System;
 using System.Collections.Generic;
-using System.Runtime;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Models.References

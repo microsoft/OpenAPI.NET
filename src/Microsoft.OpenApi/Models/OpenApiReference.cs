@@ -95,6 +95,10 @@ namespace Microsoft.OpenApi.Models
                 {
                     return Id;
                 }
+                if (Id.StartsWith("http"))
+                {
+                    return Id;
+                }
 
                 return "#/components/" + Type.GetDisplayName() + "/" + Id;
             }
@@ -234,6 +238,11 @@ namespace Microsoft.OpenApi.Models
                 if (IsFragment)
                 {
                     return ExternalResource + "#" + Id;
+                }
+
+                if (Id.StartsWith("http"))
+                {
+                    return Id;
                 }
 
                 return ExternalResource + "#/components/" + Type.GetDisplayName() + "/" + Id;
