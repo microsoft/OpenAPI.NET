@@ -98,23 +98,26 @@ namespace Microsoft.OpenApi.Reader
             Utils.CheckArgumentNull(format, nameof(format));
             settings ??= new OpenApiReaderSettings();
 
-            MemoryStream bufferedStream;
-            if (input is MemoryStream stream)
+            Stream preparedStream;
+
+            // Avoid buffering for JSON format
+            if (input is MemoryStream || format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
             {
-                bufferedStream = stream;
+                preparedStream = input;
             }
             else
             {
-                // Buffer stream so that OpenApiTextReaderReader can process it synchronously
-                // YamlDocument doesn't support async reading.
-                bufferedStream = new MemoryStream();
-                await input.CopyToAsync(bufferedStream, 81920, cancellationToken);
-                bufferedStream.Position = 0;
+                // Buffer stream for non-JSON formats (e.g., YAML) since they require synchronous reading
+                preparedStream = new MemoryStream();
+                await input.CopyToAsync(preparedStream, 81920, cancellationToken);
+                preparedStream.Position = 0;
             }
 
-            using var reader = new StreamReader(bufferedStream, default, true, -1, settings.LeaveStreamOpen);
+            // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
+            using var reader = new StreamReader(preparedStream, default, true, -1, settings.LeaveStreamOpen);
             return await LoadAsync(reader, format, settings, cancellationToken);
         }
+
 
         /// <summary>
         /// Loads the TextReader input and parses it into an Open API document.
