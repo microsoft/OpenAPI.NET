@@ -444,7 +444,9 @@ namespace Microsoft.OpenApi.Models
         public const string Name = "name";
         public const string Namespace = "namespace";
         public const string Not = "not";
+        public const string Null = "null";
         public const string Nullable = "nullable";
+        public const string NullableExtension = "x-nullable";
         public const string OneOf = "oneOf";
         public const string OpenApi = "openapi";
         public const string OpenIdConnectUrl = "openIdConnectUrl";
@@ -1521,6 +1523,7 @@ namespace Microsoft.OpenApi.Services
         public bool Contains(string location) { }
         public System.Uri GetDocumentId(string key) { }
         public bool RegisterComponent<T>(string location, T component) { }
+        public void RegisterComponents(Microsoft.OpenApi.Models.OpenApiDocument document) { }
         public T ResolveReference<T>(string location) { }
     }
     public class OperationSearch : Microsoft.OpenApi.Services.OpenApiVisitorBase

@@ -700,6 +700,16 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public const string ComponentsSegment = "/components/";
 
+        /// <summary>
+        /// Field: Null
+        /// </summary>
+        public const string Null = "null";
+
+        /// <summary>
+        /// Field: Nullable extension
+        /// </summary>
+        public const string NullableExtension = "x-nullable";
+
         #region V2.0
 
         /// <summary>

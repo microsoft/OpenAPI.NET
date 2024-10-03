@@ -42,14 +42,14 @@
       <DependentUpon>OpenApiCallbackReferenceTests.cs</DependentUpon>
     </None>
       
+    <None Update="Models\Samples\docWithDollarId.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+      
     <None Update="Models\Samples\docWithReusableWebhooks.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
       
     <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Samples\" />
   </ItemGroup>
 </Project>

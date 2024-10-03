@@ -252,7 +252,7 @@ namespace Microsoft.OpenApi.Reader.V2
             FixRequestBodyReferences(openApiDoc);
 
             // Register components
-            openApiDoc.Workspace.RegisterComponents(openApiDoc, OpenApiSpecVersion.OpenApi2_0);
+            openApiDoc.Workspace.RegisterComponents(openApiDoc);
 
             return openApiDoc;
         }
