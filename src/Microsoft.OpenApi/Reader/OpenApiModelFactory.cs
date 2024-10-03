@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Reader
 
             Stream preparedStream;
 
-            // Avoid buffering for JSON format
+            // Avoid buffering for JSON documents
             if (input is MemoryStream || format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
             {
                 preparedStream = input;
