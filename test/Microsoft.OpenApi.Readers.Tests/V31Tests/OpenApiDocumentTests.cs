@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.Services;
 using Xunit;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -392,7 +394,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
 
             var outputWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputWriter, new() { InlineLocalReferences = true } );
+            var writer = new OpenApiJsonWriter(outputWriter, new() { InlineLocalReferences = true });
             actual.OpenApiDocument.SerializeAsV31(writer);
             var serialized = outputWriter.ToString();
         }
@@ -445,7 +447,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     }
                 }
             };
-            
+
             // Serialization
             var mediaType = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
 
@@ -461,7 +463,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
       type: string
     prop3:
       type: string";
-            
+
             var actualMediaType = mediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
@@ -483,6 +485,50 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.Equal("object", responseSchema.Type);
             Assert.Equal("object", requestBodySchema.Type);
             Assert.Equal("string", parameterSchema.Type);
+        }
+
+        [Fact]
+        public async Task ExternalDocumentDereferenceToOpenApiDocumentUsingJsonPointerWorks()
+        {
+            // Arrange
+            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+
+            var settings = new OpenApiReaderSettings
+            {
+                LoadExternalRefs = true,
+                BaseUrl = new(path),
+            };
+
+            // Act
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefByJsonPointer.yaml"), settings);
+            var responseSchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+
+            // Assert
+            result.OpenApiDocument.Workspace.Contains("./externalResource.yaml");
+            responseSchema.Properties.Count.Should().Be(2); // reference has been resolved
+        }
+
+        [Fact]
+        public async Task ParseExternalDocumentDereferenceToOpenApiDocumentByIdWorks()
+        {
+            // Arrange
+            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+
+            var settings = new OpenApiReaderSettings
+            {
+                LoadExternalRefs = true,
+                BaseUrl = new(path),
+            };
+
+            // Act
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefById.yaml"), settings);
+            var doc2 = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "externalResource.yaml")).OpenApiDocument;
+
+            var requestBodySchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Parameters.First().Schema;
+            result.OpenApiDocument.Workspace.RegisterComponents(doc2);
+
+            // Assert
+            requestBodySchema.Properties.Count.Should().Be(2); // reference has been resolved
         }
     }
 }
