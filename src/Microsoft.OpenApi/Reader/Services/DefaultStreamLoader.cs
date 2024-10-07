@@ -27,6 +27,7 @@ namespace Microsoft.OpenApi.Reader.Services
         {
             this.baseUrl = baseUrl;
         }
+/// <inheritdoc/>
 
         [Obsolete]
         [EditorBrowsable(EditorBrowsableState.Never)]

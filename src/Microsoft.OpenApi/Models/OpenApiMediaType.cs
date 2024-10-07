@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -129,14 +130,14 @@ namespace Microsoft.OpenApi.Models
             * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true
             * */
             var hasEmptyArray = examples.Values.Any( static example =>
-                example.Value is OpenApiArray arr && arr.Count == 0
+                example.Value is JsonArray arr && arr.Count == 0
             );
 
             if (hasEmptyArray)
             {
                 writer.WritePropertyName(OpenApiConstants.Examples);
                 writer.WriteStartObject();
-                foreach (var kvp in examples.Where(static kvp => kvp.Value.Value is OpenApiArray arr && arr.Count == 0))
+                foreach (var kvp in examples.Where(static kvp => kvp.Value.Value is JsonArray arr && arr.Count == 0))
                 {
                     writer.WritePropertyName(kvp.Key);
                     writer.WriteStartObject();

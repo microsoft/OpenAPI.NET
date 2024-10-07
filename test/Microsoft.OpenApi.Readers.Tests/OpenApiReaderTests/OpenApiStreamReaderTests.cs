@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -64,8 +64,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             var stream = await httpClient.GetStreamAsync("master/examples/v3.0/petstore.yaml");
 
             // Read V3 as YAML
-            var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            Assert.NotNull(openApiDocument);
+            var result = OpenApiDocument.Load(stream, "yaml");
+            Assert.NotNull(result.OpenApiDocument);
         }
     }
 }

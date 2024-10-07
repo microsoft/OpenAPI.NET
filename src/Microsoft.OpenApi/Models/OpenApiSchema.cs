@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
+    public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
     {
         private JsonNode _example;
         private JsonNode _default;
@@ -888,7 +888,10 @@ namespace Microsoft.OpenApi.Models
                 // Find the non-null value and write it out
                 var nonNullValue = array.First(v => v != OpenApiConstants.Null);
                 writer.WriteProperty(OpenApiConstants.Type, nonNullValue);
-                writer.WriteProperty(nullableProp, true);
+                if (!Nullable)
+                {
+                    writer.WriteProperty(nullableProp, true);
+                }
             }
         }
     }

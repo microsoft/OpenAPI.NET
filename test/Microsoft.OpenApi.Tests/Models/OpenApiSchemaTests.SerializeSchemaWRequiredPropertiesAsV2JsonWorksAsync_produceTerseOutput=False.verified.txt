@@ -13,8 +13,8 @@
           "type": "integer"
         },
         "property3": {
-          "maxLength": 15,
-          "type": "string"
+          "type": "string",
+          "maxLength": 15
         }
       }
     },
@@ -28,8 +28,8 @@
           }
         },
         "property7": {
-          "minLength": 2,
-          "type": "string"
+          "type": "string",
+          "minLength": 2
         }
       },
       "readOnly": true

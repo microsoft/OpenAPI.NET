@@ -200,6 +200,7 @@ namespace Microsoft.OpenApi.Extensions
 }
 namespace Microsoft.OpenApi.Interfaces
 {
+    public interface IDiagnostic { }
     public interface IOpenApiAnnotatable
     {
         System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
@@ -235,6 +236,7 @@ namespace Microsoft.OpenApi.Interfaces
     }
     public interface IStreamLoader
     {
+        [System.Obsolete("Use the Async overload")]
         System.IO.Stream Load(System.Uri uri);
         System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri);
     }
@@ -860,6 +862,7 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiSchema() { }
         public OpenApiSchema(Microsoft.OpenApi.Models.OpenApiSchema schema) { }
+        public System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
         public virtual Microsoft.OpenApi.Models.OpenApiSchema AdditionalProperties { get; set; }
         public virtual bool AdditionalPropertiesAllowed { get; set; }
         public virtual System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AllOf { get; set; }
@@ -1324,6 +1327,7 @@ namespace Microsoft.OpenApi.Reader
         public static Microsoft.OpenApi.Reader.ReadResult Parse(string input, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
         public static T Parse<T>(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
+        public static System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ParseAsync(string input, System.IO.StringReader reader, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public static class OpenApiReaderRegistry
     {
@@ -1393,6 +1397,7 @@ namespace Microsoft.OpenApi.Reader.Services
     public class DefaultStreamLoader : Microsoft.OpenApi.Interfaces.IStreamLoader
     {
         public DefaultStreamLoader(System.Uri baseUrl) { }
+        [System.Obsolete]
         public System.IO.Stream Load(System.Uri uri) { }
         public System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri) { }
     }

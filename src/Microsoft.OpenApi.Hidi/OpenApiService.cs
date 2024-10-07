@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Hidi
 
                 // Load OpenAPI document
                 var format = OpenApiModelFactory.GetFormat(options.OpenApi);
-                var document = await GetOpenApi(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApiAsync(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
                 {
@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL
-        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, string format, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
+        private static async Task<OpenApiDocument> GetOpenApiAsync(HidiOptions options, string format, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
         {
             OpenApiDocument document;
             Stream stream;
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Hidi
                         await stream.DisposeAsync().ConfigureAwait(false);
                     }
 
-                    document = await ConvertCsdlToOpenApi(filteredStream ?? stream, format, metadataVersion, options.SettingsConfig, cancellationToken).ConfigureAwait(false);
+                    document = await ConvertCsdlToOpenApiAsync(filteredStream ?? stream, format, metadataVersion, options.SettingsConfig, cancellationToken).ConfigureAwait(false);
                     stopwatch.Stop();
                     logger.LogTrace("{Timestamp}ms: Generated OpenAPI with {Paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                 }
@@ -413,7 +413,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string format, string? metadataVersion = null, IConfiguration? settings = null, CancellationToken token = default)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApiAsync(Stream csdl, string format, string? metadataVersion = null, IConfiguration? settings = null, CancellationToken token = default)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync(token).ConfigureAwait(false);
@@ -588,7 +588,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 var format = OpenApiModelFactory.GetFormat(options.OpenApi);
-                var document = await GetOpenApi(options, format, logger, null, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApiAsync(options, format, logger, null, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
@@ -750,7 +750,7 @@ namespace Microsoft.OpenApi.Hidi
 
             // Load OpenAPI document
             var format = OpenApiModelFactory.GetFormat(options.OpenApi);
-            var document = await GetOpenApi(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+            var document = await GetOpenApiAsync(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
 

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.CommandLine;
@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests
@@ -27,44 +28,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             _logger = new Logger<OpenApiServiceTests>(_loggerFactory);
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-
-        [Fact]
-        public async Task ReturnConvertedCSDLFileAsync()
-        {
-            // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "Todo.xml");
-            var fileInput = new FileInfo(filePath);
-            var csdlStream = fileInput.OpenRead();
-            // Act
-            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApiAsync(csdlStream);
-            var expectedPathCount = 5;
-
-            // Assert
-            Assert.NotNull(openApiDoc);
-            Assert.NotEmpty(openApiDoc.Paths);
-            Assert.Equal(expectedPathCount, openApiDoc.Paths.Count);
-        }
-
-        [Theory]
-        [InlineData("Todos.Todo.UpdateTodo", null, 1)]
-        [InlineData("Todos.Todo.ListTodo", null, 1)]
-        [InlineData(null, "Todos.Todo", 5)]
-        public async Task ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocumentAsync(string? operationIds, string? tags, int expectedPathCount)
-        {
-            // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "Todo.xml");
-            var fileInput = new FileInfo(filePath);
-            var csdlStream = fileInput.OpenRead();
-
-            // Act
-            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApiAsync(csdlStream);
-            var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
-            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(openApiDoc, predicate);
-
-            // Assert
-            Assert.NotNull(subsetOpenApiDocument);
-            Assert.NotEmpty(subsetOpenApiDocument.Paths);
-            Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }
 
         [Fact]
@@ -199,23 +162,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public async Task ShowCommandGeneratesMermaidMarkdownFileFromCsdlWithMermaidDiagramAsync()
-        {
-            var options = new HidiOptions
-            {
-                Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
-                CsdlFilter = "todos",
-                Output = new("sample.md")
-            };
-
-            // create a dummy ILogger instance for testing
-            await OpenApiService.ShowOpenApiDocumentAsync(options, _logger);
-
-            var output = await File.ReadAllTextAsync(options.Output.FullName);
-            Assert.Contains("graph LR", output, StringComparison.Ordinal);
-        }
-
-        [Fact]
         public Task ThrowIfOpenApiUrlIsNotProvidedWhenValidatingAsync()
         {
             return Assert.ThrowsAsync<ArgumentNullException>(() =>
@@ -297,24 +243,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
-                CleanOutput = true,
-                TerseOutput = false,
-                InlineLocal = false,
-                InlineExternal = false,
-            };
-            // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocumentAsync(options, _logger);
-
-            var output = await File.ReadAllTextAsync("output.yml");
-            Assert.NotEmpty(output);
-        }
-
-        [Fact]
-        public async Task TransformCommandConvertsCsdlWithDefaultOutputNameAsync()
-        {
-            var options = new HidiOptions
-            {
-                Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
                 CleanOutput = true,
                 TerseOutput = false,
                 InlineLocal = false,

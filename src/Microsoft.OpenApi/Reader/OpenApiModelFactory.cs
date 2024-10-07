@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.VisualStudio.Threading;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -19,6 +20,8 @@ namespace Microsoft.OpenApi.Reader
     public static class OpenApiModelFactory
     {
         private static readonly HttpClient _httpClient = new();
+        private static readonly JoinableTaskContext _joinableTaskContext = new();
+        private static readonly JoinableTaskFactory _joinableTaskFactory = new(_joinableTaskContext);
 
         static OpenApiModelFactory()
         {
@@ -33,7 +36,7 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>An OpenAPI document instance.</returns>
         public static ReadResult Load(string url, OpenApiReaderSettings settings = null)
         {
-            return LoadAsync(url, settings).GetAwaiter().GetResult();
+            return _joinableTaskFactory.Run(async () => await LoadAsync(url, settings));
         }
 
         /// <summary>
@@ -49,7 +52,9 @@ namespace Microsoft.OpenApi.Reader
         {
             settings ??= new OpenApiReaderSettings();
 
-            var result = LoadAsync(stream, format, settings).GetAwaiter().GetResult();
+            // Run the async method synchronously using JoinableTaskFactory
+            var result = _joinableTaskFactory.Run(async () => await LoadAsync(stream, format, settings));
+            
             if (!settings.LeaveStreamOpen)
             {
                 stream.Dispose();
@@ -69,7 +74,9 @@ namespace Microsoft.OpenApi.Reader
                                       string format,
                                       OpenApiReaderSettings settings = null)
         {
-            return LoadAsync(input, format, settings).GetAwaiter().GetResult();
+            // Run the async method synchronously using JoinableTaskFactory
+            var result = _joinableTaskFactory.Run(async () => await LoadAsync(input, format, settings));
+            return result;
         }
 
         /// <summary>
@@ -81,7 +88,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
         {
             var format = GetFormat(url);
-            var stream = await GetStream(url);
+            var stream = await GetStreamAsync(url);
             return await LoadAsync(stream, format, settings);
         }
 
@@ -145,7 +152,24 @@ namespace Microsoft.OpenApi.Reader
             format ??= OpenApiConstants.Json;
             settings ??= new OpenApiReaderSettings();
             using var reader = new StringReader(input);
-            return LoadAsync(reader, format, settings).GetAwaiter().GetResult();
+
+            return _joinableTaskFactory.Run(async () => await ParseAsync(input, reader, format, settings));
+        }
+
+        /// <summary>
+        /// An Async method to prevent synchornously blocking the calling thread.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="reader"></param>
+        /// <param name="format"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static async Task<ReadResult> ParseAsync(string input,
+                                       StringReader reader,
+                                       string format = null,
+                                       OpenApiReaderSettings settings = null)
+        {
+            return await LoadAsync(reader, format, settings);
         }
 
         /// <summary>
@@ -183,7 +207,9 @@ namespace Microsoft.OpenApi.Reader
         {
             var format = GetFormat(url);
             settings ??= new OpenApiReaderSettings();
-            var stream = GetStream(url).GetAwaiter().GetResult();
+
+            var stream = _joinableTaskFactory.Run(async () => await GetStreamAsync(url));
+
             return Load<T>(stream, version, format, out diagnostic, settings);
         }
 
@@ -227,7 +253,8 @@ namespace Microsoft.OpenApi.Reader
         {
             if (!string.IsNullOrEmpty(url))
             {
-                var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+                var response = _joinableTaskFactory.Run(async () => await _httpClient.GetAsync(url));
+                //var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
                 var mediaType = response.Content.Headers.ContentType.MediaType;
                 return mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
             }
@@ -260,7 +287,7 @@ namespace Microsoft.OpenApi.Reader
             return null;
         }
 
-        private static async Task<Stream> GetStream(string url)
+        private static async Task<Stream> GetStreamAsync(string url)
         {
             Stream stream;
             if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
@@ -297,6 +324,5 @@ namespace Microsoft.OpenApi.Reader
 
             return stream;
         }
-
     }
 }

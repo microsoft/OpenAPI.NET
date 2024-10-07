@@ -3,10 +3,12 @@
 
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Tests;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests

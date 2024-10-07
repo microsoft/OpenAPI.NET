@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiNullAsJsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
-            var json = await WriteAsJsonAsync(nullValue, produceTerseOutput);
+            var json = await WriteAsJsonAsync(null, produceTerseOutput);
 
             // Assert
             json.Should().Be("null");
@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             await Verifier.Verify(actualJson).UseParameters(produceTerseOutput);
         }
 
-        private static async Task<string> WriteAsJsonAsync(IOpenApiAny any, bool produceTerseOutput = false)
+        private static async Task<string> WriteAsJsonAsync(JsonNode any, bool produceTerseOutput = false)
         {
             // Arrange (continued)
             using var stream = new MemoryStream();
@@ -268,7 +268,8 @@ namespace Microsoft.OpenApi.Tests.Writers
             stream.Position = 0;
 
             // Act
-            var value = new StreamReader(stream).ReadToEnd();
+            using var sr = new StreamReader(stream);
+            var value = await sr.ReadToEndAsync();
             var element = JsonDocument.Parse(value).RootElement;
             return element.ValueKind switch
             {
