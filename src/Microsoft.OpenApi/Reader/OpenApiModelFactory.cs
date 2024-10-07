@@ -254,7 +254,6 @@ namespace Microsoft.OpenApi.Reader
             if (!string.IsNullOrEmpty(url))
             {
                 var response = _joinableTaskFactory.Run(async () => await _httpClient.GetAsync(url));
-                //var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
                 var mediaType = response.Content.Headers.ContentType.MediaType;
                 return mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
             }
