@@ -125,6 +125,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteValue(value);
         }
 
+#nullable enable
         /// <summary>
         /// Write the optional Open API object/element.
         /// </summary>
@@ -136,7 +137,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalObject<T>(
             this IOpenApiWriter writer,
             string name,
-            T value,
+            T? value,
             Action<IOpenApiWriter, T> action)
         {
             if (value != null)
@@ -161,7 +162,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteRequiredObject<T>(
             this IOpenApiWriter writer,
             string name,
-            T value,
+            T? value,
             Action<IOpenApiWriter, T> action)
         {
             Utils.CheckArgumentNull(action);
@@ -177,6 +178,7 @@ namespace Microsoft.OpenApi.Writers
                 writer.WriteEndObject();
             }
         }
+#nullable restore
 
         /// <summary>
         /// Write the optional of collection string.

@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
+#nullable enable
+
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -16,12 +18,12 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible
     {
-        private OpenApiSchema _schema;
+        private OpenApiSchema? _schema;
 
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual OpenApiSchema Schema
+        public virtual OpenApiSchema? Schema
         {
             get => _schema;
             set => _schema = value;
@@ -31,13 +33,13 @@ namespace Microsoft.OpenApi.Models
         /// Example of the media type.
         /// The example object SHOULD be in the correct format as specified by the media type.
         /// </summary>
-        public JsonNode Example { get; set; }
+        public JsonNode? Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.
         /// Each example object SHOULD match the media type and specified schema if present.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public IDictionary<string, OpenApiExample>? Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// A map between a property name and its encoding information.
@@ -45,12 +47,12 @@ namespace Microsoft.OpenApi.Models
         /// The encoding object SHALL only apply to requestBody objects
         /// when the media type is multipart or application/x-www-form-urlencoded.
         /// </summary>
-        public IDictionary<string, OpenApiEncoding> Encoding { get; set; } = new Dictionary<string, OpenApiEncoding>();
+        public IDictionary<string, OpenApiEncoding>? Encoding { get; set; } = new Dictionary<string, OpenApiEncoding>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -60,7 +62,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiMediaType"/> object
         /// </summary>
-        public OpenApiMediaType(OpenApiMediaType mediaType)
+        public OpenApiMediaType(OpenApiMediaType? mediaType)
         {
             _schema = mediaType?.Schema != null ? new(mediaType.Schema) : null;
             Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;

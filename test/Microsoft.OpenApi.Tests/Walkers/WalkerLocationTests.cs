@@ -24,7 +24,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
             walker.Walk(doc);
 
             locator.Locations.Should().BeEquivalentTo(new List<string> {
+                "#/info",
                 "#/servers",
+                "#/paths",
                 "#/tags"
             });
         }
@@ -39,7 +41,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     new(),
                     new()
                 },
-                Paths = new(),
                 Tags = new List<OpenApiTag>
                 {
                     new()
@@ -51,6 +52,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             walker.Walk(doc);
 
             locator.Locations.Should().BeEquivalentTo(new List<string> {
+                "#/info",
                 "#/servers",
                 "#/servers/0",
                 "#/servers/1",
@@ -63,10 +65,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocatePathOperationContentSchema()
         {
-            var doc = new OpenApiDocument
-            {
-                Paths = new()
-            };
+            var doc = new OpenApiDocument();
             doc.Paths.Add("/test", new()
             {
                 Operations = new Dictionary<OperationType, OpenApiOperation>
@@ -98,6 +97,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             walker.Walk(doc);
 
             locator.Locations.Should().BeEquivalentTo(new List<string> {
+                "#/info",
                 "#/servers",
                 "#/paths",
                 "#/paths/~1test",
@@ -131,7 +131,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             var doc = new OpenApiDocument
             {
-                Paths = new(),
                 Components = new()
                 {
                     Schemas = new Dictionary<string, OpenApiSchema>
@@ -146,6 +145,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             walker.Walk(doc);
 
             locator.Locations.Should().BeEquivalentTo(new List<string> {
+                "#/info",
                 "#/servers",
                 "#/paths",
                 "#/components",
