@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Reader
 
                 if (settings.LoadExternalRefs)
                 {
-                    var diagnosticExternalRefs = await LoadExternalRefs(document, cancellationToken, settings, format);
+                    var diagnosticExternalRefs = await LoadExternalRefsAsync(document, cancellationToken, settings, format);
                     // Merge diagnostics of external reference
                     if (diagnosticExternalRefs != null)
                     {
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Reader
             return nodes;
         }
 
-        private async Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
+        private async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
         {
             // Create workspace for all documents to live in.
             var baseUrl = settings.BaseUrl ?? new Uri(OpenApiConstants.BaseRegistryUri);

@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Models
                     continue;
                 }
 
-                callback(writer, securityScheme);
+                writer.WritePropertyName(securityScheme.Reference.ReferenceV3);
 
                 writer.WriteStartArray();
 

@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -17,6 +16,7 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
+using SharpYaml.Model;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -112,7 +112,7 @@ paths: {}",
         [Fact]
         public void ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
-            var path = Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
+            var path = System.IO.Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
             var result = OpenApiDocument.Load(path);
 
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
@@ -152,7 +152,7 @@ paths: {}",
         [Fact]
         public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
+            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
             var result = OpenApiDocument.Load(stream, OpenApiConstants.Yaml);
 
             result.OpenApiDocument.Should().BeEquivalentTo(
@@ -180,7 +180,7 @@ paths: {}",
         [Fact]
         public void ParseMinimalDocumentShouldSucceed()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
+            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
 
             result.OpenApiDocument.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -207,7 +207,7 @@ paths: {}",
         [Fact]
         public void ParseStandardPetStoreDocumentShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
+            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "petStore.yaml"));
             var actual = OpenApiDocument.Load(stream, OpenApiConstants.Yaml);
 
             var components = new OpenApiComponents
@@ -593,7 +593,7 @@ paths: {}",
         [Fact]
         public void ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml"));
+            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml"));
             var actual = OpenApiDocument.Load(stream, OpenApiConstants.Yaml);
 
             var components = new OpenApiComponents
@@ -1105,7 +1105,7 @@ paths: {}",
         [Fact]
         public void ParsePetStoreExpandedShouldSucceed()
         {
-            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"));
+            var actual = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"));
 
             // TODO: Create the object in memory and compare with the one read from YAML file.
 
@@ -1116,7 +1116,7 @@ paths: {}",
         [Fact]
         public void GlobalSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedApi.yaml"));
+            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "securedApi.yaml"));
 
             var securityRequirement = result.OpenApiDocument.SecurityRequirements.First();
 
@@ -1127,7 +1127,7 @@ paths: {}",
         [Fact]
         public void HeaderParameterShouldAllowExample()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
+            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
 
             var exampleHeader = result.OpenApiDocument.Components?.Headers?["example-header"];
             Assert.NotNull(exampleHeader);
@@ -1195,7 +1195,7 @@ paths: {}",
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
             };
 
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), settings);
+            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), settings);
             var securityScheme = result.OpenApiDocument.Components.SecuritySchemes["OAuth2"];
 
             // Assert
@@ -1207,7 +1207,7 @@ paths: {}",
         public void ParseDocumentWithJsonSchemaReferencesWorks()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
+            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
 
             // Act
             var settings = new OpenApiReaderSettings
@@ -1227,7 +1227,7 @@ paths: {}",
         public void ValidateExampleShouldNotHaveDataTypeMismatch()
         {
             // Act
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
+            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
             {
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
 
@@ -1327,7 +1327,7 @@ components:
         format: int32
         default: 10";
 
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
+            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
             // Act
             var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
@@ -1343,6 +1343,79 @@ components:
                 .Excluding(x => x.Schema.Default.Options)
                 .IgnoringCyclicReferences());
             outputDoc.Should().BeEquivalentTo(expectedSerializedDoc.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void ParseBasicDocumentWithServerVariableShouldSucceed()
+        {
+            var result = OpenApiDocument.Parse("""
+                                                            openapi : 3.0.0
+                                                            info:
+                                                                title: The API
+                                                                version: 0.9.1
+                                                            servers:
+                                                              - url: http://www.example.org/api/{version}
+                                                                description: The http endpoint
+                                                                variables:
+                                                                  version:
+                                                                    default: v2
+                                                                    enum: [v1, v2]
+                                                            paths: {}
+                                                            """, "yaml");
+
+            var expected = new OpenApiDocument
+            {
+                Info = new()
+                {
+                    Title = "The API",
+                    Version = "0.9.1",
+                },
+                Servers =
+                    {
+                        new OpenApiServer
+                        {
+                            Url = "http://www.example.org/api/{version}",
+                            Description = "The http endpoint",
+                            Variables = new Dictionary<string, OpenApiServerVariable>
+                            {
+                                {"version", new OpenApiServerVariable {Default = "v2", Enum = ["v1", "v2"]}}
+                            }
+                        }
+                    },
+                Paths = new()
+            };
+
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic 
+                { 
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Errors = new List<OpenApiError>()
+                    {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                    }
+                });
+
+            result.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.BaseUri));
+        }
+
+        [Fact]
+        public void ParseBasicDocumentWithServerVariableAndNoDefaultShouldFail()
+        {
+            var result = OpenApiDocument.Parse("""
+                                                            openapi : 3.0.0
+                                                            info:
+                                                                title: The API
+                                                                version: 0.9.1
+                                                            servers:
+                                                              - url: http://www.example.org/api/{version}
+                                                                description: The http endpoint
+                                                                variables:
+                                                                  version:
+                                                                    enum: [v1, v2]
+                                                            paths: {}
+                                                            """, "yaml");
+
+            result.OpenApiDiagnostic.Errors.Should().NotBeEmpty();
         }
     }
 }

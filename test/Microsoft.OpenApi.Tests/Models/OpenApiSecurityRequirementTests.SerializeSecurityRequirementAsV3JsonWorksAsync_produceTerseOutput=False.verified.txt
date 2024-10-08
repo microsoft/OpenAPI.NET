@@ -1,0 +1,12 @@
+﻿{
+  "scheme1": [
+    "scope1",
+    "scope2",
+    "scope3"
+  ],
+  "scheme2": [
+    "scope4",
+    "scope5"
+  ],
+  "scheme3": [ ]
+}

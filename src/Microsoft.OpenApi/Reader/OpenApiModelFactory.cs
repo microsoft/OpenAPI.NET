@@ -33,7 +33,9 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>An OpenAPI document instance.</returns>
         public static ReadResult Load(string url, OpenApiReaderSettings settings = null)
         {
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
             return LoadAsync(url, settings).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         /// <summary>
@@ -49,7 +51,10 @@ namespace Microsoft.OpenApi.Reader
         {
             settings ??= new OpenApiReaderSettings();
 
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
             var result = LoadAsync(stream, format, settings).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+
             if (!settings.LeaveStreamOpen)
             {
                 stream.Dispose();
@@ -69,7 +74,10 @@ namespace Microsoft.OpenApi.Reader
                                       string format,
                                       OpenApiReaderSettings settings = null)
         {
-            return LoadAsync(input, format, settings).GetAwaiter().GetResult();
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            var result = LoadAsync(input, format, settings).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+            return result;
         }
 
         /// <summary>
@@ -81,7 +89,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
         {
             var format = GetFormat(url);
-            var stream = await GetStream(url);
+            var stream = await GetStreamAsync(url);
             return await LoadAsync(stream, format, settings);
         }
 
@@ -148,7 +156,26 @@ namespace Microsoft.OpenApi.Reader
             format ??= OpenApiConstants.Json;
             settings ??= new OpenApiReaderSettings();
             using var reader = new StringReader(input);
-            return LoadAsync(reader, format, settings).GetAwaiter().GetResult();
+
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            return ParseAsync(input, reader, format, settings).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+        }
+
+        /// <summary>
+        /// An Async method to prevent synchornously blocking the calling thread.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="reader"></param>
+        /// <param name="format"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static async Task<ReadResult> ParseAsync(string input,
+                                       StringReader reader,
+                                       string format = null,
+                                       OpenApiReaderSettings settings = null)
+        {
+            return await LoadAsync(reader, format, settings);
         }
 
         /// <summary>
@@ -186,7 +213,11 @@ namespace Microsoft.OpenApi.Reader
         {
             var format = GetFormat(url);
             settings ??= new OpenApiReaderSettings();
-            var stream = GetStream(url).GetAwaiter().GetResult();
+
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            var stream = GetStreamAsync(url).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+
             return Load<T>(stream, version, format, out diagnostic, settings);
         }
 
@@ -230,7 +261,10 @@ namespace Microsoft.OpenApi.Reader
         {
             if (!string.IsNullOrEmpty(url))
             {
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
                 var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+
                 var mediaType = response.Content.Headers.ContentType.MediaType;
                 return mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
             }
@@ -263,7 +297,7 @@ namespace Microsoft.OpenApi.Reader
             return null;
         }
 
-        private static async Task<Stream> GetStream(string url)
+        private static async Task<Stream> GetStreamAsync(string url)
         {
             Stream stream;
             if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
@@ -300,6 +334,5 @@ namespace Microsoft.OpenApi.Reader
 
             return stream;
         }
-
     }
 }

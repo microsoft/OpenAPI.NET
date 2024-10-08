@@ -1,1 +1,1 @@
-{"$ref":"#/parameters/example1"}
+﻿{"$ref":"#/parameters/example1"}

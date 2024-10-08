@@ -81,7 +81,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     Url = "http://server.com",
                     Description = "serverDescription"
                 }
-            }
+            },
+            Annotations = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } },
         };
 
         private static readonly OpenApiOperation _advancedOperationWithTagsAndSecurity = new()
@@ -829,6 +830,27 @@ namespace Microsoft.OpenApi.Tests.Models
                 // Assert
                 actual.Should().Be(expected);
             }
+        }
+
+        [Fact]
+        public void OpenApiOperationCopyConstructorWithAnnotationsSucceeds()
+        {
+            var baseOperation = new OpenApiOperation
+            {
+                Annotations = new Dictionary<string, object>
+                {
+                    ["key1"] = "value1",
+                    ["key2"] = 2
+                }
+            };
+
+            var actualOperation = new OpenApiOperation(baseOperation);
+
+            Assert.Equal(baseOperation.Annotations["key1"], actualOperation.Annotations["key1"]);
+
+            baseOperation.Annotations["key1"] = "value2";
+
+            Assert.NotEqual(baseOperation.Annotations["key1"], actualOperation.Annotations["key1"]);
         }
     }
 }

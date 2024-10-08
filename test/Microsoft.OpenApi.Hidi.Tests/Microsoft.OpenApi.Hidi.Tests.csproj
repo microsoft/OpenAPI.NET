@@ -12,9 +12,10 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="6.0.2" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageReference Include="Moq" Version="4.20.70" />
-    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="all" />
     <PackageReference Include="coverlet.collector" Version="6.0.2" PrivateAssets="all" />
   </ItemGroup>
@@ -31,6 +32,12 @@
     <Compile Update="UtilityFiles\OpenApiDocumentMock.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="UtilityFiles\docWithReusableHeadersAndExamples.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

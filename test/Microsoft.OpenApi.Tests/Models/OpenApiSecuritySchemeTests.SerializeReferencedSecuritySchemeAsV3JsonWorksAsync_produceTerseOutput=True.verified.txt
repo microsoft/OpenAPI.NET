@@ -1,1 +1,1 @@
-{"sampleSecurityScheme":null}
+﻿{"$ref":"sampleSecurityScheme"}

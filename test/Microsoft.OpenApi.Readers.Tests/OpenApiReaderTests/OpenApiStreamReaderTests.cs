@@ -1,7 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -37,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         }
 
         [Fact]
-        public async Task StreamShouldNotBeDisposedIfLeaveStreamOpenSettingIsTrue()
+        public async Task StreamShouldNotBeDisposedIfLeaveStreamOpenSettingIsTrueAsync()
         {
             var memoryStream = new MemoryStream();
             using var fileStream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
@@ -49,6 +51,21 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             var result = OpenApiDocument.Load(stream, "yaml", new OpenApiReaderSettings { LeaveStreamOpen = true });
             stream.Seek(0, SeekOrigin.Begin); // does not throw an object disposed exception
             Assert.True(stream.CanRead);
+        }
+
+        [Fact]
+        public async Task StreamShouldReadWhenInitializedAsync()
+        {
+            var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/")
+            };
+
+            var stream = await httpClient.GetStreamAsync("master/examples/v3.0/petstore.yaml");
+
+            // Read V3 as YAML
+            var result = OpenApiDocument.Load(stream, "yaml");
+            Assert.NotNull(result.OpenApiDocument);
         }
     }
 }

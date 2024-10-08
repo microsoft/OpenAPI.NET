@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -26,26 +27,15 @@ namespace Microsoft.OpenApi.Reader.Services
         {
             this.baseUrl = baseUrl;
         }
+/// <inheritdoc/>
 
-        /// <summary>
-        /// Loads a document stream from the input URL
-        /// </summary>
-        /// <param name="uri"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public Stream Load(Uri uri)
         {
-            var absoluteUri = new Uri(baseUrl, uri);
-            switch (uri.Scheme)
-            {
-                case "file":
-                    return File.OpenRead(absoluteUri.AbsolutePath);
-                case "http":
-                case "https":
-                    return _httpClient.GetStreamAsync(absoluteUri).GetAwaiter().GetResult();
-                default:
-                    throw new ArgumentException("Unsupported scheme");
-            }
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            return LoadAsync(uri).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         /// <summary>

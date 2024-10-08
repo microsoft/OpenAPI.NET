@@ -1,4 +1,4 @@
-{
+﻿{
   "operationId": "operationId1",
   "parameters": {
     "parameter1": "$request.path.id"

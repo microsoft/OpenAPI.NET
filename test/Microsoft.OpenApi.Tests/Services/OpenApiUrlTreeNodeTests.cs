@@ -452,7 +452,7 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
-        public async Task VerifyDiagramFromSampleOpenAPI()
+        public async Task VerifyDiagramFromSampleOpenAPIAsync()
         {
             var doc1 = OpenApiDocumentSample_1;
 
@@ -461,10 +461,43 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var writer = new StringWriter();
             rootNode.WriteMermaid(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var diagram = writer.GetStringBuilder().ToString();
 
             await Verifier.Verify(diagram);
+        }
+
+        public static TheoryData<string, string[], string, string> SupportsTrailingSlashesInPathData => new TheoryData<string, string[], string, string>
+        {
+            // Path, children up to second to leaf, last expected leaf node name, expected leaf node path
+            { "/cars/{car-id}/build/", ["cars", "{car-id}"], @"build\", @"\cars\{car-id}\build\" },
+            { "/cars/", [], @"cars\", @"\cars\" },
+        };
+
+        [Theory]
+        [MemberData(nameof(SupportsTrailingSlashesInPathData))]
+        public void SupportsTrailingSlashesInPath(string path, string[] childrenBeforeLastNode, string expectedLeafNodeName, string expectedLeafNodePath)
+        {
+            var openApiDocument = new OpenApiDocument
+            {
+                Paths = new()
+                {
+                    [path] = new()
+                }
+            };
+
+            var label = "trailing-slash";
+            var rootNode = OpenApiUrlTreeNode.Create(openApiDocument, label);
+
+            var secondToLeafNode = rootNode;
+            foreach (var childName in childrenBeforeLastNode)
+            {
+                secondToLeafNode = secondToLeafNode.Children[childName];
+            }
+
+            Assert.True(secondToLeafNode.Children.TryGetValue(expectedLeafNodeName, out var leafNode));
+            Assert.Equal(expectedLeafNodePath, leafNode.Path);
+            Assert.Empty(leafNode.Children);
         }
     }
 }

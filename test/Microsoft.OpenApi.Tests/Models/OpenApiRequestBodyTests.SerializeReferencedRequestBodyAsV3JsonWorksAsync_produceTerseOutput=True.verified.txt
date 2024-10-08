@@ -1,1 +1,1 @@
-{"$ref":"#/components/requestBodies/example1"}
+﻿{"$ref":"#/components/requestBodies/example1"}

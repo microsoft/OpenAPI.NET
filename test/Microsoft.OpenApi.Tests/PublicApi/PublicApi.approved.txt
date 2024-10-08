@@ -184,6 +184,10 @@ namespace Microsoft.OpenApi.Extensions
         public static void SerializeAsYaml<T>(this T element, System.IO.Stream stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
     }
+    public static class OpenApiServerExtensions
+    {
+        public static string ReplaceServerUrlVariables(this Microsoft.OpenApi.Models.OpenApiServer server, System.Collections.Generic.IDictionary<string, string> values = null) { }
+    }
     public static class OpenApiTypeMapper
     {
         public static System.Type MapOpenApiPrimitiveTypeToSimpleType(this Microsoft.OpenApi.Models.OpenApiSchema schema) { }
@@ -197,6 +201,10 @@ namespace Microsoft.OpenApi.Extensions
 namespace Microsoft.OpenApi.Interfaces
 {
     public interface IDiagnostic { }
+    public interface IOpenApiAnnotatable
+    {
+        System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
+    }
     public interface IOpenApiElement { }
     public interface IOpenApiExtensible : Microsoft.OpenApi.Interfaces.IOpenApiElement
     {
@@ -228,6 +236,7 @@ namespace Microsoft.OpenApi.Interfaces
     }
     public interface IStreamLoader
     {
+        [System.Obsolete("Use the Async overload")]
         System.IO.Stream Load(System.Uri uri);
         System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri);
     }
@@ -530,10 +539,11 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiDocument : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiDocument : Microsoft.OpenApi.Interfaces.IOpenApiAnnotatable, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         public OpenApiDocument() { }
         public OpenApiDocument(Microsoft.OpenApi.Models.OpenApiDocument? document) { }
+        public System.Collections.Generic.IDictionary<string, object>? Annotations { get; set; }
         public System.Uri BaseUri { get; }
         public Microsoft.OpenApi.Models.OpenApiComponents? Components { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
@@ -726,11 +736,12 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiOperation : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiOperation : Microsoft.OpenApi.Interfaces.IOpenApiAnnotatable, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         public const bool DeprecatedDefault = false;
         public OpenApiOperation() { }
         public OpenApiOperation(Microsoft.OpenApi.Models.OpenApiOperation? operation) { }
+        public System.Collections.Generic.IDictionary<string, object>? Annotations { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiCallback>? Callbacks { get; set; }
         public bool Deprecated { get; set; }
         public string? Description { get; set; }
@@ -847,10 +858,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponses() { }
         public OpenApiResponses(Microsoft.OpenApi.Models.OpenApiResponses openApiResponses) { }
     }
-    public class OpenApiSchema : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiSchema : Microsoft.OpenApi.Interfaces.IOpenApiAnnotatable, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         public OpenApiSchema() { }
         public OpenApiSchema(Microsoft.OpenApi.Models.OpenApiSchema schema) { }
+        public System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
         public virtual Microsoft.OpenApi.Models.OpenApiSchema AdditionalProperties { get; set; }
         public virtual bool AdditionalPropertiesAllowed { get; set; }
         public virtual System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AllOf { get; set; }
@@ -1315,6 +1327,7 @@ namespace Microsoft.OpenApi.Reader
         public static Microsoft.OpenApi.Reader.ReadResult Parse(string input, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
         public static T Parse<T>(string input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
+        public static System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ParseAsync(string input, System.IO.StringReader reader, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null) { }
     }
     public static class OpenApiReaderRegistry
     {
@@ -1384,6 +1397,7 @@ namespace Microsoft.OpenApi.Reader.Services
     public class DefaultStreamLoader : Microsoft.OpenApi.Interfaces.IStreamLoader
     {
         public DefaultStreamLoader(System.Uri baseUrl) { }
+        [System.Obsolete]
         public System.IO.Stream Load(System.Uri uri) { }
         public System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri) { }
     }
@@ -1515,7 +1529,7 @@ namespace Microsoft.OpenApi.Services
         public System.Uri GetDocumentId(string key) { }
         public bool RegisterComponent<T>(string location, T component) { }
         public void RegisterComponents(Microsoft.OpenApi.Models.OpenApiDocument document) { }
-        public T ResolveReference<T>(string location) { }
+        public T? ResolveReference<T>(string location) { }
     }
     public class OperationSearch : Microsoft.OpenApi.Services.OpenApiVisitorBase
     {

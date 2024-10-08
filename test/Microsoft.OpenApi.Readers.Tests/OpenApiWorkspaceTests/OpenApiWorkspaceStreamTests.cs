@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         // Use OpenApiWorkspace to load a document and a referenced document
 
         [Fact]
-        public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
+        public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspaceAsync()
         {
             // Create a reader that will resolve all references
             var settings = new OpenApiReaderSettings
@@ -40,8 +40,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                       paths: {}
                       """;
             var wr = new StreamWriter(stream);
-            wr.Write(doc);
-            wr.Flush();
+            await wr.WriteAsync(doc);
+            await wr.FlushAsync();
             stream.Position = 0;
 
             var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, settings: settings);
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         }
 
         [Fact]
-        public async Task LoadDocumentWithExternalReferenceShouldLoadExternalDocumentComponentsIntoWorkspace()
+        public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspaceAsync()
         {
             // Create a reader that will resolve all references
             var settings = new OpenApiReaderSettings
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 
         public Task<Stream> LoadAsync(Uri uri)
         {
-            return null;
+            return Task.FromResult<Stream>(null);
         }
     }
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/components/" + Type.GetDisplayName() + "/" + Id;
+                return "#/components/" + Type.Value.GetDisplayName() + "/" + Id;
             }
         }
 
@@ -187,13 +187,6 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            if (Type == ReferenceType.SecurityScheme)
-            {
-                // Write the string as property name
-                writer.WritePropertyName(ReferenceV3);
-                return;
-            }
-
             writer.WriteStartObject();
 
             // $ref
@@ -245,7 +238,10 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return ExternalResource + "#/components/" + Type.GetDisplayName() + "/" + Id;
+                if (Type.HasValue)
+                {
+                    return ExternalResource + "#/components/" + Type.Value.GetDisplayName() + "/"+ Id; 
+                }
             }
 
             return ExternalResource;

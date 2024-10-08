@@ -3,9 +3,12 @@
 
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Tests;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -70,6 +73,44 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(m => m.Examples["example1"].Value.Parent)
                 .Excluding(m => m.Examples["example2"].Value.Parent));
+        }
+
+        [Fact]
+        public void ParseMediaTypeWithEmptyArrayInExamplesWorks()
+        {
+            // Arrange
+            var expected = @"{
+  ""schema"": {
+    ""type"": ""array"",
+    ""items"": {
+      ""type"": ""object"",
+      ""properties"": {
+        ""id"": {
+          ""type"": ""string""
+        }
+      }
+    }
+  },
+  ""examples"": {
+    ""Success response - no results"": {
+      ""value"": [ ]
+    }
+  }
+}
+";
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "examplesWithEmptyArray.json")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var mediaType = OpenApiV3Deserializer.LoadMediaType(node);
+            var serialized = mediaType.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            serialized.MakeLineBreaksEnvironmentNeutral()
+                .Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

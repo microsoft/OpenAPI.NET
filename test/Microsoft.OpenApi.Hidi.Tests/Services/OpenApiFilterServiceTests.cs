@@ -3,9 +3,11 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
 using Moq;
+using SharpYaml.Tokens;
 using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests
@@ -104,6 +106,57 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
+        public void CreateFilteredDocumentUsingPredicateFromRequestUrl()
+        {
+            // Arrange
+            var openApiDocument = new OpenApiDocument
+            {
+                Info = new() { Title = "Test", Version = "1.0" },
+                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Paths = new()
+                {
+                    ["/test/{id}"] = new()
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            { OperationType.Get, new() },
+                            { OperationType.Patch, new() }
+                        },
+                        Parameters = new List<OpenApiParameter>
+                        {
+                            new()
+                            {
+                                Name = "id",
+                                In = ParameterLocation.Path,
+                                Required = true,
+                                Schema = new()
+                                {
+                                    Type = "string"
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            };
+
+            var requestUrls = new Dictionary<string, List<string>>
+            {
+                    {"/test/{id}", new List<string> {"GET","PATCH"}}
+            };
+
+            // Act
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: openApiDocument);
+            var subsetDoc = OpenApiFilterService.CreateFilteredDocument(openApiDocument, predicate);
+
+            // Assert that there's only 1 parameter in the subset document
+            Assert.NotNull(subsetDoc);
+            Assert.NotEmpty(subsetDoc.Paths);
+            Assert.Single(subsetDoc.Paths.First().Value.Parameters);
+        }
+
+        [Fact]
         public void ShouldParseNestedPostmanCollection()
         {
             // Arrange
@@ -168,6 +221,36 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             var message2 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate("users.user.ListUser", "users.user")).Message;
             Assert.Equal("Cannot specify both operationIds and tags at the same time.", message2);
+        }
+
+        [Fact]
+        public void CopiesOverAllReferencedComponentsToTheSubsetDocumentCorrectly()
+        {
+            // Arrange
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "docWithReusableHeadersAndExamples.yaml");
+            var operationIds = "getItems";
+
+            // Act
+            using var stream = File.OpenRead(filePath);
+            var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
+            
+            var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
+
+            var response = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get]?.Responses?["200"];
+            var responseHeader = response?.Headers["x-custom-header"];
+            var mediaTypeExample = response?.Content["application/json"]?.Examples?.First().Value;
+            var targetHeaders = subsetOpenApiDocument.Components?.Headers;
+            var targetExamples = subsetOpenApiDocument.Components?.Examples;
+
+            // Assert
+            Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
+            Assert.False(responseHeader?.UnresolvedReference);
+            Assert.False(mediaTypeExample?.UnresolvedReference);
+            Assert.NotNull(targetHeaders);
+            Assert.Single(targetHeaders);
+            Assert.NotNull(targetExamples);
+            Assert.Single(targetExamples);
         }
 
         [Theory]
