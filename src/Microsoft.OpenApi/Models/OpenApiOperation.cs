@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <inheritdoc />
-        public IDictionary<string, object> Annotations { get; set; }
+        public IDictionary<string, object>? Annotations { get; set; }
 
         /// <summary>
         /// Parameterless constructor

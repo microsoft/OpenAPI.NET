@@ -237,17 +237,19 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
 
-            var response = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get].Responses["200"];
-            var responseHeader = response.Headers["x-custom-header"];
-            var mediaTypeExample = response.Content["application/json"].Examples.First().Value;
-            var targetHeaders = subsetOpenApiDocument.Components.Headers;
-            var targetExamples = subsetOpenApiDocument.Components.Examples;
+            var response = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get]?.Responses?["200"];
+            var responseHeader = response?.Headers["x-custom-header"];
+            var mediaTypeExample = response?.Content["application/json"]?.Examples?.First().Value;
+            var targetHeaders = subsetOpenApiDocument.Components?.Headers;
+            var targetExamples = subsetOpenApiDocument.Components?.Examples;
 
             // Assert
             Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
-            Assert.False(responseHeader.UnresolvedReference);
-            Assert.False(mediaTypeExample.UnresolvedReference);
+            Assert.False(responseHeader?.UnresolvedReference);
+            Assert.False(mediaTypeExample?.UnresolvedReference);
+            Assert.NotNull(targetHeaders);
             Assert.Single(targetHeaders);
+            Assert.NotNull(targetExamples);
             Assert.Single(targetExamples);
         }
 

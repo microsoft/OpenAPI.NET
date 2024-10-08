@@ -543,7 +543,7 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiDocument() { }
         public OpenApiDocument(Microsoft.OpenApi.Models.OpenApiDocument? document) { }
-        public System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
+        public System.Collections.Generic.IDictionary<string, object>? Annotations { get; set; }
         public System.Uri BaseUri { get; }
         public Microsoft.OpenApi.Models.OpenApiComponents? Components { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
@@ -741,7 +741,7 @@ namespace Microsoft.OpenApi.Models
         public const bool DeprecatedDefault = false;
         public OpenApiOperation() { }
         public OpenApiOperation(Microsoft.OpenApi.Models.OpenApiOperation? operation) { }
-        public System.Collections.Generic.IDictionary<string, object> Annotations { get; set; }
+        public System.Collections.Generic.IDictionary<string, object>? Annotations { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiCallback>? Callbacks { get; set; }
         public bool Deprecated { get; set; }
         public string? Description { get; set; }
@@ -1529,7 +1529,7 @@ namespace Microsoft.OpenApi.Services
         public System.Uri GetDocumentId(string key) { }
         public bool RegisterComponent<T>(string location, T component) { }
         public void RegisterComponents(Microsoft.OpenApi.Models.OpenApiDocument document) { }
-        public T ResolveReference<T>(string location) { }
+        public T? ResolveReference<T>(string location) { }
     }
     public class OperationSearch : Microsoft.OpenApi.Services.OpenApiVisitorBase
     {
