@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.VisualStudio.Threading;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -20,8 +19,6 @@ namespace Microsoft.OpenApi.Reader
     public static class OpenApiModelFactory
     {
         private static readonly HttpClient _httpClient = new();
-        private static readonly JoinableTaskContext _joinableTaskContext = new();
-        private static readonly JoinableTaskFactory _joinableTaskFactory = new(_joinableTaskContext);
 
         static OpenApiModelFactory()
         {
@@ -36,7 +33,9 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>An OpenAPI document instance.</returns>
         public static ReadResult Load(string url, OpenApiReaderSettings settings = null)
         {
-            return _joinableTaskFactory.Run(async () => await LoadAsync(url, settings));
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            return LoadAsync(url, settings).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         /// <summary>
@@ -52,9 +51,10 @@ namespace Microsoft.OpenApi.Reader
         {
             settings ??= new OpenApiReaderSettings();
 
-            // Run the async method synchronously using JoinableTaskFactory
-            var result = _joinableTaskFactory.Run(async () => await LoadAsync(stream, format, settings));
-            
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            var result = LoadAsync(stream, format, settings).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+
             if (!settings.LeaveStreamOpen)
             {
                 stream.Dispose();
@@ -74,8 +74,9 @@ namespace Microsoft.OpenApi.Reader
                                       string format,
                                       OpenApiReaderSettings settings = null)
         {
-            // Run the async method synchronously using JoinableTaskFactory
-            var result = _joinableTaskFactory.Run(async () => await LoadAsync(input, format, settings));
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            var result = LoadAsync(input, format, settings).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
             return result;
         }
 
@@ -153,7 +154,9 @@ namespace Microsoft.OpenApi.Reader
             settings ??= new OpenApiReaderSettings();
             using var reader = new StringReader(input);
 
-            return _joinableTaskFactory.Run(async () => await ParseAsync(input, reader, format, settings));
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            return ParseAsync(input, reader, format, settings).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         /// <summary>
@@ -208,7 +211,9 @@ namespace Microsoft.OpenApi.Reader
             var format = GetFormat(url);
             settings ??= new OpenApiReaderSettings();
 
-            var stream = _joinableTaskFactory.Run(async () => await GetStreamAsync(url));
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            var stream = GetStreamAsync(url).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
 
             return Load<T>(stream, version, format, out diagnostic, settings);
         }
@@ -253,7 +258,10 @@ namespace Microsoft.OpenApi.Reader
         {
             if (!string.IsNullOrEmpty(url))
             {
-                var response = _joinableTaskFactory.Run(async () => await _httpClient.GetAsync(url));
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+                var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+
                 var mediaType = response.Content.Headers.ContentType.MediaType;
                 return mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
             }

@@ -21,9 +21,8 @@
     <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
-    <ItemGroup>
-      <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.11.20" />
-      <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    <ItemGroup>        
+        <PackageReference Include="System.Text.Json" Version="8.0.4" />
     </ItemGroup>
 
     <ItemGroup>
