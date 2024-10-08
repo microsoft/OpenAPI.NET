@@ -206,13 +206,14 @@ namespace Microsoft.OpenApi.Services
             return _IOpenApiReferenceableRegistry.ContainsKey(key) || _artifactsRegistry.ContainsKey(key);
         }
 
+#nullable enable
         /// <summary>
         /// Resolves a reference given a key.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="location"></param>
         /// <returns>The resolved reference.</returns>
-        public T ResolveReference<T>(string location)
+        public T? ResolveReference<T>(string location)
         {
             if (string.IsNullOrEmpty(location)) return default;
 
@@ -228,6 +229,7 @@ namespace Microsoft.OpenApi.Services
 
             return default;
         }
+#nullable restore
 
         private Uri ToLocationUrl(string location)
         {

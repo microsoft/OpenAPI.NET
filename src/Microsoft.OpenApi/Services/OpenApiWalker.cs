@@ -105,11 +105,11 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(externalDocs);
         }
-
+#nullable enable
         /// <summary>
         /// Visits <see cref="OpenApiComponents"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiComponents components)
+        internal void Walk(OpenApiComponents? components)
         {
             if (components == null)
             {
@@ -117,11 +117,6 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(components);
-
-            if (components == null)
-            {
-                return;
-            }
 
             Walk(OpenApiConstants.Schemas, () =>
             {
@@ -236,6 +231,7 @@ namespace Microsoft.OpenApi.Services
             Walk(components as IOpenApiExtensible);
         }
 
+#nullable restore
         /// <summary>
         /// Visits <see cref="OpenApiPaths"/> and child objects
         /// </summary>
