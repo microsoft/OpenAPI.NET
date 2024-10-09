@@ -31,7 +31,7 @@
         </PackageReference>
 
         <PackageReference Include="SharpYaml" Version="2.1.1" />
-        <PackageReference Include="System.Text.Json" Version="8.0.4" />
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
     </ItemGroup>
 
     <ItemGroup>
