@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && format == "int32")
+            if (type is "integer" or "number" && format == "int32")
             {
                 if (value is not OpenApiInteger)
                 {
@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && format == "int64")
+            if (type is "integer" or "number" && format == "int64")
             {
                 if (value is not OpenApiLong)
                 {
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number")
             {
-                if (value is not OpenApiDouble)
+                if (value is not OpenApiDouble or OpenApiInteger or OpenApiFloat or OpenApiLong)
                 {
                     context.CreateWarning(
                         ruleName,

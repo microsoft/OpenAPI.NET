@@ -367,7 +367,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             var expected =
                 """
-                openapi: 3.0.1
+                openapi: 3.0.4
                 info:
                   title: Demo
                   version: 1.0.0
@@ -497,7 +497,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             var expected =
                 """
-                openapi: 3.0.1
+                openapi: 3.0.4
                 info:
                   title: Demo
                   version: 1.0.0
