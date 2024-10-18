@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
             else
             {
-                if (type == "integer" && format == "int32")
+                if (type is "integer" or "number" && format == "int32")
                 {
                     if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
                     {
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     }
                 }
 
-                if (type == "integer" && format == "int64")
+                if (type is "integer" or "number" && format == "int64")
                 {
                     if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue))
                     {

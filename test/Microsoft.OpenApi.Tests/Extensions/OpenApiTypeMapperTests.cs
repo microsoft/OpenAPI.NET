@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
     {
         public static IEnumerable<object[]> PrimitiveTypeData => new List<object[]>
         {
-            new object[] { typeof(int), new OpenApiSchema { Type = "integer", Format = "int32" } },
+            new object[] { typeof(int), new OpenApiSchema { Type = "number", Format = "int32" } },
             new object[] { typeof(string), new OpenApiSchema { Type = "string" } },
             new object[] { typeof(double), new OpenApiSchema { Type = "number", Format = "double" } },
             new object[] { typeof(float?), new OpenApiSchema { Type = "number", Format = "float", Nullable = true } },
@@ -24,6 +24,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
         public static IEnumerable<object[]> OpenApiDataTypes => new List<object[]>
         {
             new object[] { new OpenApiSchema { Type = "integer", Format = "int32"}, typeof(int) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "int32"}, typeof(int) },
             new object[] { new OpenApiSchema { Type = "integer", Format = null, Nullable = false}, typeof(int) },
             new object[] { new OpenApiSchema { Type = "integer", Format = null, Nullable = true}, typeof(int?) },
             new object[] { new OpenApiSchema { Type = "string" }, typeof(string) },
