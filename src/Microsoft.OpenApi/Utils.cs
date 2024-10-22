@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi
         /// <returns>The input value.</returns>
         internal static T CheckArgumentNull<T>(
             T value,
-            [CallerArgumentExpression("value")] string parameterName = "")
+            [CallerArgumentExpression(nameof(value))] string parameterName = "")
         {
             return value ?? throw new ArgumentNullException(parameterName, $"Value cannot be null: {parameterName}");
         }
