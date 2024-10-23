@@ -35,10 +35,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <param name="hostDocument">The host OpenAPI document.</param>
         public OpenApiTagReference(string referenceId, OpenApiDocument hostDocument)
         {
-            if (string.IsNullOrEmpty(referenceId))
-            {
-                Utils.CheckArgumentNullOrEmpty(referenceId);
-            }
+            Utils.CheckArgumentNullOrEmpty(referenceId);
 
             _reference = new OpenApiReference()
             {
