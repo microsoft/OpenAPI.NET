@@ -40,15 +40,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                "#/example",
-            });
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -107,21 +99,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                // #enum/0 is not an error since the spec allows
-                // representing an object using a string.
-                "#/examples/example1/value/y",
-                "#/examples/example1/value/z",
-                "#/examples/example2/value"
-            });
+            result.Should().BeTrue();
         }
     }
 }

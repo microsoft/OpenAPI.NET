@@ -39,15 +39,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                "#/default",
-            });
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -72,15 +64,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var expectedWarnings = warnings.Select(e => e.Message).ToList();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                "#/example",
-            });
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -122,21 +106,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                // #enum/0 is not an error since the spec allows
-                // representing an object using a string.
-                "#/enum/1/y",
-                "#/enum/1/z",
-                "#/enum/2"
-            });
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -212,19 +182,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             bool result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                "#/default/property1/2",
-                "#/default/property2/0",
-                "#/default/property2/1/z"
-            });
+            result.Should().BeTrue();
         }
 
         [Fact]
