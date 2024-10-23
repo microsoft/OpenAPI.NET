@@ -36,10 +36,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <param name="externalResource">The externally referenced file.</param>
         public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
         {
-            if (string.IsNullOrEmpty(referenceId))
-            {
-                Utils.CheckArgumentNullOrEmpty(referenceId);
-            }
+            Utils.CheckArgumentNullOrEmpty(referenceId);
 
             _reference = new OpenApiReference()
             {

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -44,10 +43,7 @@ namespace Microsoft.OpenApi.Models.References
         /// </param>
         public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
         {
-            if (string.IsNullOrEmpty(referenceId))
-            {
-                Utils.CheckArgumentNullOrEmpty(referenceId);
-            }
+            Utils.CheckArgumentNullOrEmpty(referenceId);
 
             _reference = new OpenApiReference()
             {

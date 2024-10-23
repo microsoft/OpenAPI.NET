@@ -41,10 +41,7 @@ namespace Microsoft.OpenApi.Models.References
         /// </param>
         public OpenApiSchemaReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
         {
-            if (string.IsNullOrEmpty(referenceId))
-            {
-                Utils.CheckArgumentNullOrEmpty(referenceId);
-            }
+            Utils.CheckArgumentNullOrEmpty(referenceId);
 
             _reference = new OpenApiReference()
             {
