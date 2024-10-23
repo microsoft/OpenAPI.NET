@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -203,6 +203,9 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         internal async Task ParseDocumentAsync()
         {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
+
             Stream stream = null;
             try
             {
