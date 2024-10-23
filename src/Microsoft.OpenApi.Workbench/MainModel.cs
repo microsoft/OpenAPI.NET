@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 
@@ -158,6 +159,7 @@ namespace Microsoft.OpenApi.Workbench
                 _version = value;
                 OnPropertyChanged(nameof(IsV2_0));
                 OnPropertyChanged(nameof(IsV3_0));
+                OnPropertyChanged(nameof(IsV3_1));
             }
         }
 
@@ -183,6 +185,12 @@ namespace Microsoft.OpenApi.Workbench
         {
             get => Version == OpenApiSpecVersion.OpenApi3_0;
             set => Version = OpenApiSpecVersion.OpenApi3_0;
+        }
+
+        public bool IsV3_1
+        {
+            get => Version == OpenApiSpecVersion.OpenApi3_1;
+            set => Version = OpenApiSpecVersion.OpenApi3_1;
         }
 
         /// <summary>
