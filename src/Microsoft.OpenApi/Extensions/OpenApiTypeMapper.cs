@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Extensions
                 // integer is technically not valid with format, but we must provide some compatibility
                 ("integer" or "number", "int32", false) => typeof(int),
                 ("integer" or "number", "int64", false) => typeof(long),
-                ("integer", null, false) => typeof(int),
+                ("integer", null, false) => typeof(long),
                 ("number", "float", false) => typeof(float),
                 ("number", "double", false) => typeof(double),
                 ("number", "decimal", false) => typeof(decimal),
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Extensions
                 ("string", "uri", false) => typeof(Uri),
                 ("integer" or "number", "int32", true) => typeof(int?),
                 ("integer" or "number", "int64", true) => typeof(long?),
-                ("integer", null, true) => typeof(int?),
+                ("integer", null, true) => typeof(long?),
                 ("number", "float", true) => typeof(float?),
                 ("number", "double", true) => typeof(double?),
                 ("number", null, true) => typeof(double?),

@@ -16,10 +16,13 @@ namespace Microsoft.OpenApi.Tests.Extensions
         {
             new object[] { typeof(int), new OpenApiSchema { Type = "number", Format = "int32" } },
             new object[] { typeof(decimal), new OpenApiSchema { Type = "number", Format = "double" } },
+            new object[] { typeof(decimal?), new OpenApiSchema { Type = "number", Format = "double", Nullable = true } },
             new object[] { typeof(bool?), new OpenApiSchema { Type = "boolean", Nullable = true } },
             new object[] { typeof(Guid), new OpenApiSchema { Type = "string", Format = "uuid" } },
+            new object[] { typeof(Guid?), new OpenApiSchema { Type = "string", Format = "uuid", Nullable = true } },
             new object[] { typeof(uint), new OpenApiSchema { Type = "number", Format = "int32" } },
             new object[] { typeof(long), new OpenApiSchema { Type = "number", Format = "int64" } },
+            new object[] { typeof(long?), new OpenApiSchema { Type = "number", Format = "int64", Nullable = true } },
             new object[] { typeof(ulong), new OpenApiSchema { Type = "number", Format = "int64" } },
             new object[] { typeof(string), new OpenApiSchema { Type = "string" } },
             new object[] { typeof(double), new OpenApiSchema { Type = "number", Format = "double" } },
@@ -35,11 +38,15 @@ namespace Microsoft.OpenApi.Tests.Extensions
 
         public static IEnumerable<object[]> OpenApiDataTypes => new List<object[]>
         {
-            new object[] { new OpenApiSchema { Type = "number", Format = "int32"}, typeof(int) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "int32", Nullable = false}, typeof(int) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "int32", Nullable = true}, typeof(int?) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "int64", Nullable = false}, typeof(long) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "int64", Nullable = true}, typeof(long?) },
             new object[] { new OpenApiSchema { Type = "number", Format = "decimal"}, typeof(decimal) },
+            new object[] { new OpenApiSchema { Type = "integer", Format = null, Nullable = false}, typeof(long) },
+            new object[] { new OpenApiSchema { Type = "integer", Format = null, Nullable = true}, typeof(long?) },
             new object[] { new OpenApiSchema { Type = "number", Format = null, Nullable = false}, typeof(double) },
-            new object[] { new OpenApiSchema { Type = "number", Format = null, Nullable = false}, typeof(int) },
-            new object[] { new OpenApiSchema { Type = "number", Format = null, Nullable = true}, typeof(int?) },
+            new object[] { new OpenApiSchema { Type = "number", Format = null, Nullable = true}, typeof(double?) },
             new object[] { new OpenApiSchema { Type = "number", Format = "decimal", Nullable = true}, typeof(decimal?) },
             new object[] { new OpenApiSchema { Type = "number", Format = "double", Nullable = true}, typeof(double?) },
             new object[] { new OpenApiSchema { Type = "string", Format = "date-time", Nullable = true}, typeof(DateTimeOffset?) },
