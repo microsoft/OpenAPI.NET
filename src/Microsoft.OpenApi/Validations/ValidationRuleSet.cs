@@ -1,4 +1,4 @@
-﻿
+
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
@@ -329,17 +329,15 @@ namespace Microsoft.OpenApi.Validations
                 ..typeof(OpenApiExternalDocsRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiInfoRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiLicenseRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
-                ..typeof(OpenApiMediaTypeRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiOAuthFlowRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiServerRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiResponseRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiResponsesRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiSchemaRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
-                ..typeof(OpenApiHeaderRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiTagRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
                 ..typeof(OpenApiPathsRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
-                ..typeof(OpenApiParameterRules).GetProperties(BindingFlags.Static | BindingFlags.Public),
-            ];
+                ..typeof(OpenApiParameterRules).GetProperties(BindingFlags.Static | BindingFlags.Public)
+                ];
         }
     }
 }
