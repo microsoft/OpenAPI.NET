@@ -1768,7 +1768,7 @@ paths:
         public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
         {
             // Arrange
-            var expected = @"openapi: 3.0.1
+            var expected = @"openapi: 3.0.4
 info:
   title: magic style
   version: 1.0.0
