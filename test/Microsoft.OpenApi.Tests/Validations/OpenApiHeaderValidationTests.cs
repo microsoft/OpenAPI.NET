@@ -31,7 +31,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             };
 
             // Act
-            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var defaultRuleSet = ValidationRuleSet.GetDefaultRuleSet();
+            defaultRuleSet.Add(typeof(OpenApiHeader), OpenApiNonDefaultRules.HeaderMismatchedDataType);
+            var validator = new OpenApiValidator(defaultRuleSet);
+
             var walker = new OpenApiWalker(validator);
             walker.Walk(header);
 
@@ -40,7 +43,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().BeFalse();
         }
 
         [Fact]
