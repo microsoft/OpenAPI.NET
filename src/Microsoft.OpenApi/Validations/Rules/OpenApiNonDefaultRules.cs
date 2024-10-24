@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Models;
 
@@ -106,16 +107,13 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (examples != null)
             {
-                foreach (var key in examples.Keys)
+                foreach (var key in examples.Keys.Where(k => examples[k] != null))
                 {
-                    if (examples[key] != null)
-                    {
-                        context.Enter(key);
-                        context.Enter("value");
-                        RuleHelpers.ValidateDataTypeMismatch(context, ruleName, examples[key]?.Value, schema);
-                        context.Exit();
-                        context.Exit();
-                    }
+                    context.Enter(key);
+                    context.Enter("value");
+                    RuleHelpers.ValidateDataTypeMismatch(context, ruleName, examples[key]?.Value, schema);
+                    context.Exit();
+                    context.Exit();
                 }
             }
 
