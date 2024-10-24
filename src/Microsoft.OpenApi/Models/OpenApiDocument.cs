@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openApi;
-            writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.0");
+            writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.1");
 
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
