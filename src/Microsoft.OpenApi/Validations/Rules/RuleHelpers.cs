@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && format == "int32")
+            if (type is "integer" or "number" && format is "int32")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && format == "int64")
+            if (type is "integer" or "number" && format is "int64")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && jsonElement.ValueKind is not JsonValueKind.Number)
+            if (type is "integer")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -173,7 +173,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "number" && format == "float")
+            if (type is "number" && format is "float")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "number" && format == "double")
+            if (type is "number" && format is "double")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "number")
+            if (type is "number")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string" && format == "byte")
+            if (type is "string" && format is "byte")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -221,7 +221,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string" && format == "date")
+            if (type is "string" && format is "date")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -233,7 +233,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string" && format == "date-time")
+            if (type is "string" && format is "date-time")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -245,7 +245,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string" && format == "password")
+            if (type is "string" && format is "password")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -257,7 +257,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string")
+            if (type is "string")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -269,7 +269,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "boolean")
+            if (type is "boolean")
             {
                 if (jsonElement.ValueKind is not JsonValueKind.True && jsonElement.ValueKind is not JsonValueKind.False)
                 {
