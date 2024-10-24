@@ -14,49 +14,6 @@ namespace Microsoft.OpenApi.Validations.Rules
     public static class OpenApiSchemaRules
     {
         /// <summary>
-        /// Validate the data matches with the given data type.
-        /// </summary>
-        public static ValidationRule<OpenApiSchema> SchemaMismatchedDataType =>
-            new(nameof(SchemaMismatchedDataType),
-                (context, schema) =>
-                {
-                    // default
-                    context.Enter("default");
-
-                    if (schema.Default != null)
-                    {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Default, schema);
-                    }
-
-                    context.Exit();
-
-                    // example
-                    context.Enter("example");
-
-                    if (schema.Example != null)
-                    {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Example, schema);
-                    }
-
-                    context.Exit();
-
-                    // enum
-                    context.Enter("enum");
-
-                    if (schema.Enum != null)
-                    {
-                        for (var i = 0; i < schema.Enum.Count; i++)
-                        {
-                            context.Enter(i.ToString());
-                            RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Enum[i], schema);
-                            context.Exit();
-                        }
-                    }
-
-                    context.Exit();
-                });
-
-        /// <summary>
         /// Validates Schema Discriminator
         /// </summary>
         public static ValidationRule<OpenApiSchema> ValidateSchemaDiscriminator =>
