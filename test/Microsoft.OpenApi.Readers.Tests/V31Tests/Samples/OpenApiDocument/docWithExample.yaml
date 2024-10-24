@@ -1,4 +1,4 @@
-openapi: 3.1.0 # The version of the OpenAPI Specification
+openapi: 3.1.1 # The version of the OpenAPI Specification
 info: # Metadata about the API
   title: A simple OpenAPI 3.1 example
   version: 1.0.0
