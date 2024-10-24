@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
     public class OpenApiPathItemReferenceTests
     {
         private const string OpenApi = @"
-openapi: 3.1.0
+openapi: 3.1.1
 info:
   title: Sample API
   version: 1.0.0
@@ -41,7 +41,7 @@ components:
 ";
 
         private const string OpenApi_2 = @"
-openapi: 3.1.0
+openapi: 3.1.1
 info:
   title: Sample API
   version: 1.0.0
