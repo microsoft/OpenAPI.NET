@@ -5,6 +5,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -55,7 +56,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             // convert value to JsonElement and access the ValueKind property to determine the type.
             var jsonElement = JsonDocument.Parse(JsonSerializer.Serialize(value)).RootElement;
 
-            var type = (string)schema.Type;
+            var type = OpenApiTypeMapper.ToIdentifier(schema.Type);
             var format = schema.Format;
             var nullable = schema.Nullable;
 

@@ -12,40 +12,81 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class OpenApiTypeMapper
     {
+        /// <summary>
+        /// Maps a JsonSchema data type to an identifier.
+        /// </summary>
+        /// <param name="schemaType"></param>
+        /// <returns></returns>
+        public static string ToIdentifier(JsonSchemaType? schemaType)
+        {
+            return schemaType switch
+            {
+                JsonSchemaType.Null => "null",
+                JsonSchemaType.Boolean => "boolean",
+                JsonSchemaType.Integer => "integer",
+                JsonSchemaType.Number => "number",
+                JsonSchemaType.String => "string",
+                JsonSchemaType.Array => "array",
+                JsonSchemaType.Object => "object",
+                _ => null,
+            };
+        }
+
+        /// <summary>
+        /// Converts a schema type's identifier into the enum equivalent
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        public static JsonSchemaType IdentifierToEnumType(string identifier)
+        {
+            return identifier switch
+            {
+                "null" => JsonSchemaType.Null,
+                "boolean" => JsonSchemaType.Boolean,
+                "integer" or "int" => JsonSchemaType.Integer,
+                "number" or "double" => JsonSchemaType.Number,
+                "string" => JsonSchemaType.String,
+                "array" => JsonSchemaType.Array,
+                "object" => JsonSchemaType.Object,
+                "file" => JsonSchemaType.String, // File is treated as string
+                _ => JsonSchemaType.Any,
+            };
+        }
+
         private static readonly Dictionary<Type, Func<OpenApiSchema>> _simpleTypeToOpenApiSchema = new()
         {
-            [typeof(bool)] = () => new() { Type = "boolean" },
-            [typeof(byte)] = () => new() { Type = "string", Format = "byte" },
-            [typeof(int)] = () => new() { Type = "integer", Format = "int32" },
-            [typeof(uint)] = () => new() { Type = "integer", Format = "int32" },
-            [typeof(long)] = () => new() { Type = "integer", Format = "int64" },
-            [typeof(ulong)] = () => new() { Type = "integer", Format = "int64" },
-            [typeof(float)] = () => new() { Type = "number", Format = "float" },
-            [typeof(double)] = () => new() { Type = "number", Format = "double" },
-            [typeof(decimal)] = () => new() { Type = "number", Format = "double" },
-            [typeof(DateTime)] = () => new() { Type = "string", Format = "date-time" },
-            [typeof(DateTimeOffset)] = () => new() { Type = "string", Format = "date-time" },
-            [typeof(Guid)] = () => new() { Type = "string", Format = "uuid" },
-            [typeof(char)] = () => new() { Type = "string" },
+            [typeof(bool)] = () => new() { Type = JsonSchemaType.Boolean },
+            [typeof(byte)] = () => new() { Type = JsonSchemaType.String, Format = "byte" },
+            [typeof(int)] = () => new() { Type = JsonSchemaType.Integer, Format = "int32" },
+            [typeof(uint)] = () => new() { Type = JsonSchemaType.Integer, Format = "int32" },
+            [typeof(long)] = () => new() { Type = JsonSchemaType.Integer, Format = "int64" },
+            [typeof(ulong)] = () => new() { Type = JsonSchemaType.Integer, Format = "int64" },
+            [typeof(float)] = () => new() { Type = JsonSchemaType.Number, Format = "float" },
+            [typeof(double)] = () => new() { Type = JsonSchemaType.Number, Format = "double" },
+            [typeof(decimal)] = () => new() { Type = JsonSchemaType.Number, Format = "double" },
+            [typeof(DateTime)] = () => new() { Type = JsonSchemaType.String, Format = "date-time" },
+            [typeof(DateTimeOffset)] = () => new() { Type = JsonSchemaType.String, Format = "date-time" },
+            [typeof(Guid)] = () => new() { Type = JsonSchemaType.String, Format = "uuid" },
+            [typeof(char)] = () => new() { Type = JsonSchemaType.String },
 
             // Nullable types
-            [typeof(bool?)] = () => new() { Type = "boolean", Nullable = true },
-            [typeof(byte?)] = () => new() { Type = "string", Format = "byte", Nullable = true },
-            [typeof(int?)] = () => new() { Type = "integer", Format = "int32", Nullable = true },
-            [typeof(uint?)] = () => new() { Type = "integer", Format = "int32", Nullable = true },
-            [typeof(long?)] = () => new() { Type = "integer", Format = "int64", Nullable = true },
-            [typeof(ulong?)] = () => new() { Type = "integer", Format = "int64", Nullable = true },
-            [typeof(float?)] = () => new() { Type = "number", Format = "float", Nullable = true },
-            [typeof(double?)] = () => new() { Type = "number", Format = "double", Nullable = true },
-            [typeof(decimal?)] = () => new() { Type = "number", Format = "double", Nullable = true },
-            [typeof(DateTime?)] = () => new() { Type = "string", Format = "date-time", Nullable = true },
-            [typeof(DateTimeOffset?)] = () => new() { Type = "string", Format = "date-time", Nullable = true },
-            [typeof(Guid?)] = () => new() { Type = "string", Format = "uuid", Nullable = true },
-            [typeof(char?)] = () => new() { Type = "string", Nullable = true },
+            [typeof(bool?)] = () => new() { Type = JsonSchemaType.Boolean, Nullable = true },
+            [typeof(byte?)] = () => new() { Type = JsonSchemaType.String, Format = "byte", Nullable = true },
+            [typeof(int?)] = () => new() { Type = JsonSchemaType.Integer, Format = "int32", Nullable = true },
+            [typeof(uint?)] = () => new() { Type = JsonSchemaType.Integer, Format = "int32", Nullable = true },
+            [typeof(long?)] = () => new() { Type = JsonSchemaType.Integer, Format = "int64", Nullable = true },
+            [typeof(ulong?)] = () => new() { Type = JsonSchemaType.Integer, Format = "int64", Nullable = true },
+            [typeof(float?)] = () => new() { Type = JsonSchemaType.Number, Format = "float", Nullable = true },
+            [typeof(double?)] = () => new() { Type = JsonSchemaType.Number, Format = "double", Nullable = true },
+            [typeof(decimal?)] = () => new() { Type = JsonSchemaType.Number, Format = "double", Nullable = true },
+            [typeof(DateTime?)] = () => new() { Type = JsonSchemaType.String, Format = "date-time", Nullable = true },
+            [typeof(DateTimeOffset?)] = () => new() { Type = JsonSchemaType.String, Format = "date-time", Nullable = true },
+            [typeof(Guid?)] = () => new() { Type = JsonSchemaType.String, Format = "uuid", Nullable = true },
+            [typeof(char?)] = () => new() { Type = JsonSchemaType.String, Nullable = true },
 
-            [typeof(Uri)] = () => new() { Type = "string", Format = "uri" }, // Uri is treated as simple string
-            [typeof(string)] = () => new() { Type = "string" },
-            [typeof(object)] = () => new() { Type = "object" }
+            [typeof(Uri)] = () => new() { Type = JsonSchemaType.String, Format = "uri" }, // Uri is treated as simple string
+            [typeof(string)] = () => new() { Type = JsonSchemaType.String },
+            [typeof(object)] = () => new() { Type = JsonSchemaType.Object }
         };
 
         /// <summary>
@@ -79,7 +120,7 @@ namespace Microsoft.OpenApi.Extensions
 
             return _simpleTypeToOpenApiSchema.TryGetValue(type, out var result)
                 ? result()
-                : new() { Type = "string" };
+                : new() { Type = JsonSchemaType.String };
         }
 
         /// <summary>
@@ -95,7 +136,7 @@ namespace Microsoft.OpenApi.Extensions
                 throw new ArgumentNullException(nameof(schema));
             }
 
-            var type = (schema.Type?.ToString().ToLowerInvariant(), schema.Format?.ToLowerInvariant(), schema.Nullable) switch
+            var type = (ToIdentifier(schema.Type), schema.Format?.ToLowerInvariant(), schema.Nullable) switch
             {
                 ("boolean", null, false) => typeof(bool),
                 ("integer", "int32", false) => typeof(int),

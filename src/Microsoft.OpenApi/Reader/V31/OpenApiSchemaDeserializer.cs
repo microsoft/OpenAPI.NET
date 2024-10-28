@@ -122,9 +122,21 @@ namespace Microsoft.OpenApi.Reader.V31
                 "type",
                 (o, n, _) => 
                 {
-                   o.Type = n is ValueNode
-                        ? n.GetScalarValue()
-                        : n.CreateSimpleList((n2, p) => n2.GetScalarValue()).ToArray();
+                    if (n is ValueNode)
+                    {
+                        o.Type = OpenApiTypeMapper.IdentifierToEnumType(n.GetScalarValue());
+                    }
+                    else
+                    {
+                        var list = n.CreateSimpleList((n2, p) => n2.GetScalarValue());
+                        JsonSchemaType combinedType = JsonSchemaType.Any;
+                        foreach(var type in list)
+                        {
+                            var schemaType = OpenApiTypeMapper.IdentifierToEnumType(type);
+                            combinedType |= schemaType;
+                        }
+                        o.Type = combinedType;
+                    }
                 }
             },
             {
@@ -187,15 +199,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     var nullable = bool.Parse(n.GetScalarValue());
                     if (nullable) // if nullable, convert type into an array of type(s) and null
                     {
-                        if (o.Type is string[] typeArray)
-                        {
-                            var typeList = new List<string>(typeArray) { OpenApiConstants.Null };
-                            o.Type = typeList.ToArray();
-                        }
-                        else if (o.Type is string typeString)
-                        {
-                            o.Type = new string[]{typeString, OpenApiConstants.Null};
-                        }
+                        o.Type |= JsonSchemaType.Null;
                     }
                 }
             },
@@ -259,8 +263,8 @@ namespace Microsoft.OpenApi.Reader.V31
 
             if (schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
             {
-                var type = schema.Type;                
-                schema.Type = new string[] {(string)type, OpenApiConstants.Null};
+                var type = schema.Type;
+                schema.Type = type | JsonSchemaType.Null;
                 schema.Extensions.Remove(OpenApiConstants.NullableExtension);
             }
 
