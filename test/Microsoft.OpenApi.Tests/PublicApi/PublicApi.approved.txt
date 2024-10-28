@@ -190,8 +190,10 @@ namespace Microsoft.OpenApi.Extensions
     }
     public static class OpenApiTypeMapper
     {
+        public static Microsoft.OpenApi.Models.JsonSchemaType IdentifierToEnumType(string identifier) { }
         public static System.Type MapOpenApiPrimitiveTypeToSimpleType(this Microsoft.OpenApi.Models.OpenApiSchema schema) { }
         public static Microsoft.OpenApi.Models.OpenApiSchema MapTypeToOpenApiPrimitiveType(this System.Type type) { }
+        public static string ToIdentifier(Microsoft.OpenApi.Models.JsonSchemaType? schemaType) { }
     }
     public static class StringExtensions
     {
@@ -329,6 +331,18 @@ namespace Microsoft.OpenApi.MicrosoftExtensions
 }
 namespace Microsoft.OpenApi.Models
 {
+    [System.Flags]
+    public enum JsonSchemaType
+    {
+        Any = 0,
+        Null = 1,
+        Boolean = 2,
+        Integer = 4,
+        Number = 8,
+        String = 16,
+        Object = 32,
+        Array = 64,
+    }
     public class OpenApiCallback : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         public OpenApiCallback() { }
@@ -907,7 +921,7 @@ namespace Microsoft.OpenApi.Models
         public virtual System.Collections.Generic.ISet<string> Required { get; set; }
         public virtual string Schema { get; set; }
         public virtual string Title { get; set; }
-        public virtual object Type { get; set; }
+        public virtual Microsoft.OpenApi.Models.JsonSchemaType? Type { get; set; }
         public virtual bool UnEvaluatedProperties { get; set; }
         public virtual bool UnevaluatedProperties { get; set; }
         public virtual bool? UniqueItems { get; set; }
@@ -1248,7 +1262,7 @@ namespace Microsoft.OpenApi.Models.References
         public override System.Collections.Generic.ISet<string> Required { get; set; }
         public override string Schema { get; set; }
         public override string Title { get; set; }
-        public override object Type { get; set; }
+        public override Microsoft.OpenApi.Models.JsonSchemaType? Type { get; set; }
         public override bool UnEvaluatedProperties { get; set; }
         public override bool UnevaluatedProperties { get; set; }
         public override bool? UniqueItems { get; set; }
