@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -87,10 +87,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = false,
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     Style = ParameterStyle.Form,
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -229,7 +229,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float",
                         Default = new OpenApiAny(5).Node
                     }
@@ -256,7 +256,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Required = true,
                 Schema = new()
                 {
-                    Type = "number",
+                    Type = JsonSchemaType.Number,
                     Format = "float",
                     Enum =
                         {

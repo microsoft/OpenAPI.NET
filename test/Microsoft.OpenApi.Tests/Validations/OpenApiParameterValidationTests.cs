@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Example = 55,
                 Schema = new()
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                 }
             };
 
@@ -112,10 +112,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Required = true,
                 Schema = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     AdditionalProperties = new()
                     {
-                        Type = "integer",
+                        Type = JsonSchemaType.Integer,
                     }
                 },
                 Examples =
@@ -188,7 +188,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Required = true,
                 Schema = new()
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                 }
             };
 
@@ -226,7 +226,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Required = true,
                 Schema = new()
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                 }
             };
 

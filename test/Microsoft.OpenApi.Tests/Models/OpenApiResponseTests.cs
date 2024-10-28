@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = "Blabla",
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "The number of allowed requests in the current period",
                     Schema = new()
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "The number of seconds left in the current period",
                     Schema = new()
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
             }
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = "Blabla",
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "The number of allowed requests in the current period",
                     Schema = new()
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "The number of seconds left in the current period",
                     Schema = new()
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
             }
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
                     }
                 }
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "The number of allowed requests in the current period",
                     Schema = new()
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "The number of seconds left in the current period",
                     Schema = new()
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
             }
@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                      Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
                     }
                 }
@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "The number of allowed requests in the current period",
                     Schema = new()
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
@@ -168,7 +168,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "The number of seconds left in the current period",
                     Schema = new()
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
             }

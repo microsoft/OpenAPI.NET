@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                     {
                                         Schema = new OpenApiSchema
                                         {
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     }
                                 }
@@ -120,10 +120,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             var loopySchema = new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
-                    ["name"] = new() { Type = "string" }
+                    ["name"] = new() { Type = JsonSchemaType.String }
                 }
             };
 

@@ -24,11 +24,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MaxLength = 15
                         }
                     }
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new OpenApiSchemaReference("schema2", null)                        
                     }
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         }
                     }
                 },
@@ -136,20 +136,20 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["schema1"] = new()
                 {
-                    Type = "string"
+                    Type = JsonSchemaType.String
                 },
                 ["schema2"] = null,
                 ["schema3"] = null,
                 ["schema4"] = new()
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                     AllOf = new List<OpenApiSchema>
                     {
                         null,
                         null,
                         new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                         null,
                         null
@@ -165,12 +165,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 }
@@ -183,23 +183,23 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["schema1"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
                 ["schema2"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new OpenApiSchema()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new OpenApiSchemaReference("schema2", null)
                     }
@@ -236,7 +236,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new OpenApiSchema()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         }
                     }
                 }

@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     Required = true,
                     Schema = new()
                     {
-                        Type = "integer",
+                        Type = JsonSchemaType.Integer,
                         Format = "int32"
                     }
                     
@@ -106,11 +106,11 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                                 Properties = {
                                     ["name"] = new()
                                     {
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["tag"] = new()
                                     {
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
 

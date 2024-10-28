@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Tests
                     Schemas = {
                         ["test"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             Description = "The referenced one"
                         }
                     }
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
             var schemaFragment = new OpenApiSchema()
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Description = "Schema from a fragment"
             };
             workspace.RegisterComponent<IOpenApiReferenceable>("common#/components/schemas/test", schemaFragment);
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Tests
                     {
                         ["test"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             Description = "The referenced one"
                         }
                     }

@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             schema.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                     Format = "email"
                 });
         }       
@@ -167,10 +167,10 @@ get:
                 schema.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     AdditionalProperties = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
             }
@@ -199,17 +199,17 @@ get:
             schema.Should().BeEquivalentTo(
             new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 Properties =
                 {
                         ["id"] = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int64"
                         },
                         ["name"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                 },
                 Required =
@@ -254,18 +254,18 @@ get:
                 {
                     ["ErrorModel"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Properties =
                         {
                             ["code"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Minimum = 100,
                                 Maximum = 600
                             },
                             ["message"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             }
                         },
                         Required =
@@ -281,13 +281,13 @@ get:
                             new OpenApiSchemaReference("ErrorModel", result.OpenApiDocument),
                             new OpenApiSchema
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Required = {"rootCause"},
                                 Properties =
                                 {
                                     ["rootCause"] = new()
                                     {
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 }
                             }
@@ -311,7 +311,7 @@ get:
                 {
                     ["Pet"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Discriminator = new()
                         {
                             PropertyName = "petType"
@@ -320,11 +320,11 @@ get:
                         {
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["petType"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             }
                         },
                         Required =
@@ -341,13 +341,13 @@ get:
                             new OpenApiSchemaReference("Pet", result.OpenApiDocument),
                             new OpenApiSchema
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Required = {"huntingSkill"},
                                 Properties =
                                 {
                                     ["huntingSkill"] = new()
                                     {
-                                        Type = "string",
+                                        Type = JsonSchemaType.String,
                                         Description = "The measured skill for hunting",
                                         Enum =
                                         {
@@ -369,13 +369,13 @@ get:
                             new OpenApiSchemaReference("Pet", result.OpenApiDocument),
                             new OpenApiSchema
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Required = {"packSize"},
                                 Properties =
                                 {
                                     ["packSize"] = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int32",
                                         Description = "the size of the pack the dog is from",
                                         Default = 0,

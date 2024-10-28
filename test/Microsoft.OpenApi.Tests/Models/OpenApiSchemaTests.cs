@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
             ExclusiveMinimum = true,
             Minimum = 10,
             Default = 15,
-            Type = "integer",
+            Type = JsonSchemaType.Integer,
 
             Nullable = true,
             ExternalDocs = new()
@@ -53,11 +53,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MaxLength = 15
                         }
                     },
@@ -72,13 +72,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["property6"] = new()
                                 {
-                                    Type = "boolean"
+                                    Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
                         ["property7"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MinLength = 2
                         }
                     },
@@ -103,11 +103,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property1"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property2"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MaxLength = 15
                         }
                     },
@@ -123,13 +123,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["property4"] = new()
                                 {
-                                    Type = "boolean"
+                                    Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
                         ["property5"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MinLength = 2
                         }
                     },
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Tests.Models
             ExclusiveMinimum = true,
             Minimum = 10,
             Default = 15,
-            Type = "integer",
+            Type = JsonSchemaType.Integer,
 
             Nullable = true,
             ExternalDocs = new()
@@ -173,11 +173,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MaxLength = 15,
                             ReadOnly = true
                         }
@@ -194,13 +194,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["property6"] = new()
                                 {
-                                    Type = "boolean"
+                                    Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
                         ["property7"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MinLength = 2
                         }
                     },
@@ -427,10 +427,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "decimal"
                     },
-                    new() { Type = "string" },
+                    new() { Type = JsonSchemaType.String },
                 }
             };
 
@@ -466,7 +466,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var baseSchema = new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Format = "date"
             };
 
@@ -475,7 +475,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Nullable = true
             };
 
-            Assert.Equal("string", actualSchema.Type);
+            Assert.Equal(JsonSchemaType.String, actualSchema.Type);
             Assert.Equal("date", actualSchema.Format);
             Assert.True(actualSchema.Nullable);
         }
@@ -571,7 +571,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Not = new OpenApiSchema()
                 {
                     Title = "Inner Schema",
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                 }
             };
 

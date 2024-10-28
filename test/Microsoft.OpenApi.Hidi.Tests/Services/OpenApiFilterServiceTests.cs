@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                                 Required = true,
                                 Schema = new()
                                 {
-                                    Type = "string"
+                                    Type = JsonSchemaType.String
                                 }
                             }
                         }
