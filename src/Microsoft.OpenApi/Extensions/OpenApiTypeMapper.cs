@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -139,9 +139,10 @@ namespace Microsoft.OpenApi.Extensions
             var type = (ToIdentifier(schema.Type), schema.Format?.ToLowerInvariant(), schema.Nullable) switch
             {
                 ("boolean", null, false) => typeof(bool),
-                ("integer", "int32", false) => typeof(int),
-                ("integer", "int64", false) => typeof(long),
-                ("integer", null, false) => typeof(int),
+                // integer is technically not valid with format, but we must provide some compatibility
+                ("integer" or "number", "int32", false) => typeof(int),
+                ("integer" or "number", "int64", false) => typeof(long),
+                ("integer", null, false) => typeof(long),
                 ("number", "float", false) => typeof(float),
                 ("number", "double", false) => typeof(double),
                 ("number", "decimal", false) => typeof(decimal),
@@ -154,9 +155,9 @@ namespace Microsoft.OpenApi.Extensions
                 ("string", null, false) => typeof(string),
                 ("object", null, false) => typeof(object),
                 ("string", "uri", false) => typeof(Uri),
-                ("integer", "int32", true) => typeof(int?),
-                ("integer", "int64", true) => typeof(long?),
-                ("integer", null, true) => typeof(int?),
+                ("integer" or "number", "int32", true) => typeof(int?),
+                ("integer" or "number", "int64", true) => typeof(long?),
+                ("integer", null, true) => typeof(long?),
                 ("number", "float", true) => typeof(float?),
                 ("number", "double", true) => typeof(double?),
                 ("number", null, true) => typeof(double?),
