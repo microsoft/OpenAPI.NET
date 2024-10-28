@@ -166,10 +166,10 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                 parameter.Content = null;
                 parameter.Schema = new()
                 {
-                    Type = "array",
+                    Type = JsonSchemaType.Array,
                     Items = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 };
             }
@@ -178,9 +178,9 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private void AddAdditionalPropertiesToSchema(OpenApiSchema schema)
         {
-            if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals((string)schema.Type, StringComparison.OrdinalIgnoreCase))
+            if (schema != null && !_schemaLoop.Contains(schema) && schema.Type.Equals(JsonSchemaType.Object))
             {
-                schema.AdditionalProperties = new() { Type = "object" };
+                schema.AdditionalProperties = new() { Type = JsonSchemaType.Object };
 
                 /* Because 'additionalProperties' are now being walked,
                  * we need a way to keep track of visited schemas to avoid
