@@ -912,7 +912,7 @@ namespace Microsoft.OpenApi.Models
         public virtual bool UnresolvedReference { get; set; }
         public virtual decimal? V31ExclusiveMaximum { get; set; }
         public virtual decimal? V31ExclusiveMinimum { get; set; }
-        public virtual string Vocabulary { get; set; }
+        public virtual System.Collections.Generic.IDictionary<string, bool> Vocabulary { get; set; }
         public virtual bool WriteOnly { get; set; }
         public virtual Microsoft.OpenApi.Models.OpenApiXml Xml { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1250,7 +1250,7 @@ namespace Microsoft.OpenApi.Models.References
         public override bool? UniqueItems { get; set; }
         public override decimal? V31ExclusiveMaximum { get; set; }
         public override decimal? V31ExclusiveMinimum { get; set; }
-        public override string Vocabulary { get; set; }
+        public override System.Collections.Generic.IDictionary<string, bool> Vocabulary { get; set; }
         public override bool WriteOnly { get; set; }
         public override Microsoft.OpenApi.Models.OpenApiXml Xml { get; set; }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1845,6 +1845,7 @@ namespace Microsoft.OpenApi.Writers
     {
         public static void WriteOptionalCollection(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IEnumerable<string> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string> action) { }
         public static void WriteOptionalCollection<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IEnumerable<T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, T> action) { }
+        public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, bool> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, bool> action) { }
         public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, string> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string> action) { }
         public static void WriteOptionalMap<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, T> action)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
