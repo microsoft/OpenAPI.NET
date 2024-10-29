@@ -57,8 +57,8 @@ namespace Microsoft.OpenApi.Extensions
         /// Other types including nullables and URL are also supported.
         /// Common Name      type    format      Comments
         /// ===========      ======= ======      =========================================
-        /// integer          integer int32       signed 32 bits
-        /// long             integer int64       signed 64 bits
+        /// integer          number int32       signed 32 bits
+        /// long             number int64       signed 64 bits
         /// float            number  float
         /// double           number  double
         /// string           string  [empty]
