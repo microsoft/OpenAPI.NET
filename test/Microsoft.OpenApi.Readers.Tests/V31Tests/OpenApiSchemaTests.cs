@@ -406,5 +406,51 @@ nullable: true";
             // Assert
             schema.Type.Should().Be(JsonSchemaType.String | JsonSchemaType.Null);
         }
+
+        [Fact]
+        public void SerializeSchemaWithJsonSchemaKeywordsWorks()
+        {
+            // Arrange
+            var expected = @"$id: https://example.com/schemas/person.schema.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+$comment: A schema defining a person object with optional references to dynamic components.
+$vocabulary:
+  https://json-schema.org/draft/2020-12/vocab/core: true
+  https://json-schema.org/draft/2020-12/vocab/applicator: true
+  https://json-schema.org/draft/2020-12/vocab/validation: true
+  https://json-schema.org/draft/2020-12/vocab/meta-data: false
+  https://json-schema.org/draft/2020-12/vocab/format-annotation: false
+$dynamicAnchor: addressDef
+title: Person
+required:
+  - name
+type: object
+properties:
+  name:
+    $comment: The person's full name
+    type: string
+  age:
+    $comment: Age must be a non-negative integer
+    minimum: 0
+    type: integer
+  address:
+    $comment: Reference to an address definition which can change dynamically
+    $dynamicRef: '#addressDef'
+description: Schema for a person object
+";
+            var path = Path.Combine(SampleFolderPath, "schemaWithJsonSchemaKeywords.yaml");
+
+            // Act
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
+
+            // serialization
+            var writer = new StringWriter();
+            schema.SerializeAsV31(new OpenApiYamlWriter(writer));
+            var schemaString = writer.ToString();
+
+            // Assert
+            schema.Vocabulary.Keys.Count.Should().Be(5);
+            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+        }
     }
 }

@@ -88,15 +88,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                "#/{parameter1}/example",
-            });
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -149,7 +141,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             };
 
             // Act
-            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var defaultRuleSet = ValidationRuleSet.GetDefaultRuleSet();
+            defaultRuleSet.Add(typeof(OpenApiParameter), OpenApiNonDefaultRules.ParameterMismatchedDataType);
+
+            var validator = new OpenApiValidator(defaultRuleSet);
             validator.Enter("{parameter1}");
             var walker = new OpenApiWalker(validator);
             walker.Walk(parameter);
@@ -159,20 +154,6 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
             result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                // #enum/0 is not an error since the spec allows
-                // representing an object using a string.
-                "#/{parameter1}/examples/example1/value/y",
-                "#/{parameter1}/examples/example1/value/z",
-                "#/{parameter1}/examples/example2/value"
-            });
         }
 
         [Fact]

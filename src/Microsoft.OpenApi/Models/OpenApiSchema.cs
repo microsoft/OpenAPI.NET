@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// $vocabulary- used in meta-schemas to identify the vocabularies available for use in schemas described by that meta-schema.
         /// </summary>
-        public virtual string Vocabulary { get; set; }
+        public virtual IDictionary<string, bool> Vocabulary { get; set; }
 
         /// <summary>
         /// $dynamicRef - an applicator that allows for deferring the full resolution until runtime, at which point it is resolved each time it is encountered while evaluating an instance
@@ -55,16 +55,6 @@ namespace Microsoft.OpenApi.Models
         /// $dynamicAnchor - used to create plain name fragments that are not tied to any particular structural location for referencing purposes, which are taken into consideration for dynamic referencing.
         /// </summary>
         public virtual string DynamicAnchor { get; set; }
-
-        /// <summary>
-        /// $recursiveAnchor - used to construct recursive schemas i.e one that has a reference to its own root, identified by the empty fragment URI reference ("#")
-        /// </summary>
-        public virtual string RecursiveAnchor { get; set; }
-
-        /// <summary>
-        /// $recursiveRef - used to construct recursive schemas i.e one that has a reference to its own root, identified by the empty fragment URI reference ("#")
-        /// </summary>
-        public virtual string RecursiveRef { get; set; }
 
         /// <summary>
         /// $defs - reserves a location for schema authors to inline re-usable JSON Schemas into a more general schema. 
@@ -359,11 +349,9 @@ namespace Microsoft.OpenApi.Models
             Id = schema?.Id ?? Id;
             Schema = schema?.Schema ?? Schema;
             Comment = schema?.Comment ?? Comment;
-            Vocabulary = schema?.Vocabulary ?? Vocabulary;
+            Vocabulary = schema?.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
             DynamicAnchor = schema?.DynamicAnchor ?? DynamicAnchor;
             DynamicRef = schema?.DynamicRef ?? DynamicRef;
-            RecursiveAnchor = schema?.RecursiveAnchor ?? RecursiveAnchor;
-            RecursiveRef = schema?.RecursiveRef ?? RecursiveRef;
             Definitions = schema?.Definitions != null ? new Dictionary<string, OpenApiSchema>(schema.Definitions) : null;
             UnevaluatedProperties = schema?.UnevaluatedProperties ?? UnevaluatedProperties;
             V31ExclusiveMaximum = schema?.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
@@ -491,22 +479,22 @@ namespace Microsoft.OpenApi.Models
             SerializeTypeProperty(Type, writer, version);
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, callback);
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, callback);
 
             // not
-            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Not, Not, callback);
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, callback);
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, callback);
 
             // additionalProperties
             if (AdditionalPropertiesAllowed)
@@ -514,7 +502,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(
                     OpenApiConstants.AdditionalProperties,
                     AdditionalProperties,
-                    (w, s) => s.SerializeAsV3(w));
+                    callback);
             }
             else
             {
@@ -537,7 +525,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             // discriminator
-            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, callback);
 
             // readOnly
             writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
@@ -549,7 +537,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
@@ -558,7 +546,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }
@@ -575,12 +563,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
-            writer.WriteProperty(OpenApiConstants.Vocabulary, Vocabulary);
-            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV31(w));
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
             writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
-            writer.WriteProperty(OpenApiConstants.RecursiveAnchor, RecursiveAnchor);
-            writer.WriteProperty(OpenApiConstants.RecursiveRef, RecursiveRef);
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMaximum, V31ExclusiveMaximum);
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);            
             writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
