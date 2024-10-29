@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// $vocabulary- used in meta-schemas to identify the vocabularies available for use in schemas described by that meta-schema.
         /// </summary>
-        public virtual string Vocabulary { get; set; }
+        public virtual IDictionary<string, bool> Vocabulary { get; set; }
 
         /// <summary>
         /// $dynamicRef - an applicator that allows for deferring the full resolution until runtime, at which point it is resolved each time it is encountered while evaluating an instance
@@ -348,7 +348,7 @@ namespace Microsoft.OpenApi.Models
             Id = schema?.Id ?? Id;
             Schema = schema?.Schema ?? Schema;
             Comment = schema?.Comment ?? Comment;
-            Vocabulary = schema?.Vocabulary ?? Vocabulary;
+            Vocabulary = schema?.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
             DynamicAnchor = schema?.DynamicAnchor ?? DynamicAnchor;
             DynamicRef = schema?.DynamicRef ?? DynamicRef;
             Definitions = schema?.Definitions != null ? new Dictionary<string, OpenApiSchema>(schema.Definitions) : null;
@@ -562,8 +562,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
-            writer.WriteProperty(OpenApiConstants.Vocabulary, Vocabulary);
-            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV31(w));
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
             writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMaximum, V31ExclusiveMaximum);

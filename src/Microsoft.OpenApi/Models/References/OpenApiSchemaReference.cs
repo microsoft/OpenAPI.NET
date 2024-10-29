@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Comment { get => Target.Comment; set => Target.Comment = value; }
         /// <inheritdoc/>
-        public override string Vocabulary { get => Target.Vocabulary; set => Target.Vocabulary = value; }
+        public override IDictionary<string, bool> Vocabulary { get => Target.Vocabulary; set => Target.Vocabulary = value; }
         /// <inheritdoc/>
         public override string DynamicRef { get => Target.DynamicRef; set => Target.DynamicRef = value; }
         /// <inheritdoc/>

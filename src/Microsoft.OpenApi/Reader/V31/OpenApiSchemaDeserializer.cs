@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$vocabulary",
-                (o, n, _) => o.Vocabulary = n.GetScalarValue()
+                (o, n, _) => o.Vocabulary = n.CreateSimpleMap(LoadBool)
             },
             {
                 "$dynamicRef",
