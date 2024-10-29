@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -478,22 +478,22 @@ namespace Microsoft.OpenApi.Models
             SerializeTypeProperty(Type, writer, version);
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, callback);
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, callback);
 
             // not
-            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Not, Not, callback);
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, callback);
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, callback);
 
             // additionalProperties
             if (AdditionalPropertiesAllowed)
@@ -501,7 +501,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(
                     OpenApiConstants.AdditionalProperties,
                     AdditionalProperties,
-                    (w, s) => s.SerializeAsV3(w));
+                    callback);
             }
             else
             {
@@ -524,7 +524,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             // discriminator
-            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, callback);
 
             // readOnly
             writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
@@ -536,7 +536,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
@@ -545,7 +545,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }
