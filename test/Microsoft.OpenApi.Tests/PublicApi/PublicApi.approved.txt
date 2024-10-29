@@ -469,6 +469,8 @@ namespace Microsoft.OpenApi.Models
         public const string PropertyName = "propertyName";
         public const string Put = "put";
         public const string ReadOnly = "readOnly";
+        public const string RecursiveAnchor = "$recursiveAnchor";
+        public const string RecursiveRef = "$recursiveRef";
         public const string RefreshUrl = "refreshUrl";
         public const string RequestBodies = "requestBodies";
         public const string RequestBody = "requestBody";
