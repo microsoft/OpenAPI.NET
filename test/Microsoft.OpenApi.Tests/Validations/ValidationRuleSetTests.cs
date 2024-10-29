@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -55,8 +55,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.Empty(ruleSet_4.Rules);
 
             // Update the number if you add new default rule(s).
-            Assert.Equal(23, ruleSet_1.Rules.Count);
-            Assert.Equal(23, ruleSet_2.Rules.Count);
+            Assert.Equal(19, ruleSet_1.Rules.Count);
+            Assert.Equal(19, ruleSet_2.Rules.Count);
             Assert.Equal(3, ruleSet_3.Rules.Count);
         }
 
