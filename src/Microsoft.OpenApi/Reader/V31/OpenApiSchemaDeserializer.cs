@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$vocabulary",
-                (o, n, _) => o.Vocabulary = n.GetScalarValue()
+                (o, n, _) => o.Vocabulary = n.CreateSimpleMap(LoadBool)
             },
             {
                 "$dynamicRef",
@@ -41,14 +41,6 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 "$dynamicAnchor",
                 (o, n, _) => o.DynamicAnchor = n.GetScalarValue()
-            },
-            {
-                "$recursiveAnchor",
-                (o, n, _) => o.RecursiveAnchor = n.GetScalarValue()
-            },
-            {
-                "$recursiveRef",
-                (o, n, _) => o.RecursiveRef = n.GetScalarValue()
             },
             {
                 "$defs",

@@ -145,6 +145,11 @@ namespace Microsoft.OpenApi.Reader.V31
             return node.GetScalarValue();
         }
 
+        private static bool LoadBool(ParseNode node)
+        {
+            return bool.Parse(node.GetScalarValue());
+        }
+
         private static (string, string) GetReferenceIdAndExternalResource(string pointer)
         {
             /* Check whether the reference pointer is a URL

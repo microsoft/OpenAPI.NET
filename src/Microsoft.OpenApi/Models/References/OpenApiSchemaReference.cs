@@ -74,15 +74,11 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Comment { get => Target.Comment; set => Target.Comment = value; }
         /// <inheritdoc/>
-        public override string Vocabulary { get => Target.Vocabulary; set => Target.Vocabulary = value; }
+        public override IDictionary<string, bool> Vocabulary { get => Target.Vocabulary; set => Target.Vocabulary = value; }
         /// <inheritdoc/>
         public override string DynamicRef { get => Target.DynamicRef; set => Target.DynamicRef = value; }
         /// <inheritdoc/>
         public override string DynamicAnchor { get => Target.DynamicAnchor; set => Target.DynamicAnchor = value; }
-        /// <inheritdoc/>
-        public override string RecursiveAnchor { get => Target.RecursiveAnchor; set => Target.RecursiveAnchor = value; }
-        /// <inheritdoc/>
-        public override string RecursiveRef { get => Target.RecursiveRef; set => Target.RecursiveRef = value; }
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiSchema> Definitions { get => Target.Definitions; set => Target.Definitions = value; }
         /// <inheritdoc/>

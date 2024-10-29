@@ -1,0 +1,41 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://example.com/schemas/person.schema.yaml"
+$comment: "A schema defining a person object with optional references to dynamic components."
+$vocabulary:
+  "https://json-schema.org/draft/2020-12/vocab/core": true
+  "https://json-schema.org/draft/2020-12/vocab/applicator": true
+  "https://json-schema.org/draft/2020-12/vocab/validation": true
+  "https://json-schema.org/draft/2020-12/vocab/meta-data": false
+  "https://json-schema.org/draft/2020-12/vocab/format-annotation": false
+
+title: "Person"
+description: "Schema for a person object"
+type: "object"
+
+properties:
+  name:
+    type: "string"
+    $comment: "The person's full name"
+  age:
+    type: "integer"
+    minimum: 0
+    $comment: "Age must be a non-negative integer"
+  address:
+    $dynamicRef: "#addressDef"
+    $comment: "Reference to an address definition which can change dynamically"
+  
+required:
+  - name
+
+$dynamicAnchor: "addressDef"
+definitions:
+  address:
+    $dynamicAnchor: "addressDef"
+    type: "object"
+    properties:
+      street:
+        type: "string"
+      city:
+        type: "string"
+      postalCode:
+        type: "string"
