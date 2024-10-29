@@ -839,7 +839,7 @@ namespace Microsoft.OpenApi.Models
         {
             int count = 0;
 
-            if(schemaType != null)
+            if (schemaType != null)
             {
                 // Check each flag in the enum
                 foreach (JsonSchemaType value in System.Enum.GetValues(typeof(JsonSchemaType)))
@@ -895,7 +895,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteProperty(OpenApiConstants.Type, OpenApiTypeMapper.ToIdentifier(schemaType));
                 }
             }
-            else if (flagsCount is 2 && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null)
+            else if (flagsCount is 2 && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
             {
                 foreach (JsonSchemaType flag in System.Enum.GetValues(typeof(JsonSchemaType)))
                 {
