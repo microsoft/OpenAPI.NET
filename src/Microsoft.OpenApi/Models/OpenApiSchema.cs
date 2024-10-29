@@ -56,16 +56,6 @@ namespace Microsoft.OpenApi.Models
         public virtual string DynamicAnchor { get; set; }
 
         /// <summary>
-        /// $recursiveAnchor - used to construct recursive schemas i.e one that has a reference to its own root, identified by the empty fragment URI reference ("#")
-        /// </summary>
-        public virtual string RecursiveAnchor { get; set; }
-
-        /// <summary>
-        /// $recursiveRef - used to construct recursive schemas i.e one that has a reference to its own root, identified by the empty fragment URI reference ("#")
-        /// </summary>
-        public virtual string RecursiveRef { get; set; }
-
-        /// <summary>
         /// $defs - reserves a location for schema authors to inline re-usable JSON Schemas into a more general schema. 
         /// The keyword does not directly affect the validation result
         /// </summary>
@@ -361,8 +351,6 @@ namespace Microsoft.OpenApi.Models
             Vocabulary = schema?.Vocabulary ?? Vocabulary;
             DynamicAnchor = schema?.DynamicAnchor ?? DynamicAnchor;
             DynamicRef = schema?.DynamicRef ?? DynamicRef;
-            RecursiveAnchor = schema?.RecursiveAnchor ?? RecursiveAnchor;
-            RecursiveRef = schema?.RecursiveRef ?? RecursiveRef;
             Definitions = schema?.Definitions != null ? new Dictionary<string, OpenApiSchema>(schema.Definitions) : null;
             UnevaluatedProperties = schema?.UnevaluatedProperties ?? UnevaluatedProperties;
             V31ExclusiveMaximum = schema?.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
@@ -578,8 +566,6 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV3(w));
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
             writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
-            writer.WriteProperty(OpenApiConstants.RecursiveAnchor, RecursiveAnchor);
-            writer.WriteProperty(OpenApiConstants.RecursiveRef, RecursiveRef);
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMaximum, V31ExclusiveMaximum);
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);            
             writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);

@@ -469,8 +469,6 @@ namespace Microsoft.OpenApi.Models
         public const string PropertyName = "propertyName";
         public const string Put = "put";
         public const string ReadOnly = "readOnly";
-        public const string RecursiveAnchor = "$recursiveAnchor";
-        public const string RecursiveRef = "$recursiveRef";
         public const string RefreshUrl = "refreshUrl";
         public const string RequestBodies = "requestBodies";
         public const string RequestBody = "requestBody";
@@ -901,8 +899,6 @@ namespace Microsoft.OpenApi.Models
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> PatternProperties { get; set; }
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> Properties { get; set; }
         public virtual bool ReadOnly { get; set; }
-        public virtual string RecursiveAnchor { get; set; }
-        public virtual string RecursiveRef { get; set; }
         public virtual Microsoft.OpenApi.Models.OpenApiReference Reference { get; set; }
         public virtual System.Collections.Generic.ISet<string> Required { get; set; }
         public virtual string Schema { get; set; }
@@ -1243,8 +1239,6 @@ namespace Microsoft.OpenApi.Models.References
         public override System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> PatternProperties { get; set; }
         public override System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> Properties { get; set; }
         public override bool ReadOnly { get; set; }
-        public override string RecursiveAnchor { get; set; }
-        public override string RecursiveRef { get; set; }
         public override System.Collections.Generic.ISet<string> Required { get; set; }
         public override string Schema { get; set; }
         public override string Title { get; set; }

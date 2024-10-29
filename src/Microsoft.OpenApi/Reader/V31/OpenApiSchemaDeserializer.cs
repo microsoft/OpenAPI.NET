@@ -43,14 +43,6 @@ namespace Microsoft.OpenApi.Reader.V31
                 (o, n, _) => o.DynamicAnchor = n.GetScalarValue()
             },
             {
-                "$recursiveAnchor",
-                (o, n, _) => o.RecursiveAnchor = n.GetScalarValue()
-            },
-            {
-                "$recursiveRef",
-                (o, n, _) => o.RecursiveRef = n.GetScalarValue()
-            },
-            {
                 "$defs",
                 (o, n, t) => o.Definitions = n.CreateMap(LoadSchema, t)
             },
