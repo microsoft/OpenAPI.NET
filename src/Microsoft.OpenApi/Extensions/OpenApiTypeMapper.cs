@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -44,12 +44,12 @@ namespace Microsoft.OpenApi.Extensions
                 "null" => JsonSchemaType.Null,
                 "boolean" => JsonSchemaType.Boolean,
                 "integer" or "int" => JsonSchemaType.Integer,
-                "number" or "double" => JsonSchemaType.Number,
+                "number" or "double" or "float" or "decimal"=> JsonSchemaType.Number,
                 "string" => JsonSchemaType.String,
                 "array" => JsonSchemaType.Array,
                 "object" => JsonSchemaType.Object,
                 "file" => JsonSchemaType.String, // File is treated as string
-                _ => JsonSchemaType.Any,
+                _ => throw new ArgumentException("Invalid schema type identifier", nameof(identifier))
             };
         }
 

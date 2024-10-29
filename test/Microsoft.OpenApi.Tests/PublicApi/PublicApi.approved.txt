@@ -334,7 +334,6 @@ namespace Microsoft.OpenApi.Models
     [System.Flags]
     public enum JsonSchemaType
     {
-        Any = 0,
         Null = 1,
         Boolean = 2,
         Integer = 4,

@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     else
                     {
                         var list = n.CreateSimpleList((n2, p) => n2.GetScalarValue());
-                        JsonSchemaType combinedType = JsonSchemaType.Any;
+                        JsonSchemaType combinedType = 0;
                         foreach(var type in list)
                         {
                             var schemaType = OpenApiTypeMapper.IdentifierToEnumType(type);

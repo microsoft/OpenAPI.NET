@@ -12,11 +12,6 @@ namespace Microsoft.OpenApi.Models
     public enum JsonSchemaType
     {
         /// <summary>
-        /// Represents any type.
-        /// </summary>
-        Any = 0,
-
-        /// <summary>
         /// Represents a null type.
         /// </summary>
         Null = 1,

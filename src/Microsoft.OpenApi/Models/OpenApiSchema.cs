@@ -831,7 +831,7 @@ namespace Microsoft.OpenApi.Models
                 foreach (JsonSchemaType value in System.Enum.GetValues(typeof(JsonSchemaType)))
                 {
                     // Ignore the None flag and check if the flag is set
-                    if (value != JsonSchemaType.Any && (schemaType & value) == value)
+                    if ((schemaType & value) == value)
                     {
                         count++;
                     }
@@ -849,7 +849,7 @@ namespace Microsoft.OpenApi.Models
             foreach (JsonSchemaType flag in System.Enum.GetValues(typeof(JsonSchemaType)))
             {
                 // Check if the flag is set in 'type' using a bitwise AND operation
-                if ((Type & flag) == flag && flag != JsonSchemaType.Any)
+                if ((Type & flag) == flag)
                 {
                     list.Add(OpenApiTypeMapper.ToIdentifier(flag));
                 }
@@ -886,7 +886,7 @@ namespace Microsoft.OpenApi.Models
                 foreach (JsonSchemaType flag in System.Enum.GetValues(typeof(JsonSchemaType)))
                 {
                     // Skip if the flag is not set or if it's the Null flag
-                    if ((schemaType & flag) == flag && flag != JsonSchemaType.Null && flag != JsonSchemaType.Any)
+                    if ((schemaType & flag) == flag && flag != JsonSchemaType.Null)
                     {
                         // Write the non-null flag value to the writer
                         writer.WriteProperty(OpenApiConstants.Type, OpenApiTypeMapper.ToIdentifier(flag));
