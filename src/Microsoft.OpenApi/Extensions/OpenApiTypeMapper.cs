@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Extensions
                 "array" => JsonSchemaType.Array,
                 "object" => JsonSchemaType.Object,
                 "file" => JsonSchemaType.String, // File is treated as string
-                _ => throw new OpenApiException(string.Format("Invalid schema type identifier", identifier))
+                _ => throw new OpenApiException(string.Format("Invalid schema type identifier: {0}", identifier))
             };
         }
 
