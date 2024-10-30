@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Writers;
 using Microsoft.OpenApi.Services;
 using Xunit;
 using System.Linq;
+using VerifyXunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -529,6 +530,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             requestBodySchema.Properties.Count.Should().Be(2); // reference has been resolved
+        }
+
+        [Fact]
+        public async Task ParseDocumentWith31PropertiesWorks()
+        {
+            var path = Path.Combine(SampleFolderPath, "documentWith31Properties.yaml");
+            var doc = OpenApiDocument.Load(path).OpenApiDocument;
+            var outputStringWriter = new StringWriter();
+            doc.SerializeAsV31(new OpenApiYamlWriter(outputStringWriter));
+            outputStringWriter.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            await Verifier.Verify(actual);
         }
     }
 }

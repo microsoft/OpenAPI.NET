@@ -1,0 +1,110 @@
+﻿openapi: '3.1.0'
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+info:
+  title: Sample OpenAPI 3.1 API
+  description: A sample API demonstrating OpenAPI 3.1 features
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+    identifier: Apache-2.0
+  version: 2.0.0
+  summary: Sample OpenAPI 3.1 API with the latest features
+servers:
+  - url: https://api.example.com/v2
+    description: Main production server
+paths:
+  /pets:
+    get:
+      tags:
+        - pets
+      summary: List all pets
+      operationId: listPets
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          schema:
+            exclusiveMaximum: 100
+            exclusiveMinimum: 1
+            type: integer
+      responses:
+        '200':
+          description: A paged array of pets
+          content:
+            application/json:
+              schema:
+                $ref: https://example.com/schemas/pet.json
+  /sample:
+    get:
+      summary: Sample endpoint
+      responses:
+        '200':
+          description: Sample response
+          content:
+            application/json:
+              schema:
+                $id: https://example.com/schemas/person.schema.yaml
+                $schema: https://json-schema.org/draft/2020-12/schema
+                $comment: A schema defining a pet object with optional references to dynamic components.
+                $vocabulary:
+                  https://json-schema.org/draft/2020-12/vocab/core: true
+                  https://json-schema.org/draft/2020-12/vocab/applicator: true
+                  https://json-schema.org/draft/2020-12/vocab/validation: true
+                  https://json-schema.org/draft/2020-12/vocab/meta-data: false
+                  https://json-schema.org/draft/2020-12/vocab/format-annotation: false
+                $dynamicAnchor: addressDef
+                title: Pet
+                required:
+                  - name
+                type: object
+                properties:
+                  name:
+                    $comment: The pet's full name
+                    type: string
+                  address:
+                    $comment: Reference to an address definition which can change dynamically
+                    $dynamicRef: '#addressDef'
+                description: Schema for a pet object
+components:
+  schemas:
+    Pet:
+      $id: https://example.com/schemas/pet.json
+      $comment: This schema represents a pet in the system.
+      $defs:
+        ExtraInfo:
+          type: string
+      required:
+        - id
+        - weight
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        weight:
+          exclusiveMinimum: 0
+          type: number
+          description: Weight of the pet in kilograms
+        attributes:
+          patternProperties:
+            '^attr_[A-Za-z]+$':
+              type: string
+          type:
+            - 'null'
+            - object
+          description: Dynamic attributes for the pet
+security:
+  - api_key: [ ]
+webhooks:
+  newPetAlert:
+    post:
+      summary: Notify about a new pet being added
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Webhook processed successfully
