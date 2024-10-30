@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -810,18 +810,21 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
-                    var list = new List<JsonSchemaType>();
-                    foreach (JsonSchemaType flag in System.Enum.GetValues(typeof(JsonSchemaType)))
+                    if (type is not null)
                     {
-                        if ((type & flag) == flag)
+                        var list = new List<JsonSchemaType?>();
+                        foreach (JsonSchemaType flag in System.Enum.GetValues(typeof(JsonSchemaType)))
                         {
-                            list.Add(flag);
+                            if (type.Value.HasFlag(flag))
+                            {
+                                list.Add(flag);
+                            }
                         }
-                    }
-                        
-                    writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(OpenApiTypeMapper.ToIdentifier(s)));
+
+                        writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s.ToIdentifier()));
+                    }                    
                 }
-            }
+            } 
         }
 
         private static int CountEnumSetFlags(JsonSchemaType? schemaType)
@@ -834,7 +837,7 @@ namespace Microsoft.OpenApi.Models
                 foreach (JsonSchemaType value in System.Enum.GetValues(typeof(JsonSchemaType)))
                 {
                     // Ignore the None flag and check if the flag is set
-                    if ((schemaType.Value.HasFlag(value))
+                    if (schemaType.Value.HasFlag(value))
                     {
                         count++;
                     }
@@ -849,12 +852,12 @@ namespace Microsoft.OpenApi.Models
             // create a new array and insert the type and "null" as values
             Type = type | JsonSchemaType.Null;
             var list = new List<string>();
-            foreach (JsonSchemaType flag in System.Enum.GetValues(typeof(JsonSchemaType)))
+            foreach (JsonSchemaType? flag in System.Enum.GetValues(typeof(JsonSchemaType)))
             {
                 // Check if the flag is set in 'type' using a bitwise AND operation
-                if ((Type & flag) == flag)
+                if (Type.Value.HasFlag(flag))
                 {
-                    list.Add(OpenApiTypeMapper.ToIdentifier(flag));
+                    list.Add(flag.ToIdentifier());
                 }
             }
 
@@ -881,18 +884,18 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
-                    writer.WriteProperty(OpenApiConstants.Type, OpenApiTypeMapper.ToIdentifier(schemaType));
+                    writer.WriteProperty(OpenApiConstants.Type, schemaType.ToIdentifier());
                 }
             }
             else if (flagsCount is 2 && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
             {
-                foreach (JsonSchemaType flag in System.Enum.GetValues(typeof(JsonSchemaType)))
+                foreach (JsonSchemaType? flag in System.Enum.GetValues(typeof(JsonSchemaType)))
                 {
                     // Skip if the flag is not set or if it's the Null flag
-                    if ((schemaType & flag) == flag && flag != JsonSchemaType.Null)
+                    if (schemaType.Value.HasFlag(flag) && flag != JsonSchemaType.Null)
                     {
                         // Write the non-null flag value to the writer
-                        writer.WriteProperty(OpenApiConstants.Type, OpenApiTypeMapper.ToIdentifier(flag));
+                        writer.WriteProperty(OpenApiConstants.Type, flag.ToIdentifier());
                     }
                 }
                 if (!Nullable)
