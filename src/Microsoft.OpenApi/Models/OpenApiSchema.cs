@@ -476,7 +476,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
-            SerializeTypeProperty(Type, writer, version);
+            if (Type is not null)
+            {
+                SerializeTypeProperty(Type, writer, version);
+            }
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
@@ -657,7 +660,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // type
-            SerializeTypeProperty(Type, writer, OpenApiSpecVersion.OpenApi2_0);
+            if (Type is not null)
+            {
+                SerializeTypeProperty(Type, writer, OpenApiSpecVersion.OpenApi2_0);
+            }
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -836,7 +842,7 @@ namespace Microsoft.OpenApi.Models
                 // Check each flag in the enum
                 foreach (JsonSchemaType value in System.Enum.GetValues(typeof(JsonSchemaType)))
                 {
-                    // Ignore the None flag and check if the flag is set
+                    // Check if the flag is set
                     if (schemaType.Value.HasFlag(value))
                     {
                         count++;
