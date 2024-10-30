@@ -813,10 +813,13 @@ namespace Microsoft.OpenApi.Models
                     var list = new List<JsonSchemaType>();
                     foreach (JsonSchemaType flag in System.Enum.GetValues(typeof(JsonSchemaType)))
                     {
-                        list.Add(flag);
+                        if ((type & flag) == flag)
+                        {
+                            list.Add(flag);
+                        }
                     }
                         
-                    writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteRaw(OpenApiTypeMapper.ToIdentifier(s)));
+                    writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(OpenApiTypeMapper.ToIdentifier(s)));
                 }
             }
         }
@@ -855,7 +858,7 @@ namespace Microsoft.OpenApi.Models
                 }
             }
 
-            writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteRaw(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
         }
 
         private void DowncastTypeArrayToV2OrV3(JsonSchemaType? schemaType, IOpenApiWriter writer, OpenApiSpecVersion version, int flagsCount)
