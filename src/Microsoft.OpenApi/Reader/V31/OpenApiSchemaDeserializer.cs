@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     if (n is ValueNode)
                     {
-                        o.Type = OpenApiTypeMapper.IdentifierToEnumType(n.GetScalarValue());
+                        o.Type = n.GetScalarValue().ToJsonSchemaType();
                     }
                     else
                     {
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Reader.V31
                         JsonSchemaType combinedType = 0;
                         foreach(var type in list)
                         {
-                            var schemaType = OpenApiTypeMapper.IdentifierToEnumType(type);
+                            var schemaType = type.ToJsonSchemaType();
                             combinedType |= schemaType;
                         }
                         o.Type = combinedType;

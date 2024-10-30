@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "type",
-                (o, n, _) => GetOrCreateSchema(o).Type = OpenApiTypeMapper.IdentifierToEnumType(n.GetScalarValue())
+                (o, n, _) => GetOrCreateSchema(o).Type = n.GetScalarValue().ToJsonSchemaType()
             },
             {
                 "format",

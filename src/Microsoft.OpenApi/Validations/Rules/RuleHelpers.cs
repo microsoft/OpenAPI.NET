@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Text.Json;
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             // convert value to JsonElement and access the ValueKind property to determine the type.
             var jsonElement = JsonDocument.Parse(JsonSerializer.Serialize(value)).RootElement;
 
-            var type = OpenApiTypeMapper.ToIdentifier(schema.Type);
+            var type = schema.Type.ToIdentifier();
             var format = schema.Format;
             var nullable = schema.Nullable;
 

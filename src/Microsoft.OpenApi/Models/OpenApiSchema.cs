@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -577,7 +577,7 @@ namespace Microsoft.OpenApi.Models
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
         {
             // type
-            writer.WriteProperty(OpenApiConstants.Type, OpenApiTypeMapper.ToIdentifier(Type));
+            writer.WriteProperty(OpenApiConstants.Type, Type.ToIdentifier());
 
             // format
             if (string.IsNullOrEmpty(Format))
@@ -798,7 +798,7 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
-                    writer.WriteProperty(OpenApiConstants.Type, OpenApiTypeMapper.ToIdentifier(type));
+                    writer.WriteProperty(OpenApiConstants.Type, type.ToIdentifier());
                 }
             }
             else if(flagsCount > 1)

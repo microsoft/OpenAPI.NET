@@ -142,11 +142,11 @@ namespace Microsoft.OpenApi.Models
             foreach (var property in Content.First().Value.Schema.Properties)
             {
                 var paramSchema = property.Value;
-                if ("string".Equals(OpenApiTypeMapper.ToIdentifier(paramSchema.Type), StringComparison.OrdinalIgnoreCase)
+                if ("string".Equals(paramSchema.Type.ToIdentifier(), StringComparison.OrdinalIgnoreCase)
                     && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
                     || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
                 {
-                    paramSchema.Type = OpenApiTypeMapper.IdentifierToEnumType("file");
+                    paramSchema.Type = "file".ToJsonSchemaType();
                     paramSchema.Format = null;
                 }
                 yield return new()

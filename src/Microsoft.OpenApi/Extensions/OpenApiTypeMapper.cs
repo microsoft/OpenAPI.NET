@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string ToIdentifier(JsonSchemaType? schemaType)
+        public static string ToIdentifier(this JsonSchemaType? schemaType)
         {
             return schemaType switch
             {
@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns></returns>
-        public static JsonSchemaType IdentifierToEnumType(string identifier)
+        public static JsonSchemaType ToJsonSchemaType(this string identifier)
         {
             return identifier switch
             {
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Extensions
                 throw new ArgumentNullException(nameof(schema));
             }
 
-            var type = (ToIdentifier(schema.Type), schema.Format?.ToLowerInvariant(), schema.Nullable) switch
+            var type = (schema.Type.ToIdentifier(), schema.Format?.ToLowerInvariant(), schema.Nullable) switch
             {
                 ("boolean", null, false) => typeof(bool),
                 // integer is technically not valid with format, but we must provide some compatibility
