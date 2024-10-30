@@ -834,7 +834,7 @@ namespace Microsoft.OpenApi.Models
                 foreach (JsonSchemaType value in System.Enum.GetValues(typeof(JsonSchemaType)))
                 {
                     // Ignore the None flag and check if the flag is set
-                    if ((schemaType & value) == value)
+                    if ((schemaType.Value.HasFlag(value))
                     {
                         count++;
                     }
