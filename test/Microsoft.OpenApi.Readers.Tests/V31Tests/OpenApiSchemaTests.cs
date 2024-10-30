@@ -337,7 +337,7 @@ x-nullable: true";
         {
             // Arrange
             var expected = @"type:
-  - null
+  - 'null'
   - string";
 
             var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
@@ -357,7 +357,7 @@ x-nullable: true";
         {
             // Arrange
             var expected = @"type:
-  - null
+  - 'null'
   - string
 x-nullable: true";
 
