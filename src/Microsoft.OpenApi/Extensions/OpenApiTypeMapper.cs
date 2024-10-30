@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Extensions
@@ -49,7 +50,7 @@ namespace Microsoft.OpenApi.Extensions
                 "array" => JsonSchemaType.Array,
                 "object" => JsonSchemaType.Object,
                 "file" => JsonSchemaType.String, // File is treated as string
-                _ => throw new ArgumentException("Invalid schema type identifier", nameof(identifier))
+                _ => throw new OpenApiException(string.Format("Invalid schema type identifier", identifier))
             };
         }
 
