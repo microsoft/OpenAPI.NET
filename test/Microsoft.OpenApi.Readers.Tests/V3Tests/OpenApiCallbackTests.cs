@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "object"
+                                                    Type = JsonSchemaType.Object
                                                 }
                                             }
                                         }
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "object"
+                                                    Type = JsonSchemaType.Object
                                                 }
                                             }
                                         }
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "string"
+                                                    Type = JsonSchemaType.String
                                                 }
                                             }
                                         }
@@ -230,7 +230,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "object"
+                                                    Type = JsonSchemaType.Object
                                                 }
                                             }
                                         }

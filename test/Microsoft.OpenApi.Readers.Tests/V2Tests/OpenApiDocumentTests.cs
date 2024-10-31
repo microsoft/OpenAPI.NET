@@ -75,12 +75,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             ["sampleSchema"] = new()
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Properties =
                                 {
                                     ["sampleProperty"] = new()
                                     {
-                                        Type = "double",
+                                        Type = JsonSchemaType.Number,
                                         Minimum = (decimal)100.54,
                                         Maximum = (decimal)60000000.35,
                                         ExclusiveMaximum = true,
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     { "id", new OpenApiSchema
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             Description = "Item identifier."
                         }
                     }
@@ -132,18 +132,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     { "code", new OpenApiSchema
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int32"
                         }
                     },
                     { "message", new OpenApiSchema
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     { "fields", new OpenApiSchema
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 }
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 Schema = new()
                 {
-                    Type = "array",
+                    Type = JsonSchemaType.Array,
                     Items = new OpenApiSchemaReference("Item", result.OpenApiDocument)
                 }
             };
@@ -277,7 +277,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var successSchema = new OpenApiSchema
             {
-                Type = "array",
+                Type = JsonSchemaType.Array,
                 Items = new OpenApiSchemaReference("Item", result.OpenApiDocument)
             };
             var errorSchema = new OpenApiSchemaReference("Error", result.OpenApiDocument);

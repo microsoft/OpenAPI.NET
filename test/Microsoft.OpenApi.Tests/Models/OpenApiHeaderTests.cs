@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "sampleHeader",
             Schema = new()
             {
-                Type = "integer",
+                Type = JsonSchemaType.Integer,
                 Format = "int32"
             }
         };
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "sampleHeader",
             Schema = new()
             {
-                Type = "integer",
+                Type = JsonSchemaType.Integer,
                 Format = "int32"
             }
         };

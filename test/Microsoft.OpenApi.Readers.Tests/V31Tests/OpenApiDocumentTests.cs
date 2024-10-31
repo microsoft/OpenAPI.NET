@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Writers;
 using Microsoft.OpenApi.Services;
 using Xunit;
 using System.Linq;
+using VerifyXunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -39,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 {
                     ["petSchema"] =  new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                         {
                             "id",
@@ -49,22 +50,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         }
                     },
                     ["newPetSchema"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                         {
                             "name"
@@ -73,16 +74,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         }
                     }
@@ -116,10 +117,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             Required = false,
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = new()
                                                 {
-                                                    Type = "string"
+                                                    Type = JsonSchemaType.String
                                                 }
                                             }
                                         },
@@ -131,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             Required = false,
                                             Schema = new()
                                             {
-                                                Type = "integer",
+                                                Type = JsonSchemaType.Integer,
                                                 Format = "int32"
                                             }
                                         }
@@ -147,7 +148,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "array",
+                                                    Type = JsonSchemaType.Array,
                                                     Items = petSchema
                                                 }
                                             },
@@ -155,7 +156,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "array",
+                                                    Type = JsonSchemaType.Array,
                                                     Items = petSchema
                                                 }
                                             }
@@ -215,7 +216,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 {
                     ["petSchema"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                         {
                             "id",
@@ -225,22 +226,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         }
                     },
                     ["newPetSchema"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                         {
                             "name"
@@ -249,16 +250,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         }
                     }
@@ -290,10 +291,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         Required = false,
                                         Schema = new()
                                         {
-                                            Type = "array",
+                                            Type = JsonSchemaType.Array,
                                             Items = new()
                                             {
-                                                Type = "string"
+                                                Type = JsonSchemaType.String
                                             }
                                         }
                                     },
@@ -305,7 +306,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         Required = false,
                                         Schema = new()
                                         {
-                                            Type = "integer",
+                                            Type = JsonSchemaType.Integer,
                                             Format = "int32"
                                         }
                                     }
@@ -321,7 +322,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         {
                                             Schema = new OpenApiSchema
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = petSchema
                                             }
                                         },
@@ -329,7 +330,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         {
                                             Schema = new OpenApiSchema
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = petSchema
                                             }
                                         }
@@ -423,27 +424,27 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var expectedSchema = new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
                     ["prop1"] = new OpenApiSchema
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     },
                     ["prop2"] = new OpenApiSchema
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     },
                     ["prop3"] = new OpenApiSchema
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 },
                 PatternProperties = new Dictionary<string, OpenApiSchema>
                 {
                     ["^x-.*$"] = new OpenApiSchema
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 }
             };
@@ -482,9 +483,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var parameterSchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Parameters[0].Schema;
 
             // Assert
-            Assert.Equal("object", responseSchema.Type);
-            Assert.Equal("object", requestBodySchema.Type);
-            Assert.Equal("string", parameterSchema.Type);
+            Assert.Equal(JsonSchemaType.Object, responseSchema.Type);
+            Assert.Equal(JsonSchemaType.Object, requestBodySchema.Type);
+            Assert.Equal(JsonSchemaType.String, parameterSchema.Type);
         }
 
         [Fact]
@@ -529,6 +530,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             requestBodySchema.Properties.Count.Should().Be(2); // reference has been resolved
+        }
+
+        [Fact]
+        public async Task ParseDocumentWith31PropertiesWorks()
+        {
+            var path = Path.Combine(SampleFolderPath, "documentWith31Properties.yaml");
+            var doc = OpenApiDocument.Load(path).OpenApiDocument;
+            var outputStringWriter = new StringWriter();
+            doc.SerializeAsV31(new OpenApiYamlWriter(outputStringWriter));
+            outputStringWriter.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            await Verifier.Verify(actual);
         }
     }
 }

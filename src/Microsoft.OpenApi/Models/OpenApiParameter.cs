@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -292,7 +292,7 @@ namespace Microsoft.OpenApi.Models
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
-            else if (Schema?.UnresolvedReference == true || "object".Equals(Schema?.Type?.ToString(), StringComparison.OrdinalIgnoreCase))
+            else if (Schema?.UnresolvedReference == true || Schema?.Type == JsonSchemaType.Object)
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }
@@ -333,7 +333,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query && "array".Equals(Schema?.Type.ToString(), StringComparison.OrdinalIgnoreCase))
+                if (this.In == ParameterLocation.Query && Schema?.Type == JsonSchemaType.Array)
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {

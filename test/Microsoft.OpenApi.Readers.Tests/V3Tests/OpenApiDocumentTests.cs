@@ -216,7 +216,7 @@ paths: {}",
                 {
                     ["pet1"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "id",
@@ -226,22 +226,22 @@ paths: {}",
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         }
                     },
                     ["newPet"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "name"
@@ -250,22 +250,22 @@ paths: {}",
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         }
                     },
                     ["errorModel"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "code",
@@ -275,12 +275,12 @@ paths: {}",
                         {
                             ["code"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int32"
                             },
                             ["message"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             }
                         }
                     },
@@ -340,10 +340,10 @@ paths: {}",
                                         Required = false,
                                         Schema = new()
                                         {
-                                            Type = "array",
+                                            Type = JsonSchemaType.Array,
                                             Items = new()
                                             {
-                                                Type = "string"
+                                                Type = JsonSchemaType.String
                                             }
                                         }
                                     },
@@ -355,7 +355,7 @@ paths: {}",
                                         Required = false,
                                         Schema = new()
                                         {
-                                            Type = "integer",
+                                            Type = JsonSchemaType.Integer,
                                             Format = "int32"
                                         }
                                     }
@@ -371,7 +371,7 @@ paths: {}",
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "array",
+                                                    Type = JsonSchemaType.Array,
                                                     Items = petSchema
                                                 }
                                             },
@@ -379,7 +379,7 @@ paths: {}",
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "array",
+                                                    Type = JsonSchemaType.Array,
                                                     Items = petSchema
                                                 }
                                             }
@@ -483,7 +483,7 @@ paths: {}",
                                         Required = true,
                                         Schema = new()
                                         {
-                                            Type = "integer",
+                                            Type = JsonSchemaType.Integer,
                                             Format = "int64"
                                         }
                                     }
@@ -543,7 +543,7 @@ paths: {}",
                                         Required = true,
                                         Schema = new()
                                         {
-                                            Type = "integer",
+                                            Type = JsonSchemaType.Integer,
                                             Format = "int64"
                                         }
                                     }
@@ -602,7 +602,7 @@ paths: {}",
                 {
                     ["pet1"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "id",
@@ -612,22 +612,22 @@ paths: {}",
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         }
                     },
                     ["newPet"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "name"
@@ -636,22 +636,22 @@ paths: {}",
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         }
                     },
                     ["errorModel"] = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "code",
@@ -661,12 +661,12 @@ paths: {}",
                         {
                             ["code"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int32"
                             },
                             ["message"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             }
                         }
                     },
@@ -805,10 +805,10 @@ paths: {}",
                                             Required = false,
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = new()
                                                 {
-                                                    Type = "string"
+                                                    Type = JsonSchemaType.String
                                                 }
                                             }
                                         },
@@ -820,7 +820,7 @@ paths: {}",
                                             Required = false,
                                             Schema = new()
                                             {
-                                                Type = "integer",
+                                                Type = JsonSchemaType.Integer,
                                                 Format = "int32"
                                             }
                                         }
@@ -836,7 +836,7 @@ paths: {}",
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "array",
+                                                    Type = JsonSchemaType.Array,
                                                     Items = petSchema
                                                 }
                                             },
@@ -844,7 +844,7 @@ paths: {}",
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "array",
+                                                    Type = JsonSchemaType.Array,
                                                     Items = petSchema
                                                 }
                                             }
@@ -965,7 +965,7 @@ paths: {}",
                                             Required = true,
                                             Schema = new()
                                             {
-                                                Type = "integer",
+                                                Type = JsonSchemaType.Integer,
                                                 Format = "int64"
                                             }
                                         }
@@ -1025,7 +1025,7 @@ paths: {}",
                                             Required = true,
                                             Schema = new()
                                             {
-                                                Type = "integer",
+                                                Type = JsonSchemaType.Integer,
                                                 Format = "int64"
                                             }
                                         }
@@ -1144,7 +1144,7 @@ paths: {}",
                     Example = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721",
                     Schema = new()
                     {
-                        Type = "string",
+                        Type = JsonSchemaType.String,
                         Format = "uuid"
                     },
                 }, options => options.IgnoringCyclicReferences()
@@ -1178,7 +1178,7 @@ paths: {}",
                     },
                     Schema = new()
                     {
-                        Type = "string",
+                        Type = JsonSchemaType.String,
                         Format = "uuid"
                     },
                 }, options => options.IgnoringCyclicReferences()
@@ -1268,7 +1268,7 @@ paths: {}",
                                         Required = false,
                                         Schema = new()
                                         { 
-                                            Type = "integer",
+                                            Type = JsonSchemaType.Integer,
                                             Format = "int32",
                                             Default = 10
                                         },
@@ -1296,7 +1296,7 @@ paths: {}",
                             Required = false,
                             Schema = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int32",
                                 Default = 10
                             },

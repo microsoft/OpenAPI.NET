@@ -102,7 +102,7 @@ components:
         public void HeaderReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal("string", _externalHeaderReference.Schema.Type);
+            Assert.Equal(JsonSchemaType.String, _externalHeaderReference.Schema.Type);
             Assert.Equal("Location of the locally referenced post", _localHeaderReference.Description);
             Assert.Equal("Location of the externally referenced post", _externalHeaderReference.Description);
             Assert.Equal("The URL of the newly created post",

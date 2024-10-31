@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -64,10 +64,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = false,
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     Style = ParameterStyle.Form,
@@ -89,10 +89,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "freeForm",
                     Schema = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         AdditionalProperties = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         }
                     },
                     Style = ParameterStyle.Form
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         {
                            Schema = new()
                            {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Required =
                                 {
                                     "lat",
@@ -130,11 +130,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 {
                                     ["lat"] = new()
                                     {
-                                        Type = "number"
+                                        Type = JsonSchemaType.Number
                                     },
                                     ["long"] = new()
                                     {
-                                        Type = "number"
+                                        Type = JsonSchemaType.Number
                                     }
                                 }
                            }
@@ -161,10 +161,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int64",
                         }
                     }
@@ -187,7 +187,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -211,7 +211,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -257,7 +257,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Example = (float)5.0,
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float"
                     }
                 }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Parent));
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     },
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float"
                     }
                 }, options => options.IgnoringCyclicReferences()
@@ -352,10 +352,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Required = false,
                             Schema = new()
                             {
-                                Type = "array",
+                                Type = JsonSchemaType.Array,
                                 Items = new OpenApiSchema
                                 {
-                                    Type = "string"
+                                    Type = JsonSchemaType.String
                                 }
                             },
                             Reference = new OpenApiReference

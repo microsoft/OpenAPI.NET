@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         Schema = new()
                         {
-                            Type = "number",
+                            Type = JsonSchemaType.Number,
                             Minimum = 5,
                             Maximum = 10
                         }
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new()
                             {
-                                Type = "number",
+                                Type = JsonSchemaType.Number,
                                 Minimum = 5,
                                 Maximum = 10
                             }
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         Schema = new()
                         {
-                            Type = "number",
+                            Type = JsonSchemaType.Number,
                             Minimum = 5,
                             Maximum = 10
                         }
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new()
                             {
-                                Type = "number",
+                                Type = JsonSchemaType.Number,
                                 Minimum = 5,
                                 Maximum = 10
                             }
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Required = true,
                         Schema = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
@@ -208,12 +208,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                     ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
                                 Required = new HashSet<string>
@@ -231,12 +231,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                     ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
                                 Required = new HashSet<string>

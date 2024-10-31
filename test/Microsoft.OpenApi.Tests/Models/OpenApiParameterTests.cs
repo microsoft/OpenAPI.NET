@@ -48,8 +48,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 Description = "description2",
                 OneOf = new List<OpenApiSchema>
                 {
-                    new() { Type = "number", Format = "double" },
-                    new() { Type = "string" }
+                    new() { Type = JsonSchemaType.Number, Format = "double" },
+                    new() { Type = JsonSchemaType.String }
                 }
             },
             Examples = new Dictionary<string, OpenApiExample>
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Explode = false,
             Schema = new()
             {
-                Type = "array",
+                Type = JsonSchemaType.Array,
                 Items = new()
                 {
                     Enum =
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Explode = true,
             Schema = new()
             {
-                Type = "array",
+                Type = JsonSchemaType.Array,
                 Items = new()
                 {
                     Enum =
@@ -110,10 +110,10 @@ namespace Microsoft.OpenApi.Tests.Models
             In = ParameterLocation.Query,
             Schema = new()
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 AdditionalProperties = new OpenApiSchema
                 {
-                    Type = "integer"
+                    Type = JsonSchemaType.Integer
                 }
             }
         };
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Explode = true,
             Schema = new()
             {
-                Type = "object"
+                Type = JsonSchemaType.Object
             },
             Examples = new Dictionary<string, OpenApiExample>
             {

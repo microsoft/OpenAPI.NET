@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             var sharedSchema = new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Reference = new()
                 {
                     Id = "test"
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             var sharedSchema = new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Reference = new()
                 {
                     Id = "test"

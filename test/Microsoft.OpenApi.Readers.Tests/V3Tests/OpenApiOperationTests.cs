@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Required = true,
                         Schema = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     new OpenApiParameter
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Required = true,
                         Schema = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 }

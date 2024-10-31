@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Example = 5,
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float"
                     }
                 }, options => options.IgnoringCyclicReferences()
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     },
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float"
                     }
                 }, options => options.IgnoringCyclicReferences()

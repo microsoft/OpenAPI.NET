@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Assert
             schema.Should().BeEquivalentTo(new OpenApiSchema
             {
-                Type = "number",
+                Type = JsonSchemaType.Number,
                 Format = "float",
                 Default = 5
             }, options => options.IgnoringCyclicReferences().Excluding(x => x.Default.Parent));
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             schema.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
-                    Type = "number",
+                    Type = JsonSchemaType.Number,
                     Format = "float",
                     Example = 5
                 }, options => options.IgnoringCyclicReferences().Excluding(x => x.Example.Parent));
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Assert
             var expected = new OpenApiSchema
             {
-                Type = "number",
+                Type = JsonSchemaType.Number,
                 Format = "float",
                 Enum = new List<JsonNode>
                 {

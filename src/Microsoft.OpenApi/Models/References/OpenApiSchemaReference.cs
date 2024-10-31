@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override bool UnEvaluatedProperties { get => Target.UnEvaluatedProperties; set => Target.UnEvaluatedProperties = value; }
         /// <inheritdoc/>
-        public override object Type { get => Target.Type; set => Target.Type = value; }
+        public override JsonSchemaType? Type { get => Target.Type; set => Target.Type = value; }
         /// <inheritdoc/>
         public override string Format { get => Target.Format; set => Target.Format = value; }
         /// <inheritdoc/>

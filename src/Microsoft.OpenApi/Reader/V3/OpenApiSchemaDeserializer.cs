@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "type",
-                (o, n, _) => o.Type = n.GetScalarValue()
+                (o, n, _) => o.Type = n.GetScalarValue().ToJsonSchemaType()
             },
             {
                 "allOf",

@@ -30,10 +30,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     Style = ParameterStyle.Simple
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             Required = true,
                             Schema = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             }
                         }
                     },
@@ -68,18 +68,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Schema = new()
                                 {
-                                    Type = "object",
+                                    Type = JsonSchemaType.Object,
                                     Properties =
                                     {
                                         ["name"] = new()
                                         {
                                             Description = "Updated name of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         },
                                         ["status"] = new()
                                         {
                                             Description = "Updated status of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     },
                                     Required = new HashSet<string>
@@ -92,18 +92,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                Schema = new()
                                 {
-                                    Type = "object",
+                                    Type = JsonSchemaType.Object,
                                     Properties =
                                     {
                                         ["name"] = new()
                                         {
                                             Description = "Updated name of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         },
                                         ["status"] = new()
                                         {
                                             Description = "Updated status of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     },
                                     Required = new HashSet<string>
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             Required = true,
                             Schema = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             }
                         },
                         new()
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             Required = true,
                             Schema = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             }
                         }
                     },
@@ -174,23 +174,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Schema = new()
                                 {
-                                    Type = "object",
+                                    Type = JsonSchemaType.Object,
                                     Properties =
                                     {
                                         ["name"] = new()
                                         {
                                             Description = "Updated name of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         },
                                         ["status"] = new()
                                         {
                                             Description = "Updated status of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         },
                                         ["skill"] = new()
                                         {
                                             Description = "Updated skill of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     },
                                     Required = new HashSet<string>
@@ -203,23 +203,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Schema = new()
                                 {
-                                    Type = "object",
+                                    Type = JsonSchemaType.Object,
                                     Properties =
                                     {
                                         ["name"] = new()
                                         {
                                             Description = "Updated name of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         },
                                         ["status"] = new()
                                         {
                                             Description = "Updated status of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         },
                                         ["skill"] = new()
                                         {
                                             Description = "Updated skill of the pet",
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     },
                                     Required = new HashSet<string>

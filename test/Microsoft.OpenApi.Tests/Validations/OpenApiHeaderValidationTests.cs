@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Example = 55,
                 Schema = new OpenApiSchema
                 { 
-                    Type = "string"
+                    Type = JsonSchemaType.String
                 }
             };
 
@@ -57,10 +57,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Required = true,
                 Schema = new OpenApiSchema
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     AdditionalProperties = new OpenApiSchema
                     {
-                        Type = "integer"
+                        Type = JsonSchemaType.Integer
                     }
                 },
                 Examples =

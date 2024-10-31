@@ -31,27 +31,27 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Id = "https://example.com/arrays.schema.json",
                 Schema = "https://json-schema.org/draft/2020-12/schema",
                 Description = "A representation of a person, company, organization, or place",
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
                     ["fruits"] = new OpenApiSchema
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new OpenApiSchema
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     ["vegetables"] = new OpenApiSchema
                     {
-                        Type = "array"
+                        Type = JsonSchemaType.Array
                     }
                 },
                 Definitions = new Dictionary<string, OpenApiSchema>
                 {
                     ["veggie"] = new OpenApiSchema
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                         {
                             "veggieName",
@@ -61,12 +61,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             ["veggieName"] = new OpenApiSchema
                             {
-                                Type = "string",
+                                Type = JsonSchemaType.String,
                                 Description = "The name of the vegetable."
                             },
                             ["veggieLike"] = new OpenApiSchema
                             {
-                                Type = "boolean",
+                                Type = JsonSchemaType.Boolean,
                                 Description = "Do I like this vegetable?"
                             }
                         }
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Id = "https://example.com/arrays.schema.json",
                 Schema = "https://json-schema.org/draft/2020-12/schema",
                 Description = "A representation of a person, company, organization, or place",
-                Type = new string[] { "object", "null" }
+                Type = JsonSchemaType.Object | JsonSchemaType.Null
             };
 
             // Act
@@ -116,49 +116,51 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             */
             var schemaWithTypeArray = new OpenApiSchema()
             {
-                Type = new string[] { "array", "null" },
+                Type = JsonSchemaType.Array | JsonSchemaType.Null,
                 Items = new OpenApiSchema
                 {
-                    Type = "string"
+                    Type = JsonSchemaType.String
                 }
             };
 
             var simpleSchema = new OpenApiSchema()
             {
-                Type = "string"
+                Type = JsonSchemaType.String
             };
 
             // Act
             var schemaWithArrayCopy = new OpenApiSchema(schemaWithTypeArray);
-            schemaWithArrayCopy.Type = "string";
+            schemaWithArrayCopy.Type = JsonSchemaType.String;
 
-            var simpleSchemaCopy = new OpenApiSchema(simpleSchema);
-            simpleSchemaCopy.Type = new string[] { "string", "null" };
+            var simpleSchemaCopy = new OpenApiSchema(simpleSchema)
+            {
+                Type = JsonSchemaType.String | JsonSchemaType.Null
+            };
 
             // Assert
-            schemaWithArrayCopy.Type.Should().NotBeEquivalentTo(schemaWithTypeArray.Type);
-            schemaWithTypeArray.Type = new string[] { "string", "null" };
+            schemaWithArrayCopy.Type.Should().NotBe(schemaWithTypeArray.Type);
+            schemaWithTypeArray.Type = JsonSchemaType.String | JsonSchemaType.Null;
 
-            simpleSchemaCopy.Type.Should().NotBeEquivalentTo(simpleSchema.Type);
-            simpleSchema.Type = "string";
+            simpleSchemaCopy.Type.Should().NotBe(simpleSchema.Type);
+            simpleSchema.Type = JsonSchemaType.String;
         }
 
         [Fact]
         public void ParseV31SchemaShouldSucceed()
         {
-            var path = System.IO.Path.Combine(SampleFolderPath, "schema.yaml");
+            var path = Path.Combine(SampleFolderPath, "schema.yaml");
 
             // Act
             var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
             var expectedSchema = new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
                     ["one"] = new()
                     {
                         Description = "type array",
-                        Type = new HashSet<string> { "integer", "string" }
+                        Type = JsonSchemaType.Integer | JsonSchemaType.String
                     }
                 }
             };
@@ -171,38 +173,38 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public void ParseAdvancedV31SchemaShouldSucceed()
         {
             // Arrange and Act
-            var path = System.IO.Path.Combine(SampleFolderPath, "advancedSchema.yaml");
+            var path = Path.Combine(SampleFolderPath, "advancedSchema.yaml");
             var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
 
             var expectedSchema = new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
                     ["one"] = new()
                     {
                         Description = "type array",
-                        Type = new HashSet<string> { "integer", "string" }
+                        Type = JsonSchemaType.Integer | JsonSchemaType.String
                     },
                     ["two"] = new()
                     {
                         Description = "type 'null'",
-                        Type = "null"
+                        Type = JsonSchemaType.Null
                     },
                     ["three"] = new()
                     {
                         Description = "type array including 'null'",
-                        Type = new HashSet<string> { "string", "null" }
+                        Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
                     ["four"] = new()
                     {
                         Description = "array with no items",
-                        Type = "array"
+                        Type = JsonSchemaType.Array
                     },
                     ["five"] = new()
                     {
                         Description = "singular example",
-                        Type = "string",
+                        Type = JsonSchemaType.String,
                         Examples = new List<JsonNode>
                         {
                             "exampleValue"
@@ -231,12 +233,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     ["ten"] = new()
                     {
                         Description = "nullable string",
-                        Type = new HashSet<string> { "string", "null" }
+                        Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
                     ["eleven"] = new()
                     {
                         Description = "x-nullable string",
-                        Type = new HashSet<string> { "string", "null" }
+                        Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
                     ["twelve"] = new()
                     {
@@ -275,7 +277,7 @@ examples:
             // Arrange
             var schema = new OpenApiSchema
             {
-                Type = "int",
+                Type = JsonSchemaType.Integer,
                 Default = 5,
                 Examples = [2, 3],
                 Enum = [1, 2, 3]
@@ -335,8 +337,8 @@ x-nullable: true";
         {
             // Arrange
             var expected = @"type:
-  - string
-  - null";
+  - 'null'
+  - string";
 
             var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
 
@@ -355,8 +357,8 @@ x-nullable: true";
         {
             // Arrange
             var expected = @"type:
+  - 'null'
   - string
-  - null
 x-nullable: true";
 
             var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
@@ -402,7 +404,7 @@ nullable: true";
             var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
 
             // Assert
-            schema.Type.Should().BeEquivalentTo(new string[] { "string", "null" });
+            schema.Type.Should().Be(JsonSchemaType.String | JsonSchemaType.Null);
         }
 
         [Fact]

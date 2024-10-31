@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float",
                         Default = new OpenApiAny(5).Node
                     }
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float",
                         Enum =
                         {

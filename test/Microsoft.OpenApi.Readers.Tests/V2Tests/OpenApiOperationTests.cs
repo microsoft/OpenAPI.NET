@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 }
             },
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Required = true,
                         Schema = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
@@ -85,18 +85,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             Schema = new()
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Properties =
                                 {
                                     ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
                                 Required = new HashSet<string>
@@ -109,18 +109,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                              Schema = new()
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Properties =
                                 {
                                     ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
                                 Required = new HashSet<string>
@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 },
             },
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Schema = new()
                         {
-                            Type = "object"
+                            Type = JsonSchemaType.Object
                         }
                     }
                 },
@@ -314,10 +314,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 {
                                     Schema = new()
                                     {
-                                        Type = "array",
+                                        Type = JsonSchemaType.Array,
                                         Items = new()
                                         {
-                                            Type = "number",
+                                            Type = JsonSchemaType.Number,
                                             Format = "float"
                                         }
                                     },
@@ -332,10 +332,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 {
                                     Schema = new()
                                     {
-                                        Type = "array",
+                                        Type = JsonSchemaType.Array,
                                         Items = new()
                                         {
-                                            Type = "number",
+                                            Type = JsonSchemaType.Number,
                                             Format = "float"
                                         }
                                     }

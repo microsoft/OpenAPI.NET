@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "type",
-                (o, n, _) => GetOrCreateSchema(o).Type = n.GetScalarValue()
+                (o, n, _) => GetOrCreateSchema(o).Type = n.GetScalarValue().ToJsonSchemaType()
             },
             {
                 "format",

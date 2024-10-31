@@ -37,12 +37,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             Annotations = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     }
@@ -56,12 +56,12 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["schema1"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             Annotations = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     },
@@ -74,12 +74,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["schema2"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["pet"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Required = new HashSet<string>
                     {
                         "id",
@@ -148,22 +148,22 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["id"] = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int64"
                         },
                         ["name"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                         ["tag"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                     }
                 },
                 ["newPet"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Required = new HashSet<string>
                     {
                         "name"
@@ -172,22 +172,22 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["id"] = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int64"
                         },
                         ["name"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                         ["tag"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                     }
                 },
                 ["errorModel"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Required = new HashSet<string>
                     {
                         "code",
@@ -197,12 +197,12 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["code"] = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int32"
                         },
                         ["message"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
@@ -264,10 +264,10 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = false,
                                     Schema = new()
                                     {
-                                        Type = "array",
+                                        Type = JsonSchemaType.Array,
                                         Items = new()
                                         {
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     }
                                 },
@@ -279,7 +279,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = false,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int32"
                                     }
                                 }
@@ -295,7 +295,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = PetSchemaWithReference
                                             }
                                         },
@@ -303,7 +303,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = PetSchemaWithReference
                                             }
                                         }
@@ -407,7 +407,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int64"
                                     }
                                 }
@@ -467,7 +467,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int64"
                                     }
                                 }
@@ -515,7 +515,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["pet"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Required = new HashSet<string>
                     {
                         "id",
@@ -525,22 +525,22 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["id"] = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int64"
                         },
                         ["name"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                         ["tag"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                     }
                 },
                 ["newPet"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Required = new HashSet<string>
                     {
                         "name"
@@ -549,22 +549,22 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["id"] = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int64"
                         },
                         ["name"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                         ["tag"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                     }
                 },
                 ["errorModel"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Required = new HashSet<string>
                     {
                         "code",
@@ -574,12 +574,12 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["code"] = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int32"
                         },
                         ["message"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
@@ -640,10 +640,10 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = false,
                                     Schema = new()
                                     {
-                                        Type = "array",
+                                        Type = JsonSchemaType.Array,
                                         Items = new()
                                         {
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     }
                                 },
@@ -655,7 +655,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = false,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int32"
                                     }
                                 }
@@ -671,7 +671,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = PetSchema
                                             }
                                         },
@@ -679,7 +679,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = PetSchema
                                             }
                                         }
@@ -783,7 +783,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int64"
                                     }
                                 }
@@ -843,7 +843,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int64"
                                     }
                                 }
@@ -936,16 +936,16 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             ["id"] = new()
                             {
-                                Type = "integer",
+                                Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
                             ["name"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                             ["tag"] = new()
                             {
-                                Type = "string"
+                                Type = JsonSchemaType.String
                             },
                         },
                     }
@@ -987,7 +987,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
                                             ["my-extension"] = new OpenApiAny(4)
@@ -1006,7 +1006,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
                                             ["my-extension"] = new OpenApiAny(4)
@@ -1029,7 +1029,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = PetSchema
                                             }
                                         },
@@ -1099,10 +1099,10 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = false,
                                     Schema = new()
                                     {
-                                        Type = "array",
+                                        Type = JsonSchemaType.Array,
                                         Items = new()
                                         {
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     }
                                 },
@@ -1114,7 +1114,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = false,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int32"
                                     }
                                 }
@@ -1130,7 +1130,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = PetSchema
                                             }
                                         },
@@ -1138,7 +1138,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             Schema = new()
                                             {
-                                                Type = "array",
+                                                Type = JsonSchemaType.Array,
                                                 Items = PetSchema
                                             }
                                         }
@@ -1242,7 +1242,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int64"
                                     }
                                 }
@@ -1302,7 +1302,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "integer",
+                                        Type = JsonSchemaType.Integer,
                                         Format = "int64"
                                     }
                                 }
@@ -1744,7 +1744,7 @@ paths:
                                         In = ParameterLocation.Query,
                                         Schema = new()
                                         {
-                                            Type = "string"
+                                            Type = JsonSchemaType.String
                                         }
                                     }
                                 },
@@ -1813,10 +1813,10 @@ paths:
                                         In = ParameterLocation.Query,
                                         Schema = new()
                                         {
-                                            Type = "object",
+                                            Type = JsonSchemaType.Object,
                                             AdditionalProperties = new()
                                             {
-                                                Type = "integer"
+                                                Type = JsonSchemaType.Integer
                                             }
                                         }
                                     }
@@ -1832,7 +1832,7 @@ paths:
                                             {
                                                 Schema = new()
                                                 {
-                                                    Type = "string"
+                                                    Type = JsonSchemaType.String
                                                 }
                                             }
                                         }

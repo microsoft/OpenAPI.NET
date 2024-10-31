@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var schema = new OpenApiSchema
             {
                 Default = 55,
-                Type = "string",
+                Type = JsonSchemaType.String,
             };
 
             // Act
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Example = 55,
                 Default = "1234",
-                Type = "string",
+                Type = JsonSchemaType.String,
             };
 
             // Act
@@ -90,10 +90,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                         ["y"] = 40,
                     }).Node
                 },
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 AdditionalProperties = new()
                 {
-                    Type = "integer"
+                    Type = JsonSchemaType.Integer
                 }
             };
 
@@ -116,38 +116,38 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 Properties =
                 {
                     ["property1"] = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int64"
                         }
                     },
                     ["property2"] = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new()
                         {
-                            Type = "object",
+                            Type = JsonSchemaType.Object,
                             AdditionalProperties = new()
                             {
-                                Type = "boolean"
+                                Type = JsonSchemaType.Boolean
                             }
                         }
                     },
                     ["property3"] = new()
                     {
-                        Type = "string",
+                        Type = JsonSchemaType.String,
                         Format = "password"
                     },
                     ["property4"] = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 },
                 Default = new JsonObject()
@@ -198,7 +198,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         "schema1",
                         new OpenApiSchema
                         {
-                            Type = "object",
+                            Type = JsonSchemaType.Object,
                             Discriminator = new() { PropertyName = "property1" },
                             Reference = new() { Id = "schema1" }
                         }
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         "Person",
                         new OpenApiSchema
                         {
-                            Type = "array",
+                            Type = JsonSchemaType.Array,
                             Discriminator = new()
                             {
                                 PropertyName = "type"
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                             "type",
                                             new OpenApiSchema
                                             {
-                                                Type = "array"
+                                                Type = JsonSchemaType.Array
                                             }
                                         }
                                     },

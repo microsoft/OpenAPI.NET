@@ -1,0 +1,122 @@
+openapi: 3.1.0
+info:
+  title: Sample OpenAPI 3.1 API
+  description: A sample API demonstrating OpenAPI 3.1 features
+  version: "2.0.0"
+  summary: Sample OpenAPI 3.1 API with the latest features # OpenAPI 3.1 feature
+  license:
+    name: Apache 2.0
+    identifier: Apache-2.0 # SPDX license identifier, a new 3.1 feature to define an API's SPDX license expression
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+# JSON Schema 2020-12 feature
+jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
+
+servers:
+  - url: https://api.example.com/v2
+    description: Main production server
+
+# Example Webhooks (OpenAPI 3.1 feature) 
+webhooks:
+  newPetAlert:
+    post:
+      summary: Notify about a new pet being added
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Webhook processed successfully
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      tags:
+        - pets
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            #exclusiveMinimum and exclusiveMaximum now represent distinct values
+            exclusiveMinimum: 1
+            exclusiveMaximum: 100
+      responses:
+        '200':
+          description: A paged array of pets
+          content:
+            application/json:
+              schema:
+                # 3.1 feature where we can reference schemas using their identifier
+                $ref: 'https://example.com/schemas/pet.json' 
+  /sample:
+    get:
+      summary: Sample endpoint
+      responses:
+        '200':
+          description: Sample response
+          content:
+            application/json:
+              schema:
+                #JSON schema keywords
+                $schema: "https://json-schema.org/draft/2020-12/schema"
+                $id: "https://example.com/schemas/person.schema.yaml"
+                $comment: "A schema defining a pet object with optional references to dynamic components."
+                $vocabulary:
+                  "https://json-schema.org/draft/2020-12/vocab/core": true
+                  "https://json-schema.org/draft/2020-12/vocab/applicator": true
+                  "https://json-schema.org/draft/2020-12/vocab/validation": true
+                  "https://json-schema.org/draft/2020-12/vocab/meta-data": false
+                  "https://json-schema.org/draft/2020-12/vocab/format-annotation": false
+
+                title: "Pet"
+                description: "Schema for a pet object"
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                    $comment: "The pet's full name"
+                  address:
+                    $dynamicRef: "#addressDef"
+                    $comment: "Reference to an address definition which can change dynamically"                  
+                required:
+                  - name
+                $dynamicAnchor: "addressDef"
+components:
+  schemas:
+    Pet:
+      $id: 'https://example.com/schemas/pet.json'
+      type: object
+      required:
+        - id
+        - weight
+      properties:
+        id:
+          type: string
+          format: uuid
+        weight:
+          type: number
+          exclusiveMinimum: 0
+          description: Weight of the pet in kilograms
+        # Pattern properties and Type array feature from JSON Schema
+        attributes:
+          type: 
+            - "object"
+            - "null"
+          description: Dynamic attributes for the pet
+          patternProperties:
+            "^attr_[A-Za-z]+$":
+              type: string
+      $comment: "This schema represents a pet in the system." # JSON Schema 2020-12 feature
+      $defs: # JSON Schema 2020-12 feature
+        ExtraInfo:
+          type: string
+
+security:
+  - api_key: []

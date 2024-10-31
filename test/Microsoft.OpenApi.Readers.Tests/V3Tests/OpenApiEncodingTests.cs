@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 Description = "The number of allowed requests in the current period",
                                 Schema = new()
                                 { 
-                                    Type = "integer"
+                                    Type = JsonSchemaType.Integer
                                 }
                             }
                     }

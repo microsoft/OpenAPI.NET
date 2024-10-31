@@ -440,7 +440,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Arrange
             var thingSchema = new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 UnresolvedReference = false,
                 Reference = new()
                 {
