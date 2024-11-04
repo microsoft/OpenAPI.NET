@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
                 BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/")
             };
 
-            var stream = await httpClient.GetStreamAsync("master/examples/v3.0/petstore.yaml");
+            var stream = await httpClient.GetStreamAsync("20fe7a7b720a0e48e5842d002ac418b12a8201df/tests/v3.0/pass/petstore.yaml");
 
             // Read V3 as YAML
             var result = OpenApiDocument.Load(stream, "yaml");
