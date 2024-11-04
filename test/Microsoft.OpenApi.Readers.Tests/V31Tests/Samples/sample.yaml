@@ -98,7 +98,7 @@ components:
         - weight
       properties:
         id:
-          type: str
+          type: string
           format: uuid
         weight:
           type: number
