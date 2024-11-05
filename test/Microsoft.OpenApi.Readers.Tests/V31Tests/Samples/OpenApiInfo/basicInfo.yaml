@@ -1,0 +1,16 @@
+{
+  "title": "Basic Info",
+  "summary": "Sample Summary",
+  "description": "Sample Description",
+  "termsOfService": "http://swagger.io/terms/",
+  "contact": {
+    "name": "API Support",
+    "url": "http://www.swagger.io/support",
+    "email": "support@swagger.io"
+  },
+  "license": {
+    "name": "Apache 2.0",
+    "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+  },
+  "version": "1.0.1"
+}

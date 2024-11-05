@@ -1,0 +1,10 @@
+﻿{
+  "name": "limit",
+  "in": "query",
+  "description": "Results to return",
+  "schema": {
+    "maximum": 100,
+    "minimum": 1,
+    "type": "integer"
+  }
+}

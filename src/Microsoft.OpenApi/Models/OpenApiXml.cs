@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiXml() {}
+        public OpenApiXml() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiXml"/> object
@@ -61,6 +61,14 @@ namespace Microsoft.OpenApi.Models
             Attribute = xml?.Attribute ?? Attribute;
             Wrapped = xml?.Wrapped ?? Wrapped;
             Extensions = xml?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(xml.Extensions) : null;
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiXml"/> to Open Api v3.0
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            Write(writer, OpenApiSpecVersion.OpenApi3_1);
         }
 
         /// <summary>
@@ -81,6 +89,8 @@ namespace Microsoft.OpenApi.Models
 
         private void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
+            Utils.CheckArgumentNull(writer);;
+
             writer.WriteStartObject();
 
             // name

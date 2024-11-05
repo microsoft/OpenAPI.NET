@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Services
         /// The OperationSearch constructor.
         /// </summary>
         /// <param name="predicate">A predicate function.</param>
-        public OperationSearch(Func<string, OperationType?,OpenApiOperation, bool> predicate)
+        public OperationSearch(Func<string, OperationType?, OpenApiOperation, bool> predicate)
         {
             _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
         }

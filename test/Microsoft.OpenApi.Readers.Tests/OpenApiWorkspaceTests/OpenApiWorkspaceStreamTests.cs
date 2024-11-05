@@ -1,27 +1,34 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 {
     public class OpenApiWorkspaceStreamTests
     {
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiWorkspace/";
+        
+        public OpenApiWorkspaceStreamTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
+
         // Use OpenApiWorkspace to load a document and a referenced document
 
         [Fact]
         public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspaceAsync()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new MockLoader(),
                 BaseUrl = new("file://c:\\")
-            });
+            };
 
             // Todo: this should be ReadAsync
             var stream = new MemoryStream();
@@ -37,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             await wr.FlushAsync();
             stream.Position = 0;
 
-            var result = await reader.ReadAsync(stream);
+            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, settings: settings);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
         }
@@ -46,42 +53,25 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspaceAsync()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new()
+            var settings = new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
-                BaseUrl = new("fie://c:\\")
-            });
+                BaseUrl = new("file://c:\\"),
+            };
 
             ReadResult result;
-            using (var stream = Resources.GetStream("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml"))
-            {
-                result = await reader.ReadAsync(stream);
-            }
+            result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);
 
-            Assert.NotNull(result.OpenApiDocument.Workspace);
-            Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));
+            var externalDocBaseUri = result.OpenApiDocument.Workspace.GetDocumentId("./TodoComponents.yaml");
+            var schemasPath = "/components/schemas/";
+            var parametersPath = "/components/parameters/";
 
-            var referencedSchema = result.OpenApiDocument
-                                            .Paths["/todos"]
-                                            .Operations[OperationType.Get]
-                                            .Responses["200"]
-                                            .Content["application/json"]
-                                                .Schema.GetEffective(result.OpenApiDocument);
-            Assert.Equal("object", referencedSchema.Type);
-            Assert.Equal("string", referencedSchema.Properties["subject"].Type);
-            Assert.False(referencedSchema.UnresolvedReference);
-
-            var referencedParameter = result.OpenApiDocument
-                .Paths["/todos"]
-                .Operations[OperationType.Get]
-                .Parameters
-                .Select(p => p.GetEffective(result.OpenApiDocument))
-                .FirstOrDefault(p => p.Name == "filter");
-
-            Assert.Equal("string", referencedParameter.Schema.Type);
+            Assert.NotNull(externalDocBaseUri);
+            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + schemasPath + "todo"));
+            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + schemasPath + "entity"));
+            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + parametersPath + "filter"));
         }
-
     }
 
     public class MockLoader : IStreamLoader

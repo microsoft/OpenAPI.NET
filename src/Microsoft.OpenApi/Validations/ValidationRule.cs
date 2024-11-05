@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Validations
     /// Class containing validation rule logic for <see cref="IOpenApiElement"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ValidationRule<T> : ValidationRule where T : IOpenApiElement
+    public class ValidationRule<T> : ValidationRule
     {
         private readonly Action<IValidationContext, T> _validate;
         

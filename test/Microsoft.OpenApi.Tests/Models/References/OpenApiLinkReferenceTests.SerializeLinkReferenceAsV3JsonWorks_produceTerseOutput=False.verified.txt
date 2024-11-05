@@ -1,0 +1,7 @@
+﻿{
+  "operationId": "getUser",
+  "parameters": {
+    "userId": "$response.body#/id"
+  },
+  "description": "Use the id returned as the userId in `GET /users/{userId}`"
+}

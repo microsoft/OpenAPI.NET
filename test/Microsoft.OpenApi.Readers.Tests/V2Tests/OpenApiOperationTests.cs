@@ -1,18 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license.
+// Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
-using Microsoft.OpenApi.Readers.V3;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V2;
+using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -22,14 +24,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     {
         private const string SampleFolderPath = "V2Tests/Samples/OpenApiOperation/";
 
-        private static readonly OpenApiOperation _basicOperation = new()
+        private static readonly OpenApiOperation _basicOperation = new OpenApiOperation
         {
             Summary = "Updates a pet in the store",
             Description = "",
             OperationId = "updatePet",
             Parameters = new List<OpenApiParameter>
             {
-                new()
+                new OpenApiParameter
                 {
                     Name = "petId",
                     In = ParameterLocation.Path,
@@ -37,33 +39,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 }
             },
-            Responses = new()
+            Responses = new OpenApiResponses
             {
-                ["200"] = new()
+                ["200"] = new OpenApiResponse
                 {
                     Description = "Pet updated.",
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new(),
-                        ["application/xml"] = new()
+                        ["application/json"] = new OpenApiMediaType(),
+                        ["application/xml"] = new OpenApiMediaType()
                     }
                 }
             }
         };
 
         private static readonly OpenApiOperation _operationWithFormData =
-            new()
+            new OpenApiOperation
             {
                 Summary = "Updates a pet in the store with form data",
                 Description = "",
                 OperationId = "updatePetWithForm",
                 Parameters = new List<OpenApiParameter>
                 {
-                    new()
+                    new OpenApiParameter
                     {
                         Name = "petId",
                         In = ParameterLocation.Path,
@@ -71,30 +73,30 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Required = true,
                         Schema = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
-                RequestBody = new()
+                RequestBody = new OpenApiRequestBody
                 {
                     Content =
                     {
-                        ["application/x-www-form-urlencoded"] = new()
+                        ["application/x-www-form-urlencoded"] = new OpenApiMediaType
                         {
                             Schema = new()
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Properties =
                                 {
                                     ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
                                 Required = new HashSet<string>
@@ -103,22 +105,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 }
                             }
                         },
-                        ["multipart/form-data"] = new()
+                        ["multipart/form-data"] = new OpenApiMediaType
                         {
-                            Schema = new()
+                             Schema = new()
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Properties =
                                 {
                                     ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
                                 Required = new HashSet<string>
@@ -129,38 +131,38 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                     }
                 },
-                Responses = new()
+                Responses = new OpenApiResponses
                 {
-                    ["200"] = new()
+                    ["200"] = new OpenApiResponse
                     {
                         Description = "Pet updated.",
                         Content = new Dictionary<string, OpenApiMediaType>
                         {
-                            ["application/json"] = new(),
-                            ["application/xml"] = new()
+                            ["application/json"] = new OpenApiMediaType(),
+                            ["application/xml"] = new OpenApiMediaType()
                         }
 
                     },
-                    ["405"] = new()
+                    ["405"] = new OpenApiResponse
                     {
                         Description = "Invalid input",
                         Content = new Dictionary<string, OpenApiMediaType>
                         {
-                            ["application/json"] = new(),
-                            ["application/xml"] = new()
+                            ["application/json"] = new OpenApiMediaType(),
+                            ["application/xml"] = new OpenApiMediaType()
                         }
                     }
                 }
             };
 
-        private static readonly OpenApiOperation _operationWithBody = new()
+        private static readonly OpenApiOperation _operationWithBody = new OpenApiOperation
         {
             Summary = "Updates a pet in the store with request body",
             Description = "",
             OperationId = "updatePetWithBody",
             Parameters = new List<OpenApiParameter>
             {
-                new()
+                new OpenApiParameter
                 {
                     Name = "petId",
                     In = ParameterLocation.Path,
@@ -168,46 +170,46 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 },
             },
-            RequestBody = new()
+            RequestBody = new OpenApiRequestBody
             {
                 Description = "Pet to update with",
                 Required = true,
                 Content =
                 {
-                    ["application/json"] = new()
+                    ["application/json"] = new OpenApiMediaType
                     {
                         Schema = new()
                         {
-                            Type = "object"
+                            Type = JsonSchemaType.Object
                         }
                     }
                 },
                 Extensions = {
-                    [OpenApiConstants.BodyName] = new OpenApiString("petObject")
+                    [OpenApiConstants.BodyName] = new OpenApiAny("petObject")
                 }
             },
-            Responses = new()
+            Responses = new OpenApiResponses
             {
-                ["200"] = new()
+                ["200"] = new OpenApiResponse
                 {
                     Description = "Pet updated.",
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new(),
-                        ["application/xml"] = new()
+                        ["application/json"] = new OpenApiMediaType(),
+                        ["application/xml"] = new OpenApiMediaType()
                     }
                 },
-                ["405"] = new()
+                ["405"] = new OpenApiResponse
                 {
                     Description = "Invalid input",
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new(),
-                        ["application/xml"] = new()
+                        ["application/json"] = new OpenApiMediaType(),
+                        ["application/xml"] = new OpenApiMediaType()
                     }
 
                 }
@@ -250,41 +252,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ParseOperationWithFormDataShouldSucceed()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithFormData.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
-
-            // Assert
-            operation.Should().BeEquivalentTo(_operationWithFormData);
-        }
-
-        [Fact]
-        public void ParseOperationWithFormDataTwiceShouldYieldSameObject()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = new MemoryStream(
-                Encoding.Default.GetBytes(_operationWithFormData.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0))))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
-
-            // Assert
-            operation.Should().BeEquivalentTo(_operationWithFormData);
-        }
-
-        [Fact]
         public void ParseOperationWithBodyShouldSucceed()
         {
             // Arrange
@@ -298,7 +265,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -316,7 +283,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -334,41 +301,41 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             operation.Should().BeEquivalentTo(
-                new OpenApiOperation
+                new OpenApiOperation()
                 {
-                    Responses = new()
+                    Responses = new OpenApiResponses()
                     {
-                        { "200", new()
+                        { "200", new OpenApiResponse()
                         {
                             Description = "An array of float response",
                             Content =
                             {
-                                ["application/json"] = new()
+                                ["application/json"] = new OpenApiMediaType()
                                 {
                                     Schema = new()
                                     {
-                                        Type = "array",
+                                        Type = JsonSchemaType.Array,
                                         Items = new()
                                         {
-                                            Type = "number",
+                                            Type = JsonSchemaType.Number,
                                             Format = "float"
                                         }
                                     },
-                                    Example = new OpenApiArray
+                                    Example = new JsonArray()
                                     {
-                                        new OpenApiFloat(5),
-                                        new OpenApiFloat(6),
-                                        new OpenApiFloat(7),
+                                        5.0,
+                                        6.0,
+                                        7.0
                                     }
                                 },
-                                ["application/xml"] = new()
+                                ["application/xml"] = new OpenApiMediaType()
                                 {
                                     Schema = new()
                                     {
-                                        Type = "array",
+                                        Type = JsonSchemaType.Array,
                                         Items = new()
                                         {
-                                            Type = "number",
+                                            Type = JsonSchemaType.Number,
                                             Format = "float"
                                         }
                                     }
@@ -376,8 +343,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }}
                     }
-                }
-            );
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[0].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[0].Root)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[1].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[1].Root)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[2].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example[2].Root));
         }
 
         [Fact]
@@ -390,36 +362,30 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Act
             var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var expected = @"{
+  ""produces"": [
+    ""application/octet-stream""
+  ],
+  ""responses"": {
+    ""200"": {
+      ""description"": ""OK"",
+      ""schema"": {
+        ""type"": ""string"",
+        ""description"": ""The content of the file."",
+        ""format"": ""binary"",
+        ""x-ms-summary"": ""File Content""
+      }
+    }
+  }
+}";
+
+            var stringBuilder = new StringBuilder();
+            var jsonWriter = new OpenApiJsonWriter(new StringWriter(stringBuilder));
+            operation.SerializeAsV2(jsonWriter);
 
             // Assert
-            operation.Should().BeEquivalentTo(
-                new OpenApiOperation
-                {
-                    Responses = new()
-                    {
-                        { "200", new()
-                        {
-                            Description = "OK",
-                            Content =
-                            {
-                                ["application/octet-stream"] = new()
-                                {
-                                    Schema = new()
-                                    {
-                                        Format = "binary",
-                                        Description = "The content of the file.",
-                                        Type = "string",
-                                        Extensions =
-                                        {
-                                            ["x-ms-summary"] = new OpenApiString("File Content")
-                                        }
-                                    }
-                                }
-                            }
-                        }}
-                    }
-                }
-            );
+            var actual = stringBuilder.ToString();
+            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());            
         }
 
         [Fact]
@@ -434,7 +400,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]

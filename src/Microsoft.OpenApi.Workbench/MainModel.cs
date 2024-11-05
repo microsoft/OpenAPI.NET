@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
@@ -158,6 +159,7 @@ namespace Microsoft.OpenApi.Workbench
                 _version = value;
                 OnPropertyChanged(nameof(IsV2_0));
                 OnPropertyChanged(nameof(IsV3_0));
+                OnPropertyChanged(nameof(IsV3_1));
             }
         }
 
@@ -185,6 +187,12 @@ namespace Microsoft.OpenApi.Workbench
             set => Version = OpenApiSpecVersion.OpenApi3_0;
         }
 
+        public bool IsV3_1
+        {
+            get => Version == OpenApiSpecVersion.OpenApi3_1;
+            set => Version = OpenApiSpecVersion.OpenApi3_1;
+        }
+
         /// <summary>
         /// Handling method when the property with given name has changed.
         /// </summary>
@@ -203,6 +211,9 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         internal async Task ParseDocumentAsync()
         {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
+
             Stream stream = null;
             try
             {
@@ -245,8 +256,9 @@ namespace Microsoft.OpenApi.Workbench
                         settings.BaseUrl = new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                     }
                 }
-                var readResult = await new OpenApiStreamReader(settings
-                ).ReadAsync(stream);
+
+                var format = OpenApiModelFactory.GetFormat(_inputFile);
+                var readResult = await OpenApiDocument.LoadAsync(stream, format);
                 var document = readResult.OpenApiDocument;
                 var context = readResult.OpenApiDiagnostic;
 
@@ -287,7 +299,8 @@ namespace Microsoft.OpenApi.Workbench
                 Output = string.Empty;
                 Errors = "Failed to parse input: " + ex.Message;
             }
-            finally {
+            finally
+            {
                 if (stream != null)
                 {
                     stream.Close();

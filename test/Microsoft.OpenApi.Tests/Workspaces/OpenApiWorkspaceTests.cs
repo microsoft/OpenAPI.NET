@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -13,141 +13,76 @@ namespace Microsoft.OpenApi.Tests
     public class OpenApiWorkspaceTests
     {
         [Fact]
-        public void OpenApiWorkspaceCanHoldMultipleDocuments()
+        public void OpenApiWorkspacesCanAddComponentsFromAnotherDocument()
         {
-            var workspace = new OpenApiWorkspace();
-
-            workspace.AddDocument("root", new());
-            workspace.AddDocument("common", new());
-
-            Assert.Equal(2, workspace.Documents.Count());
-        }
-
-        [Fact]
-        public void OpenApiWorkspacesAllowDocumentsToReferenceEachOther()
-        {
-            var workspace = new OpenApiWorkspace();
-
-            workspace.AddDocument("root", new()
+            var doc = new OpenApiDocument()
             {
-                Paths = new()
+                Paths = new OpenApiPaths()
                 {
                     ["/"] = new()
                     {
-                        Operations  = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<OperationType, OpenApiOperation>()
                         {
-                            [OperationType.Get] = new()
+                            [OperationType.Get] = new OpenApiOperation()
                             {
-                                Responses = new()
+                                Responses = new OpenApiResponses()
                                 {
                                     ["200"] = new()
                                     {
-                                       Content = new Dictionary<string,OpenApiMediaType>
-                                       {
-                                           ["application/json"] = new()
-                                           {
-                                               Schema = new()
-                                               {
-                                                   Reference = new()
-                                                   {
-                                                       Id = "test",
-                                                       Type = ReferenceType.Schema
-                                                   }
-                                               }
-                                           }
-                                       }
+                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        {
+                                            ["application/json"] = new OpenApiMediaType()
+                                            {
+                                                Schema = new()
+                                                {
+                                                    Reference = new()
+                                                    {
+                                                        Id = "test",
+                                                        Type = ReferenceType.Schema
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            });
-            workspace.AddDocument("common", new()
+            };
+
+            var doc2 = new OpenApiDocument()
             {
-                Components = new()
+                Components = new OpenApiComponents()
                 {
                     Schemas = {
                         ["test"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             Description = "The referenced one"
                         }
                     }
                 }
-            });
-            Assert.Equal(2, workspace.Documents.Count());
+            };
+
+            doc.Workspace.RegisterComponents(doc2);
+                                    
+            Assert.Equal(1, doc.Workspace.ComponentsCount());
         }
 
         [Fact]
         public void OpenApiWorkspacesCanResolveExternalReferences()
         {
+            var refUri = new Uri("https://everything.json/common#/components/schemas/test");
             var workspace = new OpenApiWorkspace();
-            workspace.AddDocument("common", CreateCommonDocument());
-            var schema = workspace.ResolveReference(new() {Id = "test", Type = ReferenceType.Schema, ExternalResource = "common"}) as OpenApiSchema;
+            var externalDoc = CreateCommonDocument();
+                       
+            workspace.RegisterComponent<IOpenApiReferenceable>("https://everything.json/common#/components/schemas/test", externalDoc.Components.Schemas["test"]);
 
+            var schema = workspace.ResolveReference<OpenApiSchema>("https://everything.json/common#/components/schemas/test");
+           
             Assert.NotNull(schema);
             Assert.Equal("The referenced one", schema.Description);
-        }
-
-        [Fact]
-        public void OpenApiWorkspacesAllowDocumentsToReferenceEachOther_short()
-        {
-            var workspace = new OpenApiWorkspace();
-
-            var doc = new OpenApiDocument();
-            doc.CreatePathItem("/", p =>
-            {
-                p.Description = "Consumer";
-                p.CreateOperation(OperationType.Get, op =>
-                    op.CreateResponse("200", re =>
-                    {
-                        re.Description = "Success";
-                        re.CreateContent("application/json",
-                            co =>
-                            co.Schema = new()
-                            {
-                                Reference = new() // Reference
-                                {
-                                    Id = "test", Type = ReferenceType.Schema, ExternalResource = "common"
-                                },
-                                UnresolvedReference = true
-                            }
-                        );
-                    })
-                );
-            });
-
-            workspace.AddDocument("root", doc);
-            workspace.AddDocument("common", CreateCommonDocument());
-            var errors = doc.ResolveReferences();
-            Assert.Empty(errors);
-
-            var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            var effectiveSchema = schema.GetEffective(doc);
-            Assert.False(effectiveSchema.UnresolvedReference);
-        }
-
-        [Fact]
-        public void OpenApiWorkspacesShouldNormalizeDocumentLocations()
-        {
-            var workspace = new OpenApiWorkspace();
-            workspace.AddDocument("hello", new());
-            workspace.AddDocument("hi", new());
-
-            Assert.True(workspace.Contains("./hello"));
-            Assert.True(workspace.Contains("./foo/../hello"));
-            Assert.True(workspace.Contains("file://" + Environment.CurrentDirectory + "/./foo/../hello"));
-
-            Assert.False(workspace.Contains("./goodbye"));
-        }
-
-        // Enable Workspace to load from any reader, not just streams.
-
-        // Test fragments
-        internal void OpenApiWorkspacesShouldLoadDocumentFragments()
-        {
-            Assert.True(false);
         }
 
         [Fact]
@@ -155,11 +90,15 @@ namespace Microsoft.OpenApi.Tests
         {
             // Arrange
             var workspace = new OpenApiWorkspace();
-            var schemaFragment = new OpenApiSchema {Type = "string", Description = "Schema from a fragment"};
-            workspace.AddFragment("fragment", schemaFragment);
+            var schemaFragment = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.String,
+                Description = "Schema from a fragment"
+            };
+            workspace.RegisterComponent<IOpenApiReferenceable>("common#/components/schemas/test", schemaFragment);
 
             // Act
-            var schema = workspace.ResolveReference(new() {ExternalResource = "fragment"}) as OpenApiSchema;
+            var schema = workspace.ResolveReference<OpenApiSchema>("common#/components/schemas/test");
 
             // Assert
             Assert.NotNull(schema);
@@ -178,45 +117,46 @@ namespace Microsoft.OpenApi.Tests
                     { "header1", new OpenApiHeader() }
                 }
             };
-            workspace.AddFragment("fragment", responseFragment);
+
+            workspace.RegisterComponent("headers/header1", responseFragment);
 
             // Act
-            var resolvedElement = workspace.ResolveReference(new()
-            {
-                Id = "headers/header1",
-                ExternalResource = "fragment"
-            });
+            var resolvedElement = workspace.ResolveReference<OpenApiResponse>("headers/header1");
 
             // Assert
-            Assert.Same(responseFragment.Headers["header1"], resolvedElement);
+            Assert.Same(responseFragment.Headers["header1"], resolvedElement.Headers["header1"]);
         }
 
         // Test artifacts
         private static OpenApiDocument CreateCommonDocument()
         {
-            return new()
+            var doc =  new OpenApiDocument()
             {
                 Components = new()
                 {
-                    Schemas = {
+                    Schemas = 
+                    {
                         ["test"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             Description = "The referenced one"
                         }
                     }
                 }
             };
+
+            return doc;
         }
     }
 
     public static class OpenApiFactoryExtensions
     {
+
         public static OpenApiDocument CreatePathItem(this OpenApiDocument document, string path, Action<OpenApiPathItem> config)
         {
             var pathItem = new OpenApiPathItem();
             config(pathItem);
-            document.Paths = new();
+            document.Paths = new OpenApiPaths();
             document.Paths.Add(path, pathItem);
             return document;
         }
@@ -244,5 +184,6 @@ namespace Microsoft.OpenApi.Tests
             parent.Content.Add(mediaType, child);
             return parent;
         }
+
     }
 }

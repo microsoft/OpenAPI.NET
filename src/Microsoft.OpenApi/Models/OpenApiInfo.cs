@@ -19,6 +19,11 @@ namespace Microsoft.OpenApi.Models
         public string Title { get; set; }
 
         /// <summary>
+        /// A short summary of the API.
+        /// </summary>
+        public string Summary { get; set; }
+
+        /// <summary>
         /// A short description of the application.
         /// </summary>
         public string Description { get; set; }
@@ -51,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiInfo() {}
+        public OpenApiInfo() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiInfo"/> object
@@ -59,6 +64,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiInfo(OpenApiInfo info)
         {
             Title = info?.Title ?? Title;
+            Summary = info?.Summary ?? Summary;
             Description = info?.Description ?? Description;
             Version = info?.Version ?? Version;
             TermsOfService = info?.TermsOfService ?? TermsOfService;
@@ -68,12 +74,33 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.1
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
+
+            // summary - present in 3.1
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
 
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
+        /// </summary>
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        {
+            Utils.CheckArgumentNull(writer);;
             writer.WriteStartObject();
 
             // title
@@ -86,18 +113,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, callback);
 
             // license object
-            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.License, License, callback);
 
             // version
             writer.WriteProperty(OpenApiConstants.Version, Version);
 
             // specification extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
+            writer.WriteExtensions(Extensions, version);
         }
 
         /// <summary>
@@ -105,7 +130,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);
+            Utils.CheckArgumentNull(writer);;
 
             writer.WriteStartObject();
 

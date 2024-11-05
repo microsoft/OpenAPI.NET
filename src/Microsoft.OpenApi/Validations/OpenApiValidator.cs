@@ -1,4 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -22,9 +23,11 @@ namespace Microsoft.OpenApi.Validations
         /// Create a visitor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
-        public OpenApiValidator(ValidationRuleSet ruleSet)
+        /// <param name="hostDocument"></param>
+        public OpenApiValidator(ValidationRuleSet ruleSet, OpenApiDocument hostDocument = null)
         {
             _ruleSet = ruleSet;
+            HostDocument = hostDocument;
         }
 
         /// <summary>
@@ -36,6 +39,11 @@ namespace Microsoft.OpenApi.Validations
         /// Gets the validation warnings.
         /// </summary>
         public IEnumerable<OpenApiValidatorWarning> Warnings { get => _warnings; }
+
+        /// <summary>
+        /// The host document used for validation.
+        /// </summary>
+        public OpenApiDocument HostDocument { get; set; }
 
         /// <summary>
         /// Register an error with the validation context.
@@ -292,7 +300,7 @@ namespace Microsoft.OpenApi.Validations
             }
 
             // Validate unresolved references as references
-            if (item is IOpenApiReferenceable {UnresolvedReference: true})
+            if (item is IOpenApiReferenceable { UnresolvedReference: true })
             {
                 type = typeof(IOpenApiReferenceable);
             }
@@ -300,7 +308,7 @@ namespace Microsoft.OpenApi.Validations
             var rules = _ruleSet.FindRules(type);
             foreach (var rule in rules)
             {
-                rule.Evaluate(this as IValidationContext, item);
+                rule.Evaluate(this, item);
             }
         }
     }

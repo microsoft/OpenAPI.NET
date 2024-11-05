@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -34,17 +35,17 @@ public class OpenApiReservedParameterExtension : IOpenApiExtension
         get; set;
     }
     /// <summary>
-    /// Parses the <see cref="IOpenApiAny"/> to <see cref="OpenApiReservedParameterExtension"/>.
+    /// Parses the <see cref="OpenApiAny"/> to <see cref="OpenApiReservedParameterExtension"/>.
     /// </summary>
     /// <param name="source">The source object.</param>
     /// <returns>The <see cref="OpenApiReservedParameterExtension"/>.</returns>
     /// <returns></returns>
-    public static OpenApiReservedParameterExtension Parse(IOpenApiAny source)
+    public static OpenApiReservedParameterExtension Parse(JsonNode source)
     {
-        if (source is not OpenApiBoolean rawBoolean) return null;
+        if (source is not JsonNode rawBoolean) return null;
         return new()
         {
-            IsReserved = rawBoolean.Value
+            IsReserved = rawBoolean.GetValue<bool>()
         };
     }
 }

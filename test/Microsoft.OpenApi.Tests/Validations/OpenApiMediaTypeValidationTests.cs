@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -21,10 +22,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var mediaType = new OpenApiMediaType
             {
-                Example = new OpenApiInteger(55),
+                Example = 55,
                 Schema = new()
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                 }
             };
 
@@ -38,15 +39,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                "#/example",
-            });
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -59,41 +52,37 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Schema = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     AdditionalProperties = new()
                     {
-                        Type = "integer",
+                        Type = JsonSchemaType.Integer,
                     }
                 },
                 Examples =
                     {
                         ["example0"] = new()
                         {
-                            Value = new OpenApiString("1"),
+                            Value = "1",
                         },
                         ["example1"] = new()
                         {
-                           Value = new OpenApiObject
-                           {
-                                ["x"] = new OpenApiInteger(2),
-                                ["y"] = new OpenApiString("20"),
-                                ["z"] = new OpenApiString("200")
+                           Value = new JsonObject()
+                            {
+                                ["x"] = 2,
+                                ["y"] = "20",
+                                ["z"] = "200"
                             }
                         },
                         ["example2"] = new()
                         {
-                            Value =
-                            new OpenApiArray
-                            {
-                                new OpenApiInteger(3)
-                            }
+                            Value = new JsonArray(){3}
                         },
                         ["example3"] = new()
                         {
-                            Value = new OpenApiObject
+                            Value = new JsonObject()
                             {
-                                ["x"] = new OpenApiInteger(4),
-                                ["y"] = new OpenApiInteger(40),
+                                ["x"] = 4,
+                                ["y"] = 40
                             }
                         },
                     }
@@ -109,21 +98,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
-            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-            });
-            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
-            {
-                // #enum/0 is not an error since the spec allows
-                // representing an object using a string.
-                "#/examples/example1/value/y",
-                "#/examples/example1/value/z",
-                "#/examples/example2/value"
-            });
+            result.Should().BeTrue();
         }
     }
 }

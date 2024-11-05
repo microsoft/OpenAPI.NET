@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -33,16 +34,16 @@ public class OpenApiPrimaryErrorMessageExtension : IOpenApiExtension
     public bool IsPrimaryErrorMessage { get; set; }
 
     /// <summary>
-    /// Parses the <see cref="IOpenApiAny"/> to <see cref="OpenApiPrimaryErrorMessageExtension"/>.
+    /// Parses the <see cref="OpenApiAny"/> to <see cref="OpenApiPrimaryErrorMessageExtension"/>.
     /// </summary>
     /// <param name="source">The source object.</param>
     /// <returns>The <see cref="OpenApiPrimaryErrorMessageExtension"/>.</returns>
-    public static OpenApiPrimaryErrorMessageExtension Parse(IOpenApiAny source)
+    public static OpenApiPrimaryErrorMessageExtension Parse(JsonNode source)
     {
-        if (source is not OpenApiBoolean rawObject) return null;
+        if (source is not JsonNode rawObject) return null;
         return new()
         {
-            IsPrimaryErrorMessage = rawObject.Value
+            IsPrimaryErrorMessage = rawObject.GetValue<bool>()
         };
     }
 }

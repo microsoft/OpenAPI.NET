@@ -2,12 +2,9 @@
 // Licensed under the MIT license.
 
 using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
-using SharpYaml.Serialization;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -17,21 +14,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDiscriminator/";
 
+        public OpenApiDiscriminatorTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParseBasicDiscriminatorShouldSucceed()
         {
+            // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDiscriminator.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             // Act
-            var discriminator = OpenApiV3Deserializer.LoadDiscriminator(node);
+            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(stream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out var diagnostic);
 
             // Assert
             discriminator.Should().BeEquivalentTo(
@@ -40,8 +35,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     PropertyName = "pet_type",
                     Mapping =
                     {
-                        ["puppy"] = "#/components/schemas/Dog",
-                        ["kitten"] = "Cat"
+                            ["puppy"] = "#/components/schemas/Dog",
+                            ["kitten"] = "Cat"
                     }
                 });
         }

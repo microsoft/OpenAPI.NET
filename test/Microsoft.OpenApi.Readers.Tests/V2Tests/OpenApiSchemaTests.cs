@@ -3,11 +3,14 @@
 
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Reader.V2;
 using Xunit;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
+using System.Collections.Generic;
+using FluentAssertions.Equivalency;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -30,13 +33,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            schema.Should().BeEquivalentTo(
-                new OpenApiSchema
-                {
-                    Type = "number",
-                    Format = "float",
-                    Default = new OpenApiFloat(5)
-                });
+            schema.Should().BeEquivalentTo(new OpenApiSchema
+            {
+                Type = JsonSchemaType.Number,
+                Format = "float",
+                Default = 5
+            }, options => options.IgnoringCyclicReferences().Excluding(x => x.Default.Parent));
         }
 
         [Fact]
@@ -56,10 +58,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             schema.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
-                    Type = "number",
+                    Type = JsonSchemaType.Number,
                     Format = "float",
-                    Example = new OpenApiFloat(5)
-                });
+                    Example = 5
+                }, options => options.IgnoringCyclicReferences().Excluding(x => x.Example.Parent));
         }
 
         [Fact]
@@ -76,18 +78,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            schema.Should().BeEquivalentTo(
-                new OpenApiSchema
+            var expected = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Number,
+                Format = "float",
+                Enum = new List<JsonNode>
                 {
-                    Type = "number",
-                    Format = "float",
-                    Enum =
-                    {
-                        new OpenApiFloat(7),
-                        new OpenApiFloat(8),
-                        new OpenApiFloat(9)
-                    }
-                });
+                    new OpenApiAny(7).Node,
+                    new OpenApiAny(8).Node,
+                    new OpenApiAny(9).Node
+                }
+            };
+
+            schema.Should().BeEquivalentTo(expected, options =>
+                       options.IgnoringCyclicReferences()
+                              .Excluding((IMemberInfo memberInfo) =>
+                                    memberInfo.Path.EndsWith("Parent")));
         }
     }
 }

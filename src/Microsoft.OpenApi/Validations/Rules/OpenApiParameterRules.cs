@@ -59,44 +59,6 @@ namespace Microsoft.OpenApi.Validations.Rules
                 });
 
         /// <summary>
-        /// Validate the data matches with the given data type.
-        /// </summary>
-        public static ValidationRule<OpenApiParameter> ParameterMismatchedDataType =>
-            new(nameof(ParameterMismatchedDataType),
-                (context, parameter) =>
-                {
-                    // example
-                    context.Enter("example");
-
-                    if (parameter.Example != null)
-                    {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(ParameterMismatchedDataType), parameter.Example, parameter.Schema);
-                    }
-
-                    context.Exit();
-
-                    // examples
-                    context.Enter("examples");
-
-                    if (parameter.Examples != null)
-                    {
-                        foreach (var key in parameter.Examples.Keys)
-                        {
-                            if (parameter.Examples[key] != null)
-                            {
-                                context.Enter(key);
-                                context.Enter("value");
-                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(ParameterMismatchedDataType), parameter.Examples[key]?.Value, parameter.Schema);
-                                context.Exit();
-                                context.Exit();
-                            }
-                        }
-                    }
-
-                    context.Exit();
-                });
-
-        /// <summary>
         /// Validate that a path parameter should always appear in the path
         /// </summary>
         public static ValidationRule<OpenApiParameter> PathParameterShouldBeInThePath =>

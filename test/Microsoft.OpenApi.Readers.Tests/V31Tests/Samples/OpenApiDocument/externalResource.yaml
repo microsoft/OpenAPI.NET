@@ -1,0 +1,22 @@
+openapi: 3.1.0
+info:
+  title: ReferencedById
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    todo:
+      type: object
+      properties:
+        id:
+           type: string
+        name:
+           type: string
+    user:
+       $id: 'https://example.com/schemas/user.json'
+       type: object
+       properties:
+         id:
+           type: string
+         name:
+           type: string

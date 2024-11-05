@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -20,15 +21,14 @@ namespace Microsoft.OpenApi.Tests.Writers
     [Collection("DefaultSettings")]
     public class OpenApiJsonWriterTests
     {
-        static bool[] shouldProduceTerseOutputValues = new[] { true, false };
+        static bool[] shouldProduceTerseOutputValues = [true, false];
 
         public static IEnumerable<object[]> WriteStringListAsJsonShouldMatchExpectedTestCases()
         {
             return
                 from input in new[]
                 {
-                    new[]
-                    {
+                    [
                         "string1",
                         "string2",
                         "string3",
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                         "string6",
                         "string7",
                         "string8"
-                    },
+                    ],
                     new[] {"string1", "string1", "string1", "string1"}
                 }
                 from shouldBeTerse in shouldProduceTerseOutputValues
@@ -275,10 +275,11 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Arrange
             var schema = new OpenApiSchema
             {
-                Enum = new List<IOpenApiAny> {
-                        new OpenApiDouble(double.NaN),
-                        new OpenApiDouble(double.PositiveInfinity),
-                        new OpenApiDouble(double.NegativeInfinity) 
+                Enum = new List<JsonNode>
+                {
+                    new OpenApiAny("NaN").Node,
+                    new OpenApiAny("Infinity").Node,
+                    new OpenApiAny("-Infinity").Node
                 }
             };
 

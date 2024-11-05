@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
-using SharpYaml.Serialization;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -16,22 +14,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiSecuritySchemeTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiSecurityScheme/";
+        public OpenApiSecuritySchemeTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
 
         [Fact]
         public void ParseHttpSecuritySchemeShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
             // Act
-            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -45,18 +37,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseApiKeySecuritySchemeShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
             // Act
-            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -71,18 +53,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBearerSecuritySchemeShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
             // Act
-            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -97,33 +69,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseOAuth2SecuritySchemeShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
             // Act
-            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new()
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Implicit = new()
+                        Implicit = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new("https://example.com/api/oauth/dialog"),
+                            AuthorizationUrl = new Uri("https://example.com/api/oauth/dialog"),
                             Scopes =
                             {
-                                ["write:pets"] = "modify pets in your account",
-                                ["read:pets"] = "read your pets"
+                                    ["write:pets"] = "modify pets in your account",
+                                    ["read:pets"] = "read your pets"
                             }
                         }
                     }
@@ -133,18 +95,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseOpenIdConnectSecuritySchemeShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
             // Act
-            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiModelFactory.Load<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -152,7 +104,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Type = SecuritySchemeType.OpenIdConnect,
                     Description = "Sample Description",
-                    OpenIdConnectUrl = new("http://www.example.com")
+                    OpenIdConnectUrl = new Uri("http://www.example.com")
                 });
         }
     }

@@ -76,7 +76,18 @@ namespace Microsoft.OpenApi.Properties {
                 return ResourceManager.GetString("ArgumentNullOrWhiteSpace", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to The argument &apos;{0}&apos; is null..
+        /// </summary>
+        internal static string ArgumentNull
+        {
+            get
+            {
+                return ResourceManager.GetString("ArgumentNull", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to http://localhost/.
         /// </summary>
@@ -399,6 +410,28 @@ namespace Microsoft.OpenApi.Properties {
         internal static string WorkspaceRequredForExternalReferenceResolution {
             get {
                 return ResourceManager.GetString("WorkspaceRequredForExternalReferenceResolution", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The HostDocument is null..
+        /// </summary>
+        internal static string HostDocumentIsNull
+        {
+            get
+            {
+                return ResourceManager.GetString("HostDocumentIsNull", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The identifier in the referenced element is null or empty ..
+        /// </summary>
+        internal static string ReferenceIdIsNullOrEmpty
+        {
+            get
+            {
+                return ResourceManager.GetString("ReferenceIdIsNullOrEmpty", resourceCulture);
             }
         }
     }

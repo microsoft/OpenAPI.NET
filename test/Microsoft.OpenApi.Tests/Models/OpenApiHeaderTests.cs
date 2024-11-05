@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -19,22 +20,19 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "sampleHeader",
             Schema = new()
             {
-                Type = "integer",
+                Type = JsonSchemaType.Integer,
                 Format = "int32"
             }
         };
 
+        public static OpenApiHeaderReference OpenApiHeaderReference = new(ReferencedHeader, "example1");
+
         public static OpenApiHeader ReferencedHeader = new()
         {
-            Reference = new()
-            {
-                Type = ReferenceType.Header,
-                Id = "example1",
-            },
             Description = "sampleHeader",
             Schema = new()
             {
-                Type = "integer",
+                Type = JsonSchemaType.Integer,
                 Format = "int32"
             }
         };
@@ -66,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedHeader.SerializeAsV3(writer);
+            OpenApiHeaderReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -83,9 +81,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedHeader.SerializeAsV3WithoutReference(writer);
+            ReferencedHeader.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -118,7 +115,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedHeader.SerializeAsV2(writer);
+            OpenApiHeaderReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert
@@ -135,7 +132,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedHeader.SerializeAsV2WithoutReference(writer);
+            ReferencedHeader.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

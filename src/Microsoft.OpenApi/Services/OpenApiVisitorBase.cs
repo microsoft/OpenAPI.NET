@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -51,6 +52,14 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="JsonNode"/>
+        /// </summary>
+        /// <param name="node"></param>
+        public virtual void Visit(JsonNode node)
+        {
+        }
+
+        /// <summary>
         /// Visits <see cref="OpenApiInfo"/>
         /// </summary>
         public virtual void Visit(OpenApiInfo info)
@@ -89,6 +98,13 @@ namespace Microsoft.OpenApi.Services
         /// Visits <see cref="OpenApiPaths"/>
         /// </summary>
         public virtual void Visit(OpenApiPaths paths)
+        {
+        }
+
+        /// <summary>
+        /// Visits Webhooks>
+        /// </summary>
+        public virtual void Visit(IDictionary<string, OpenApiPathItem> webhooks)
         {
         }
 
@@ -249,7 +265,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiHeader"/>
         /// </summary>
-        public virtual void Visit(OpenApiHeader tag)
+        public virtual void Visit(OpenApiHeader header)
         {
         }
 

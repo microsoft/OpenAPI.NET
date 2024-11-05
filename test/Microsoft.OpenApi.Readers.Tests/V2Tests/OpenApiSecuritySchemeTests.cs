@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader.V2;
 using SharpYaml.Serialization;
 using Xunit;
 
@@ -20,13 +22,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseHttpSecuritySchemeShouldSucceed()
         {
+            // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var asJsonNode = document.RootNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
             // Act
             var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -43,12 +47,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseApiKeySecuritySchemeShouldSucceed()
         {
+            // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var asJsonNode = document.RootNode.ToJsonNode();
+
+            var node = new MapNode(context, asJsonNode);
 
             // Act
             var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -71,10 +78,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+                var asJsonNode = document.RootNode.ToJsonNode();
 
-            // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+                var node = new MapNode(context, asJsonNode);
+
+                // Act
+                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -99,12 +108,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2PasswordSecuritySchemeShouldSucceed()
         {
+            // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2PasswordSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var asJsonNode = document.RootNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
             // Act
             var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -114,15 +125,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new()
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Password = new()
+                        Password = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
+                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
                             Scopes =
                             {
-                                ["write:pets"] = "modify pets in your account",
-                                ["read:pets"] = "read your pets"
+                                    ["write:pets"] = "modify pets in your account",
+                                    ["read:pets"] = "read your pets"
                             }
                         }
                     }
@@ -132,12 +143,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2ApplicationSecuritySchemeShouldSucceed()
         {
+            // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ApplicationSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var asJsonNode = document.RootNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
             // Act
             var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -147,15 +160,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new()
+                    Flows = new OpenApiOAuthFlows
                     {
-                        ClientCredentials = new()
+                        ClientCredentials = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
+                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
                             Scopes =
                             {
-                                ["write:pets"] = "modify pets in your account",
-                                ["read:pets"] = "read your pets"
+                                    ["write:pets"] = "modify pets in your account",
+                                    ["read:pets"] = "read your pets"
                             }
                         }
                     }
@@ -165,13 +178,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2AccessCodeSecuritySchemeShouldSucceed()
         {
+            // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2AccessCodeSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var asJsonNode = document.RootNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
             // Act
             var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -181,15 +196,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new()
+                    Flows = new OpenApiOAuthFlows
                     {
-                        AuthorizationCode = new()
+                        AuthorizationCode = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
+                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
                             Scopes =
                             {
-                                ["write:pets"] = "modify pets in your account",
-                                ["read:pets"] = "read your pets"
+                                    ["write:pets"] = "modify pets in your account",
+                                    ["read:pets"] = "read your pets"
                             }
                         }
                     }

@@ -2,12 +2,9 @@
 // Licensed under the MIT license.
 
 using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
-using SharpYaml.Serialization;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -17,21 +14,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiEncoding/";
 
+        public OpenApiEncodingTests()
+        {
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParseBasicEncodingShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicEncoding.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
             // Act
-            var encoding = OpenApiV3Deserializer.LoadEncoding(node);
+            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             encoding.Should().BeEquivalentTo(
@@ -45,17 +37,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseAdvancedEncodingShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml"));
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
-
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
-
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             // Act
-            var encoding = OpenApiV3Deserializer.LoadEncoding(node);
+            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out _);
 
             // Assert
             encoding.Should().BeEquivalentTo(
@@ -69,8 +53,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             {
                                 Description = "The number of allowed requests in the current period",
                                 Schema = new()
-                                {
-                                    Type = "integer"
+                                { 
+                                    Type = JsonSchemaType.Integer
                                 }
                             }
                     }

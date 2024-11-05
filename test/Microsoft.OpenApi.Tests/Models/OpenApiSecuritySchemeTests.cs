@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -104,17 +105,13 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
+        public static OpenApiSecuritySchemeReference OpenApiSecuritySchemeReference = new(target: ReferencedSecurityScheme, referenceId: "sampleSecurityScheme");
         public static OpenApiSecurityScheme ReferencedSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
             Scheme = OpenApiConstants.Bearer,
-            OpenIdConnectUrl = new("https://example.com/openIdConnect"),
-            Reference = new()
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = "sampleSecurityScheme"
-            }
+            OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
         [Fact]
@@ -314,7 +311,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedSecurityScheme.SerializeAsV3(writer);
+            OpenApiSecuritySchemeReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -331,7 +328,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedSecurityScheme.SerializeAsV3WithoutReference(writer);
+            ReferencedSecurityScheme.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert

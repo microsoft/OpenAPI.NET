@@ -3,8 +3,10 @@
 
 using System.Collections.Generic;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
@@ -22,15 +24,15 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MaxLength = 15
                         }
-                    },
-                },
+                    }
+                }
             },
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
@@ -71,21 +73,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
-                        ["property3"] = new()
-                        {
-                            Reference = new()
-                            {
-                                Type = ReferenceType.Schema,
-                                Id = "schema2"
-                            }
-                        }
-                    },
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
+                        ["property3"] = new OpenApiSchemaReference("schema2", null)                        
                     }
                 },
                 ["schema2"] = new()
@@ -94,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         }
                     }
                 },
@@ -146,20 +136,20 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["schema1"] = new()
                 {
-                    Type = "string"
+                    Type = JsonSchemaType.String
                 },
                 ["schema2"] = null,
                 ["schema3"] = null,
                 ["schema4"] = new()
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                     AllOf = new List<OpenApiSchema>
                     {
                         null,
                         null,
                         new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         },
                         null,
                         null
@@ -172,25 +162,18 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new()
-                {
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema2"
-                    }
-                },
+                ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
-                },
+                }
             }
         };
 
@@ -200,28 +183,23 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["schema1"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
-                    },
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
                     }
                 },
                 ["schema2"] = new()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Properties =
                     {
                         ["property1"] = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
@@ -232,12 +210,64 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new()
+                ["schema1"] = new OpenApiSchemaReference("schema1", null)
+            }
+        };
+
+        public static OpenApiComponents ComponentsWithPathItem = new OpenApiComponents
+        {
+            Schemas = new Dictionary<string, OpenApiSchema>()
+            {
+                ["schema1"] = new OpenApiSchema()
                 {
-                    Reference = new()
+                    Properties = new Dictionary<string, OpenApiSchema>()
                     {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
+                        ["property2"] = new OpenApiSchema()
+                        {
+                            Type = JsonSchemaType.Integer
+                        },
+                        ["property3"] = new OpenApiSchemaReference("schema2", null)
+                    }
+                },                
+
+                ["schema2"] = new()
+                {
+                    Properties = new Dictionary<string, OpenApiSchema>()
+                    {
+                        ["property2"] = new OpenApiSchema()
+                        {
+                            Type = JsonSchemaType.Integer
+                        }
+                    }
+                }
+            },
+            PathItems = new Dictionary<string, OpenApiPathItem>
+            {
+                ["/pets"] = new OpenApiPathItem
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Post] = new OpenApiOperation
+                        {
+                            RequestBody = new OpenApiRequestBody
+                            {
+                                Description = "Information about a new pet in the system",
+                                Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType
+                                    {
+                                        Schema = new OpenApiSchemaReference("schema1", null)
+                                    }
+                                }
+                            },
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "Return a 200 status to indicate that the data was received successfully"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -468,8 +498,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBrokenComponentsAsJsonV3Works()
         {
             // Arrange
-            var expected =
-                """
+            var expected = """
                 {
                   "schemas": {
                     "schema1": {
@@ -536,6 +565,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeTopLevelReferencingComponentsAsYamlV3Works()
         {
             // Arrange
+            // Arrange
             var expected =
                 """
                 schemas:
@@ -558,17 +588,23 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeTopLevelSelfReferencingComponentsAsYamlV3Works()
+        public void SerializeTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected =
-                """
-                schemas:
-                  schema1: { }
-                """;
+            var expected = @"schemas:
+  schema1:
+    type: object
+    properties:
+      property1:
+        type: string
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
 
             // Act
-            var actual = TopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -577,26 +613,90 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
+        public void SerializeComponentsWithPathItemsAsJsonWorks()
         {
             // Arrange
-            var expected =
-                """
-                schemas:
-                  schema1:
-                    type: object
-                    properties:
-                      property1:
-                        type: string
-                  schema2:
-                    type: object
-                    properties:
-                      property1:
-                        type: string
-                """;
+            var expected = @"{
+  ""pathItems"": {
+    ""/pets"": {
+      ""post"": {
+        ""requestBody"": {
+          ""description"": ""Information about a new pet in the system"",
+          ""content"": {
+            ""application/json"": {
+              ""schema"": {
+                ""$ref"": ""#/components/schemas/schema1""
+              }
+            }
+          }
+        },
+        ""responses"": {
+          ""200"": {
+            ""description"": ""Return a 200 status to indicate that the data was received successfully""
+          }
+        }
+      }
+    }
+  },
+  ""schemas"": {
+    ""schema1"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        },
+        ""property3"": {
+          ""$ref"": ""#/components/schemas/schema2""
+        }
+      }
+    },
+    ""schema2"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        }
+      }
+    }
+  }
+}";
+            // Act
+            var actual = ComponentsWithPathItem.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeComponentsWithPathItemsAsYamlWorks()
+        {
+            // Arrange
+            var expected = @"pathItems:
+  /pets:
+    post:
+      requestBody:
+        description: Information about a new pet in the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schema1'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully
+schemas:
+  schema1:
+    properties:
+      property2:
+        type: integer
+      property3:
+        $ref: '#/components/schemas/schema2'
+  schema2:
+    properties:
+      property2:
+        type: integer";
 
             // Act
-            var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = ComponentsWithPathItem.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
