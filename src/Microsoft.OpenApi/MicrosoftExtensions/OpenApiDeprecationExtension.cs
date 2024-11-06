@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.MicrosoftExtensions;
 
@@ -71,23 +72,23 @@ public class OpenApiDeprecationExtension : IOpenApiExtension
         }
     }
     /// <summary>
-    /// Parses the <see cref="IOpenApiAny"/> to <see cref="OpenApiDeprecationExtension"/>.
+    /// Parses the <see cref="OpenApiAny"/> to <see cref="OpenApiDeprecationExtension"/>.
     /// </summary>
     /// <param name="source">The source object.</param>
     /// <returns>The <see cref="OpenApiDeprecationExtension"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
-    public static OpenApiDeprecationExtension Parse(IOpenApiAny source)
+    public static OpenApiDeprecationExtension Parse(JsonNode source)
     {
-        if (source is not OpenApiObject rawObject) return null;
+        if (source is not JsonObject rawObject) return null;
         var extension = new OpenApiDeprecationExtension();
-        if (rawObject.TryGetValue(nameof(RemovalDate).ToFirstCharacterLowerCase(), out var removalDate) && removalDate is OpenApiDateTime removalDateValue)
-            extension.RemovalDate = removalDateValue.Value;
-        if (rawObject.TryGetValue(nameof(Date).ToFirstCharacterLowerCase(), out var date) && date is OpenApiDateTime dateValue)
-            extension.Date = dateValue.Value;
-        if (rawObject.TryGetValue(nameof(Version).ToFirstCharacterLowerCase(), out var version) && version is OpenApiString versionValue)
-            extension.Version = versionValue.Value;
-        if (rawObject.TryGetValue(nameof(Description).ToFirstCharacterLowerCase(), out var description) && description is OpenApiString descriptionValue)
-            extension.Description = descriptionValue.Value;
+        if (rawObject.TryGetPropertyValue(nameof(RemovalDate).ToFirstCharacterLowerCase(), out var removalDate) && removalDate is JsonNode removalDateValue)
+            extension.RemovalDate = removalDateValue.GetValue<DateTimeOffset>();
+        if (rawObject.TryGetPropertyValue(nameof(Date).ToFirstCharacterLowerCase(), out var date) && date is JsonNode dateValue)
+            extension.Date = dateValue.GetValue<DateTimeOffset>();
+        if (rawObject.TryGetPropertyValue(nameof(Version).ToFirstCharacterLowerCase(), out var version) && version is JsonNode versionValue)
+            extension.Version = versionValue.GetValue<string>();
+        if (rawObject.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var description) && description is JsonNode descriptionValue)
+            extension.Description = descriptionValue.GetValue<string>();
         return extension;
     }
 }

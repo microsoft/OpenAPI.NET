@@ -1,0 +1,7 @@
+﻿type: object
+properties:
+    one:
+        description: type array
+        type:
+        - integer
+        - string

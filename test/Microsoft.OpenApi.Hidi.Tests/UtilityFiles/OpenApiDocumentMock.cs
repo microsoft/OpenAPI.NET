@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 Required = true,
                                                 Schema = new()
                                                 {
-                                                    Type = "string"
+                                                    Type = JsonSchemaType.String
                                                 }
                                             }
                                         }
@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         {
                                                             Schema = new()
                                                             {
-                                                                Type = "array"
+                                                                Type = JsonSchemaType.Array
                                                             }
                                                         }
                                                     }
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Required = true,
                                     Schema = new()
                                     {
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 }
                             }
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 Required = true,
                                                 Schema = new()
                                                 {
-                                                    Type = "string"
+                                                    Type = JsonSchemaType.String
                                                 }
                                             }
                                         }
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         {
                                                             Schema = new()
                                                             {
-                                                                Type = "array"
+                                                                Type = JsonSchemaType.Array
                                                             }
                                                         }
                                                     }
@@ -198,7 +198,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 Required = true,
                                 Schema = new()
                                 {
-                                    Type = "string"
+                                    Type = JsonSchemaType.String
                                 }
                             }
                         }
@@ -236,14 +236,14 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                             Schema = new()
                                                             {
                                                                 Title = "Collection of user",
-                                                                Type = "object",
+                                                                Type = JsonSchemaType.Object,
                                                                 Properties = new Dictionary<string, OpenApiSchema>
                                                                 {
                                                                     {
                                                                         "value",
                                                                         new OpenApiSchema
                                                                         {
-                                                                            Type = "array",
+                                                                            Type = JsonSchemaType.Array,
                                                                             Items = new()
                                                                             {
                                                                                 Reference = new()
@@ -368,7 +368,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Description = "Select properties to be returned",
                                             Schema = new()
                                             {
-                                                Type = "array"
+                                                Type = JsonSchemaType.Array
                                             }
                                             // missing explode parameter
                                         }
@@ -432,7 +432,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 Description = "key: id of administrativeUnit",
                                                 Schema = new()
                                                 {
-                                                    Type = "string"
+                                                    Type = JsonSchemaType.String
                                                 }
                                             }
                                         }
@@ -455,7 +455,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                                 {
                                                                     new()
                                                                     {
-                                                                        Type = "string"
+                                                                        Type = JsonSchemaType.String
                                                                     }
                                                                 },
                                                                 Nullable = true
@@ -534,14 +534,14 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                             Schema = new()
                                                             {
                                                                 Title = "Collection of hostSecurityProfile",
-                                                                Type = "object",
+                                                                Type = JsonSchemaType.Object,
                                                                 Properties = new Dictionary<string, OpenApiSchema>
                                                                 {
                                                                     {
                                                                         "value",
                                                                         new OpenApiSchema
                                                                         {
-                                                                            Type = "array",
+                                                                            Type = JsonSchemaType.Array,
                                                                             Items = new()
                                                                             {
                                                                                 Reference = new()
@@ -592,12 +592,12 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Required = true,
                                             Schema = new()
                                             {
-                                                Type = "string"
+                                                Type = JsonSchemaType.String
                                             },
                                             Extensions = new Dictionary<string, IOpenApiExtension>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiString("call")
+                                                    "x-ms-docs-key-type", new OpenApiAny("call")
                                                 }
                                             }
                                         }
@@ -614,7 +614,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         {
-                                            "x-ms-docs-operation-type", new OpenApiString("action")
+                                            "x-ms-docs-operation-type", new OpenApiAny("action")
                                         }
                                     }
                                 }
@@ -647,12 +647,12 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Required = true,
                                             Schema = new()
                                             {
-                                                Type = "string"
+                                                Type = JsonSchemaType.String
                                             },
                                             Extensions = new Dictionary<string, IOpenApiExtension>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiString("group")
+                                                    "x-ms-docs-key-type", new OpenApiAny("group")
                                                 }
                                             }
                                         },
@@ -664,12 +664,12 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Required = true,
                                             Schema = new()
                                             {
-                                                Type = "string"
+                                                Type = JsonSchemaType.String
                                             },
                                             Extensions = new Dictionary<string, IOpenApiExtension>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiString("event")
+                                                    "x-ms-docs-key-type", new OpenApiAny("event")
                                                 }
                                             }
                                         }
@@ -688,7 +688,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         {
                                                             Schema = new()
                                                             {
-                                                                Type = "array",
+                                                                Type = JsonSchemaType.Array,
                                                                 Reference = new()
                                                                 {
                                                                     Type = ReferenceType.Schema,
@@ -704,7 +704,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         {
-                                            "x-ms-docs-operation-type", new OpenApiString("function")
+                                            "x-ms-docs-operation-type", new OpenApiAny("function")
                                         }
                                     }
                                 }
@@ -740,13 +740,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             "microsoft.graph.networkInterface", new OpenApiSchema
                             {
                                 Title = "networkInterface",
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Properties = new Dictionary<string, OpenApiSchema>
                                 {
                                     {
                                         "description", new OpenApiSchema
                                         {
-                                            Type = "string",
+                                            Type = JsonSchemaType.String,
                                             Description = "Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).",
                                             Nullable = true
                                         }

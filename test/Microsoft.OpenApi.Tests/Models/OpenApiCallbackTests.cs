@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -35,7 +36,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         Schema = new()
                                         {
-                                            Type = "object"
+                                            Type = JsonSchemaType.Object
                                         }
                                     }
                                 }
@@ -53,13 +54,10 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static OpenApiCallbackReference CallbackProxy = new(ReferencedCallback, "simpleHook");
+
         public static OpenApiCallback ReferencedCallback = new()
         {
-            Reference = new()
-            {
-                Type = ReferenceType.Callback,
-                Id = "simpleHook",
-            },
             PathItems =
             {
                 [RuntimeExpression.Build("$request.body#/url")]
@@ -78,7 +76,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     {
                                         Schema = new()
                                         {
-                                            Type = "object"
+                                            Type = JsonSchemaType.Object
                                         }
                                     }
                                 }
@@ -123,7 +121,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedCallback.SerializeAsV3(writer);
+            CallbackProxy.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -140,7 +138,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedCallback.SerializeAsV3WithoutReference(writer);
+            ReferencedCallback.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert

@@ -4,6 +4,7 @@ using Microsoft.OpenApi.MicrosoftExtensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Tests.MicrosoftExtensions;
 
@@ -72,12 +73,12 @@ public class OpenApiDeprecationExtensionTests
     [Fact]
     public void Parses()
     {
-        var oaiValue = new OpenApiObject
+        var oaiValue = new JsonObject
         {
-            { "date", new OpenApiDateTime(new(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0)))},
-            { "removalDate", new OpenApiDateTime(new(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0)))},
-            { "version", new OpenApiString("v1.0")},
-            { "description", new OpenApiString("removing")}
+            { "date", new OpenApiAny(new DateTimeOffset(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0))).Node},
+            { "removalDate", new OpenApiAny(new DateTimeOffset(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0))).Node},
+            { "version", new OpenApiAny("v1.0").Node},
+            { "description", new OpenApiAny("removing").Node}
         };
         var value = OpenApiDeprecationExtension.Parse(oaiValue);
         Assert.NotNull(value);

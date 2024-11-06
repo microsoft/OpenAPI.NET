@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.MicrosoftExtensions;
 
@@ -38,18 +39,18 @@ public class OpenApiEnumFlagsExtension : IOpenApiExtension
         writer.WriteEndObject();
     }
     /// <summary>
-    /// Parse the extension from the raw IOpenApiAny object.
+    /// Parse the extension from the raw OpenApiAny object.
     /// </summary>
     /// <param name="source">The source element to parse.</param>
     /// <returns>The <see cref="OpenApiEnumFlagsExtension"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
-    public static OpenApiEnumFlagsExtension Parse(IOpenApiAny source)
+    public static OpenApiEnumFlagsExtension Parse(JsonNode source)
     {
-        if (source is not OpenApiObject rawObject) return null;
+        if (source is not JsonObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
         var extension = new OpenApiEnumFlagsExtension();
-        if (rawObject.TryGetValue(nameof(IsFlags).ToFirstCharacterLowerCase(), out var flagsValue) && flagsValue is OpenApiBoolean isFlags)
+        if (rawObject.TryGetPropertyValue(nameof(IsFlags).ToFirstCharacterLowerCase(), out var flagsValue) && flagsValue is JsonNode isFlags)
         {
-            extension.IsFlags = isFlags.Value;
+            extension.IsFlags = isFlags.GetValue<bool>();
         }
         return extension;
     }

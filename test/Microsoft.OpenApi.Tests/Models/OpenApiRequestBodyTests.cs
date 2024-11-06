@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -24,19 +25,15 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 }
             }
         };
 
+        public static OpenApiRequestBodyReference OpenApiRequestBodyReference = new(ReferencedRequestBody, "example1");
         public static OpenApiRequestBody ReferencedRequestBody = new()
         {
-            Reference = new()
-            {
-                Type = ReferenceType.RequestBody,
-                Id = "example1",
-            },
             Description = "description",
             Required = true,
             Content =
@@ -45,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 }
             }
@@ -78,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedRequestBody.SerializeAsV3(writer);
+            OpenApiRequestBodyReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -95,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedRequestBody.SerializeAsV3WithoutReference(writer);
+            ReferencedRequestBody.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert

@@ -1,0 +1,3 @@
+﻿{
+  "$ref": "#/components/requestBodies/UserRequest"
+}

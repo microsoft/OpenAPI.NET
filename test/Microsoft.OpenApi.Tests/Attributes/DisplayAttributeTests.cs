@@ -31,12 +31,12 @@ namespace Microsoft.OpenApi.Tests.Attributes
     public class DisplayAttributeTests
     {
         [Theory]
-        [InlineData(ApiLevel.Private,"private")]
+        [InlineData(ApiLevel.Private, "private")]
         [InlineData(ApiLevel.Public, "public")]
         [InlineData(ApiLevel.Corporate, "corporate")]
         public void GetDisplayNameExtensionShouldUseDisplayAttribute(ApiLevel apiLevel, string expected)
         {
-            Assert.Equal(expected, apiLevel.GetDisplayName());          
+            Assert.Equal(expected, apiLevel.GetDisplayName());
         }
 
         [Theory]

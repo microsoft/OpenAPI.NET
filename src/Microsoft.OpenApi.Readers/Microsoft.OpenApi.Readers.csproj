@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.6.22</Version>
+        <Version>2.0.0-preview1</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
@@ -18,6 +18,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="V31\**" />
+      <EmbeddedResource Remove="V31\**" />
+      <None Remove="V31\**" />
+    </ItemGroup>
+
+    <ItemGroup>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.11.20">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +31,7 @@
         </PackageReference>
 
         <PackageReference Include="SharpYaml" Version="2.1.1" />
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
     </ItemGroup>
 
     <ItemGroup>

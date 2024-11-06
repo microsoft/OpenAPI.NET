@@ -1,0 +1,1 @@
+{"description":"Location of the locally referenced post","type":"string"}

@@ -1,0 +1,6 @@
+﻿{
+  "description": "The URL of the newly created post",
+  "schema": {
+    "type": "string"
+  }
+}

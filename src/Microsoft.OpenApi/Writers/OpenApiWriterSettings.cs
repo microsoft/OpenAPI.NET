@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -38,11 +38,13 @@ namespace Microsoft.OpenApi.Writers
         /// Indicates how references in the source document should be handled.
         /// </summary>
         [Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
-        public ReferenceInlineSetting ReferenceInline {
+        public ReferenceInlineSetting ReferenceInline
+        {
             get { return referenceInline; }
-            set {
+            set
+            {
                 referenceInline = value;
-                switch(referenceInline)
+                switch (referenceInline)
                 {
                     case ReferenceInlineSetting.DoNotInlineReferences:
                         InlineLocalReferences = false;
@@ -73,6 +75,11 @@ namespace Microsoft.OpenApi.Writers
         {
             return (reference.IsLocal && InlineLocalReferences)
                              || (reference.IsExternal && InlineExternalReferences);
+        }
+
+        internal bool ShouldInlineReference()
+        {
+            return InlineLocalReferences || InlineExternalReferences;
         }
     }
 }

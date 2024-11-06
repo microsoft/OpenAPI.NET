@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.Extensions.Logging;
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                                 Required = true,
                                 Schema = new()
                                 {
-                                    Type = "string"
+                                    Type = JsonSchemaType.String
                                 }
                             }
                         }
@@ -232,22 +232,24 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Act
             using var stream = File.OpenRead(filePath);
-            var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
             
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
 
-            var response = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get].Responses["200"];
-            var responseHeader = response.Headers["x-custom-header"];
-            var mediaTypeExample = response.Content["application/json"].Examples.First().Value;
-            var targetHeaders = subsetOpenApiDocument.Components.Headers;
-            var targetExamples = subsetOpenApiDocument.Components.Examples;
+            var response = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get]?.Responses?["200"];
+            var responseHeader = response?.Headers["x-custom-header"];
+            var mediaTypeExample = response?.Content["application/json"]?.Examples?.First().Value;
+            var targetHeaders = subsetOpenApiDocument.Components?.Headers;
+            var targetExamples = subsetOpenApiDocument.Components?.Examples;
 
             // Assert
             Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
-            Assert.False(responseHeader.UnresolvedReference);
-            Assert.False(mediaTypeExample.UnresolvedReference);
+            Assert.False(responseHeader?.UnresolvedReference);
+            Assert.False(mediaTypeExample?.UnresolvedReference);
+            Assert.NotNull(targetHeaders);
             Assert.Single(targetHeaders);
+            Assert.NotNull(targetExamples);
             Assert.Single(targetExamples);
         }
 

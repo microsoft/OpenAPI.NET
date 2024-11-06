@@ -3,14 +3,15 @@
 
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.V2;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
     public class ConvertToOpenApiReferenceV2Tests
     {
-        public OpenApiDiagnostic Diagnostic{get;}
+        public OpenApiDiagnostic Diagnostic { get; }
 
         public ConvertToOpenApiReferenceV2Tests()
         {

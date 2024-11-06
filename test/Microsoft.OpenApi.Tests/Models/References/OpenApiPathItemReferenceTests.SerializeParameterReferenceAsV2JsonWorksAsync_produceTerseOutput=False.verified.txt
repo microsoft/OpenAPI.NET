@@ -1,0 +1,28 @@
+﻿{
+  "get": {
+    "summary": "Get users",
+    "responses": {
+      "200": {
+        "description": "Successful operation"
+      }
+    }
+  },
+  "post": {
+    "summary": "Create a user",
+    "responses": {
+      "201": {
+        "description": "User created successfully"
+      }
+    }
+  },
+  "delete": {
+    "summary": "Delete a user",
+    "responses": {
+      "204": {
+        "description": "User deleted successfully"
+      }
+    }
+  },
+  "x-summary": "Local reference: User path item summary",
+  "x-description": "Local reference: User path item description"
+}

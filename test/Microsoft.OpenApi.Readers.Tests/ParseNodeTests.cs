@@ -3,15 +3,21 @@
 
 using System.Collections.Generic;
 using FluentAssertions;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Readers.Exceptions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests
 {
     public class ParseNodeTests
     {
+        public ParseNodeTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void BrokenSimpleList()
         {
@@ -25,14 +31,11 @@ namespace Microsoft.OpenApi.Tests
                 paths: { }
                 """;
 
-            var reader = new OpenApiStringReader();
-            reader.Read(input, out var diagnostic);
+            var result = OpenApiDocument.Parse(input, "yaml");
 
-            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
-            {
-                new(new OpenApiReaderException("Expected a value.") {
-                    Pointer = "#line=4"
-                })
+            result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
+                new OpenApiError(new OpenApiReaderException("Expected a value.")),
+                new OpenApiError("", "Paths is a REQUIRED field at #/")
             });
         }
 
@@ -55,10 +58,9 @@ namespace Microsoft.OpenApi.Tests
                                       schema: asdasd
                         """;
 
-            var reader = new OpenApiStringReader();
-            reader.Read(input, out var diagnostic);
+            var res= OpenApiDocument.Parse(input, "yaml");
 
-            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
+            res.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
             {
                 new(new OpenApiReaderException("schema must be a map/object") {
                     Pointer = "#/paths/~1foo/get/responses/200/content/application~1json/schema"

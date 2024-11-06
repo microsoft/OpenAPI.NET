@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.MicrosoftExtensions;
 
@@ -71,23 +72,23 @@ public class OpenApiPagingExtension : IOpenApiExtension
     /// <param name="source">The source element to parse.</param>
     /// <returns>The <see cref="OpenApiPagingExtension"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
-    public static OpenApiPagingExtension Parse(IOpenApiAny source)
+    public static OpenApiPagingExtension Parse(JsonNode source)
     {
-        if (source is not OpenApiObject rawObject) return null;
+        if (source is not JsonObject rawObject) return null;
         var extension = new OpenApiPagingExtension();
-        if (rawObject.TryGetValue(nameof(NextLinkName).ToFirstCharacterLowerCase(), out var nextLinkName) && nextLinkName is OpenApiString nextLinkNameStr)
+        if (rawObject.TryGetPropertyValue(nameof(NextLinkName).ToFirstCharacterLowerCase(), out var nextLinkName) && nextLinkName is JsonNode nextLinkNameStr)
         {
-            extension.NextLinkName = nextLinkNameStr.Value;
+            extension.NextLinkName = nextLinkNameStr.GetValue<string>();
         }
 
-        if (rawObject.TryGetValue(nameof(OperationName).ToFirstCharacterLowerCase(), out var opName) && opName is OpenApiString opNameStr)
+        if (rawObject.TryGetPropertyValue(nameof(OperationName).ToFirstCharacterLowerCase(), out var opName) && opName is JsonNode opNameStr)
         {
-            extension.OperationName = opNameStr.Value;
+            extension.OperationName = opNameStr.GetValue<string>();
         }
 
-        if (rawObject.TryGetValue(nameof(ItemName).ToFirstCharacterLowerCase(), out var itemName) && itemName is OpenApiString itemNameStr)
+        if (rawObject.TryGetPropertyValue(nameof(ItemName).ToFirstCharacterLowerCase(), out var itemName) && itemName is JsonNode itemNameStr)
         {
-            extension.ItemName = itemNameStr.Value;
+            extension.ItemName = itemNameStr.GetValue<string>();
         }
 
         return extension;

@@ -1,4 +1,4 @@
-// ------------------------------------------------------------
+﻿// ------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
@@ -47,7 +47,7 @@ public class OpenApiPrimaryErrorMessageExtensionTests
     public void ParsesValue()
     {
         // Arrange
-        var value = new OpenApiBoolean(true);
+        var value = true;
 
         // Act
         var extension = MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Parse(value);

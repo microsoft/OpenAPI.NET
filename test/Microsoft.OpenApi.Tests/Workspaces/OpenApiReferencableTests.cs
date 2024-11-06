@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiLink _linkFragment = new();
         private static readonly OpenApiHeader _headerFragment = new()
         {
-            Schema = new(),
+            Schema = new OpenApiSchema(),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 { "example1", new OpenApiExample() }
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         };
         private static readonly OpenApiParameter _parameterFragment = new()
         {
-            Schema = new(),
+            Schema = new OpenApiSchema(),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 { "example1", new OpenApiExample() }
@@ -45,9 +45,9 @@ namespace Microsoft.OpenApi.Tests.Workspaces
                 { "link1", new OpenApiLink() }
             }
         };
-        private static readonly OpenApiSchema _schemaFragment = new();
-        private static readonly OpenApiSecurityScheme _securitySchemeFragment = new();
-        private static readonly OpenApiTag _tagFragment = new();
+        private static readonly OpenApiSchema _schemaFragment = new OpenApiSchema();
+        private static readonly OpenApiSecurityScheme _securitySchemeFragment = new OpenApiSecurityScheme();
+        private static readonly OpenApiTag _tagFragment = new OpenApiTag();
 
         public static IEnumerable<object[]> ResolveReferenceCanResolveValidJsonPointersTestData =>
         new List<object[]>
@@ -56,16 +56,13 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _exampleFragment, "/", _exampleFragment },
             new object[] { _linkFragment, "/", _linkFragment },
             new object[] { _headerFragment, "/", _headerFragment },
-            new object[] { _headerFragment, "/schema", _headerFragment.Schema },
             new object[] { _headerFragment, "/examples/example1", _headerFragment.Examples["example1"] },
             new object[] { _parameterFragment, "/", _parameterFragment },
-            new object[] { _parameterFragment, "/schema", _parameterFragment.Schema },
             new object[] { _parameterFragment, "/examples/example1", _parameterFragment.Examples["example1"] },
             new object[] { _requestBodyFragment, "/", _requestBodyFragment },
             new object[] { _responseFragment, "/", _responseFragment },
             new object[] { _responseFragment, "/headers/header1", _responseFragment.Headers["header1"] },
             new object[] { _responseFragment, "/links/link1", _responseFragment.Links["link1"] },
-            new object[] { _schemaFragment, "/", _schemaFragment},
             new object[] { _securitySchemeFragment, "/", _securitySchemeFragment},
             new object[] { _tagFragment, "/", _tagFragment}
         };

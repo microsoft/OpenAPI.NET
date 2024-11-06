@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Globalization;
@@ -106,6 +106,10 @@ namespace Microsoft.OpenApi.Extensions
 
             switch (specVersion)
             {
+                case OpenApiSpecVersion.OpenApi3_1:
+                    element.SerializeAsV31(writer);
+                    break;
+
                 case OpenApiSpecVersion.OpenApi3_0:
                     element.SerializeAsV3(writer);
                     break;

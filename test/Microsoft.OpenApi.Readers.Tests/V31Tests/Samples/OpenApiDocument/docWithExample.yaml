@@ -1,0 +1,95 @@
+openapi: 3.1.0 # The version of the OpenAPI Specification
+info: # Metadata about the API
+  title: A simple OpenAPI 3.1 example
+  version: 1.0.0
+  license:
+    name: Apache 2.0
+    identifier: Apache-2.0 # The SPDX license identifier
+paths: # The available paths and operations for the API
+  /echo: # A path for echoing messages using WebSockets
+    get: # An operation using the GET method
+      summary: Echo a message
+      description: Send a message to the server and receive the same message back
+      responses:
+        '101':
+          description: Switching Protocols
+          headers:
+            Upgrade:
+              schema:
+                type: string
+                enum:
+                  - websocket
+            Connection:
+              schema:
+                type: string
+                enum:
+                  - Upgrade
+            Sec-WebSocket-Accept:
+              schema:
+                type: string
+          content: {} # No content is returned for this response
+      servers:
+        - url: ws://example.com # The WebSocket server URL
+  /upload: # A path for uploading files using multipart/form-data
+    post: # An operation using the POST method
+      summary: Upload a file
+      description: Upload a file to the server and receive a confirmation message
+      requestBody:
+        required: true
+        content:
+          multipart/form-data: # The media type for sending multiple parts of data
+            schema:
+              type: object
+              properties:
+                file: # A property for the file data
+                  type: string
+                  format: binary
+                comment: # A property for the file comment
+                  type: string
+            encoding: # The encoding for each part of data
+              file:
+                contentType: application/octet-stream # The media type for the file data
+              comment:
+                contentType: text/plain # The media type for the file comment
+      responses:
+        '200':
+          description: File uploaded successfully
+          content:
+            application/json: # The media type for the response body
+              schema:
+                type: object
+                properties:
+                  message: # A property for the confirmation message
+                    type: string
+                    examples:
+                      - The file was uploaded successfully
+components: # Reusable components for the API
+  schemas: # JSON Schema definitions for the API
+    Pet: # A schema for a pet object
+      type: object
+      required:
+        - petType
+      properties:
+        petType: # A property for the pet type
+          type: string
+      discriminator: # The discriminator for resolving the concrete schema type
+        propertyName: petType
+        mapping:
+          cat: '#/components/schemas/Cat'
+          dog: '#/components/schemas/Dog'
+    Cat: # A schema for a cat object
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            name: # A property for the cat name
+              type: string
+              default: "Fluffy" # The default value for the cat name
+    Dog: # A schema for a dog object
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            bark: # A property for the dog bark
+              type: string
+              default: "Woof" # The default value for the dog bark

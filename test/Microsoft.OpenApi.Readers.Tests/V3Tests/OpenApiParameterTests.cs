@@ -1,13 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using System;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
+using Microsoft.OpenApi.Reader;
 using Xunit;
+using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -16,18 +19,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiParameter/";
 
+        public OpenApiParameterTests() 
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ParsePathParameterShouldSucceed()
         {
             // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml"));
 
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -39,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -47,15 +51,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseQueryParameterShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameter.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -67,10 +64,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = false,
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     Style = ParameterStyle.Form,
@@ -81,15 +78,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseQueryParameterWithObjectTypeShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -99,10 +89,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "freeForm",
                     Schema = new()
                     {
-                        Type = "object",
+                        Type = JsonSchemaType.Object,
                         AdditionalProperties = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         }
                     },
                     Style = ParameterStyle.Form
@@ -113,14 +103,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseQueryParameterWithObjectTypeAndContentShouldSucceed()
         {
             // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml"));
 
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -132,9 +118,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
-                            {
-                                Type = "object",
+                           Schema = new()
+                           {
+                                Type = JsonSchemaType.Object,
                                 Required =
                                 {
                                     "lat",
@@ -144,14 +130,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 {
                                     ["lat"] = new()
                                     {
-                                        Type = "number"
+                                        Type = JsonSchemaType.Number
                                     },
                                     ["long"] = new()
                                     {
-                                        Type = "number"
+                                        Type = JsonSchemaType.Number
                                     }
                                 }
-                            }
+                           }
                         }
                     }
                 });
@@ -160,15 +146,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseHeaderParameterShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameter.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "headerParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -182,10 +161,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                     Schema = new()
                     {
-                        Type = "array",
+                        Type = JsonSchemaType.Array,
                         Items = new()
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int64",
                         }
                     }
@@ -195,15 +174,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseParameterWithNullLocationShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -215,7 +187,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -224,14 +196,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseParameterWithNoLocationShouldSucceed()
         {
             // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml"));
 
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -243,7 +211,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -252,14 +220,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseParameterWithUnknownLocationShouldSucceed()
         {
             // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml"));
 
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -271,7 +235,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Schema = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 });
         }
@@ -279,15 +243,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseParameterWithExampleShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithExample.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -297,27 +254,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Example = new OpenApiFloat(5),
+                    Example = (float)5.0,
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                });
+                }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Parent));
         }
 
         [Fact]
         public void ParseParameterWithExamplesShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithExamples.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -331,19 +281,105 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["example1"] = new()
                         {
-                            Value = new OpenApiFloat(5),
+                            Value = 5.0
                         },
                         ["example2"] = new()
                         {
-                            Value = new OpenApiFloat((float)7.5),
+                            Value = (float) 7.5
                         }
                     },
                     Schema = new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                });
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Examples["example1"].Value.Parent)
+                .Excluding(p => p.Examples["example2"].Value.Parent));
+        }
+
+        [Fact]
+        public void ParseParameterWithReferenceWorks()
+        {
+            // Arrange
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Version = "1.0.0",
+                    Title = "Swagger Petstore (Simple)"
+                },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
+                    {
+                        Url = "http://petstore.swagger.io/api"
+                    }
+                },
+                Paths = new OpenApiPaths
+                {
+                    ["/pets"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Description = "Returns all pets from the system that the user has access to",
+                                OperationId = "findPets",
+                                Parameters = new List<OpenApiParameter>
+                                {
+                                    new() {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Parameter,
+                                            Id = "tagsParameter"
+                                        }
+                                    }
+                                },
+                            }
+                        }
+                    }
+                },
+                Components = new OpenApiComponents
+                {
+                    Parameters = new Dictionary<string, OpenApiParameter>()
+                    {
+                        ["tagsParameter"] = new OpenApiParameter
+                        {
+                            Name = "tags",
+                            In = ParameterLocation.Query,
+                            Description = "tags to filter by",
+                            Required = false,
+                            Schema = new()
+                            {
+                                Type = JsonSchemaType.Array,
+                                Items = new OpenApiSchema
+                                {
+                                    Type = JsonSchemaType.String
+                                }
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Parameter,
+                                Id = "tagsParameter"
+                            }
+                        }
+                    }
+                }
+            };
+
+            document.Workspace.RegisterComponents(document);
+
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithRef.yaml"));
+            var node = TestHelper.CreateYamlMapNode(stream);
+
+            var expected = document.Components.Parameters["tagsParameter"];
+
+            // Act
+            var param = OpenApiV3Deserializer.LoadParameter(node, document);
+
+            // Assert
+            param.Should().BeEquivalentTo(expected, options => options.Excluding(p => p.Reference.HostDocument));
         }
     }
 }

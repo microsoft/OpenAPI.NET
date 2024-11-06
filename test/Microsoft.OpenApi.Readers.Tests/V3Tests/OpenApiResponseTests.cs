@@ -3,6 +3,9 @@
 
 using System.IO;
 using System.Linq;
+using FluentAssertions;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -12,15 +15,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiResponse/";
 
+        public OpenApiResponseTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void ResponseWithReferencedHeaderShouldReferenceComponent()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
 
-            var response = openApiDoc.Components.Responses["Test"];
+            var response = result.OpenApiDocument.Components.Responses["Test"];
+            var expected = response.Headers.First().Value;
+            var actual = result.OpenApiDocument.Components.Headers.First().Value;
 
-            Assert.Same(response.Headers.First().Value, openApiDoc.Components.Headers.First().Value);
+            actual.Description.Should().BeEquivalentTo(expected.Description);
         }
     }
 }

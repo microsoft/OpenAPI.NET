@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Globalization;
-using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Reader.ParseNodes;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.ParseNodes

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -15,7 +15,7 @@
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SharpYaml" Version="2.1.1" />
-    <PackageReference Include="Verify.Xunit" Version="27.1.0" />
+    <PackageReference Include="Verify.Xunit" Version="28.0.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -29,19 +29,27 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Models\Samples\sampleDocument.yaml">
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Models\Samples\sampleDocumentWithWhiteSpaces.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
       
+    <None Update="Models\References\OpenApiCallbackReferenceTests.SerializeReferencedCallbackAsV3JsonWorks_produceTerseOutput=False.verified.txt">
+      <DependentUpon>OpenApiCallbackReferenceTests.cs</DependentUpon>
+    </None>
+      
+    <None Update="Models\Samples\docWithDollarId.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+      
+    <None Update="Models\Samples\docWithReusableWebhooks.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+      
     <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Samples\" />
   </ItemGroup>
 </Project>

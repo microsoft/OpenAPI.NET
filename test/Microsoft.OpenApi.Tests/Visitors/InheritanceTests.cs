@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
 
             visitor = new TestVisitor();
 
-            visitor.Enter(default);
+            visitor.Enter(default(string));
             visitor.Visit(default(OpenApiDocument));
             visitor.Visit(default(OpenApiInfo));
             visitor.Visit(default(OpenApiContact));
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
 
         internal protected class TestVisitor : OpenApiVisitorBase
         {
-            public Stack<string> CallStack { get; } = new();
+            public Stack<string> CallStack { get; } = new Stack<string>();
 
             private string EncodeCall([CallerMemberName] string name = "", [CallerLineNumber] int lineNumber = 0)
             {
@@ -261,10 +261,10 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(tag);
             }
 
-            public override void Visit(OpenApiHeader tag)
+            public override void Visit(OpenApiHeader header)
             {
                 EncodeCall();
-                base.Visit(tag);
+                base.Visit(header);
             }
 
             public override void Visit(OpenApiOAuthFlow openApiOAuthFlow)

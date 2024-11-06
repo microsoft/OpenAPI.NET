@@ -4,8 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -14,6 +20,7 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public abstract class OpenApiWriterBase : IOpenApiWriter
     {
+
         /// <summary>
         /// Settings for controlling how the OpenAPI document will be written out.
         /// </summary>
@@ -225,6 +232,10 @@ namespace Microsoft.OpenApi.Writers
             {
                 WriteValue((int)value);
             }
+            else if (type == typeof(uint) || type == typeof(uint?))
+            {
+                WriteValue((uint)value);
+            }
             else if (type == typeof(long) || type == typeof(long?))
             {
                 WriteValue((long)value);
@@ -297,7 +308,7 @@ namespace Microsoft.OpenApi.Writers
                 Writer.Write(IndentationString);
             }
         }
-
+        
         /// <summary>
         /// Get current scope.
         /// </summary>
@@ -404,6 +415,29 @@ namespace Microsoft.OpenApi.Writers
                 throw new OpenApiWriterException(
                     string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
             }
+        }
+
+        /// <inheritdoc/>
+        public void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version)
+        {
+            writer.WriteStartObject();
+
+            // summary
+            writer.WriteProperty(OpenApiConstants.Summary, example.Summary);
+
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, example.Description);
+
+            // value
+            writer.WriteOptionalObject(OpenApiConstants.Value, example.Value, (w, v) => w.WriteAny(v));
+
+            // externalValue
+            writer.WriteProperty(OpenApiConstants.ExternalValue, example.ExternalValue);
+
+            // extensions
+            writer.WriteExtensions(example.Extensions, version);
+
+            writer.WriteEndObject();
         }
     }
 }

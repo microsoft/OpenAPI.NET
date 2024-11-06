@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Attribute = true,
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-xml-extension", new OpenApiInteger(7)}
+                {"x-xml-extension", new OpenApiAny(7)}
             }
         };
 

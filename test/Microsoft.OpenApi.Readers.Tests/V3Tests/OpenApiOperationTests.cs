@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
+using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -15,44 +15,32 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiOperation/";
 
+        public OpenApiOperationTests()
+        {
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+        }
+
         [Fact]
         public void OperationWithSecurityRequirementShouldReferenceSecurityScheme()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
 
-            var securityRequirement = openApiDoc.Paths["/"].Operations[OperationType.Get].Security.First();
+            var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security.First().Keys.First();
 
-            Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
+            securityScheme.Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value, 
+                options => options.Excluding(x => x.Reference));
         }
 
         [Fact]
         public void ParseOperationWithParameterWithNoLocationShouldSucceed()
         {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
             // Act
-            var operation = OpenApiV3Deserializer.LoadOperation(node);
-
-            // Assert
-            operation.Should().BeEquivalentTo(new OpenApiOperation
+            var operation = OpenApiModelFactory.Load<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var expectedOp = new OpenApiOperation
             {
                 Tags =
                 {
-                    new OpenApiTag
-                    {
-                        UnresolvedReference = true,
-                        Reference = new()
-                        {
-                            Id = "user",
-                            Type = ReferenceType.Tag
-                        }
-                    }
+                    new OpenApiTagReference("user", null)
                 },
                 Summary = "Logs user into the system",
                 Description = "",
@@ -66,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Required = true,
                         Schema = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     new OpenApiParameter
@@ -77,11 +65,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Required = true,
                         Schema = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 }
-            });
+            };
+
+            // Assert
+            expectedOp.Should().BeEquivalentTo(operation, 
+                options => options.Excluding(x => x.Tags[0].Reference.HostDocument)
+                .Excluding(x => x.Tags[0].Extensions));
         }
     }
 }

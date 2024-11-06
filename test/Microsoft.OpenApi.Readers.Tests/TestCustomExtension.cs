@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 
@@ -27,22 +29,20 @@ namespace Microsoft.OpenApi.Readers.Tests
                 """;
             var settings = new OpenApiReaderSettings
             {
-                ExtensionParsers = { { "x-foo", (a,_) => {
-                        var fooNode = (OpenApiObject)a;
-                        return new FooExtension
-                        {
-                              Bar = (fooNode["bar"] as OpenApiString)?.Value,
-                              Baz = (fooNode["baz"] as OpenApiString)?.Value
+                ExtensionParsers = { { "x-foo", (a,v) => {
+                        var fooNode = (JsonObject)a;
+                        return new FooExtension() {
+                              Bar = (fooNode["bar"].ToString()),
+                              Baz = (fooNode["baz"].ToString())
                         };
                 } } }
             };
 
-            var reader = new OpenApiStringReader(settings);
-
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
             var diag = new OpenApiDiagnostic();
-            var doc = reader.Read(description, out diag);
+            var actual = OpenApiDocument.Parse(description, "yaml", settings: settings);
 
-            var fooExtension = doc.Info.Extensions["x-foo"] as FooExtension;
+            var fooExtension = actual.OpenApiDocument.Info.Extensions["x-foo"] as FooExtension;
 
             fooExtension.Should().NotBeNull();
             fooExtension.Bar.Should().Be("hey");
