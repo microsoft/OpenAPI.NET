@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Hidi
                     throw new IOException($"The file {options.Output} already exists. Please input a new file path.");
                 }
 
-                // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
+                // Default to yaml and OpenApiVersion 3_1 during csdl to OpenApi conversion
                 var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
                 var openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_1;
 
