@@ -192,7 +192,8 @@ namespace Microsoft.OpenApi.Extensions
     {
         public static System.Type MapOpenApiPrimitiveTypeToSimpleType(this Microsoft.OpenApi.Models.OpenApiSchema schema) { }
         public static Microsoft.OpenApi.Models.OpenApiSchema MapTypeToOpenApiPrimitiveType(this System.Type type) { }
-        public static string ToIdentifier(this Microsoft.OpenApi.Models.JsonSchemaType? schemaType) { }
+        public static string? ToIdentifier(this Microsoft.OpenApi.Models.JsonSchemaType schemaType) { }
+        public static string? ToIdentifier(this Microsoft.OpenApi.Models.JsonSchemaType? schemaType) { }
         public static Microsoft.OpenApi.Models.JsonSchemaType ToJsonSchemaType(this string identifier) { }
     }
     public static class StringExtensions
