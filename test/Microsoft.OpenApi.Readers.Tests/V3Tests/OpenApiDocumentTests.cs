@@ -1305,7 +1305,7 @@ paths: {}",
                 }
             };
 
-            var expectedSerializedDoc = @"openapi: 3.0.1
+            var expectedSerializedDoc = @"openapi: 3.0.4
 info:
   title: Pet Store with Referenceable Parameter
   version: 1.0.0
