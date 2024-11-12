@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.MicrosoftExtensions;
 
@@ -62,14 +63,14 @@ public class OpenApiEnumValuesDescriptionExtension : IOpenApiExtension
     /// <param name="source">The source element to parse.</param>
     /// <returns>The <see cref="OpenApiEnumValuesDescriptionExtension"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">When the source element is not an object</exception>
-    public static OpenApiEnumValuesDescriptionExtension Parse(IOpenApiAny source)
+    public static OpenApiEnumValuesDescriptionExtension Parse(JsonNode source)
     {
-        if (source is not OpenApiObject rawObject) return null;
+        if (source is not JsonObject rawObject) return null;
         var extension = new OpenApiEnumValuesDescriptionExtension();
-        if (rawObject.TryGetValue("values", out var values) && values is OpenApiArray valuesArray)
+        if (rawObject.TryGetPropertyValue("values", out var values) && values is JsonArray valuesArray)
         {
             extension.ValuesDescriptions.AddRange(valuesArray
-                                            .OfType<OpenApiObject>()
+                                            .OfType<JsonObject>()
                                             .Select(x => new EnumDescription(x)));
         }
         return extension;
@@ -92,15 +93,15 @@ public class EnumDescription : IOpenApiElement
     /// Constructor from a raw OpenApiObject
     /// </summary>
     /// <param name="source">The source object</param>
-    public EnumDescription(OpenApiObject source)
+    public EnumDescription(JsonObject source)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
-        if (source.TryGetValue(nameof(Value).ToFirstCharacterLowerCase(), out var rawValue) && rawValue is OpenApiString value)
-            Value = value.Value;
-        if (source.TryGetValue(nameof(Description).ToFirstCharacterLowerCase(), out var rawDescription) && rawDescription is OpenApiString description)
-            Description = description.Value;
-        if (source.TryGetValue(nameof(Name).ToFirstCharacterLowerCase(), out var rawName) && rawName is OpenApiString name)
-            Name = name.Value;
+        if (source.TryGetPropertyValue(nameof(Value).ToFirstCharacterLowerCase(), out var rawValue) && rawValue is JsonNode value)
+            Value = value.GetValue<string>();
+        if (source.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var rawDescription) && rawDescription is JsonNode description)
+            Description = description.GetValue<string>();
+        if (source.TryGetPropertyValue(nameof(Name).ToFirstCharacterLowerCase(), out var rawName) && rawName is JsonNode name)
+            Name = name.GetValue<string>();
     }
     /// <summary>
     /// The description for the enum symbol

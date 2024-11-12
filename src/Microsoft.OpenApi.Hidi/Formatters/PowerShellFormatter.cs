@@ -52,7 +52,8 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         public override void Visit(OpenApiPathItem pathItem)
         {
-            if (pathItem.Operations.TryGetValue(OperationType.Put, out var value))
+            if (pathItem.Operations.TryGetValue(OperationType.Put, out var value) &&
+                value.OperationId != null)
             {
                 var operationId = value.OperationId;
                 pathItem.Operations[OperationType.Put].OperationId = ResolvePutOperationId(operationId);
@@ -67,14 +68,14 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                 throw new ArgumentException($"OperationId is required {PathString}", nameof(operation));
 
             var operationId = operation.OperationId;
-            var operationTypeExtension = operation.Extensions.GetExtension("x-ms-docs-operation-type");
+            var operationTypeExtension = operation.Extensions?.GetExtension("x-ms-docs-operation-type");
             if (operationTypeExtension.IsEquals("function"))
-                operation.Parameters = ResolveFunctionParameters(operation.Parameters);
+                operation.Parameters = ResolveFunctionParameters(operation.Parameters ?? new List<OpenApiParameter>());
 
             // Order matters. Resolve operationId.
             operationId = RemoveHashSuffix(operationId);
             if (operationTypeExtension.IsEquals("action") || operationTypeExtension.IsEquals("function"))
-                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters);
+                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? new List<OpenApiParameter>());
             operationId = SingularizeAndDeduplicateOperationId(operationId.SplitByChar('.'));
             operationId = ResolveODataCastOperationId(operationId);
             operationId = ResolveByRefOperationId(operationId);
@@ -165,10 +166,10 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                 parameter.Content = null;
                 parameter.Schema = new()
                 {
-                    Type = "array",
+                    Type = JsonSchemaType.Array,
                     Items = new()
                     {
-                        Type = "string"
+                        Type = JsonSchemaType.String
                     }
                 };
             }
@@ -177,9 +178,9 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private void AddAdditionalPropertiesToSchema(OpenApiSchema schema)
         {
-            if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals(schema.Type, StringComparison.OrdinalIgnoreCase))
+            if (schema != null && !_schemaLoop.Contains(schema) && schema.Type.Equals(JsonSchemaType.Object))
             {
-                schema.AdditionalProperties = new() { Type = "object" };
+                schema.AdditionalProperties = new() { Type = JsonSchemaType.Object };
 
                 /* Because 'additionalProperties' are now being walked,
                  * we need a way to keep track of visited schemas to avoid
@@ -191,7 +192,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static void ResolveOneOfSchema(OpenApiSchema schema)
         {
-            if (schema.OneOf?.FirstOrDefault() is {} newSchema)
+            if (schema.OneOf?.FirstOrDefault() is { } newSchema)
             {
                 schema.OneOf = null;
                 FlattenSchema(schema, newSchema);
@@ -200,7 +201,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static void ResolveAnyOfSchema(OpenApiSchema schema)
         {
-            if (schema.AnyOf?.FirstOrDefault() is {} newSchema)
+            if (schema.AnyOf?.FirstOrDefault() is { } newSchema)
             {
                 schema.AnyOf = null;
                 FlattenSchema(schema, newSchema);

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -10,12 +10,12 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" PrivateAssets="all" />
     <PackageReference Include="coverlet.msbuild" Version="6.0.2" PrivateAssets="all" />
-    <PackageReference Include="FluentAssertions" Version="6.12.1" />
+    <PackageReference Include="FluentAssertions" Version="6.12.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SharpYaml" Version="2.1.1" />
-    <PackageReference Include="Verify.Xunit" Version="27.0.1" />
+    <PackageReference Include="Verify.Xunit" Version="28.2.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -29,19 +29,27 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Models\Samples\sampleDocument.yaml">
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Models\Samples\sampleDocumentWithWhiteSpaces.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
       
+    <None Update="Models\References\OpenApiCallbackReferenceTests.SerializeReferencedCallbackAsV3JsonWorks_produceTerseOutput=False.verified.txt">
+      <DependentUpon>OpenApiCallbackReferenceTests.cs</DependentUpon>
+    </None>
+      
+    <None Update="Models\Samples\docWithDollarId.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+      
+    <None Update="Models\Samples\docWithReusableWebhooks.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+      
     <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Samples\" />
   </ItemGroup>
 </Project>

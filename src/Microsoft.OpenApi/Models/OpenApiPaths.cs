@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiPaths() {}
+        public OpenApiPaths() { }
 
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiPaths"/> object

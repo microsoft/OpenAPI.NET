@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -13,6 +13,19 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiReference : IOpenApiSerializable
     {
+        /// <summary>
+        /// A short summary which by default SHOULD override that of the referenced component.
+        /// If the referenced object-type does not allow a summary field, then this field has no effect.
+        /// </summary>
+        public string Summary { get; set; }
+
+        /// <summary>
+        /// A description which by default SHOULD override that of the referenced component.
+        /// CommonMark syntax MAY be used for rich text representation.
+        /// If the referenced object-type does not allow a description field, then this field has no effect.
+        /// </summary>
+        public string Description { get; set; }
+
         /// <summary>
         /// External resource in the reference.
         /// It maybe:
@@ -49,7 +62,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets a flag indicating whether a file is a valid OpenAPI document or a fragment
         /// </summary>
-        public bool IsFragrament = false;
+        public bool IsFragment = false;
 
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
@@ -79,6 +92,10 @@ namespace Microsoft.OpenApi.Models
                 }
 
                 if (Type == ReferenceType.SecurityScheme)
+                {
+                    return Id;
+                }
+                if (Id.StartsWith("http"))
                 {
                     return Id;
                 }
@@ -121,13 +138,15 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiReference() {}
+        public OpenApiReference() { }
 
         /// <summary>
         /// Initializes a copy instance of the <see cref="OpenApiReference"/> object
         /// </summary>
         public OpenApiReference(OpenApiReference reference)
         {
+            Summary = reference?.Summary;
+            Description = reference?.Description;
             ExternalResource = reference?.ExternalResource;
             Type = reference?.Type;
             Id = reference?.Id;
@@ -135,9 +154,29 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.1.
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            // summary and description are in 3.1 but not in 3.0
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
+
+            SerializeInternal(writer);
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiReference"/>
+        /// </summary>
+        private void SerializeInternal(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -161,7 +200,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);
+            Utils.CheckArgumentNull(writer);;
 
             if (Type == ReferenceType.Tag)
             {
@@ -189,11 +228,16 @@ namespace Microsoft.OpenApi.Models
         {
             if (Id != null)
             {
-                if (IsFragrament)
+                if (IsFragment)
                 {
                     return ExternalResource + "#" + Id;
                 }
-                
+
+                if (Id.StartsWith("http"))
+                {
+                    return Id;
+                }
+
                 if (Type.HasValue)
                 {
                     return ExternalResource + "#/components/" + Type.Value.GetDisplayName() + "/"+ Id; 

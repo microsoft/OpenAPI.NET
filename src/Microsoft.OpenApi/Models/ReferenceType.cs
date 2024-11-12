@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Attributes;
@@ -61,8 +61,8 @@ namespace Microsoft.OpenApi.Models
         [Display("tags")] Tag,
 
         /// <summary>
-        /// Paths item.
+        /// Path item.
         /// </summary>
-        [Display("paths")] Path
+        [Display("pathItems")] PathItem
     }
 }

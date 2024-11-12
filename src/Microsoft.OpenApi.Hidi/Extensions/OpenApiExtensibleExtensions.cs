@@ -14,9 +14,9 @@ namespace Microsoft.OpenApi.Hidi.Extensions
         /// <returns>A <see cref="string"/> value matching the provided extensionKey. Return null when extensionKey is not found. </returns>
         internal static string GetExtension(this IDictionary<string, IOpenApiExtension> extensions, string extensionKey)
         {
-            if (extensions.TryGetValue(extensionKey, out var value) && value is OpenApiString castValue)
+            if (extensions.TryGetValue(extensionKey, out var value) && value is OpenApiAny castValue)
             {
-                return castValue.Value;
+                return castValue.Node.GetValue<string>();
             }
             return string.Empty;
         }

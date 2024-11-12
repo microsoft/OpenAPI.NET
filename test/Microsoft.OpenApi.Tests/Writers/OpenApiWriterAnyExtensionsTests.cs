@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -26,9 +28,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiNullAsJsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
-            var nullValue = new OpenApiNull();
-
-            var json = await WriteAsJsonAsync(nullValue, produceTerseOutput);
+            var json = await WriteAsJsonAsync(null, produceTerseOutput);
 
             // Assert
             json.Should().Be("null");
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiIntegerAsJsonWorksAsync(int input, bool produceTerseOutput)
         {
             // Arrange
-            var intValue = new OpenApiInteger(input);
+            var intValue = input;
 
             var json = await WriteAsJsonAsync(intValue, produceTerseOutput);
 
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiLongAsJsonWorksAsync(long input, bool produceTerseOutput)
         {
             // Arrange
-            var longValue = new OpenApiLong(input);
+            var longValue = input;
 
             var json = await WriteAsJsonAsync(longValue, produceTerseOutput);
 
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiFloatAsJsonWorksAsync(float input, bool produceTerseOutput)
         {
             // Arrange
-            var floatValue = new OpenApiFloat(input);
+            var floatValue = input;
 
             var json = await WriteAsJsonAsync(floatValue, produceTerseOutput);
 
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiDoubleAsJsonWorksAsync(double input, bool produceTerseOutput)
         {
             // Arrange
-            var doubleValue = new OpenApiDouble(input);
+            var doubleValue = input;
 
             var json = await WriteAsJsonAsync(doubleValue, produceTerseOutput);
 
@@ -168,7 +168,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             // Arrange
             var input = DateTimeOffset.Parse(inputString, CultureInfo.InvariantCulture);
-            var dateTimeValue = new OpenApiDateTime(input);
+            var dateTimeValue = input;
 
             var json = await WriteAsJsonAsync(dateTimeValue, produceTerseOutput);
             var expectedJson = "\"" + input.ToString("o") + "\"";
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiBooleanAsJsonWorksAsync(bool input, bool produceTerseOutput)
         {
             // Arrange
-            var boolValue = new OpenApiBoolean(input);
+            var boolValue = input;
 
             var json = await WriteAsJsonAsync(boolValue, produceTerseOutput);
 
@@ -204,15 +204,15 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiObjectAsJsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
-            var openApiObject = new OpenApiObject
+            var openApiObject = new JsonObject
             {
-                {"stringProp", new OpenApiString("stringValue1")},
-                {"objProp", new OpenApiObject()},
+                {"stringProp", "stringValue1"},
+                {"objProp", new JsonObject()},
                 {
                     "arrayProp",
-                    new OpenApiArray
+                    new JsonArray
                     {
-                        new OpenApiBoolean(false)
+                        false
                     }
                 }
             };
@@ -229,24 +229,24 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiArrayAsJsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
-            var openApiObject = new OpenApiObject
+            var openApiObject = new JsonObject
             {
-                {"stringProp", new OpenApiString("stringValue1")},
-                {"objProp", new OpenApiObject()},
+                {"stringProp", "stringValue1"},
+                {"objProp", new JsonObject()},
                 {
                     "arrayProp",
-                    new OpenApiArray
+                    new JsonArray
                     {
-                        new OpenApiBoolean(false)
+                        false
                     }
                 }
             };
 
-            var array = new OpenApiArray
+            var array = new JsonArray
             {
-                new OpenApiBoolean(false),
+                false,
                 openApiObject,
-                new OpenApiString("stringValue2")
+                "stringValue2"
             };
 
             var actualJson = WriteAsJsonAsync(array, produceTerseOutput);
@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             await Verifier.Verify(actualJson).UseParameters(produceTerseOutput);
         }
 
-        private static async Task<string> WriteAsJsonAsync(IOpenApiAny any, bool produceTerseOutput = false)
+        private static async Task<string> WriteAsJsonAsync(JsonNode any, bool produceTerseOutput = false)
         {
             // Arrange (continued)
             using var stream = new MemoryStream();
@@ -270,13 +270,16 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Act
             using var sr = new StreamReader(stream);
             var value = await sr.ReadToEndAsync();
-
-            if (any.AnyType is AnyType.Primitive or AnyType.Null)
+            var element = JsonDocument.Parse(value).RootElement;
+            return element.ValueKind switch
             {
-                return value;
-            }
-
-            return value.MakeLineBreaksEnvironmentNeutral();
+                JsonValueKind.String => value,
+                JsonValueKind.Number => value,
+                JsonValueKind.Null => value,
+                JsonValueKind.False => value,
+                JsonValueKind.True => value,
+                _ => value.MakeLineBreaksEnvironmentNeutral(),
+            };
         }
     }
 }

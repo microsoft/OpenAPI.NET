@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Email = "support@example.com",
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-internal-id", new OpenApiInteger(42)}
+                {"x-internal-id", new OpenApiAny(42)}
             }
         };
 

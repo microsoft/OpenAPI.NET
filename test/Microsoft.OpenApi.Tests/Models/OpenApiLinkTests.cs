@@ -3,10 +3,12 @@
 
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -28,9 +30,9 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             RequestBody = new()
             {
-                Any = new OpenApiObject
+                Any = new JsonObject
                 {
-                    ["property1"] = new OpenApiBoolean(true)
+                    ["property1"] = true
                 }
             },
             Description = "description1",
@@ -40,6 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static readonly OpenApiLinkReference LinkReference = new(ReferencedLink, "example1");
         public static readonly OpenApiLink ReferencedLink = new()
         {
             Reference = new()
@@ -57,9 +60,9 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             RequestBody = new()
             {
-                Any = new OpenApiObject
+                Any = new JsonObject
                 {
-                    ["property1"] = new OpenApiBoolean(true)
+                    ["property1"] = true
                 }
             },
             Description = "description1",
@@ -96,7 +99,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedLink.SerializeAsV3(writer);
+            LinkReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -113,7 +116,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedLink.SerializeAsV3WithoutReference(writer);
+            ReferencedLink.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -127,7 +130,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var link = new OpenApiLink()
             {
                 Extensions = {
-                { "x-display", new OpenApiString("Abc") }
+                { "x-display", new OpenApiAny("Abc") }
 }
             };
 

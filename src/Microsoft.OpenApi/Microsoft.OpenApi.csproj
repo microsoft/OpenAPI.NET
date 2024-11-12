@@ -3,7 +3,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>Latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.6.22</Version>
+        <Version>2.0.0-preview1</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
@@ -16,6 +16,14 @@
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
         <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
+
+    <!-- https://github.com/clairernovotny/DeterministicBuilds#deterministic-builds -->
+    <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    <ItemGroup>        
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    </ItemGroup>
 
     <ItemGroup>
         <Compile Update="Properties\SRResource.Designer.cs">

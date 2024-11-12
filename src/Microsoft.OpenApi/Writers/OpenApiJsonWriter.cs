@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Indicates whether or not the produced document will be written in a compact or pretty fashion.
         /// </summary>
-        private readonly bool _produceTerseOutput;
+        private readonly bool _produceTerseOutput = false;
 
         /// <summary>
         /// Base Indentation Level.
@@ -250,6 +250,7 @@ namespace Microsoft.OpenApi.Writers
 
             base.WriteIndentation();
         }
+
 
         /// <summary>
         /// Writes a line terminator to the text string or stream.

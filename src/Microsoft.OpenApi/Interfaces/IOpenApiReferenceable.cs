@@ -20,16 +20,5 @@ namespace Microsoft.OpenApi.Interfaces
         /// Reference object.
         /// </summary>
         OpenApiReference Reference { get; set; }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        void SerializeAsV3WithoutReference(IOpenApiWriter writer);
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        void SerializeAsV2WithoutReference(IOpenApiWriter writer);
-
     }
 }

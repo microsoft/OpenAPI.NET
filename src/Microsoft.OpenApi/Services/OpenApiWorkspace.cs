@@ -15,34 +15,15 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
-        private Dictionary<Uri, OpenApiDocument> _documents = new();
-        private Dictionary<Uri, IOpenApiReferenceable> _fragments = new();
-        private Dictionary<Uri, Stream> _artifacts = new();
-
-        /// <summary>
-        /// A list of OpenApiDocuments contained in the workspace
-        /// </summary>
-        public IEnumerable<OpenApiDocument> Documents {
-            get {
-                return _documents.Values;
-            }
-        }
-
-        /// <summary>
-        /// A list of document fragments that are contained in the workspace
-        /// </summary>
-        public IEnumerable<IOpenApiElement> Fragments { get; }
+        private readonly Dictionary<string, Uri> _documentsIdRegistry = new();
+        private readonly Dictionary<Uri, Stream> _artifactsRegistry = new();        
+        private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new();
 
         /// <summary>
         /// The base location from where all relative references are resolved
         /// </summary>
         public Uri BaseUrl { get; }
-
-        /// <summary>
-        /// A list of document fragments that are contained in the workspace
-        /// </summary>
-        public IEnumerable<Stream> Artifacts { get; }
-
+       
         /// <summary>
         /// Initialize workspace pointing to a base URL to allow resolving relative document locations.  Use a file:// url to point to a folder
         /// </summary>
@@ -57,87 +38,198 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public OpenApiWorkspace()
         {
-            BaseUrl = new("file://" + Environment.CurrentDirectory + $"{Path.DirectorySeparatorChar}" );
+            BaseUrl = new Uri(OpenApiConstants.BaseRegistryUri);
         }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiWorkspace"/> object
         /// </summary>
-        public OpenApiWorkspace(OpenApiWorkspace workspace){}
+        public OpenApiWorkspace(OpenApiWorkspace workspace) { }
 
         /// <summary>
-        /// Verify if workspace contains a document based on its URL.
+        /// Returns the total count of all the components in the workspace registry
+        /// </summary>
+        /// <returns></returns>
+        public int ComponentsCount()
+        {
+            return _IOpenApiReferenceableRegistry.Count + _artifactsRegistry.Count;
+        }
+
+        /// <summary>
+        /// Registers a document's components into the workspace
+        /// </summary>
+        /// <param name="document"></param>
+        public void RegisterComponents(OpenApiDocument document)
+        {
+            if (document?.Components == null) return;
+
+            string baseUri = document.BaseUri + OpenApiConstants.ComponentsSegment;
+            string location;
+
+            // Register Schema
+            foreach (var item in document.Components.Schemas)
+            {
+                location = item.Value.Id ?? baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
+
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Parameters
+            foreach (var item in document.Components.Parameters)
+            {
+                location = baseUri + ReferenceType.Parameter.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Responses
+            foreach (var item in document.Components.Responses)
+            {
+                location = baseUri + ReferenceType.Response.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register RequestBodies
+            foreach (var item in document.Components.RequestBodies)
+            {
+                location = baseUri + ReferenceType.RequestBody.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Links
+            foreach (var item in document.Components.Links)
+            {
+                location = baseUri + ReferenceType.Link.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Callbacks
+            foreach (var item in document.Components.Callbacks)
+            {
+                location = baseUri + ReferenceType.Callback.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register PathItems
+            foreach (var item in document.Components.PathItems)
+            {
+                location = baseUri + ReferenceType.PathItem.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Examples
+            foreach (var item in document.Components.Examples)
+            {
+                location = baseUri + ReferenceType.Example.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register Headers
+            foreach (var item in document.Components.Headers)
+            {
+                location = baseUri + ReferenceType.Header.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+
+            // Register SecuritySchemes
+            foreach (var item in document.Components.SecuritySchemes)
+            {
+                location = baseUri + ReferenceType.SecurityScheme.GetDisplayName() + "/" + item.Key;
+                RegisterComponent(location, item.Value);
+            }
+        }
+
+
+        /// <summary>
+        /// Registers a component in the component registry.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="component"></param>
+        /// <returns>true if the component is successfully registered; otherwise false.</returns>
+        public bool RegisterComponent<T>(string location, T component)
+        {
+            var uri = ToLocationUrl(location);
+            if (component is IOpenApiReferenceable referenceable)
+            {
+                if (!_IOpenApiReferenceableRegistry.ContainsKey(uri))
+                {
+                    _IOpenApiReferenceableRegistry[uri] = referenceable;
+                    return true;
+                }
+            }
+            else if (component is Stream stream)
+            {
+                if (!_artifactsRegistry.ContainsKey(uri))
+                {
+                    _artifactsRegistry[uri] = stream;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Adds a document id to the dictionaries of document locations and their ids.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void AddDocumentId(string key, Uri value)
+        {
+            if (!_documentsIdRegistry.ContainsKey(key))
+            {
+                _documentsIdRegistry[key] = value;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the document id given a key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns>The document id of the given key.</returns>
+        public Uri GetDocumentId(string key)
+        {
+            if (_documentsIdRegistry.TryGetValue(key, out var id))
+            {
+                return id;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Verify if workspace contains a component based on its URL.
         /// </summary>
         /// <param name="location">A relative or absolute URL of the file.  Use file:// for folder locations.</param>
         /// <returns>Returns true if a matching document is found.</returns>
         public bool Contains(string location)
         {
             var key = ToLocationUrl(location);
-            return _documents.ContainsKey(key) || _fragments.ContainsKey(key) || _artifacts.ContainsKey(key);
+            return _IOpenApiReferenceableRegistry.ContainsKey(key) || _artifactsRegistry.ContainsKey(key);
         }
 
+#nullable enable
         /// <summary>
-        /// Add an OpenApiDocument to the workspace.
+        /// Resolves a reference given a key.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="location"></param>
-        /// <param name="document"></param>
-        public void AddDocument(string location, OpenApiDocument  document)
+        /// <returns>The resolved reference.</returns>
+        public T? ResolveReference<T>(string location)
         {
-            document.Workspace = this;
-            _documents.Add(ToLocationUrl(location), document);
-        }
+            if (string.IsNullOrEmpty(location)) return default;
 
-        /// <summary>
-        /// Adds a fragment of an OpenApiDocument to the workspace.
-        /// </summary>
-        /// <param name="location"></param>
-        /// <param name="fragment"></param>
-        /// <remarks>Not sure how this is going to work.  Does the reference just point to the fragment as a whole, or do we need to
-        /// to be able to point into the fragment.  Keeping it private until we figure it out.
-        /// </remarks>
-        public void AddFragment(string location, IOpenApiReferenceable fragment)
-        {
-            _fragments.Add(ToLocationUrl(location), fragment);
-        }
-
-        /// <summary>
-        /// Add a stream based artifact to the workspace.  Useful for images, examples, alternative schemas.
-        /// </summary>
-        /// <param name="location"></param>
-        /// <param name="artifact"></param>
-        public void AddArtifact(string location, Stream artifact)
-        {
-            _artifacts.Add(ToLocationUrl(location), artifact);
-        }
-
-        /// <summary>
-        /// Returns the target of an OpenApiReference from within the workspace.
-        /// </summary>
-        /// <param name="reference">An instance of an OpenApiReference</param>
-        /// <returns></returns>
-        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
-        {
-            if (_documents.TryGetValue(new(BaseUrl, reference.ExternalResource), out var doc))
+            var uri = ToLocationUrl(location);            
+            if (_IOpenApiReferenceableRegistry.TryGetValue(uri, out var referenceableValue))
             {
-                return doc.ResolveReference(reference, false);
+                return (T)referenceableValue;
             }
-            else if (_fragments.TryGetValue(new(BaseUrl, reference.ExternalResource), out var fragment))
+            else if (_artifactsRegistry.TryGetValue(uri, out var artifact))
             {
-                var jsonPointer = new JsonPointer($"/{reference.Id ?? string.Empty}");
-                return fragment.ResolveReference(jsonPointer);
+                return (T)(object)artifact;
             }
-            return null;
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        public Stream GetArtifact(string location)
-        {
-            return _artifacts[ToLocationUrl(location)];
+            return default;
         }
+#nullable restore
 
         private Uri ToLocationUrl(string location)
         {

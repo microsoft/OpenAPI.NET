@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="settings"></param>
         public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
         {
-           
+
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The string value.</param>
         public override void WriteValue(string value)
         {
-            if (!UseLiteralStyle || value.IndexOfAny(new [] { '\n', '\r' }) == -1)
+            if (!UseLiteralStyle || value.IndexOfAny(new[] { '\n', '\r' }) == -1)
             {
                 WriteValueSeparator();
 

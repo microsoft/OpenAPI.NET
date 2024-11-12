@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
@@ -47,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         Schema = new()
                         {
-                            Type = "number",
+                            Type = JsonSchemaType.Number,
                             Minimum = 5,
                             Maximum = 10
                         }
@@ -56,14 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Responses = new()
             {
-                ["200"] = new()
-                {
-                    Reference = new()
-                    {
-                        Id = "response1",
-                        Type = ReferenceType.Response
-                    }
-                },
+                ["200"] = new OpenApiResponseReference("response1", hostDocument: null),
                 ["400"] = new()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
@@ -72,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new()
                             {
-                                Type = "number",
+                                Type = JsonSchemaType.Number,
                                 Minimum = 5,
                                 Maximum = 10
                             }
@@ -100,14 +94,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Name = "tagName1",
                     Description = "tagDescription1",
                 },
-                new()
-                {
-                    Reference = new()
-                    {
-                        Id = "tagId1",
-                        Type = ReferenceType.Tag
-                    }
-                }
+                new OpenApiTagReference("tagId1", null)
             },
             Summary = "summary1",
             Description = "operationDescription",
@@ -140,7 +127,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         Schema = new()
                         {
-                            Type = "number",
+                            Type = JsonSchemaType.Number,
                             Minimum = 5,
                             Maximum = 10
                         }
@@ -149,14 +136,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Responses = new()
             {
-                ["200"] = new()
-                {
-                    Reference = new()
-                    {
-                        Id = "response1",
-                        Type = ReferenceType.Response
-                    }
-                },
+                ["200"] = new OpenApiResponseReference("response1", hostDocument: null),
                 ["400"] = new()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
@@ -165,7 +145,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new()
                             {
-                                Type = "number",
+                                Type = JsonSchemaType.Number,
                                 Minimum = 5,
                                 Maximum = 10
                             }
@@ -177,22 +157,8 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 new()
                 {
-                    [new()
-                    {
-                        Reference = new()
-                        {
-                            Id = "securitySchemeId1",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    }] = new List<string>(),
-                    [new()
-                    {
-                        Reference = new()
-                        {
-                            Id = "securitySchemeId2",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    }] = new List<string>
+                    [new OpenApiSecuritySchemeReference("securitySchemeId1", hostDocument: null)] = new List<string>(),
+                    [new OpenApiSecuritySchemeReference("securitySchemeId2", hostDocument: null)] = new List<string>
                     {
                         "scopeName1",
                         "scopeName2"
@@ -225,7 +191,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Required = true,
                         Schema = new()
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 },
@@ -242,12 +208,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                     ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
                                 Required = new HashSet<string>
@@ -265,12 +231,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                     ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     },
                                     ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
-                                        Type = "string"
+                                        Type = JsonSchemaType.String
                                     }
                                 },
                                 Required = new HashSet<string>
@@ -661,9 +627,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "description": "description2",
                       "required": true,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   ],
@@ -674,9 +640,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "400": {
                       "description": null,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   },
@@ -734,9 +700,9 @@ namespace Microsoft.OpenApi.Tests.Models
                       "description": "description2",
                       "required": true,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   ],
@@ -747,9 +713,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     "400": {
                       "description": null,
                       "schema": {
+                        "type": "number",
                         "maximum": 10,
-                        "minimum": 5,
-                        "type": "number"
+                        "minimum": 5
                       }
                     }
                   },

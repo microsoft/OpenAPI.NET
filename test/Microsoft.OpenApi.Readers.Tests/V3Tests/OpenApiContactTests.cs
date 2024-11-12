@@ -3,6 +3,7 @@
 
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -20,10 +21,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                   "email": "support@swagger.io"
                 }
                 """;
-            var reader = new OpenApiStringReader();
 
             // Act
-            var contact = reader.ReadFragment<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var contact = OpenApiModelFactory.Parse<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic, OpenApiConstants.Json);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());

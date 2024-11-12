@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -28,12 +30,13 @@ namespace Microsoft.OpenApi.Tests.Services
                 Title = "foo",
                 Version = "1.2.2"
             };
-            openApiDocument.Paths = new();
-            openApiDocument.Paths.Add(
-                "/test",
-                new()
+            openApiDocument.Paths = new()
+            {
                 {
-                    Operations =
+                    "/test",
+                    new()
+                    {
+                        Operations =
                     {
                         [OperationType.Get] = new()
                         {
@@ -43,7 +46,9 @@ namespace Microsoft.OpenApi.Tests.Services
                             }
                         }
                     }
-                });
+                    }
+                }
+            };
 
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
@@ -96,11 +101,11 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
 
-            ruleset.Add(
-             new ValidationRule<FooExtension>("FooExtensionRule",
+            ruleset.Add(typeof(OpenApiAny), 
+             new ValidationRule<OpenApiAny>("FooExtensionRule",
                  (context, item) =>
                  {
-                     if (item.Bar == "hey")
+                     if (item.Node["Bar"].ToString() == "hey")
                      {
                          context.AddError(new("FooExtensionRule", context.PathString, "Don't say hey"));
                      }
@@ -122,7 +127,9 @@ namespace Microsoft.OpenApi.Tests.Services
                 Baz = "baz"
             };
 
-            openApiDocument.Info.Extensions.Add("x-foo", fooExtension);
+            var extensionNode = JsonSerializer.Serialize(fooExtension);
+            var jsonNode = JsonNode.Parse(extensionNode);
+            openApiDocument.Info.Extensions.Add("x-foo", new OpenApiAny(jsonNode));
 
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
@@ -138,8 +145,8 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void RemoveRuleByName_Invalid()
         {
-            Assert.Throws<ArgumentNullException>(() => new ValidationRule<IOpenApiAny>(null, (vc, oaa) => { }));
-            Assert.Throws<ArgumentNullException>(() => new ValidationRule<IOpenApiAny>(string.Empty, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<OpenApiAny>(null, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<OpenApiAny>(string.Empty, (vc, oaa) => { }));
         }
 
         [Fact]

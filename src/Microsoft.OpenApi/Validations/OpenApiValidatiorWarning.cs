@@ -3,8 +3,8 @@
 namespace Microsoft.OpenApi.Validations
 {
     /// <summary>
-     /// Warnings detected when validating an OpenAPI Element
-     /// </summary>
+    /// Warnings detected when validating an OpenAPI Element
+    /// </summary>
     public class OpenApiValidatorWarning : OpenApiError
     {
         /// <summary>

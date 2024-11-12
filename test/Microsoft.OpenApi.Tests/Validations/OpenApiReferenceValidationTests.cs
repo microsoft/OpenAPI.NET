@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 using Xunit;
@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             var sharedSchema = new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Reference = new()
                 {
                     Id = "test"
@@ -31,9 +31,9 @@ namespace Microsoft.OpenApi.Tests.Validations
             var document = new OpenApiDocument();
             document.Components = new()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>
+                Schemas = new Dictionary<string, OpenApiSchema>()
                 {
-                    [sharedSchema.Reference.Id] = sharedSchema
+                    ["test"] = sharedSchema
                 }
             };
 
@@ -64,40 +64,18 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
-
-            // Assert
-            Assert.True(errors.Count() == 1);
-        }
-
-        [Fact]
-        public void UnresolvedReferenceSchemaShouldNotBeValidated()
-        {
-            // Arrange
-            var sharedSchema = new OpenApiSchema
+            var rules = new Dictionary<Type, IList<ValidationRule>>()
             {
-                Type = "string",
-                Reference = new()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = true
-            };
-
-            var document = new OpenApiDocument();
-            document.Components = new()
-            {
-                Schemas = new Dictionary<string, OpenApiSchema>
-                {
-                    [sharedSchema.Reference.Id] = sharedSchema
+                { typeof(OpenApiSchema),
+                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
                 }
             };
 
-            // Act
-            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
+            var errors = document.Validate(new ValidationRuleSet(rules));
+
 
             // Assert
-            Assert.True(errors.Count() == 0);
+            Assert.True(errors.Count() == 1);
         }
 
         [Fact]
@@ -107,6 +85,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             var sharedSchema = new OpenApiSchema
             {
+                Type = JsonSchemaType.String,
                 Reference = new()
                 {
                     Id = "test"
@@ -143,14 +122,21 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
+            var rules = new Dictionary<Type, IList<ValidationRule>>()
+            {
+                { typeof(OpenApiSchema),
+                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
+                }
+            };
+
+            var errors = document.Validate(new ValidationRuleSet(rules));
 
             // Assert
-            Assert.True(errors.Count() == 0);
+            Assert.True(!errors.Any());
         }
     }
 
-    public class AlwaysFailRule<T> : ValidationRule<T> where T : IOpenApiElement
+    public class AlwaysFailRule<T> : ValidationRule<T>
     {
         public AlwaysFailRule() : base("AlwaysFailRule", (c, _) => c.CreateError("x", "y"))
         {

@@ -19,6 +19,11 @@ namespace Microsoft.OpenApi.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// An SPDX license expression for the API. The identifier field is mutually exclusive of the url field.
+        /// </summary>
+        public string Identifier { get; set; }
+
+        /// <summary>
         /// The URL pointing to the contact information. MUST be in the format of a URL.
         /// </summary>
         public Uri Url { get; set; }
@@ -39,8 +44,19 @@ namespace Microsoft.OpenApi.Models
         public OpenApiLicense(OpenApiLicense license)
         {
             Name = license?.Name ?? Name;
+            Identifier = license?.Identifier ?? Identifier;
             Url = license?.Url != null ? new Uri(license.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.1
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_1);
+            writer.WriteProperty(OpenApiConstants.Identifier, Identifier);
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -49,6 +65,7 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -57,10 +74,12 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+            writer.WriteEndObject();
         }
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
+            Utils.CheckArgumentNull(writer);;
             writer.WriteStartObject();
 
             // name
@@ -71,8 +90,6 @@ namespace Microsoft.OpenApi.Models
 
             // specification extensions
             writer.WriteExtensions(Extensions, specVersion);
-
-            writer.WriteEndObject();
         }
     }
 }

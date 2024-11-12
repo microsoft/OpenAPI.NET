@@ -40,6 +40,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Label>Version:</Label>
+                        <RadioButton GroupName="Format" Content="V3.1.0" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV3_1}" />
                         <RadioButton GroupName="Format" Content="V3.0.4" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV3_0}" />
                         <RadioButton GroupName="Format" Content="V2.0" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV2_0}" />
                     </StackPanel>

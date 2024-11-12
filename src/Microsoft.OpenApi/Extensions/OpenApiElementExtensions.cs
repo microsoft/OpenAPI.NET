@@ -24,6 +24,12 @@ namespace Microsoft.OpenApi.Extensions
         public static IEnumerable<OpenApiError> Validate(this IOpenApiElement element, ValidationRuleSet ruleSet)
         {
             var validator = new OpenApiValidator(ruleSet);
+
+            if (element is OpenApiDocument doc)
+            {
+                validator.HostDocument = doc;
+            }
+            
             var walker = new OpenApiWalker(validator);
             walker.Walk(element);
             return validator.Errors.Cast<OpenApiError>().Union(validator.Warnings);

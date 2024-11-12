@@ -1,13 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -16,60 +20,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     {
         private const string SampleFolderPath = "V2Tests/Samples/";
 
-        [Fact]
-        public void ShouldThrowWhenReferenceTypeIsInvalid()
+        public OpenApiDocumentTests()
         {
-            var input =
-                """
-                swagger: 2.0
-                info:
-                  title: test
-                  version: 1.0.0
-                paths:
-                  '/':
-                    get:
-                      responses:
-                        '200':
-                          description: ok
-                          schema:
-                            $ref: '#/defi888nition/does/notexist'
-                """;
-
-            var reader = new OpenApiStringReader();
-            var doc = reader.Read(input, out var diagnostic);
-
-            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new( new OpenApiException("Unknown reference type 'defi888nition'")) });
-            doc.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void ShouldThrowWhenReferenceDoesNotExist()
-        {
-            var input =
-                """
-                swagger: 2.0
-                info:
-                  title: test
-                  version: 1.0.0
-                paths:
-                  '/':
-                    get:
-                      produces: ['application/json']
-                      responses:
-                        '200':
-                          description: ok
-                          schema:
-                            $ref: '#/definitions/doesnotexist'
-                """;
-
-            var reader = new OpenApiStringReader();
-
-            var doc = reader.Read(input, out var diagnostic);
-
-            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new( new OpenApiException("Invalid Reference identifier 'doesnotexist'.")) });
-            doc.Should().NotBeNull();
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
         }
 
         [Theory]
@@ -83,8 +36,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Thread.CurrentThread.CurrentCulture = new(culture);
             Thread.CurrentThread.CurrentUICulture = new(culture);
 
-            var openApiDoc = new OpenApiStringReader().Read(
-                """
+            var result = OpenApiDocument.Parse(
+            """
                 swagger: 2.0
                 info:
                   title: Simple Document
@@ -102,9 +55,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         exclusiveMinimum: false
                 paths: {}
                 """,
-                out var context);
+                "yaml");
 
-            openApiDoc.Should().BeEquivalentTo(
+            result.OpenApiDocument.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new()
@@ -113,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Version = "0.9.1",
                         Extensions =
                         {
-                            ["x-extension"] = new OpenApiDouble(2.335)
+                            ["x-extension"] = new OpenApiAny(2.335)
                         }
                     },
                     Components = new()
@@ -122,53 +75,51 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             ["sampleSchema"] = new()
                             {
-                                Type = "object",
+                                Type = JsonSchemaType.Object,
                                 Properties =
                                 {
                                     ["sampleProperty"] = new()
                                     {
-                                        Type = "double",
+                                        Type = JsonSchemaType.Number,
                                         Minimum = (decimal)100.54,
                                         Maximum = (decimal)60000000.35,
                                         ExclusiveMaximum = true,
                                         ExclusiveMinimum = false
                                     }
-                                },
-                                Reference = new()
-                                {
-                                    Id = "sampleSchema",
-                                    Type = ReferenceType.Schema
                                 }
                             }
                         }
                     },
                     Paths = new()
-                });
+                }, options => options
+                .Excluding(x=> x.BaseUri)
+                .Excluding((IMemberInfo memberInfo) =>
+                                        memberInfo.Path.EndsWith("Parent"))
+                .Excluding((IMemberInfo memberInfo) =>
+                                        memberInfo.Path.EndsWith("Root")));
 
-            context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
+            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic { 
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi2_0,
+                    Errors = new List<OpenApiError>()
+                    {
+                        new OpenApiError("", "Paths is a REQUIRED field at #/")
+                    }
+                });
         }
 
         [Fact]
         public void ShouldParseProducesInAnyOrder()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "twoResponses.json"));
-            var reader = new OpenApiStreamReader();
-            var doc = reader.Read(stream, out var diagnostic);
+            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
 
             var okSchema = new OpenApiSchema
             {
-                Reference = new()
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "Item",
-                    HostDocument = doc
-                },
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
                     { "id", new OpenApiSchema
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             Description = "Item identifier."
                         }
                     }
@@ -177,28 +128,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var errorSchema = new OpenApiSchema
             {
-                Reference = new()
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "Error",
-                    HostDocument = doc
-                },
                 Properties = new Dictionary<string, OpenApiSchema>
                 {
                     { "code", new OpenApiSchema
                         {
-                            Type = "integer",
+                            Type = JsonSchemaType.Integer,
                             Format = "int32"
                         }
                     },
                     { "message", new OpenApiSchema
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     },
                     { "fields", new OpenApiSchema
                         {
-                            Type = "string"
+                            Type = JsonSchemaType.String
                         }
                     }
                 }
@@ -208,17 +153,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 Schema = new()
                 {
-                    Type = "array",
-                    Items = okSchema
+                    Type = JsonSchemaType.Array,
+                    Items = new OpenApiSchemaReference("Item", result.OpenApiDocument)
                 }
             };
 
             var errorMediaType = new OpenApiMediaType
             {
-                Schema = errorSchema
+                Schema = new OpenApiSchemaReference("Error", result.OpenApiDocument)
             };
 
-            doc.Should().BeEquivalentTo(new OpenApiDocument
+            result.OpenApiDocument.Should().BeEquivalentTo(new OpenApiDocument
             {
                 Info = new()
                 {
@@ -319,70 +264,25 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["Error"] = errorSchema
                     }
                 }
-            });
+            }, options => options.Excluding(x => x.BaseUri));
         }
 
         [Fact]
         public void ShouldAssignSchemaToAllResponses()
         {
-            OpenApiDocument document;
-            OpenApiDiagnostic diagnostic;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json")))
-            {
-                document = new OpenApiStreamReader().Read(stream, out diagnostic);
-            }
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json"));
+            var result = OpenApiDocument.Load(stream, OpenApiConstants.Json);
 
-            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
+            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, result.OpenApiDiagnostic.SpecificationVersion);
 
             var successSchema = new OpenApiSchema
             {
-                Type = "array",
-                Items = new()
-                {
-                    Properties = {
-                        { "id", new OpenApiSchema
-                            {
-                                Type = "string",
-                                Description = "Item identifier."
-                            }
-                        }
-                    },
-                    Reference = new()
-                    {
-                        Id = "Item",
-                        Type = ReferenceType.Schema,
-                        HostDocument = document
-                    }
-                }
+                Type = JsonSchemaType.Array,
+                Items = new OpenApiSchemaReference("Item", result.OpenApiDocument)
             };
-            var errorSchema = new OpenApiSchema
-            {
-                Properties = {
-                    { "code", new OpenApiSchema
-                        {
-                            Type = "integer",
-                            Format = "int32"
-                        }
-                    },
-                    { "message", new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
-                    },
-                    { "fields", new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
-                    }
-                },
-                Reference = new()
-                {
-                    Id = "Error",
-                    Type = ReferenceType.Schema,
-                    HostDocument = document
-                }
-            };
-            var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
+            var errorSchema = new OpenApiSchemaReference("Error", result.OpenApiDocument);
+
+            var responses = result.OpenApiDocument.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)
             {
                 var targetSchema = response.Key == "200" ? successSchema : errorSchema;
@@ -400,12 +300,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ShouldAllowComponentsThatJustContainAReference()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "ComponentRootReference.json"));
-            var reader = new OpenApiStreamReader();
-            var doc = reader.Read(stream, out var diags);
-            var schema1 = doc.Components.Schemas["AllPets"];
+            // Act
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "ComponentRootReference.json")).OpenApiDocument;
+            var schema1 = actual.Components.Schemas["AllPets"];
             Assert.False(schema1.UnresolvedReference);
-            var schema2 = doc.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
+            var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
             if (schema2.UnresolvedReference && schema1.Reference.Id == schema2.Reference.Id)
             {
                 // detected a cycle - this code gets triggered
@@ -416,11 +315,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseDocumentWithDefaultContentTypeSettingShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"));
-            var doc = new OpenApiStreamReader(new() { DefaultContentType =  new() { "application/json" } })
-                .Read(stream, out var diags);
-            var mediaType = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
+            var settings = new OpenApiReaderSettings
+            {
+                DefaultContentType = ["application/json"]
+            };
+
+            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
+            var mediaType = actual.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
+        }
+
+        [Fact]
+        public void testContentType()
+        {
+            var contentType = "application/json; charset = utf-8";
+            var res = contentType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
+            var expected = res.Split('/').LastOrDefault();
+            Assert.Equal("application/json", res);
         }
     }
 }

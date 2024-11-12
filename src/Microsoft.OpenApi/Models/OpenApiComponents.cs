@@ -1,10 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
+
+#nullable enable
 
 namespace Microsoft.OpenApi.Models
 {
@@ -16,55 +20,60 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
+        public IDictionary<string, OpenApiSchema>? Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public virtual IDictionary<string, OpenApiResponse>? Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiParameter"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiParameter> Parameters { get; set; } =
+        public virtual IDictionary<string, OpenApiParameter>? Parameters { get; set; } =
             new Dictionary<string, OpenApiParameter>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public virtual IDictionary<string, OpenApiExample>? Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiRequestBody"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; } =
+        public virtual IDictionary<string, OpenApiRequestBody>? RequestBodies { get; set; } =
             new Dictionary<string, OpenApiRequestBody>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiHeader"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
+        public virtual IDictionary<string, OpenApiHeader>? Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } =
+        public virtual IDictionary<string, OpenApiSecurityScheme>? SecuritySchemes { get; set; } =
             new Dictionary<string, OpenApiSecurityScheme>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiLink"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
+        public virtual IDictionary<string, OpenApiLink>? Links { get; set; } = new Dictionary<string, OpenApiLink>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public virtual IDictionary<string, OpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+
+        /// <summary>
+        /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
+        /// </summary>
+        public virtual IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -74,7 +83,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiComponents"/> object
         /// </summary>
-        public OpenApiComponents(OpenApiComponents components)
+        public OpenApiComponents(OpenApiComponents? components)
         {
             Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
             Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
@@ -85,12 +94,52 @@ namespace Microsoft.OpenApi.Models
             SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
             Links = components?.Links != null ? new Dictionary<string, OpenApiLink>(components.Links) : null;
             Callbacks = components?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(components.Callbacks) : null;
+            PathItems = components?.PathItems != null ? new Dictionary<string, OpenApiPathItem>(components.PathItems) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
+        /// Serialize <see cref="OpenApiComponents"/> to Open API v3.1.
         /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            Utils.CheckArgumentNull(writer);
+
+            // If references have been inlined we don't need the to render the components section
+            // however if they have cycles, then we will need a component rendered
+            if (writer.GetSettings().InlineLocalReferences)
+            {
+                RenderComponents(writer, (writer, element) => element.SerializeAsV31(writer));
+                return;
+            }
+
+            writer.WriteStartObject();
+
+            // pathItems - only present in v3.1
+            writer.WriteOptionalMap(
+            OpenApiConstants.PathItems,
+            PathItems,
+            (w, key, component) =>
+            {
+                if (component is OpenApiPathItemReference reference)
+                {
+                    reference.SerializeAsV31(w);
+                }
+                else
+                {
+                    component.SerializeAsV31(w);
+                }
+            });
+
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer),
+               (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/> to v3.0
+        /// </summary>
+        /// <param name="writer"></param>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
@@ -99,24 +148,21 @@ namespace Microsoft.OpenApi.Models
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                var loops = writer.GetSettings().LoopDetector.Loops;
-                writer.WriteStartObject();
-                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
-                {
-                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
-                        .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
-
-                    writer.WriteOptionalMap(
-                       OpenApiConstants.Schemas,
-                       Schemas,
-                       (w, _, component) => component.SerializeAsV3WithoutReference(w));
-                }
-                writer.WriteEndObject();
+                RenderComponents(writer, (writer, element) => element.SerializeAsV3(writer));
                 return;
             }
 
             writer.WriteStartObject();
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer),
+                (writer, referenceElement) => referenceElement.SerializeAsV3(writer));
+        }
 
+        /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/>.
+        /// </summary>
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+            Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, IOpenApiReferenceable> action)
+        {
             // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
             // If the reference exists but points to other objects, the object is serialized to just that reference.
 
@@ -126,14 +172,13 @@ namespace Microsoft.OpenApi.Models
                 Schemas,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.Schema} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiSchemaReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -143,14 +188,13 @@ namespace Microsoft.OpenApi.Models
                 Responses,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.Response} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiResponseReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -160,14 +204,13 @@ namespace Microsoft.OpenApi.Models
                 Parameters,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.Parameter} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiParameterReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -177,14 +220,13 @@ namespace Microsoft.OpenApi.Models
                 Examples,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.Example} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiExampleReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -194,14 +236,13 @@ namespace Microsoft.OpenApi.Models
                 RequestBodies,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.RequestBody} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiRequestBodyReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -211,14 +252,13 @@ namespace Microsoft.OpenApi.Models
                 Headers,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.Header} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiHeaderReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -228,14 +268,13 @@ namespace Microsoft.OpenApi.Models
                 SecuritySchemes,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.SecurityScheme} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiSecuritySchemeReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -245,14 +284,13 @@ namespace Microsoft.OpenApi.Models
                 Links,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.Link} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiLinkReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -262,20 +300,29 @@ namespace Microsoft.OpenApi.Models
                 Callbacks,
                 (w, key, component) =>
                 {
-                    if (component.Reference is {Type: ReferenceType.Callback} &&
-                        component.Reference.Id == key)
+                    if (component is OpenApiCallbackReference reference)
                     {
-                        component.SerializeAsV3WithoutReference(w);
+                        action(w, reference);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
+            writer.WriteEndObject();
+        }
 
+        private void RenderComponents(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        {
+            var loops = writer.GetSettings().LoopDetector.Loops;
+            writer.WriteStartObject();
+            if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+            {
+                writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, callback);
+            }
             writer.WriteEndObject();
         }
 

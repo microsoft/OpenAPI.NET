@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -27,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Models
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-tag-extension", new OpenApiNull()}
+                {"x-tag-extension", null}
             }
         };
 
@@ -38,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Models
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-tag-extension", new OpenApiNull()}
+                {"x-tag-extension", null}
             },
             Reference = new()
             {

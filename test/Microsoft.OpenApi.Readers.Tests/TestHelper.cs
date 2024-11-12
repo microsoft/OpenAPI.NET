@@ -3,7 +3,8 @@
 
 using System.IO;
 using System.Linq;
-using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.ParseNodes;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -16,9 +17,10 @@ namespace Microsoft.OpenApi.Readers.Tests
             yamlStream.Load(new StreamReader(stream));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext(new());
+            var context = new ParsingContext(new OpenApiDiagnostic());
+            var asJsonNode = yamlNode.ToJsonNode();
 
-            return new(context, (YamlMappingNode)yamlNode);
+            return new MapNode(context, asJsonNode);
         }
     }
 }

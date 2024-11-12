@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -29,8 +31,8 @@ namespace Microsoft.OpenApi.Tests.Models
             Maximum = 42,
             ExclusiveMinimum = true,
             Minimum = 10,
-            Default = new OpenApiInteger(15),
-            Type = "integer",
+            Default = 15,
+            Type = JsonSchemaType.Integer,
 
             Nullable = true,
             ExternalDocs = new()
@@ -51,11 +53,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MaxLength = 15
                         }
                     },
@@ -70,13 +72,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["property6"] = new()
                                 {
-                                    Type = "boolean"
+                                    Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
                         ["property7"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MinLength = 2
                         }
                     },
@@ -101,11 +103,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property1"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property2"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MaxLength = 15
                         }
                     },
@@ -121,13 +123,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["property4"] = new()
                                 {
-                                    Type = "boolean"
+                                    Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
                         ["property5"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MinLength = 2
                         }
                     },
@@ -148,19 +150,13 @@ namespace Microsoft.OpenApi.Tests.Models
             Maximum = 42,
             ExclusiveMinimum = true,
             Minimum = 10,
-            Default = new OpenApiInteger(15),
-            Type = "integer",
+            Default = 15,
+            Type = JsonSchemaType.Integer,
 
             Nullable = true,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
-            },
-
-            Reference = new()
-            {
-                Type = ReferenceType.Schema,
-                Id = "schemaObject1"
             }
         };
 
@@ -177,11 +173,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["property2"] = new()
                         {
-                            Type = "integer"
+                            Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MaxLength = 15,
                             ReadOnly = true
                         }
@@ -198,13 +194,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["property6"] = new()
                                 {
-                                    Type = "boolean"
+                                    Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
                         ["property7"] = new()
                         {
-                            Type = "string",
+                            Type = JsonSchemaType.String,
                             MinLength = 2
                         }
                     },
@@ -380,7 +376,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            ReferencedSchema.SerializeAsV3WithoutReference(writer);
+            ReferencedSchema.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -431,10 +427,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     new()
                     {
-                        Type = "number",
+                        Type = JsonSchemaType.Number,
                         Format = "decimal"
                     },
-                    new() { Type = "string" },
+                    new() { Type = JsonSchemaType.String },
                 }
             };
 
@@ -454,15 +450,15 @@ namespace Microsoft.OpenApi.Tests.Models
                   "format": "decimal",
                   "allOf": [
                     {
-                      "format": "decimal",
-                      "type": "number"
+                      "type": "number",
+                      "format": "decimal"
                     }
                   ]
                 }
                 """.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            Assert.Equal(expectedV2Schema, v2Schema);
+            expectedV2Schema.Should().BeEquivalentTo(v2Schema);
         }
 
         [Fact]
@@ -470,7 +466,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var baseSchema = new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Format = "date"
             };
 
@@ -479,7 +475,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Nullable = true
             };
 
-            Assert.Equal("string", actualSchema.Type);
+            Assert.Equal(JsonSchemaType.String, actualSchema.Type);
             Assert.Equal("date", actualSchema.Format);
             Assert.True(actualSchema.Nullable);
         }
@@ -505,30 +501,27 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.NotEqual(baseSchema.Annotations["key1"], actualSchema.Annotations["key1"]);
         }
 
-        public static TheoryData<IOpenApiAny> SchemaExamples()
+        public static TheoryData<JsonNode> SchemaExamples()
         {
             return new()
             {
-                new OpenApiArray() { new OpenApiString("example") },
-                new OpenApiBinary([0, 1, 2]),
-                new OpenApiBoolean(true),
-                new OpenApiByte(42),
-                new OpenApiDate(new(2024, 07, 19, 12, 34, 56)),
-                new OpenApiDateTime(new(2024, 07, 19, 12, 34, 56, new(01, 00, 00))),
-                new OpenApiDouble(42.37),
-                new OpenApiFloat(42.37f),
-                new OpenApiInteger(42),
-                new OpenApiLong(42),
-                new OpenApiNull(),
-                new OpenApiObject() { ["prop"] = new OpenApiString("example") },
-                new OpenApiPassword("secret"),
-                new OpenApiString("example"),
+                new JsonArray() { "example" },
+                new JsonArray { 0, 1, 2 },   // Represent OpenApiBinary as JsonArray of bytes
+                true,
+                JsonValue.Create((byte)42),
+                JsonValue.Create(new DateTime(2024, 07, 19, 12, 34, 56, DateTimeKind.Utc).ToString("o")), // DateTime object
+                42.37,
+                42.37f,
+                42,
+                null,
+                JsonValue.Create("secret"), //Represent OpenApiPassword as string
+                "example",
             };
         }
 
         [Theory]
         [MemberData(nameof(SchemaExamples))]
-        public void CloningSchemaExamplesWorks(IOpenApiAny example)
+        public void CloningSchemaExamplesWorks(JsonNode example)
         {
             // Arrange
             var schema = new OpenApiSchema
@@ -538,10 +531,11 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act && Assert
             var schemaCopy = new OpenApiSchema(schema);
-            Assert.NotNull(schemaCopy.Example);
 
             // Act && Assert
-            Assert.Equivalent(schema.Example, schemaCopy.Example);
+            schema.Example.Should().BeEquivalentTo(schemaCopy.Example, options => options
+            .IgnoringCyclicReferences()
+            .Excluding(x => x.Options));
         }
 
         [Fact]
@@ -552,7 +546,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Extensions =
                 {
-                    { "x-myextension", new OpenApiInteger(42) }
+                    { "x-myextension", new OpenApiAny(42) }
                 }
             };
 
@@ -563,7 +557,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act && Assert
             schemaCopy.Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                { "x-myextension" , new OpenApiInteger(40) }
+                { "x-myextension" , new OpenApiAny(40) }
             };
             Assert.NotEqual(schema.Extensions, schemaCopy.Extensions);
         }
@@ -577,9 +571,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 Not = new OpenApiSchema()
                 {
                     Title = "Inner Schema",
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                 }
-            };        
+            };
 
             var document = new OpenApiDocument()
             {

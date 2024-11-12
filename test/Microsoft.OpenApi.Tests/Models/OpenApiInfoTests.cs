@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -24,11 +24,19 @@ namespace Microsoft.OpenApi.Tests.Models
             Version = "1.1.1",
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-updated", new OpenApiString("metadata")}
+                {"x-updated", new OpenApiAny("metadata")}
             }
         };
 
-        public static OpenApiInfo BasicInfo = new()
+        public static OpenApiInfo InfoWithSummary = new()
+        {
+            Title = "Sample Pet Store App",
+            Summary = "This is a sample server for a pet store.",
+            Description = "This is a sample server for a pet store.",
+            Version = "1.1.1",
+        };
+
+        public static OpenApiInfo BasicInfo = new OpenApiInfo
         {
             Title = "Sample Pet Store App",
             Version = "1.0"
@@ -203,6 +211,44 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeInfoObjectWithSummaryAsV31YamlWorks()
+        {
+            // Arrange
+            var expected = @"title: Sample Pet Store App
+description: This is a sample server for a pet store.
+version: '1.1.1'
+summary: This is a sample server for a pet store.";
+
+            // Act
+            var actual = InfoWithSummary.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void SerializeInfoObjectWithSummaryAsV31JsonWorks()
+        {
+            // Arrange
+            var expected = @"{
+  ""title"": ""Sample Pet Store App"",
+  ""description"": ""This is a sample server for a pet store."",
+  ""version"": ""1.1.1"",
+  ""summary"": ""This is a sample server for a pet store.""
+}";
+
+            // Act
+            var actual = InfoWithSummary.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }

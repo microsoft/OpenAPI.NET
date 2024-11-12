@@ -28,15 +28,6 @@ namespace Microsoft.OpenApi.Validations.Rules
                             String.Format(SRResource.Validation_FieldIsRequired, "info", "document"));
                     }
                     context.Exit();
-
-                    // paths
-                    context.Enter("paths");
-                    if (item.Paths == null)
-                    {
-                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing),
-                            String.Format(SRResource.Validation_FieldIsRequired, "paths", "document"));
-                    }
-                    context.Exit();
                 });
     }
 }

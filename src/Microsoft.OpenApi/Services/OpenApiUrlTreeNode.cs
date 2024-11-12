@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -348,12 +348,12 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// The CSS color name of the diagram element
         /// </summary>
-        public string Color { get;  }
+        public string Color { get; }
 
         /// <summary>
         /// The shape of the diagram element
         /// </summary>
-        public MermaidNodeShape Shape { get;  }
+        public MermaidNodeShape Shape { get; }
     }
 
     /// <summary>
