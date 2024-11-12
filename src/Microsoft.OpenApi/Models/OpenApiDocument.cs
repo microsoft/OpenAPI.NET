@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
+            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.4");
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
             writer.WriteEndObject();
         }
