@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Load OpenAPI document
-                var format = OpenApiModelFactory.GetFormat(options.OpenApi);
+                var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi).ConfigureAwait(false);
                 var document = await GetOpenApiAsync(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
@@ -396,8 +396,7 @@ namespace Microsoft.OpenApi.Hidi
                         new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 };
 
-                var format = OpenApiModelFactory.GetFormat(openApiFile);
-                result = await OpenApiDocument.LoadAsync(stream, format, settings, cancellationToken).ConfigureAwait(false);
+                result = await OpenApiDocument.LoadAsync(stream, settings, cancellationToken).ConfigureAwait(false);
 
                 logger.LogTrace("{Timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
 
@@ -421,7 +420,7 @@ namespace Microsoft.OpenApi.Hidi
             settings ??= SettingsUtilities.GetConfiguration();
 
             var document = edmModel.ConvertToOpenApi(SettingsUtilities.GetOpenApiConvertSettings(settings, metadataVersion));
-            document = FixReferences(document, format);
+            document = await FixReferencesAsync(document, format).ConfigureAwait(false);
 
             return document;
         }
@@ -431,7 +430,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="document"> The converted OpenApiDocument.</param>
         /// <returns> A valid OpenApiDocument instance.</returns>
-        public static OpenApiDocument FixReferences(OpenApiDocument document, string format)
+        public static async Task<OpenApiDocument> FixReferencesAsync(OpenApiDocument document, string format)
         {
             // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
             // So we write it out, and read it back in again to fix it up.
@@ -439,9 +438,9 @@ namespace Microsoft.OpenApi.Hidi
             var sb = new StringBuilder();
             document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
 
-            var doc = OpenApiDocument.Parse(sb.ToString(), format).OpenApiDocument;
+            var result = await OpenApiDocument.ParseAsync(sb.ToString()).ConfigureAwait(false);
 
-            return doc;
+            return result.OpenApiDocument;
         }
 
         /// <summary>
@@ -587,7 +586,7 @@ namespace Microsoft.OpenApi.Hidi
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var format = OpenApiModelFactory.GetFormat(options.OpenApi);
+                var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi).ConfigureAwait(false);
                 var document = await GetOpenApiAsync(options, format, logger, null, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Creating diagram"))
@@ -749,10 +748,10 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             // Load OpenAPI document
-            var format = OpenApiModelFactory.GetFormat(options.OpenApi);
+            var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi).ConfigureAwait(false);
             var document = await GetOpenApiAsync(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
-            cancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();   
 
             if (options.FilterOptions != null)
             {

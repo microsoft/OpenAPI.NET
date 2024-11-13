@@ -38,19 +38,17 @@ namespace Microsoft.OpenApi.Interfaces
         /// </summary>
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
-        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
-        T ReadFragment<T>(TextReader input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
+        Task<ReadFragmentResult> ReadFragmentAsync<T>(TextReader input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T: IOpenApiElement;
 
         /// <summary>
         /// Reads the JsonNode input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
-        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
-        T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
+        Task<ReadFragmentResult> ReadFragmentAsync<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T: IOpenApiElement;
     }
 }

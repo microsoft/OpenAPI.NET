@@ -46,10 +46,9 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(TextReader input,
-                                 OpenApiSpecVersion version,
-                                 out OpenApiDiagnostic diagnostic,
-                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public async Task<ReadFragmentResult> ReadFragmentAsync<T>(TextReader input,
+                                                                   OpenApiSpecVersion version,
+                                                                   OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             JsonNode jsonNode;
 
@@ -60,12 +59,12 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (JsonException ex)
             {
-                diagnostic = new();
+                var diagnostic = new OpenApiDiagnostic();
                 diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
                 return default;
             }
 
-            return ReadFragment<T>(jsonNode, version, out diagnostic);
+            return await ReadFragmentAsync<T>(jsonNode, version, settings);
         }
 
         /// <summary>
@@ -88,9 +87,9 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public async Task<ReadFragmentResult> ReadFragmentAsync<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic);
+            return await OpenApiReaderRegistry.DefaultReader.ReadFragmentAsync<T>(input, version, settings);
         }
     }
 }

@@ -539,45 +539,6 @@ namespace Microsoft.OpenApi.Models
         /// Parses a local file path or Url into an Open API document.
         /// </summary>
         /// <param name="url"> The path to the OpenAPI file.</param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        public static ReadResult Load(string url, OpenApiReaderSettings? settings = null)
-        {
-            return OpenApiModelFactory.Load(url, settings);
-        }
-
-        /// <summary>
-        /// Reads the stream input and parses it into an Open API document.
-        /// </summary>
-        /// <param name="stream">Stream containing OpenAPI description to parse.</param>
-        /// <param name="format">The OpenAPI format to use during parsing.</param>
-        /// <param name="settings">The OpenApi reader settings.</param>
-        /// <returns></returns>
-        public static ReadResult Load(Stream stream,
-                                      string format,
-                                      OpenApiReaderSettings? settings = null)
-        {
-            return OpenApiModelFactory.Load(stream, format, settings);
-        }
-
-        /// <summary>
-        /// Reads the text reader content and parses it into an Open API document.
-        /// </summary>
-        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
-        /// <param name="format"> The OpenAPI format to use during parsing.</param>
-        /// <param name="settings">The OpenApi reader settings.</param>
-        /// <returns></returns>
-        public static ReadResult Load(TextReader input,
-                                           string format,
-                                           OpenApiReaderSettings? settings = null)
-        {
-            return OpenApiModelFactory.Load(input, format, settings);
-        }
-
-        /// <summary>
-        /// Parses a local file path or Url into an Open API document.
-        /// </summary>
-        /// <param name="url"> The path to the OpenAPI file.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null)
@@ -589,39 +550,35 @@ namespace Microsoft.OpenApi.Models
         /// Reads the stream input and parses it into an Open API document.
         /// </summary>
         /// <param name="stream">Stream containing OpenAPI description to parse.</param>
-        /// <param name="format">The OpenAPI format to use during parsing.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates information about operation cancelling.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream stream, string format, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
+        public static async Task<ReadResult> LoadAsync(Stream stream, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
-            return await OpenApiModelFactory.LoadAsync(stream, format, settings, cancellationToken);
+            return await OpenApiModelFactory.LoadAsync(stream, settings: settings, cancellationToken: cancellationToken);
         }
 
         /// <summary>
         /// Reads the text reader content and parses it into an Open API document.
         /// </summary>
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
-        /// <param name="format"> The OpenAPI format to use during parsing.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings? settings = null)
+        public static async Task<ReadResult> LoadAsync(TextReader input, OpenApiReaderSettings? settings = null)
         {
-            return await OpenApiModelFactory.LoadAsync(input, format, settings);
+            return await OpenApiModelFactory.LoadAsync(input, settings: settings);
         }
 
         /// <summary>
         /// Parses a string into a <see cref="OpenApiDocument"/> object.
         /// </summary>
         /// <param name="input"> The string input.</param>
-        /// <param name="format"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static ReadResult Parse(string input,
-                                       string? format = null,
-                                       OpenApiReaderSettings? settings = null)
+        public static async Task<ReadResult> ParseAsync(string input,
+                                                        OpenApiReaderSettings? settings = null)
         {
-            return OpenApiModelFactory.Parse(input, format, settings);
+            return await OpenApiModelFactory.ParseAsync(input, settings);
         }
     }
 

@@ -14,7 +14,6 @@ using System.Linq;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader.Services;
-using System.Collections.Generic;
 using System;
 
 namespace Microsoft.OpenApi.Reader
@@ -42,7 +41,7 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON text in the TextReader into JsonNodes
             try
             {
-                jsonNode = LoadJsonNodes(input);
+                jsonNode = await LoadJsonNodesAsync(input);
             }
             catch (JsonException ex)
             {
@@ -124,35 +123,33 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(TextReader input,
-                                 OpenApiSpecVersion version,
-                                 out OpenApiDiagnostic diagnostic,
-                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public async Task<ReadFragmentResult> ReadFragmentAsync<T>(TextReader input,
+                                                                   OpenApiSpecVersion version,
+                                                                   OpenApiReaderSettings settings = null) where T: IOpenApiElement
         {
             JsonNode jsonNode;
 
             // Parse the JSON
             try
             {
-                jsonNode = LoadJsonNodes(input);
+                jsonNode = await LoadJsonNodesAsync(input);
             }
             catch (JsonException ex)
             {
-                diagnostic = new();
+                var diagnostic = new OpenApiDiagnostic();
                 diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
                 return default;
             }
 
-            return ReadFragment<T>(jsonNode, version, out diagnostic);
+            return await ReadFragmentAsync<T>(jsonNode, version, settings);
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(JsonNode input,
-                         OpenApiSpecVersion version,
-                         out OpenApiDiagnostic diagnostic,
-                         OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public async Task<ReadFragmentResult> ReadFragmentAsync<T>(JsonNode input,
+                                                                   OpenApiSpecVersion version,
+                                                                   OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            diagnostic = new();
+            var diagnostic = new OpenApiDiagnostic();
             settings ??= new OpenApiReaderSettings();
             var context = new ParsingContext(diagnostic)
             {
@@ -162,8 +159,8 @@ namespace Microsoft.OpenApi.Reader
             IOpenApiElement element = null;
             try
             {
-                // Parse the OpenAPI element
-                element = context.ParseFragment<T>(input, version);
+                // Parse the OpenAPI element asynchronously
+                element = await Task.Run(() => context.ParseFragment<T>(input, version));
             }
             catch (OpenApiException ex)
             {
@@ -180,13 +177,17 @@ namespace Microsoft.OpenApi.Reader
                 }
             }
 
-            return (T)element;
+            return new ReadFragmentResult
+            {
+                Element = element,
+                OpenApiDiagnostic = diagnostic
+            };
         }
 
-        private JsonNode LoadJsonNodes(TextReader input)
+        private async Task<JsonNode> LoadJsonNodesAsync(TextReader input)
         {
-            var nodes = JsonNode.Parse(input.ReadToEnd());
-            return nodes;
+            var content = await input.ReadToEndAsync();
+            return JsonNode.Parse(content);
         }
 
         private async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
