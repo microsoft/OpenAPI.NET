@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -117,9 +117,9 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="version"></param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
-        public static async Task<ReadFragmentResult> ParseAsync<T>(string input,
-                                                                   OpenApiSpecVersion version,
-                                                                   OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static async Task<ReadFragmentResult<T>> ParseAsync<T>(string input,
+                                                                      OpenApiSpecVersion version,
+                                                                      OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             var format = input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
             settings ??= new OpenApiReaderSettings();
@@ -136,10 +136,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="cancellationToken"></param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static async Task<ReadFragmentResult> LoadAsync<T>(string url,
-                                                                  OpenApiSpecVersion version,
-                                                                  OpenApiReaderSettings settings = null,
-                                                                  CancellationToken cancellationToken = default) where T : IOpenApiElement
+        public static async Task<ReadFragmentResult<T>> LoadAsync<T>(string url,
+                                                                     OpenApiSpecVersion version,
+                                                                     OpenApiReaderSettings settings = null,
+                                                                     CancellationToken cancellationToken = default) where T : IOpenApiElement
         {
             var format = await GetFormatAsync(url);
             settings ??= new OpenApiReaderSettings();
@@ -156,10 +156,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static async Task<ReadFragmentResult> LoadAsync<T>(Stream input,
-                                                                  OpenApiSpecVersion version,
-                                                                  string format = null,
-                                                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static async Task<ReadFragmentResult<T>> LoadAsync<T>(Stream input,
+                                                                     OpenApiSpecVersion version,
+                                                                     string format = null,
+                                                                     OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             format ??= InspectStreamFormat(input);
             using var reader = new StreamReader(input);
@@ -175,10 +175,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static async Task<ReadFragmentResult> LoadAsync<T>(TextReader input,
-                                                                  OpenApiSpecVersion version,
-                                                                  string format = null,
-                                                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static async Task<ReadFragmentResult<T>> LoadAsync<T>(TextReader input,
+                                                                     OpenApiSpecVersion version,
+                                                                     string format = null,
+                                                                     OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             format ??= InspectTextReaderFormat(input);
             return await OpenApiReaderRegistry.GetReader(format).ReadFragmentAsync<T>(input, version, settings);

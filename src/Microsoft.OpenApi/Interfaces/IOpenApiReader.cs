@@ -29,9 +29,8 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
-        /// <param name="format">The OpenAPI format.</param>
         /// <returns></returns>
-        Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null, CancellationToken cancellationToken = default);
+        Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Reads the TextReader input and parses the fragment of an OpenAPI description into an Open API Element.
@@ -40,7 +39,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
-        Task<ReadFragmentResult> ReadFragmentAsync<T>(TextReader input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T: IOpenApiElement;
+        Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T: IOpenApiElement;
 
         /// <summary>
         /// Reads the JsonNode input and parses the fragment of an OpenAPI description into an Open API Element.
@@ -49,6 +48,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
-        Task<ReadFragmentResult> ReadFragmentAsync<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T: IOpenApiElement;
+        Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T: IOpenApiElement;
     }
 }

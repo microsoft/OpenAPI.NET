@@ -24,12 +24,12 @@ namespace Microsoft.OpenApi.Reader
     /// <summary>
     /// Container object used for returning the result of reading an OpenAPI fragment
     /// </summary>
-    public class ReadFragmentResult
+    public class ReadFragmentResult<T> where T: IOpenApiElement
     {
         /// <summary>
         /// The parsed fragment.
         /// </summary>
-        public IOpenApiElement Element { get; set; }
+        public T Element { get; set; }
 
         /// <summary>
         /// OpenApiDiagnostic contains the Errors reported while parsing

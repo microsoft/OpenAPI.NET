@@ -10,7 +10,6 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
 using SharpYaml.Serialization;
 using System.Linq;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -46,9 +45,9 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
-        public async Task<ReadFragmentResult> ReadFragmentAsync<T>(TextReader input,
-                                                                   OpenApiSpecVersion version,
-                                                                   OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input,
+                                                                      OpenApiSpecVersion version,
+                                                                      OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             JsonNode jsonNode;
 
@@ -81,13 +80,13 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>        
-        public async Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null, CancellationToken cancellationToken = default)
+        public async Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
-            return await OpenApiReaderRegistry.DefaultReader.ReadAsync(jsonNode, settings, OpenApiConstants.Yaml, cancellationToken);
+            return await OpenApiReaderRegistry.DefaultReader.ReadAsync(jsonNode, settings, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<ReadFragmentResult> ReadFragmentAsync<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             return await OpenApiReaderRegistry.DefaultReader.ReadFragmentAsync<T>(input, version, settings);
         }

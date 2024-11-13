@@ -61,12 +61,10 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
-        /// <param name="format">The OpenAPI format.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
         public async Task<ReadResult> ReadAsync(JsonNode jsonNode,                                                
                                                 OpenApiReaderSettings settings,
-                                                string format = null,
                                                 CancellationToken cancellationToken = default)
         {
             var diagnostic = new OpenApiDiagnostic();
@@ -85,7 +83,7 @@ namespace Microsoft.OpenApi.Reader
 
                 if (settings.LoadExternalRefs)
                 {
-                    var diagnosticExternalRefs = await LoadExternalRefsAsync(document, cancellationToken, settings, format);
+                    var diagnosticExternalRefs = await LoadExternalRefsAsync(document, cancellationToken, settings);
                     // Merge diagnostics of external reference
                     if (diagnosticExternalRefs != null)
                     {
@@ -123,9 +121,9 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public async Task<ReadFragmentResult> ReadFragmentAsync<T>(TextReader input,
-                                                                   OpenApiSpecVersion version,
-                                                                   OpenApiReaderSettings settings = null) where T: IOpenApiElement
+        public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input,
+                                                                      OpenApiSpecVersion version,
+                                                                      OpenApiReaderSettings settings = null) where T: IOpenApiElement
         {
             JsonNode jsonNode;
 
@@ -145,7 +143,7 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public async Task<ReadFragmentResult> ReadFragmentAsync<T>(JsonNode input,
+        public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(JsonNode input,
                                                                    OpenApiSpecVersion version,
                                                                    OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
@@ -177,9 +175,9 @@ namespace Microsoft.OpenApi.Reader
                 }
             }
 
-            return new ReadFragmentResult
+            return new ReadFragmentResult<T>
             {
-                Element = element,
+                Element = (T)element,
                 OpenApiDiagnostic = diagnostic
             };
         }
@@ -190,7 +188,7 @@ namespace Microsoft.OpenApi.Reader
             return JsonNode.Parse(content);
         }
 
-        private async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
+        private async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings)
         {
             // Create workspace for all documents to live in.
             var baseUrl = settings.BaseUrl ?? new Uri(OpenApiConstants.BaseRegistryUri);
@@ -199,7 +197,7 @@ namespace Microsoft.OpenApi.Reader
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
-            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
+            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, null, cancellationToken);
         }
     }
 }
