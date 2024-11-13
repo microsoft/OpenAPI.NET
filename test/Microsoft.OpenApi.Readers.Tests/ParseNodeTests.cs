@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Tests
         }
 
         [Fact]
-        public void BrokenSimpleList()
+        public async Task BrokenSimpleList()
         {
             var input =
                 """
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Tests
                 paths: { }
                 """;
 
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = await OpenApiDocument.ParseAsync(input);
 
             result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
                 new OpenApiError(new OpenApiReaderException("Expected a value.")),
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Tests
         }
 
         [Fact]
-        public void BadSchema()
+        public async Task BadSchema()
         {
             var input = """
                         openapi: 3.0.0
@@ -58,7 +59,7 @@ namespace Microsoft.OpenApi.Tests
                                       schema: asdasd
                         """;
 
-            var res= OpenApiDocument.Parse(input, "yaml");
+            var res = await OpenApiDocument.ParseAsync(input);
 
             res.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
             {

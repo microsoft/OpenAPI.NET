@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models.References;
+using System.Threading.Tasks;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -58,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }       
 
         [Fact]
-        public void ParseExampleStringFragmentShouldSucceed()
+        public async Task ParseExampleStringFragmentShouldSucceed()
         {
             var input = @"
 { 
@@ -68,12 +69,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = await OpenApiModelFactory.ParseAsync<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            openApiAny.Element.Should().BeEquivalentTo(new OpenApiAny(
                 new JsonObject
                 {
                     ["foo"] = "bar",
@@ -82,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseEnumFragmentShouldSucceed()
+        public async Task ParseEnumFragmentShouldSucceed()
         {
             var input = @"
 [ 
@@ -92,12 +93,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = await OpenApiModelFactory.ParseAsync<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            openApiAny.Element.Should().BeEquivalentTo(new OpenApiAny(
                 new JsonArray
                 {
                     "foo",
@@ -106,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParsePathFragmentShouldSucceed()
+        public async Task ParsePathFragmentShouldSucceed()
         {
             var input = @"
 summary: externally referenced path item
@@ -118,12 +119,12 @@ get:
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic, "yaml");
+            var openApiAny = await OpenApiModelFactory.ParseAsync<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.Should().BeEquivalentTo(
+            openApiAny.Element.Should().BeEquivalentTo(
                 new OpenApiPathItem
                 {
                     Summary = "externally referenced path item",
@@ -230,10 +231,10 @@ get:
         }
 
         [Fact]
-        public void ParseBasicSchemaWithReferenceShouldSucceed()
+        public async Task ParseBasicSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
 
             // Assert
             var components = result.OpenApiDocument.Components;
@@ -300,10 +301,10 @@ get:
         }
 
         [Fact]
-        public void ParseAdvancedSchemaWithReferenceShouldSucceed()
+        public async Task ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
 
             var expectedComponents = new OpenApiComponents
             {

@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -21,9 +22,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ResponseWithReferencedHeaderShouldReferenceComponent()
+        public async Task ResponseWithReferencedHeaderShouldReferenceComponent()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
 
             var response = result.OpenApiDocument.Components.Responses["Test"];
             var expected = response.Headers.First().Value;

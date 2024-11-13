@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
@@ -31,12 +32,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         // The equivalent of English 1,000.36 in French and Danish is 1.000,36
         [InlineData("fr-FR")]
         [InlineData("da-DK")]
-        public void ParseDocumentWithDifferentCultureShouldSucceed(string culture)
+        public async Task ParseDocumentWithDifferentCultureShouldSucceed(string culture)
         {
             Thread.CurrentThread.CurrentCulture = new(culture);
             Thread.CurrentThread.CurrentUICulture = new(culture);
 
-            var result = OpenApiDocument.Parse(
+            var result = await OpenApiDocument.ParseAsync(
             """
                 swagger: 2.0
                 info:
@@ -54,8 +55,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         exclusiveMaximum: true
                         exclusiveMinimum: false
                 paths: {}
-                """,
-                "yaml");
+                """);
 
             result.OpenApiDocument.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -109,9 +109,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ShouldParseProducesInAnyOrder()
+        public async Task ShouldParseProducesInAnyOrder()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "twoResponses.json"));
 
             var okSchema = new OpenApiSchema
             {
@@ -268,10 +268,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ShouldAssignSchemaToAllResponses()
+        public async Task ShouldAssignSchemaToAllResponses()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json"));
-            var result = OpenApiDocument.Load(stream, OpenApiConstants.Json);
+            var result = await OpenApiDocument.LoadAsync(stream);
 
             Assert.Equal(OpenApiSpecVersion.OpenApi2_0, result.OpenApiDiagnostic.SpecificationVersion);
 
@@ -298,13 +298,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ShouldAllowComponentsThatJustContainAReference()
+        public async Task ShouldAllowComponentsThatJustContainAReference()
         {
             // Act
-            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "ComponentRootReference.json")).OpenApiDocument;
-            var schema1 = actual.Components.Schemas["AllPets"];
+            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "ComponentRootReference.json"));
+            var schema1 = actual.OpenApiDocument.Components.Schemas["AllPets"];
             Assert.False(schema1.UnresolvedReference);
-            var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
+            var schema2 = actual.OpenApiDocument.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
             if (schema2.UnresolvedReference && schema1.Reference.Id == schema2.Reference.Id)
             {
                 // detected a cycle - this code gets triggered
@@ -313,14 +313,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ParseDocumentWithDefaultContentTypeSettingShouldSucceed()
+        public async Task ParseDocumentWithDefaultContentTypeSettingShouldSucceed()
         {
             var settings = new OpenApiReaderSettings
             {
                 DefaultContentType = ["application/json"]
             };
 
-            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
+            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
             var mediaType = actual.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
         }

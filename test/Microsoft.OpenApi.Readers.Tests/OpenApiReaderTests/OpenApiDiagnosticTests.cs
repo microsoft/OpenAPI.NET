@@ -23,18 +23,18 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         }
 
         [Fact]
-        public void DetectedSpecificationVersionShouldBeV2_0()
+        public async Task DetectedSpecificationVersionShouldBeV2_0()
         {
-            var actual = OpenApiDocument.Load("V2Tests/Samples/basic.v2.yaml");
+            var actual = await OpenApiDocument.LoadAsync("V2Tests/Samples/basic.v2.yaml");
 
             actual.OpenApiDiagnostic.Should().NotBeNull();
             actual.OpenApiDiagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi2_0);
         }
 
         [Fact]
-        public void DetectedSpecificationVersionShouldBeV3_0()
+        public async Task DetectedSpecificationVersionShouldBeV3_0()
         {
-            var actual = OpenApiDocument.Load("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
+            var actual = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
 
             actual.OpenApiDiagnostic.Should().NotBeNull();
             actual.OpenApiDiagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);

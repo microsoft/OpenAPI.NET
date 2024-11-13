@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -20,13 +21,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseBasicEncodingShouldSucceed()
+        public async Task ParseBasicEncodingShouldSucceed()
         {
             // Act
-            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            encoding.Should().BeEquivalentTo(
+            encoding.Element.Should().BeEquivalentTo(
                 new OpenApiEncoding
                 {
                     ContentType = "application/xml; charset=utf-8"
@@ -34,15 +35,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseAdvancedEncodingShouldSucceed()
+        public async Task ParseAdvancedEncodingShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml"));
 
             // Act
-            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out _);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            encoding.Should().BeEquivalentTo(
+            encoding.Element.Should().BeEquivalentTo(
                 new OpenApiEncoding
                 {
                     ContentType = "image/png, image/jpeg",

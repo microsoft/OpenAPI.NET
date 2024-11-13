@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -24,13 +25,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseMediaTypeWithExampleShouldSucceed()
+        public async Task ParseMediaTypeWithExampleShouldSucceed()
         {
             // Act
-            var mediaType = OpenApiModelFactory.Load<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            mediaType.Should().BeEquivalentTo(
+            mediaType.Element.Should().BeEquivalentTo(
                 new OpenApiMediaType
                 {
                     Example = 5,
@@ -45,13 +46,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseMediaTypeWithExamplesShouldSucceed()
+        public async Task ParseMediaTypeWithExamplesShouldSucceed()
         {
             // Act
-            var mediaType = OpenApiModelFactory.Load<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            mediaType.Should().BeEquivalentTo(
+            mediaType.Element.Should().BeEquivalentTo(
                 new OpenApiMediaType
                 {
                     Examples =

@@ -80,8 +80,8 @@ components:
         public OpenApiPathItemReferenceTests()
         {
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            _openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).OpenApiDocument;
-            _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
+            _openApiDoc = OpenApiDocument.ParseAsync(OpenApi).GetAwaiter().GetResult().OpenApiDocument;
+            _openApiDoc_2 = OpenApiDocument.ParseAsync(OpenApi_2).GetAwaiter().GetResult().OpenApiDocument;
             _openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", _openApiDoc_2.BaseUri);
             _openApiDoc.Workspace.RegisterComponents(_openApiDoc_2);
             _openApiDoc_2.Workspace.RegisterComponents(_openApiDoc_2);
