@@ -117,8 +117,8 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
         public static async Task<ReadFragmentResult> ParseAsync<T>(string input,
-                                                  OpenApiSpecVersion version,
-                                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
+                                                                   OpenApiSpecVersion version,
+                                                                   OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             var format = input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
             settings ??= new OpenApiReaderSettings();
