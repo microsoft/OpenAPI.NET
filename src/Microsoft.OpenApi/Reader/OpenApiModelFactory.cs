@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -101,10 +101,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="cancellationToken">Propagates notification that operations should be cancelled.</param>
         /// <param name="format">The Open API format</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream input, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
+        public static async Task<ReadResult> LoadAsync(Stream input, string format = null, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
-            Utils.CheckArgumentNull(format, nameof(format));
             settings ??= new OpenApiReaderSettings();
+            format ??= InspectStreamFormat(input);
 
             Stream preparedStream;
 
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(TextReader input, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
-            Utils.CheckArgumentNull(format, nameof(format));
+            format ??= InspectTextReaderFormat(input);
             var reader = OpenApiReaderRegistry.GetReader(format);
             return await reader.ReadAsync(input, settings, cancellationToken);
         }
@@ -175,6 +175,9 @@ namespace Microsoft.OpenApi.Reader
                                        string format = null,
                                        OpenApiReaderSettings settings = null)
         {
+            var format = input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
+            settings ??= new OpenApiReaderSettings();
+            using var reader = new StringReader(input);
             return await LoadAsync(reader, format, settings);
         }
 
@@ -252,8 +255,8 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>The OpenAPI element.</returns>
         public static T Load<T>(TextReader input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, string format, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            format ??= OpenApiConstants.Json;
-            return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, out diagnostic, settings);
+            format ??= InspectTextReaderFormat(input);
+            return await OpenApiReaderRegistry.GetReader(format).ReadFragmentAsync<T>(input, version, settings);
         }
 
 
@@ -295,6 +298,58 @@ namespace Microsoft.OpenApi.Reader
                 }
             }
             return null;
+        }
+
+        private static string InspectStreamFormat(Stream stream)
+        {
+            try
+            {
+                if (stream == null) throw new ArgumentNullException(nameof(stream));
+                if (!stream.CanSeek) throw new InvalidOperationException("Stream must support seeking."); // ensure stream supports seeking to reset position
+
+                long initialPosition = stream.Position;
+                int firstByte = stream.ReadByte();
+
+                // Check if stream is empty or contains only whitespace
+                if (firstByte == -1)
+                {
+                    stream.Position = initialPosition;
+                    throw new InvalidOperationException("Stream is empty or contains only whitespace.");
+                }
+
+                // Skip whitespace if present and read the next non-whitespace byte
+                if (char.IsWhiteSpace((char)firstByte))
+                {
+                    firstByte = stream.ReadByte();
+
+                    // If still whitespace or end of stream, throw an error
+                    if (firstByte == -1 || char.IsWhiteSpace((char)firstByte))
+                    {
+                        stream.Position = initialPosition;
+                        throw new InvalidOperationException("Stream is empty or contains only whitespace.");
+                    }
+                }
+
+                stream.Position = initialPosition; // Reset the stream position to the beginning
+
+                char firstChar = (char)firstByte;
+                return firstChar switch
+                {
+                    '{' or '[' => OpenApiConstants.Json,  // If the first character is '{' or '[', assume JSON
+                    _ => OpenApiConstants.Yaml             // Otherwise assume YAML
+                };
+            }
+            catch(Exception ex)
+            {
+                throw new OpenApiException(ex.Message);
+            }            
+        }
+
+        private static string InspectTextReaderFormat(TextReader reader)
+        {
+            // Read the first line or a few characters from the input
+            var input = reader.ReadLine().Trim();
+            return input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
 
         private static async Task<Stream> GetStreamAsync(string url)
