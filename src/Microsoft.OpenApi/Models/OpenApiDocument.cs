@@ -540,10 +540,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="url"> The path to the OpenAPI file.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null)
+        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
-            return await OpenApiModelFactory.LoadAsync(url, settings);
+            return await OpenApiModelFactory.LoadAsync(url, settings, cancellationToken);
         }
 
         /// <summary>

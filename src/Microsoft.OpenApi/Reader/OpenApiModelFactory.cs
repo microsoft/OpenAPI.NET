@@ -31,11 +31,12 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="url">The path to the OpenAPI file</param>
         /// <param name="settings"> The OpenApi reader settings.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
+        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             var format = await GetFormatAsync(url);
-            var stream = await GetStreamAsync(url);
+            var stream = await GetStreamAsync(url, cancellationToken);
             return await LoadAsync(stream, format, settings);
         }
 
@@ -132,13 +133,17 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="url">The path to the OpenAPI file</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static async Task<ReadFragmentResult> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static async Task<ReadFragmentResult> LoadAsync<T>(string url,
+                                                                  OpenApiSpecVersion version,
+                                                                  OpenApiReaderSettings settings = null,
+                                                                  CancellationToken cancellationToken = default) where T : IOpenApiElement
         {
             var format = await GetFormatAsync(url);
             settings ??= new OpenApiReaderSettings();
-            var stream = await  GetStreamAsync(url);
+            var stream = await GetStreamAsync(url, cancellationToken);
             return await LoadAsync<T>(stream, version, format, settings);
         }
 
@@ -278,7 +283,7 @@ namespace Microsoft.OpenApi.Reader
             return input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
 
-        private static async Task<Stream> GetStreamAsync(string url)
+        private static async Task<Stream> GetStreamAsync(string url, CancellationToken cancellationToken = default)
         {
             Stream stream;
             if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
