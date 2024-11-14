@@ -11,11 +11,11 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
 {
-    public class OpenApiStreamReaderTests
+    public class OpenApiDocumentLoadTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
 
-        public OpenApiStreamReaderTests()
+        public OpenApiDocumentLoadTests()
         {
             OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
         }
