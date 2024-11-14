@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             var format = await GetFormatAsync(url);
-            var stream = await GetStreamAsync(url, cancellationToken);
+            var stream = await GetStreamAsync(url);
             return await LoadAsync(stream, format, settings);
         }
 
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Reader
         {
             var format = await GetFormatAsync(url);
             settings ??= new OpenApiReaderSettings();
-            var stream = await GetStreamAsync(url, cancellationToken);
+            var stream = await GetStreamAsync(url);
             return await LoadAsync<T>(stream, version, format, settings);
         }
 
@@ -308,7 +308,7 @@ namespace Microsoft.OpenApi.Reader
             return input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
 
-        private static async Task<Stream> GetStreamAsync(string url, CancellationToken cancellationToken = default)
+        private static async Task<Stream> GetStreamAsync(string url)
         {
             Stream stream;
             if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
