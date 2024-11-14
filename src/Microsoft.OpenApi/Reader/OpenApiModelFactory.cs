@@ -51,22 +51,10 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<ReadResult> LoadAsync(Stream input, string format = null, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             settings ??= new OpenApiReaderSettings();
-            format ??= InspectStreamFormat(input);
 
-            Stream preparedStream;
-
-            // Avoid buffering for JSON documents
-            if (input is MemoryStream || format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
-            {
-                preparedStream = input;
-            }
-            else
-            {
-                // Buffer stream for non-JSON formats (e.g., YAML) since they require synchronous reading
-                preparedStream = new MemoryStream();
-                await input.CopyToAsync(preparedStream, 81920, cancellationToken);
-                preparedStream.Position = 0;
-            }
+            // Prepare the stream based on seekability and format
+            var (preparedStream, detectedFormat) = await PrepareStreamForReadingAsync(input, format, cancellationToken);
+            format ??= detectedFormat;
 
             // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
             using var reader = new StreamReader(preparedStream, default, true, -1, settings.LeaveStreamOpen);
@@ -231,49 +219,86 @@ namespace Microsoft.OpenApi.Reader
             return null;
         }
 
+        private static async Task<(Stream preparedStream, string format)> PrepareStreamForReadingAsync(Stream input, string format, CancellationToken token = default)
+        {
+            Stream preparedStream = input;
+
+            if (!input.CanSeek)
+            {
+                // Use a temporary buffer to read a small portion for format detection
+                using var bufferStream = new MemoryStream();
+                await input.CopyToAsync(bufferStream, 1024, token);
+                bufferStream.Position = 0;
+
+                // Inspect the format from the buffered portion
+                format ??= InspectStreamFormat(bufferStream);
+
+                // If format is JSON, no need to buffer further — use the original stream.
+                if (format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
+                {
+                    preparedStream = input;
+                }
+                else
+                {
+                    // YAML or other non-JSON format; copy remaining input to a new stream.
+                    preparedStream = new MemoryStream();
+                    bufferStream.Position = 0;
+                    await bufferStream.CopyToAsync(preparedStream, 81920, token); // Copy buffered portion
+                    await input.CopyToAsync(preparedStream, 81920, token); // Copy remaining data
+                    preparedStream.Position = 0;
+                }
+            }
+            else
+            {
+                format ??= InspectStreamFormat(input);
+
+                if (!format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Buffer stream for non-JSON formats (e.g., YAML) since they require synchronous reading
+                    preparedStream = new MemoryStream();
+                    await input.CopyToAsync(preparedStream, 81920, token);
+                    preparedStream.Position = 0;
+                }
+            }
+
+            return(preparedStream, format);
+        }
+
         private static string InspectStreamFormat(Stream stream)
         {
-            try
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+
+            long initialPosition = stream.Position;
+            int firstByte = stream.ReadByte();
+
+            // Check if stream is empty or contains only whitespace
+            if (firstByte == -1)
             {
-                if (stream == null) throw new ArgumentNullException(nameof(stream));
-                if (!stream.CanSeek) throw new InvalidOperationException("Stream must support seeking."); // ensure stream supports seeking to reset position
+                stream.Position = initialPosition;
+                throw new InvalidOperationException("Stream is empty or contains only whitespace.");
+            }
 
-                long initialPosition = stream.Position;
-                int firstByte = stream.ReadByte();
+            // Skip whitespace if present and read the next non-whitespace byte
+            if (char.IsWhiteSpace((char)firstByte))
+            {
+                firstByte = stream.ReadByte();
 
-                // Check if stream is empty or contains only whitespace
-                if (firstByte == -1)
+                // If still whitespace or end of stream, throw an error
+                if (firstByte == -1 || char.IsWhiteSpace((char)firstByte))
                 {
                     stream.Position = initialPosition;
                     throw new InvalidOperationException("Stream is empty or contains only whitespace.");
                 }
-
-                // Skip whitespace if present and read the next non-whitespace byte
-                if (char.IsWhiteSpace((char)firstByte))
-                {
-                    firstByte = stream.ReadByte();
-
-                    // If still whitespace or end of stream, throw an error
-                    if (firstByte == -1 || char.IsWhiteSpace((char)firstByte))
-                    {
-                        stream.Position = initialPosition;
-                        throw new InvalidOperationException("Stream is empty or contains only whitespace.");
-                    }
-                }
-
-                stream.Position = initialPosition; // Reset the stream position to the beginning
-
-                char firstChar = (char)firstByte;
-                return firstChar switch
-                {
-                    '{' or '[' => OpenApiConstants.Json,  // If the first character is '{' or '[', assume JSON
-                    _ => OpenApiConstants.Yaml             // Otherwise assume YAML
-                };
             }
-            catch(Exception ex)
+
+            stream.Position = initialPosition; // Reset the stream position to the beginning
+
+            char firstChar = (char)firstByte;
+            return firstChar switch
             {
-                throw new OpenApiException(ex.Message);
-            }            
+                '{' or '[' => OpenApiConstants.Json,  // If the first character is '{' or '[', assume JSON
+                _ => OpenApiConstants.Yaml             // Otherwise assume YAML
+            };
         }
 
         private static string InspectTextReaderFormat(TextReader reader)
