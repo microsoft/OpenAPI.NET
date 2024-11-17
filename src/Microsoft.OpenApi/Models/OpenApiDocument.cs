@@ -21,7 +21,7 @@ using Microsoft.OpenApi.Writers;
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
+    /// Describes an OpenAPI object (OpenAPI document). See: https://spec.openapis.org
     /// </summary>
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
     {
