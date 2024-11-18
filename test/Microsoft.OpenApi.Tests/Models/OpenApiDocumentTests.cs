@@ -992,7 +992,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             ["my-extension"] = new OpenApiAny(4)
                                         }
-                                    },                                        
+                                    },
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         ["my-extension"] = new OpenApiAny(4),
@@ -2070,6 +2070,60 @@ components:
             var doc = OpenApiDocument.Load("Models/Samples/docWithDollarId.yaml").OpenApiDocument;
 
             var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void SerializeDocumentTagsWithMultipleExtensionsWorks()
+        {
+            var expected = @"{
+  ""openapi"": ""3.0.4"",
+  ""info"": {
+    ""title"": ""Test"",
+    ""version"": ""1.0.0""
+  },
+  ""paths"": { },
+  ""tags"": [
+    {
+      ""name"": ""tag1"",
+      ""x-tag1"": ""tag1""
+    },
+    {
+      ""name"": ""tag2"",
+      ""x-tag2"": ""tag2""
+    }
+  ]
+}";
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "Test",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths(),
+                Tags = new List<OpenApiTag>
+                {
+                    new OpenApiTag
+                    {
+                        Name = "tag1",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag1"] = new OpenApiAny("tag1")
+                        }
+                    },
+                    new OpenApiTag
+                    {
+                        Name = "tag2",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag2"] = new OpenApiAny("tag2")
+                        }
+                    }
+                }
+            };
+
+            var actual = doc.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
             actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
         }
     }
