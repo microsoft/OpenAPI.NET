@@ -220,9 +220,9 @@ namespace Microsoft.OpenApi.Interfaces
     {
         System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.TextReader input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.Text.Json.Nodes.JsonNode jsonNode, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadFragmentResult<T>> ReadFragmentAsync<T>(System.IO.TextReader input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+        Microsoft.OpenApi.Reader.ReadFragmentResult<T> ReadFragment<T>(System.Text.Json.Nodes.JsonNode input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
-        System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadFragmentResult<T>> ReadFragmentAsync<T>(System.Text.Json.Nodes.JsonNode input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+        System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadFragmentResult<T>> ReadFragmentAsync<T>(System.IO.TextReader input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken token = default)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
     }
     public interface IOpenApiReferenceable : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
@@ -1310,14 +1310,14 @@ namespace Microsoft.OpenApi.Reader
         public OpenApiJsonReader() { }
         public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.TextReader input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default) { }
         public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.Text.Json.Nodes.JsonNode jsonNode, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings, System.Threading.CancellationToken cancellationToken = default) { }
-        public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadFragmentResult<T>> ReadFragmentAsync<T>(System.IO.TextReader input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+        public Microsoft.OpenApi.Reader.ReadFragmentResult<T> ReadFragment<T>(System.Text.Json.Nodes.JsonNode input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
-        public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadFragmentResult<T>> ReadFragmentAsync<T>(System.Text.Json.Nodes.JsonNode input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
+        public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadFragmentResult<T>> ReadFragmentAsync<T>(System.IO.TextReader input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken token = default)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
     }
     public static class OpenApiModelFactory
     {
-        public static System.Threading.Tasks.Task<string> GetFormatAsync(string url) { }
+        public static System.Threading.Tasks.Task<string> GetFormatAsync(string url, System.Threading.CancellationToken token = default) { }
         public static System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> LoadAsync(string url, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default) { }
         public static System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> LoadAsync(System.IO.Stream input, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default) { }
         public static System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> LoadAsync(System.IO.TextReader input, string format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null, System.Threading.CancellationToken cancellationToken = default) { }
