@@ -158,7 +158,7 @@ namespace Microsoft.OpenApi.Reader
             try
             {
                 // Parse the OpenAPI element asynchronously
-                element = await Task.Run(() => context.ParseFragment<T>(input, version));
+                element = context.ParseFragment<T>(input, version);
             }
             catch (OpenApiException ex)
             {
