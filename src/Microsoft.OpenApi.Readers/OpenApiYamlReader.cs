@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers
         /// <inheritdoc/>
         public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input,
                                                                       OpenApiSpecVersion version,
-                                                                      OpenApiReaderSettings settings = null) where T : IOpenApiElement
+                                                                      OpenApiReaderSettings settings = null,
                                                                       CancellationToken token = default) where T : IOpenApiElement
         {
             JsonNode jsonNode;
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers
             // Parse the YAML
             try
             {
-                jsonNode = LoadJsonNodesFromYamlDocument(input);
+                jsonNode = await Task.Run(() => LoadJsonNodesFromYamlDocument(input));
             }
             catch (JsonException ex)
             {
