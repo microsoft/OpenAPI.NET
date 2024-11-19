@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<ReadResult> ParseAsync(string input,
                                                         OpenApiReaderSettings settings = null)
         {
-            var format = input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
+            var format = InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
             using var reader = new StringReader(input);
             return await LoadAsync(reader, format, settings);
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Reader
                                                                       OpenApiSpecVersion version,
                                                                       OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            var format = input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
+            var format = InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
             using var reader = new StringReader(input);
             return await LoadAsync<T>(reader, version, format, settings);
@@ -305,6 +305,11 @@ namespace Microsoft.OpenApi.Reader
         {
             // Read the first line or a few characters from the input
             var input = reader.ReadLine().Trim();
+            return InspectInputFormat(input);
+        }
+
+        private static string InspectInputFormat(string input)
+        {
             return input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
 
