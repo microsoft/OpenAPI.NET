@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Load OpenAPI document
-                var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi).ConfigureAwait(false);
+                var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi, cancellationToken).ConfigureAwait(false);
                 var document = await GetOpenApiAsync(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
@@ -586,7 +586,7 @@ namespace Microsoft.OpenApi.Hidi
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi).ConfigureAwait(false);
+                var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi, cancellationToken).ConfigureAwait(false);
                 var document = await GetOpenApiAsync(options, format, logger, null, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Creating diagram"))
@@ -748,7 +748,7 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             // Load OpenAPI document
-            var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi).ConfigureAwait(false);
+            var format = await OpenApiModelFactory.GetFormatAsync(options.OpenApi, cancellationToken).ConfigureAwait(false);
             var document = await GetOpenApiAsync(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();   

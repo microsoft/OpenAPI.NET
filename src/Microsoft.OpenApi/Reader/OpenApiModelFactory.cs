@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
-            var format = await GetFormatAsync(url);
+            var format = await GetFormatAsync(url, cancellationToken);
             var stream = await GetStreamAsync(url);
             return await LoadAsync(stream, format, settings);
         }
@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Reader
                                                                      OpenApiReaderSettings settings = null,
                                                                      CancellationToken cancellationToken = default) where T : IOpenApiElement
         {
-            var format = await GetFormatAsync(url);
+            var format = await GetFormatAsync(url, cancellationToken);
             settings ??= new OpenApiReaderSettings();
             var stream = await GetStreamAsync(url);
             return await LoadAsync<T>(stream, version, format, settings);
@@ -172,11 +172,15 @@ namespace Microsoft.OpenApi.Reader
             return await OpenApiReaderRegistry.GetReader(format).ReadFragmentAsync<T>(input, version, settings);
         }
 
-        private static async Task<string> GetContentTypeAsync(string url)
+        private static async Task<string> GetContentTypeAsync(string url, CancellationToken token = default)
         {
             if (!string.IsNullOrEmpty(url))
             {
+#if NETSTANDARD2_0
                 var response = await _httpClient.GetAsync(url);
+#else
+                var response = await _httpClient.GetAsync(url, token);
+#endif
                 var mediaType = response.Content.Headers.ContentType.MediaType;
                 var contentType = mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
                 return contentType;
@@ -189,8 +193,9 @@ namespace Microsoft.OpenApi.Reader
         /// Infers the OpenAPI format from the input URL.
         /// </summary>
         /// <param name="url">The input URL.</param>
+        /// <param name="token"></param>
         /// <returns>The OpenAPI format.</returns>
-        public static async Task<string> GetFormatAsync(string url)
+        public static async Task<string> GetFormatAsync(string url, CancellationToken token = default)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -207,7 +212,7 @@ namespace Microsoft.OpenApi.Reader
                     }
                     else
                     {
-                        var contentType = await GetContentTypeAsync(url);
+                        var contentType = await GetContentTypeAsync(url, token);
                         return contentType.Split('/').LastOrDefault();
                     }
                 }

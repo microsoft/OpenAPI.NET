@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON text in the TextReader into JsonNodes
             try
             {
-                jsonNode = await LoadJsonNodesAsync(input);
+                jsonNode = await LoadJsonNodesAsync(input, cancellationToken);
             }
             catch (JsonException ex)
             {
@@ -123,14 +123,15 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input,
                                                                       OpenApiSpecVersion version,
-                                                                      OpenApiReaderSettings settings = null) where T: IOpenApiElement
+                                                                      OpenApiReaderSettings settings = null,
+                                                                      CancellationToken token = default) where T: IOpenApiElement
         {
             JsonNode jsonNode;
 
             // Parse the JSON
             try
             {
-                jsonNode = await LoadJsonNodesAsync(input);
+                jsonNode = await LoadJsonNodesAsync(input, token);
             }
             catch (JsonException ex)
             {
@@ -182,9 +183,13 @@ namespace Microsoft.OpenApi.Reader
             };
         }
 
-        private async Task<JsonNode> LoadJsonNodesAsync(TextReader input)
+        private async Task<JsonNode> LoadJsonNodesAsync(TextReader input, CancellationToken token = default)
         {
+#if NETSTANDARD2_0
             var content = await input.ReadToEndAsync();
+#else
+    var content = await input.ReadToEndAsync(token);
+#endif            
             return JsonNode.Parse(content);
         }
 

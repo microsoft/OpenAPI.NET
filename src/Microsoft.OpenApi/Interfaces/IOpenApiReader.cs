@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
@@ -38,8 +38,9 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
+        /// <param name="token"></param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
-        Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T: IOpenApiElement;
+        Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement;
 
         /// <summary>
         /// Reads the JsonNode input and parses the fragment of an OpenAPI description into an Open API Element.

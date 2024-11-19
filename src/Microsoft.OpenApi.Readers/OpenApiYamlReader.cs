@@ -48,6 +48,7 @@ namespace Microsoft.OpenApi.Readers
         public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input,
                                                                       OpenApiSpecVersion version,
                                                                       OpenApiReaderSettings settings = null) where T : IOpenApiElement
+                                                                      CancellationToken token = default) where T : IOpenApiElement
         {
             JsonNode jsonNode;
 
