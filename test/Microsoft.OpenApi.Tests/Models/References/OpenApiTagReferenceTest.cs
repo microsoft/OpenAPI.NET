@@ -15,7 +15,7 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models.References
 {
     [Collection("DefaultSettings")]
-    public class OpenApiTagReferenceTest
+    public class OpenApiTagReferenceTest : IAsyncLifetime
     {
         private const string OpenApi = @"openapi: 3.0.3
 info:
@@ -58,12 +58,16 @@ tags:
     description: Operations about users.
 ";
 
-        readonly OpenApiTagReference _openApiTagReference;
+        OpenApiTagReference _openApiTagReference;
 
         public OpenApiTagReferenceTest()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            var result = OpenApiDocument.ParseAsync(OpenApi).GetAwaiter().GetResult();
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());            
+        }
+
+        public async Task InitializeAsync()
+        {
+            var result = (await OpenApiDocument.ParseAsync(OpenApi));
             _openApiTagReference = new("user", result.OpenApiDocument)
             {
                 Description = "Users operations"
@@ -110,6 +114,10 @@ tags:
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -15,7 +15,7 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models.References
 {
     [Collection("DefaultSettings")]
-    public class OpenApiSecuritySchemeReferenceTests
+    public class OpenApiSecuritySchemeReferenceTests :  IAsyncLifetime
     {
         private const string OpenApi = @"
 openapi: 3.0.3
@@ -39,12 +39,16 @@ components:
       in: header
 ";
 
-        readonly OpenApiSecuritySchemeReference _openApiSecuritySchemeReference;
+        OpenApiSecuritySchemeReference _openApiSecuritySchemeReference;
 
         public OpenApiSecuritySchemeReferenceTests()
         {
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            var result = OpenApiDocument.ParseAsync(OpenApi).GetAwaiter().GetResult();
+        }
+
+        public async Task InitializeAsync()
+        {
+            var result = (await OpenApiDocument.ParseAsync(OpenApi));
             _openApiSecuritySchemeReference = new("mySecurityScheme", result.OpenApiDocument);
         }
 
@@ -88,6 +92,10 @@ components:
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

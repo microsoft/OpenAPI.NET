@@ -10,14 +10,13 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.Services;
 using VerifyXunit;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models.References
 {
     [Collection("DefaultSettings")]
-    public class OpenApiPathItemReferenceTests
+    public class OpenApiPathItemReferenceTests : IAsyncLifetime
     {
         private const string OpenApi = @"
 openapi: 3.1.1
@@ -72,16 +71,20 @@ components:
             description: User deleted successfully
 ";
 
-        private readonly OpenApiPathItemReference _localPathItemReference;
-        private readonly OpenApiPathItemReference _externalPathItemReference;
-        private readonly OpenApiDocument _openApiDoc;
-        private readonly OpenApiDocument _openApiDoc_2;
+        private OpenApiPathItemReference _localPathItemReference;
+        private OpenApiPathItemReference _externalPathItemReference;
+        private OpenApiDocument _openApiDoc;
+        private OpenApiDocument _openApiDoc_2;
 
         public OpenApiPathItemReferenceTests()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            _openApiDoc = OpenApiDocument.ParseAsync(OpenApi).GetAwaiter().GetResult().OpenApiDocument;
-            _openApiDoc_2 = OpenApiDocument.ParseAsync(OpenApi_2).GetAwaiter().GetResult().OpenApiDocument;
+            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());            
+        }
+
+        public async Task InitializeAsync()
+        {
+            _openApiDoc = (await OpenApiDocument.ParseAsync(OpenApi)).OpenApiDocument;
+            _openApiDoc_2 = (await OpenApiDocument.ParseAsync(OpenApi_2)).OpenApiDocument;
             _openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", _openApiDoc_2.BaseUri);
             _openApiDoc.Workspace.RegisterComponents(_openApiDoc_2);
             _openApiDoc_2.Workspace.RegisterComponents(_openApiDoc_2);
@@ -134,6 +137,11 @@ components:
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }
