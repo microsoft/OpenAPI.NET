@@ -90,6 +90,8 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override JsonSchemaType? Type { get => Target.Type; set => Target.Type = value; }
         /// <inheritdoc/>
+        public override string Const { get => Target.Const; set => Target.Const = value; }
+        /// <inheritdoc/>
         public override string Format { get => Target.Format; set => Target.Format = value; }
         /// <inheritdoc/>
         public override string Description
