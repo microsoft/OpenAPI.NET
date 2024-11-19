@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers
                 return default;
             }
 
-            return await ReadFragmentAsync<T>(jsonNode, version, settings);
+            return ReadFragment<T>(jsonNode, version, settings);
         }
 
         /// <summary>
@@ -86,9 +86,9 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
-        public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public ReadFragmentResult<T> ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            return await OpenApiReaderRegistry.DefaultReader.ReadFragmentAsync<T>(input, version, settings);
+            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, settings);
         }
     }
 }
