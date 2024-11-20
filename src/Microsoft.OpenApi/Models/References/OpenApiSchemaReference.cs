@@ -17,6 +17,9 @@ namespace Microsoft.OpenApi.Models.References
         internal OpenApiSchema _target;
         private readonly OpenApiReference _reference;
         private string _description;
+        private JsonNode _default;
+        private JsonNode _example;
+        private IList<JsonNode> _examples;
 
         private OpenApiSchema Target
         {
@@ -116,7 +119,11 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override decimal? MultipleOf { get => Target.MultipleOf; set => Target.MultipleOf = value; }
         /// <inheritdoc/>
-        public override JsonNode Default { get => Target.Default; set => Target.Default = value; }
+        public override JsonNode Default 
+        { 
+            get => _default ??= Target.Default; 
+            set => _default = value; 
+        }
         /// <inheritdoc/>
         public override bool ReadOnly { get => Target.ReadOnly; set => Target.ReadOnly = value; }
         /// <inheritdoc/>
@@ -154,9 +161,17 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override OpenApiDiscriminator Discriminator { get => Target.Discriminator; set => Target.Discriminator = value; }
         /// <inheritdoc/>
-        public override JsonNode Example { get => Target.Example; set => Target.Example = value; }
+        public override JsonNode Example 
+        { 
+            get => _example ??= Target.Example; 
+            set => _example = value; 
+        }
         /// <inheritdoc/>
-        public override IList<JsonNode> Examples { get => Target.Examples; set => Target.Examples = value; }
+        public override IList<JsonNode> Examples 
+        { 
+            get => _examples ??= Target.Examples; 
+            set => Target.Examples = value; 
+        }
         /// <inheritdoc/>
         public override IList<JsonNode> Enum { get => Target.Enum; set => Target.Enum = value; }
         /// <inheritdoc/>
