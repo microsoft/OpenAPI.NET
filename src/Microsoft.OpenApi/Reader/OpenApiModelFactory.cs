@@ -315,7 +315,7 @@ namespace Microsoft.OpenApi.Reader
 
         private static string InspectInputFormat(string input)
         {
-            return input.StartsWith("{") || input.StartsWith("[") ? OpenApiConstants.Json : OpenApiConstants.Yaml;
+            return input.StartsWith("{", StringComparison.OrdinalIgnoreCase) || input.StartsWith("[", StringComparison.OrdinalIgnoreCase) ? OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
 
         private static async Task<Stream> GetStreamAsync(string url)
