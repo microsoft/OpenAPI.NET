@@ -310,8 +310,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Errors =
                     {
-                        new OpenApiError("#/", "Invalid host"),
-                        new OpenApiError("", "Paths is a REQUIRED field at #/")
+                        new OpenApiError("#/", "Invalid host")
                     },
                     SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
                 });
