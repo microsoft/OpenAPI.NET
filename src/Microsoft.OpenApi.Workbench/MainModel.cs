@@ -257,8 +257,7 @@ namespace Microsoft.OpenApi.Workbench
                     }
                 }
 
-                var format = OpenApiModelFactory.GetFormat(_inputFile);
-                var readResult = await OpenApiDocument.LoadAsync(stream, format);
+                var readResult = await OpenApiDocument.LoadAsync(stream, Format.GetDisplayName());
                 var document = readResult.OpenApiDocument;
                 var context = readResult.OpenApiDiagnostic;
 
