@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public void CopiesOverAllReferencedComponentsToTheSubsetDocumentCorrectly()
+        public async Task CopiesOverAllReferencedComponentsToTheSubsetDocumentCorrectly()
         {
             // Arrange
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "docWithReusableHeadersAndExamples.yaml");
@@ -232,10 +232,10 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Act
             using var stream = File.OpenRead(filePath);
-            var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
+            var res = await OpenApiDocument.LoadAsync(stream);
             
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
-            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(res.OpenApiDocument, predicate);
 
             var response = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get]?.Responses?["200"];
             var responseHeader = response?.Headers["x-custom-header"];
@@ -244,7 +244,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var targetExamples = subsetOpenApiDocument.Components?.Examples;
 
             // Assert
-            Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
+            Assert.Same(res.OpenApiDocument.Servers, subsetOpenApiDocument.Servers);
             Assert.False(responseHeader?.UnresolvedReference);
             Assert.False(mediaTypeExample?.UnresolvedReference);
             Assert.NotNull(targetHeaders);

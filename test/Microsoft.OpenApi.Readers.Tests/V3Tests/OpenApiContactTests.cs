@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -11,7 +12,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiContactTests
     {
         [Fact]
-        public void ParseStringContactFragmentShouldSucceed()
+        public async Task ParseStringContactFragmentShouldSucceed()
         {
             var input =
                 """
@@ -23,12 +24,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 """;
 
             // Act
-            var contact = OpenApiModelFactory.Parse<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic, OpenApiConstants.Json);
+            var contact = await OpenApiModelFactory.ParseAsync<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            contact.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            contact.Should().BeEquivalentTo(
+            contact.Element.Should().BeEquivalentTo(
                 new OpenApiContact
                 {
                     Email = "support@swagger.io",

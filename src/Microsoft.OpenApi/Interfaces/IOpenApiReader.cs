@@ -29,28 +29,26 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
-        /// <param name="format">The OpenAPI format.</param>
         /// <returns></returns>
-        Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null, CancellationToken cancellationToken = default);
+        Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Reads the TextReader input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
-        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
+        /// <param name="token"></param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
-        T ReadFragment<T>(TextReader input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
+        Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement;
 
         /// <summary>
         /// Reads the JsonNode input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
-        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
-        T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
+        ReadFragmentResult<T> ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T: IOpenApiElement;
     }
 }

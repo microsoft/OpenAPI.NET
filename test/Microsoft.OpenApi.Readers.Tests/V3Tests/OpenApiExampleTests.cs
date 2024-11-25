@@ -3,8 +3,8 @@
 
 using System.IO;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -22,9 +22,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseAdvancedExampleShouldSucceed()
+        public async Task ParseAdvancedExampleShouldSucceed()
         {
-            var example = OpenApiModelFactory.Load<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var result = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0);
             var expected = new OpenApiExample
             {
                 Value = new JsonObject
@@ -62,12 +62,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 }
             };
 
-            var actualRoot = example.Value["versions"][0]["status"].Root;
+            var actualRoot = result.Element.Value["versions"][0]["status"].Root;
             var expectedRoot = expected.Value["versions"][0]["status"].Root;
 
-            diagnostic.Errors.Should().BeEmpty();
+            result.OpenApiDiagnostic.Errors.Should().BeEmpty();
 
-            example.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences()
+            result.Element.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences()
             .Excluding(e => e.Value["versions"][0]["status"].Root)
             .Excluding(e => e.Value["versions"][0]["id"].Root)
             .Excluding(e => e.Value["versions"][0]["links"][0]["href"].Root)
@@ -79,9 +79,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseExampleForcedStringSucceed()
+        public async Task ParseExampleForcedStringSucceed()
         {
-            var result= OpenApiDocument.Load(Path.Combine(SampleFolderPath, "explicitString.yaml"));
+            var result= await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "explicitString.yaml"));
             result.OpenApiDiagnostic.Errors.Should().BeEmpty();
         }
     }

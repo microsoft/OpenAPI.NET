@@ -9,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -17,7 +16,7 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models.References
 {
     [Collection("DefaultSettings")]
-    public class OpenApiCallbackReferenceTests
+    public class OpenApiCallbackReferenceTests : IAsyncLifetime
     {
         // OpenApi doc with external $ref
         private const string OpenApi = @"
@@ -128,18 +127,27 @@ components:
             '200':
               description: ok";
 
-        private readonly OpenApiCallbackReference _externalCallbackReference;
-        private readonly OpenApiCallbackReference _localCallbackReference;
+        private OpenApiCallbackReference _externalCallbackReference;
+        private OpenApiCallbackReference _localCallbackReference;
 
         public OpenApiCallbackReferenceTests()
         {
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            OpenApiDocument openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).OpenApiDocument;
-            OpenApiDocument openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).OpenApiDocument;
+        }
+
+        public async Task InitializeAsync()
+        {
+            OpenApiDocument openApiDoc = (await OpenApiDocument.ParseAsync(OpenApi)).OpenApiDocument;
+            OpenApiDocument openApiDoc_2 = (await OpenApiDocument.ParseAsync(OpenApi_2)).OpenApiDocument;
             openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", openApiDoc_2.BaseUri);
             openApiDoc.Workspace.RegisterComponents(openApiDoc_2);
             _externalCallbackReference = new("callbackEvent", openApiDoc, "https://myserver.com/beta");
             _localCallbackReference = new("callbackEvent", openApiDoc_2);
+        }
+
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
         }
 
         [Fact]

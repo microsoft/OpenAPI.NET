@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             await wr.FlushAsync();
             stream.Position = 0;
 
-            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, settings: settings);
+            var result = await OpenApiDocument.LoadAsync(stream, settings: settings);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
         }

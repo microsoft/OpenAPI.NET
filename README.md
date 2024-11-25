@@ -84,7 +84,7 @@ var httpClient = new HttpClient
 var stream = await httpClient.GetStreamAsync("master/examples/v3.0/petstore.yaml");
 
 // Read V3 as YAML
-var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic);
+var openApiDocument = OpenApiDocument.LoadAsync(stream).OpenApiDocument;
 
 // Write V2 as JSON
 var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);

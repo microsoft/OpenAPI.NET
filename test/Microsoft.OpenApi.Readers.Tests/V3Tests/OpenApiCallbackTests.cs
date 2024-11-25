@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
@@ -21,15 +22,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseBasicCallbackShouldSucceed()
+        public async Task ParseBasicCallbackShouldSucceed()
         {
             // Act
-            var callback = OpenApiModelFactory.Load<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var callback = await OpenApiModelFactory.LoadAsync<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            callback.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            callback.Should().BeEquivalentTo(
+            callback.Element.Should().BeEquivalentTo(
                 new OpenApiCallback
                 {
                     PathItems =
@@ -64,12 +65,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseCallbackWithReferenceShouldSucceed()
+        public async Task ParseCallbackWithReferenceShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml"));
 
             // Act
-            var result = OpenApiModelFactory.Load(stream, OpenApiConstants.Yaml);
+            var result = await OpenApiModelFactory.LoadAsync(stream);
 
             // Assert
             var path = result.OpenApiDocument.Paths.First().Value;
@@ -122,10 +123,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseMultipleCallbacksWithReferenceShouldSucceed()
+        public async Task ParseMultipleCallbacksWithReferenceShouldSucceed()
         {
             // Act
-            var result = OpenApiModelFactory.Load(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
+            var result = await OpenApiModelFactory.LoadAsync(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
 
             // Assert
             var path = result.OpenApiDocument.Paths.First().Value;

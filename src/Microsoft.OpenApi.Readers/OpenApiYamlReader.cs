@@ -10,7 +10,6 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
 using SharpYaml.Serialization;
 using System.Linq;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -46,26 +45,26 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(TextReader input,
-                                 OpenApiSpecVersion version,
-                                 out OpenApiDiagnostic diagnostic,
-                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public async Task<ReadFragmentResult<T>> ReadFragmentAsync<T>(TextReader input,
+                                                                      OpenApiSpecVersion version,
+                                                                      OpenApiReaderSettings settings = null,
+                                                                      CancellationToken token = default) where T : IOpenApiElement
         {
             JsonNode jsonNode;
 
             // Parse the YAML
             try
             {
-                jsonNode = LoadJsonNodesFromYamlDocument(input);
+                jsonNode = await Task.Run(() => LoadJsonNodesFromYamlDocument(input));
             }
             catch (JsonException ex)
             {
-                diagnostic = new();
+                var diagnostic = new OpenApiDiagnostic();
                 diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
                 return default;
             }
 
-            return ReadFragment<T>(jsonNode, version, out diagnostic);
+            return ReadFragment<T>(jsonNode, version, settings);
         }
 
         /// <summary>
@@ -82,15 +81,15 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>        
-        public async Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null, CancellationToken cancellationToken = default)
+        public async Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
-            return await OpenApiReaderRegistry.DefaultReader.ReadAsync(jsonNode, settings, OpenApiConstants.Yaml, cancellationToken);
+            return await OpenApiReaderRegistry.DefaultReader.ReadAsync(jsonNode, settings, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public ReadFragmentResult<T> ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic);
+            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, settings);
         }
     }
 }

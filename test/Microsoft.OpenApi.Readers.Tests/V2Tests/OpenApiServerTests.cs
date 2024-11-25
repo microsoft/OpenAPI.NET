@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void NoServer()
+        public async Task NoServer()
         {
             var input =
                 """
@@ -25,13 +26,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 paths: {}
                 """;
 
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = await OpenApiDocument.ParseAsync(input);
 
             Assert.Empty(result.OpenApiDocument.Servers);
         }
 
         [Fact]
-        public void JustSchemeNoDefault()
+        public async Task JustSchemeNoDefault()
         {
             var input =
                 """
@@ -43,13 +44,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = await OpenApiDocument.ParseAsync(input);
 
             Assert.Empty(result.OpenApiDocument.Servers);
         }
 
         [Fact]
-        public void JustHostNoDefault()
+        public async Task JustHostNoDefault()
         {
             var input =
                 """
@@ -60,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: www.foo.com
                 paths: {}
                 """;
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = await OpenApiDocument.ParseAsync(input);
 
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
@@ -68,7 +69,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void NoBasePath()
+        public async Task NoBasePath()
         {
             var input =
                 """
@@ -86,14 +87,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://www.foo.com/spec.yaml")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("http://www.foo.com", server.Url);
         }
 
         [Fact]
-        public void JustBasePathNoDefault()
+        public async Task JustBasePathNoDefault()
         {
             var input =
                 """
@@ -104,7 +105,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 basePath: /baz
                 paths: {}
                 """;
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = await OpenApiDocument.ParseAsync(input);
 
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
@@ -112,7 +113,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void JustSchemeWithCustomHost()
+        public async Task JustSchemeWithCustomHost()
         {
             var input =
                 """
@@ -129,7 +130,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://bing.com/foo")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
 
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
@@ -137,7 +138,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void JustSchemeWithCustomHostWithEmptyPath()
+        public async Task JustSchemeWithCustomHostWithEmptyPath()
         {
             var input =
                 """
@@ -154,7 +155,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://bing.com")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
 
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
@@ -162,7 +163,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void JustBasePathWithCustomHost()
+        public async Task JustBasePathWithCustomHost()
         {
             var input =
                 """
@@ -178,7 +179,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://bing.com")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
 
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
@@ -186,7 +187,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void JustHostWithCustomHost()
+        public async Task JustHostWithCustomHost()
         {
             var input =
                 """
@@ -202,7 +203,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://bing.com")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
 
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
@@ -210,7 +211,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void JustHostWithCustomHostWithApi()
+        public async Task JustHostWithCustomHostWithApi()
         {
             var input =
                 """
@@ -227,14 +228,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://dev.bing.com/api/description.yaml")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
             Assert.Equal("https://prod.bing.com", server.Url);
         }
 
         [Fact]
-        public void MultipleServers()
+        public async Task MultipleServers()
         {
             var input =
                 """
@@ -253,7 +254,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://dev.bing.com/api")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
             var server = result.OpenApiDocument.Servers.First();
             Assert.Equal(2, result.OpenApiDocument.Servers.Count);
             Assert.Equal("http://dev.bing.com/api", server.Url);
@@ -261,7 +262,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void LocalHostWithCustomHost()
+        public async Task LocalHostWithCustomHost()
         {
             var input =
                 """
@@ -278,7 +279,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://bing.com")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
 
             var server = result.OpenApiDocument.Servers.First();
             Assert.Single(result.OpenApiDocument.Servers);
@@ -286,7 +287,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void InvalidHostShouldYieldError()
+        public async Task InvalidHostShouldYieldError()
         {
             var input =
                 """
@@ -303,7 +304,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 BaseUrl = new("https://bing.com")
             };
 
-            var result = OpenApiDocument.Parse(input, "yaml", settings);
+            var result = await OpenApiDocument.ParseAsync(input, settings);
             result.OpenApiDocument.Servers.Count.Should().Be(0);
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic

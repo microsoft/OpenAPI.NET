@@ -22,7 +22,6 @@ namespace Microsoft.OpenApi.Reader.Services
 
         internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference,
                                                          OpenApiDocument document,
-                                                         string format = null,
                                                          OpenApiDiagnostic diagnostic = null,
                                                          CancellationToken cancellationToken = default)
         {
@@ -46,7 +45,7 @@ namespace Microsoft.OpenApi.Reader.Services
                 if (!_workspace.Contains(item.ExternalResource))
                 {
                     var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
-                    var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken);
+                    var result = await OpenApiDocument.LoadAsync(input, _readerSettings, cancellationToken);
                     // Merge diagnostics
                     if (result.OpenApiDiagnostic != null)
                     {
@@ -54,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.Services
                     }
                     if (result.OpenApiDocument != null)
                     {
-                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, format, diagnostic, cancellationToken);
+                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, diagnostic, cancellationToken);
                         diagnostic = loadDiagnostic;
                     }
                 }

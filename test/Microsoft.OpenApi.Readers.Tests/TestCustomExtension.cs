@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Tests
     public class TestCustomExtension
     {
         [Fact]
-        public void ParseCustomExtension()
+        public async Task ParseCustomExtension()
         {
             var description =
                 """
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
             var diag = new OpenApiDiagnostic();
-            var actual = OpenApiDocument.Parse(description, "yaml", settings: settings);
+            var actual = await OpenApiDocument.ParseAsync(description, settings: settings);
 
             var fooExtension = actual.OpenApiDocument.Info.Extensions["x-foo"] as FooExtension;
 
