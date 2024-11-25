@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_0;
 
-        private HttpClient _httpClient = new();
+        private static readonly HttpClient _httpClient = new();
 
         public string Input
         {
@@ -331,7 +331,7 @@ namespace Microsoft.OpenApi.Workbench
             return new StreamReader(outputStream).ReadToEnd();
         }
 
-        private MemoryStream CreateStream(string text)
+        private static MemoryStream CreateStream(string text)
         {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
