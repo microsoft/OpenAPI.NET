@@ -12,6 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader.Services;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -71,7 +73,16 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
-        {
+        {       
+            // If url is HTTP
+                // Get the response object.
+                // Select format based on MediaType
+                // Get the stream from the response object.
+                // Load the stream.
+            // Else
+                // Determine the format from the file extension.
+                // Load the file from the local file system.
+
             var format = GetFormat(url);
             var stream = await GetStreamAsync(url);  // Get response back and then get Content
             return await LoadAsync(stream, format, settings);
@@ -134,14 +145,45 @@ namespace Microsoft.OpenApi.Reader
             Utils.CheckArgumentNull(format, nameof(format));
             var reader = OpenApiReaderRegistry.GetReader(format);
             var readResult = await reader.ReadAsync(input, settings, cancellationToken);
+
+            if (settings.LoadExternalRefs)
+            {
+                var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.OpenApiDocument, cancellationToken, settings, format);
+                // Merge diagnostics of external reference
+                if (diagnosticExternalRefs != null)
+                {
+                    readResult.OpenApiDiagnostic.Errors.AddRange(diagnosticExternalRefs.Errors);
+                    readResult.OpenApiDiagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
+                }
+            }
+
+
             return readResult;
+        }
+
+        private static async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
+        {
+            // Create workspace for all documents to live in.
+            var baseUrl = settings.BaseUrl ?? new Uri(OpenApiConstants.BaseRegistryUri);
+            var openApiWorkSpace = new OpenApiWorkspace(baseUrl);
+
+            // Load this root document into the workspace
+            var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
+            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
+            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
         }
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings = null)
         {
             Utils.CheckArgumentNull(format, nameof(format));
+            if (settings.LoadExternalRefs)
+            {
+                throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
+            }
+
             var reader = OpenApiReaderRegistry.GetReader(format);
             var readResult = reader.Read(input, settings);
+
             return readResult;
         }
 

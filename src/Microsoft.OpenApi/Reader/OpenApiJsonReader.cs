@@ -214,16 +214,6 @@ namespace Microsoft.OpenApi.Reader
             return (T)element;
         }
 
-        private async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
-        {
-            // Create workspace for all documents to live in.
-            var baseUrl = settings.BaseUrl ?? new Uri(OpenApiConstants.BaseRegistryUri);
-            var openApiWorkSpace = new OpenApiWorkspace(baseUrl);
 
-            // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
-            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
-            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
-        }
     }
 }
