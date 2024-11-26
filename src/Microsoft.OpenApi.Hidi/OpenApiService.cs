@@ -30,9 +30,9 @@ using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.YamlReader;
 using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 
 namespace Microsoft.OpenApi.Hidi

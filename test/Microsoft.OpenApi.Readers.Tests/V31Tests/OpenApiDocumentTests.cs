@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,10 +9,9 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.Services;
 using Xunit;
-using System.Linq;
 using VerifyXunit;
+using Microsoft.OpenApi.YamlReader;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {

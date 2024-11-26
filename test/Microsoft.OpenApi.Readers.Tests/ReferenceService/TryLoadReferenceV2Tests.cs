@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.ReferenceService

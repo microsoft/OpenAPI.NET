@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -39,7 +40,6 @@ namespace Microsoft.OpenApi.Readers.Tests
             };
 
             OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-            var diag = new OpenApiDiagnostic();
             var actual = OpenApiDocument.Parse(description, "yaml", settings: settings);
 
             var fooExtension = actual.OpenApiDocument.Info.Extensions["x-foo"] as FooExtension;

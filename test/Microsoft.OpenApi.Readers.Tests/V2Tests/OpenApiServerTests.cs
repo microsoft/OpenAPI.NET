@@ -1,7 +1,8 @@
-﻿using System.Linq;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests

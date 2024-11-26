@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -16,7 +16,7 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
-using SharpYaml.Model;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.CommandLine;
@@ -12,8 +12,8 @@ using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests

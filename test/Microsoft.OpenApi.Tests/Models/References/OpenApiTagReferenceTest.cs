@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.YamlReader;
 using VerifyXunit;
 using Xunit;
 

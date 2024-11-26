@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.YamlReader;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {

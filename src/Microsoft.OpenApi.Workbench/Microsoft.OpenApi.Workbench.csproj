@@ -20,7 +20,7 @@
     <Resource Include="Themes\Metro\HowToApplyTheme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
+    <ProjectReference Include="..\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj" />
     <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
   </ItemGroup>
   <ItemGroup>

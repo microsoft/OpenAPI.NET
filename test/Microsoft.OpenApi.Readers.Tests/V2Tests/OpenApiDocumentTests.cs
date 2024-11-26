@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -329,8 +330,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void testContentType()
         {
             var contentType = "application/json; charset = utf-8";
-            var res = contentType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
-            var expected = res.Split('/').LastOrDefault();
+            var res = contentType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
             Assert.Equal("application/json", res);
         }
     }
