@@ -84,6 +84,11 @@ namespace Microsoft.OpenApi.Models
         public virtual JsonSchemaType? Type { get; set; }
 
         /// <summary>
+        /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+        /// </summary>
+        public virtual string Const { get; set; }
+
+        /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// While relying on JSON Schema's defined formats,
         /// the OAS offers a few additional predefined formats.
@@ -347,6 +352,7 @@ namespace Microsoft.OpenApi.Models
         {
             Title = schema?.Title ?? Title;
             Id = schema?.Id ?? Id;
+            Const = schema?.Const ?? Const;
             Schema = schema?.Schema ?? Schema;
             Comment = schema?.Comment ?? Comment;
             Vocabulary = schema?.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
@@ -563,6 +569,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
+            writer.WriteProperty(OpenApiConstants.Const, Const);
             writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
             writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV31(w));
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);

@@ -132,6 +132,10 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
             },
             {
+                "const",
+                (o, n, _) => o.Const = n.GetScalarValue()
+            },
+            {
                 "allOf",
                 (o, n, t) => o.AllOf = n.CreateList(LoadSchema, t)
             },

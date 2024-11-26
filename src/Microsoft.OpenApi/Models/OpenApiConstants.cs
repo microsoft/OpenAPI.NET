@@ -51,6 +51,11 @@ namespace Microsoft.OpenApi.Models
         public const string Title = "title";
 
         /// <summary>
+        /// Field: Const
+        /// </summary>
+        public const string Const = "const";
+
+        /// <summary>
         /// Field: Type
         /// </summary>
         public const string Type = "type";
