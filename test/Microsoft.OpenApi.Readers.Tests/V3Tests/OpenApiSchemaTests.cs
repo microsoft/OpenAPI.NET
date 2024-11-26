@@ -241,11 +241,7 @@ get:
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                 });
 
             var expectedComponents = new OpenApiComponents

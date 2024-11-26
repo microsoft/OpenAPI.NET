@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_0;
 
-        private HttpClient _httpClient = new();
+        private static readonly HttpClient _httpClient = new();
 
         public string Input
         {
@@ -166,31 +166,31 @@ namespace Microsoft.OpenApi.Workbench
         public bool IsYaml
         {
             get => Format == OpenApiFormat.Yaml;
-            set => Format = OpenApiFormat.Yaml;
+            set => Format = value ? OpenApiFormat.Yaml : Format;
         }
 
         public bool IsJson
         {
             get => Format == OpenApiFormat.Json;
-            set => Format = OpenApiFormat.Json;
+            set => Format = value ? OpenApiFormat.Json : Format;
         }
 
         public bool IsV2_0
         {
             get => Version == OpenApiSpecVersion.OpenApi2_0;
-            set => Version = OpenApiSpecVersion.OpenApi2_0;
+            set => Version = value ? OpenApiSpecVersion.OpenApi2_0 : Version;
         }
 
         public bool IsV3_0
         {
             get => Version == OpenApiSpecVersion.OpenApi3_0;
-            set => Version = OpenApiSpecVersion.OpenApi3_0;
+            set => Version = value ? OpenApiSpecVersion.OpenApi3_0 : Version;
         }
 
         public bool IsV3_1
         {
             get => Version == OpenApiSpecVersion.OpenApi3_1;
-            set => Version = OpenApiSpecVersion.OpenApi3_1;
+            set => Version = value ? OpenApiSpecVersion.OpenApi3_1 : Version;
         }
 
         /// <summary>
@@ -219,14 +219,8 @@ namespace Microsoft.OpenApi.Workbench
             {
                 if (!string.IsNullOrWhiteSpace(_inputFile))
                 {
-                    if (_inputFile.StartsWith("http"))
-                    {
-                        stream = await _httpClient.GetStreamAsync(_inputFile);
-                    }
-                    else
-                    {
-                        stream = new FileStream(_inputFile, FileMode.Open);
-                    }
+                    stream = _inputFile.StartsWith("http") ? await _httpClient.GetStreamAsync(_inputFile) 
+                        : new FileStream(_inputFile, FileMode.Open);
                 }
                 else
                 {
@@ -245,20 +239,13 @@ namespace Microsoft.OpenApi.Workbench
                     ReferenceResolution = ResolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 };
-                if (ResolveExternal)
+                if (ResolveExternal && !string.IsNullOrWhiteSpace(_inputFile))
                 {
-                    if (_inputFile.StartsWith("http"))
-                    {
-                        settings.BaseUrl = new(_inputFile);
-                    }
-                    else
-                    {
-                        settings.BaseUrl = new("file://" + Path.GetDirectoryName(_inputFile) + "/");
-                    }
+                    settings.BaseUrl = _inputFile.StartsWith("http") ? new(_inputFile) 
+                        : new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                 }
 
-                var format = OpenApiModelFactory.GetFormat(_inputFile);
-                var readResult = await OpenApiDocument.LoadAsync(stream, format);
+                var readResult = await OpenApiDocument.LoadAsync(stream, Format.GetDisplayName());
                 var document = readResult.OpenApiDocument;
                 var context = readResult.OpenApiDiagnostic;
 
@@ -306,7 +293,6 @@ namespace Microsoft.OpenApi.Workbench
                     stream.Close();
                     await stream.DisposeAsync();
                 }
-
             }
         }
 
@@ -332,7 +318,7 @@ namespace Microsoft.OpenApi.Workbench
             return new StreamReader(outputStream).ReadToEnd();
         }
 
-        private MemoryStream CreateStream(string text)
+        private static MemoryStream CreateStream(string text)
         {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);

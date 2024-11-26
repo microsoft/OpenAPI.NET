@@ -398,6 +398,7 @@ namespace Microsoft.OpenApi.Models
         public const string Comment = "$comment";
         public const string Components = "components";
         public const string ComponentsSegment = "/components/";
+        public const string Const = "const";
         public const string Consumes = "consumes";
         public const string Contact = "contact";
         public const string Content = "content";
@@ -882,6 +883,7 @@ namespace Microsoft.OpenApi.Models
         public virtual System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AllOf { get; set; }
         public virtual System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AnyOf { get; set; }
         public virtual string Comment { get; set; }
+        public virtual string Const { get; set; }
         public virtual System.Text.Json.Nodes.JsonNode Default { get; set; }
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> Definitions { get; set; }
         public virtual bool Deprecated { get; set; }
@@ -1219,6 +1221,7 @@ namespace Microsoft.OpenApi.Models.References
         public override System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AllOf { get; set; }
         public override System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AnyOf { get; set; }
         public override string Comment { get; set; }
+        public override string Const { get; set; }
         public override System.Text.Json.Nodes.JsonNode Default { get; set; }
         public override System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> Definitions { get; set; }
         public override bool Deprecated { get; set; }

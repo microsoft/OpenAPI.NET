@@ -101,11 +101,7 @@ paths: {}",
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                        {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                        }
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                 });
         }
 
@@ -115,16 +111,7 @@ paths: {}",
             var path = System.IO.Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
             var result = OpenApiDocument.Load(path);
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic()
-                {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                        new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
-                });
-
+            result.OpenApiDiagnostic.Errors.Should().BeEmpty();
             result.OpenApiDocument.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
@@ -170,7 +157,6 @@ paths: {}",
                 {
                     Errors =
                     {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/"),
                             new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
                     },
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
@@ -196,11 +182,7 @@ paths: {}",
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                 });
         }
 
@@ -1388,11 +1370,7 @@ components:
             result.OpenApiDiagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic 
                 { 
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                 });
 
             result.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.BaseUri));
@@ -1416,6 +1394,13 @@ components:
                                                             """, "yaml");
 
             result.OpenApiDiagnostic.Errors.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void ParseDocumentWithEmptyPathsSucceeds()
+        {
+            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"));
+            result.OpenApiDiagnostic.Errors.Should().BeEmpty();
         }
     }
 }

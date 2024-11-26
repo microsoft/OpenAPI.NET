@@ -31,7 +31,9 @@
         </PackageReference>
 
         <PackageReference Include="SharpYaml" Version="2.1.1" />
-        <PackageReference Include="System.Text.Json" Version="9.0.0" />
+        <PackageReference Include="System.Text.Json" Version="[8.0,)" />
+        <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-hh2w-p6rv-4g7w" />
+        <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-8g4q-xg66-9fp4" />
     </ItemGroup>
 
     <ItemGroup>

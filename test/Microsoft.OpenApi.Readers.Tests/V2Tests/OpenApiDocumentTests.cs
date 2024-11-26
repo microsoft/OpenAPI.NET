@@ -96,16 +96,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 .Excluding((IMemberInfo memberInfo) =>
                                         memberInfo.Path.EndsWith("Parent"))
                 .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Root")));
-
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic { 
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi2_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                        new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
-                });
+                                        memberInfo.Path.EndsWith("Root")));;
         }
 
         [Fact]
