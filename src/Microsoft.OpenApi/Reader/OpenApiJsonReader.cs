@@ -24,16 +24,15 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     public class OpenApiJsonReader : IOpenApiReader
     {
+
         /// <summary>
-        /// Reads the stream input and parses it into an Open API document.
+        /// Reads the memory stream input and parses it into an Open API document.
         /// </summary>
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
-        /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
-        public async Task<ReadResult> ReadAsync(TextReader input,
-                                                OpenApiReaderSettings settings = null,
-                                                CancellationToken cancellationToken = default)
+        public ReadResult Read(MemoryStream input,
+                                OpenApiReaderSettings settings = null)
         {
             JsonNode jsonNode;
             var diagnostic = new OpenApiDiagnostic();
@@ -42,7 +41,7 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON text in the TextReader into JsonNodes
             try
             {
-                jsonNode = LoadJsonNodes(input);
+                jsonNode = JsonNode.Parse(input);
             }
             catch (JsonException ex)
             {
@@ -54,7 +53,41 @@ namespace Microsoft.OpenApi.Reader
                 };
             }
 
-            return await ReadAsync(jsonNode, settings, cancellationToken: cancellationToken);            
+            return Read(jsonNode, settings);
+        }
+
+
+        /// <summary>
+        /// Reads the stream input asynchronously and parses it into an Open API document.
+        /// </summary>
+        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="settings">The Reader settings to be used during parsing.</param>
+        /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
+        /// <returns></returns>
+        public async Task<ReadResult> ReadAsync(Stream input,
+                                                OpenApiReaderSettings settings = null,
+                                                CancellationToken cancellationToken = default)
+        {
+            JsonNode jsonNode;
+            var diagnostic = new OpenApiDiagnostic();
+            settings ??= new OpenApiReaderSettings();
+
+            // Parse the JSON text in the TextReader into JsonNodes
+            try
+            {
+                jsonNode = await JsonNode.ParseAsync(input);;
+            }
+            catch (JsonException ex)
+            {
+                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
+                return new ReadResult
+                {
+                    OpenApiDocument = null,
+                    OpenApiDiagnostic = diagnostic
+                };
+            }
+
+            return Read(jsonNode, settings);
         }
 
         /// <summary>
@@ -63,12 +96,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <param name="format">The OpenAPI format.</param>
-        /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
-        public async Task<ReadResult> ReadAsync(JsonNode jsonNode,                                                
+        public ReadResult Read(JsonNode jsonNode,
                                                 OpenApiReaderSettings settings,
-                                                string format = null,
-                                                CancellationToken cancellationToken = default)
+                                                string format = null)
         {
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)
@@ -84,16 +115,16 @@ namespace Microsoft.OpenApi.Reader
                 // Parse the OpenAPI Document
                 document = context.Parse(jsonNode);
 
-                if (settings.LoadExternalRefs)
-                {
-                    var diagnosticExternalRefs = await LoadExternalRefsAsync(document, cancellationToken, settings, format);
-                    // Merge diagnostics of external reference
-                    if (diagnosticExternalRefs != null)
-                    {
-                        diagnostic.Errors.AddRange(diagnosticExternalRefs.Errors);
-                        diagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
-                    }
-                }
+                // if (settings.LoadExternalRefs)
+                // {
+                //     var diagnosticExternalRefs = await LoadExternalRefsAsync(document, cancellationToken, settings, format);
+                //     // Merge diagnostics of external reference
+                //     if (diagnosticExternalRefs != null)
+                //     {
+                //         diagnostic.Errors.AddRange(diagnosticExternalRefs.Errors);
+                //         diagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
+                //     }
+                // }
 
                 document.SetReferenceHostDocument();
             }
@@ -124,7 +155,7 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(TextReader input,
+        public T ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  out OpenApiDiagnostic diagnostic,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
@@ -134,7 +165,7 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON
             try
             {
-                jsonNode = LoadJsonNodes(input);
+                jsonNode = JsonNode.Parse(input);
             }
             catch (JsonException ex)
             {
@@ -181,12 +212,6 @@ namespace Microsoft.OpenApi.Reader
             }
 
             return (T)element;
-        }
-
-        private JsonNode LoadJsonNodes(TextReader input)
-        {
-            var nodes = JsonNode.Parse(input.ReadToEnd());
-            return nodes;
         }
 
         private async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, CancellationToken cancellationToken, OpenApiReaderSettings settings, string format = null)
