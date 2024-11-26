@@ -522,9 +522,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefById.yaml"), settings);
-            var doc2 = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "externalResource.yaml")).OpenApiDocument;
+            var doc2 = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalResource.yaml"))).OpenApiDocument;
 
-            var requestBodySchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Parameters.First().Schema;
+            var requestBodySchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Parameters[0].Schema;
             result.OpenApiDocument.Workspace.RegisterComponents(doc2);
 
             // Assert
@@ -535,10 +535,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWith31PropertiesWorks()
         {
             var path = Path.Combine(SampleFolderPath, "documentWith31Properties.yaml");
-            var doc = OpenApiDocument.Load(path).OpenApiDocument;
+            var doc = (await OpenApiDocument.LoadAsync(path)).OpenApiDocument;
             var outputStringWriter = new StringWriter();
             doc.SerializeAsV31(new OpenApiYamlWriter(outputStringWriter));
-            outputStringWriter.Flush();
+            await outputStringWriter.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
