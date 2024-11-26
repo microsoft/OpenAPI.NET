@@ -56,10 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
 
             Assert.NotNull(result);
             Assert.NotNull(result.OpenApiDocument.Workspace);
-            result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
-            {
-                new OpenApiError("", "[File: ./TodoReference.yaml] Paths is a REQUIRED field at #/")
-            });
+            result.OpenApiDiagnostic.Errors.Should().BeEmpty();
         }
     }
 

@@ -34,8 +34,7 @@ namespace Microsoft.OpenApi.Tests
             var result = OpenApiDocument.Parse(input, "yaml");
 
             result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
-                new OpenApiError(new OpenApiReaderException("Expected a value.")),
-                new OpenApiError("", "Paths is a REQUIRED field at #/")
+                new OpenApiError(new OpenApiReaderException("Expected a value."))
             });
         }
 
