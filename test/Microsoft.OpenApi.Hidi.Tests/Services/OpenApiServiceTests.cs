@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.CommandLine;
@@ -335,7 +335,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openApi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
             var args = new[] { "show", "-d", openApi, "-o", "sample.md" };
             var parseResult = rootCommand.Parse(args);
-            var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
+            var handler = rootCommand.Subcommands.First(c => c.Name == "show").Handler;
             var context = new InvocationContext(parseResult);
 
             await handler!.InvokeAsync(context);
@@ -351,7 +351,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var manifest = Path.Combine(".", "UtilityFiles", "exampleapimanifest.json");
             var args = new[] { "plugin", "-m", manifest, "--of", AppDomain.CurrentDomain.BaseDirectory };
             var parseResult = rootCommand.Parse(args);
-            var handler = rootCommand.Subcommands.Where(c => c.Name == "plugin").First().Handler;
+            var handler = rootCommand.Subcommands.First(c => c.Name == "plugin").Handler;
             var context = new InvocationContext(parseResult);
 
             await handler!.InvokeAsync(context);

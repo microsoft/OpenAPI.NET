@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
@@ -62,9 +62,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                 }
             };
-
-            var actualRoot = example.Value["versions"][0]["status"].Root;
-            var expectedRoot = expected.Value["versions"][0]["status"].Root;
 
             diagnostic.Errors.Should().BeEmpty();
 

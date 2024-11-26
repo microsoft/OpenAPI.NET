@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
@@ -149,13 +149,13 @@ components:
             Assert.NotEmpty(_externalCallbackReference.PathItems);
             Assert.Single(_externalCallbackReference.PathItems);
             Assert.Equal("{$request.body#/callbackUrl}", _externalCallbackReference.PathItems.First().Key.Expression);
-            Assert.Equal(OperationType.Post, _externalCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);;
+            Assert.Equal(OperationType.Post, _externalCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);
 
             // Local reference resolution works
             Assert.NotEmpty(_localCallbackReference.PathItems);
             Assert.Single(_localCallbackReference.PathItems);
             Assert.Equal("{$request.body#/callbackUrl}", _localCallbackReference.PathItems.First().Key.Expression);
-            Assert.Equal(OperationType.Post, _localCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key); ;
+            Assert.Equal(OperationType.Post, _localCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);
         }
 
         [Theory]

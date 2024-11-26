@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "primitiveSchema.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = yamlStream.Documents[0].RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
@@ -66,10 +66,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
   ""foo"": ""bar"",
   ""baz"": [ 1,2]
 }";
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -90,10 +89,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
   ""foo"",
   ""baz""
 ]";
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -116,10 +114,9 @@ get:
     '200':
       description: Ok
 ";
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic, "yaml");
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic, "yaml");
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -151,7 +148,7 @@ get:
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+                var yamlNode = yamlStream.Documents[0].RootNode;
 
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
@@ -183,7 +180,7 @@ get:
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = yamlStream.Documents[0].RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);

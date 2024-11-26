@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -396,7 +396,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var outputWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputWriter, new() { InlineLocalReferences = true });
             actual.OpenApiDocument.SerializeAsV31(writer);
-            var serialized = outputWriter.ToString();
         }
 
         [Fact]

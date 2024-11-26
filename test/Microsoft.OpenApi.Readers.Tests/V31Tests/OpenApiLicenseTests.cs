@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "licenseWithSpdxIdentifier.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = yamlStream.Documents[0].RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);

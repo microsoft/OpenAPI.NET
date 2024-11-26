@@ -3,11 +3,9 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
 using Moq;
-using SharpYaml.Tokens;
 using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests

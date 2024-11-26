@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicInfo.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = yamlStream.Documents[0].RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
