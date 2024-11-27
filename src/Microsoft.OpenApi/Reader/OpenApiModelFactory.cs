@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -65,6 +65,47 @@ namespace Microsoft.OpenApi.Reader
             return result;
         }
 
+        /// <summary>
+        /// Reads the stream input and ensures it is buffered before passing it to the Load method.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="version"></param>
+        /// <param name="format"></param>
+        /// <param name="diagnostic"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static T Load<T>(Stream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            if (input is MemoryStream memoryStream)
+            {
+                return Load<T>(memoryStream, version, format, out diagnostic, settings);
+            }
+            else
+            {
+                memoryStream = new MemoryStream();
+                input.CopyTo(memoryStream);
+                memoryStream.Position = 0;
+                return Load<T>(memoryStream, version, format, out diagnostic, settings);
+            }
+        }
+
+        /// <summary>
+        /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input">Stream containing OpenAPI description to parse.</param>
+        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
+        /// <param name="format"></param>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
+        /// <param name="settings">The OpenApiReader settings.</param>
+        /// <returns>Instance of newly created IOpenApiElement.</returns>
+        /// <returns>The OpenAPI element.</returns>
+        public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            format ??= OpenApiConstants.Json;
+            return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, out diagnostic, settings);
+        }
 
         /// <summary>
         /// Loads the input URL and parses it into an Open API document.
