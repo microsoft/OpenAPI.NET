@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="cancellationToken">Propagates notification that operations should be cancelled.</param>
         /// <param name="format">The Open API format</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream input, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
+        public static async Task<ReadResult> LoadAsync(Stream input, string format = null, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             Utils.CheckArgumentNull(format, nameof(format));
             settings ??= new OpenApiReaderSettings();
@@ -173,6 +173,27 @@ namespace Microsoft.OpenApi.Reader
             return InternalLoad(stream, format, settings);
         }
 
+        /// <summary>
+        /// Reads the input string and parses it into an Open API document.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="version"></param>
+        /// <param name="diagnostic">The diagnostic entity containing information from the reading process.</param>
+        /// <param name="format">The Open API format</param>
+        /// <param name="settings">The OpenApi reader settings.</param>
+        /// <returns>An OpenAPI document instance.</returns>
+        public static T Parse<T>(string input,
+                                 OpenApiSpecVersion version,
+                                 out OpenApiDiagnostic diagnostic,
+                                 string format = null,
+                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            format ??= OpenApiConstants.Json;
+            settings ??= new OpenApiReaderSettings();
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+            return Load<T>(stream, version, format, out diagnostic, settings);
+        }
+
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
             Utils.CheckArgumentNull(format, nameof(format));
@@ -189,7 +210,6 @@ namespace Microsoft.OpenApi.Reader
                     readResult.OpenApiDiagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
                 }
             }
-
 
             return readResult;
         }
@@ -220,168 +240,49 @@ namespace Microsoft.OpenApi.Reader
             return readResult;
         }
 
-
-        /// <summary>
-        /// Reads the input string and parses it into an Open API document.
-        /// </summary>
-        /// <param name="input">The input string.</param>
-        /// <param name="version"></param>
-        /// <param name="diagnostic">The diagnostic entity containing information from the reading process.</param>
-        /// <param name="format">The Open API format</param>
-        /// <param name="settings">The OpenApi reader settings.</param>
-        /// <returns>An OpenAPI document instance.</returns>
-        public static T Parse<T>(string input,
-                                 OpenApiSpecVersion version,
-                                 out OpenApiDiagnostic diagnostic,
-                                 string format = null,
-                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
-        {
-            format ??= OpenApiConstants.Json;
-            settings ??= new OpenApiReaderSettings();
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
-            return Load<T>(stream, version, format, out diagnostic,  settings);
-        }
-
-        /// <summary>
-        /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="url">The path to the OpenAPI file</param>
-        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
-        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
-        /// <param name="settings">The OpenApiReader settings.</param>
-        /// <returns>Instance of newly created IOpenApiElement.</returns>
-        /// <returns>The OpenAPI element.</returns>
-        public static T Load<T>(string url, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
-        {
-            var format = GetFormat(url);
-            settings ??= new OpenApiReaderSettings();
-
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-            var stream = GetStreamAsync(url).GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
-
-            return Load<T>(stream as MemoryStream, version, format, out diagnostic, settings);
-        }
-
-
-        /// <summary>
-        /// Reads the stream input and ensures it is buffered before passing it to the Load method.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="input"></param>
-        /// <param name="version"></param>
-        /// <param name="format"></param>
-        /// <param name="diagnostic"></param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        public static T Load<T>(Stream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
-        {
-            if (input is MemoryStream memoryStream)
-            {
-                return Load<T>(memoryStream, version, format, out diagnostic, settings);
-            } else {
-                memoryStream = new MemoryStream();
-                input.CopyTo(memoryStream);
-                memoryStream.Position = 0;
-                return Load<T>(memoryStream, version, format, out diagnostic, settings);
-            }
-        }
-
-
-        /// <summary>
-        /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="input">Stream containing OpenAPI description to parse.</param>
-        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
-        /// <param name="format"></param>
-        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
-        /// <param name="settings">The OpenApiReader settings.</param>
-        /// <returns>Instance of newly created IOpenApiElement.</returns>
-        /// <returns>The OpenAPI element.</returns>
-        public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
-        {
-            format ??= OpenApiConstants.Json;
-            return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, out diagnostic, settings);
-        }
-
-        private static string GetContentType(string url)
+        private static async Task<(Stream, string)> RetrieveStreamAndFormatAsync(string url)
         {
             if (!string.IsNullOrEmpty(url))
             {
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-                var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+                Stream stream;
+                string format;
 
-                var mediaType = response.Content.Headers.ContentType.MediaType;
-                return mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Infers the OpenAPI format from the input URL.
-        /// </summary>
-        /// <param name="url">The input URL.</param>
-        /// <returns>The OpenAPI format.</returns>
-        public static string GetFormat(string url)
-        {
-            if (!string.IsNullOrEmpty(url))
-            {
-                if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+                if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                    || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 {
-                    // URL examples ---> https://example.com/path/to/file.json, https://example.com/path/to/file.yaml
-                    var path = new Uri(url);
-                    var urlSuffix = path.Segments[path.Segments.Length - 1].Split('.').LastOrDefault();
-
-                    return !string.IsNullOrEmpty(urlSuffix) ? urlSuffix : GetContentType(url).Split('/').LastOrDefault();
+                    var response = await _httpClient.GetAsync(url);
+                    var mediaType = response.Content.Headers.ContentType.MediaType;
+                    var contentType = mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
+                    format = contentType.Split('/').LastOrDefault();
+                    stream = await response.Content.ReadAsStreamAsync();
+                    return (stream, format);
                 }
                 else
                 {
-                    return Path.GetExtension(url).Split('.').LastOrDefault();
-                }
-            }
-            return null;
-        }
+                    format = Path.GetExtension(url).Split('.').LastOrDefault();
 
-        private static async Task<Stream> GetStreamAsync(string url)
-        {
-            Stream stream;
-            if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    stream = await _httpClient.GetStreamAsync(new Uri(url));
-                }
-                catch (HttpRequestException ex)
-                {
-                    throw new InvalidOperationException($"Could not download the file at {url}", ex);
-                }
-            }
-            else
-            {
-                try
-                {
-                    var fileInput = new FileInfo(url);
-                    stream = fileInput.OpenRead();
-                }
-                catch (Exception ex) when (
-                    ex is
-                        FileNotFoundException or
-                        PathTooLongException or
-                        DirectoryNotFoundException or
-                        IOException or
-                        UnauthorizedAccessException or
-                        SecurityException or
-                        NotSupportedException)
-                {
-                    throw new InvalidOperationException($"Could not open the file at {url}", ex);
-                }
-            }
+                    try
+                    {
+                        var fileInput = new FileInfo(url);
+                        stream = fileInput.OpenRead();
+                    }
+                    catch (Exception ex) when (
+                        ex is
+                            FileNotFoundException or
+                            PathTooLongException or
+                            DirectoryNotFoundException or
+                            IOException or
+                            UnauthorizedAccessException or
+                            SecurityException or
+                            NotSupportedException)
+                    {
+                        throw new InvalidOperationException($"Could not open the file at {url}", ex);
+                    }
 
-            return stream;
+                    return (stream, format);
+                }
+            }
+            return (null, null);
         }
     }
 }
