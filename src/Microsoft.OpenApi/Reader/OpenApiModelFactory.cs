@@ -30,19 +30,6 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <summary>
-        /// Loads the input URL and parses it into an Open API document.
-        /// </summary>
-        /// <param name="url">The path to the OpenAPI file.</param>
-        /// <param name="settings"> The OpenApi reader settings.</param>
-        /// <returns>An OpenAPI document instance.</returns>
-        public static ReadResult Load(string url, OpenApiReaderSettings settings = null)
-        {
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-            return LoadAsync(url, settings).GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
-        }
-
-        /// <summary>
         /// Loads the input stream and parses it into an Open API document.
         /// </summary>
         /// <param name="stream"> The input stream.</param>
@@ -114,19 +101,24 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
-        {       
-            // If url is HTTP
-                // Get the response object.
-                // Select format based on MediaType
-                // Get the stream from the response object.
-                // Load the stream.
-            // Else
-                // Determine the format from the file extension.
-                // Load the file from the local file system.
+        {
+            var result = await RetrieveStreamAndFormatAsync(url);
+            return await LoadAsync(result.Item1, result.Item2, settings);
+        }
 
-            var format = GetFormat(url);
-            var stream = await GetStreamAsync(url);  // Get response back and then get Content
-            return await LoadAsync(stream, format, settings);
+        /// <summary>
+        /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="url">The path to the OpenAPI file</param>
+        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
+        /// <param name="settings">The OpenApiReader settings.</param>
+        /// <returns>Instance of newly created IOpenApiElement.</returns>
+        /// <returns>The OpenAPI element.</returns>
+        public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            var result = await RetrieveStreamAndFormatAsync(url);
+            return Load<T>(result.Item1 as MemoryStream, version, result.Item2, out var diagnostic, settings);
         }
 
         /// <summary>
