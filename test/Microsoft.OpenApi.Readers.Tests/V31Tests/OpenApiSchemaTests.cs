@@ -461,5 +461,48 @@ description: Schema for a person object
             schema.Vocabulary.Keys.Count.Should().Be(5);
             schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
         }
+
+        [Fact]
+        public void ParseSchemaWithConstWorks()
+        {
+            var expected = @"{
+  ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
+  ""required"": [
+    ""status""
+  ],
+  ""type"": ""object"",
+  ""properties"": {
+    ""status"": {
+      ""const"": ""active"",
+      ""type"": ""string""
+    },
+    ""user"": {
+      ""required"": [
+        ""role""
+      ],
+      ""type"": ""object"",
+      ""properties"": {
+        ""role"": {
+          ""const"": ""admin"",
+          ""type"": ""string""
+        }
+      }
+    }
+  }
+}";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithConst.json");
+
+            // Act
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, out _);
+            schema.Properties["status"].Const.Should().Be("active");
+            schema.Properties["user"].Properties["role"].Const.Should().Be("admin");
+
+            // serialization
+            var writer = new StringWriter();
+            schema.SerializeAsV31(new OpenApiJsonWriter(writer));
+            var schemaString = writer.ToString();
+            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+        }
     }
 }
