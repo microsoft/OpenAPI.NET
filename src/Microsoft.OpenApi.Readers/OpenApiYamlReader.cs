@@ -29,7 +29,9 @@ namespace Microsoft.OpenApi.Readers
             if (input is MemoryStream memoryStream)
             {
                 return Read(memoryStream, settings);
-            } else {
+            } 
+            else 
+            {
                 using var preparedStream = new MemoryStream();
                 await input.CopyToAsync(preparedStream, copyBufferSize, cancellationToken);
                 preparedStream.Position = 0;
@@ -39,14 +41,15 @@ namespace Microsoft.OpenApi.Readers
 
         /// <inheritdoc/>
         public ReadResult Read(MemoryStream input,
-                                OpenApiReaderSettings settings = null)
+                               OpenApiReaderSettings settings = null)
         {
             JsonNode jsonNode;
 
             // Parse the YAML text in the TextReader into a sequence of JsonNodes
             try
             {
-                jsonNode = LoadJsonNodesFromYamlDocument(new StreamReader(input));  // Should we leave the stream open?
+                using var stream = new StreamReader(input);
+                jsonNode = LoadJsonNodesFromYamlDocument(stream);
             }
             catch (JsonException ex)
             {
@@ -73,7 +76,8 @@ namespace Microsoft.OpenApi.Readers
             // Parse the YAML
             try
             {
-                jsonNode = LoadJsonNodesFromYamlDocument(new StreamReader(input));
+                using var stream = new StreamReader(input);
+                jsonNode = LoadJsonNodesFromYamlDocument(stream);
             }
             catch (JsonException ex)
             {
