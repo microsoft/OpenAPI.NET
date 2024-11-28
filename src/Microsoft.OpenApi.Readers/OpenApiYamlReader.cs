@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers
 
         /// <inheritdoc/>
         public async Task<ReadResult> ReadAsync(Stream input,
-                                                OpenApiReaderSettings settings = null,
+                                                OpenApiReaderSettings settings,
                                                 CancellationToken cancellationToken = default)
         {
             if (input is MemoryStream memoryStream)
@@ -41,14 +41,14 @@ namespace Microsoft.OpenApi.Readers
 
         /// <inheritdoc/>
         public ReadResult Read(MemoryStream input,
-                               OpenApiReaderSettings settings = null)
+                               OpenApiReaderSettings settings)
         {
             JsonNode jsonNode;
 
             // Parse the YAML text in the TextReader into a sequence of JsonNodes
             try
             {
-                using var stream = new StreamReader(input, default, true, -1, settings?.LeaveStreamOpen);
+                using var stream = new StreamReader(input, default, true, -1, settings.LeaveStreamOpen);
                 jsonNode = LoadJsonNodesFromYamlDocument(stream);
             }
             catch (JsonException ex)

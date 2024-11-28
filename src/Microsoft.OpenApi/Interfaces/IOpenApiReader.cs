@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates notification that an operation should be cancelled.</param>
         /// <returns></returns>
-        Task<ReadResult> ReadAsync(Stream input, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default);
+        Task<ReadResult> ReadAsync(Stream input, OpenApiReaderSettings settings, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Provides a synchronous method to read the input memory stream and parse it into an Open API document.
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="input"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        ReadResult Read(MemoryStream input, OpenApiReaderSettings settings = null);
+        ReadResult Read(MemoryStream input, OpenApiReaderSettings settings);
 
         /// <summary>
         /// Parses the JsonNode input into an Open API document.

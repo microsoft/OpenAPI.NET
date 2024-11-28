@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
         public async Task<ReadResult> ReadAsync(Stream input,
-                                                OpenApiReaderSettings settings = null,
+                                                OpenApiReaderSettings settings,
                                                 CancellationToken cancellationToken = default)
         {
             JsonNode jsonNode;
@@ -94,8 +94,8 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="format">The OpenAPI format.</param>
         /// <returns></returns>
         public ReadResult Read(JsonNode jsonNode,
-                                                OpenApiReaderSettings settings,
-                                                string format = null)
+                               OpenApiReaderSettings settings,
+                               string format = null)
         {
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)

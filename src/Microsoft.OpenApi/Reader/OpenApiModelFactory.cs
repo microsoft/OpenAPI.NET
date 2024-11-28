@@ -149,18 +149,14 @@ namespace Microsoft.OpenApi.Reader
                 preparedStream.Position = 0;
             }
 
-            try
+            // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
+            var result = await InternalLoadAsync(preparedStream, format, settings, cancellationToken);
+            if (!settings.LeaveStreamOpen)
             {
-                // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
-                return await InternalLoadAsync(preparedStream, format, settings, cancellationToken);
+                input.Dispose();
             }
-            finally
-            {
-                if (!settings.LeaveStreamOpen)
-                {
-                    input.Dispose();
-                }
-            }
+
+            return result;
         }
 
         /// <summary>
@@ -204,13 +200,13 @@ namespace Microsoft.OpenApi.Reader
             return Load<T>(stream, version, format, out diagnostic, settings);
         }
 
-        private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
+        private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
             Utils.CheckArgumentNull(format, nameof(format));
             var reader = OpenApiReaderRegistry.GetReader(format);
             var readResult = await reader.ReadAsync(input, settings, cancellationToken);
 
-            if (settings is not null && settings.LoadExternalRefs)
+            if (settings.LoadExternalRefs)
             {
                 var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.OpenApiDocument, cancellationToken, settings, format);
                 // Merge diagnostics of external reference
@@ -236,10 +232,10 @@ namespace Microsoft.OpenApi.Reader
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
         }
 
-        private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings = null)
+        private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
         {
             Utils.CheckArgumentNull(format, nameof(format));
-            if (settings is not null && settings.LoadExternalRefs)
+            if (settings.LoadExternalRefs)
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
             }
