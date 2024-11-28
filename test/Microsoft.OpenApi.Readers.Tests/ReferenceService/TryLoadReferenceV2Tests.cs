@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -22,10 +23,10 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         }
 
         [Fact]
-        public void LoadParameterReference()
+        public async Task LoadParameterReference()
         {
             // Arrange
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
             var reference = new OpenApiParameterReference("skipParam", result.OpenApiDocument);
 
             // Assert
@@ -47,9 +48,9 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         }
 
         [Fact]
-        public void LoadSecuritySchemeReference()
+        public async Task LoadSecuritySchemeReference()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
 
             var reference = new OpenApiSecuritySchemeReference("api_key_sample", result.OpenApiDocument);
 
@@ -65,9 +66,9 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         }
 
         [Fact]
-        public void LoadResponseReference()
+        public async Task LoadResponseReference()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
 
             var reference = new OpenApiResponseReference("NotFound", result.OpenApiDocument);
 
@@ -85,9 +86,9 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         }
 
         [Fact]
-        public void LoadResponseAndSchemaReference()
+        public async Task LoadResponseAndSchemaReference()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
             var reference = new OpenApiResponseReference("GeneralError", result.OpenApiDocument);
 
             // Assert

@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            // openApi;
+            // openApi
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.1");
 
             // jsonSchemaDialect
@@ -533,17 +533,6 @@ namespace Microsoft.OpenApi.Models
             }
 
             return Workspace?.ResolveReference<IOpenApiReferenceable>(uriLocation);
-        }
-
-        /// <summary>
-        /// Parses a local file path or Url into an Open API document.
-        /// </summary>
-        /// <param name="url"> The path to the OpenAPI file.</param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        public static ReadResult Load(string url, OpenApiReaderSettings? settings = null)
-        {
-            return OpenApiModelFactory.Load(url, settings);
         }
 
         /// <summary>
