@@ -11,11 +11,7 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Validations;
 using System.Linq;
-using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Reader.Services;
-using System.Collections.Generic;
-using System;
 
 namespace Microsoft.OpenApi.Reader
 {

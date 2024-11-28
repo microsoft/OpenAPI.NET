@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             var result = await RetrieveStreamAndFormatAsync(url);
-            return Load<T>(result.Item1 as MemoryStream, version, result.Item2, out var diagnostic, settings);
+            return Load<T>(result.Item1, version, result.Item2, out var diagnostic, settings);
         }
 
         /// <summary>
@@ -149,8 +149,18 @@ namespace Microsoft.OpenApi.Reader
                 preparedStream.Position = 0;
             }
 
-            // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
-            return await InternalLoadAsync(preparedStream, format, settings, cancellationToken);
+            try
+            {
+                // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
+                return await InternalLoadAsync(preparedStream, format, settings, cancellationToken);
+            }
+            finally
+            {
+                if (!settings.LeaveStreamOpen)
+                {
+                    input.Dispose();
+                }
+            }
         }
 
         /// <summary>

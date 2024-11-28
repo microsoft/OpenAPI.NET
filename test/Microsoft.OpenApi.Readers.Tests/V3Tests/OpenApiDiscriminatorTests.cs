@@ -28,6 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             // Copy stream to MemoryStream
             using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
 
             // Act
             var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out var diagnostic);
