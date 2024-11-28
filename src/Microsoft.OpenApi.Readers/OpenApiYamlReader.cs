@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers
             // Parse the YAML text in the TextReader into a sequence of JsonNodes
             try
             {
-                using var stream = new StreamReader(input);
+                using var stream = new StreamReader(input, default, true, -1, settings.LeaveStreamOpen);
                 jsonNode = LoadJsonNodesFromYamlDocument(stream);
             }
             catch (JsonException ex)
