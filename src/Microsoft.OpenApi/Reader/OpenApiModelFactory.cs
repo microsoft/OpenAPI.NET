@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Buffers.Text;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
