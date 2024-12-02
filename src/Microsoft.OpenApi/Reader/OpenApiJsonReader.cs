@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON text in the TextReader into JsonNodes
             try
             {
-                jsonNode = await JsonNode.ParseAsync(input);;
+                jsonNode = await JsonNode.ParseAsync(input);
             }
             catch (JsonException ex)
             {
@@ -110,18 +110,6 @@ namespace Microsoft.OpenApi.Reader
             {
                 // Parse the OpenAPI Document
                 document = context.Parse(jsonNode);
-
-                // if (settings.LoadExternalRefs)
-                // {
-                //     var diagnosticExternalRefs = await LoadExternalRefsAsync(document, cancellationToken, settings, format);
-                //     // Merge diagnostics of external reference
-                //     if (diagnosticExternalRefs != null)
-                //     {
-                //         diagnostic.Errors.AddRange(diagnosticExternalRefs.Errors);
-                //         diagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
-                //     }
-                // }
-
                 document.SetReferenceHostDocument();
             }
             catch (OpenApiException ex)
