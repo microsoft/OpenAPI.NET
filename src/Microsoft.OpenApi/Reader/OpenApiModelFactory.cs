@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Reader
                                        string format = null,
                                        OpenApiReaderSettings settings = null)
         {
-            format ??= OpenApiConstants.Json;
+            format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
 
             // Copy string into MemoryStream
@@ -193,7 +193,7 @@ namespace Microsoft.OpenApi.Reader
                                  string format = null,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            format ??= OpenApiConstants.Json;
+            format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
             return Load<T>(stream, version, format, out diagnostic, settings);
@@ -201,7 +201,6 @@ namespace Microsoft.OpenApi.Reader
 
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
-            Utils.CheckArgumentNull(format, nameof(format));
             var reader = OpenApiReaderRegistry.GetReader(format);
             var readResult = await reader.ReadAsync(input, settings, cancellationToken);
 
@@ -288,6 +287,11 @@ namespace Microsoft.OpenApi.Reader
                 }
             }
             return (null, null);
+        }
+
+        private static string InspectInputFormat(string input)
+        {
+            return input.StartsWith("{", StringComparison.OrdinalIgnoreCase) || input.StartsWith("[", StringComparison.OrdinalIgnoreCase) ? OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
     }
 }

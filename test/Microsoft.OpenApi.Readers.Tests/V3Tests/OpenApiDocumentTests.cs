@@ -107,6 +107,21 @@ paths: {}",
         }
 
         [Fact]
+        public void ParseInlineStringWithoutProvidingFormatSucceeds()
+        {
+            var stringOpenApiDoc = """
+openapi: 3.1.0
+info:
+  title: Sample API
+  version: 1.0.0
+paths: {}
+""";
+
+            var readResult = OpenApiDocument.Parse(stringOpenApiDoc);
+            readResult.OpenApiDocument.Info.Title.Should().Be("Sample API");
+        }
+
+        [Fact]
         public async Task ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
             var path = System.IO.Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
