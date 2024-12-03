@@ -20,7 +20,6 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     public class OpenApiJsonReader : IOpenApiReader
     {
-
         /// <summary>
         /// Reads the memory stream input and parses it into an Open API document.
         /// </summary>
