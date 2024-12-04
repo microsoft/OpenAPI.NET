@@ -64,47 +64,22 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.1
         /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer) 
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
-        /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
-        {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
-        /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
-        {
-            Utils.CheckArgumentNull(writer);
-            writer.WriteValue(Name);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1,
                 (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
+        /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
-        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV3(IOpenApiWriter writer) 
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0,
                 (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
@@ -128,15 +103,6 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
         /// </summary>
         public virtual void SerializeAsV2(IOpenApiWriter writer)
-        {
-            Utils.CheckArgumentNull(writer);
-            writer.WriteValue(Name);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             writer.WriteStartObject();
 
