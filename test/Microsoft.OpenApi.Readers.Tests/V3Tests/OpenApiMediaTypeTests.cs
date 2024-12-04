@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.YamlReader;
 using Microsoft.OpenApi.Tests;
 using Xunit;
 

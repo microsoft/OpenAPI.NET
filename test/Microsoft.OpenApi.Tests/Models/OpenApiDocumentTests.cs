@@ -13,12 +13,11 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.YamlReader;
 using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -1582,8 +1581,6 @@ definitions:
                     }
                 }
             };
-
-            var reference = document.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Reference;
 
             // Act
             var actual = document.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
