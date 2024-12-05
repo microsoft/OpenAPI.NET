@@ -19,17 +19,34 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiYamlReader : IOpenApiReader
     {
+        private const int copyBufferSize = 4096;
+
         /// <inheritdoc/>
-        public async Task<ReadResult> ReadAsync(TextReader input,
+        public async Task<ReadResult> ReadAsync(Stream input,
                                                 OpenApiReaderSettings settings = null,
                                                 CancellationToken cancellationToken = default)
+        {
+            if (input is MemoryStream memoryStream)
+            {
+                return Read(memoryStream, settings);
+            } else {
+                using var preparedStream = new MemoryStream();
+                await input.CopyToAsync(preparedStream, copyBufferSize, cancellationToken);
+                preparedStream.Position = 0;
+                return Read(preparedStream, settings);
+            }
+        }
+
+        /// <inheritdoc/>
+        public ReadResult Read(MemoryStream input,
+                                OpenApiReaderSettings settings = null)
         {
             JsonNode jsonNode;
 
             // Parse the YAML text in the TextReader into a sequence of JsonNodes
             try
             {
-                jsonNode = LoadJsonNodesFromYamlDocument(input);
+                jsonNode = LoadJsonNodesFromYamlDocument(new StreamReader(input));  // Should we leave the stream open?
             }
             catch (JsonException ex)
             {
@@ -42,11 +59,11 @@ namespace Microsoft.OpenApi.Readers
                 };
             }
 
-            return await ReadAsync(jsonNode, settings, cancellationToken: cancellationToken);
+            return Read(jsonNode, settings);
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(TextReader input,
+        public T ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  out OpenApiDiagnostic diagnostic,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
@@ -56,7 +73,7 @@ namespace Microsoft.OpenApi.Readers
             // Parse the YAML
             try
             {
-                jsonNode = LoadJsonNodesFromYamlDocument(input);
+                jsonNode = LoadJsonNodesFromYamlDocument(new StreamReader(input));
             }
             catch (JsonException ex)
             {
@@ -81,10 +98,10 @@ namespace Microsoft.OpenApi.Readers
             return yamlDocument.ToJsonNode();
         }
 
-        /// <inheritdoc/>        
-        public async Task<ReadResult> ReadAsync(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null)
         {
-            return await OpenApiReaderRegistry.DefaultReader.ReadAsync(jsonNode, settings, OpenApiConstants.Yaml, cancellationToken);
+            return OpenApiReaderRegistry.DefaultReader.Read(jsonNode, settings, OpenApiConstants.Yaml);
         }
 
         /// <inheritdoc/>
