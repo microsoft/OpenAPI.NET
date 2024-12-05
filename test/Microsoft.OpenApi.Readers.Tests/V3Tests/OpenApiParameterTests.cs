@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml"));
 
             // Act
-            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, out _, "yaml");
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml"));
 
             // Act
-            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, out _, "yaml");
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -200,7 +200,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml"));
 
             // Act
-            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml"));
 
             // Act
-            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
+            var parameter = OpenApiModelFactory.Load<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             parameter.Should().BeEquivalentTo(

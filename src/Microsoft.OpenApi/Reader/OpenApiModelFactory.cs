@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -36,11 +36,13 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="format">The OpenAPI format.</param>
         /// <returns>An OpenAPI document instance.</returns>
         public static ReadResult Load(MemoryStream stream,
-                                      string format,
+                                      string format = null,
                                       OpenApiReaderSettings settings = null)
         {
             settings ??= new OpenApiReaderSettings();
 
+            // Get the format of the stream if not provided
+            format ??= InspectStreamFormat(stream);
             var result = InternalLoad(stream, format, settings);
 
             if (!settings.LeaveStreamOpen)
@@ -61,7 +63,11 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="diagnostic"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static T Load<T>(Stream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static T Load<T>(Stream input,
+                                OpenApiSpecVersion version,
+                                out OpenApiDiagnostic diagnostic,
+                                string format = null,
+                                OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             if (input is MemoryStream memoryStream)
             {
@@ -89,7 +95,7 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>The OpenAPI element.</returns>
         public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            format ??= OpenApiConstants.Json;
+            format ??= InspectStreamFormat(input);
             return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, out diagnostic, settings);
         }
 
@@ -117,7 +123,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             var result = await RetrieveStreamAndFormatAsync(url);
-            return Load<T>(result.Item1, version, result.Item2, out var diagnostic, settings);
+            return Load<T>(result.Item1, version, out var diagnostic, result.Item2, settings);
         }
 
         /// <summary>
@@ -130,22 +136,17 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(Stream input, string format = null, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
-            Utils.CheckArgumentNull(format, nameof(format));
             settings ??= new OpenApiReaderSettings();
-
             Stream preparedStream;
-
-            // Avoid buffering for JSON documents
-            if (input is MemoryStream || format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
+            if (format is null)
             {
-                preparedStream = input;
+                var readResult = await PrepareStreamForReadingAsync(input, format, cancellationToken);
+                preparedStream = readResult.Item1;
+                format = readResult.Item2;
             }
             else
             {
-                // Buffer stream for non-JSON formats (e.g., YAML) since they require synchronous reading
-                preparedStream = new MemoryStream();
-                await input.CopyToAsync(preparedStream, 81920, cancellationToken);
-                preparedStream.Position = 0;
+                preparedStream = input;
             }
 
             // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
@@ -232,7 +233,6 @@ namespace Microsoft.OpenApi.Reader
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
         {
-            Utils.CheckArgumentNull(format, nameof(format));
             if (settings.LoadExternalRefs)
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
@@ -292,6 +292,74 @@ namespace Microsoft.OpenApi.Reader
         private static string InspectInputFormat(string input)
         {
             return input.StartsWith("{", StringComparison.OrdinalIgnoreCase) || input.StartsWith("[", StringComparison.OrdinalIgnoreCase) ? OpenApiConstants.Json : OpenApiConstants.Yaml;
+        }
+
+        private static string InspectStreamFormat(Stream stream)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));            
+            
+            long initialPosition = stream.Position;
+            int firstByte = stream.ReadByte();
+
+            // Skip whitespace if present and read the next non-whitespace byte
+            if (char.IsWhiteSpace((char)firstByte))
+            {
+                firstByte = stream.ReadByte();
+            }
+
+            stream.Position = initialPosition; // Reset the stream position to the beginning
+
+            char firstChar = (char)firstByte;
+            return firstChar switch
+            {
+                '{' or '[' => OpenApiConstants.Json,  // If the first character is '{' or '[', assume JSON
+                _ => OpenApiConstants.Yaml             // Otherwise assume YAML
+            };
+        }
+
+        private static async Task<(Stream, string)> PrepareStreamForReadingAsync(Stream input, string format, CancellationToken token = default)
+        {
+            Stream preparedStream = input;
+
+            if (!input.CanSeek)
+            {
+                // Use a temporary buffer to read a small portion for format detection
+                using var bufferStream = new MemoryStream();
+                await input.CopyToAsync(bufferStream, 1024, token);
+                bufferStream.Position = 0;
+
+                // Inspect the format from the buffered portion
+                format ??= InspectStreamFormat(bufferStream);
+
+                // If format is JSON, no need to buffer further — use the original stream.
+                if (format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
+                {
+                    preparedStream = input;
+                }
+                else
+                {
+                    // YAML or other non-JSON format; copy remaining input to a new stream.
+                    preparedStream = new MemoryStream();
+                    bufferStream.Position = 0;
+                    await bufferStream.CopyToAsync(preparedStream, 81920, token); // Copy buffered portion
+                    await input.CopyToAsync(preparedStream, 81920, token); // Copy remaining data
+                    preparedStream.Position = 0;
+                }
+            }
+            else
+            {
+                format ??= InspectStreamFormat(input);
+
+                if (!format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Buffer stream for non-JSON formats (e.g., YAML) since they require synchronous reading
+                    preparedStream = new MemoryStream();
+                    await input.CopyToAsync(preparedStream, 81920, token);
+                    preparedStream.Position = 0;
+                }
+            }
+
+            return (preparedStream, format);
         }
     }
 }

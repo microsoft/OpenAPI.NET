@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalInfo.yaml"));
 
             // Act
-            var openApiInfo = OpenApiModelFactory.Load<OpenApiInfo>(stream, OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
+            var openApiInfo = OpenApiModelFactory.Load<OpenApiInfo>(stream, OpenApiSpecVersion.OpenApi3_0, out _, "yaml");
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(

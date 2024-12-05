@@ -156,7 +156,12 @@ paths: {}
         public async Task ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
             using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
-            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
+            // Copy stream to MemoryStream
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+
+            var result = OpenApiDocument.Load(memoryStream);
 
             result.OpenApiDocument.Should().BeEquivalentTo(
                 new OpenApiDocument

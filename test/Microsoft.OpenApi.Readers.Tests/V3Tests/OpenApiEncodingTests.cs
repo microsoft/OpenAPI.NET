@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml"));
 
             // Act
-            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out _);
+            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, out _);
 
             // Assert
             encoding.Should().BeEquivalentTo(

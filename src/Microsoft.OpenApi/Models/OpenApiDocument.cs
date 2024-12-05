@@ -543,7 +543,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
         public static ReadResult Load(MemoryStream stream,
-                                      string format,
+                                      string? format = null,
                                       OpenApiReaderSettings? settings = null)
         {
             return OpenApiModelFactory.Load(stream, format, settings);
@@ -568,7 +568,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates information about operation cancelling.</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream stream, string format, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
+        public static async Task<ReadResult> LoadAsync(Stream stream, string? format = null, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
             return await OpenApiModelFactory.LoadAsync(stream, format, settings, cancellationToken);
         }
