@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public void CopiesOverAllReferencedComponentsToTheSubsetDocumentCorrectly()
+        public async Task CopiesOverAllReferencedComponentsToTheSubsetDocumentCorrectly()
         {
             // Arrange
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "docWithReusableHeadersAndExamples.yaml");
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Act
             using var stream = File.OpenRead(filePath);
-            var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
+            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml")).OpenApiDocument;
             
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);

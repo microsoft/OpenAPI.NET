@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
@@ -96,13 +97,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 .Excluding((IMemberInfo memberInfo) =>
                                         memberInfo.Path.EndsWith("Parent"))
                 .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Root")));;
+                                        memberInfo.Path.EndsWith("Root")));
         }
 
         [Fact]
-        public void ShouldParseProducesInAnyOrder()
+        public async Task ShouldParseProducesInAnyOrder()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "twoResponses.json"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "twoResponses.json"));
 
             var okSchema = new OpenApiSchema
             {
@@ -259,10 +260,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ShouldAssignSchemaToAllResponses()
+        public async Task ShouldAssignSchemaToAllResponses()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json"));
-            var result = OpenApiDocument.Load(stream, OpenApiConstants.Json);
+            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Json);
 
             Assert.Equal(OpenApiSpecVersion.OpenApi2_0, result.OpenApiDiagnostic.SpecificationVersion);
 
@@ -289,10 +290,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ShouldAllowComponentsThatJustContainAReference()
+        public async Task ShouldAllowComponentsThatJustContainAReference()
         {
             // Act
-            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "ComponentRootReference.json")).OpenApiDocument;
+            var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "ComponentRootReference.json"))).OpenApiDocument;
             var schema1 = actual.Components.Schemas["AllPets"];
             Assert.False(schema1.UnresolvedReference);
             var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
@@ -304,14 +305,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ParseDocumentWithDefaultContentTypeSettingShouldSucceed()
+        public async Task ParseDocumentWithDefaultContentTypeSettingShouldSucceed()
         {
             var settings = new OpenApiReaderSettings
             {
                 DefaultContentType = ["application/json"]
             };
 
-            var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
+            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
             var mediaType = actual.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
         }
@@ -320,8 +321,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void testContentType()
         {
             var contentType = "application/json; charset = utf-8";
-            var res = contentType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
-            var expected = res.Split('/').LastOrDefault();
+            var res = contentType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
             Assert.Equal("application/json", res);
         }
     }
