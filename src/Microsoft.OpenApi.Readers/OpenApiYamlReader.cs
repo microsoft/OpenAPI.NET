@@ -66,6 +66,12 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
+        public ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null)
+        {
+            return OpenApiReaderRegistry.DefaultReader.Read(jsonNode, settings, OpenApiConstants.Yaml);
+        }
+
+        /// <inheritdoc/>
         public T ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  out OpenApiDiagnostic diagnostic,
@@ -89,6 +95,12 @@ namespace Microsoft.OpenApi.Readers
             return ReadFragment<T>(jsonNode, version, out diagnostic);
         }
 
+        /// <inheritdoc/>
+        public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic);
+        }
+
         /// <summary>
         /// Helper method to turn streams into a sequence of JsonNodes
         /// </summary>
@@ -98,20 +110,8 @@ namespace Microsoft.OpenApi.Readers
         {
             var yamlStream = new YamlStream();
             yamlStream.Load(input);
-            var yamlDocument = yamlStream.Documents.First();
+            var yamlDocument = yamlStream.Documents[0];
             return yamlDocument.ToJsonNode();
-        }
-
-        /// <inheritdoc/>
-        public ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null)
-        {
-            return OpenApiReaderRegistry.DefaultReader.Read(jsonNode, settings, OpenApiConstants.Yaml);
-        }
-
-        /// <inheritdoc/>
-        public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
-        {
-            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic);
         }
     }
 }
