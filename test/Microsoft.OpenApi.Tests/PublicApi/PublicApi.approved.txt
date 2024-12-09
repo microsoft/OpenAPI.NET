@@ -1388,8 +1388,8 @@ namespace Microsoft.OpenApi.Reader
     public class ReadResult
     {
         public ReadResult() { }
-        public Microsoft.OpenApi.Reader.OpenApiDiagnostic OpenApiDiagnostic { get; set; }
-        public Microsoft.OpenApi.Models.OpenApiDocument OpenApiDocument { get; set; }
+        public Microsoft.OpenApi.Reader.OpenApiDiagnostic Diagnostic { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiDocument Document { get; set; }
     }
     public enum ReferenceResolutionSetting
     {

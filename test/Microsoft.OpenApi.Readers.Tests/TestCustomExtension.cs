@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var diag = new OpenApiDiagnostic();
             var actual = OpenApiDocument.Parse(description, "yaml", settings: settings);
 
-            var fooExtension = actual.OpenApiDocument.Info.Extensions["x-foo"] as FooExtension;
+            var fooExtension = actual.Document.Info.Extensions["x-foo"] as FooExtension;
 
             fooExtension.Should().NotBeNull();
             fooExtension.Bar.Should().Be("hey");

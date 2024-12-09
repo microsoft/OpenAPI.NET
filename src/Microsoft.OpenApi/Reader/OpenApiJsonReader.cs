@@ -49,8 +49,8 @@ namespace Microsoft.OpenApi.Reader
                 diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
                 return new ReadResult
                 {
-                    OpenApiDocument = null,
-                    OpenApiDiagnostic = diagnostic
+                    Document = null,
+                    Diagnostic = diagnostic
                 };
             }
 
@@ -118,8 +118,8 @@ namespace Microsoft.OpenApi.Reader
 
             return new()
             {
-                OpenApiDocument = document,
-                OpenApiDiagnostic = diagnostic
+                Document = document,
+                Diagnostic = diagnostic
             };
         }
 

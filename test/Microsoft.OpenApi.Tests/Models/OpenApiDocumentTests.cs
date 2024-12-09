@@ -1707,7 +1707,7 @@ paths: { }";
             // Read in the input yaml file
             using FileStream stream = File.OpenRead(filePath);
             var format = OpenApiModelFactory.GetFormat(filePath);
-            var openApiDoc = OpenApiDocument.Load(stream, format).OpenApiDocument;
+            var openApiDoc = OpenApiDocument.Load(stream, format).Document;
 
             return openApiDoc;
         }
@@ -2013,7 +2013,7 @@ responses:
           items:
             type: object";
 
-            var doc = OpenApiDocument.Load("Models/Samples/docWithReusableWebhooks.yaml").OpenApiDocument;
+            var doc = OpenApiDocument.Load("Models/Samples/docWithReusableWebhooks.yaml").Document;
 
             var stringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true });
@@ -2067,7 +2067,7 @@ components:
         radius:
           type: number
 ";
-            var doc = OpenApiDocument.Load("Models/Samples/docWithDollarId.yaml").OpenApiDocument;
+            var doc = OpenApiDocument.Load("Models/Samples/docWithDollarId.yaml").Document;
 
             var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
             actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());

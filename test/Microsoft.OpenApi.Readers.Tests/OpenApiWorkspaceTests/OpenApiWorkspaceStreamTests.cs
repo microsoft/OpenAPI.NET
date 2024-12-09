@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 
             var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, settings: settings);
 
-            Assert.NotNull(result.OpenApiDocument.Workspace);
+            Assert.NotNull(result.Document.Workspace);
         }
 
         [Fact]
@@ -63,14 +63,14 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             ReadResult result;
             result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);
 
-            var externalDocBaseUri = result.OpenApiDocument.Workspace.GetDocumentId("./TodoComponents.yaml");
+            var externalDocBaseUri = result.Document.Workspace.GetDocumentId("./TodoComponents.yaml");
             var schemasPath = "/components/schemas/";
             var parametersPath = "/components/parameters/";
 
             Assert.NotNull(externalDocBaseUri);
-            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + schemasPath + "todo"));
-            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + schemasPath + "entity"));
-            Assert.True(result.OpenApiDocument.Workspace.Contains(externalDocBaseUri + parametersPath + "filter"));
+            Assert.True(result.Document.Workspace.Contains(externalDocBaseUri + schemasPath + "todo"));
+            Assert.True(result.Document.Workspace.Contains(externalDocBaseUri + schemasPath + "entity"));
+            Assert.True(result.Document.Workspace.Contains(externalDocBaseUri + parametersPath + "filter"));
         }
     }
 

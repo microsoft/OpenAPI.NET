@@ -37,8 +37,8 @@ namespace Microsoft.OpenApi.Readers
                 diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
                 return new()
                 {
-                    OpenApiDocument = null,
-                    OpenApiDiagnostic = diagnostic
+                    Document = null,
+                    Diagnostic = diagnostic
                 };
             }
 

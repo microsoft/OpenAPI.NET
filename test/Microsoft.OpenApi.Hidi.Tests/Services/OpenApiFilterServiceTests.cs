@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Act
             using var stream = File.OpenRead(filePath);
-            var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
+            var doc = OpenApiDocument.Load(stream, "yaml").Document;
             
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
