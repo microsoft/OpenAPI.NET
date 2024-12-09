@@ -45,7 +45,7 @@ components:
         {
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
             var result = OpenApiDocument.Parse(OpenApi, "yaml");
-            _openApiSecuritySchemeReference = new("mySecurityScheme", result.OpenApiDocument);
+            _openApiSecuritySchemeReference = new("mySecurityScheme", result.Document);
         }
 
         [Fact]

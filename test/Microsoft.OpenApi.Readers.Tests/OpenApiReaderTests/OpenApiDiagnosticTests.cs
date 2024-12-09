@@ -27,8 +27,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         {
             var actual = OpenApiDocument.Load("V2Tests/Samples/basic.v2.yaml");
 
-            actual.OpenApiDiagnostic.Should().NotBeNull();
-            actual.OpenApiDiagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi2_0);
+            actual.Diagnostic.Should().NotBeNull();
+            actual.Diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi2_0);
         }
 
         [Fact]
@@ -36,8 +36,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         {
             var actual = OpenApiDocument.Load("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
 
-            actual.OpenApiDiagnostic.Should().NotBeNull();
-            actual.OpenApiDiagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);
+            actual.Diagnostic.Should().NotBeNull();
+            actual.Diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);
         }
 
         [Fact]
@@ -55,8 +55,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             result = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/TodoMain.yaml", settings);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.OpenApiDocument.Workspace);
-            result.OpenApiDiagnostic.Errors.Should().BeEmpty();
+            Assert.NotNull(result.Document.Workspace);
+            result.Diagnostic.Errors.Should().BeEmpty();
         }
     }
 

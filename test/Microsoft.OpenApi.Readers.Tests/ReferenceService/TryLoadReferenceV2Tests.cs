@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         {
             // Arrange
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
-            var reference = new OpenApiParameterReference("skipParam", result.OpenApiDocument);
+            var reference = new OpenApiParameterReference("skipParam", result.Document);
 
             // Assert
             reference.Should().BeEquivalentTo(
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         {
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
 
-            var reference = new OpenApiSecuritySchemeReference("api_key_sample", result.OpenApiDocument);
+            var reference = new OpenApiSecuritySchemeReference("api_key_sample", result.Document);
 
             // Assert
             reference.Should().BeEquivalentTo(
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         {
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
 
-            var reference = new OpenApiResponseReference("NotFound", result.OpenApiDocument);
+            var reference = new OpenApiResponseReference("NotFound", result.Document);
 
             // Assert
             reference.Should().BeEquivalentTo(
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void LoadResponseAndSchemaReference()
         {
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
-            var reference = new OpenApiResponseReference("GeneralError", result.OpenApiDocument);
+            var reference = new OpenApiResponseReference("GeneralError", result.Document);
 
             // Assert
             reference.Should().BeEquivalentTo(
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                                 {
                                     Type = ReferenceType.Schema,
                                     Id = "SampleObject2",
-                                    HostDocument = result.OpenApiDocument
+                                    HostDocument = result.Document
                                 }
                             }
                         }

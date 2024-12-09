@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
 
             // Read V3 as YAML
             var result = OpenApiDocument.Load(stream, "yaml");
-            Assert.NotNull(result.OpenApiDocument);
+            Assert.NotNull(result.Document);
         }
     }
 }
