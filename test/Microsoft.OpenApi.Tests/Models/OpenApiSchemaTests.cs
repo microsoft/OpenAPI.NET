@@ -602,15 +602,42 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             visitor.Titles.Count.Should().Be(2);
         }
-    }
 
-    internal class SchemaVisitor : OpenApiVisitorBase
-    {
-        public List<string> Titles = new();
-
-        public override void Visit(OpenApiSchema schema)
+        [Fact]
+        public void SerializeSchemaWithUnrecognizedPropertiesWorks()
         {
-            Titles.Add(schema.Title);
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                UnrecognizedKeywords = new Dictionary<string, JsonNode>()
+                {
+                    ["customKeyWord"] = "bar",
+                    ["anotherKeyword"] = 42
+                }
+            };
+
+            var expected = @"{
+  ""unrecognizedProperties"": {
+    ""customKeyWord"": ""bar"",
+    ""anotherKeyword"": 42
+  }
+}";
+
+            // Act
+            var actual = schema.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        internal class SchemaVisitor : OpenApiVisitorBase
+        {
+            public List<string> Titles = new();
+
+            public override void Visit(OpenApiSchema schema)
+            {
+                Titles.Add(schema.Title);
+            }
         }
     }
 }

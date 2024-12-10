@@ -495,5 +495,21 @@ description: Schema for a person object
             var schemaString = writer.ToString();
             schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
         }
+
+        [Fact]
+        public void ParseSchemaWithUnrecognizedKeywordsWorks() 
+        {
+            var input = @"{
+    ""type"": ""string"",
+    ""format"": ""date-time"",
+    ""customKeyword"": ""customValue"",
+    ""anotherKeyword"": 42,
+    ""x-test"": ""test""
+}
+";
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, out _, "json");
+            schema.UnrecognizedKeywords.Should().HaveCount(2);
+        }
+
     }
 }
