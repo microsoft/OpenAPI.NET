@@ -328,6 +328,11 @@ namespace Microsoft.OpenApi.Models
         public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// This object stores any unrecognized keywords found in the schema.
+        /// </summary>
+        public virtual IDictionary<string, JsonNode> UnrecognizedKeywords { get; set; } = new Dictionary<string, JsonNode>();
+
+        /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
         /// </summary>
         public virtual bool UnresolvedReference { get; set; }
@@ -403,6 +408,7 @@ namespace Microsoft.OpenApi.Models
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
             Annotations = schema?.Annotations != null ? new Dictionary<string, object>(schema?.Annotations) : null;
+            UnrecognizedKeywords = schema?.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema?.UnrecognizedKeywords) : null;
         }
 
         /// <summary>
@@ -430,7 +436,7 @@ namespace Microsoft.OpenApi.Models
 
             if (version == OpenApiSpecVersion.OpenApi3_1)
             {
-                WriteV31Properties(writer);
+                WriteJsonSchemaKeywords(writer);
             }
 
             // title
@@ -554,6 +560,12 @@ namespace Microsoft.OpenApi.Models
             // extensions
             writer.WriteExtensions(Extensions, version);
 
+            // Unrecognized keywords
+            if (UnrecognizedKeywords.Any())
+            {
+                writer.WriteOptionalMap(OpenApiConstants.UnrecognizedKeywords, UnrecognizedKeywords, (w,s) => w.WriteAny(s));
+            }
+
             writer.WriteEndObject();
         }
 
@@ -564,7 +576,7 @@ namespace Microsoft.OpenApi.Models
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }
 
-        internal void WriteV31Properties(IOpenApiWriter writer)
+        internal void WriteJsonSchemaKeywords(IOpenApiWriter writer)
         {
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);

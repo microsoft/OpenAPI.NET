@@ -28,14 +28,3 @@ required:
   - name
 
 $dynamicAnchor: "addressDef"
-definitions:
-  address:
-    $dynamicAnchor: "addressDef"
-    type: "object"
-    properties:
-      street:
-        type: "string"
-      city:
-        type: "string"
-      postalCode:
-        type: "string"

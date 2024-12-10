@@ -512,6 +512,7 @@ namespace Microsoft.OpenApi.Models
         public const string Type = "type";
         public const string UnevaluatedProperties = "unevaluatedProperties";
         public const string UniqueItems = "uniqueItems";
+        public const string UnrecognizedKeywords = "unrecognizedKeywords";
         public const string Url = "url";
         public const string V2ReferenceUri = "https://registry/definitions/";
         public const string V31ExclusiveMaximum = "exclusiveMaximum";
@@ -925,6 +926,7 @@ namespace Microsoft.OpenApi.Models
         public virtual bool UnEvaluatedProperties { get; set; }
         public virtual bool UnevaluatedProperties { get; set; }
         public virtual bool? UniqueItems { get; set; }
+        public virtual System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> UnrecognizedKeywords { get; set; }
         public virtual bool UnresolvedReference { get; set; }
         public virtual decimal? V31ExclusiveMaximum { get; set; }
         public virtual decimal? V31ExclusiveMinimum { get; set; }
@@ -1859,6 +1861,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalCollection<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IEnumerable<T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, T> action) { }
         public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, bool> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, bool> action) { }
         public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, string> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string> action) { }
+        public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, System.Text.Json.Nodes.JsonNode> action) { }
         public static void WriteOptionalMap<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, T> action)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
         public static void WriteOptionalMap<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string, T> action)
