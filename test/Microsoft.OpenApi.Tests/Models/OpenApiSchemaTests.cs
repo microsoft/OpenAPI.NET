@@ -617,7 +617,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             var expected = @"{
-  ""unrecognizedProperties"": {
+  ""unrecognizedKeywords"": {
     ""customKeyWord"": ""bar"",
     ""anotherKeyword"": 42
   }

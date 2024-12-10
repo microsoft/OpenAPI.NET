@@ -563,7 +563,7 @@ namespace Microsoft.OpenApi.Models
             // Unrecognized keywords
             if (UnrecognizedKeywords.Any())
             {
-                writer.WriteOptionalMap(OpenApiConstants.UnrecognizedProperties, UnrecognizedKeywords, (w,s) => w.WriteAny(s));
+                writer.WriteOptionalMap(OpenApiConstants.UnrecognizedKeywords, UnrecognizedKeywords, (w,s) => w.WriteAny(s));
             }
 
             writer.WriteEndObject();
