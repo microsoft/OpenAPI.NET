@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -21,21 +22,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void OperationWithSecurityRequirementShouldReferenceSecurityScheme()
+        public async Task OperationWithSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
 
-            var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security.First().Keys.First();
+            var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security[0].Keys.First();
 
             securityScheme.Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value, 
                 options => options.Excluding(x => x.Reference));
         }
 
         [Fact]
-        public void ParseOperationWithParameterWithNoLocationShouldSucceed()
+        public async Task ParseOperationWithParameterWithNoLocationShouldSucceed()
         {
             // Act
-            var operation = OpenApiModelFactory.Load<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, out _);
+            var operation = await OpenApiModelFactory.LoadAsync<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0);
             var expectedOp = new OpenApiOperation
             {
                 Tags =
