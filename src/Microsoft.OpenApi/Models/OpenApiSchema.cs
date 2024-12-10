@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -328,6 +328,11 @@ namespace Microsoft.OpenApi.Models
         public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// This object stores any unrecognized keywords found in the schema.
+        /// </summary>
+        public virtual IDictionary<string, JsonNode> UnrecognizedKeywords { get; set; } = new Dictionary<string, JsonNode>();
+
+        /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
         /// </summary>
         public virtual bool UnresolvedReference { get; set; }
@@ -403,6 +408,7 @@ namespace Microsoft.OpenApi.Models
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
             Annotations = schema?.Annotations != null ? new Dictionary<string, object>(schema?.Annotations) : null;
+            UnrecognizedKeywords = schema?.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema?.UnrecognizedKeywords) : null;
         }
 
         /// <summary>
@@ -553,6 +559,12 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, version);
+
+            // Unrecognized keywords
+            if (UnrecognizedKeywords.Any())
+            {
+                writer.WriteOptionalMap(OpenApiConstants.UnrecognizedProperties, UnrecognizedKeywords, (w,s) => w.WriteAny(s));
+            }
 
             writer.WriteEndObject();
         }

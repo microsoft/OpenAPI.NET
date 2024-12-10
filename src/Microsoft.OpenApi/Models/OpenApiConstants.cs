@@ -481,6 +481,11 @@ namespace Microsoft.OpenApi.Models
         public const string Properties = "properties";
 
         /// <summary>
+        /// Field: UnrecognizedKeywords
+        /// </summary>
+        public const string UnrecognizedKeywords = "unrecognizedKeywords";
+
+        /// <summary>
         /// Field: Pattern Properties
         /// </summary>
         public const string PatternProperties = "patternProperties";
