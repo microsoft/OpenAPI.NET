@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -436,7 +436,7 @@ namespace Microsoft.OpenApi.Models
 
             if (version == OpenApiSpecVersion.OpenApi3_1)
             {
-                WriteV31Properties(writer);
+                WriteJsonSchemaKeywords(writer);
             }
 
             // title
@@ -576,7 +576,7 @@ namespace Microsoft.OpenApi.Models
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }
 
-        internal void WriteV31Properties(IOpenApiWriter writer)
+        internal void WriteJsonSchemaKeywords(IOpenApiWriter writer)
         {
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
