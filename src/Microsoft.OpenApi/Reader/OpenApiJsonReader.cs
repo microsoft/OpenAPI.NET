@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON text in the TextReader into JsonNodes
             try
             {
-                jsonNode = await JsonNode.ParseAsync(input);
+                jsonNode = await JsonNode.ParseAsync(input, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             catch (JsonException ex)
             {
