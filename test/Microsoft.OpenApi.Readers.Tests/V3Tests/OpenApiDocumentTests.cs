@@ -34,46 +34,36 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
         public T Clone<T>(T element) where T : IOpenApiSerializable
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
             {
-                IOpenApiWriter writer;
-                var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
-                {
-                    InlineLocalReferences = true
-                });
-                element.SerializeAsV3(writer);
-                writer.Flush();
-                stream.Position = 0;
+                InlineLocalReferences = true
+            });
+            element.SerializeAsV3(writer);
+            writer.Flush();
+            stream.Position = 0;
 
-                using (var streamReader = new StreamReader(stream))
-                {
-                    var result = streamReader.ReadToEnd();
-                    return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
-                }
-            }
+            using var streamReader = new StreamReader(stream);
+            var result = streamReader.ReadToEnd();
+            return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, out var _);
         }
 
         public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
             {
-                IOpenApiWriter writer;
-                var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
-                {
-                    InlineLocalReferences = true
-                });
-                element.SerializeAsV3(writer);
-                writer.Flush();
-                stream.Position = 0;
+                InlineLocalReferences = true
+            });
+            element.SerializeAsV3(writer);
+            writer.Flush();
+            stream.Position = 0;
 
-                using (var streamReader = new StreamReader(stream))
-                {
-                    var result = streamReader.ReadToEnd();
-                    return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
-                }
-            }
+            using var streamReader = new StreamReader(stream);
+            var result = streamReader.ReadToEnd();
+            return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out var _);
         }
 
         [Fact]

@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             var result = await RetrieveStreamAndFormatAsync(url);
-            return Load<T>(result.Item1, version, out var diagnostic, result.Item2, settings);
+            return Load<T>(result.Item1, version, out var _, result.Item2, settings);
         }
 
         /// <summary>

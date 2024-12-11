@@ -371,7 +371,7 @@ namespace Microsoft.OpenApi.Models
 
             // Arbitrarily choose the first server given that V2 only allows
             // one host, port, and base path.
-            var serverUrl = ParseServerUrl(servers.First());
+            var serverUrl = ParseServerUrl(servers[0]);
 
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
             // The Url property cannot contain path templating to be valid for V2 serialization.
