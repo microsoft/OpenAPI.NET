@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers
             else 
             {
                 using var preparedStream = new MemoryStream();
-                await input.CopyToAsync(preparedStream, copyBufferSize, cancellationToken);
+                await input.CopyToAsync(preparedStream, copyBufferSize, cancellationToken).ConfigureAwait(false);
                 preparedStream.Position = 0;
                 return Read(preparedStream, settings);
             }
