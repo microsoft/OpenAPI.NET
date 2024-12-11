@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
         {
             var result = await RetrieveStreamAndFormatAsync(url);
-            return await LoadAsync(result.Item1, result.Item2, settings);
+            return await LoadAsync(result.Item1, result.Item2, settings).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Microsoft.OpenApi.Reader
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
-            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
+            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken).ConfigureAwait(false);
         }
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
