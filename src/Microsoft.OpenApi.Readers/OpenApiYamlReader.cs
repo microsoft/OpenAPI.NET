@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Reader;
 using SharpYaml.Serialization;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -26,6 +27,7 @@ namespace Microsoft.OpenApi.Readers
                                                 OpenApiReaderSettings settings,
                                                 CancellationToken cancellationToken = default)
         {
+            if (input is null) throw new ArgumentNullException(nameof(input));
             if (input is MemoryStream memoryStream)
             {
                 return Read(memoryStream, settings);
@@ -43,6 +45,8 @@ namespace Microsoft.OpenApi.Readers
         public ReadResult Read(MemoryStream input,
                                OpenApiReaderSettings settings)
         {
+            if (input is null) throw new ArgumentNullException(nameof(input));
+            if (settings is null) throw new ArgumentNullException(nameof(settings));
             JsonNode jsonNode;
 
             // Parse the YAML text in the TextReader into a sequence of JsonNodes
@@ -77,6 +81,7 @@ namespace Microsoft.OpenApi.Readers
                                  out OpenApiDiagnostic diagnostic,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
+            if (input is null) throw new ArgumentNullException(nameof(input));
             JsonNode jsonNode;
 
             // Parse the YAML
@@ -92,13 +97,13 @@ namespace Microsoft.OpenApi.Readers
                 return default;
             }
 
-            return ReadFragment<T>(jsonNode, version, out diagnostic);
+            return ReadFragment<T>(jsonNode, version, out diagnostic, settings);
         }
 
         /// <inheritdoc/>
         public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic);
+            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic, settings);
         }
 
         /// <summary>
