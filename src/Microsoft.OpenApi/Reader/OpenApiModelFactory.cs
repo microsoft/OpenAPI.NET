@@ -228,7 +228,7 @@ namespace Microsoft.OpenApi.Reader
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
-            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken);
+            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, cancellationToken).ConfigureAwait(false);
         }
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
