@@ -200,12 +200,14 @@ namespace Microsoft.OpenApi.Reader
             return Load<T>(stream, version, format, out diagnostic, settings);
         }
 
+        private static readonly OpenApiReaderSettings DefaultReaderSettings = new();
+
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
             var reader = OpenApiReaderRegistry.GetReader(format);
             var readResult = await reader.ReadAsync(input, settings, cancellationToken);
 
-            if (settings.LoadExternalRefs)
+            if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
             {
                 var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.OpenApiDocument, cancellationToken, settings, format);
                 // Merge diagnostics of external reference
@@ -233,7 +235,7 @@ namespace Microsoft.OpenApi.Reader
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
         {
-            if (settings.LoadExternalRefs)
+            if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
             }
