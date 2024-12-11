@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null)
         {
             var result = await RetrieveStreamAndFormatAsync(url);
-            return await LoadAsync(result.Item1, result.Item2, settings);
+            return await LoadAsync(result.Item1, result.Item2, settings).ConfigureAwait(false);
         }
 
         /// <summary>
