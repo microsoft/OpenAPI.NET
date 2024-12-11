@@ -325,7 +325,7 @@ namespace Microsoft.OpenApi.Reader
             {
                 // Use a temporary buffer to read a small portion for format detection
                 using var bufferStream = new MemoryStream();
-                await input.CopyToAsync(bufferStream, 1024, token);
+                await input.CopyToAsync(bufferStream, 1024, token).ConfigureAwait(false);
                 bufferStream.Position = 0;
 
                 // Inspect the format from the buffered portion
