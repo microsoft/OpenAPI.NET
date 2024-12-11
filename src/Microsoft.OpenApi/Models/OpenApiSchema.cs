@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
+    public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable
     {
         private JsonNode _example;
         private JsonNode _default;
@@ -832,15 +832,9 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
-                    var list = new List<JsonSchemaType>();
-                    foreach (JsonSchemaType flag in jsonSchemaTypeValues)
-                    {
-                        if (type.Value.HasFlag(flag))
-                        {
-                            list.Add(flag);
-                        }
-                    }
-
+                    var list = (from JsonSchemaType flag in jsonSchemaTypeValues
+                                where type.Value.HasFlag(flag)
+                                select flag).ToList();
                     writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s.ToIdentifier()));
                 }
             } 
@@ -862,16 +856,9 @@ namespace Microsoft.OpenApi.Models
         {
             // create a new array and insert the type and "null" as values
             Type = type | JsonSchemaType.Null;
-            var list = new List<string>();
-            foreach (JsonSchemaType? flag in jsonSchemaTypeValues)
-            {
-                // Check if the flag is set in 'type' using a bitwise AND operation
-                if (Type.Value.HasFlag(flag))
-                {
-                    list.Add(flag.ToIdentifier());
-                }
-            }
-
+            var list = (from JsonSchemaType? flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
+                        where Type.Value.HasFlag(flag)
+                        select flag.ToIdentifier()).ToList();
             writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
         }
 
