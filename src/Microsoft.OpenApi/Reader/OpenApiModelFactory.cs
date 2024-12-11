@@ -354,7 +354,7 @@ namespace Microsoft.OpenApi.Reader
                 {
                     // Buffer stream for non-JSON formats (e.g., YAML) since they require synchronous reading
                     preparedStream = new MemoryStream();
-                    await input.CopyToAsync(preparedStream, 81920, token);
+                    await input.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false);
                     preparedStream.Position = 0;
                 }
             }
