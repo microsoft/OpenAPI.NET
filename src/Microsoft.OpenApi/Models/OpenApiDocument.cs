@@ -570,7 +570,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(Stream stream, string? format = null, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
-            return await OpenApiModelFactory.LoadAsync(stream, format, settings, cancellationToken);
+            return await OpenApiModelFactory.LoadAsync(stream, format, settings, cancellationToken).ConfigureAwait(false);
         }
 
 
