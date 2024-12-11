@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
         }
 
-        public T Clone<T>(T element) where T : IOpenApiSerializable
+        private static T Clone<T>(T element) where T : IOpenApiSerializable
         {
             using var stream = new MemoryStream();
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, out var _);
         }
 
-        public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
+        private static OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
         {
             using var stream = new MemoryStream();
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
