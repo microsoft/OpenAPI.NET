@@ -341,8 +341,8 @@ namespace Microsoft.OpenApi.Reader
                     // YAML or other non-JSON format; copy remaining input to a new stream.
                     preparedStream = new MemoryStream();
                     bufferStream.Position = 0;
-                    await bufferStream.CopyToAsync(preparedStream, 81920, token); // Copy buffered portion
-                    await input.CopyToAsync(preparedStream, 81920, token); // Copy remaining data
+                    await bufferStream.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false); // Copy buffered portion
+                    await input.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false); // Copy remaining data
                     preparedStream.Position = 0;
                 }
             }
