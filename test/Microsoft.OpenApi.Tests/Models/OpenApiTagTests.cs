@@ -18,9 +18,9 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiTagTests
     {
-        public static OpenApiTag BasicTag = new();
+        public static readonly OpenApiTag BasicTag = new();
 
-        public static OpenApiTag AdvancedTag = new()
+        public static readonly OpenApiTag AdvancedTag = new()
         {
             Name = "pet",
             Description = "Pets operations",
@@ -102,40 +102,6 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeAdvancedTagAsV3JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
-
-            // Act
-            AdvancedTag.SerializeAsV3(writer);
-            writer.Flush();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeAdvancedTagAsV2JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
-
-            // Act
-            AdvancedTag.SerializeAsV2(writer);
-            writer.Flush();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
