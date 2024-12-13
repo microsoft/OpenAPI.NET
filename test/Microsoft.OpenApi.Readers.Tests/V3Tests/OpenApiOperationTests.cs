@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
 
-            var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security.First().Keys.First();
+            var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security[0].Keys.First();
 
             securityScheme.Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value, 
                 options => options.Excluding(x => x.Reference));

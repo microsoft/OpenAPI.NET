@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
+using Microsoft.OpenApi.YamlReader;
 using SharpYaml.Serialization;
 using Xunit;
 
@@ -216,7 +217,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             using var reader = new StreamReader(input);
             var yamlStream = new YamlStream();
             yamlStream.Load(reader);
-            return yamlStream.Documents.First();
+            return yamlStream.Documents[0];
         }
     }
 }

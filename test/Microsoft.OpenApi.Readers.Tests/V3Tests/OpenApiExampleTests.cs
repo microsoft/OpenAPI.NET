@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -61,9 +62,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                 }
             };
-
-            var actualRoot = example.Value["versions"][0]["status"].Root;
-            var expectedRoot = expected.Value["versions"][0]["status"].Root;
 
             diagnostic.Errors.Should().BeEmpty();
 

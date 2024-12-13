@@ -1,17 +1,16 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 {
     public class OpenApiWorkspaceStreamTests
-    {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiWorkspace/";
-        
+    {        
         public OpenApiWorkspaceStreamTests()
         {
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());

@@ -2,15 +2,13 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
-using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi.YamlReader;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {

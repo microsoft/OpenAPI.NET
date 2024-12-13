@@ -12,7 +12,7 @@ using SharpYaml.Serialization;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.YamlReader
 {
     /// <summary>
     /// Reader for parsing YAML files into an OpenAPI document.

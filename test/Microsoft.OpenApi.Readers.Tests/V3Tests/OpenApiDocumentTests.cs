@@ -16,7 +16,7 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
-using SharpYaml.Model;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -1100,7 +1100,7 @@ paths: {}",
         {
             var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "securedApi.yaml"));
 
-            var securityRequirement = result.OpenApiDocument.SecurityRequirements.First();
+            var securityRequirement = result.OpenApiDocument.SecurityRequirements[0];
 
             securityRequirement.Keys.First().Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value,
                 options => options.Excluding(x => x.Reference));
@@ -1313,10 +1313,9 @@ components:
 
             // Act
             var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
-            var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
+            var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var outputDoc = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0).MakeLineBreaksEnvironmentNeutral();
-            var output = actualParam.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
-            var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
+            var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
 
             // Assert
             actualParam.Should().BeEquivalentTo(expectedParam, options => options
