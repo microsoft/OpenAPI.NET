@@ -89,11 +89,6 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Tags = new List<OpenApiTag>
             {
-                new()
-                {
-                    Name = "tagName1",
-                    Description = "tagDescription1",
-                },
                 new OpenApiTagReference("tagId1", null)
             },
             Summary = "summary1",
@@ -360,7 +355,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "tags": [
-                    "tagName1",
                     "tagId1"
                   ],
                   "summary": "summary1",
@@ -669,7 +663,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "tags": [
-                    "tagName1",
                     "tagId1"
                   ],
                   "summary": "summary1",

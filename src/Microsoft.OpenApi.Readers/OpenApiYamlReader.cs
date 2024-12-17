@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Readers
         {
             var yamlStream = new YamlStream();
             yamlStream.Load(input);
-            var yamlDocument = yamlStream.Documents.First();
+            var yamlDocument = yamlStream.Documents[0];
             return yamlDocument.ToJsonNode();
         }
 
