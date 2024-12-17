@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
@@ -17,6 +18,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     public class OpenApiSchemaTests
     {
         private const string SampleFolderPath = "V31Tests/Samples/OpenApiSchema/";
+
+
+        public MemoryStream GetMemoryStream(string fileName)
+        {
+            var filePath = Path.Combine(SampleFolderPath, fileName);
+            var fileBytes = File.ReadAllBytes(filePath);
+            return new MemoryStream(fileBytes);
+        }
 
         public OpenApiSchemaTests()
         {

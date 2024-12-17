@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -20,13 +21,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseBasicDiscriminatorShouldSucceed()
+        public async Task ParseBasicDiscriminatorShouldSucceed()
         {
             // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDiscriminator.yaml"));
+            // Copy stream to MemoryStream
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
 
             // Act
-            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(stream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out var diagnostic);
+            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out var diagnostic);
 
             // Assert
             discriminator.Should().BeEquivalentTo(
