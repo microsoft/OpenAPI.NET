@@ -43,10 +43,6 @@ extends:
             displayName: 'Publish Artifact: Nugets'
             artifactName: Nugets
             targetPath: '$(Build.ArtifactStagingDirectory)/Nugets'
-          - output: pipelineArtifact
-            displayName: 'Publish Artifact: Hidi'
-            artifactName: Hidi
-            targetPath: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi'
         steps:
         - task: UseDotNet@2
           displayName: 'Use .NET 6'
@@ -208,9 +204,6 @@ extends:
           inputs:
           - input: pipelineArtifact
             artifactName: Nugets
-            targetPath: '$(Pipeline.Workspace)'
-          - input: pipelineArtifact
-            artifactName: Hidi
             targetPath: '$(Pipeline.Workspace)'
         dependsOn: []
         environment: nuget-org
