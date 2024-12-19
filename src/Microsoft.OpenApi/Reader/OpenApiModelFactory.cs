@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Reader
             Stream preparedStream;
             if (format is null)
             {
-                var readResult = await PrepareStreamForReadingAsync(input, format, cancellationToken);
+                var readResult = await PrepareStreamForReadingAsync(input, format, cancellationToken).ConfigureAwait(false);
                 preparedStream = readResult.Item1;
                 format = readResult.Item2;
             }
