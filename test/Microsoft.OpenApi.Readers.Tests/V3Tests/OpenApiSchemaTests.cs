@@ -236,9 +236,9 @@ get:
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
 
             // Assert
-            var components = result.OpenApiDocument.Components;
+            var components = result.Document.Components;
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+            result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
                 {
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
@@ -274,7 +274,7 @@ get:
                     {
                         AllOf =
                         {
-                            new OpenApiSchemaReference("ErrorModel", result.OpenApiDocument),
+                            new OpenApiSchemaReference("ErrorModel", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
@@ -334,7 +334,7 @@ get:
                         Description = "A representation of a cat",
                         AllOf =
                         {
-                            new OpenApiSchemaReference("Pet", result.OpenApiDocument),
+                            new OpenApiSchemaReference("Pet", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
@@ -362,7 +362,7 @@ get:
                         Description = "A representation of a dog",
                         AllOf =
                         {
-                            new OpenApiSchemaReference("Pet", result.OpenApiDocument),
+                            new OpenApiSchemaReference("Pet", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
@@ -385,7 +385,7 @@ get:
             };
 
             // We serialize so that we can get rid of the schema BaseUri properties which show up as diffs
-            var actual = result.OpenApiDocument.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = result.Document.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             var expected = expectedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert

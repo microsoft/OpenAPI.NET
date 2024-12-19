@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseExampleForcedStringSucceed()
         {
             var result= OpenApiDocument.Load(Path.Combine(SampleFolderPath, "explicitString.yaml"));
-            result.OpenApiDiagnostic.Errors.Should().BeEmpty();
+            result.Diagnostic.Errors.Should().BeEmpty();
         }
     }
 }

@@ -30,9 +30,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange and Act
             var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
-            var petSchema = new OpenApiSchemaReference("petSchema", actual.OpenApiDocument);
+            var petSchema = new OpenApiSchemaReference("petSchema", actual.Document);
 
-            var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.OpenApiDocument);
+            var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.Document);
 
             var components = new OpenApiComponents
             {
@@ -200,8 +200,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert            
-            actual.OpenApiDiagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+            actual.Diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+            actual.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
 
         [Fact]
@@ -267,9 +267,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = new OpenApiSchemaReference("petSchema", actual.OpenApiDocument);
+            var petSchema = new OpenApiSchemaReference("petSchema", actual.Document);
 
-            var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.OpenApiDocument);
+            var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.Document);
 
             components.PathItems = new Dictionary<string, OpenApiPathItem>
             {
@@ -387,17 +387,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options
+            actual.Document.Should().BeEquivalentTo(expected, options => options
             .Excluding(x => x.Webhooks["pets"].Reference)
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
-            actual.OpenApiDiagnostic.Should().BeEquivalentTo(
-    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-
-            var outputWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputWriter, new() { InlineLocalReferences = true });
-            actual.OpenApiDocument.SerializeAsV31(writer);
-            var serialized = outputWriter.ToString();
+            actual.Diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
         }
 
         [Fact]
@@ -409,7 +404,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var actual = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithExample.yaml"));
-            actual.OpenApiDocument.SerializeAsV31(writer);
+            actual.Document.SerializeAsV31(writer);
 
             // Assert
             Assert.NotNull(actual);
@@ -420,7 +415,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange and Act
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"));
-            var actualSchema = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var actualSchema = result.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             var expectedSchema = new OpenApiSchema
             {
@@ -450,7 +445,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Serialization
-            var mediaType = result.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
+            var mediaType = result.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
 
             var expectedMediaType = @"schema:
   patternProperties:
@@ -478,9 +473,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             // Arrange and Act
             var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "docWithReferenceById.yaml"));
 
-            var responseSchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            var requestBodySchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema;
-            var parameterSchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Parameters[0].Schema;
+            var responseSchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var requestBodySchema = result.Document.Paths["/resource"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema;
+            var parameterSchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Parameters[0].Schema;
 
             // Assert
             Assert.Equal(JsonSchemaType.Object, responseSchema.Type);
@@ -502,10 +497,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefByJsonPointer.yaml"), settings);
-            var responseSchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var responseSchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             // Assert
-            result.OpenApiDocument.Workspace.Contains("./externalResource.yaml");
+            result.Document.Workspace.Contains("./externalResource.yaml");
             responseSchema.Properties.Count.Should().Be(2); // reference has been resolved
         }
 
@@ -523,10 +518,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefById.yaml"), settings);
-            var doc2 = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "externalResource.yaml")).OpenApiDocument;
+            var doc2 = (await  OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalResource.yaml"))).Document;
 
-            var requestBodySchema = result.OpenApiDocument.Paths["/resource"].Operations[OperationType.Get].Parameters.First().Schema;
-            result.OpenApiDocument.Workspace.RegisterComponents(doc2);
+            var requestBodySchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Parameters[0].Schema;
+            result.Document.Workspace.RegisterComponents(doc2);
 
             // Assert
             requestBodySchema.Properties.Count.Should().Be(2); // reference has been resolved
@@ -536,10 +531,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWith31PropertiesWorks()
         {
             var path = Path.Combine(SampleFolderPath, "documentWith31Properties.yaml");
-            var doc = OpenApiDocument.Load(path).OpenApiDocument;
+            var doc = (await OpenApiDocument.LoadAsync(path)).Document;
             var outputStringWriter = new StringWriter();
             doc.SerializeAsV31(new OpenApiYamlWriter(outputStringWriter));
-            outputStringWriter.Flush();
+            await outputStringWriter.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert

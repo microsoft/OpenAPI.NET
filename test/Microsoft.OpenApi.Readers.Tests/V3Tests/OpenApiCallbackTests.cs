@@ -72,12 +72,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var result = OpenApiModelFactory.Load(stream, OpenApiConstants.Yaml);
 
             // Assert
-            var path = result.OpenApiDocument.Paths.First().Value;
+            var path = result.Document.Paths.First().Value;
             var subscribeOperation = path.Operations[OperationType.Post];
 
             var callback = subscribeOperation.Callbacks["simpleHook"];
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+            result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             callback.Should().BeEquivalentTo(
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = ReferenceType.Callback,
                         Id = "simpleHook",
-                        HostDocument = result.OpenApiDocument
+                        HostDocument = result.Document
                     }
                 });
         }
@@ -128,10 +128,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var result = OpenApiModelFactory.Load(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
 
             // Assert
-            var path = result.OpenApiDocument.Paths.First().Value;
+            var path = result.Document.Paths.First().Value;
             var subscribeOperation = path.Operations[OperationType.Post];
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+            result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             var callback1 = subscribeOperation.Callbacks["simpleHook"];
@@ -172,7 +172,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = ReferenceType.Callback,
                         Id = "simpleHook",
-                        HostDocument = result.OpenApiDocument
+                        HostDocument = result.Document
                     }
                 });
 
