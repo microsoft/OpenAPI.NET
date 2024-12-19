@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Async method to reads the stream and parse it into an Open API document.
         /// </summary>
-        /// <param name="input">The TextReader input.</param>
+        /// <param name="input">The stream input.</param>
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates notification that an operation should be cancelled.</param>
         /// <returns></returns>

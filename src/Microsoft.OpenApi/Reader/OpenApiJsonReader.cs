@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Reads the memory stream input and parses it into an Open API document.
         /// </summary>
-        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
         public ReadResult Read(MemoryStream input,
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader
             var diagnostic = new OpenApiDiagnostic();
             settings ??= new OpenApiReaderSettings();
 
-            // Parse the JSON text in the TextReader into JsonNodes
+            // Parse the JSON text in the stream into JsonNodes
             try
             {
                 jsonNode = JsonNode.Parse(input);
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Reads the stream input asynchronously and parses it into an Open API document.
         /// </summary>
-        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Reader
             var diagnostic = new OpenApiDiagnostic();
             settings ??= new OpenApiReaderSettings();
 
-            // Parse the JSON text in the TextReader into JsonNodes
+            // Parse the JSON text in the stream into JsonNodes
             try
             {
                 jsonNode = await JsonNode.ParseAsync(input, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -195,7 +195,5 @@ namespace Microsoft.OpenApi.Reader
 
             return (T)element;
         }
-
-
     }
 }

@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers
             if (settings is null) throw new ArgumentNullException(nameof(settings));
             JsonNode jsonNode;
 
-            // Parse the YAML text in the TextReader into a sequence of JsonNodes
+            // Parse the YAML text in the stream into a sequence of JsonNodes
             try
             {
                 using var stream = new StreamReader(input, default, true, -1, settings.LeaveStreamOpen);
