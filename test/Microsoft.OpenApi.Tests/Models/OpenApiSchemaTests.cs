@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiSchemaTests
     {
-        public static OpenApiSchema BasicSchema = new();
+        private static readonly OpenApiSchema BasicSchema = new();
 
         public static readonly OpenApiSchema AdvancedSchemaNumber = new()
         {
