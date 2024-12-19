@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
 
@@ -21,13 +22,10 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, item) =>
                 {
                     context.Enter("extensions");
-                    foreach (var extensible in item.Extensions)
+                    foreach (var extensible in item.Extensions.Keys.Where(static x => !x.StartsWith("x-", StringComparison.OrdinalIgnoreCase)))
                     {
-                        if (!extensible.Key.StartsWith("x-"))
-                        {
-                            context.CreateError(nameof(ExtensionNameMustStartWithXDash),
-                                String.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible.Key, context.PathString));
-                        }
+                        context.CreateError(nameof(ExtensionNameMustStartWithXDash),
+                            string.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible, context.PathString));
                     }
                     context.Exit();
                 });
