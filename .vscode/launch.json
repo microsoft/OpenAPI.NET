@@ -4,7 +4,7 @@
         {
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
-            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/main/debugger-launchjson.md
             "name": "Launch Hidi",
             "type": "coreclr",
             "request": "launch",
@@ -22,7 +22,7 @@
         {
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
-            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/main/debugger-launchjson.md
             "name": "Launch Workbench",
             "type": "coreclr",
             "request": "launch",
