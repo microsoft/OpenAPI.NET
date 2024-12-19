@@ -6,12 +6,12 @@ trigger:
   branches:
     include:
     - main
-    - vnext
+    - dev
 pr:
   branches:
     include:
     - main
-    - vnext
+    - dev
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'

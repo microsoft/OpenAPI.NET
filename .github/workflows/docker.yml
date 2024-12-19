@@ -2,7 +2,7 @@ name: Publish Docker image
 on:
   workflow_dispatch:
   push:
-    branches: [main, vnext]
+    branches: [main, dev]
     paths: ['src/Microsoft.OpenApi.Hidi/**', '.github/workflows/**']
 env:
   REGISTRY: msgraphprod.azurecr.io
@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
-      - name: Login to GitHub package feed
+      - name: Login to registry 
         uses: docker/login-action@v3.3.0 
         with:
           username: ${{ secrets.ACR_USERNAME }}
@@ -28,13 +28,13 @@ jobs:
           echo "::set-output name=version::${version}"
         shell: pwsh
         id: getversion
-      - name: Push to GitHub Packages - Nightly
-        if: ${{ github.ref == 'refs/heads/vnext' }}
+      - name: Push to registry - Nightly
+        if: ${{ github.ref == 'refs/heads/dev' }}
         uses: docker/build-push-action@v6.10.0
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly
-      - name: Push to GitHub Packages - Release
+      - name: Push to registry - Release
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v6.10.0
         with:
