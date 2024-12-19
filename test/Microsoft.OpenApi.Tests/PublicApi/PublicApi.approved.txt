@@ -1671,7 +1671,6 @@ namespace Microsoft.OpenApi.Validations.Rules
     [Microsoft.OpenApi.Validations.Rules.OpenApiRule]
     public static class OpenApiComponentsRules
     {
-        public static readonly System.Text.RegularExpressions.Regex KeyRegex;
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiComponents> KeyMustBeRegularExpression { get; }
     }
     [Microsoft.OpenApi.Validations.Rules.OpenApiRule]
