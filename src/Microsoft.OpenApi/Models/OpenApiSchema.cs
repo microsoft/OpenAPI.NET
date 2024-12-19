@@ -17,10 +17,6 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable
     {
-        private JsonNode _example;
-        private JsonNode _default;
-        private IList<JsonNode> _examples;
-
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
         /// </summary>
@@ -148,11 +144,7 @@ namespace Microsoft.OpenApi.Models
         /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
         /// For example, if type is string, then default can be "foo" but cannot be 1.
         /// </summary>
-        public virtual JsonNode Default 
-        {
-            get => _default;
-            set => _default = value;
-        }
+        public virtual JsonNode Default { get; set; }
 
         /// <summary>
         /// Relevant only for Schema "properties" definitions. Declares the property as "read only".
@@ -273,22 +265,14 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples that cannot be naturally represented in JSON or YAML,
         /// a string value can be used to contain the example with escaping where necessary.
         /// </summary>
-        public virtual JsonNode Example
-        {
-            get => _example;
-            set => _example = value;
-        }
+        public virtual JsonNode Example { get; set; }
 
         /// <summary>
         /// A free-form property to include examples of an instance for this schema. 
         /// To represent examples that cannot be naturally represented in JSON or YAML, 
         /// a list of values can be used to contain the examples with escaping where necessary.
         /// </summary>
-        public virtual IList<JsonNode> Examples
-        {
-            get => _examples;
-            set => _examples = value;
-        }
+        public virtual IList<JsonNode> Examples { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -378,7 +362,7 @@ namespace Microsoft.OpenApi.Models
             MinLength = schema?.MinLength ?? MinLength;
             Pattern = schema?.Pattern ?? Pattern;
             MultipleOf = schema?.MultipleOf ?? MultipleOf;
-            _default = schema?.Default != null ? JsonNodeCloneHelper.Clone(schema?.Default) : null;
+            Default = schema?.Default != null ? JsonNodeCloneHelper.Clone(schema?.Default) : null;
             ReadOnly = schema?.ReadOnly ?? ReadOnly;
             WriteOnly = schema?.WriteOnly ?? WriteOnly;
             AllOf = schema?.AllOf != null ? new List<OpenApiSchema>(schema.AllOf) : null;
@@ -397,8 +381,8 @@ namespace Microsoft.OpenApi.Models
             AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
             AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
             Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null; 
-            _example = schema?.Example != null ? JsonNodeCloneHelper.Clone(schema?.Example) : null;
-            _examples = schema?.Examples != null ? new List<JsonNode>(schema.Examples) : null;
+            Example = schema?.Example != null ? JsonNodeCloneHelper.Clone(schema?.Example) : null;
+            Examples = schema?.Examples != null ? new List<JsonNode>(schema.Examples) : null;
             Enum = schema?.Enum != null ? new List<JsonNode>(schema.Enum) : null;
             Nullable = schema?.Nullable ?? Nullable;
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
