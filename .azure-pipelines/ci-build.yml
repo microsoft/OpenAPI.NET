@@ -227,10 +227,6 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: DownloadPipelineArtifact@2
-                displayName: Download hidi executable from artifacts
-                inputs:
-                  source: current
               - pwsh: |
                   $artifactName = Get-ChildItem -Path $(Pipeline.Workspace)\Nugets -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
                   $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
