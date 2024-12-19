@@ -210,6 +210,13 @@ extends:
       dependsOn: build
       jobs:
       - deployment: deploy_hidi
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
         dependsOn: []
         environment: nuget-org
         strategy:
@@ -218,11 +225,6 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: DownloadPipelineArtifact@2
-                displayName: Download nupkg from artifacts
-                inputs:
-                  artifact: Nugets
-                  source: current
               - task: DownloadPipelineArtifact@2
                 displayName: Download hidi executable from artifacts
                 inputs:
@@ -264,6 +266,13 @@ extends:
                     ]'
 
       - deployment: deploy_lib
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
         dependsOn: []
         environment: nuget-org
         strategy:
@@ -272,11 +281,6 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: DownloadPipelineArtifact@2
-                displayName: Download nupkg from artifacts
-                inputs:
-                  artifact: Nugets
-                  source: current
               - powershell: |
                   $fileNames = "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Readers.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Workbench.*.nupkg"
                   foreach($fileName in $fileNames) {
@@ -294,6 +298,13 @@ extends:
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
 
       - deployment: deploy_readers
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
         dependsOn: deploy_lib
         environment: nuget-org
         strategy:
@@ -302,11 +313,6 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: DownloadPipelineArtifact@2
-                displayName: Download nupkg from artifacts
-                inputs:
-                  artifact: Nugets
-                  source: current
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:

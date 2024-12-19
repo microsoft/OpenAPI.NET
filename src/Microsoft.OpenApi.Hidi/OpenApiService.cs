@@ -254,7 +254,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 stream = await GetStreamAsync(options.OpenApi, logger, cancellationToken).ConfigureAwait(false);
                 var result = await ParseOpenApiAsync(options.OpenApi, format, options.InlineExternal, logger, stream, cancellationToken).ConfigureAwait(false);
-                document = result.OpenApiDocument;
+                document = result.Document;
             }
             else throw new InvalidOperationException("No input file path or URL provided");
 
@@ -357,7 +357,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     var statsVisitor = new StatsVisitor();
                     var walker = new OpenApiWalker(statsVisitor);
-                    walker.Walk(result.OpenApiDocument);
+                    walker.Walk(result.Document);
 
                     logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
                     #pragma warning disable CA2254
@@ -376,7 +376,7 @@ namespace Microsoft.OpenApi.Hidi
 
             if (result is null) return null;
 
-            return result.OpenApiDiagnostic.Errors.Count == 0;
+            return result.Diagnostic.Errors.Count == 0;
         }
 
         private static async Task<ReadResult> ParseOpenApiAsync(string openApiFile, string format, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
@@ -437,7 +437,7 @@ namespace Microsoft.OpenApi.Hidi
             var sb = new StringBuilder();
             document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
 
-            var doc = OpenApiDocument.Parse(sb.ToString(), format).OpenApiDocument;
+            var doc = OpenApiDocument.Parse(sb.ToString(), format).Document;
 
             return doc;
         }
@@ -647,7 +647,7 @@ namespace Microsoft.OpenApi.Hidi
 
         private static void LogErrors(ILogger logger, ReadResult result)
         {
-            var context = result.OpenApiDiagnostic;
+            var context = result.Diagnostic;
             if (context.Errors.Count != 0)
             {
                 using (logger.BeginScope("Detected errors"))

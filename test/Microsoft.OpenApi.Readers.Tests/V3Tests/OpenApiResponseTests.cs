@@ -26,9 +26,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
 
-            var response = result.OpenApiDocument.Components.Responses["Test"];
+            var response = result.Document.Components.Responses["Test"];
             var expected = response.Headers.First().Value;
-            var actual = result.OpenApiDocument.Components.Headers.First().Value;
+            var actual = result.Document.Components.Headers.First().Value;
 
             actual.Description.Should().BeEquivalentTo(expected.Description);
         }

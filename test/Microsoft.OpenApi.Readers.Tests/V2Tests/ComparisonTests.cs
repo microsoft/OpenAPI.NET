@@ -27,10 +27,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var result1 = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, $"{fileName}.v2.yaml"));
             var result2 = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, $"{fileName}.v3.yaml"));
 
-            result2.OpenApiDocument.Should().BeEquivalentTo(result1.OpenApiDocument,
+            result2.Document.Should().BeEquivalentTo(result1.Document,
                 options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            result1.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(result2.OpenApiDiagnostic.Errors);
+            result1.Diagnostic.Errors.Should().BeEquivalentTo(result2.Diagnostic.Errors);
         }
     }
 }

@@ -26,9 +26,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
 
-            var securityScheme = result.OpenApiDocument.Paths["/"].Operations[OperationType.Get].Security[0].Keys.First();
-
-            securityScheme.Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value, 
+            var securityScheme = result.Document.Paths["/"].Operations[OperationType.Get].Security[0].Keys.First();
+            securityScheme.Should().BeEquivalentTo(result.Document.Components.SecuritySchemes.First().Value, 
                 options => options.Excluding(x => x.Reference));
         }
 

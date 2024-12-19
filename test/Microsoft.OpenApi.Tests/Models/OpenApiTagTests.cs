@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -17,9 +18,9 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiTagTests
     {
-        public static OpenApiTag BasicTag = new();
+        public static readonly OpenApiTag BasicTag = new();
 
-        public static OpenApiTag AdvancedTag = new()
+        public static readonly OpenApiTag AdvancedTag = new()
         {
             Name = "pet",
             Description = "Pets operations",
@@ -30,21 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiTag ReferencedTag = new()
-        {
-            Name = "pet",
-            Description = "Pets operations",
-            ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new Dictionary<string, IOpenApiExtension>
-            {
-                {"x-tag-extension", null}
-            },
-            Reference = new()
-            {
-                Type = ReferenceType.Tag,
-                Id = "pet"
-            }
-        };
+        public static OpenApiTag ReferencedTag = new OpenApiTagReference("pet", null);
 
         [Theory]
         [InlineData(true)]
@@ -56,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            BasicTag.SerializeAsV3WithoutReference(writer);
+            BasicTag.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -73,7 +60,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
-            BasicTag.SerializeAsV2WithoutReference(writer);
+            BasicTag.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert
@@ -89,7 +76,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = "{ }";
 
             // Act
-            BasicTag.SerializeAsV3WithoutReference(writer);
+            BasicTag.SerializeAsV3(writer);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -107,7 +94,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = "{ }";
 
             // Act
-            BasicTag.SerializeAsV2WithoutReference(writer);
+            BasicTag.SerializeAsV2(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -115,40 +102,6 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeAdvancedTagAsV3JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
-
-            // Act
-            AdvancedTag.SerializeAsV3WithoutReference(writer);
-            writer.Flush();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeAdvancedTagAsV2JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
-
-            // Act
-            AdvancedTag.SerializeAsV2WithoutReference(writer);
-            writer.Flush();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
@@ -168,7 +121,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            AdvancedTag.SerializeAsV3WithoutReference(writer);
+            AdvancedTag.SerializeAsV3(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -195,7 +148,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            AdvancedTag.SerializeAsV2WithoutReference(writer);
+            AdvancedTag.SerializeAsV2(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -246,7 +199,12 @@ namespace Microsoft.OpenApi.Tests.Models
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
 
-            var expected = @" pet";
+            var expected = @"name: pet
+description: Pets operations
+externalDocs:
+  description: Find more info here
+  url: https://example.com
+x-tag-extension:";
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
@@ -266,7 +224,12 @@ namespace Microsoft.OpenApi.Tests.Models
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
 
-            var expected = @" pet";
+            var expected = @"name: pet
+description: Pets operations
+externalDocs:
+  description: Find more info here
+  url: https://example.com
+x-tag-extension:";
 
             // Act
             AdvancedTag.SerializeAsV2(writer);

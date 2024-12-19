@@ -246,8 +246,8 @@ namespace Microsoft.OpenApi.Workbench
                 }
 
                 var readResult = await OpenApiDocument.LoadAsync(stream, Format.GetDisplayName());
-                var document = readResult.OpenApiDocument;
-                var context = readResult.OpenApiDiagnostic;
+                var document = readResult.Document;
+                var context = readResult.Diagnostic;
 
                 stopwatch.Stop();
                 ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";

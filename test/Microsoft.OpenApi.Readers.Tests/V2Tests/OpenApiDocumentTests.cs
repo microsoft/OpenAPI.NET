@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 """,
                 "yaml");
 
-            result.OpenApiDocument.Should().BeEquivalentTo(
+            result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new()
@@ -146,16 +146,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Schema = new()
                 {
                     Type = JsonSchemaType.Array,
-                    Items = new OpenApiSchemaReference("Item", result.OpenApiDocument)
+                    Items = new OpenApiSchemaReference("Item", result.Document)
                 }
             };
 
             var errorMediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchemaReference("Error", result.OpenApiDocument)
+                Schema = new OpenApiSchemaReference("Error", result.Document)
             };
 
-            result.OpenApiDocument.Should().BeEquivalentTo(new OpenApiDocument
+            result.Document.Should().BeEquivalentTo(new OpenApiDocument
             {
                 Info = new()
                 {
@@ -265,16 +265,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json"));
             var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Json);
 
-            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, result.OpenApiDiagnostic.SpecificationVersion);
+            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, result.Diagnostic.SpecificationVersion);
 
             var successSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Array,
-                Items = new OpenApiSchemaReference("Item", result.OpenApiDocument)
+                Items = new OpenApiSchemaReference("Item", result.Document)
             };
-            var errorSchema = new OpenApiSchemaReference("Error", result.OpenApiDocument);
+            var errorSchema = new OpenApiSchemaReference("Error", result.Document);
 
-            var responses = result.OpenApiDocument.Paths["/items"].Operations[OperationType.Get].Responses;
+            var responses = result.Document.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)
             {
                 var targetSchema = response.Key == "200" ? successSchema : errorSchema;
@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public async Task ShouldAllowComponentsThatJustContainAReference()
         {
             // Act
-            var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "ComponentRootReference.json"))).OpenApiDocument;
+            var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "ComponentRootReference.json"))).Document;
             var schema1 = actual.Components.Schemas["AllPets"];
             Assert.False(schema1.UnresolvedReference);
             var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
@@ -313,7 +313,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             };
 
             var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
-            var mediaType = actual.OpenApiDocument.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
+            var mediaType = actual.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
         }
 
