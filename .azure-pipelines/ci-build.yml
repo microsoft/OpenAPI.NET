@@ -7,11 +7,13 @@ trigger:
     include:
     - main
     - dev
+    - support/v1
 pr:
   branches:
     include:
     - main
     - dev
+    - support/v1
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
@@ -206,7 +208,7 @@ extends:
             content: '*.nupkg'
             
     - stage: deploy
-      condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+      condition: and(or(contains(variables['build.sourceBranch'], 'refs/heads/main'),contains(variables['build.sourceBranch'], 'refs/heads/support/v1')), succeeded())
       dependsOn: build
       jobs:
       - deployment: deploy_hidi
