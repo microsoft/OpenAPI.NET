@@ -18,18 +18,13 @@ namespace Microsoft.OpenApi.Models
         where T : IOpenApiSerializable
     {
         /// <summary>
-        /// Parameterless constructor
-        /// </summary>
-        protected OpenApiExtensibleDictionary() { }
-
-        /// <summary>
         /// Initializes a copy of <see cref="OpenApiExtensibleDictionary{T}"/> class.
         /// </summary>
         /// <param name="dictionary">The generic dictionary.</param>
         /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
         protected OpenApiExtensibleDictionary(
             Dictionary<string, T> dictionary = null,
-            IDictionary<string, IOpenApiExtension> extensions = null) : base(dictionary)
+            IDictionary<string, IOpenApiExtension> extensions = null) : base(dictionary is null ? [] : dictionary)
         {
             Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : null;
         }
