@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Reader
             settings ??= new OpenApiReaderSettings();
 
             // Copy string into MemoryStream
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
 
             return InternalLoad(stream, format, settings);
         }
