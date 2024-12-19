@@ -5,12 +5,12 @@ name: $(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   branches:
     include:
-    - master
+    - main
     - vnext
 pr:
   branches:
     include:
-    - master
+    - main
     - vnext
 variables:
   buildPlatform: 'Any CPU'
@@ -206,7 +206,7 @@ extends:
             content: '*.nupkg'
             
     - stage: deploy
-      condition: and(contains(variables['build.sourceBranch'], 'refs/heads/master'), succeeded())
+      condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
       dependsOn: build
       jobs:
       - deployment: deploy_hidi

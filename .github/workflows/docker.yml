@@ -2,7 +2,7 @@ name: Publish Docker image
 on:
   workflow_dispatch:
   push:
-    branches: [master, vnext]
+    branches: [main, vnext]
     paths: ['src/Microsoft.OpenApi.Hidi/**', '.github/workflows/**']
 env:
   REGISTRY: msgraphprod.azurecr.io
@@ -35,7 +35,7 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly
       - name: Push to GitHub Packages - Release
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v6.10.0
         with:
           push: true
