@@ -43,10 +43,6 @@ extends:
             displayName: 'Publish Artifact: Nugets'
             artifactName: Nugets
             targetPath: '$(Build.ArtifactStagingDirectory)/Nugets'
-          - output: pipelineArtifact
-            displayName: 'Publish Artifact: Hidi'
-            artifactName: Microsoft.OpenApi.Hidi-v$(hidiversion)
-            targetPath: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)'
         steps:
         - task: UseDotNet@2
           displayName: 'Use .NET 6'
@@ -179,23 +175,13 @@ extends:
             MaxConcurrency: '50'
             MaxRetryAttempts: '5'
             PendingAnalysisWaitTimeoutMinutes: '5'
-
-        - task: PowerShell@2
-          displayName: "Get Hidi's version-number from .csproj"
-          inputs:
-            targetType: 'inline'
-            script: |
-              $xml = [Xml] (Get-Content .\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj)
-              $version = $xml.Project.PropertyGroup.Version
-              echo $version
-              echo "##vso[task.setvariable variable=hidiversion]$version"
-        
+      
         # publish hidi as an .exe
         - task: DotNetCoreCLI@2
           displayName: publish Hidi as executable
           inputs:
             command: 'publish'
-            arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)
+            arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
             projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
             publishWebProjects: False
             zipAfterPublish: false
@@ -227,10 +213,6 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: DownloadPipelineArtifact@2
-                displayName: Download hidi executable from artifacts
-                inputs:
-                  source: current
               - pwsh: |
                   $artifactName = Get-ChildItem -Path $(Pipeline.Workspace)\Nugets -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
                   $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
