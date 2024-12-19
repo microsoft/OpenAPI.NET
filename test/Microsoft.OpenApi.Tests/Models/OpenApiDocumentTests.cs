@@ -1702,7 +1702,7 @@ paths: { }";
 
         private static async Task<OpenApiDocument> ParseInputFileAsync(string filePath)
         {
-            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath)).OpenApiDocument;
+            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath)).Document;
             return openApiDoc;
         }
 

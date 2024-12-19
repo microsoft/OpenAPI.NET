@@ -108,7 +108,7 @@ paths: {}
 """;
 
             var readResult = OpenApiDocument.Parse(stringOpenApiDoc);
-            readResult.OpenApiDocument.Info.Title.Should().Be("Sample API");
+            readResult.Document.Info.Title.Should().Be("Sample API");
         }
 
         [Fact]
@@ -1323,7 +1323,7 @@ components:
             using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
             // Act
-            var doc = OpenApiDocument.Load(stream, "yaml").Document;
+            var doc = (await OpenApiDocument.LoadAsync(stream)).Document;
             var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var outputDoc = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0).MakeLineBreaksEnvironmentNeutral();
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];

@@ -209,12 +209,12 @@ namespace Microsoft.OpenApi.Reader
 
             if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
             {
-                var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.OpenApiDocument, cancellationToken, settings, format);
+                var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.Document, cancellationToken, settings, format);
                 // Merge diagnostics of external reference
                 if (diagnosticExternalRefs != null)
                 {
-                    readResult.OpenApiDiagnostic.Errors.AddRange(diagnosticExternalRefs.Errors);
-                    readResult.OpenApiDiagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
+                    readResult.Diagnostic.Errors.AddRange(diagnosticExternalRefs.Errors);
+                    readResult.Diagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
                 }
             }
 
