@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Reader
         {
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
             return Load<T>(stream, version, format, out diagnostic, settings);
         }
 
