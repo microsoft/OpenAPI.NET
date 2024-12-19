@@ -15,12 +15,8 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
+    public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable
     {
-        private JsonNode _example;
-        private JsonNode _default;
-        private IList<JsonNode> _examples;
-
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
         /// </summary>
@@ -148,11 +144,7 @@ namespace Microsoft.OpenApi.Models
         /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
         /// For example, if type is string, then default can be "foo" but cannot be 1.
         /// </summary>
-        public virtual JsonNode Default 
-        {
-            get => _default;
-            set => _default = value;
-        }
+        public virtual JsonNode Default { get; set; }
 
         /// <summary>
         /// Relevant only for Schema "properties" definitions. Declares the property as "read only".
@@ -273,22 +265,14 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples that cannot be naturally represented in JSON or YAML,
         /// a string value can be used to contain the example with escaping where necessary.
         /// </summary>
-        public virtual JsonNode Example
-        {
-            get => _example;
-            set => _example = value;
-        }
+        public virtual JsonNode Example { get; set; }
 
         /// <summary>
         /// A free-form property to include examples of an instance for this schema. 
         /// To represent examples that cannot be naturally represented in JSON or YAML, 
         /// a list of values can be used to contain the examples with escaping where necessary.
         /// </summary>
-        public virtual IList<JsonNode> Examples
-        {
-            get => _examples;
-            set => _examples = value;
-        }
+        public virtual IList<JsonNode> Examples { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -326,6 +310,11 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+
+        /// <summary>
+        /// This object stores any unrecognized keywords found in the schema.
+        /// </summary>
+        public virtual IDictionary<string, JsonNode> UnrecognizedKeywords { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
@@ -373,7 +362,7 @@ namespace Microsoft.OpenApi.Models
             MinLength = schema?.MinLength ?? MinLength;
             Pattern = schema?.Pattern ?? Pattern;
             MultipleOf = schema?.MultipleOf ?? MultipleOf;
-            _default = schema?.Default != null ? JsonNodeCloneHelper.Clone(schema?.Default) : null;
+            Default = schema?.Default != null ? JsonNodeCloneHelper.Clone(schema?.Default) : null;
             ReadOnly = schema?.ReadOnly ?? ReadOnly;
             WriteOnly = schema?.WriteOnly ?? WriteOnly;
             AllOf = schema?.AllOf != null ? new List<OpenApiSchema>(schema.AllOf) : null;
@@ -392,8 +381,8 @@ namespace Microsoft.OpenApi.Models
             AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
             AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
             Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null; 
-            _example = schema?.Example != null ? JsonNodeCloneHelper.Clone(schema?.Example) : null;
-            _examples = schema?.Examples != null ? new List<JsonNode>(schema.Examples) : null;
+            Example = schema?.Example != null ? JsonNodeCloneHelper.Clone(schema?.Example) : null;
+            Examples = schema?.Examples != null ? new List<JsonNode>(schema.Examples) : null;
             Enum = schema?.Enum != null ? new List<JsonNode>(schema.Enum) : null;
             Nullable = schema?.Nullable ?? Nullable;
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
@@ -403,6 +392,7 @@ namespace Microsoft.OpenApi.Models
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
             Annotations = schema?.Annotations != null ? new Dictionary<string, object>(schema?.Annotations) : null;
+            UnrecognizedKeywords = schema?.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema?.UnrecognizedKeywords) : null;
         }
 
         /// <summary>
@@ -430,7 +420,7 @@ namespace Microsoft.OpenApi.Models
 
             if (version == OpenApiSpecVersion.OpenApi3_1)
             {
-                WriteV31Properties(writer);
+                WriteJsonSchemaKeywords(writer);
             }
 
             // title
@@ -554,6 +544,12 @@ namespace Microsoft.OpenApi.Models
             // extensions
             writer.WriteExtensions(Extensions, version);
 
+            // Unrecognized keywords
+            if (UnrecognizedKeywords.Any())
+            {
+                writer.WriteOptionalMap(OpenApiConstants.UnrecognizedKeywords, UnrecognizedKeywords, (w,s) => w.WriteAny(s));
+            }
+
             writer.WriteEndObject();
         }
 
@@ -564,7 +560,7 @@ namespace Microsoft.OpenApi.Models
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }
 
-        internal void WriteV31Properties(IOpenApiWriter writer)
+        internal void WriteJsonSchemaKeywords(IOpenApiWriter writer)
         {
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
@@ -577,7 +573,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMaximum, V31ExclusiveMaximum);
             writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);            
             writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
-            writer.WriteOptionalCollection(OpenApiConstants.Examples, _examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
         }
 
@@ -820,15 +816,9 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
-                    var list = new List<JsonSchemaType>();
-                    foreach (JsonSchemaType flag in jsonSchemaTypeValues)
-                    {
-                        if (type.Value.HasFlag(flag))
-                        {
-                            list.Add(flag);
-                        }
-                    }
-
+                    var list = (from JsonSchemaType flag in jsonSchemaTypeValues
+                                where type.Value.HasFlag(flag)
+                                select flag).ToList();
                     writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s.ToIdentifier()));
                 }
             } 
@@ -850,16 +840,9 @@ namespace Microsoft.OpenApi.Models
         {
             // create a new array and insert the type and "null" as values
             Type = type | JsonSchemaType.Null;
-            var list = new List<string>();
-            foreach (JsonSchemaType? flag in jsonSchemaTypeValues)
-            {
-                // Check if the flag is set in 'type' using a bitwise AND operation
-                if (Type.Value.HasFlag(flag))
-                {
-                    list.Add(flag.ToIdentifier());
-                }
-            }
-
+            var list = (from JsonSchemaType? flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
+                        where Type.Value.HasFlag(flag)
+                        select flag.ToIdentifier()).ToList();
             writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
         }
 

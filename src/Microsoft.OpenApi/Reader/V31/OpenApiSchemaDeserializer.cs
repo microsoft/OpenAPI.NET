@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -254,7 +256,17 @@ namespace Microsoft.OpenApi.Reader.V31
 
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields);
+                bool isRecognized = _openApiSchemaFixedFields.ContainsKey(propertyNode.Name) ||
+                        _openApiSchemaPatternFields.Any(p => p.Key(propertyNode.Name));
+
+                if (isRecognized)
+                {
+                    propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields);
+                }
+                else
+                {
+                    schema.UnrecognizedKeywords[propertyNode.Name] = propertyNode.JsonNode;
+                }
             }
 
             if (schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
