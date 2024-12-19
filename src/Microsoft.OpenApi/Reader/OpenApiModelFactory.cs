@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Reader
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
             var reader = OpenApiReaderRegistry.GetReader(format);
-            var readResult = await reader.ReadAsync(input, settings, cancellationToken);
+            var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
 
             if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
             {
