@@ -257,7 +257,7 @@ namespace Microsoft.OpenApi.Reader.V31
             foreach (var propertyNode in mapNode)
             {
                 bool isRecognized = _openApiSchemaFixedFields.ContainsKey(propertyNode.Name) ||
-                        _openApiSchemaPatternFields.Any(static p => p.Key(propertyNode.Name));
+                        _openApiSchemaPatternFields.Any(p => p.Key(propertyNode.Name));
 
                 if (isRecognized)
                 {
