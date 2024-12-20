@@ -218,10 +218,9 @@ extends:
                   $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
                   #Set Variable $artifactName and $artifactVersion
                   Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
-                  Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true]$artifactName.FullName"
-                  echo "$artifactName"
                   echo "$artifactVersion"
                 displayName: 'Fetch Artifact Name'
+                name: getTagVersion
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
@@ -234,10 +233,10 @@ extends:
                 condition: succeededOrFailed()
                 inputs:
                   gitHubConnection: 'Github-MaggieKimani1'
-                  action: edit
+                  action: create
                   tagSource: userSpecifiedTag
-                  tag: '$(artifactVersion)'
-                  title: '$(artifactVersion)'
+                  tag: '$(getTagVersion.artifactVersion)'
+                  title: '$(getTagVersion.artifactVersion)'
                   releaseNotesSource: inline
                   assets: '$(Pipeline.Workspace)\**\*.exe'
                   changeLogType: issueBased
