@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -21,10 +22,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseBasicXmlShouldSucceed()
+        public async Task ParseBasicXmlShouldSucceed()
         {
             // Act
-            var xml = OpenApiModelFactory.Load<OpenApiXml>(Resources.GetStream(Path.Combine(SampleFolderPath, "basicXml.yaml")), OpenApiSpecVersion.OpenApi3_0, "yaml", out _);
+            var xml = await OpenApiModelFactory.LoadAsync<OpenApiXml>(Resources.GetStream(Path.Combine(SampleFolderPath, "basicXml.yaml")), OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             xml.Should().BeEquivalentTo(

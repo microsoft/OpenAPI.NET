@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
@@ -12,11 +13,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
     public class UnsupportedSpecVersionTests
     {
         [Fact]
-        public void ThrowOpenApiUnsupportedSpecVersionException()
+        public async Task ThrowOpenApiUnsupportedSpecVersionException()
         {
             try
             {
-                _ = OpenApiDocument.Load("OpenApiReaderTests/Samples/unsupported.v1.yaml");
+                _ = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/unsupported.v1.yaml");
             }
             catch (OpenApiUnsupportedSpecVersionException exception)
             {
