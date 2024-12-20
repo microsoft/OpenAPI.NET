@@ -216,7 +216,7 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg'
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg'
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
@@ -238,7 +238,7 @@ extends:
                 vmImage: ubuntu-latest
               steps:
               - powershell: |
-                  $fileNames = "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Readers.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Workbench.*.nupkg"
+                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Readers.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
                   foreach($fileName in $fileNames) {
                     if(Test-Path $fileName) {
                       rm $fileName -Verbose
@@ -248,7 +248,7 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.*.nupkg'
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.*.nupkg'
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
@@ -272,7 +272,7 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Readers.*.nupkg'
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Readers.*.nupkg'
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
@@ -294,13 +294,12 @@ extends:
                 vmImage: ubuntu-latest
               steps:
               - pwsh: |
-                  $artifactName = Get-ChildItem -Path $(Pipeline.Workspace)\Nugets -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
+                  $artifactName = Get-ChildItem -Path $(Pipeline.Workspace) -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
                   $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
                   #Set Variable $artifactName and $artifactVersion
-                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
+                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false;]$artifactVersion"
                   echo "$artifactVersion"
                 displayName: 'Fetch Artifact Name'
-                name: getTagVersion
               - task: GitHubRelease@1
                 displayName: 'GitHub release (edit)'
                 condition: succeededOrFailed()
@@ -308,8 +307,8 @@ extends:
                   gitHubConnection: 'Github-MaggieKimani1'
                   action: create
                   tagSource: userSpecifiedTag
-                  tag: '$(getTagVersion.artifactVersion)'
-                  title: '$(getTagVersion.artifactVersion)'
+                  tag: '$(artifactVersion)'
+                  title: '$(artifactVersion)'
                   releaseNotesSource: inline
                   assets: '$(Pipeline.Workspace)\**\*.exe'
                   changeLogType: issueBased
