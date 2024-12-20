@@ -32,15 +32,6 @@ namespace Microsoft.OpenApi.Interfaces
         ReadResult Read(MemoryStream input, OpenApiReaderSettings settings);
 
         /// <summary>
-        /// Parses the JsonNode input into an Open API document.
-        /// </summary>
-        /// <param name="jsonNode">The JsonNode input.</param>
-        /// <param name="settings">The Reader settings to be used during parsing.</param>
-        /// <param name="format">The OpenAPI format.</param>
-        /// <returns></returns>
-        ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null);
-
-        /// <summary>
         /// Reads the MemoryStream and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
         /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
@@ -49,15 +40,5 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         T ReadFragment<T>(MemoryStream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
-
-        /// <summary>
-        /// Reads the JsonNode input and parses the fragment of an OpenAPI description into an Open API Element.
-        /// </summary>
-        /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
-        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
-        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
-        /// <param name="settings">The OpenApiReader settings.</param>
-        /// <returns>Instance of newly created IOpenApiElement.</returns>
-        T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
     }
 }

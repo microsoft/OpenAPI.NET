@@ -21,6 +21,7 @@ namespace Microsoft.OpenApi.Readers
     public class OpenApiYamlReader : IOpenApiReader
     {
         private const int copyBufferSize = 4096;
+        private static readonly OpenApiJsonReader _jsonReader = new();
 
         /// <inheritdoc/>
         public async Task<ReadResult> ReadAsync(Stream input,
@@ -70,9 +71,9 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
-        public ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null)
+        public static ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null)
         {
-            return OpenApiReaderRegistry.DefaultReader.Read(jsonNode, settings, OpenApiConstants.Yaml);
+            return _jsonReader.Read(jsonNode, settings, OpenApiConstants.Yaml);
         }
 
         /// <inheritdoc/>
@@ -101,9 +102,9 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            return OpenApiReaderRegistry.DefaultReader.ReadFragment<T>(input, version, out diagnostic, settings);
+            return _jsonReader.ReadFragment<T>(input, version, out diagnostic, settings);
         }
 
         /// <summary>

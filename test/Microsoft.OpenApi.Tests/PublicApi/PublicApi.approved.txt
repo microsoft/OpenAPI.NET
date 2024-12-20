@@ -220,11 +220,8 @@ namespace Microsoft.OpenApi.Interfaces
     public interface IOpenApiReader
     {
         Microsoft.OpenApi.Reader.ReadResult Read(System.IO.MemoryStream input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings);
-        Microsoft.OpenApi.Reader.ReadResult Read(System.Text.Json.Nodes.JsonNode jsonNode, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings, string format = null);
         System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.Stream input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings, System.Threading.CancellationToken cancellationToken = default);
         T ReadFragment<T>(System.IO.MemoryStream input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
-            where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
-        T ReadFragment<T>(System.Text.Json.Nodes.JsonNode input, Microsoft.OpenApi.OpenApiSpecVersion version, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
     }
     public interface IOpenApiReferenceable : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
