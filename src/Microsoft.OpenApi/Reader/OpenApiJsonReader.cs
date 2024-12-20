@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Validations;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using System;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -29,6 +30,9 @@ namespace Microsoft.OpenApi.Reader
         public ReadResult Read(MemoryStream input,
                                OpenApiReaderSettings settings)
         {
+            if (input is null) throw new ArgumentNullException(nameof(input));
+            if (settings is null) throw new ArgumentNullException(nameof(settings));
+
             JsonNode jsonNode;
             var diagnostic = new OpenApiDiagnostic();
             settings ??= new OpenApiReaderSettings();
@@ -62,6 +66,9 @@ namespace Microsoft.OpenApi.Reader
                                OpenApiReaderSettings settings,
                                string format = null)
         {
+            if (jsonNode is null) throw new ArgumentNullException(nameof(jsonNode));
+            if (settings is null) throw new ArgumentNullException(nameof(settings));
+
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)
             {
@@ -114,9 +121,11 @@ namespace Microsoft.OpenApi.Reader
                                                 OpenApiReaderSettings settings,
                                                 CancellationToken cancellationToken = default)
         {
+            if (input is null) throw new ArgumentNullException(nameof(input));
+            if (settings is null) throw new ArgumentNullException(nameof(settings));
+
             JsonNode jsonNode;
             var diagnostic = new OpenApiDiagnostic();
-            settings ??= new OpenApiReaderSettings();
 
             // Parse the JSON text in the stream into JsonNodes
             try
@@ -142,6 +151,8 @@ namespace Microsoft.OpenApi.Reader
                                  out OpenApiDiagnostic diagnostic,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
+            if (input is null) throw new ArgumentNullException(nameof(input));
+
             JsonNode jsonNode;
 
             // Parse the JSON
