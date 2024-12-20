@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement
         {
             var (stream, format) = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
-            return await LoadAsync<T>(stream, version, format, settings);
+            return await LoadAsync<T>(stream, version, format, settings, token);
         }
 
         /// <summary>
@@ -143,11 +143,13 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="version"></param>
         /// <param name="format"></param>
         /// <param name="settings"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
         public static async Task<T> LoadAsync<T>(Stream input,
                                                  OpenApiSpecVersion version,
                                                  string format = null,
-                                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+                                                 OpenApiReaderSettings settings = null,
+                                                 CancellationToken token = default) where T : IOpenApiElement
         {
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (input is MemoryStream memoryStream)
@@ -157,7 +159,7 @@ namespace Microsoft.OpenApi.Reader
             else
             {
                 memoryStream = new MemoryStream();
-                await input.CopyToAsync(memoryStream).ConfigureAwait(false);
+                await input.CopyToAsync(memoryStream, 81920, token).ConfigureAwait(false);
                 memoryStream.Position = 0;
                 return Load<T>(memoryStream, version, format, out var _, settings);
             }
