@@ -124,14 +124,15 @@ namespace Microsoft.OpenApi.Reader
             }
 
             // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
-            var result = await InternalLoadAsync(preparedStream, format, settings, cancellationToken).ConfigureAwait(false);
-            if (!settings.LeaveStreamOpen)
+            using (preparedStream)
             {
-                input.Dispose();
-                preparedStream.Dispose();
+                var result = await InternalLoadAsync(preparedStream, format, settings, cancellationToken).ConfigureAwait(false);
+                if (!settings.LeaveStreamOpen)
+                {
+                    input.Dispose();
+                }
+                return result;
             }
-
-            return result;
         }
 
         /// <summary>
