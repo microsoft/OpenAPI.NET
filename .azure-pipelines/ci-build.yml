@@ -213,14 +213,6 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - pwsh: |
-                  $artifactName = Get-ChildItem -Path $(Pipeline.Workspace)\Nugets -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
-                  $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
-                  #Set Variable $artifactName and $artifactVersion
-                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
-                  echo "$artifactVersion"
-                displayName: 'Fetch Artifact Name'
-                name: getTagVersion
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
@@ -228,25 +220,6 @@ extends:
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
-              - task: GitHubRelease@1
-                displayName: 'GitHub release (edit)'
-                condition: succeededOrFailed()
-                inputs:
-                  gitHubConnection: 'Github-MaggieKimani1'
-                  action: create
-                  tagSource: userSpecifiedTag
-                  tag: '$(getTagVersion.artifactVersion)'
-                  title: '$(getTagVersion.artifactVersion)'
-                  releaseNotesSource: inline
-                  assets: '$(Pipeline.Workspace)\**\*.exe'
-                  changeLogType: issueBased
-                  changeLogLabels: '[ 
-                    { "label" : "feature-work", "feature", "displayName" : "New Features", "state" : "closed" }, 
-                    { "label" : "enhancement", "V2-Enhancement", "displayName" : "Enhancements", "state" : "closed" }, 
-                    { "label" : "bug", "bug-fix", "displayName" : "Bugs", "state" : "closed" }, 
-                    { "label" : "documentation", "doc", "displayName" : "Documentation", "state" : "closed"}, 
-                    { "label" : "dependencies", "displayName" : "Package Updates", "state" : "closed" }
-                    ]'
 
       - deployment: deploy_lib
         templateContext:
@@ -303,3 +276,48 @@ extends:
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
+
+      - deployment: create_github_release
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: []
+        environment: kiota-github-releases
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - pwsh: |
+                  $artifactName = Get-ChildItem -Path $(Pipeline.Workspace)\Nugets -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
+                  $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
+                  #Set Variable $artifactName and $artifactVersion
+                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
+                  echo "$artifactVersion"
+                displayName: 'Fetch Artifact Name'
+                name: getTagVersion
+              - task: GitHubRelease@1
+              displayName: 'GitHub release (edit)'
+              condition: succeededOrFailed()
+              inputs:
+                gitHubConnection: 'Github-MaggieKimani1'
+                action: create
+                tagSource: userSpecifiedTag
+                tag: '$(getTagVersion.artifactVersion)'
+                title: '$(getTagVersion.artifactVersion)'
+                releaseNotesSource: inline
+                assets: '$(Pipeline.Workspace)\**\*.exe'
+                changeLogType: issueBased
+                changeLogLabels: '[ 
+                  { "label" : "feature-work", "feature", "displayName" : "New Features", "state" : "closed" }, 
+                  { "label" : "enhancement", "V2-Enhancement", "displayName" : "Enhancements", "state" : "closed" }, 
+                  { "label" : "bug", "bug-fix", "displayName" : "Bugs", "state" : "closed" }, 
+                  { "label" : "documentation", "doc", "displayName" : "Documentation", "state" : "closed"}, 
+                  { "label" : "dependencies", "displayName" : "Package Updates", "state" : "closed" }
+                  ]'
+
