@@ -80,8 +80,8 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken token = default)
         {
-            var result = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
-            return await LoadAsync(result.Item1, result.Item2, settings, token).ConfigureAwait(false);
+            var (stream, format) = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
+            return await LoadAsync(stream, format, settings, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>The OpenAPI element.</returns>
         public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement
         {
-            var result = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
-            return await LoadAsync<T>(result.Item1, version, result.Item2, settings);
+            var (stream, format) = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
+            return await LoadAsync<T>(stream, version, format, settings);
         }
 
         /// <summary>
@@ -116,9 +116,7 @@ namespace Microsoft.OpenApi.Reader
             Stream preparedStream;
             if (format is null)
             {
-                var readResult = await PrepareStreamForReadingAsync(input, format, cancellationToken).ConfigureAwait(false);
-                preparedStream = readResult.Item1;
-                format = readResult.Item2;
+                (preparedStream, format) = await PrepareStreamForReadingAsync(input, format, cancellationToken).ConfigureAwait(false);
             }
             else
             {
