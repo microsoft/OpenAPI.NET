@@ -51,6 +51,11 @@ namespace Microsoft.OpenApi.Models
         public const string Title = "title";
 
         /// <summary>
+        /// Field: Const
+        /// </summary>
+        public const string Const = "const";
+
+        /// <summary>
         /// Field: Type
         /// </summary>
         public const string Type = "type";
@@ -474,6 +479,11 @@ namespace Microsoft.OpenApi.Models
         /// Field: Properties
         /// </summary>
         public const string Properties = "properties";
+
+        /// <summary>
+        /// Field: UnrecognizedKeywords
+        /// </summary>
+        public const string UnrecognizedKeywords = "unrecognizedKeywords";
 
         /// <summary>
         /// Field: Pattern Properties

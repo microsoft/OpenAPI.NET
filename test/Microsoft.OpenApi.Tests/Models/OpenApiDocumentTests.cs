@@ -992,7 +992,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         {
                                             ["my-extension"] = new OpenApiAny(4)
                                         }
-                                    },                                        
+                                    },
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         ["my-extension"] = new OpenApiAny(4),
@@ -1583,8 +1583,6 @@ definitions:
                 }
             };
 
-            var reference = document.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Reference;
-
             // Act
             var actual = document.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
 
@@ -1684,14 +1682,14 @@ paths: { }";
         }
 
         [Fact]
-        public void TestHashCodesForSimilarOpenApiDocuments()
+        public async Task TestHashCodesForSimilarOpenApiDocuments()
         {
             // Arrange
             var sampleFolderPath = "Models/Samples/";
 
-            var doc1 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
-            var doc2 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
-            var doc3 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocumentWithWhiteSpaces.yaml"));
+            var doc1 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
+            var doc2 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
+            var doc3 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocumentWithWhiteSpaces.yaml"));
 
             // Act && Assert
             /*
@@ -1702,13 +1700,9 @@ paths: { }";
             Assert.Equal(doc1.HashCode, doc3.HashCode);
         }
 
-        private static OpenApiDocument ParseInputFile(string filePath)
+        private static async Task<OpenApiDocument> ParseInputFileAsync(string filePath)
         {
-            // Read in the input yaml file
-            using FileStream stream = File.OpenRead(filePath);
-            var format = OpenApiModelFactory.GetFormat(filePath);
-            var openApiDoc = OpenApiDocument.Load(stream, format).OpenApiDocument;
-
+            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath)).Document;
             return openApiDoc;
         }
 
@@ -1999,7 +1993,7 @@ paths: { }";
         }
 
         [Fact]
-        public void SerializeV31DocumentWithRefsInWebhooksWorks()
+        public async Task SerializeV31DocumentWithRefsInWebhooksWorks()
         {
             var expected = @"description: Returns all pets from the system that the user has access to
 operationId: findPets
@@ -2013,8 +2007,8 @@ responses:
           items:
             type: object";
 
-            var doc = OpenApiDocument.Load("Models/Samples/docWithReusableWebhooks.yaml").OpenApiDocument;
-
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml")).Document;
+          
             var stringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true });
             var webhooks = doc.Webhooks["pets"].Operations;
@@ -2025,7 +2019,7 @@ responses:
         }
 
         [Fact]
-        public void SerializeDocWithDollarIdInDollarRefSucceeds()
+        public async Task SerializeDocWithDollarIdInDollarRefSucceeds()
         {
             var expected = @"openapi: '3.1.1'
 info:
@@ -2067,9 +2061,62 @@ components:
         radius:
           type: number
 ";
-            var doc = OpenApiDocument.Load("Models/Samples/docWithDollarId.yaml").OpenApiDocument;
-
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml")).Document;
             var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void SerializeDocumentTagsWithMultipleExtensionsWorks()
+        {
+            var expected = @"{
+  ""openapi"": ""3.0.4"",
+  ""info"": {
+    ""title"": ""Test"",
+    ""version"": ""1.0.0""
+  },
+  ""paths"": { },
+  ""tags"": [
+    {
+      ""name"": ""tag1"",
+      ""x-tag1"": ""tag1""
+    },
+    {
+      ""name"": ""tag2"",
+      ""x-tag2"": ""tag2""
+    }
+  ]
+}";
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "Test",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths(),
+                Tags = new List<OpenApiTag>
+                {
+                    new OpenApiTag
+                    {
+                        Name = "tag1",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag1"] = new OpenApiAny("tag1")
+                        }
+                    },
+                    new OpenApiTag
+                    {
+                        Name = "tag2",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag2"] = new OpenApiAny("tag2")
+                        }
+                    }
+                }
+            };
+
+            var actual = doc.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
             actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
         }
     }

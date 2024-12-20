@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Hidi
 
         public int LinkCount { get; set; }
 
-        public override void Visit(OpenApiLink operation)
+        public override void Visit(OpenApiLink link)
         {
             LinkCount++;
         }

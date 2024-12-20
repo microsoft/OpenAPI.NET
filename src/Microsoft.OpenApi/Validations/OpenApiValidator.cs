@@ -67,219 +67,108 @@ namespace Microsoft.OpenApi.Validations
             _warnings.Add(warning);
         }
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiDocument"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiDocument item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiDocument doc) => Validate(doc);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiInfo"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiInfo item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiInfo info) => Validate(info);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiContact"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiContact item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiContact contact) => Validate(contact);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiComponents"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiComponents item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiComponents components) => Validate(components);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiHeader"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiHeader item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiHeader header) => Validate(header);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiResponse"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiResponse item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiResponse response) => Validate(response);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiMediaType"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiMediaType item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiMediaType mediaType) => Validate(mediaType);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiResponses"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiResponses item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiResponses response) => Validate(response);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiExternalDocs"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiExternalDocs item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiExternalDocs externalDocs) => Validate(externalDocs);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiLicense"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiLicense item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiLicense license) => Validate(license);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiOAuthFlow"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiOAuthFlow item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiOAuthFlow openApiOAuthFlow) => Validate(openApiOAuthFlow);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiTag"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiTag item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiTag tag) => Validate(tag);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiParameter"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiParameter item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiParameter parameter) => Validate(parameter);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiSchema"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiSchema item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiSchema schema) => Validate(schema);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiServer"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiServer item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiServer server) => Validate(server);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiEncoding"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiEncoding item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiEncoding encoding) => Validate(encoding);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiCallback"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiCallback item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiCallback callback) => Validate(callback);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="IOpenApiExtensible"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IOpenApiExtensible item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(IOpenApiExtensible openApiExtensible) => Validate(openApiExtensible);
 
-        /// <summary>
-        /// Execute validation rules against an <see cref="IOpenApiExtension"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IOpenApiExtension item) => Validate(item, item.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IOpenApiExtension openApiExtension) => Validate(openApiExtension, openApiExtension.GetType());
 
-        /// <summary>
-        /// Execute validation rules against a list of <see cref="OpenApiExample"/>
-        /// </summary>
-        /// <param name="items">The object to be validated</param>
-        public override void Visit(IList<OpenApiExample> items) => Validate(items, items.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IList<OpenApiExample> example) => Validate(example, example.GetType());
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiPathItem"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiPathItem item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiPathItem pathItem) => Validate(pathItem);
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiServerVariable"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiServerVariable item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiServerVariable serverVariable) => Validate(serverVariable);
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiSecurityScheme"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiSecurityScheme item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiSecurityScheme securityScheme) => Validate(securityScheme);
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiSecurityRequirement"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiSecurityRequirement item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiSecurityRequirement securityRequirement) => Validate(securityRequirement);
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiRequestBody"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiRequestBody item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiRequestBody requestBody) => Validate(requestBody);
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiPaths"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiPaths item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiPaths paths) => Validate(paths);
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiLink"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiLink item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiLink link) => Validate(link);
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiExample"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiExample item) => Validate(item);
+        /// <inheritdoc/>
+        public override void Visit(OpenApiExample example) => Validate(example);
 
-        /// <summary>
-        /// Execute validation rules against a <see cref="OpenApiOperation"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiOperation item) => Validate(item);
-        /// <summary>
-        /// Execute validation rules against a <see cref="IDictionary{OperationType, OpenApiOperation}"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IDictionary<OperationType, OpenApiOperation> item) => Validate(item, item.GetType());
-        /// <summary>
-        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiHeader}"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IDictionary<string, OpenApiHeader> item) => Validate(item, item.GetType());
-        /// <summary>
-        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiCallback}"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IDictionary<string, OpenApiCallback> item) => Validate(item, item.GetType());
-        /// <summary>
-        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiMediaType}"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IDictionary<string, OpenApiMediaType> item) => Validate(item, item.GetType());
-        /// <summary>
-        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiExample}"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IDictionary<string, OpenApiExample> item) => Validate(item, item.GetType());
-        /// <summary>
-        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiLink}"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IDictionary<string, OpenApiLink> item) => Validate(item, item.GetType());
-        /// <summary>
-        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiServerVariable}"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IDictionary<string, OpenApiServerVariable> item) => Validate(item, item.GetType());
-        /// <summary>
-        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiEncoding}"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(IDictionary<string, OpenApiEncoding> item) => Validate(item, item.GetType());
+        /// <inheritdoc/>
+        public override void Visit(OpenApiOperation operation) => Validate(operation);
+        /// <inheritdoc/>
+        public override void Visit(IDictionary<OperationType, OpenApiOperation> operations) => Validate(operations, operations.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IDictionary<string, OpenApiHeader> headers) => Validate(headers, headers.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IDictionary<string, OpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IDictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IDictionary<string, OpenApiExample> examples) => Validate(examples, examples.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IDictionary<string, OpenApiLink> links) => Validate(links, links.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IDictionary<string, OpenApiServerVariable> serverVariables) => Validate(serverVariables, serverVariables.GetType());
+        /// <inheritdoc/>
+        public override void Visit(IDictionary<string, OpenApiEncoding> encodings) => Validate(encodings, encodings.GetType());
 
         private void Validate<T>(T item)
         {

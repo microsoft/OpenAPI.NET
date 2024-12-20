@@ -13,10 +13,10 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// The parsed OpenApiDocument.  Null will be returned if the document could not be parsed.
         /// </summary>
-        public OpenApiDocument OpenApiDocument { set; get; }
+        public OpenApiDocument Document { get; set; }
         /// <summary>
         /// OpenApiDiagnostic contains the Errors reported while parsing
         /// </summary>
-        public OpenApiDiagnostic OpenApiDiagnostic { set; get; }
+        public OpenApiDiagnostic Diagnostic { get; set; }
     }
 }

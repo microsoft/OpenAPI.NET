@@ -19,5 +19,5 @@ VOLUME /app/collection.json
 ENV HIDI_CONTAINER=true DOTNET_TieredPGO=1 DOTNET_TC_QuickJitForLoops=1
 ENTRYPOINT ["dotnet", "Microsoft.OpenApi.Hidi.dll"]
 LABEL description="# Welcome to Hidi \
-To start transforming OpenAPI documents checkout [the getting started documentation](https://github.com/microsoft/OpenAPI.NET/tree/vnext/src/Microsoft.OpenApi.Hidi)  \
-[Source dockerfile](https://github.com/microsoft/OpenAPI.NET/blob/vnext/Dockerfile)"
+To start transforming OpenAPI documents checkout [the getting started documentation](https://github.com/microsoft/OpenAPI.NET/tree/main/src/Microsoft.OpenApi.Hidi)  \
+[Source dockerfile](https://github.com/microsoft/OpenAPI.NET/blob/main/Dockerfile)"

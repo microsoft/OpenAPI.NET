@@ -81,7 +81,7 @@ var httpClient = new HttpClient
     BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/")
 };
 
-var stream = await httpClient.GetStreamAsync("master/examples/v3.0/petstore.yaml");
+var stream = await httpClient.GetStreamAsync("main/examples/v3.0/petstore.yaml");
 
 // Read V3 as YAML
 var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic);
@@ -95,7 +95,7 @@ var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, Open
 In order to test the validity of an OpenApi document, we avail the following tools:
 - [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi)
 
-    A commandline tool for validating and transforming OpenAPI descriptions. [Installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET/blob/vnext/src/Microsoft.OpenApi.Hidi/readme.md)
+    A commandline tool for validating and transforming OpenAPI descriptions. [Installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET/blob/main/src/Microsoft.OpenApi.Hidi/readme.md)
 
 - Microsoft.OpenApi.Workbench
 

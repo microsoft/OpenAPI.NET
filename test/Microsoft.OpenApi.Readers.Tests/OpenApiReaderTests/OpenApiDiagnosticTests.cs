@@ -23,21 +23,21 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         }
 
         [Fact]
-        public void DetectedSpecificationVersionShouldBeV2_0()
+        public async Task DetectedSpecificationVersionShouldBeV2_0()
         {
-            var actual = OpenApiDocument.Load("V2Tests/Samples/basic.v2.yaml");
+            var actual = await OpenApiDocument.LoadAsync("V2Tests/Samples/basic.v2.yaml");
 
-            actual.OpenApiDiagnostic.Should().NotBeNull();
-            actual.OpenApiDiagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi2_0);
+            actual.Diagnostic.Should().NotBeNull();
+            actual.Diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi2_0);
         }
 
         [Fact]
-        public void DetectedSpecificationVersionShouldBeV3_0()
+        public async Task DetectedSpecificationVersionShouldBeV3_0()
         {
-            var actual = OpenApiDocument.Load("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
+            var actual = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
 
-            actual.OpenApiDiagnostic.Should().NotBeNull();
-            actual.OpenApiDiagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);
+            actual.Diagnostic.Should().NotBeNull();
+            actual.Diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);
         }
 
         [Fact]
@@ -55,11 +55,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             result = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/TodoMain.yaml", settings);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.OpenApiDocument.Workspace);
-            result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
-            {
-                new OpenApiError("", "[File: ./TodoReference.yaml] Paths is a REQUIRED field at #/")
-            });
+            Assert.NotNull(result.Document.Workspace);
+            result.Diagnostic.Errors.Should().BeEmpty();
         }
     }
 

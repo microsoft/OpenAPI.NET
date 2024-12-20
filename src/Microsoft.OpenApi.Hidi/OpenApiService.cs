@@ -22,6 +22,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OpenApi.ApiManifest;
 using Microsoft.OpenApi.ApiManifest.OpenAI;
+using Microsoft.OpenApi.ApiManifest.OpenAI.Authentication;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Hidi.Formatters;
@@ -66,7 +67,7 @@ namespace Microsoft.OpenApi.Hidi
 
 #pragma warning restore CA1308 // Normalize strings to uppercase
                     options.Output = new($"./output{inputExtension}");
-                };
+                }
 
                 if (options.CleanOutput && options.Output.Exists)
                 {
@@ -85,7 +86,7 @@ namespace Microsoft.OpenApi.Hidi
                 var apiDependency = await FindApiDependencyAsync(options.FilterOptions.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
                 if (apiDependency != null)
                 {
-                    options.OpenApi = apiDependency.ApiDescripionUrl;
+                    options.OpenApi = apiDependency.ApiDescriptionUrl;
                 }
 
                 // If Postman Collection is provided, load it
@@ -97,8 +98,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Load OpenAPI document
-                var format = OpenApiModelFactory.GetFormat(options.OpenApi);
-                var document = await GetOpenApiAsync(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApiAsync(options, openApiFormat.GetDisplayName(), logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
                 {
@@ -254,8 +254,8 @@ namespace Microsoft.OpenApi.Hidi
             else if (!string.IsNullOrEmpty(options.OpenApi))
             {
                 stream = await GetStreamAsync(options.OpenApi, logger, cancellationToken).ConfigureAwait(false);
-                var result = await ParseOpenApiAsync(options.OpenApi, options.InlineExternal, logger, stream, cancellationToken).ConfigureAwait(false);
-                document = result.OpenApiDocument;
+                var result = await ParseOpenApiAsync(options.OpenApi, format, options.InlineExternal, logger, stream, cancellationToken).ConfigureAwait(false);
+                document = result.Document;
             }
             else throw new InvalidOperationException("No input file path or URL provided");
 
@@ -351,14 +351,14 @@ namespace Microsoft.OpenApi.Hidi
             try
             {
                 using var stream = await GetStreamAsync(openApi, logger, cancellationToken).ConfigureAwait(false);
-
-                result = await ParseOpenApiAsync(openApi, false, logger, stream, cancellationToken).ConfigureAwait(false);
+                var openApiFormat = !string.IsNullOrEmpty(openApi) ? GetOpenApiFormat(openApi, logger) : OpenApiFormat.Yaml;
+                result = await ParseOpenApiAsync(openApi, openApiFormat.GetDisplayName(),false, logger, stream, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Calculating statistics"))
                 {
                     var statsVisitor = new StatsVisitor();
                     var walker = new OpenApiWalker(statsVisitor);
-                    walker.Walk(result.OpenApiDocument);
+                    walker.Walk(result.Document);
 
                     logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
                     #pragma warning disable CA2254
@@ -377,10 +377,10 @@ namespace Microsoft.OpenApi.Hidi
 
             if (result is null) return null;
 
-            return result.OpenApiDiagnostic.Errors.Count == 0;
+            return result.Diagnostic.Errors.Count == 0;
         }
 
-        private static async Task<ReadResult> ParseOpenApiAsync(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
+        private static async Task<ReadResult> ParseOpenApiAsync(string openApiFile, string format, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
         {
             ReadResult result;
             var stopwatch = Stopwatch.StartNew();
@@ -396,7 +396,6 @@ namespace Microsoft.OpenApi.Hidi
                         new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 };
 
-                var format = OpenApiModelFactory.GetFormat(openApiFile);
                 result = await OpenApiDocument.LoadAsync(stream, format, settings, cancellationToken).ConfigureAwait(false);
 
                 logger.LogTrace("{Timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
@@ -439,7 +438,7 @@ namespace Microsoft.OpenApi.Hidi
             var sb = new StringBuilder();
             document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
 
-            var doc = OpenApiDocument.Parse(sb.ToString(), format).OpenApiDocument;
+            var doc = OpenApiDocument.Parse(sb.ToString(), format).Document;
 
             return doc;
         }
@@ -587,8 +586,8 @@ namespace Microsoft.OpenApi.Hidi
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var format = OpenApiModelFactory.GetFormat(options.OpenApi);
-                var document = await GetOpenApiAsync(options, format, logger, null, cancellationToken).ConfigureAwait(false);
+                var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
+                var document = await GetOpenApiAsync(options, openApiFormat.GetDisplayName(), logger, null, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
@@ -649,7 +648,7 @@ namespace Microsoft.OpenApi.Hidi
 
         private static void LogErrors(ILogger logger, ReadResult result)
         {
-            var context = result.OpenApiDiagnostic;
+            var context = result.Diagnostic;
             if (context.Errors.Count != 0)
             {
                 using (logger.BeginScope("Detected errors"))
@@ -745,12 +744,14 @@ namespace Microsoft.OpenApi.Hidi
             var apiDependency = await FindApiDependencyAsync(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
             if (apiDependency != null)
             {
-                options.OpenApi = apiDependency.ApiDescripionUrl;
+                options.OpenApi = apiDependency.ApiDescriptionUrl;
             }
 
+            var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) 
+                ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
+
             // Load OpenAPI document
-            var format = OpenApiModelFactory.GetFormat(options.OpenApi);
-            var document = await GetOpenApiAsync(options, format, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+            var document = await GetOpenApiAsync(options, openApiFormat.GetDisplayName(), logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -771,15 +772,11 @@ namespace Microsoft.OpenApi.Hidi
             WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_1, document, logger);
 
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
-            var manifest = new OpenAIPluginManifest
+            var manifest = new OpenAIPluginManifest(document.Info?.Title ?? "Title", document.Info?.Title ?? "Title", "https://go.microsoft.com/fwlink/?LinkID=288890", document.Info?.Contact?.Email ?? "placeholder@contoso.com", document.Info?.License?.Url.ToString() ?? "https://placeholderlicenseurl.com")
             {
-                NameForHuman = document.Info.Title,
-                DescriptionForHuman = document.Info.Description,
-                Api = new()
-                {
-                    Type = "openapi",
-                    Url = "./openapi.json"
-                }
+                DescriptionForHuman = document.Info?.Description ?? "Description placeholder",
+                Api = new("openapi", "./openapi.json"),
+                Auth = new ManifestNoAuth(),
             };
             manifest.NameForModel = manifest.NameForHuman;
             manifest.DescriptionForModel = manifest.DescriptionForHuman;

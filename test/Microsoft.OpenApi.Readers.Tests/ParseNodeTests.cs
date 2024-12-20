@@ -33,9 +33,8 @@ namespace Microsoft.OpenApi.Tests
 
             var result = OpenApiDocument.Parse(input, "yaml");
 
-            result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
-                new OpenApiError(new OpenApiReaderException("Expected a value.")),
-                new OpenApiError("", "Paths is a REQUIRED field at #/")
+            result.Diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
+                new OpenApiError(new OpenApiReaderException("Expected a value."))
             });
         }
 
@@ -60,7 +59,7 @@ namespace Microsoft.OpenApi.Tests
 
             var res= OpenApiDocument.Parse(input, "yaml");
 
-            res.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
+            res.Diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
             {
                 new(new OpenApiReaderException("schema must be a map/object") {
                     Pointer = "#/paths/~1foo/get/responses/200/content/application~1json/schema"

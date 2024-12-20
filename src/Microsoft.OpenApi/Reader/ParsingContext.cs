@@ -271,9 +271,9 @@ namespace Microsoft.OpenApi.Reader
 
         private void ValidateRequiredFields(OpenApiDocument doc, string version)
         {
-            if ((version.is2_0() || version.is3_0()) && (doc.Paths == null || !doc.Paths.Any()))
+            if ((version.is2_0() || version.is3_0()) && (doc.Paths == null))
             {
-                // paths is a required field in OpenAPI 3.0 but optional in 3.1
+                // paths is a required field in OpenAPI 2.0 and 3.0 but optional in 3.1
                 RootNode.Context.Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {RootNode.Context.GetLocation()}"));
             }
         }

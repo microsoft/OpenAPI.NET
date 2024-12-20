@@ -48,13 +48,13 @@ namespace Microsoft.OpenApi.Reader.Services
                     var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
                     var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken);
                     // Merge diagnostics
-                    if (result.OpenApiDiagnostic != null)
+                    if (result.Diagnostic != null)
                     {
-                        diagnostic.AppendDiagnostic(result.OpenApiDiagnostic, item.ExternalResource);
+                        diagnostic.AppendDiagnostic(result.Diagnostic, item.ExternalResource);
                     }
-                    if (result.OpenApiDocument != null)
+                    if (result.Document != null)
                     {
-                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, format, diagnostic, cancellationToken);
+                        var loadDiagnostic = await LoadAsync(item, result.Document, format, diagnostic, cancellationToken);
                         diagnostic = loadDiagnostic;
                     }
                 }

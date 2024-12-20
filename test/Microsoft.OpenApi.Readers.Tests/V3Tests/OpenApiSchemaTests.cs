@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models.References;
+using System.Threading.Tasks;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -35,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "primitiveSchema.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = yamlStream.Documents[0].RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
@@ -65,10 +66,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
   ""foo"": ""bar"",
   ""baz"": [ 1,2]
 }";
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -89,10 +89,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
   ""foo"",
   ""baz""
 ]";
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -115,10 +114,9 @@ get:
     '200':
       description: Ok
 ";
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic, "yaml");
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic, "yaml");
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -150,7 +148,7 @@ get:
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+                var yamlNode = yamlStream.Documents[0].RootNode;
 
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
@@ -182,7 +180,7 @@ get:
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = yamlStream.Documents[0].RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
@@ -230,22 +228,18 @@ get:
         }
 
         [Fact]
-        public void ParseBasicSchemaWithReferenceShouldSucceed()
+        public async Task ParseBasicSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
 
             // Assert
-            var components = result.OpenApiDocument.Components;
+            var components = result.Document.Components;
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+            result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                 });
 
             var expectedComponents = new OpenApiComponents
@@ -278,7 +272,7 @@ get:
                     {
                         AllOf =
                         {
-                            new OpenApiSchemaReference("ErrorModel", result.OpenApiDocument),
+                            new OpenApiSchemaReference("ErrorModel", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
@@ -300,10 +294,10 @@ get:
         }
 
         [Fact]
-        public void ParseAdvancedSchemaWithReferenceShouldSucceed()
+        public async Task ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = OpenApiDocument.Load(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
 
             var expectedComponents = new OpenApiComponents
             {
@@ -338,7 +332,7 @@ get:
                         Description = "A representation of a cat",
                         AllOf =
                         {
-                            new OpenApiSchemaReference("Pet", result.OpenApiDocument),
+                            new OpenApiSchemaReference("Pet", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
@@ -366,7 +360,7 @@ get:
                         Description = "A representation of a dog",
                         AllOf =
                         {
-                            new OpenApiSchemaReference("Pet", result.OpenApiDocument),
+                            new OpenApiSchemaReference("Pet", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
@@ -389,7 +383,7 @@ get:
             };
 
             // We serialize so that we can get rid of the schema BaseUri properties which show up as diffs
-            var actual = result.OpenApiDocument.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = result.Document.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             var expected = expectedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert

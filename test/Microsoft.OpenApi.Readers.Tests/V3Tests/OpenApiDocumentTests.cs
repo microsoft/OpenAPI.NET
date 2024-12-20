@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -31,48 +32,38 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
         }
 
-        public T Clone<T>(T element) where T : IOpenApiSerializable
+        private static T Clone<T>(T element) where T : IOpenApiSerializable
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
             {
-                IOpenApiWriter writer;
-                var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
-                {
-                    InlineLocalReferences = true
-                });
-                element.SerializeAsV3(writer);
-                writer.Flush();
-                stream.Position = 0;
+                InlineLocalReferences = true
+            });
+            element.SerializeAsV3(writer);
+            writer.Flush();
+            stream.Position = 0;
 
-                using (var streamReader = new StreamReader(stream))
-                {
-                    var result = streamReader.ReadToEnd();
-                    return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
-                }
-            }
+            using var streamReader = new StreamReader(stream);
+            var result = streamReader.ReadToEnd();
+            return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, out var _);
         }
 
-        public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
+        private static OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
             {
-                IOpenApiWriter writer;
-                var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
-                {
-                    InlineLocalReferences = true
-                });
-                element.SerializeAsV3(writer);
-                writer.Flush();
-                stream.Position = 0;
+                InlineLocalReferences = true
+            });
+            element.SerializeAsV3(writer);
+            writer.Flush();
+            stream.Position = 0;
 
-                using (var streamReader = new StreamReader(stream))
-                {
-                    var result = streamReader.ReadToEnd();
-                    return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
-                }
-            }
+            using var streamReader = new StreamReader(stream);
+            var result = streamReader.ReadToEnd();
+            return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out var _);
         }
 
         [Fact]
@@ -87,7 +78,7 @@ info:
 paths: {}",
                 OpenApiConstants.Yaml);
 
-            result.OpenApiDocument.Should().BeEquivalentTo(
+            result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -98,34 +89,36 @@ paths: {}",
                     Paths = new OpenApiPaths()
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+            result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                        {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                        }
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                 });
         }
 
         [Fact]
-        public void ParseBasicDocumentWithMultipleServersShouldSucceed()
+        public void ParseInlineStringWithoutProvidingFormatSucceeds()
+        {
+            var stringOpenApiDoc = """
+openapi: 3.1.0
+info:
+  title: Sample API
+  version: 1.0.0
+paths: {}
+""";
+
+            var readResult = OpenApiDocument.Parse(stringOpenApiDoc);
+            readResult.Document.Info.Title.Should().Be("Sample API");
+        }
+
+        [Fact]
+        public async Task ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
             var path = System.IO.Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
-            var result = OpenApiDocument.Load(path);
+            var result = await OpenApiDocument.LoadAsync(path);
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic()
-                {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                        new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
-                });
-
-            result.OpenApiDocument.Should().BeEquivalentTo(
+            result.Diagnostic.Errors.Should().BeEmpty();
+            result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -150,12 +143,17 @@ paths: {}",
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
         [Fact]
-        public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
+        public async Task ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
             using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
-            var result = OpenApiDocument.Load(stream, OpenApiConstants.Yaml);
+            // Copy stream to MemoryStream
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
 
-            result.OpenApiDocument.Should().BeEquivalentTo(
+            var result = OpenApiDocument.Load(memoryStream);
+
+            result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -165,12 +163,11 @@ paths: {}",
                     Paths = new OpenApiPaths()
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+            result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic
                 {
                     Errors =
                     {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/"),
                             new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
                     },
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
@@ -178,11 +175,11 @@ paths: {}",
         }
 
         [Fact]
-        public void ParseMinimalDocumentShouldSucceed()
+        public async Task ParseMinimalDocumentShouldSucceed()
         {
-            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
+            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
 
-            result.OpenApiDocument.Should().BeEquivalentTo(
+            result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -193,22 +190,18 @@ paths: {}",
                     Paths = new OpenApiPaths()
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+            result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                 });
         }
 
         [Fact]
-        public void ParseStandardPetStoreDocumentShouldSucceed()
+        public async Task ParseStandardPetStoreDocumentShouldSucceed()
         {
             using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "petStore.yaml"));
-            var actual = OpenApiDocument.Load(stream, OpenApiConstants.Yaml);
+            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
 
             var components = new OpenApiComponents
             {
@@ -287,10 +280,10 @@ paths: {}",
                 }
             };
 
-            var petSchema = new OpenApiSchemaReference("pet1", actual.OpenApiDocument);
-            var newPetSchema = new OpenApiSchemaReference("newPet", actual.OpenApiDocument);
+            var petSchema = new OpenApiSchemaReference("pet1", actual.Document);
+            var newPetSchema = new OpenApiSchemaReference("newPet", actual.Document);
 
-            var errorModelSchema = new OpenApiSchemaReference("errorModel", actual.OpenApiDocument);
+            var errorModelSchema = new OpenApiSchemaReference("errorModel", actual.Document);
 
             var expectedDoc = new OpenApiDocument
             {
@@ -584,17 +577,17 @@ paths: {}",
                 Components = components
             };
 
-            actual.OpenApiDocument.Should().BeEquivalentTo(expectedDoc, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+            actual.Document.Should().BeEquivalentTo(expectedDoc, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            actual.OpenApiDiagnostic.Should().BeEquivalentTo(
+            actual.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
-        public void ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
+        public async Task ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
             using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml"));
-            var actual = OpenApiDocument.Load(stream, OpenApiConstants.Yaml);
+            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
 
             var components = new OpenApiComponents
             {
@@ -693,7 +686,7 @@ paths: {}",
             {
                 Id = "pet1",
                 Type = ReferenceType.Schema,
-                HostDocument = actual.OpenApiDocument
+                HostDocument = actual.Document
             };
 
             var newPetSchema = Clone(components.Schemas["newPet"]);
@@ -702,7 +695,7 @@ paths: {}",
             {
                 Id = "newPet",
                 Type = ReferenceType.Schema,
-                HostDocument = actual.OpenApiDocument
+                HostDocument = actual.Document
             };
 
             var errorModelSchema = Clone(components.Schemas["errorModel"]);
@@ -711,7 +704,7 @@ paths: {}",
             {
                 Id = "errorModel",
                 Type = ReferenceType.Schema,
-                HostDocument = actual.OpenApiDocument
+                HostDocument = actual.Document
             };
 
             var tag1 = new OpenApiTag
@@ -1087,7 +1080,7 @@ paths: {}",
                     }
             };
 
-            actual.OpenApiDocument.Should().BeEquivalentTo(expected, options => options
+            actual.Document.Should().BeEquivalentTo(expected, options => options
             .Excluding(x => x.HashCode)
             .Excluding(m => m.Tags[0].Reference)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference)
@@ -1098,38 +1091,38 @@ paths: {}",
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
 
-            actual.OpenApiDiagnostic.Should().BeEquivalentTo(
+            actual.Diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
-        public void ParsePetStoreExpandedShouldSucceed()
+        public async Task ParsePetStoreExpandedShouldSucceed()
         {
-            var actual = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"));
+            var actual = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"));
 
             // TODO: Create the object in memory and compare with the one read from YAML file.
 
-            actual.OpenApiDiagnostic.Should().BeEquivalentTo(
+            actual.Diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
-        public void GlobalSecurityRequirementShouldReferenceSecurityScheme()
+        public async Task GlobalSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "securedApi.yaml"));
+            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "securedApi.yaml"));
 
-            var securityRequirement = result.OpenApiDocument.SecurityRequirements.First();
+            var securityRequirement = result.Document.SecurityRequirements[0];
 
-            securityRequirement.Keys.First().Should().BeEquivalentTo(result.OpenApiDocument.Components.SecuritySchemes.First().Value,
+            securityRequirement.Keys.First().Should().BeEquivalentTo(result.Document.Components.SecuritySchemes.First().Value,
                 options => options.Excluding(x => x.Reference));
         }
 
         [Fact]
-        public void HeaderParameterShouldAllowExample()
+        public async Task HeaderParameterShouldAllowExample()
         {
-            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
+            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
 
-            var exampleHeader = result.OpenApiDocument.Components?.Headers?["example-header"];
+            var exampleHeader = result.Document.Components?.Headers?["example-header"];
             Assert.NotNull(exampleHeader);
             exampleHeader.Should().BeEquivalentTo(
                 new OpenApiHeader()
@@ -1151,7 +1144,7 @@ paths: {}",
                 .Excluding(e => e.Example.Parent)
                 .Excluding(x => x.Reference));
 
-            var examplesHeader = result.OpenApiDocument.Components?.Headers?["examples-header"];
+            var examplesHeader = result.Document.Components?.Headers?["examples-header"];
             Assert.NotNull(examplesHeader);
             examplesHeader.Should().BeEquivalentTo(
                 new OpenApiHeader()
@@ -1187,7 +1180,7 @@ paths: {}",
         }
 
         [Fact]
-        public void ParseDocumentWithReferencedSecuritySchemeWorks()
+        public async Task ParseDocumentWithReferencedSecuritySchemeWorks()
         {
             // Act
             var settings = new OpenApiReaderSettings
@@ -1195,8 +1188,8 @@ paths: {}",
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
             };
 
-            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), settings);
-            var securityScheme = result.OpenApiDocument.Components.SecuritySchemes["OAuth2"];
+            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), settings);
+            var securityScheme = result.Document.Components.SecuritySchemes["OAuth2"];
 
             // Assert
             Assert.False(securityScheme.UnresolvedReference);
@@ -1204,7 +1197,7 @@ paths: {}",
         }
 
         [Fact]
-        public void ParseDocumentWithJsonSchemaReferencesWorks()
+        public async Task ParseDocumentWithJsonSchemaReferencesWorks()
         {
             // Arrange
             using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
@@ -1214,32 +1207,32 @@ paths: {}",
             {
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
             };
-            var result = OpenApiDocument.Load(stream, OpenApiConstants.Yaml, settings);
+            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, settings);
 
-            var actualSchema = result.OpenApiDocument.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var actualSchema = result.Document.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
-            var expectedSchema = new OpenApiSchemaReference("User", result.OpenApiDocument);
+            var expectedSchema = new OpenApiSchemaReference("User", result.Document);
             // Assert
             actualSchema.Should().BeEquivalentTo(expectedSchema);
         }
 
         [Fact]
-        public void ValidateExampleShouldNotHaveDataTypeMismatch()
+        public async Task ValidateExampleShouldNotHaveDataTypeMismatch()
         {
             // Act
-            var result = OpenApiDocument.Load(System.IO.Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
+            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
             {
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
 
             });
 
             // Assert
-            var warnings = result.OpenApiDiagnostic.Warnings;
+            var warnings = result.Diagnostic.Warnings;
             Assert.False(warnings.Any());
         }
 
         [Fact]
-        public void ParseDocWithRefsUsingProxyReferencesSucceeds()
+        public async Task ParseDocWithRefsUsingProxyReferencesSucceeds()
         {
             // Arrange
             var expected = new OpenApiDocument
@@ -1330,11 +1323,10 @@ components:
             using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
             // Act
-            var doc = OpenApiDocument.Load(stream, "yaml").OpenApiDocument;
-            var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
+            var doc = (await OpenApiDocument.LoadAsync(stream)).Document;
+            var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var outputDoc = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0).MakeLineBreaksEnvironmentNeutral();
-            var output = actualParam.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
-            var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters.First();
+            var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
 
             // Assert
             actualParam.Should().BeEquivalentTo(expectedParam, options => options
@@ -1385,17 +1377,13 @@ components:
                 Paths = new()
             };
 
-            result.OpenApiDiagnostic.Should().BeEquivalentTo(
+            result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic 
                 { 
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                 });
 
-            result.OpenApiDocument.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.BaseUri));
+            result.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.BaseUri));
         }
 
         [Fact]
@@ -1415,7 +1403,14 @@ components:
                                                             paths: {}
                                                             """, "yaml");
 
-            result.OpenApiDiagnostic.Errors.Should().NotBeEmpty();
+            result.Diagnostic.Errors.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task ParseDocumentWithEmptyPathsSucceeds()
+        {
+            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"));
+            result.Diagnostic.Errors.Should().BeEmpty();
         }
     }
 }

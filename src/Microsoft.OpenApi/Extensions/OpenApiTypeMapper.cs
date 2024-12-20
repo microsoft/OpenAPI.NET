@@ -13,12 +13,27 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class OpenApiTypeMapper
     {
+#nullable enable
         /// <summary>
         /// Maps a JsonSchema data type to an identifier.
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string ToIdentifier(this JsonSchemaType? schemaType)
+        public static string? ToIdentifier(this JsonSchemaType? schemaType)
+        {
+            if (schemaType is null)
+            {
+                return null;
+            }
+            return schemaType.Value.ToIdentifier();
+        }
+
+        /// <summary>
+        /// Maps a JsonSchema data type to an identifier.
+        /// </summary>
+        /// <param name="schemaType"></param>
+        /// <returns></returns>
+        public static string? ToIdentifier(this JsonSchemaType schemaType)
         {
             return schemaType switch
             {
@@ -32,6 +47,7 @@ namespace Microsoft.OpenApi.Extensions
                 _ => null,
             };
         }
+#nullable restore
 
         /// <summary>
         /// Converts a schema type's identifier into the enum equivalent
