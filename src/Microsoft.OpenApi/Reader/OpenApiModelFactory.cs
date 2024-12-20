@@ -128,6 +128,7 @@ namespace Microsoft.OpenApi.Reader
             if (!settings.LeaveStreamOpen)
             {
                 input.Dispose();
+                preparedStream.Dispose();
             }
 
             return result;
