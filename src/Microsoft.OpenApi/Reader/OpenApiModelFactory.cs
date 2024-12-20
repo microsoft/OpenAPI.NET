@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Reader
             settings ??= new OpenApiReaderSettings();
 
             // Copy string into MemoryStream
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
 
             return InternalLoad(stream, format, settings);
         }
@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Reader
             if (input is null) throw new ArgumentNullException(nameof(input));
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
             return Load<T>(stream, version, format, out diagnostic, settings);
         }
 
@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Reader
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
             var reader = OpenApiReaderRegistry.GetReader(format);
-            var readResult = await reader.ReadAsync(input, settings, cancellationToken);
+            var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
 
             if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
             {
