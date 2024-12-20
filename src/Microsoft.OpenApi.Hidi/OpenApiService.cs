@@ -22,6 +22,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OpenApi.ApiManifest;
 using Microsoft.OpenApi.ApiManifest.OpenAI;
+using Microsoft.OpenApi.ApiManifest.OpenAI.Authentication;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Hidi.Formatters;
@@ -85,7 +86,7 @@ namespace Microsoft.OpenApi.Hidi
                 var apiDependency = await FindApiDependencyAsync(options.FilterOptions.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
                 if (apiDependency != null)
                 {
-                    options.OpenApi = apiDependency.ApiDescripionUrl;
+                    options.OpenApi = apiDependency.ApiDescriptionUrl;
                 }
 
                 // If Postman Collection is provided, load it
@@ -745,7 +746,7 @@ namespace Microsoft.OpenApi.Hidi
             var apiDependency = await FindApiDependencyAsync(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
             if (apiDependency != null)
             {
-                options.OpenApi = apiDependency.ApiDescripionUrl;
+                options.OpenApi = apiDependency.ApiDescriptionUrl;
             }
 
             // Load OpenAPI document
@@ -771,15 +772,11 @@ namespace Microsoft.OpenApi.Hidi
             WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_1, document, logger);
 
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
-            var manifest = new OpenAIPluginManifest
+            var manifest = new OpenAIPluginManifest(document.Info?.Title ?? "Title", document.Info?.Title ?? "Title", "https://go.microsoft.com/fwlink/?LinkID=288890", document.Info?.Contact?.Email ?? "placeholder@contoso.com", document.Info?.License?.Url.ToString() ?? "https://placeholderlicenseurl.com")
             {
-                NameForHuman = document.Info.Title,
-                DescriptionForHuman = document.Info.Description,
-                Api = new()
-                {
-                    Type = "openapi",
-                    Url = "./openapi.json"
-                }
+                DescriptionForHuman = document.Info?.Description ?? "Description placeholder",
+                Api = new("openapi", "./openapi.json"),
+                Auth = new ManifestNoAuth(),
             };
             manifest.NameForModel = manifest.NameForHuman;
             manifest.DescriptionForModel = manifest.DescriptionForHuman;
