@@ -297,10 +297,9 @@ extends:
                   $artifactName = Get-ChildItem -Path $(Pipeline.Workspace)\Nugets -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
                   $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
                   #Set Variable $artifactName and $artifactVersion
-                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
+                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false;]$artifactVersion"
                   echo "$artifactVersion"
                 displayName: 'Fetch Artifact Name'
-                name: getTagVersion
               - task: GitHubRelease@1
                 displayName: 'GitHub release (edit)'
                 condition: succeededOrFailed()
@@ -308,8 +307,8 @@ extends:
                   gitHubConnection: 'Github-MaggieKimani1'
                   action: create
                   tagSource: userSpecifiedTag
-                  tag: '$(getTagVersion.artifactVersion)'
-                  title: '$(getTagVersion.artifactVersion)'
+                  tag: '$(artifactVersion)'
+                  title: '$(artifactVersion)'
                   releaseNotesSource: inline
                   assets: '$(Pipeline.Workspace)\**\*.exe'
                   changeLogType: issueBased
