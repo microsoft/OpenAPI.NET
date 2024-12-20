@@ -302,22 +302,22 @@ extends:
                 displayName: 'Fetch Artifact Name'
                 name: getTagVersion
               - task: GitHubRelease@1
-              displayName: 'GitHub release (edit)'
-              condition: succeededOrFailed()
-              inputs:
-                gitHubConnection: 'Github-MaggieKimani1'
-                action: create
-                tagSource: userSpecifiedTag
-                tag: '$(getTagVersion.artifactVersion)'
-                title: '$(getTagVersion.artifactVersion)'
-                releaseNotesSource: inline
-                assets: '$(Pipeline.Workspace)\**\*.exe'
-                changeLogType: issueBased
-                changeLogLabels: '[ 
-                  { "label" : "feature-work", "feature", "displayName" : "New Features", "state" : "closed" }, 
-                  { "label" : "enhancement", "V2-Enhancement", "displayName" : "Enhancements", "state" : "closed" }, 
-                  { "label" : "bug", "bug-fix", "displayName" : "Bugs", "state" : "closed" }, 
-                  { "label" : "documentation", "doc", "displayName" : "Documentation", "state" : "closed"}, 
-                  { "label" : "dependencies", "displayName" : "Package Updates", "state" : "closed" }
-                  ]'
+                displayName: 'GitHub release (edit)'
+                condition: succeededOrFailed()
+                inputs:
+                  gitHubConnection: 'Github-MaggieKimani1'
+                  action: create
+                  tagSource: userSpecifiedTag
+                  tag: '$(getTagVersion.artifactVersion)'
+                  title: '$(getTagVersion.artifactVersion)'
+                  releaseNotesSource: inline
+                  assets: '$(Pipeline.Workspace)\**\*.exe'
+                  changeLogType: issueBased
+                  changeLogLabels: '[ 
+                    { "label" : "feature-work", "feature", "displayName" : "New Features", "state" : "closed" }, 
+                    { "label" : "enhancement", "V2-Enhancement", "displayName" : "Enhancements", "state" : "closed" }, 
+                    { "label" : "bug", "bug-fix", "displayName" : "Bugs", "state" : "closed" }, 
+                    { "label" : "documentation", "doc", "displayName" : "Documentation", "state" : "closed"}, 
+                    { "label" : "dependencies", "displayName" : "Package Updates", "state" : "closed" }
+                    ]'
 
