@@ -35,12 +35,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseAdvancedEncodingShouldSucceed()
+        public async Task ParseAdvancedEncodingShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml"));
 
             // Act
-            var encoding = OpenApiModelFactory.Load<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, out _);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             encoding.Should().BeEquivalentTo(

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -55,36 +55,6 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <summary>
-        /// Reads the stream input and ensures it is buffered before passing it to the Load method.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="input"></param>
-        /// <param name="version"></param>
-        /// <param name="format"></param>
-        /// <param name="diagnostic"></param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        public static T Load<T>(Stream input,
-                                OpenApiSpecVersion version,
-                                out OpenApiDiagnostic diagnostic,
-                                string format = null,
-                                OpenApiReaderSettings settings = null) where T : IOpenApiElement
-        {
-            if (input is null) throw new ArgumentNullException(nameof(input));
-            if (input is MemoryStream memoryStream)
-            {
-                return Load<T>(memoryStream, version, format, out diagnostic, settings);
-            }
-            else
-            {
-                memoryStream = new MemoryStream();
-                input.CopyTo(memoryStream);
-                memoryStream.Position = 0;
-                return Load<T>(memoryStream, version, format, out diagnostic, settings);
-            }
-        }
-
-        /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -127,7 +97,7 @@ namespace Microsoft.OpenApi.Reader
         public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement
         {
             var result = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
-            return Load<T>(result.Item1, version, out var _, result.Item2, settings);
+            return await LoadAsync<T>(result.Item1, version, result.Item2, settings);
         }
 
         /// <summary>
@@ -163,6 +133,34 @@ namespace Microsoft.OpenApi.Reader
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Reads the stream input and ensures it is buffered before passing it to the Load method.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="version"></param>
+        /// <param name="format"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static async Task<T> LoadAsync<T>(Stream input,
+                                                 OpenApiSpecVersion version,
+                                                 string format = null,
+                                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        {
+            if (input is null) throw new ArgumentNullException(nameof(input));
+            if (input is MemoryStream memoryStream)
+            {
+                return Load<T>(memoryStream, version, format, out var _, settings);
+            }
+            else
+            {
+                memoryStream = new MemoryStream();
+                await input.CopyToAsync(memoryStream).ConfigureAwait(false);
+                memoryStream.Position = 0;
+                return Load<T>(memoryStream, version, format, out var _, settings);
+            }
         }
 
         /// <summary>

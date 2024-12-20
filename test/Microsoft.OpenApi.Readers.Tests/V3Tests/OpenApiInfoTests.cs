@@ -109,12 +109,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseMinimalInfoShouldSucceed()
+        public async Task ParseMinimalInfoShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalInfo.yaml"));
 
             // Act
-            var openApiInfo = OpenApiModelFactory.Load<OpenApiInfo>(stream, OpenApiSpecVersion.OpenApi3_0, out _, "yaml");
+            var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(stream, OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(

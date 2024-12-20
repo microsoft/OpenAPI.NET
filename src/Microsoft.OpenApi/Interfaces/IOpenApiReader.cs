@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Reads the MemoryStream and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
-        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Reads the JsonNode input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
-        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
