@@ -11,6 +11,8 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using System.Text.Json.Nodes;
+using System.Text.Json;
+using System.Globalization;
 
 namespace Microsoft.OpenApi.MicrosoftExtensions;
 
@@ -97,7 +99,10 @@ public class EnumDescription : IOpenApiElement
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
         if (source.TryGetPropertyValue(nameof(Value).ToFirstCharacterLowerCase(), out var rawValue) && rawValue is JsonNode value)
-            Value = value.GetValue<string>();
+            if (value.GetValueKind() == JsonValueKind.Number)
+                Value = value.GetValue<decimal>().ToString(CultureInfo.InvariantCulture);
+            else
+                Value = value.GetValue<string>();
         if (source.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var rawDescription) && rawDescription is JsonNode description)
             Description = description.GetValue<string>();
         if (source.TryGetPropertyValue(nameof(Name).ToFirstCharacterLowerCase(), out var rawName) && rawName is JsonNode name)
