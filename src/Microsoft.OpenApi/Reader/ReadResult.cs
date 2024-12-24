@@ -18,5 +18,13 @@ namespace Microsoft.OpenApi.Reader
         /// OpenApiDiagnostic contains the Errors reported while parsing
         /// </summary>
         public OpenApiDiagnostic Diagnostic { get; set; }
+        /// <summary>
+        /// Deconstructs the result for easier assignment on the client application.
+        /// </summary>
+        public void Deconstruct(out OpenApiDocument document, out OpenApiDiagnostic diagnostic)
+        {
+            document = Document;
+            diagnostic = Diagnostic;
+        }
     }
 }
