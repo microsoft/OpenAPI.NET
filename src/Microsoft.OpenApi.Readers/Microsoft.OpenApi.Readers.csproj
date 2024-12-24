@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
+        <!-- net6.0 target is present because of the conditional build in OpenApiYamlReader.Read -->
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>2.0.0-preview3</Version>
