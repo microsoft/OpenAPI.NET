@@ -12,6 +12,7 @@ using SharpYaml.Serialization;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Text;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -53,7 +54,13 @@ namespace Microsoft.OpenApi.Readers
             // Parse the YAML text in the stream into a sequence of JsonNodes
             try
             {
+#if NET
+// this represents net core, net5 and up
                 using var stream = new StreamReader(input, default, true, -1, settings.LeaveStreamOpen);
+#else
+// the implementation differs and results in a null reference exception in NETFX
+                using var stream = new StreamReader(input, Encoding.UTF8, true, 4096, settings.LeaveStreamOpen);
+#endif
                 jsonNode = LoadJsonNodesFromYamlDocument(stream);
             }
             catch (JsonException ex)
