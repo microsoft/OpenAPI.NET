@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.MicrosoftExtensions;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -22,7 +23,7 @@ public class OpenApiEnumValuesDescriptionExtensionTests
     {
         // Arrange
         OpenApiEnumValuesDescriptionExtension extension = new();
-        using TextWriter sWriter = new StringWriter();
+        using var sWriter = new StringWriter();
         OpenApiJsonWriter writer = new(sWriter);
 
         // Act
@@ -41,16 +42,16 @@ public class OpenApiEnumValuesDescriptionExtensionTests
         OpenApiEnumValuesDescriptionExtension extension = new()
         {
             EnumName = "TestEnum",
-            ValuesDescriptions = new()
-        {
+            ValuesDescriptions =
+        [
             new() {
                 Description = "TestDescription",
                 Value = "TestValue",
                 Name = "TestName"
             }
-        }
+        ]
         };
-        using TextWriter sWriter = new StringWriter();
+        using var sWriter = new StringWriter();
         OpenApiJsonWriter writer = new(sWriter);
 
         // Act
@@ -64,6 +65,50 @@ public class OpenApiEnumValuesDescriptionExtensionTests
         Assert.Contains("description\": \"TestDescription", result);
         Assert.Contains("value\": \"TestValue", result);
         Assert.Contains("name\": \"TestName", result);
+    }
+    [Fact]
+    public void ParsesEnumDescription()
+    {
+        var extensionValue =
+"""
+{
+    "value": "Standard_LRS",
+    "description": "Locally redundant storage.",
+    "name": "StandardLocalRedundancy"
+}
+""";
+        var source = JsonNode.Parse(extensionValue);
+        Assert.NotNull(source);
+        var sourceAsObject = source.AsObject();
+        Assert.NotNull(sourceAsObject);
+
+        var descriptionItem = new EnumDescription(sourceAsObject);
+        Assert.NotNull(descriptionItem);
+        Assert.Equal("Standard_LRS", descriptionItem.Value);
+        Assert.Equal("Locally redundant storage.", descriptionItem.Description);
+        Assert.Equal("StandardLocalRedundancy", descriptionItem.Name);
+    }
+       [Fact]
+    public void ParsesEnumDescriptionWithDecimalValue()
+    {
+        var extensionValue =
+"""
+{
+    "value": -1,
+    "description": "Locally redundant storage.",
+    "name": "StandardLocalRedundancy"
+}
+""";
+        var source = JsonNode.Parse(extensionValue);
+        Assert.NotNull(source);
+        var sourceAsObject = source.AsObject();
+        Assert.NotNull(sourceAsObject);
+
+        var descriptionItem = new EnumDescription(sourceAsObject);
+        Assert.NotNull(descriptionItem);
+        Assert.Equal("-1", descriptionItem.Value);
+        Assert.Equal("Locally redundant storage.", descriptionItem.Description);
+        Assert.Equal("StandardLocalRedundancy", descriptionItem.Name);
     }
 }
 

@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
+        <!-- net6.0 target is present because of the conditional build in OpenApiYamlReader.Read -->
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>2.0.0-preview3</Version>
+        <Version>2.0.0-preview4</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
