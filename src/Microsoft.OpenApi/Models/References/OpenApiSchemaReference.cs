@@ -21,14 +21,21 @@ namespace Microsoft.OpenApi.Models.References
         private JsonNode _example;
         private IList<JsonNode> _examples;
 
+        #nullable enable
+        private OpenApiSchema? _targetProxy;
+        #nullable restore
+
         private OpenApiSchema Target
         {
             get
             {
                 _target ??= Reference.HostDocument?.ResolveReferenceTo<OpenApiSchema>(_reference);
-                OpenApiSchema resolved = new OpenApiSchema(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
+                if (_targetProxy is null)
+                {
+                    _targetProxy = new OpenApiSchema(_target);
+                    if (!string.IsNullOrEmpty(_description)) _targetProxy.Description = _description;
+                }
+                return _targetProxy;
             }
         }
 
