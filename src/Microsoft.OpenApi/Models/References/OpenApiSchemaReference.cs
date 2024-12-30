@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override string Title { get => string.IsNullOrEmpty(_title) ? Target.Title : _title; set => _title = value; }
+        public override string Title { get => string.IsNullOrEmpty(_title) ? Target?.Title : _title; set => _title = value; }
         /// <inheritdoc/>
         public override string Schema { get => string.IsNullOrEmpty(_schema) ? Target.Schema : _schema; set => _schema = value; }
         /// <inheritdoc/>
@@ -124,13 +124,13 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Comment { get => string.IsNullOrEmpty(_comment) ? Target.Comment : _comment; set => _comment = value; }
         /// <inheritdoc/>
-        public override IDictionary<string, bool> Vocabulary { get => _vocabulary is not null ? _vocabulary : Target.Vocabulary; set => _vocabulary = value; }
+        public override IDictionary<string, bool> Vocabulary { get => _vocabulary is not null ? _vocabulary : Target?.Vocabulary; set => _vocabulary = value; }
         /// <inheritdoc/>
         public override string DynamicRef { get => string.IsNullOrEmpty(_dynamicRef) ? Target.DynamicRef : _dynamicRef; set => _dynamicRef = value; }
         /// <inheritdoc/>
         public override string DynamicAnchor { get => string.IsNullOrEmpty(_dynamicAnchor) ? Target.DynamicAnchor : _dynamicAnchor; set => _dynamicAnchor = value; }
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiSchema> Definitions { get => _definitions is not null ? _definitions : Target.Definitions; set => _definitions = value; }
+        public override IDictionary<string, OpenApiSchema> Definitions { get => _definitions is not null ? _definitions : Target?.Definitions; set => _definitions = value; }
         /// <inheritdoc/>
         public override decimal? V31ExclusiveMaximum { get => _v31ExclusiveMaximum is not null ? _v31ExclusiveMaximum.Value : Target.V31ExclusiveMaximum; set => _v31ExclusiveMaximum = value; }
         /// <inheritdoc/>
@@ -176,15 +176,15 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override bool WriteOnly { get => _writeOnly is not null ? _writeOnly.Value : Target.WriteOnly; set => _writeOnly = value; }
         /// <inheritdoc/>
-        public override IList<OpenApiSchema> AllOf { get => _allOf is not null ? _allOf : Target.AllOf; set => _allOf = value; }
+        public override IList<OpenApiSchema> AllOf { get => _allOf is not null ? _allOf : Target?.AllOf; set => _allOf = value; }
         /// <inheritdoc/>
-        public override IList<OpenApiSchema> OneOf { get => _oneOf is not null ? _oneOf : Target.OneOf; set => _oneOf = value; }
+        public override IList<OpenApiSchema> OneOf { get => _oneOf is not null ? _oneOf : Target?.OneOf; set => _oneOf = value; }
         /// <inheritdoc/>
-        public override IList<OpenApiSchema> AnyOf { get => _anyOf is not null ? _anyOf : Target.AnyOf; set => _anyOf = value; }
+        public override IList<OpenApiSchema> AnyOf { get => _anyOf is not null ? _anyOf : Target?.AnyOf; set => _anyOf = value; }
         /// <inheritdoc/>
         public override OpenApiSchema Not { get => _not is not null ? _not : Target.Not; set => _not = value; }
         /// <inheritdoc/>
-        public override ISet<string> Required { get => _required is not null ? _required : Target.Required; set => _required = value; }
+        public override ISet<string> Required { get => _required is not null ? _required : Target?.Required; set => _required = value; }
         /// <inheritdoc/>
         public override OpenApiSchema Items { get => _items is not null ? _items : Target.Items; set => _items = value; }
         /// <inheritdoc/>
@@ -194,9 +194,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override bool? UniqueItems { get => _uniqueItems is not null ? _uniqueItems : Target.UniqueItems; set => _uniqueItems = value; }
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiSchema> Properties { get => _properties is not null ? _properties : Target.Properties ; set => _properties = value; }
+        public override IDictionary<string, OpenApiSchema> Properties { get => _properties is not null ? _properties : Target?.Properties ; set => _properties = value; }
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiSchema> PatternProperties { get => _patternProperties is not null ? _patternProperties : Target.PatternProperties; set => _patternProperties = value; }
+        public override IDictionary<string, OpenApiSchema> PatternProperties { get => _patternProperties is not null ? _patternProperties : Target?.PatternProperties; set => _patternProperties = value; }
         /// <inheritdoc/>
         public override int? MaxProperties { get => _maxProperties is not null ? _maxProperties : Target.MaxProperties; set => _maxProperties = value; }
         /// <inheritdoc/>
@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Models.References
             set => Target.Examples = value; 
         }
         /// <inheritdoc/>
-        public override IList<JsonNode> Enum { get => _enum is not null ? _enum : Target.Enum; set => _enum = value; }
+        public override IList<JsonNode> Enum { get => _enum is not null ? _enum : Target?.Enum; set => _enum = value; }
         /// <inheritdoc/>
         public override bool Nullable { get => _nullable is null ? Target.Nullable : _nullable.Value; set => _nullable = value; }
         /// <inheritdoc/>
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override OpenApiXml Xml { get => _xml is not null ? _xml : Target.Xml; set => _xml = value; }
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target.Extensions; set => _extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
