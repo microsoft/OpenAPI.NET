@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (document?.Components == null) return;
 
-            string baseUri = document.BaseUri + OpenApiConstants.ComponentsSegment;
+            string baseUri = getBaseUri(document);
             string location;
 
             // Register Schema
@@ -139,6 +139,33 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+        private string getBaseUri(OpenApiDocument openApiDocument)
+        {
+            return openApiDocument.BaseUri + OpenApiConstants.ComponentsSegment;
+        }
+
+        /// <summary>
+        /// Registers a schema for a document in the workspace
+        /// </summary>
+        /// <param name="openApiDocument">The document to register the schema for.</param>
+        /// <param name="openApiSchema">The schema to register.</param>
+        /// <param name="id">The id of the schema.</param>
+        /// <returns>true if the schema is successfully registered; otherwise false.</returns>
+        /// <exception cref="ArgumentNullException">openApiDocument is null</exception>
+        /// <exception cref="ArgumentNullException">openApiSchema is null</exception>
+        /// <exception cref="ArgumentNullException">id is null or empty</exception>
+        public bool RegisterSchemaForDocument(OpenApiDocument openApiDocument, OpenApiSchema openApiSchema, string id)
+        {
+            Utils.CheckArgumentNull(openApiDocument);
+            Utils.CheckArgumentNull(openApiSchema);
+            Utils.CheckArgumentNullOrEmpty(id);
+
+            var baseUri = getBaseUri(openApiDocument);
+
+            var location = baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + id;
+
+            return RegisterComponent(location, openApiSchema);
+        }
 
         /// <summary>
         /// Registers a component in the component registry.
