@@ -166,11 +166,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override decimal? MultipleOf { get => _multipleOf is not null ? _multipleOf : Target.MultipleOf; set => _multipleOf = value; }
         /// <inheritdoc/>
-        public override JsonNode Default 
-        { 
-            get => _default ??= Target.Default; //TODO normalize like other properties
-            set => _default = value; 
-        }
+        public override JsonNode Default { get => _default is not null ? _default : Target.Default; set => _default = value; }
         /// <inheritdoc/>
         public override bool ReadOnly { get => _readOnly is not null ? _readOnly.Value : Target.ReadOnly; set => _readOnly = value; }
         /// <inheritdoc/>
@@ -182,11 +178,11 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override IList<OpenApiSchema> AnyOf { get => _anyOf is not null ? _anyOf : Target?.AnyOf; set => _anyOf = value; }
         /// <inheritdoc/>
-        public override OpenApiSchema Not { get => _not is not null ? _not : Target.Not; set => _not = value; }
+        public override OpenApiSchema Not { get => _not is not null ? _not : Target?.Not; set => _not = value; }
         /// <inheritdoc/>
         public override ISet<string> Required { get => _required is not null ? _required : Target?.Required; set => _required = value; }
         /// <inheritdoc/>
-        public override OpenApiSchema Items { get => _items is not null ? _items : Target.Items; set => _items = value; }
+        public override OpenApiSchema Items { get => _items is not null ? _items : Target?.Items; set => _items = value; }
         /// <inheritdoc/>
         public override int? MaxItems { get => _maxItems is not null ? _maxItems : Target.MaxItems; set => _maxItems = value; }
         /// <inheritdoc/>
@@ -204,21 +200,13 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override bool AdditionalPropertiesAllowed { get => _additionalPropertiesAllowed is not null ? _additionalPropertiesAllowed.Value : Target.AdditionalPropertiesAllowed; set => _additionalPropertiesAllowed = value; }
         /// <inheritdoc/>
-        public override OpenApiSchema AdditionalProperties { get => _additionalProperties is not null ? _additionalProperties : Target.AdditionalProperties; set => _additionalProperties = value; }
+        public override OpenApiSchema AdditionalProperties { get => _additionalProperties is not null ? _additionalProperties : Target?.AdditionalProperties; set => _additionalProperties = value; }
         /// <inheritdoc/>
         public override OpenApiDiscriminator Discriminator { get => _discriminator is not null ? _discriminator : Target.Discriminator; set => _discriminator = value; }
         /// <inheritdoc/>
-        public override JsonNode Example 
-        { 
-            get => _example ??= Target.Example; //TODO normalize like other properties
-            set => _example = value; 
-        }
+        public override JsonNode Example { get => _example is not null ? _example : Target.Example; set => _example = value; }
         /// <inheritdoc/>
-        public override IList<JsonNode> Examples 
-        { 
-            get => _examples ??= Target.Examples; //TODO normalize like other properties
-            set => Target.Examples = value; 
-        }
+        public override IList<JsonNode> Examples { get => _examples is not null ? _examples : Target?.Examples; set => _examples = value; }
         /// <inheritdoc/>
         public override IList<JsonNode> Enum { get => _enum is not null ? _enum : Target?.Enum; set => _enum = value; }
         /// <inheritdoc/>
@@ -226,7 +214,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override bool UnevaluatedProperties { get => _unevaluatedProperties is not null ? _unevaluatedProperties.Value : Target.UnevaluatedProperties; set => _unevaluatedProperties = value; }
         /// <inheritdoc/>
-        public override OpenApiExternalDocs ExternalDocs { get => _externalDocs is not null ? _externalDocs : Target.ExternalDocs; set => _externalDocs = value; }
+        public override OpenApiExternalDocs ExternalDocs { get => _externalDocs is not null ? _externalDocs : Target?.ExternalDocs; set => _externalDocs = value; }
         /// <inheritdoc/>
         public override bool Deprecated { get => _deprecated is not null ? _deprecated.Value : Target.Deprecated; set => _deprecated = value; }
         /// <inheritdoc/>
