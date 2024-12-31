@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var schema = OpenApiV3Deserializer.LoadSchema(node);
+            var schema = OpenApiV3Deserializer.LoadSchema(node, new());
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -157,7 +157,7 @@ get:
                 var node = new MapNode(context, asJsonNode);
 
                 // Act
-                var schema = OpenApiV3Deserializer.LoadSchema(node);
+                var schema = OpenApiV3Deserializer.LoadSchema(node, new());
 
                 // Assert
                 diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -189,7 +189,7 @@ get:
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var schema = OpenApiV3Deserializer.LoadSchema(node);
+            var schema = OpenApiV3Deserializer.LoadSchema(node, new());
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());

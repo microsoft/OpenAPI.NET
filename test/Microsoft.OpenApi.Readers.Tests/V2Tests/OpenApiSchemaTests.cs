@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var schema = OpenApiV2Deserializer.LoadSchema(node);
+            var schema = OpenApiV2Deserializer.LoadSchema(node, new());
 
             // Assert
             schema.Should().BeEquivalentTo(new OpenApiSchema
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var schema = OpenApiV2Deserializer.LoadSchema(node);
+            var schema = OpenApiV2Deserializer.LoadSchema(node, new());
 
             // Assert
             schema.Should().BeEquivalentTo(
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var schema = OpenApiV2Deserializer.LoadSchema(node);
+            var schema = OpenApiV2Deserializer.LoadSchema(node, new());
 
             // Assert
             var expected = new OpenApiSchema

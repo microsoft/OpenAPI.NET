@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("PathItem");
 

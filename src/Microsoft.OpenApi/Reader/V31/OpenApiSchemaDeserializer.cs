@@ -151,11 +151,11 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "not",
-                (o, n, _) => o.Not = LoadSchema(n)
+                (o, n, doc) => o.Not = LoadSchema(n, doc)
             },
             {
                 "items",
-                (o, n, _) => o.Items = LoadSchema(n)
+                (o, n, doc) => o.Items = LoadSchema(n, doc)
             },
             {
                 "properties",
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 (o, n, t) => o.PatternProperties = n.CreateMap(LoadSchema, t)
             },
             {
-                "additionalProperties", (o, n, _) =>
+                "additionalProperties", (o, n, doc) =>
                 {
                     if (n is ValueNode)
                     {
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                     else
                     {
-                        o.AdditionalProperties = LoadSchema(n);
+                        o.AdditionalProperties = LoadSchema(n, doc);
                     }
                 }
             },
@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "discriminator",
-                (o, n, _) => o.Discriminator = LoadDiscriminator(n)
+                (o, n, doc) => o.Discriminator = LoadDiscriminator(n, doc)
             },
             {
                 "readOnly",
@@ -215,11 +215,11 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "xml",
-                (o, n, _) => o.Xml = LoadXml(n)
+                (o, n, doc) => o.Xml = LoadXml(n, doc)
             },
             {
                 "externalDocs",
-                (o, n, _) => o.ExternalDocs = LoadExternalDocs(n)
+                (o, n, doc) => o.ExternalDocs = LoadExternalDocs(n, doc)
             },
             {
                 "example",
@@ -240,7 +240,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 
@@ -261,7 +261,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
                 if (isRecognized)
                 {
-                    propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields);
+                    propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
                 }
                 else
                 {
