@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiTagReference(OpenApiTagReference source):base()
         {
             Reference = source?.Reference != null ? new(source.Reference) : null;
-            _target = source._target;
+            _target = source?._target;
         }
 
         private const string ReferenceErrorMessage = "Setting the value from the reference is not supported, use the target property instead.";
