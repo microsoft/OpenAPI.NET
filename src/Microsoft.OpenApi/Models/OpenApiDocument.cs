@@ -503,21 +503,6 @@ namespace Microsoft.OpenApi.Models
                 throw new ArgumentException(Properties.SRResource.LocalReferenceRequiresType);
             }
 
-            // Special case for Tag
-            if (reference.Type == ReferenceType.Tag)
-            {
-                foreach (var tag in this.Tags ?? Enumerable.Empty<OpenApiTag>())
-                {
-                    if (tag.Name == reference.Id)
-                    {
-                        tag.Reference = reference;
-                        return tag;
-                    }
-                }
-
-                return null;
-            }
-
             string uriLocation;
             if (reference.Id.Contains("/")) // this means its a URL reference
             {

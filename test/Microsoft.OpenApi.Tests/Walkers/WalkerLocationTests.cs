@@ -328,5 +328,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add(this.PathString);
         }
+        public override void Visit(IList<OpenApiTagReference> openApiTags)
+        {
+            Locations.Add(this.PathString);
+        }
     }
 }

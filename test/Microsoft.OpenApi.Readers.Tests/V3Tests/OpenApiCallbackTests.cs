@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseBasicCallbackShouldSucceed()
         {
             // Act
-            var callback = await OpenApiModelFactory.LoadAsync<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0);
+            var callback = await OpenApiModelFactory.LoadAsync<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
             callback.Should().BeEquivalentTo(

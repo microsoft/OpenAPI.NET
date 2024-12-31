@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMediaTypeWithExampleShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMediaTypeWithExamplesShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
             mediaType.Should().BeEquivalentTo(

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 
@@ -57,7 +56,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
         }
 
-        public virtual List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map)
+        public virtual List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
         {
             throw new OpenApiReaderException("Cannot create simple list from this type of node.", Context);
         }
