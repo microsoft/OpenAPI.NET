@@ -80,7 +80,6 @@ namespace Microsoft.OpenApi.Models.References
             if (!writer.GetSettings().ShouldInlineReference(_reference))
             {
                 _reference.SerializeAsV3(writer);
-                return;
             }
             else
             {
@@ -94,7 +93,6 @@ namespace Microsoft.OpenApi.Models.References
             if (!writer.GetSettings().ShouldInlineReference(_reference))
             {
                 _reference.SerializeAsV31(writer);
-                return;
             }
             else
             {
@@ -108,7 +106,6 @@ namespace Microsoft.OpenApi.Models.References
             if (!writer.GetSettings().ShouldInlineReference(_reference))
             {
                 _reference.SerializeAsV2(writer);
-                return;
             }
             else
             {
@@ -119,7 +116,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
             writer.WriteValue(Name);
         }
     }
