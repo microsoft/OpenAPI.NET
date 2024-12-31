@@ -64,12 +64,9 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "parameters",
-                (o, n, _) =>
+                (o, n, doc) =>
                 {
-                    if (o.Components == null)
-                    {
-                        o.Components = new();
-                    }
+                    o.Components ??= new();
 
                     o.Components.Parameters = n.CreateMap(LoadParameter, o);
 
@@ -77,7 +74,8 @@ namespace Microsoft.OpenApi.Reader.V2
                             {
                                 var parameter = LoadParameter(node: p, loadRequestBody: true, hostDocument: d);
                                 return parameter != null ? CreateRequestBody(p.Context, parameter) : null;
-                            }
+                            },
+                            doc
                       );
                 }
             },

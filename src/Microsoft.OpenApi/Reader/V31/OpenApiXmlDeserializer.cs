@@ -54,14 +54,14 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiXml LoadXml(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiXml LoadXml(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("xml");
 
             var xml = new OpenApiXml();
             foreach (var property in mapNode)
             {
-                property.ParseField(xml, _xmlFixedFields, _xmlPatternFields);
+                property.ParseField(xml, _xmlFixedFields, _xmlPatternFields, hostDocument);
             }
 
             return xml;

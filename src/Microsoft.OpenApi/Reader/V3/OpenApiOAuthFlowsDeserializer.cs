@@ -28,14 +28,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiOAuthFlows LoadOAuthFlows(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiOAuthFlows LoadOAuthFlows(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("OAuthFlows");
 
             var oAuthFlows = new OpenApiOAuthFlows();
             foreach (var property in mapNode)
             {
-                property.ParseField(oAuthFlows, _oAuthFlowsFixedFields, _oAuthFlowsPatternFields);
+                property.ParseField(oAuthFlows, _oAuthFlowsFixedFields, _oAuthFlowsPatternFields, hostDocument);
             }
 
             return oAuthFlows;

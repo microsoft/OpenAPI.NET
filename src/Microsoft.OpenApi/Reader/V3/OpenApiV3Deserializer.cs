@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Reader.V3
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap, 
-            OpenApiDocument hostDocument = null)
+            OpenApiDocument hostDocument)
         {
             if (mapNode == null)
             {
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Reader.V3
             };
         }
 
-        public static OpenApiAny LoadAny(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiAny LoadAny(ParseNode node, OpenApiDocument hostDocument)
         {
             return new OpenApiAny(node.CreateAny());
         }

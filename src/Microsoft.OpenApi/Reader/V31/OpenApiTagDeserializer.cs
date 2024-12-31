@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiTag LoadTag(ParseNode n, OpenApiDocument hostDocument = null)
+        public static OpenApiTag LoadTag(ParseNode n, OpenApiDocument hostDocument)
         {
             var mapNode = n.CheckMapNode("tag");
 
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(domainObject, _tagFixedFields, _tagPatternFields);
+                propertyNode.ParseField(domainObject, _tagFixedFields, _tagPatternFields, hostDocument);
             }
 
             return domainObject;

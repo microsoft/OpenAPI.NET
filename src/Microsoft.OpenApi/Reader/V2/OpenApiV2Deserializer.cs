@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        public static JsonNode LoadAny(ParseNode node, OpenApiDocument hostDocument = null)
+        public static JsonNode LoadAny(ParseNode node, OpenApiDocument hostDocument)
         {
             return node.CreateAny();
         }

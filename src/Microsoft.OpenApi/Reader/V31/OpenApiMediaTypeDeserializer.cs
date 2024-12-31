@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Reader.V31
             }
         };
 
-        public static OpenApiMediaType LoadMediaType(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiMediaType LoadMediaType(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Content);
 

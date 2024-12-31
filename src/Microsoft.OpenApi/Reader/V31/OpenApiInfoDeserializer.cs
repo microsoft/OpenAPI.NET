@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-"), (o, k, n, _) => o.AddExtension(k,LoadExtension(k, n))}
         };
 
-        public static OpenApiInfo LoadInfo(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiInfo LoadInfo(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("Info");
             var info = new OpenApiInfo();

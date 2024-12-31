@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var header = OpenApiV2Deserializer.LoadHeader(node);
+            var header = OpenApiV2Deserializer.LoadHeader(node, new());
 
             // Assert
             header.Should().BeEquivalentTo(
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var header = OpenApiV2Deserializer.LoadHeader(node);
+            var header = OpenApiV2Deserializer.LoadHeader(node, new());
 
             // Assert
             header.Should().BeEquivalentTo(

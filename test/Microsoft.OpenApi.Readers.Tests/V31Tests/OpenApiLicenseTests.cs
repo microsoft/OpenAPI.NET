@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var license = OpenApiV31Deserializer.LoadLicense(node);
+            var license = OpenApiV31Deserializer.LoadLicense(node, new());
 
             // Assert
             license.Should().BeEquivalentTo(

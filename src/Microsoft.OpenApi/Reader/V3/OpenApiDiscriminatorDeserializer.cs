@@ -27,14 +27,14 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields = new();
 
-        public static OpenApiDiscriminator LoadDiscriminator(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiDiscriminator LoadDiscriminator(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("discriminator");
 
             var discriminator = new OpenApiDiscriminator();
             foreach (var property in mapNode)
             {
-                property.ParseField(discriminator, _discriminatorFixedFields, _discriminatorPatternFields);
+                property.ParseField(discriminator, _discriminatorFixedFields, _discriminatorPatternFields, hostDocument);
             }
 
             return discriminator;

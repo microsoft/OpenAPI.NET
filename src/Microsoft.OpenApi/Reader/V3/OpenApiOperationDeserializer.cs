@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "externalDocs",
-                    (o, n, _) => o.ExternalDocs = LoadExternalDocs(n)
+                    (o, n, doc) => o.ExternalDocs = LoadExternalDocs(n, doc)
                 },
                 {
                     "operationId",
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
+        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("Operation");
 

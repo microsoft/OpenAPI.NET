@@ -41,14 +41,14 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiOAuthFlow LoadOAuthFlow(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiOAuthFlow LoadOAuthFlow(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("OAuthFlow");
 
             var oauthFlow = new OpenApiOAuthFlow();
             foreach (var property in mapNode)
             {
-                property.ParseField(oauthFlow, _oAuthFlowFixedFileds, _oAuthFlowPatternFields);
+                property.ParseField(oauthFlow, _oAuthFlowFixedFileds, _oAuthFlowPatternFields, hostDocument);
             }
 
             return oauthFlow;

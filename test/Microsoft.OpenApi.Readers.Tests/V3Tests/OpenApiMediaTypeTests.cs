@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             }
 
             // Act
-            var mediaType = OpenApiV3Deserializer.LoadMediaType(node);
+            var mediaType = OpenApiV3Deserializer.LoadMediaType(node, new());
             var serialized = mediaType.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert

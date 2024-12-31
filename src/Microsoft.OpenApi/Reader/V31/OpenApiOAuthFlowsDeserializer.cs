@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Reader.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiOAuthFlows> _oAuthFlowsFixedFileds =
+        private static readonly FixedFieldMap<OpenApiOAuthFlows> _oAuthFlowsFixedFields =
             new()
             {
                 {"implicit", (o, n, t) => o.Implicit = LoadOAuthFlow(n, t)},
@@ -25,14 +25,14 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiOAuthFlows LoadOAuthFlows(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiOAuthFlows LoadOAuthFlows(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("OAuthFlows");
 
             var oAuthFlows = new OpenApiOAuthFlows();
             foreach (var property in mapNode)
             {
-                property.ParseField(oAuthFlows, _oAuthFlowsFixedFileds, _oAuthFlowsPatternFields);
+                property.ParseField(oAuthFlows, _oAuthFlowsFixedFields, _oAuthFlowsPatternFields, hostDocument);
             }
 
             return oAuthFlows;
