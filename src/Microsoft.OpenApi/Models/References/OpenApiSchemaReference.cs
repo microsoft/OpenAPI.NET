@@ -118,59 +118,59 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Title { get => string.IsNullOrEmpty(_title) ? Target?.Title : _title; set => _title = value; }
         /// <inheritdoc/>
-        public override string Schema { get => string.IsNullOrEmpty(_schema) ? Target.Schema : _schema; set => _schema = value; }
+        public override string Schema { get => string.IsNullOrEmpty(_schema) ? Target?.Schema : _schema; set => _schema = value; }
         /// <inheritdoc/>
-        public override string Id { get => string.IsNullOrEmpty(_id) ? Target.Id : _id; set => _id = value; }
+        public override string Id { get => string.IsNullOrEmpty(_id) ? Target?.Id : _id; set => _id = value; }
         /// <inheritdoc/>
-        public override string Comment { get => string.IsNullOrEmpty(_comment) ? Target.Comment : _comment; set => _comment = value; }
+        public override string Comment { get => string.IsNullOrEmpty(_comment) ? Target?.Comment : _comment; set => _comment = value; }
         /// <inheritdoc/>
         public override IDictionary<string, bool> Vocabulary { get => _vocabulary is not null ? _vocabulary : Target?.Vocabulary; set => _vocabulary = value; }
         /// <inheritdoc/>
-        public override string DynamicRef { get => string.IsNullOrEmpty(_dynamicRef) ? Target.DynamicRef : _dynamicRef; set => _dynamicRef = value; }
+        public override string DynamicRef { get => string.IsNullOrEmpty(_dynamicRef) ? Target?.DynamicRef : _dynamicRef; set => _dynamicRef = value; }
         /// <inheritdoc/>
-        public override string DynamicAnchor { get => string.IsNullOrEmpty(_dynamicAnchor) ? Target.DynamicAnchor : _dynamicAnchor; set => _dynamicAnchor = value; }
+        public override string DynamicAnchor { get => string.IsNullOrEmpty(_dynamicAnchor) ? Target?.DynamicAnchor : _dynamicAnchor; set => _dynamicAnchor = value; }
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiSchema> Definitions { get => _definitions is not null ? _definitions : Target?.Definitions; set => _definitions = value; }
         /// <inheritdoc/>
-        public override decimal? V31ExclusiveMaximum { get => _v31ExclusiveMaximum is not null ? _v31ExclusiveMaximum.Value : Target.V31ExclusiveMaximum; set => _v31ExclusiveMaximum = value; }
+        public override decimal? V31ExclusiveMaximum { get => _v31ExclusiveMaximum is not null ? _v31ExclusiveMaximum.Value : Target?.V31ExclusiveMaximum; set => _v31ExclusiveMaximum = value; }
         /// <inheritdoc/>
-        public override decimal? V31ExclusiveMinimum { get => _v31ExclusiveMinimum is not null ? _v31ExclusiveMinimum.Value : Target.V31ExclusiveMinimum; set => _v31ExclusiveMinimum = value; }
+        public override decimal? V31ExclusiveMinimum { get => _v31ExclusiveMinimum is not null ? _v31ExclusiveMinimum.Value : Target?.V31ExclusiveMinimum; set => _v31ExclusiveMinimum = value; }
         /// <inheritdoc/>
-        public override bool UnEvaluatedProperties { get => _unEvaluatedProperties is not null ? _unEvaluatedProperties.Value : Target.UnEvaluatedProperties; set => _unEvaluatedProperties = value; }
+        public override bool UnEvaluatedProperties { get => _unEvaluatedProperties is not null ? _unEvaluatedProperties.Value : Target?.UnEvaluatedProperties ?? false; set => _unEvaluatedProperties = value; }
         /// <inheritdoc/>
-        public override JsonSchemaType? Type { get => _type is not null ? _type.Value : Target.Type; set => _type = value; }
+        public override JsonSchemaType? Type { get => _type is not null ? _type.Value : Target?.Type; set => _type = value; }
         /// <inheritdoc/>
-        public override string Const { get => string.IsNullOrEmpty(_const) ? Target.Const : _const; set => _const = value; }
+        public override string Const { get => string.IsNullOrEmpty(_const) ? Target?.Const : _const; set => _const = value; }
         /// <inheritdoc/>
-        public override string Format { get => string.IsNullOrEmpty(_format) ? Target.Format : _format; set => _format = value; }
+        public override string Format { get => string.IsNullOrEmpty(_format) ? Target?.Format : _format; set => _format = value; }
         /// <inheritdoc/>
         public override string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
             set => _description = value;
         }
         /// <inheritdoc/>
-        public override decimal? Maximum { get => _maximum is not null ? _maximum : Target.Maximum; set => _maximum = value; }
+        public override decimal? Maximum { get => _maximum is not null ? _maximum : Target?.Maximum; set => _maximum = value; }
         /// <inheritdoc/>
-        public override bool? ExclusiveMaximum { get => _exclusiveMaximum is not null ? _exclusiveMaximum : Target.ExclusiveMaximum; set => _exclusiveMaximum = value; }
+        public override bool? ExclusiveMaximum { get => _exclusiveMaximum is not null ? _exclusiveMaximum : Target?.ExclusiveMaximum; set => _exclusiveMaximum = value; }
         /// <inheritdoc/>
-        public override decimal? Minimum { get => _minimum is not null ? _minimum : Target.Minimum; set => _minimum = value; }
+        public override decimal? Minimum { get => _minimum is not null ? _minimum : Target?.Minimum; set => _minimum = value; }
         /// <inheritdoc/>
-        public override bool? ExclusiveMinimum { get => _exclusiveMinimum is not null ? _exclusiveMinimum : Target.ExclusiveMinimum; set => _exclusiveMinimum = value; }
+        public override bool? ExclusiveMinimum { get => _exclusiveMinimum is not null ? _exclusiveMinimum : Target?.ExclusiveMinimum; set => _exclusiveMinimum = value; }
         /// <inheritdoc/>
-        public override int? MaxLength { get => _maxLength is not null ? _maxLength : Target.MaxLength; set => _maxLength = value; }
+        public override int? MaxLength { get => _maxLength is not null ? _maxLength : Target?.MaxLength; set => _maxLength = value; }
         /// <inheritdoc/>
-        public override int? MinLength { get => _minLength is not null ? _minLength : Target.MinLength; set => _minLength = value; }
+        public override int? MinLength { get => _minLength is not null ? _minLength : Target?.MinLength; set => _minLength = value; }
         /// <inheritdoc/>
-        public override string Pattern { get => string.IsNullOrEmpty(_pattern) ? Target.Pattern : _pattern; set => _pattern = value; }
+        public override string Pattern { get => string.IsNullOrEmpty(_pattern) ? Target?.Pattern : _pattern; set => _pattern = value; }
         /// <inheritdoc/>
-        public override decimal? MultipleOf { get => _multipleOf is not null ? _multipleOf : Target.MultipleOf; set => _multipleOf = value; }
+        public override decimal? MultipleOf { get => _multipleOf is not null ? _multipleOf : Target?.MultipleOf; set => _multipleOf = value; }
         /// <inheritdoc/>
-        public override JsonNode Default { get => _default is not null ? _default : Target.Default; set => _default = value; }
+        public override JsonNode Default { get => _default is not null ? _default : Target?.Default; set => _default = value; }
         /// <inheritdoc/>
-        public override bool ReadOnly { get => _readOnly is not null ? _readOnly.Value : Target.ReadOnly; set => _readOnly = value; }
+        public override bool ReadOnly { get => _readOnly is not null ? _readOnly.Value : Target?.ReadOnly ?? false; set => _readOnly = value; }
         /// <inheritdoc/>
-        public override bool WriteOnly { get => _writeOnly is not null ? _writeOnly.Value : Target.WriteOnly; set => _writeOnly = value; }
+        public override bool WriteOnly { get => _writeOnly is not null ? _writeOnly.Value : Target?.WriteOnly ?? false; set => _writeOnly = value; }
         /// <inheritdoc/>
         public override IList<OpenApiSchema> AllOf { get => _allOf is not null ? _allOf : Target?.AllOf; set => _allOf = value; }
         /// <inheritdoc/>
@@ -184,41 +184,41 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override OpenApiSchema Items { get => _items is not null ? _items : Target?.Items; set => _items = value; }
         /// <inheritdoc/>
-        public override int? MaxItems { get => _maxItems is not null ? _maxItems : Target.MaxItems; set => _maxItems = value; }
+        public override int? MaxItems { get => _maxItems is not null ? _maxItems : Target?.MaxItems; set => _maxItems = value; }
         /// <inheritdoc/>
-        public override int? MinItems { get => _minItems is not null ? _minItems : Target.MinItems; set => _minItems = value; }
+        public override int? MinItems { get => _minItems is not null ? _minItems : Target?.MinItems; set => _minItems = value; }
         /// <inheritdoc/>
-        public override bool? UniqueItems { get => _uniqueItems is not null ? _uniqueItems : Target.UniqueItems; set => _uniqueItems = value; }
+        public override bool? UniqueItems { get => _uniqueItems is not null ? _uniqueItems : Target?.UniqueItems; set => _uniqueItems = value; }
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiSchema> Properties { get => _properties is not null ? _properties : Target?.Properties ; set => _properties = value; }
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiSchema> PatternProperties { get => _patternProperties is not null ? _patternProperties : Target?.PatternProperties; set => _patternProperties = value; }
         /// <inheritdoc/>
-        public override int? MaxProperties { get => _maxProperties is not null ? _maxProperties : Target.MaxProperties; set => _maxProperties = value; }
+        public override int? MaxProperties { get => _maxProperties is not null ? _maxProperties : Target?.MaxProperties; set => _maxProperties = value; }
         /// <inheritdoc/>
-        public override int? MinProperties { get => _minProperties is not null ? _minProperties : Target.MinProperties; set => _minProperties = value; }
+        public override int? MinProperties { get => _minProperties is not null ? _minProperties : Target?.MinProperties; set => _minProperties = value; }
         /// <inheritdoc/>
-        public override bool AdditionalPropertiesAllowed { get => _additionalPropertiesAllowed is not null ? _additionalPropertiesAllowed.Value : Target.AdditionalPropertiesAllowed; set => _additionalPropertiesAllowed = value; }
+        public override bool AdditionalPropertiesAllowed { get => _additionalPropertiesAllowed is not null ? _additionalPropertiesAllowed.Value : Target?.AdditionalPropertiesAllowed ?? true; set => _additionalPropertiesAllowed = value; }
         /// <inheritdoc/>
         public override OpenApiSchema AdditionalProperties { get => _additionalProperties is not null ? _additionalProperties : Target?.AdditionalProperties; set => _additionalProperties = value; }
         /// <inheritdoc/>
-        public override OpenApiDiscriminator Discriminator { get => _discriminator is not null ? _discriminator : Target.Discriminator; set => _discriminator = value; }
+        public override OpenApiDiscriminator Discriminator { get => _discriminator is not null ? _discriminator : Target?.Discriminator; set => _discriminator = value; }
         /// <inheritdoc/>
-        public override JsonNode Example { get => _example is not null ? _example : Target.Example; set => _example = value; }
+        public override JsonNode Example { get => _example is not null ? _example : Target?.Example; set => _example = value; }
         /// <inheritdoc/>
         public override IList<JsonNode> Examples { get => _examples is not null ? _examples : Target?.Examples; set => _examples = value; }
         /// <inheritdoc/>
         public override IList<JsonNode> Enum { get => _enum is not null ? _enum : Target?.Enum; set => _enum = value; }
         /// <inheritdoc/>
-        public override bool Nullable { get => _nullable is null ? Target.Nullable : _nullable.Value; set => _nullable = value; }
+        public override bool Nullable { get => _nullable is not null ? _nullable.Value : Target?.Nullable ?? false; set => _nullable = value; }
         /// <inheritdoc/>
-        public override bool UnevaluatedProperties { get => _unevaluatedProperties is not null ? _unevaluatedProperties.Value : Target.UnevaluatedProperties; set => _unevaluatedProperties = value; }
+        public override bool UnevaluatedProperties { get => _unevaluatedProperties is not null ? _unevaluatedProperties.Value : Target?.UnevaluatedProperties ?? false; set => _unevaluatedProperties = value; }
         /// <inheritdoc/>
         public override OpenApiExternalDocs ExternalDocs { get => _externalDocs is not null ? _externalDocs : Target?.ExternalDocs; set => _externalDocs = value; }
         /// <inheritdoc/>
-        public override bool Deprecated { get => _deprecated is not null ? _deprecated.Value : Target.Deprecated; set => _deprecated = value; }
+        public override bool Deprecated { get => _deprecated is not null ? _deprecated.Value : Target?.Deprecated ?? false; set => _deprecated = value; }
         /// <inheritdoc/>
-        public override OpenApiXml Xml { get => _xml is not null ? _xml : Target.Xml; set => _xml = value; }
+        public override OpenApiXml Xml { get => _xml is not null ? _xml : Target?.Xml; set => _xml = value; }
         /// <inheritdoc/>
         public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
 
