@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Interfaces
 {

@@ -54,6 +54,7 @@ namespace Microsoft.OpenApi.Services
         {
             return _IOpenApiReferenceableRegistry.Count + _artifactsRegistry.Count;
         }
+        private const string ComponentSegmentSeparator = "/";
 
         /// <summary>
         /// Registers a document's components into the workspace
@@ -63,13 +64,13 @@ namespace Microsoft.OpenApi.Services
         {
             if (document?.Components == null) return;
 
-            string baseUri = document.BaseUri + OpenApiConstants.ComponentsSegment;
+            string baseUri = getBaseUri(document);
             string location;
 
             // Register Schema
             foreach (var item in document.Components.Schemas)
             {
-                location = item.Value.Id ?? baseUri + ReferenceType.Schema.GetDisplayName() + "/" + item.Key;
+                location = item.Value.Id ?? baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + item.Key;
 
                 RegisterComponent(location, item.Value);
             }
@@ -77,67 +78,94 @@ namespace Microsoft.OpenApi.Services
             // Register Parameters
             foreach (var item in document.Components.Parameters)
             {
-                location = baseUri + ReferenceType.Parameter.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.Parameter.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
 
             // Register Responses
             foreach (var item in document.Components.Responses)
             {
-                location = baseUri + ReferenceType.Response.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.Response.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
 
             // Register RequestBodies
             foreach (var item in document.Components.RequestBodies)
             {
-                location = baseUri + ReferenceType.RequestBody.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.RequestBody.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
 
             // Register Links
             foreach (var item in document.Components.Links)
             {
-                location = baseUri + ReferenceType.Link.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.Link.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
 
             // Register Callbacks
             foreach (var item in document.Components.Callbacks)
             {
-                location = baseUri + ReferenceType.Callback.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.Callback.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
 
             // Register PathItems
             foreach (var item in document.Components.PathItems)
             {
-                location = baseUri + ReferenceType.PathItem.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.PathItem.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
 
             // Register Examples
             foreach (var item in document.Components.Examples)
             {
-                location = baseUri + ReferenceType.Example.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
 
             // Register Headers
             foreach (var item in document.Components.Headers)
             {
-                location = baseUri + ReferenceType.Header.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
 
             // Register SecuritySchemes
             foreach (var item in document.Components.SecuritySchemes)
             {
-                location = baseUri + ReferenceType.SecurityScheme.GetDisplayName() + "/" + item.Key;
+                location = baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                 RegisterComponent(location, item.Value);
             }
         }
 
+        private string getBaseUri(OpenApiDocument openApiDocument)
+        {
+            return openApiDocument.BaseUri + OpenApiConstants.ComponentsSegment;
+        }
+
+        /// <summary>
+        /// Registers a schema for a document in the workspace
+        /// </summary>
+        /// <param name="openApiDocument">The document to register the schema for.</param>
+        /// <param name="openApiSchema">The schema to register.</param>
+        /// <param name="id">The id of the schema.</param>
+        /// <returns>true if the schema is successfully registered; otherwise false.</returns>
+        /// <exception cref="ArgumentNullException">openApiDocument is null</exception>
+        /// <exception cref="ArgumentNullException">openApiSchema is null</exception>
+        /// <exception cref="ArgumentNullException">id is null or empty</exception>
+        public bool RegisterSchemaForDocument(OpenApiDocument openApiDocument, OpenApiSchema openApiSchema, string id)
+        {
+            Utils.CheckArgumentNull(openApiDocument);
+            Utils.CheckArgumentNull(openApiSchema);
+            Utils.CheckArgumentNullOrEmpty(id);
+
+            var baseUri = getBaseUri(openApiDocument);
+
+            var location = baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + id;
+
+            return RegisterComponent(location, openApiSchema);
+        }
 
         /// <summary>
         /// Registers a component in the component registry.

@@ -587,6 +587,21 @@ namespace Microsoft.OpenApi.Models
         {
             return OpenApiModelFactory.Parse(input, format, settings);
         }
+        /// <summary>
+        /// Adds a schema to the components object of the current document.
+        /// </summary>
+        /// <param name="openApiSchema">The schema to add</param>
+        /// <param name="id">The id for the component</param>
+        /// <returns>Whether the schema was added to the components.</returns>
+        public bool AddComponentSchema(string id, OpenApiSchema openApiSchema)
+        {
+            Utils.CheckArgumentNull(openApiSchema);
+            Utils.CheckArgumentNullOrEmpty(id);
+            Components ??= new();
+            Components.Schemas ??= new Dictionary<string, OpenApiSchema>();
+            Components.Schemas.Add(id, openApiSchema);
+            return Workspace?.RegisterSchemaForDocument(this, openApiSchema, id) ?? false;
+        }
     }
 
     internal class FindSchemaReferences : OpenApiVisitorBase

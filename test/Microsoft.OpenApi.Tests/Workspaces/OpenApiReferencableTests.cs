@@ -45,7 +45,6 @@ namespace Microsoft.OpenApi.Tests.Workspaces
                 { "link1", new OpenApiLink() }
             }
         };
-        private static readonly OpenApiSchema _schemaFragment = new OpenApiSchema();
         private static readonly OpenApiSecurityScheme _securitySchemeFragment = new OpenApiSecurityScheme();
         private static readonly OpenApiTag _tagFragment = new OpenApiTag();
 
