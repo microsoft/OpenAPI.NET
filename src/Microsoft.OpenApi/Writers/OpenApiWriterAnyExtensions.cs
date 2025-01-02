@@ -111,10 +111,7 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WritePrimitive(this IOpenApiWriter writer, JsonNode primitive)
         {
-            if (writer == null)
-            {
-                Utils.CheckArgumentNull(writer);
-            }
+            Utils.CheckArgumentNull(writer);
 
             var valueKind = primitive.GetValueKind();
 
