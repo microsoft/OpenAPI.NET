@@ -265,11 +265,6 @@ namespace Microsoft.OpenApi.Models
                 {
                     parameters.Add(
                         new OpenApiParameterReference(RequestBody.Reference.Id, hostDocument));
-
-                    if (hostDocument != null)
-                    {                        
-                        consumes = new (RequestBody.Content?.Keys.Distinct(StringComparer.OrdinalIgnoreCase) ?? [], StringComparer.OrdinalIgnoreCase);
-                    }
                 }
 
                 if (consumes.Count > 0)
