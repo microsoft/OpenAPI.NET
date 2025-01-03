@@ -237,18 +237,18 @@ namespace Microsoft.OpenApi.Models
             List<OpenApiParameter> parameters;
             if (Parameters == null)
             {
-                parameters = new();
+                parameters = [];
             }
             else
             {
-                parameters = new(Parameters);
+                parameters = [.. Parameters];
             }
 
             if (RequestBody != null)
             {
                 // consumes
-                var consumes = RequestBody.Content.Keys.Distinct().ToList();
-                if (consumes.Any())
+                var consumes = new HashSet<string>(RequestBody.Content?.Keys.Distinct(StringComparer.OrdinalIgnoreCase) ?? [], StringComparer.OrdinalIgnoreCase);
+                if (consumes.Count > 0)
                 {
                     // This is form data. We need to split the request body into multiple parameters.
                     if (consumes.Contains("application/x-www-form-urlencoded") ||
@@ -261,19 +261,18 @@ namespace Microsoft.OpenApi.Models
                         parameters.Add(RequestBody.ConvertToBodyParameter());
                     }
                 }
-                else if (RequestBody.Reference != null)
+                else if (RequestBody.Reference != null && RequestBody.Reference.HostDocument is {} hostDocument)
                 {
-                    var hostDocument = RequestBody.Reference.HostDocument;
                     parameters.Add(
                         new OpenApiParameterReference(RequestBody.Reference.Id, hostDocument));
 
                     if (hostDocument != null)
                     {                        
-                        consumes = RequestBody.Content.Keys.Distinct().ToList();
+                        consumes = new (RequestBody.Content?.Keys.Distinct(StringComparer.OrdinalIgnoreCase) ?? [], StringComparer.OrdinalIgnoreCase);
                     }
                 }
 
-                if (consumes.Any())
+                if (consumes.Count > 0)
                 {
                     writer.WritePropertyName(OpenApiConstants.Consumes);
                     writer.WriteStartArray();
@@ -294,10 +293,10 @@ namespace Microsoft.OpenApi.Models
                         Responses
                         .Where(static r => r.Value.Reference is {HostDocument: not null})
                         .SelectMany(static r => r.Value.Content?.Keys))
-                    .Distinct()
-                    .ToList();
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
 
-                if (produces.Any())
+                if (produces.Length > 0)
                 {
                     // produces
                     writer.WritePropertyName(OpenApiConstants.Produces);
