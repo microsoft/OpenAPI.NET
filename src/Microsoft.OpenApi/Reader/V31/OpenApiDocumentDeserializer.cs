@@ -25,16 +25,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
             {"webhooks", (o, n, _) => o.Webhooks = n.CreateMap(LoadPathItem, o)},
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
-            {"tags", (o, n, _) => {o.Tags = n.CreateList(LoadTag, o);
-                foreach (var tag in o.Tags)
-    {
-                    tag.Reference = new OpenApiReference()
-                    {
-                        Id = tag.Name,
-                        Type = ReferenceType.Tag
-                    };
-    }
-            } },
+            {"tags", (o, n, _) => o.Tags = n.CreateList(LoadTag, o) },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
             {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)}
         };

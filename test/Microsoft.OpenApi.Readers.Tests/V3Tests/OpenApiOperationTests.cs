@@ -34,13 +34,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseOperationWithParameterWithNoLocationShouldSucceed()
         {
+            var openApiDocument = new OpenApiDocument
+            {
+                Tags = { new OpenApiTag() { Name = "user" } }
+            };
             // Act
-            var operation = await OpenApiModelFactory.LoadAsync<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0);
+            var operation = await OpenApiModelFactory.LoadAsync<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, openApiDocument);
             var expectedOp = new OpenApiOperation
             {
                 Tags =
                 {
-                    new OpenApiTagReference("user", null)
+                    new OpenApiTagReference("user", openApiDocument)
                 },
                 Summary = "Logs user into the system",
                 Description = "",
@@ -73,8 +77,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             // Assert
             expectedOp.Should().BeEquivalentTo(operation, 
-                options => options.Excluding(x => x.Tags[0].Reference.HostDocument)
-                .Excluding(x => x.Tags[0].Extensions));
+                options => 
+                options.Excluding(x => x.Tags[0].Reference.HostDocument)
+                        .Excluding(x => x.Tags[0].Reference)
+                        .Excluding(x => x.Tags[0].Target)
+                        .Excluding(x => x.Tags[0].Extensions));
         }
     }
 }

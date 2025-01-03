@@ -105,8 +105,9 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="jsonNode"></param>
         /// <param name="version">OpenAPI version of the fragment</param>
+        /// <param name="openApiDocument">The OpenApiDocument object to which the fragment belongs, used to lookup references.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        public T ParseFragment<T>(JsonNode jsonNode, OpenApiSpecVersion version) where T : IOpenApiElement
+        public T ParseFragment<T>(JsonNode jsonNode, OpenApiSpecVersion version, OpenApiDocument openApiDocument) where T : IOpenApiElement
         {
             var node = ParseNode.Create(this, jsonNode);
 
@@ -116,16 +117,16 @@ namespace Microsoft.OpenApi.Reader
             {
                 case OpenApiSpecVersion.OpenApi2_0:
                     VersionService = new OpenApiV2VersionService(Diagnostic);
-                    element = this.VersionService.LoadElement<T>(node);
+                    element = this.VersionService.LoadElement<T>(node, openApiDocument);
                     break;
 
                 case OpenApiSpecVersion.OpenApi3_0:
                     this.VersionService = new OpenApiV3VersionService(Diagnostic);
-                    element = this.VersionService.LoadElement<T>(node);
+                    element = this.VersionService.LoadElement<T>(node, openApiDocument);
                     break;
                 case OpenApiSpecVersion.OpenApi3_1:
                     this.VersionService = new OpenApiV31VersionService(Diagnostic);
-                    element = this.VersionService.LoadElement<T>(node);
+                    element = this.VersionService.LoadElement<T>(node, openApiDocument);
                     break;
             }
 

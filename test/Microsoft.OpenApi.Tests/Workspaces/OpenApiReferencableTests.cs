@@ -47,8 +47,6 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         };
         private static readonly OpenApiSchema _schemaFragment = new OpenApiSchema();
         private static readonly OpenApiSecurityScheme _securitySchemeFragment = new OpenApiSecurityScheme();
-        private static readonly OpenApiTag _tagFragment = new OpenApiTag();
-
         public static IEnumerable<object[]> ResolveReferenceCanResolveValidJsonPointersTestData =>
         new List<object[]>
         {
@@ -64,7 +62,6 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _responseFragment, "/headers/header1", _responseFragment.Headers["header1"] },
             new object[] { _responseFragment, "/links/link1", _responseFragment.Links["link1"] },
             new object[] { _securitySchemeFragment, "/", _securitySchemeFragment},
-            new object[] { _tagFragment, "/", _tagFragment}
         };
 
         [Theory]

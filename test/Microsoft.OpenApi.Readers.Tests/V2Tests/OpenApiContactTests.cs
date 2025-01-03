@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 """;
 
             // Act
-            var contact = OpenApiModelFactory.Parse<OpenApiContact>(input, OpenApiSpecVersion.OpenApi2_0, out var diagnostic);
+            var contact = OpenApiModelFactory.Parse<OpenApiContact>(input, OpenApiSpecVersion.OpenApi2_0, new(), out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());

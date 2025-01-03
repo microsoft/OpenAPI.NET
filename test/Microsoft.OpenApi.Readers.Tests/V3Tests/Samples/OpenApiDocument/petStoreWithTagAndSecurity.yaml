@@ -210,6 +210,8 @@ components:
 tags:
   - name: tagName1
     description: tagDescription1
+  - name: tagName2
+    description: tagDescription2
 security: 
   - securitySchemeName1: []
     securitySchemeName2:

@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "required",
-                (o, n, _) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue()))
+                (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc))
             },
             {
                 "enum",

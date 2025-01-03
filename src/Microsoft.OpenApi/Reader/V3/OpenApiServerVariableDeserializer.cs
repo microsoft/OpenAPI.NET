@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "enum",
-                    (o, n, _) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue())
+                    (o, n, doc) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc)
                 },
                 {
                     "default",

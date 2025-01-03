@@ -148,10 +148,12 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public T ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
+                                 OpenApiDocument openApiDocument,
                                  out OpenApiDiagnostic diagnostic,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            if (input is null) throw new ArgumentNullException(nameof(input));
+            Utils.CheckArgumentNull(input);
+            Utils.CheckArgumentNull(openApiDocument);
 
             JsonNode jsonNode;
 
@@ -167,12 +169,13 @@ namespace Microsoft.OpenApi.Reader
                 return default;
             }
 
-            return ReadFragment<T>(jsonNode, version, out diagnostic);
+            return ReadFragment<T>(jsonNode, version, openApiDocument, out diagnostic);
         }
 
         /// <inheritdoc/>
         public T ReadFragment<T>(JsonNode input,
                          OpenApiSpecVersion version,
+                         OpenApiDocument openApiDocument,
                          out OpenApiDiagnostic diagnostic,
                          OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
@@ -187,7 +190,7 @@ namespace Microsoft.OpenApi.Reader
             try
             {
                 // Parse the OpenAPI element
-                element = context.ParseFragment<T>(input, version);
+                element = context.ParseFragment<T>(input, version, openApiDocument);
             }
             catch (OpenApiException ex)
             {

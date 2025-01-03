@@ -4,6 +4,7 @@
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Tests.UtilityFiles
 {
@@ -19,6 +20,17 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
         public static OpenApiDocument CreateOpenApiDocument()
         {
             var applicationJsonMediaType = "application/json";
+            const string getTeamsActivityByPeriodPath = "/reports/microsoft.graph.getTeamsUserActivityCounts(period={period})";
+            const string getTeamsActivityByDatePath = "/reports/microsoft.graph.getTeamsUserActivityUserDetail(date={date})";
+            const string usersPath = "/users";
+            const string usersByIdPath = "/users/{user-id}";
+            const string messagesByIdPath = "/users/{user-id}/messages/{message-id}";
+            const string administrativeUnitRestorePath = "/administrativeUnits/{administrativeUnit-id}/microsoft.graph.restore";
+            const string logoPath = "/applications/{application-id}/logo";
+            const string securityProfilesPath = "/security/hostSecurityProfiles";
+            const string communicationsCallsKeepAlivePath = "/communications/calls/{call-id}/microsoft.graph.keepAlive";
+            const string eventsDeltaPath = "/groups/{group-id}/events/{event-id}/calendar/events/microsoft.graph.delta";
+            const string refPath = "/applications/{application-id}/createdOnBehalfOf/$ref";
 
             var document = new OpenApiDocument
             {
@@ -57,22 +69,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/reports/microsoft.graph.getTeamsUserActivityCounts(period={period})"] = new()
+                    [getTeamsActivityByPeriodPath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Get, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "reports.Functions"
-                                            }
-                                        }
-                                    },
                                     OperationId = "reports.getTeamsUserActivityCounts",
                                     Summary = "Invoke function getTeamsUserActivityUserCounts",
                                     Parameters = new List<OpenApiParameter>
@@ -131,22 +134,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/reports/microsoft.graph.getTeamsUserActivityUserDetail(date={date})"] = new()
+                    [getTeamsActivityByDatePath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Get, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "reports.Functions"
-                                            }
-                                        }
-                                    },
                                     OperationId = "reports.getTeamsUserActivityUserDetail-a3f1",
                                     Summary = "Invoke function getTeamsUserActivityUserDetail",
                                     Parameters = new List<OpenApiParameter>
@@ -203,22 +197,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/users"] = new()
+                    [usersPath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Get, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "users.user"
-                                            }
-                                        }
-                                    },
                                     OperationId = "users.user.ListUser",
                                     Summary = "Get entities from users",
                                     Responses = new()
@@ -266,22 +251,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/users/{user-id}"] = new()
+                    [usersByIdPath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Get, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "users.user"
-                                            }
-                                        }
-                                    },
                                     OperationId = "users.user.GetUser",
                                     Summary = "Get entity from users by key",
                                     Responses = new()
@@ -315,15 +291,6 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             {
                                 OperationType.Patch, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "users.user"
-                                            }
-                                        }
-                                    },
                                     OperationId = "users.user.UpdateUser",
                                     Summary = "Update entity in users",
                                     Responses = new()
@@ -339,22 +306,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/users/{user-id}/messages/{message-id}"] = new()
+                    [messagesByIdPath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Get, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "users.message"
-                                            }
-                                        }
-                                    },
                                     OperationId = "users.GetMessages",
                                     Summary = "Get messages from users",
                                     Description = "The messages in a mailbox or folder. Read-only. Nullable.",
@@ -403,22 +361,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/administrativeUnits/{administrativeUnit-id}/microsoft.graph.restore"] = new()
+                    [administrativeUnitRestorePath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Post, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "administrativeUnits.Actions"
-                                            }
-                                        }
-                                    },
                                     OperationId = "administrativeUnits.restore",
                                     Summary = "Invoke action restore",
                                     Parameters = new List<OpenApiParameter>
@@ -470,22 +419,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/applications/{application-id}/logo"] = new()
+                    [logoPath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Put, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "applications.application"
-                                            }
-                                        }
-                                    },
                                     OperationId = "applications.application.UpdateLogo",
                                     Summary = "Update media content for application in applications",
                                     Responses = new()
@@ -501,22 +441,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/security/hostSecurityProfiles"] = new()
+                    [securityProfilesPath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Get, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "security.hostSecurityProfile"
-                                            }
-                                        }
-                                    },
                                     OperationId = "security.ListHostSecurityProfiles",
                                     Summary = "Get hostSecurityProfiles from security",
                                     Responses = new()
@@ -564,22 +495,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/communications/calls/{call-id}/microsoft.graph.keepAlive"] = new()
+                    [communicationsCallsKeepAlivePath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Post, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        {
-                                            new()
-                                            {
-                                                Name = "communications.Actions"
-                                            }
-                                        }
-                                    },
                                     OperationId = "communications.calls.call.keepAlive",
                                     Summary = "Invoke action keepAlive",
                                     Parameters = new List<OpenApiParameter>
@@ -621,20 +543,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/groups/{group-id}/events/{event-id}/calendar/events/microsoft.graph.delta"] = new()
+                    [eventsDeltaPath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Get, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        new()
-                                        {
-                                            Name = "groups.Functions"
-                                        }
-                                    },
                                     OperationId = "groups.group.events.event.calendar.events.delta",
                                     Summary = "Invoke function delta",
                                     Parameters = new List<OpenApiParameter>
@@ -711,20 +626,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    ["/applications/{application-id}/createdOnBehalfOf/$ref"] = new()
+                    [refPath] = new()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             {
                                 OperationType.Get, new OpenApiOperation
                                 {
-                                    Tags = new List<OpenApiTag>
-                                    {
-                                        new()
-                                        {
-                                            Name = "applications.directoryObject"
-                                        }
-                                    },
                                     OperationId = "applications.GetRefCreatedOnBehalfOf",
                                     Summary = "Get ref of createdOnBehalfOf from applications"
                                 }
@@ -755,8 +663,68 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     }
+                },
+                Tags = new List<OpenApiTag>
+                {
+                    new()
+                    {
+                        Name = "reports.Functions",
+                        Description = "The reports.Functions operations"
+                    },
+                    new()
+                    {
+                        Name = "users.user",
+                        Description = "The users.user operations"
+                    },
+                    new()
+                    {
+                        Name = "users.message",
+                        Description = "The users.message operations"
+                    },
+                    new()
+                    {
+                        Name = "administrativeUnits.Actions",
+                        Description = "The administrativeUnits.Actions operations"
+                    },
+                    new()
+                    {
+                        Name = "applications.application",
+                        Description = "The applications.application operations"
+                    },
+                    new()
+                    {
+                        Name = "security.hostSecurityProfile",
+                        Description = "The security.hostSecurityProfile operations"
+                    },
+                    new()
+                    {
+                        Name = "communications.Actions",
+                        Description = "The communications.Actions operations"
+                    },
+                    new()
+                    {
+                        Name = "groups.Functions",
+                        Description = "The groups.Functions operations"
+                    },
+                    new()
+                    {
+                        Name = "applications.directoryObject",
+                        Description = "The applications.directoryObject operations"
+                    }
                 }
             };
+            document.Paths[getTeamsActivityByPeriodPath].Operations[OperationType.Get].Tags!.Add(new OpenApiTagReference("reports.Functions", document));
+            document.Paths[getTeamsActivityByDatePath].Operations[OperationType.Get].Tags!.Add(new OpenApiTagReference("reports.Functions", document));
+            document.Paths[usersPath].Operations[OperationType.Get].Tags!.Add(new OpenApiTagReference("users.user", document));
+            document.Paths[usersByIdPath].Operations[OperationType.Get].Tags!.Add(new OpenApiTagReference("users.user", document));
+            document.Paths[usersByIdPath].Operations[OperationType.Patch].Tags!.Add(new OpenApiTagReference("users.user", document));
+            document.Paths[messagesByIdPath].Operations[OperationType.Get].Tags!.Add(new OpenApiTagReference("users.message", document));
+            document.Paths[administrativeUnitRestorePath].Operations[OperationType.Post].Tags!.Add(new OpenApiTagReference("administrativeUnits.Actions", document));
+            document.Paths[logoPath].Operations[OperationType.Put].Tags!.Add(new OpenApiTagReference("applications.application", document));
+            document.Paths[securityProfilesPath].Operations[OperationType.Get].Tags!.Add(new OpenApiTagReference("security.hostSecurityProfile", document));
+            document.Paths[communicationsCallsKeepAlivePath].Operations[OperationType.Post].Tags!.Add(new OpenApiTagReference("communications.Actions", document));
+            document.Paths[eventsDeltaPath].Operations[OperationType.Get].Tags!.Add(new OpenApiTagReference("groups.Functions", document));
+            document.Paths[refPath].Operations[OperationType.Get].Tags!.Add(new OpenApiTagReference("applications.directoryObject", document));
             return document;
         }
     }

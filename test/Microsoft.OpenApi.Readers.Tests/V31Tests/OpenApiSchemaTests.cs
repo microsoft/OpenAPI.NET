@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(
-                System.IO.Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1);
+                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, new());
 
             // Assert
             schema.Should().BeEquivalentTo(expectedObject);
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Act
-            var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, out _);
+            var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, new(), out _);
 
             // Assert
             actual.Should().BeEquivalentTo(expected);
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var path = Path.Combine(SampleFolderPath, "schema.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange and Act
             var path = Path.Combine(SampleFolderPath, "advancedSchema.yaml");
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
 
             var expectedSchema = new OpenApiSchema
             {
@@ -275,7 +275,7 @@ examples:
  - ubuntu
 ";
             // Act
-            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, out _, "yaml");
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml");
 
             // Assert
             schema.Examples.Should().HaveCount(2);
@@ -314,7 +314,7 @@ nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
 
             var writer = new StringWriter();
             schema.SerializeAsV3(new OpenApiYamlWriter(writer));
@@ -333,7 +333,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
 
             var writer = new StringWriter();
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
@@ -353,7 +353,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new());
 
             var writer = new StringWriter();
             schema.SerializeAsV31(new OpenApiYamlWriter(writer));
@@ -374,7 +374,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new());
 
             var writer = new StringWriter();
             schema.SerializeAsV31(new OpenApiYamlWriter(writer));
@@ -393,7 +393,7 @@ nullable: true";
 
             var expected = @"{ }";
 
-            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, out _, "yaml");
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml");
 
             var writer = new StringWriter();
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
@@ -411,7 +411,7 @@ nullable: true";
             var path = Path.Combine(SampleFolderPath, filePath);
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
 
             // Assert
             schema.Type.Should().Be(JsonSchemaType.String | JsonSchemaType.Null);
@@ -451,7 +451,7 @@ description: Schema for a person object
             var path = Path.Combine(SampleFolderPath, "schemaWithJsonSchemaKeywords.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
 
             // serialization
             var writer = new StringWriter();
@@ -495,7 +495,7 @@ description: Schema for a person object
             var path = Path.Combine(SampleFolderPath, "schemaWithConst.json");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
             schema.Properties["status"].Const.Should().Be("active");
             schema.Properties["user"].Properties["role"].Const.Should().Be("admin");
 
@@ -517,7 +517,7 @@ description: Schema for a person object
     ""x-test"": ""test""
 }
 ";
-            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, out _, "json");
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "json");
             schema.UnrecognizedKeywords.Should().HaveCount(2);
         }
 

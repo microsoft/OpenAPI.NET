@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "required",
-                (o, n, _) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue()))
+                (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc))
             },
             {
                 "enum",
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "type",
-                (o, n, _) => 
+                (o, n, doc) => 
                 {
                     if (n is ValueNode)
                     {
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                     else
                     {
-                        var list = n.CreateSimpleList((n2, p) => n2.GetScalarValue());
+                        var list = n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc);
                         JsonSchemaType combinedType = 0;
                         foreach(var type in list)
                         {
