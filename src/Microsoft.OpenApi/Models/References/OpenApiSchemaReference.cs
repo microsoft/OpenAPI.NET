@@ -228,6 +228,22 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
+        internal override void SerializeAsV2(
+            IOpenApiWriter writer,
+            ISet<string> parentRequiredProperties,
+            string propertyName)
+        {
+            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                _reference.SerializeAsV2(writer);
+            }
+            else
+            {
+                base.SerializeAsV2(writer, parentRequiredProperties, propertyName);
+            }
+        }
+
+        /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
             if (!writer.GetSettings().ShouldInlineReference(_reference))
