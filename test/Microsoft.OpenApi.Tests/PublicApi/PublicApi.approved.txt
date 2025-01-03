@@ -237,8 +237,6 @@ namespace Microsoft.OpenApi.Interfaces
     }
     public interface IStreamLoader
     {
-        [System.Obsolete("Use the Async overload")]
-        System.IO.Stream Load(System.Uri uri);
         System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri);
     }
 }
@@ -1401,8 +1399,6 @@ namespace Microsoft.OpenApi.Reader.Services
     public class DefaultStreamLoader : Microsoft.OpenApi.Interfaces.IStreamLoader
     {
         public DefaultStreamLoader(System.Uri baseUrl) { }
-        [System.Obsolete]
-        public System.IO.Stream Load(System.Uri uri) { }
         public System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri) { }
     }
 }
@@ -1653,8 +1649,6 @@ namespace Microsoft.OpenApi.Validations
     }
     public class ValidationRule<T> : Microsoft.OpenApi.Validations.ValidationRule
     {
-        [System.Obsolete("Please use the other constructor and specify a name")]
-        public ValidationRule(System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
         public ValidationRule(string name, System.Action<Microsoft.OpenApi.Validations.IValidationContext, T> validate) { }
     }
 }
@@ -1876,8 +1870,6 @@ namespace Microsoft.OpenApi.Writers
         public OpenApiWriterSettings() { }
         public bool InlineExternalReferences { get; set; }
         public bool InlineLocalReferences { get; set; }
-        [System.Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
-        public Microsoft.OpenApi.Writers.ReferenceInlineSetting ReferenceInline { get; set; }
     }
     public class OpenApiYamlWriter : Microsoft.OpenApi.Writers.OpenApiWriterBase
     {
@@ -1894,13 +1886,6 @@ namespace Microsoft.OpenApi.Writers
         public override void WriteStartObject() { }
         public override void WriteValue(string value) { }
         protected override void WriteValueSeparator() { }
-    }
-    [System.Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
-    public enum ReferenceInlineSetting
-    {
-        DoNotInlineReferences = 0,
-        InlineLocalReferences = 1,
-        InlineAllReferences = 2,
     }
     public sealed class Scope
     {
