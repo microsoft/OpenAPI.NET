@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 }
             };
             workingDocument.Components.Schemas.Add(referenceId, targetSchema);
-            workingDocument.Workspace.RegisterComponent("schemas", targetSchema);
+            workingDocument.Workspace.RegisterComponents(workingDocument);
             var referenceSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
