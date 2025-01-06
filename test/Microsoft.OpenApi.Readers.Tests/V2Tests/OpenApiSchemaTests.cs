@@ -11,6 +11,8 @@ using Microsoft.OpenApi.Any;
 using System.Text.Json.Nodes;
 using System.Collections.Generic;
 using FluentAssertions.Equivalency;
+using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -94,6 +96,57 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                        options.IgnoringCyclicReferences()
                               .Excluding((IMemberInfo memberInfo) =>
                                     memberInfo.Path.EndsWith("Parent")));
+        }
+        [Fact]
+        public void PropertiesReferenceShouldWork()
+        {
+            var workingDocument = new OpenApiDocument()
+            {
+                Components = new OpenApiComponents(),
+            };
+            const string referenceId = "targetSchema";
+            var targetSchema = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["prop1"] = new OpenApiSchema()
+                    {
+                        Type = JsonSchemaType.String
+                    }
+                }
+            };
+            workingDocument.Components.Schemas.Add(referenceId, targetSchema);
+            workingDocument.Workspace.RegisterComponent("schemas", targetSchema);
+            var referenceSchema = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["propA"] = new OpenApiSchemaReference(referenceId, workingDocument),
+                }
+            };
+
+            using var textWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(textWriter);
+            referenceSchema.SerializeAsV2(writer);
+
+            var json = textWriter.ToString();
+            var expected = JsonNode.Parse(
+                """
+                {
+                    "type": "object",
+                    "properties":
+                    {
+                        "propA":
+                        {
+                            "$ref": "#/definitions/targetSchema"
+                        }
+                    }
+                }
+                """
+            );
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(json), expected));
         }
     }
 }
