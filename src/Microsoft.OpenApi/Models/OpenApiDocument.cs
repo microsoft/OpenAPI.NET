@@ -588,19 +588,65 @@ namespace Microsoft.OpenApi.Models
             return OpenApiModelFactory.Parse(input, format, settings);
         }
         /// <summary>
-        /// Adds a schema to the components object of the current document.
+        /// Adds a component to the components object of the current document and registers it to the underlying workspace.
         /// </summary>
-        /// <param name="openApiSchema">The schema to add</param>
+        /// <param name="componentToRegister">The component to add</param>
         /// <param name="id">The id for the component</param>
-        /// <returns>Whether the schema was added to the components.</returns>
-        public bool AddComponentSchema(string id, OpenApiSchema openApiSchema)
+        /// <typeparam name="T">The type of the component</typeparam>
+        /// <returns>Whether the component was added to the components.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the component is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the id is null or empty.</exception>
+        public bool AddComponent<T>(string id, T componentToRegister)
         {
-            Utils.CheckArgumentNull(openApiSchema);
+            Utils.CheckArgumentNull(componentToRegister);
             Utils.CheckArgumentNullOrEmpty(id);
             Components ??= new();
-            Components.Schemas ??= new Dictionary<string, OpenApiSchema>();
-            Components.Schemas.Add(id, openApiSchema);
-            return Workspace?.RegisterSchemaForDocument(this, openApiSchema, id) ?? false;
+            switch (componentToRegister)
+            {
+                case OpenApiSchema openApiSchema:
+                    Components.Schemas ??= new Dictionary<string, OpenApiSchema>();
+                    Components.Schemas.Add(id, openApiSchema);
+                    break;
+                case OpenApiParameter openApiParameter:
+                    Components.Parameters ??= new Dictionary<string, OpenApiParameter>();
+                    Components.Parameters.Add(id, openApiParameter);
+                    break;
+                case OpenApiResponse openApiResponse:
+                    Components.Responses ??= new Dictionary<string, OpenApiResponse>();
+                    Components.Responses.Add(id, openApiResponse);
+                    break;
+                case OpenApiRequestBody openApiRequestBody:
+                    Components.RequestBodies ??= new Dictionary<string, OpenApiRequestBody>();
+                    Components.RequestBodies.Add(id, openApiRequestBody);
+                    break;
+                case OpenApiLink openApiLink:
+                    Components.Links ??= new Dictionary<string, OpenApiLink>();
+                    Components.Links.Add(id, openApiLink);
+                    break;
+                case OpenApiCallback openApiCallback:
+                    Components.Callbacks ??= new Dictionary<string, OpenApiCallback>();
+                    Components.Callbacks.Add(id, openApiCallback);
+                    break;
+                case OpenApiPathItem openApiPathItem:
+                    Components.PathItems ??= new Dictionary<string, OpenApiPathItem>();
+                    Components.PathItems.Add(id, openApiPathItem);
+                    break;
+                case OpenApiExample openApiExample:
+                    Components.Examples ??= new Dictionary<string, OpenApiExample>();
+                    Components.Examples.Add(id, openApiExample);
+                    break;
+                case OpenApiHeader openApiHeader:
+                    Components.Headers ??= new Dictionary<string, OpenApiHeader>();
+                    Components.Headers.Add(id, openApiHeader);
+                    break;
+                case OpenApiSecurityScheme openApiSecurityScheme:
+                    Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+                    Components.SecuritySchemes.Add(id, openApiSecurityScheme);
+                    break;
+                default:
+                    throw new ArgumentException($"Component type {componentToRegister!.GetType().Name} is not supported.");
+            }
+            return Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false;
         }
     }
 

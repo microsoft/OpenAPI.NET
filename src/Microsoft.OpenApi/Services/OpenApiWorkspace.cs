@@ -145,26 +145,40 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Registers a schema for a document in the workspace
+        /// Registers a component for a document in the workspace
         /// </summary>
-        /// <param name="openApiDocument">The document to register the schema for.</param>
-        /// <param name="openApiSchema">The schema to register.</param>
-        /// <param name="id">The id of the schema.</param>
-        /// <returns>true if the schema is successfully registered; otherwise false.</returns>
+        /// <param name="openApiDocument">The document to register the component for.</param>
+        /// <param name="componentToRegister">The component to register.</param>
+        /// <param name="id">The id of the component.</param>
+        /// <typeparam name="T">The type of the component to register.</typeparam>
+        /// <returns>true if the component is successfully registered; otherwise false.</returns>
         /// <exception cref="ArgumentNullException">openApiDocument is null</exception>
-        /// <exception cref="ArgumentNullException">openApiSchema is null</exception>
+        /// <exception cref="ArgumentNullException">componentToRegister is null</exception>
         /// <exception cref="ArgumentNullException">id is null or empty</exception>
-        public bool RegisterSchemaForDocument(OpenApiDocument openApiDocument, OpenApiSchema openApiSchema, string id)
+        public bool RegisterComponentForDocument<T>(OpenApiDocument openApiDocument, T componentToRegister, string id)
         {
             Utils.CheckArgumentNull(openApiDocument);
-            Utils.CheckArgumentNull(openApiSchema);
+            Utils.CheckArgumentNull(componentToRegister);
             Utils.CheckArgumentNullOrEmpty(id);
 
             var baseUri = getBaseUri(openApiDocument);
 
-            var location = baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + id;
+            var location = componentToRegister switch
+            {
+                OpenApiSchema => baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiParameter => baseUri + ReferenceType.Parameter.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiResponse => baseUri + ReferenceType.Response.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiRequestBody => baseUri + ReferenceType.RequestBody.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiLink => baseUri + ReferenceType.Link.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiCallback => baseUri + ReferenceType.Callback.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiPathItem => baseUri + ReferenceType.PathItem.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiExample => baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiHeader => baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + id,
+                OpenApiSecurityScheme => baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + id,
+                _ => throw new ArgumentException($"Invalid component type {componentToRegister.GetType().Name}"),
+            };
 
-            return RegisterComponent(location, openApiSchema);
+            return RegisterComponent(location, componentToRegister);
         }
 
         /// <summary>
@@ -173,7 +187,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="location"></param>
         /// <param name="component"></param>
         /// <returns>true if the component is successfully registered; otherwise false.</returns>
-        public bool RegisterComponent<T>(string location, T component)
+        internal bool RegisterComponent<T>(string location, T component)
         {
             var uri = ToLocationUrl(location);
             if (component is IOpenApiReferenceable referenceable)
