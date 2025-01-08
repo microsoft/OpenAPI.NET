@@ -283,11 +283,11 @@ namespace Microsoft.OpenApi.Models
             {
                 var produces = Responses
                     .Where(static r => r.Value.Content != null)
-                    .SelectMany(static r => r.Value.Content?.Keys)
+                    .SelectMany(static r => r.Value.Content?.Keys ?? [])
                     .Concat(
                         Responses
                         .Where(static r => r.Value.Reference is {HostDocument: not null})
-                        .SelectMany(static r => r.Value.Content?.Keys))
+                        .SelectMany(static r => r.Value.Content?.Keys ?? []))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray();
 

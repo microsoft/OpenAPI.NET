@@ -238,7 +238,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                          .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
@@ -409,14 +409,15 @@ namespace Microsoft.OpenApi.Models
                         return url;
                     })
                 .Where(
-                    u => Uri.Compare(
+                    u => u is not null &&
+                        Uri.Compare(
                             u,
                             firstServerUrl,
                             UriComponents.Host | UriComponents.Port | UriComponents.Path,
                             UriFormat.SafeUnescaped,
                             StringComparison.OrdinalIgnoreCase) ==
                         0 && u.IsAbsoluteUri)
-                .Select(u => u.Scheme)
+                .Select(u => u!.Scheme)
                 .Distinct()
                 .ToList();
 
@@ -464,10 +465,12 @@ namespace Microsoft.OpenApi.Models
             SerializeAsV3(openApiJsonWriter);
             await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
 
+#if NET5_0_OR_GREATER
+            await cryptoStream.FlushFinalBlockAsync(cancellationToken).ConfigureAwait(false);
+#else
             cryptoStream.FlushFinalBlock();
-            var hash = sha.Hash;
-
-            return ConvertByteArrayToString(hash);
+#endif
+            return ConvertByteArrayToString(sha.Hash ?? []);
         }
 
         private static string ConvertByteArrayToString(byte[] hash)
