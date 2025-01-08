@@ -650,7 +650,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer">The open api writer.</param>
         /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
         /// <param name="propertyName">The property name that will be serialized.</param>
-        internal void SerializeAsV2(
+        internal virtual void SerializeAsV2(
             IOpenApiWriter writer,
             ISet<string> parentRequiredProperties,
             string propertyName)

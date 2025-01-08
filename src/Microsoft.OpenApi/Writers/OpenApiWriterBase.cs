@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -188,7 +189,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The DateTime value.</param>
         public virtual void WriteValue(DateTime value)
         {
-            this.WriteValue(value.ToString("o"));
+            this.WriteValue(value.ToString("o", CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -197,7 +198,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The DateTimeOffset value.</param>
         public virtual void WriteValue(DateTimeOffset value)
         {
-            this.WriteValue(value.ToString("o"));
+            this.WriteValue(value.ToString("o", CultureInfo.InvariantCulture));
         }
 
         /// <summary>
