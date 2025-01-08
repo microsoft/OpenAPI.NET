@@ -1212,6 +1212,7 @@ namespace Microsoft.OpenApi.Models.References
     public class OpenApiSchemaReference : Microsoft.OpenApi.Models.OpenApiSchema
     {
         public OpenApiSchemaReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, string externalResource = null) { }
+        public Microsoft.OpenApi.Models.OpenApiSchema? Target { get; }
         public override Microsoft.OpenApi.Models.OpenApiSchema AdditionalProperties { get; set; }
         public override bool AdditionalPropertiesAllowed { get; set; }
         public override System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> AllOf { get; set; }

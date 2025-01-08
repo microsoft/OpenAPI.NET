@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models.References
     /// </summary>
     public class OpenApiSchemaReference : OpenApiSchema
     {
-        #nullable enable
+#nullable enable
         private OpenApiSchema? _target;
         private readonly OpenApiReference _reference;
         private string? _description;
@@ -69,8 +69,14 @@ namespace Microsoft.OpenApi.Models.References
         private bool? _unevaluatedProperties;
         private IList<JsonNode>? _enum;
 
-        private OpenApiSchema? Target
-        #nullable restore
+        /// <summary>
+        /// Gets the target schema.
+        /// </summary>
+        /// <remarks>
+        /// If the reference is not resolved, this will return null.
+        /// </remarks>
+        public OpenApiSchema? Target
+#nullable restore
         {
             get
             {
@@ -190,7 +196,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override bool? UniqueItems { get => _uniqueItems is not null ? _uniqueItems : Target?.UniqueItems; set => _uniqueItems = value; }
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiSchema> Properties { get => _properties is not null ? _properties : Target?.Properties ; set => _properties = value; }
+        public override IDictionary<string, OpenApiSchema> Properties { get => _properties is not null ? _properties : Target?.Properties; set => _properties = value; }
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiSchema> PatternProperties { get => _patternProperties is not null ? _patternProperties : Target?.PatternProperties; set => _patternProperties = value; }
         /// <inheritdoc/>
@@ -257,7 +263,7 @@ namespace Microsoft.OpenApi.Models.References
                 _reference.SerializeAsV3(writer);
                 return;
             }
-               
+
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
             writer.GetSettings().LoopDetector.PopLoop<OpenApiSchema>();
         }
