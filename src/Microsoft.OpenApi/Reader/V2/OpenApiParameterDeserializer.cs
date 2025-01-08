@@ -172,8 +172,10 @@ namespace Microsoft.OpenApi.Reader.V2
                 case "query":
                 case "header":
                 case "path":
-                    value.TryGetEnumFromDisplayName<ParameterLocation>(out var _in);
-                    o.In = _in;
+                    if (value.TryGetEnumFromDisplayName<ParameterLocation>(out var _in))
+                    {
+                        o.In = _in;
+                    }
                     break;
                 default:
                     o.In = null;
