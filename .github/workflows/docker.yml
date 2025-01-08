@@ -2,8 +2,8 @@ name: Publish Docker image
 on:
   workflow_dispatch:
   push:
-    branches: [master, vnext]
-    paths: ['src/Microsoft.OpenApi.Hidi/**', '.github/workflows/**']
+    branches: [task/update-container-reference]
+    paths: ["src/Microsoft.OpenApi.Hidi/**", ".github/workflows/**"]
 env:
   REGISTRY: msgraphprod.azurecr.io
   IMAGE_NAME: public/openapi/hidi
@@ -16,12 +16,18 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
-      - name: Login to GitHub package feed
-        uses: docker/login-action@v3.3.0 
+      # - name: Login to GitHub package feed
+      #   uses: docker/login-action@v3.3.0
+      #   with:
+      #     username: ${{ secrets.ACR_USERNAME }}
+      #     password: ${{ secrets.ACR_PASSWORD }}
+      #     registry: ${{ env.REGISTRY }}
+      - name: "Az CLI login"
+        uses: azure/login@v1
         with:
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-          registry: ${{ env.REGISTRY }}
+          client-id: "64721008-1da6-49ea-a3d2-6beec11d9c65"
+          tenant-id: "cdc5aeea-15c5-4db6-b079-fcadd2505dc2"
+          subscription-id: "64721008-1da6-49ea-a3d2-6beec11d9c65"
       - run: |
           $content = [XML](Get-Content ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj)
           $version = $content.Project.PropertyGroup.Version
@@ -29,14 +35,14 @@ jobs:
         shell: pwsh
         id: getversion
       - name: Push to GitHub Packages - Nightly
-        if: ${{ github.ref == 'refs/heads/vnext' }}
+        if: ${{ github.ref == 'refs/heads/task/update-container-reference' }}
         uses: docker/build-push-action@v6.9.0
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly
-      - name: Push to GitHub Packages - Release
-        if: ${{ github.ref == 'refs/heads/master' }}
-        uses: docker/build-push-action@v6.9.0
-        with:
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.getversion.outputs.version }}
+      # - name: Push to GitHub Packages - Release
+      #   if: ${{ github.ref == 'refs/heads/task/update-container-reference' }}
+      #   uses: docker/build-push-action@v6.9.0
+      #   with:
+      #     push: true
+      #     tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.getversion.outputs.version }}
