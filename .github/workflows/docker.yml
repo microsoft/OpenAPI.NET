@@ -4,6 +4,8 @@ on:
   push:
     branches: [task/update-container-reference]
     paths: ["src/Microsoft.OpenApi.Hidi/**", ".github/workflows/**"]
+permissions:
+  id-token: write
 env:
   REGISTRY: msgraphprod.azurecr.io
   IMAGE_NAME: public/openapi/hidi
