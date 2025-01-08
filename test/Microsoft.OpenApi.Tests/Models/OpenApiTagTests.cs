@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             BasicTag.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             BasicTag.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeBasicTagAsV2YamlWithoutReferenceWorks()
+        public async Task SerializeBasicTagAsV2YamlWithoutReferenceWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             BasicTag.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedTagAsV3YamlWithoutReferenceWorks()
+        public async Task SerializeAdvancedTagAsV3YamlWithoutReferenceWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedTagAsV2YamlWithoutReferenceWorks()
+        public async Task SerializeAdvancedTagAsV2YamlWithoutReferenceWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedTag.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -186,14 +186,14 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedTag.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
-        public void SerializeAdvancedTagAsV3YamlWorks()
+        public async Task SerializeAdvancedTagAsV3YamlWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -208,7 +208,7 @@ x-tag-extension:";
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -218,7 +218,7 @@ x-tag-extension:";
         }
 
         [Fact]
-        public void SerializeAdvancedTagAsV2YamlWorks()
+        public async Task SerializeAdvancedTagAsV2YamlWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -233,7 +233,7 @@ x-tag-extension:";
 
             // Act
             AdvancedTag.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -253,7 +253,7 @@ x-tag-extension:";
 
             // Act
             ReferencedTag.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -270,14 +270,14 @@ x-tag-extension:";
 
             // Act
             ReferencedTag.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
-        public void SerializeReferencedTagAsV3YamlWorks()
+        public async Task SerializeReferencedTagAsV3YamlWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -287,7 +287,7 @@ x-tag-extension:";
 
             // Act
             ReferencedTag.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -297,7 +297,7 @@ x-tag-extension:";
         }
 
         [Fact]
-        public void SerializeReferencedTagAsV2YamlWorks()
+        public async Task SerializeReferencedTagAsV2YamlWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -307,7 +307,7 @@ x-tag-extension:";
 
             // Act
             ReferencedTag.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert

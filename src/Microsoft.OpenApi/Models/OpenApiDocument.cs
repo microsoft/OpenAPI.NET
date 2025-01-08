@@ -83,11 +83,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
-        /// <summary>
-        /// The unique hash code of the generated OpenAPI document
-        /// </summary>
-        public string HashCode => GenerateHashValue(this);
-
         /// <inheritdoc />
         public IDictionary<string, object>? Annotations { get; set; }
 
@@ -457,17 +452,17 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Takes in an OpenApi document instance and generates its hash value
         /// </summary>
-        /// <param name="doc">The OpenAPI description to hash.</param>
+        /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
         /// <returns>The hash value.</returns>
-        public static string GenerateHashValue(OpenApiDocument doc)
+        public async Task<string> GetHashCodeAsync(CancellationToken cancellationToken = default)
         {
             using HashAlgorithm sha = SHA512.Create();
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
             var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
-            doc.SerializeAsV3(openApiJsonWriter);
-            openApiJsonWriter.Flush();
+            SerializeAsV3(openApiJsonWriter);
+            await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
 
             cryptoStream.FlushFinalBlock();
             var hash = sha.Hash;
