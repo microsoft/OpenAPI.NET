@@ -45,7 +45,8 @@ namespace Microsoft.OpenApi.Tests.Attributes
         [InlineData(ApiLevel.Corporate, "corporate")]
         public void GetEnumFromDisplayNameShouldReturnEnumValue(ApiLevel expected, string displayName)
         {
-            Assert.Equal(expected, displayName.GetEnumFromDisplayName<ApiLevel>());
+            displayName.TryGetEnumFromDisplayName<ApiLevel>(out var result);
+            Assert.Equal(expected, result);
         }
 
         [Theory]
@@ -54,7 +55,8 @@ namespace Microsoft.OpenApi.Tests.Attributes
         [InlineData(UserType.Editor, "editor")]
         public void GetEnumFromDisplayNameShouldReturnEnumValueForFlagsEnum(UserType expected, string displayName)
         {
-            Assert.Equal(expected, displayName.GetEnumFromDisplayName<UserType>());
+            displayName.TryGetEnumFromDisplayName<UserType>(out var result);
+            Assert.Equal(expected, result);
         }
     }
 }
