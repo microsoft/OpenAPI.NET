@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
         }
 
-        private static T Clone<T>(T element) where T : IOpenApiSerializable
+        private static async Task<T> CloneAsync<T>(T element) where T : IOpenApiSerializable
         {
             using var stream = new MemoryStream();
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
@@ -41,15 +41,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 InlineLocalReferences = true
             });
             element.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             stream.Position = 0;
 
             using var streamReader = new StreamReader(stream);
-            var result = streamReader.ReadToEnd();
+            var result = await streamReader.ReadToEndAsync();
             return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
         }
 
-        private static OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
+        private static async Task<OpenApiSecurityScheme> CloneSecuritySchemeAsync(OpenApiSecurityScheme element)
         {
             using var stream = new MemoryStream();
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
@@ -58,11 +58,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 InlineLocalReferences = true
             });
             element.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             stream.Position = 0;
 
             using var streamReader = new StreamReader(stream);
-            var result = streamReader.ReadToEnd();
+            var result = await streamReader.ReadToEndAsync();
             return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
         }
 
@@ -681,7 +681,7 @@ paths: {}
             };
 
             // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = Clone(components.Schemas["pet1"]);
+            var petSchema = await CloneAsync(components.Schemas["pet1"]);
             petSchema.Reference = new()
             {
                 Id = "pet1",
@@ -689,7 +689,7 @@ paths: {}
                 HostDocument = actual.Document
             };
 
-            var newPetSchema = Clone(components.Schemas["newPet"]);
+            var newPetSchema = await CloneAsync(components.Schemas["newPet"]);
 
             newPetSchema.Reference = new()
             {
@@ -698,7 +698,7 @@ paths: {}
                 HostDocument = actual.Document
             };
 
-            var errorModelSchema = Clone(components.Schemas["errorModel"]);
+            var errorModelSchema = await CloneAsync(components.Schemas["errorModel"]);
 
             errorModelSchema.Reference = new()
             {
@@ -711,7 +711,7 @@ paths: {}
 
             var tagReference2 = new OpenApiTagReference("tagName2", null);
 
-            var securityScheme1 = CloneSecurityScheme(components.SecuritySchemes["securitySchemeName1"]);
+            var securityScheme1 = await CloneSecuritySchemeAsync(components.SecuritySchemes["securitySchemeName1"]);
 
             securityScheme1.Reference = new OpenApiReference
             {
@@ -719,7 +719,7 @@ paths: {}
                 Type = ReferenceType.SecurityScheme
             };
 
-            var securityScheme2 = CloneSecurityScheme(components.SecuritySchemes["securitySchemeName2"]);
+            var securityScheme2 = await CloneSecuritySchemeAsync(components.SecuritySchemes["securitySchemeName2"]);
 
             securityScheme2.Reference = new OpenApiReference
             {
@@ -1071,7 +1071,6 @@ paths: {}
             tagReference2.Reference.HostDocument = expected;
 
             actual.Document.Should().BeEquivalentTo(expected, options => options
-            .Excluding(x => x.HashCode)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference.HostDocument)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Target)
@@ -1318,7 +1317,7 @@ components:
             // Act
             var doc = (await OpenApiDocument.LoadAsync(stream)).Document;
             var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
-            var outputDoc = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0).MakeLineBreaksEnvironmentNeutral();
+            var outputDoc = (await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0)).MakeLineBreaksEnvironmentNeutral();
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
 
             // Assert

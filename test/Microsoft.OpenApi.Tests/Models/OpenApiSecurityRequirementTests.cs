@@ -72,13 +72,13 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
         [Fact]
-        public void SerializeBasicSecurityRequirementAsV3JsonWorks()
+        public async Task SerializeBasicSecurityRequirementAsV3JsonWorks()
         {
             // Arrange
             var expected = @"{ }";
 
             // Act
-            var actual = BasicSecurityRequirement.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicSecurityRequirement.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -97,14 +97,14 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             SecurityRequirementWithReferencedSecurityScheme.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
-        public void SerializeSecurityRequirementWithReferencedSecuritySchemeAsV3JsonWorks()
+        public async Task SerializeSecurityRequirementWithReferencedSecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await SecurityRequirementWithReferencedSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSecurityRequirementWithReferencedSecuritySchemeAsV2JsonWorks()
+        public async Task SerializeSecurityRequirementWithReferencedSecuritySchemeAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await SecurityRequirementWithReferencedSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV3JsonShouldSkipUnserializableKeyValuePair()
+        public async Task SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV3JsonShouldSkipUnserializableKeyValuePair()
         {
             // Arrange
             var expected =
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -187,7 +187,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV2JsonShouldSkipUnserializableKeyValuePair()
+        public async Task SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV2JsonShouldSkipUnserializableKeyValuePair()
         {
             // Arrange
             var expected =
@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual =
-                SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+                await SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

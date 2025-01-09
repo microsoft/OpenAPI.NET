@@ -83,11 +83,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
-        /// <summary>
-        /// The unique hash code of the generated OpenAPI document
-        /// </summary>
-        public string HashCode => GenerateHashValue(this);
-
         /// <inheritdoc />
         public IDictionary<string, object>? Annotations { get; set; }
 
@@ -243,7 +238,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                          .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
@@ -414,14 +409,15 @@ namespace Microsoft.OpenApi.Models
                         return url;
                     })
                 .Where(
-                    u => Uri.Compare(
+                    u => u is not null &&
+                        Uri.Compare(
                             u,
                             firstServerUrl,
                             UriComponents.Host | UriComponents.Port | UriComponents.Path,
                             UriFormat.SafeUnescaped,
                             StringComparison.OrdinalIgnoreCase) ==
                         0 && u.IsAbsoluteUri)
-                .Select(u => u.Scheme)
+                .Select(u => u!.Scheme)
                 .Distinct()
                 .ToList();
 
@@ -457,22 +453,24 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Takes in an OpenApi document instance and generates its hash value
         /// </summary>
-        /// <param name="doc">The OpenAPI description to hash.</param>
+        /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
         /// <returns>The hash value.</returns>
-        public static string GenerateHashValue(OpenApiDocument doc)
+        public async Task<string> GetHashCodeAsync(CancellationToken cancellationToken = default)
         {
             using HashAlgorithm sha = SHA512.Create();
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
             var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
-            doc.SerializeAsV3(openApiJsonWriter);
-            openApiJsonWriter.Flush();
+            SerializeAsV3(openApiJsonWriter);
+            await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
 
+#if NET5_0_OR_GREATER
+            await cryptoStream.FlushFinalBlockAsync(cancellationToken).ConfigureAwait(false);
+#else
             cryptoStream.FlushFinalBlock();
-            var hash = sha.Hash;
-
-            return ConvertByteArrayToString(hash);
+#endif
+            return ConvertByteArrayToString(sha.Hash ?? []);
         }
 
         private static string ConvertByteArrayToString(byte[] hash)

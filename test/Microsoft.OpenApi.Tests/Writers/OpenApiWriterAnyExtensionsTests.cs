@@ -264,7 +264,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 new() { Terse = produceTerseOutput });
 
             writer.WriteAny(any);
-            writer.Flush();
+            await writer.FlushAsync();
             stream.Position = 0;
 
             // Act
