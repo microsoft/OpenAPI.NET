@@ -12,6 +12,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -48,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         [Theory]
         [MemberData(nameof(WriteStringListAsJsonShouldMatchExpectedTestCases))]
-        public void WriteStringListAsJsonShouldMatchExpected(string[] stringValues, bool produceTerseOutput)
+        public async Task WriteStringListAsJsonShouldMatchExpected(string[] stringValues, bool produceTerseOutput)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -62,7 +63,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             }
 
             writer.WriteEndArray();
-            writer.Flush();
+            await writer.FlushAsync();
 
             var parsedObject = JsonSerializer.Deserialize<List<string>>(outputString.GetStringBuilder().ToString());
             var expectedObject =

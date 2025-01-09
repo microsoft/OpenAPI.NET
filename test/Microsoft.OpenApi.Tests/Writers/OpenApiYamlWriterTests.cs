@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         [Theory]
         [MemberData(nameof(WriteStringListAsYamlShouldMatchExpectedTestCases))]
-        public void WriteStringListAsYamlShouldMatchExpected(string[] stringValues, string expectedYaml)
+        public async Task WriteStringListAsYamlShouldMatchExpected(string[] stringValues, string expectedYaml)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -71,7 +72,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             }
 
             writer.WriteEndArray();
-            writer.Flush();
+            await writer.FlushAsync();
 
             var actualYaml = outputString.GetStringBuilder()
                 .ToString()

@@ -318,7 +318,7 @@ namespace Microsoft.OpenApi.Models
         {
             var loops = writer.GetSettings().LoopDetector.Loops;
             writer.WriteStartObject();
-            if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+            if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
             {
                 writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, callback);
             }

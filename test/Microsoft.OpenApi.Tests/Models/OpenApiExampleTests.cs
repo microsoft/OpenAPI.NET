@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedExample.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             OpenApiExampleReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedExample.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

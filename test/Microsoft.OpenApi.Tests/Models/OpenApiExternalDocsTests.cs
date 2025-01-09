@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -24,10 +25,10 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public void SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expected)
+        public async Task SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            var actual = BasicExDocs.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
+            var actual = await BasicExDocs.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvanceExDocsAsV3JsonWorks()
+        public async Task SerializeAdvanceExDocsAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -48,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceExDocs.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvanceExDocs.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvanceExDocsAsV3YamlWorks()
+        public async Task SerializeAdvanceExDocsAsV3YamlWorks()
         {
             // Arrange
             var expected =
@@ -67,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceExDocs.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvanceExDocs.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

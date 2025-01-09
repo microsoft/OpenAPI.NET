@@ -129,7 +129,11 @@ namespace Microsoft.OpenApi.Reader
                 var result = await InternalLoadAsync(preparedStream, format, settings, cancellationToken).ConfigureAwait(false);
                 if (!settings.LeaveStreamOpen)
                 {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+                    await input.DisposeAsync().ConfigureAwait(false);
+#else
                     input.Dispose();
+#endif
                 }
                 return result;
             }
