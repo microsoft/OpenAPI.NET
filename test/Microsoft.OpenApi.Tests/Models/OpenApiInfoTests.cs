@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -62,10 +63,10 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [MemberData(nameof(BasicInfoJsonExpected))]
-        public void SerializeBasicInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
+        public async Task SerializeBasicInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            var actual = BasicInfo.SerializeAsJson(version);
+            var actual = await BasicInfo.SerializeAsJsonAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -91,10 +92,10 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [MemberData(nameof(BasicInfoYamlExpected))]
-        public void SerializeBasicInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
+        public async Task SerializeBasicInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            var actual = BasicInfo.SerializeAsYaml(version);
+            var actual = await BasicInfo.SerializeAsYamlAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -136,10 +137,10 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [MemberData(nameof(AdvanceInfoJsonExpect))]
-        public void SerializeAdvanceInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
+        public async Task SerializeAdvanceInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            var actual = AdvanceInfo.SerializeAsJson(version);
+            var actual = await AdvanceInfo.SerializeAsJsonAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -177,10 +178,10 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [MemberData(nameof(AdvanceInfoYamlExpect))]
-        public void SerializeAdvanceInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
+        public async Task SerializeAdvanceInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            var actual = AdvanceInfo.SerializeAsYaml(version);
+            var actual = await AdvanceInfo.SerializeAsYamlAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -189,7 +190,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void InfoVersionShouldAcceptDateStyledAsVersions()
+        public async Task InfoVersionShouldAcceptDateStyledAsVersions()
         {
             // Arrange
             var info = new OpenApiInfo
@@ -205,7 +206,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);
+            var actual = await info.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -214,7 +215,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeInfoObjectWithSummaryAsV31YamlWorks()
+        public async Task SerializeInfoObjectWithSummaryAsV31YamlWorks()
         {
             // Arrange
             var expected = @"title: Sample Pet Store App
@@ -223,7 +224,7 @@ version: '1.1.1'
 summary: This is a sample server for a pet store.";
 
             // Act
-            var actual = InfoWithSummary.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await InfoWithSummary.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -232,7 +233,7 @@ summary: This is a sample server for a pet store.";
         }
 
         [Fact]
-        public void SerializeInfoObjectWithSummaryAsV31JsonWorks()
+        public async Task SerializeInfoObjectWithSummaryAsV31JsonWorks()
         {
             // Arrange
             var expected = @"{
@@ -243,7 +244,7 @@ summary: This is a sample server for a pet store.";
 }";
 
             // Act
-            var actual = InfoWithSummary.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await InfoWithSummary.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

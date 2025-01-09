@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -85,7 +86,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSchemaReferenceAsJsonV3Works()
+        public async Task SerializeSchemaReferenceAsJsonV3Works()
         {
             // Arrange
             var reference = new OpenApiReference { Type = ReferenceType.Schema, Id = "Pet" };
@@ -97,7 +98,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -106,7 +107,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSchemaReferenceAsYamlV3Works()
+        public async Task SerializeSchemaReferenceAsYamlV3Works()
         {
             // Arrange
             var reference = new OpenApiReference
@@ -118,14 +119,14 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: '#/components/schemas/Pet'";
 
             // Act
-            var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual.Should().Be(expected);
         }
 
         [Fact]
-        public void SerializeSchemaReferenceAsJsonV2Works()
+        public async Task SerializeSchemaReferenceAsJsonV2Works()
         {
             // Arrange
             var reference = new OpenApiReference
@@ -142,14 +143,14 @@ namespace Microsoft.OpenApi.Tests.Models
                 """.MakeLineBreaksEnvironmentNeutral();
 
             // Act
-            var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected);
         }
 
         [Fact]
-        public void SerializeSchemaReferenceAsYamlV2Works()
+        public async Task SerializeSchemaReferenceAsYamlV2Works()
         {
             // Arrange
             var reference = new OpenApiReference
@@ -160,14 +161,14 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: '#/definitions/Pet'";
 
             // Act
-            var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual.Should().Be(expected);
         }
 
         [Fact]
-        public void SerializeExternalReferenceAsJsonV2Works()
+        public async Task SerializeExternalReferenceAsJsonV2Works()
         {
             // Arrange
             var reference = new OpenApiReference
@@ -185,7 +186,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -194,7 +195,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeExternalReferenceAsYamlV2Works()
+        public async Task SerializeExternalReferenceAsYamlV2Works()
         {
             // Arrange
             var reference = new OpenApiReference
@@ -206,14 +207,14 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: main.json#/definitions/Pets";
 
             // Act
-            var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual.Should().Be(expected);
         }
 
         [Fact]
-        public void SerializeExternalReferenceAsJsonV3Works()
+        public async Task SerializeExternalReferenceAsJsonV3Works()
         {
             // Arrange
             var reference = new OpenApiReference { ExternalResource = "main.json", Type = ReferenceType.Schema, Id = "Pets" };
@@ -226,7 +227,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -235,14 +236,14 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeExternalReferenceAsYamlV3Works()
+        public async Task SerializeExternalReferenceAsYamlV3Works()
         {
             // Arrange
             var reference = new OpenApiReference { ExternalResource = "main.json", Type = ReferenceType.Schema, Id = "Pets" };
             var expected = @"$ref: main.json#/components/schemas/Pets";
 
             // Act
-            var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual.Should().Be(expected);

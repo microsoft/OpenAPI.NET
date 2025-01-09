@@ -1355,7 +1355,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocument.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1372,7 +1372,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1389,7 +1389,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithServerVariable.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1406,7 +1406,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocument.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1423,7 +1423,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             DuplicateExtensions.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1440,7 +1440,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             DuplicateExtensions.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1457,14 +1457,14 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithReference.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
-        public void SerializeSimpleDocumentWithTopLevelReferencingComponentsAsYamlV2Works()
+        public async Task SerializeSimpleDocumentWithTopLevelReferencingComponentsAsYamlV2Works()
         {
             // Arrange
             var expected = @"swagger: '2.0'
@@ -1481,7 +1481,7 @@ definitions:
         type: string";
 
             // Act
-            var actual = SimpleDocumentWithTopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await SimpleDocumentWithTopLevelReferencingComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1490,7 +1490,7 @@ definitions:
         }
 
         [Fact]
-        public void SerializeSimpleDocumentWithTopLevelSelfReferencingComponentsAsYamlV3Works()
+        public async Task SerializeSimpleDocumentWithTopLevelSelfReferencingComponentsAsYamlV3Works()
         {
             // Arrange
             var expected = @"swagger: '2.0'
@@ -1501,7 +1501,7 @@ definitions:
   schema1: { }";
 
             // Act
-            var actual = SimpleDocumentWithTopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await SimpleDocumentWithTopLevelSelfReferencingComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1510,7 +1510,7 @@ definitions:
         }
 
         [Fact]
-        public void SerializeSimpleDocumentWithTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
+        public async Task SerializeSimpleDocumentWithTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
         {
             // Arrange
             var expected = @"swagger: '2.0'
@@ -1530,7 +1530,7 @@ definitions:
         type: string";
 
             // Act
-            var actual = SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1539,7 +1539,7 @@ definitions:
         }
 
         [Fact]
-        public void SerializeDocumentWithReferenceButNoComponents()
+        public async Task SerializeDocumentWithReferenceButNoComponents()
         {
             // Arrange
             var document = new OpenApiDocument()
@@ -1584,14 +1584,14 @@ definitions:
             };
 
             // Act
-            var actual = document.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
+            var actual = await document.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
 
             // Assert
             Assert.NotEmpty(actual);
         }
 
         [Fact]
-        public void SerializeRelativePathAsV2JsonWorks()
+        public async Task SerializeRelativePathAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -1612,7 +1612,7 @@ paths: { }";
             };
 
             // Act
-            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1621,7 +1621,7 @@ paths: { }";
         }
 
         [Fact]
-        public void SerializeRelativePathWithHostAsV2JsonWorks()
+        public async Task SerializeRelativePathWithHostAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -1643,7 +1643,7 @@ paths: { }";
             };
 
             // Act
-            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1652,7 +1652,7 @@ paths: { }";
         }
 
         [Fact]
-        public void SerializeRelativeRootPathWithHostAsV2JsonWorks()
+        public async Task SerializeRelativeRootPathWithHostAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -1673,7 +1673,7 @@ paths: { }";
             };
 
             // Act
-            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1696,8 +1696,17 @@ paths: { }";
                 Test whether reading in two similar documents yield the same hash code,
                 And reading in similar documents(one has a whitespace) yields the same hash code as the result is terse
             */
-            Assert.True(doc1.HashCode != null && doc2.HashCode != null && doc1.HashCode.Equals(doc2.HashCode));
-            Assert.Equal(doc1.HashCode, doc3.HashCode);
+            var doc1HashCode = await doc1.GetHashCodeAsync();
+            var doc2HashCode = await doc2.GetHashCodeAsync();
+            var doc3HashCode = await doc3.GetHashCodeAsync();
+            Assert.NotNull(doc1HashCode);
+            Assert.NotNull(doc2HashCode);
+            Assert.NotNull(doc3HashCode);
+            Assert.NotEmpty(doc1HashCode);
+            Assert.NotEmpty(doc2HashCode);
+            Assert.NotEmpty(doc3HashCode);
+            Assert.Equal(doc1HashCode, doc2HashCode);
+            Assert.Equal(doc1HashCode, doc3HashCode);
         }
 
         private static async Task<OpenApiDocument> ParseInputFileAsync(string filePath)
@@ -1707,7 +1716,7 @@ paths: { }";
         }
 
         [Fact]
-        public void SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()
+        public async Task SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()
         {
             // Arrange
             var expected = @"swagger: '2.0'
@@ -1750,7 +1759,7 @@ paths:
             };
 
             // Act
-            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1759,7 +1768,7 @@ paths:
         }
 
         [Fact]
-        public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
+        public async Task SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
         {
             // Arrange
             var expected = @"openapi: 3.0.4
@@ -1839,7 +1848,7 @@ paths:
             };
 
             // Act
-            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1912,7 +1921,7 @@ paths:
 
             // Act
             DocumentWithWebhooks.SerializeAsV31(writer);
-            writer.Flush();
+            await writer.FlushAsync();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -1920,7 +1929,7 @@ paths:
         }
 
         [Fact]
-        public void SerializeDocumentWithWebhooksAsV3YamlWorks()
+        public async Task SerializeDocumentWithWebhooksAsV3YamlWorks()
         {
             // Arrange
             var expected = @"openapi: '3.1.1'
@@ -1956,7 +1965,7 @@ webhooks:
           description: Return a 200 status to indicate that the data was received successfully";
 
             // Act
-            var actual = DocumentWithWebhooks.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await DocumentWithWebhooks.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1965,7 +1974,7 @@ webhooks:
         }
 
         [Fact]
-        public void SerializeDocumentWithRootJsonSchemaDialectPropertyWorks()
+        public async Task SerializeDocumentWithRootJsonSchemaDialectPropertyWorks()
         {
             // Arrange
             var doc = new OpenApiDocument
@@ -1986,7 +1995,7 @@ info:
 paths: { }";
 
             // Act
-            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
@@ -2062,12 +2071,12 @@ components:
           type: number
 ";
             var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml")).Document;
-            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
             actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
-        public void SerializeDocumentTagsWithMultipleExtensionsWorks()
+        public async Task SerializeDocumentTagsWithMultipleExtensionsWorks()
         {
             var expected = @"{
   ""openapi"": ""3.0.4"",
@@ -2116,7 +2125,7 @@ components:
                 }
             };
 
-            var actual = doc.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await doc.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
         }
     }

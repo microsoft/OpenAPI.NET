@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -133,10 +134,10 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public void SerializeBasicMediaTypeAsV3Works(OpenApiFormat format, string expected)
+        public async Task SerializeBasicMediaTypeAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            var actual = BasicMediaType.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
+            var actual = await BasicMediaType.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -145,7 +146,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvanceMediaTypeAsV3JsonWorks()
+        public async Task SerializeAdvanceMediaTypeAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -164,7 +165,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceMediaType.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvanceMediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -173,7 +174,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvanceMediaTypeAsV3YamlWorks()
+        public async Task SerializeAdvanceMediaTypeAsV3YamlWorks()
         {
             // Arrange
             var expected =
@@ -188,7 +189,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceMediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvanceMediaType.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -197,7 +198,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeMediaTypeWithObjectExampleAsV3YamlWorks()
+        public async Task SerializeMediaTypeWithObjectExampleAsV3YamlWorks()
         {
             // Arrange
             var expected =
@@ -223,7 +224,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = MediaTypeWithObjectExample.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await MediaTypeWithObjectExample.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -232,7 +233,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeMediaTypeWithObjectExampleAsV3JsonWorks()
+        public async Task SerializeMediaTypeWithObjectExampleAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -274,7 +275,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = MediaTypeWithObjectExample.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await MediaTypeWithObjectExample.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -283,7 +284,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeMediaTypeWithXmlExampleAsV3YamlWorks()
+        public async Task SerializeMediaTypeWithXmlExampleAsV3YamlWorks()
         {
             // Arrange
             var expected =
@@ -298,7 +299,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = MediaTypeWithXmlExample.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await MediaTypeWithXmlExample.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -307,7 +308,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeMediaTypeWithXmlExampleAsV3JsonWorks()
+        public async Task SerializeMediaTypeWithXmlExampleAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -326,7 +327,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = MediaTypeWithXmlExample.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await MediaTypeWithXmlExample.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -335,7 +336,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeMediaTypeWithObjectExamplesAsV3YamlWorks()
+        public async Task SerializeMediaTypeWithObjectExamplesAsV3YamlWorks()
         {
             // Arrange
             var expected =
@@ -363,7 +364,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = MediaTypeWithObjectExamples.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await MediaTypeWithObjectExamples.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
             _output.WriteLine(actual);
 
             // Assert
@@ -373,7 +374,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeMediaTypeWithObjectExamplesAsV3JsonWorks()
+        public async Task SerializeMediaTypeWithObjectExamplesAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -419,7 +420,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = MediaTypeWithObjectExamples.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await MediaTypeWithObjectExamples.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             _output.WriteLine(actual);
 
             // Assert

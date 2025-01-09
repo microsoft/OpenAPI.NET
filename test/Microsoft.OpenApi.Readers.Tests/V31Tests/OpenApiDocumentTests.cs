@@ -460,7 +460,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     prop3:
       type: string";
 
-            var actualMediaType = mediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            var actualMediaType = await mediaType.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actualSchema.Should().BeEquivalentTo(expectedSchema);

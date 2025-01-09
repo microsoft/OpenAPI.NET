@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Hidi
                     var walker = new OpenApiWalker(powerShellFormatter);
                     walker.Walk(document);
                 }
-                WriteOpenApi(options, openApiFormat, openApiVersion, document, logger);
+                await WriteOpenApiAsync(options, openApiFormat, openApiVersion, document, logger, cancellationToken).ConfigureAwait(false);
             }
             catch (TaskCanceledException)
             {
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static void WriteOpenApi(HidiOptions options, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger)
+        private static async Task WriteOpenApiAsync(HidiOptions options, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
         {
             using (logger.BeginScope("Output"))
             {
@@ -216,11 +216,11 @@ namespace Microsoft.OpenApi.Hidi
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
-                document.Serialize(writer, openApiVersion);
+                await document.SerializeAsync(writer, openApiVersion, cancellationToken).ConfigureAwait(false);
                 stopwatch.Stop();
 
                 logger.LogTrace("Finished serializing in {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
-                textWriter.Flush();
+                await textWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -769,7 +769,7 @@ namespace Microsoft.OpenApi.Hidi
             // Write OpenAPI to Output folder
             options.Output = new(Path.Combine(options.OutputFolder, "openapi.json"));
             options.TerseOutput = true;
-            WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_1, document, logger);
+            await WriteOpenApiAsync(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_1, document, logger, cancellationToken).ConfigureAwait(false);
 
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
             var manifest = new OpenAIPluginManifest(document.Info?.Title ?? "Title", document.Info?.Title ?? "Title", "https://go.microsoft.com/fwlink/?LinkID=288890", document.Info?.Contact?.Email ?? "placeholder@contoso.com", document.Info?.License?.Url.ToString() ?? "https://placeholderlicenseurl.com")
