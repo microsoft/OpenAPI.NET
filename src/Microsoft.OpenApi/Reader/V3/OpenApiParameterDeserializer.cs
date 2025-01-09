@@ -26,11 +26,11 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     "in", (o, n, _) =>
                     {
-                        var inString = n.GetScalarValue();
-
-                        o.In = Enum.GetValues(typeof(ParameterLocation)).Cast<ParameterLocation>()
-                            .Select( e => e.GetDisplayName() )
-                            .Contains(inString) ? n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>() : null;
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        {
+                            return;
+                        }
+                        o.In = _in;
                     }
                 },
                 {
@@ -55,7 +55,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "style",
-                    (o, n, _) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
+                    (o, n, _) => 
+                    {
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                        {
+                            return;
+                        }
+                        o.Style = style;
+                    }
                 },
                 {
                     "explode",

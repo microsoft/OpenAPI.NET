@@ -197,10 +197,6 @@ namespace Microsoft.OpenApi.Extensions
         public static string? ToIdentifier(this Microsoft.OpenApi.Models.JsonSchemaType? schemaType) { }
         public static Microsoft.OpenApi.Models.JsonSchemaType ToJsonSchemaType(this string identifier) { }
     }
-    public static class StringExtensions
-    {
-        public static T GetEnumFromDisplayName<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicFields)]  T>(this string displayName) { }
-    }
 }
 namespace Microsoft.OpenApi.Interfaces
 {
@@ -949,11 +945,11 @@ namespace Microsoft.OpenApi.Models
         public virtual string Description { get; set; }
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public virtual Microsoft.OpenApi.Models.OpenApiOAuthFlows Flows { get; set; }
-        public virtual Microsoft.OpenApi.Models.ParameterLocation In { get; set; }
+        public virtual Microsoft.OpenApi.Models.ParameterLocation? In { get; set; }
         public virtual string Name { get; set; }
         public virtual System.Uri OpenIdConnectUrl { get; set; }
         public virtual string Scheme { get; set; }
-        public virtual Microsoft.OpenApi.Models.SecuritySchemeType Type { get; set; }
+        public virtual Microsoft.OpenApi.Models.SecuritySchemeType? Type { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1274,11 +1270,11 @@ namespace Microsoft.OpenApi.Models.References
         public override string Description { get; set; }
         public override System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public override Microsoft.OpenApi.Models.OpenApiOAuthFlows Flows { get; set; }
-        public override Microsoft.OpenApi.Models.ParameterLocation In { get; set; }
+        public override Microsoft.OpenApi.Models.ParameterLocation? In { get; set; }
         public override string Name { get; set; }
         public override System.Uri OpenIdConnectUrl { get; set; }
         public override string Scheme { get; set; }
-        public override Microsoft.OpenApi.Models.SecuritySchemeType Type { get; set; }
+        public override Microsoft.OpenApi.Models.SecuritySchemeType? Type { get; set; }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
