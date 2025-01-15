@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
-using FluentAssertions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -44,9 +43,9 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var fooExtension = actual.Document.Info.Extensions["x-foo"] as FooExtension;
 
-            fooExtension.Should().NotBeNull();
-            fooExtension.Bar.Should().Be("hey");
-            fooExtension.Baz.Should().Be("hi!");
+            Assert.NotNull(fooExtension);
+            Assert.Equal("hey", fooExtension.Bar);
+            Assert.Equal("hi!", fooExtension.Baz);
         }
     }
 

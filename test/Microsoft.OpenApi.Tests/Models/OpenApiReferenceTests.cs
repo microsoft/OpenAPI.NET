@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Assert
-            reference.ExternalResource.Should().BeNull();
+            Assert.Null(reference.ExternalResource);
             reference.Type.Should().Be(type);
             reference.Id.Should().Be(id);
 

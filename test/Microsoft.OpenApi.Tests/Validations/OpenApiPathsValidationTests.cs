@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().BeEmpty();
+            Assert.Empty(errors);
         }
         [Fact]
         public void ValidatePathsAreUniqueConsidersMultiParametersAsIdentical()

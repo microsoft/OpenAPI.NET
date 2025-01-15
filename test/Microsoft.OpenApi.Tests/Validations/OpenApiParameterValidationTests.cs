@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -88,7 +87,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
@@ -153,7 +152,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
@@ -183,7 +182,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = errors.Any();
 
             // Assert
-            result.Should().BeTrue();
+            Assert.True(result);
             errors.OfType<OpenApiValidatorError>().Select(e => e.RuleName).Should().BeEquivalentTo(new[]
             {
                 "PathParameterShouldBeInThePath"
@@ -226,7 +225,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = errors.Any();
 
             // Assert
-            result.Should().BeFalse();
+            Assert.False(result);
         }
     }
 }

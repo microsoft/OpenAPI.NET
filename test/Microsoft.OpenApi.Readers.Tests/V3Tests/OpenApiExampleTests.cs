@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseExampleForcedStringSucceed()
         {
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "explicitString.yaml"));
-            result.Diagnostic.Errors.Should().BeEmpty();
+            Assert.Empty(result.Diagnostic.Errors);
         }
     }
 }

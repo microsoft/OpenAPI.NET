@@ -222,7 +222,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var runtimeExpression = RuntimeExpression.Build(expression);
 
             // Assert
-            runtimeExpression.Should().NotBeNull();
+            Assert.NotNull(runtimeExpression);
             runtimeExpression.Should().BeOfType(typeof(CompositeExpression));
             var response = (CompositeExpression)runtimeExpression;
             response.Expression.Should().Be(expression);
@@ -262,7 +262,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var runtimeExpression = RuntimeExpression.Build(expression);
 
             // Assert
-            runtimeExpression.Should().NotBeNull();
+            Assert.NotNull(runtimeExpression);
             runtimeExpression.Should().BeOfType(typeof(CompositeExpression));
             var response = (CompositeExpression)runtimeExpression;
             response.Expression.Should().Be(expression);
@@ -270,7 +270,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var compositeExpression = runtimeExpression as CompositeExpression;
 
             // The whole string is treated as the template without any contained expressions.
-            compositeExpression.ContainedExpressions.Should().BeEmpty();
+            Assert.Empty(compositeExpression.ContainedExpressions);
         }
     }
 }

@@ -117,7 +117,7 @@ paths: {}
             var path = System.IO.Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
             var result = await OpenApiDocument.LoadAsync(path);
 
-            result.Diagnostic.Errors.Should().BeEmpty();
+            Assert.Empty(result.Diagnostic.Errors);
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
@@ -1409,7 +1409,7 @@ components:
         public async Task ParseDocumentWithEmptyPathsSucceeds()
         {
             var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"));
-            result.Diagnostic.Errors.Should().BeEmpty();
+            Assert.Empty(result.Diagnostic.Errors);
         }
     }
 }
