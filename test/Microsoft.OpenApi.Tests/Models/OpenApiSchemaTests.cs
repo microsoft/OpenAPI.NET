@@ -627,7 +627,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         internal class SchemaVisitor : OpenApiVisitorBase
