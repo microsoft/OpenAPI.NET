@@ -304,7 +304,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             };
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
-            result.Document.Servers.Count.Should().Be(0);
+            Assert.Empty(result.Document.Servers);
             result.Diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic
                 {

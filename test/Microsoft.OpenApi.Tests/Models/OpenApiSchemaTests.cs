@@ -226,7 +226,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -256,7 +256,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -308,7 +308,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -363,7 +363,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -600,7 +600,7 @@ namespace Microsoft.OpenApi.Tests.Models
             walker.Walk(document);
 
             // Assert
-            visitor.Titles.Count.Should().Be(2);
+            Assert.Equal(2, visitor.Titles.Count);
         }
 
         [Fact]
@@ -627,7 +627,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected, actual);
         }
 
         internal class SchemaVisitor : OpenApiVisitorBase
