@@ -499,7 +499,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             result.Document.Workspace.Contains("./externalResource.yaml");
-            responseSchema.Properties.Count.Should().Be(2); // reference has been resolved
+            Assert.Equal(2, responseSchema.Properties.Count); // reference has been resolved
         }
 
         [Fact]
@@ -522,7 +522,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             result.Document.Workspace.RegisterComponents(doc2);
 
             // Assert
-            requestBodySchema.Properties.Count.Should().Be(2); // reference has been resolved
+            Assert.Equal(2, requestBodySchema.Properties.Count); // reference has been resolved
         }
 
         [Fact]

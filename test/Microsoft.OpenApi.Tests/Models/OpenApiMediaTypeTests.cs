@@ -441,7 +441,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             MediaTypeWithObjectExamples.Examples.Should().NotBeEquivalentTo(clone.Examples);
-            MediaTypeWithObjectExamples.Example.Should().Be(null);
+            Assert.Null(MediaTypeWithObjectExamples.Example);
         }
     }
 }

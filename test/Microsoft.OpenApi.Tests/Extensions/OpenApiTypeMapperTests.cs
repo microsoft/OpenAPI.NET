@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
             var actual = OpenApiTypeMapper.MapOpenApiPrimitiveTypeToSimpleType(schema);
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }
