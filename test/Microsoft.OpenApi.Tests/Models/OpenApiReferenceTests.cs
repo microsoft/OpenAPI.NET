@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;

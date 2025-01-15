@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]

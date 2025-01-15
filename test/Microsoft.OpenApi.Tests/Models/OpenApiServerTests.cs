@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -65,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -103,7 +102,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }
