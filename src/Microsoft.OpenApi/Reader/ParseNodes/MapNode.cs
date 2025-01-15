@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
@@ -114,7 +115,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
 
         public override string GetRaw()
         {
-            var x = JsonSerializer.Serialize(_node);
+            var x = JsonSerializer.Serialize(_node, SourceGenerationContext.Default.JsonObject);
             return x;
         }
 
@@ -176,4 +177,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return _node;
         }
     }
+
+    [JsonSerializable(typeof(JsonObject))]
+    internal partial class SourceGenerationContext : JsonSerializerContext { }
 }
