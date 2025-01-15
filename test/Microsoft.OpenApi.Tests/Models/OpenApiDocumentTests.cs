@@ -1898,7 +1898,7 @@ paths:
             };
 
             OpenApiJsonWriter apiWriter = new OpenApiJsonWriter(new StringWriter());
-            doc.Invoking(d => d.SerializeAsV3(apiWriter)).Should().NotThrow();
+            doc.SerializeAsV3(apiWriter);
         }
 
         [Theory]

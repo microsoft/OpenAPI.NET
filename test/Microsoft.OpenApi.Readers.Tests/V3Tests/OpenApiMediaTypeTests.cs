@@ -110,8 +110,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var serialized = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            serialized.MakeLineBreaksEnvironmentNeutral()
-                .Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), serialized.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

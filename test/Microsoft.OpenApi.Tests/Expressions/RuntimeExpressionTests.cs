@@ -244,7 +244,8 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => RuntimeExpression.Build(expression);
 
             // Assert
-            test.Should().Throw<OpenApiException>().WithMessage(String.Format(SRResource.RuntimeExpressionHasInvalidFormat, invalidExpression));
+            var result = Assert.Throws<OpenApiException>(test);
+            Assert.Equal(result.Message, string.Format(SRResource.RuntimeExpressionHasInvalidFormat, invalidExpression));
         }
 
         [Theory]

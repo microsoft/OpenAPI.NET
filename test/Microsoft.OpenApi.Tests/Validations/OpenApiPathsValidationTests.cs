@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().NotBeEmpty();
+            Assert.NotEmpty(errors);
             errors.Select(e => e.Message).Should().BeEquivalentTo(error);
         }
 
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().NotBeEmpty();
+            Assert.NotEmpty(errors);
             errors.Select(e => e.Message).Should().BeEquivalentTo(error);
         }
         [Fact]
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().NotBeEmpty();
+            Assert.NotEmpty(errors);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = parameter.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().NotBeEmpty();
+            Assert.NotEmpty(errors);
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
                 nameError,
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
             var errors = validator.Errors;
             // Assert
-            errors.Should().NotBeEmpty();
+            Assert.NotEmpty(errors);
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
                 "\"required\" must be true when parameter location is \"path\""

@@ -277,10 +277,10 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             // Only the first two should be added successfully since the latter two are duplicates of securityScheme1.
             // Duplicate determination only considers Reference.Id.
-            addSecurityScheme1Duplicate.Should().Throw<ArgumentException>();
-            addSecurityScheme1WithDifferentProperties.Should().Throw<ArgumentException>();
+            Assert.Throws<ArgumentException>(addSecurityScheme1Duplicate);
+            Assert.Throws<ArgumentException>(addSecurityScheme1WithDifferentProperties);
 
-            securityRequirement.Should().HaveCount(2);
+            Assert.Equal(2, securityRequirement.Count);
 
             securityRequirement.Should().BeEquivalentTo(
                 new OpenApiSecurityRequirement
