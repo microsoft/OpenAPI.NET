@@ -1961,7 +1961,7 @@ webhooks:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().BeEquivalentTo(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1989,7 +1989,7 @@ paths: { }";
             var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -2015,7 +2015,7 @@ responses:
 
             webhooks[OperationType.Get].SerializeAsV31(writer);
             var actual = stringWriter.ToString();
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -2063,7 +2063,7 @@ components:
 ";
             var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml")).Document;
             var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -2117,7 +2117,7 @@ components:
             };
 
             var actual = await doc.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Path,
@@ -61,7 +61,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                },
+                parameter);
         }
 
         [Fact]
@@ -78,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Query,
@@ -95,7 +96,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     },
                     Style = ParameterStyle.Form,
                     Explode = true
-                });
+                },
+                parameter);
         }
 
         [Fact]
@@ -112,7 +114,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
@@ -123,7 +125,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                },
+                parameter);
         }
 
         [Fact]
@@ -140,7 +143,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
@@ -151,7 +154,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                },
+                parameter);
         }
 
         [Fact]
@@ -168,14 +172,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
                     Name = "username",
                     Description = "username to fetch",
                     Required = false
-                });
+                },
+                parameter);
         }
 
         [Fact]
@@ -192,7 +197,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
@@ -203,7 +208,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                },
+                parameter);
         }
 
         [Fact]
