@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -440,7 +439,10 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Assert
-            MediaTypeWithObjectExamples.Examples.Should().NotBeEquivalentTo(clone.Examples);
+            Assert.Equal(42, clone.Example.GetValue<int>());
+            Assert.Empty(clone.Examples);
+            Assert.Empty(clone.Encoding);
+            Assert.Empty(clone.Extensions);
             Assert.Null(MediaTypeWithObjectExamples.Example);
         }
     }

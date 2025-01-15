@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -298,9 +299,9 @@ examples:
             clone.Default = 6;
 
             // Assert
-            clone.Enum.Should().NotBeEquivalentTo(schema.Enum);
-            clone.Examples.Should().NotBeEquivalentTo(schema.Examples);
-            clone.Default.Should().NotBeEquivalentTo(schema.Default);
+            Assert.Equivalent(new int[] {1, 2, 3, 4}, clone.Enum.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(new int[] {2, 3, 4}, clone.Examples.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(6, clone.Default.GetValue<int>());
         }
 
         [Fact]
