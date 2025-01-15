@@ -107,7 +107,7 @@ paths: {}
 """;
 
             var readResult = OpenApiDocument.Parse(stringOpenApiDoc);
-            readResult.Document.Info.Title.Should().Be("Sample API");
+            Assert.Equal("Sample API", readResult.Document.Info.Title);
         }
 
         [Fact]
@@ -1401,7 +1401,7 @@ components:
                                                             paths: {}
                                                             """, "yaml");
 
-            result.Diagnostic.Errors.Should().NotBeEmpty();
+            Assert.NotEmpty(result.Diagnostic.Errors);
         }
 
         [Fact]

@@ -223,9 +223,9 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Assert
             Assert.NotNull(runtimeExpression);
-            runtimeExpression.Should().BeOfType(typeof(CompositeExpression));
+            Assert.IsType<CompositeExpression>(runtimeExpression);
             var response = (CompositeExpression)runtimeExpression;
-            response.Expression.Should().Be(expression);
+            Assert.Equal(expression, response.Expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
             compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
@@ -263,9 +263,9 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Assert
             Assert.NotNull(runtimeExpression);
-            runtimeExpression.Should().BeOfType(typeof(CompositeExpression));
+            Assert.IsType<CompositeExpression>(runtimeExpression);
             var response = (CompositeExpression)runtimeExpression;
-            response.Expression.Should().Be(expression);
+            Assert.Equal(expression, response.Expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
 

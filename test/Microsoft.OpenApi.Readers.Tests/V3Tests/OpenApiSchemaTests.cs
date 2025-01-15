@@ -386,7 +386,7 @@ get:
             var expected = await expectedComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }
