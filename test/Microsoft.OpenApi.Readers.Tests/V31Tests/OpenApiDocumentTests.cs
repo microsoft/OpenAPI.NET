@@ -9,9 +9,7 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.Services;
 using Xunit;
-using System.Linq;
 using VerifyXunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests

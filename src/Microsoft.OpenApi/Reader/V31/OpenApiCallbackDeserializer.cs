@@ -4,7 +4,6 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
-using System.Linq;
 
 namespace Microsoft.OpenApi.Reader.V31
 {

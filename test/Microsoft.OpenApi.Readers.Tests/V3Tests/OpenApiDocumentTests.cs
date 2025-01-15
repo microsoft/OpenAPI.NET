@@ -17,7 +17,6 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
-using SharpYaml.Model;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests

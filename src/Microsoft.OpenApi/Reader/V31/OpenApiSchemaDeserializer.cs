@@ -8,7 +8,6 @@ using Microsoft.OpenApi.Reader.ParseNodes;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31
 {

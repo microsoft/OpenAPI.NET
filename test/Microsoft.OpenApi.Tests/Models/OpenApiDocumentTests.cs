@@ -18,7 +18,6 @@ using Microsoft.OpenApi.Writers;
 using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
