@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -24,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
             Assert.NotEmpty(errors);
-            errors.Select(e => e.Message).Should().BeEquivalentTo(error);
+            Assert.Equivalent(new string[] {error}, errors.Select(e => e.Message).ToArray());
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
             Assert.NotEmpty(errors);
-            errors.Select(e => e.Message).Should().BeEquivalentTo(error);
+            Assert.Equivalent(new string[] {error}, errors.Select(e => e.Message).ToArray());
         }
         [Fact]
         public void ValidatePathsAreUniqueDoesNotConsiderMultiParametersAsIdentical()

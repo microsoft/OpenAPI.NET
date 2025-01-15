@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -29,11 +28,11 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
             Assert.NotEmpty(errors);
-            errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
+            Assert.Equivalent(new[]
             {
                 nameError,
                 inError
-            });
+            }, errors.Select(e => e.Message));
         }
 
         [Fact]
@@ -54,10 +53,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = validator.Errors;
             // Assert
             Assert.NotEmpty(errors);
-            errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
+            Assert.Equivalent(new[]
             {
                 "\"required\" must be true when parameter location is \"path\""
-            });
+            }, errors.Select(e => e.Message));
         }
 
         [Fact]
@@ -183,14 +182,14 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
             Assert.True(result);
-            errors.OfType<OpenApiValidatorError>().Select(e => e.RuleName).Should().BeEquivalentTo(new[]
+            Assert.Equivalent(new[]
             {
                 "PathParameterShouldBeInThePath"
-            });
-            errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
+            }, errors.OfType<OpenApiValidatorError>().Select(e => e.RuleName));
+            Assert.Equivalent(new[]
             {
                 "#/in"
-            });
+            }, errors.Select(e => e.Pointer));
         }
 
         [Fact]
