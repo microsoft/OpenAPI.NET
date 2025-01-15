@@ -88,11 +88,11 @@ paths: {}",
                     Paths = new OpenApiPaths()
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            result.Diagnostic.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiDiagnostic()
                 {
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
-                });
+                }, result.Diagnostic);
         }
 
         [Fact]
@@ -162,7 +162,7 @@ paths: {}
                     Paths = new OpenApiPaths()
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            result.Diagnostic.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiDiagnostic
                 {
                     Errors =
@@ -170,7 +170,7 @@ paths: {}
                             new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
                     },
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
-                });
+                }, result.Diagnostic);
         }
 
         [Fact]
@@ -189,11 +189,11 @@ paths: {}
                     Paths = new OpenApiPaths()
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            result.Diagnostic.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiDiagnostic()
                 {
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
-                });
+                }, result.Diagnostic);
         }
 
         [Fact]
@@ -578,8 +578,8 @@ paths: {}
 
             actual.Document.Should().BeEquivalentTo(expectedDoc, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            actual.Diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            Assert.Equivalent(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, actual.Diagnostic);
         }
 
         [Fact]
@@ -1089,8 +1089,8 @@ paths: {}
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
 
-            actual.Diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            Assert.Equivalent(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, actual.Diagnostic);
         }
 
         [Fact]
@@ -1100,8 +1100,8 @@ paths: {}
 
             // TODO: Create the object in memory and compare with the one read from YAML file.
 
-            actual.Diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            Assert.Equivalent(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, actual.Diagnostic);
         }
 
         [Fact]
@@ -1211,14 +1211,14 @@ paths: {}
 
             var expectedSchema = new OpenApiSchemaReference("User", result.Document);
             // Assert
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
+            Assert.Equivalent(expectedSchema, actualSchema);
         }
 
         [Fact]
         public async Task ValidateExampleShouldNotHaveDataTypeMismatch()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
             {
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
 
@@ -1375,11 +1375,11 @@ components:
                 Paths = new()
             };
 
-            result.Diagnostic.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiDiagnostic 
                 { 
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
-                });
+                }, result.Diagnostic);
 
             result.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.BaseUri));
         }

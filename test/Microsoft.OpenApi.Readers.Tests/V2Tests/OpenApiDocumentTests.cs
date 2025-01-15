@@ -280,11 +280,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
-                json.Schema.Should().BeEquivalentTo(targetSchema);
+                Assert.Equivalent(targetSchema, json.Schema);
 
                 var xml = response.Value.Content["application/xml"];
                 Assert.NotNull(xml);
-                xml.Schema.Should().BeEquivalentTo(targetSchema);
+                Assert.Equivalent(targetSchema, xml.Schema);
             }
         }
 

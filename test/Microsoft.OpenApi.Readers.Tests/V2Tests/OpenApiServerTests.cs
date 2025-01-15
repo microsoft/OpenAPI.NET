@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -305,7 +304,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
             Assert.Empty(result.Document.Servers);
-            result.Diagnostic.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiDiagnostic
                 {
                     Errors =
@@ -313,7 +312,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         new OpenApiError("#/", "Invalid host")
                     },
                     SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
-                });
+                }, result.Diagnostic);
         }
     }
 }

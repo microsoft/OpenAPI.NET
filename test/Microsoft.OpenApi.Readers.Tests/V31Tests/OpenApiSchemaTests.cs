@@ -86,10 +86,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(
-                System.IO.Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1);
+                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedObject);
+            Assert.Equivalent(expectedObject, schema);
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, out _);
 
             // Assert
-            actual.Should().BeEquivalentTo(expected);
+            Assert.Equivalent(expected, actual);
         }
 
         [Fact]
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedSchema);
+            Assert.Equivalent(expectedSchema, schema);
         }
 
         [Fact]

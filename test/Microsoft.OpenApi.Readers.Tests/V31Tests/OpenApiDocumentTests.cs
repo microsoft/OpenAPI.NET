@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using VerifyXunit;
+using VerifyTests;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -198,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert            
-            actual.Diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+            Assert.Equivalent(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 }, actual.Diagnostic);
             actual.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
 
@@ -389,8 +390,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             .Excluding(x => x.Webhooks["pets"].Reference)
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
-            actual.Diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+            Assert.Equivalent(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 }, actual.Diagnostic);
         }
 
         [Fact]
@@ -461,7 +462,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var actualMediaType = await mediaType.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
+            Assert.Equivalent(expectedSchema, actualSchema);
             actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
         }
 

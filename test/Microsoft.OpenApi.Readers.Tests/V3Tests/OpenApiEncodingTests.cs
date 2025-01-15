@@ -3,7 +3,6 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -27,11 +26,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            encoding.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiEncoding
                 {
                     ContentType = "application/xml; charset=utf-8"
-                });
+                }, encoding);
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            encoding.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiEncoding
                 {
                     ContentType = "image/png, image/jpeg",
@@ -59,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 }
                             }
                     }
-                });
+                }, encoding);
         }
     }
 }

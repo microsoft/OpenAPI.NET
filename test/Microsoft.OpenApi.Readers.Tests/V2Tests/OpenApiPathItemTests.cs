@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -260,7 +259,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
 
             // Assert
-            pathItem.Should().BeEquivalentTo(_basicPathItemWithFormData);
+            Assert.Equivalent(_basicPathItemWithFormData, pathItem);
         }
 
         [Fact]
