@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             using var streamReader = new StreamReader(stream);
             var result = await streamReader.ReadToEndAsync();
-            return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, out var _);
+            return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
         }
 
         private static async Task<OpenApiSecurityScheme> CloneSecuritySchemeAsync(OpenApiSecurityScheme element)
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             using var streamReader = new StreamReader(stream);
             var result = await streamReader.ReadToEndAsync();
-            return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out var _);
+            return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
         }
 
         [Fact]
@@ -707,27 +707,9 @@ paths: {}
                 HostDocument = actual.Document
             };
 
-            var tag1 = new OpenApiTag
-            {
-                Name = "tagName1",
-                Description = "tagDescription1",
-                Reference = new OpenApiReference
-                {
-                    Id = "tagName1",
-                    Type = ReferenceType.Tag
-                }
-            };
+            var tagReference1 = new OpenApiTagReference("tagName1", null);
 
-
-            var tag2 = new OpenApiTag
-            {
-                Name = "tagName2",
-                Reference = new OpenApiReference
-                {
-                    Id = "tagName2",
-                    Type = ReferenceType.Tag
-                }
-            };
+            var tagReference2 = new OpenApiTagReference("tagName2", null);
 
             var securityScheme1 = await CloneSecuritySchemeAsync(components.SecuritySchemes["securitySchemeName1"]);
 
@@ -781,10 +763,10 @@ paths: {}
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
-                                Tags = new List<OpenApiTag>
+                                Tags = new List<OpenApiTagReference>
                                     {
-                                        tag1,
-                                        tag2
+                                        tagReference1,
+                                        tagReference2
                                     },
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
@@ -869,10 +851,10 @@ paths: {}
                             },
                             [OperationType.Post] = new OpenApiOperation
                             {
-                                Tags = new List<OpenApiTag>
+                                Tags = new List<OpenApiTagReference>
                                     {
-                                        tag1,
-                                        tag2
+                                        tagReference1,
+                                        tagReference2
                                     },
                                 Description = "Creates a new pet in the store.  Duplicates are allowed",
                                 OperationId = "addPet",
@@ -1063,6 +1045,11 @@ paths: {}
                         {
                             Name = "tagName1",
                             Description = "tagDescription1"                            
+                        },
+                        new OpenApiTag
+                        {
+                            Name = "tagName2",
+                            Description = "tagDescription2"
                         }
                     },
                 SecurityRequirements = new List<OpenApiSecurityRequirement>
@@ -1080,13 +1067,19 @@ paths: {}
                     }
             };
 
+            tagReference1.Reference.HostDocument = expected;
+            tagReference2.Reference.HostDocument = expected;
+
             actual.Document.Should().BeEquivalentTo(expected, options => options
-            .Excluding(m => m.Tags[0].Reference)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference.HostDocument)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Target)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[0].Reference.HostDocument)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[0].Target)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[1].Reference.HostDocument)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[1].Target)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[1].Reference.HostDocument)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[1].Target)
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
 

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 
 namespace Microsoft.OpenApi.Interfaces
@@ -36,9 +37,10 @@ namespace Microsoft.OpenApi.Interfaces
         /// </summary>
         /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
+        /// <param name="openApiDocument">The OpenApiDocument object to which the fragment belongs, used to lookup references.</param>
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
-        T ReadFragment<T>(MemoryStream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
+        T ReadFragment<T>(MemoryStream input, OpenApiSpecVersion version, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement;
     }
 }
