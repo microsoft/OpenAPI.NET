@@ -7,6 +7,7 @@
         <Version>2.0.0-preview4</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <SignAssembly>true</SignAssembly>
+        <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net5.0'))">true</IsTrimmable>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <NoWarn>NU5048</NoWarn>
