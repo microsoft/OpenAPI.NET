@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
-        public void SerializeBasicResponseWorks(
+        public async Task SerializeBasicResponseWorks(
             OpenApiSpecVersion version,
             OpenApiFormat format)
         {
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }" : @"description: ";
 
             // Act
-            var actual = BasicResponse.Serialize(version, format);
+            var actual = await BasicResponse.SerializeAsync(version, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedResponseAsV3JsonWorks()
+        public async Task SerializeAdvancedResponseAsV3JsonWorks()
         {
             // Arrange
             var expected = @"{
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedV3Response.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedV3Response.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -248,7 +248,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedResponseAsV3YamlWorks()
+        public async Task SerializeAdvancedResponseAsV3YamlWorks()
         {
             // Arrange
             var expected =
@@ -272,7 +272,7 @@ content:
     myextension: myextensionvalue";
 
             // Act
-            var actual = AdvancedV3Response.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedV3Response.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -281,7 +281,7 @@ content:
         }
 
         [Fact]
-        public void SerializeAdvancedResponseAsV2JsonWorks()
+        public async Task SerializeAdvancedResponseAsV2JsonWorks()
         {
             // Arrange
             var expected = @"{
@@ -309,7 +309,7 @@ content:
 }";
 
             // Act
-            var actual = AdvancedV2Response.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await AdvancedV2Response.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -318,7 +318,7 @@ content:
         }
 
         [Fact]
-        public void SerializeAdvancedResponseAsV2YamlWorks()
+        public async Task SerializeAdvancedResponseAsV2YamlWorks()
         {
             // Arrange
             var expected =
@@ -339,7 +339,7 @@ headers:
     type: integer";
 
             // Act
-            var actual = AdvancedV2Response.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await AdvancedV2Response.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -358,7 +358,7 @@ headers:
 
             // Act
             V3OpenApiResponseReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -375,7 +375,7 @@ headers:
 
             // Act
             ReferencedV3Response.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -392,7 +392,7 @@ headers:
 
             // Act
             V2OpenApiResponseReference.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -409,7 +409,7 @@ headers:
 
             // Act
             ReferencedV2Response.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

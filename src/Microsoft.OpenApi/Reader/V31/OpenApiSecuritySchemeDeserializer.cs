@@ -22,7 +22,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "type", (o, n, _) =>
                     {
-                        o.Type = n.GetScalarValue().GetEnumFromDisplayName<SecuritySchemeType>();
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<SecuritySchemeType>(n.Context, out var type))
+                        {
+                            return;
+                        }
+                        o.Type = type;
                     }
                 },
                 {
@@ -40,7 +44,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "in", (o, n, _) =>
                     {
-                        o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        {
+                            return;
+                        }
+                        o.In = _in;
                     }
                 },
                 {

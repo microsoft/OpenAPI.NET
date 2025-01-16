@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Reader.V3
                     if (id.StartsWith("/components/"))
                     {
                         var localSegments = segments[1].Split('/');
-                        var referencedType = localSegments[2].GetEnumFromDisplayName<ReferenceType>();
+                        localSegments[2].TryGetEnumFromDisplayName<ReferenceType>(out var referencedType);
                         if (type == null)
                         {
                             type = referencedType;
@@ -200,25 +200,22 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var segments = localReference.Split('/');
 
-            if (segments.Length == 4) // /components/{type}/pet
+            if (segments.Length == 4 && segments[1] == "components") // /components/{type}/pet
             {
-                if (segments[1] == "components")
+                segments[2].TryGetEnumFromDisplayName<ReferenceType>(out var referenceType);
+                var refId = segments[3];
+                if (segments[2] == "pathItems")
                 {
-                    var referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
-                    var refId = segments[3];
-                    if (segments[2] == "pathItems")
-                    {
-                        refId = "/" + segments[3];
-                    };
-
-                    var parsedReference = new OpenApiReference
-                    {
-                        Type = referenceType,
-                        Id = refId
-                    };
-
-                    return parsedReference;
+                    refId = "/" + segments[3];
                 }
+
+                var parsedReference = new OpenApiReference
+                {
+                    Type = referenceType,
+                    Id = refId
+                };
+
+                return parsedReference;
             }
 
             throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, localReference));

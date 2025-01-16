@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -32,13 +33,13 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "{ }")]
-        public void SerializeBasicContactWorks(
+        public async Task SerializeBasicContactWorks(
             OpenApiSpecVersion version,
             OpenApiFormat format,
             string expected)
         {
             // Arrange & Act
-            var actual = BasicContact.Serialize(version, format);
+            var actual = await BasicContact.SerializeAsync(version, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -49,7 +50,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeAdvanceContactAsJsonWorks(OpenApiSpecVersion version)
+        public async Task SerializeAdvanceContactAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected =
@@ -63,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceContact.SerializeAsJson(version);
+            var actual = await AdvanceContact.SerializeAsJsonAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -74,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeAdvanceContactAsYamlWorks(OpenApiSpecVersion version)
+        public async Task SerializeAdvanceContactAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected =
@@ -86,7 +87,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceContact.SerializeAsYaml(version);
+            var actual = await AdvanceContact.SerializeAsYamlAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

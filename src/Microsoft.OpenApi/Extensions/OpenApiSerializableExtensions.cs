@@ -3,6 +3,8 @@
 
 using System.Globalization;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
@@ -22,10 +24,11 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">The Open API element.</param>
         /// <param name="stream">The output stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
-        public static void SerializeAsJson<T>(this T element, Stream stream, OpenApiSpecVersion specVersion)
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            element.Serialize(stream, specVersion, OpenApiFormat.Json);
+            return element.SerializeAsync(stream, specVersion, OpenApiFormat.Json, cancellationToken);
         }
 
         /// <summary>
@@ -35,10 +38,11 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">The Open API element.</param>
         /// <param name="stream">The output stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
-        public static void SerializeAsYaml<T>(this T element, Stream stream, OpenApiSpecVersion specVersion)
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task SerializeAsYamlAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            element.Serialize(stream, specVersion, OpenApiFormat.Yaml);
+            return element.SerializeAsync(stream, specVersion, OpenApiFormat.Yaml, cancellationToken);
         }
 
         /// <summary>
@@ -50,14 +54,16 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="stream">The given stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
-        public static void Serialize<T>(
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task SerializeAsync<T>(
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format)
+            OpenApiFormat format,
+            CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            element.Serialize(stream, specVersion, format, null);
+            return element.SerializeAsync(stream, specVersion, format, null, cancellationToken);
         }
 
         /// <summary>
@@ -70,12 +76,14 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
         /// <param name="settings">Provide configuration settings for controlling writing output</param>
-        public static void Serialize<T>(
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task SerializeAsync<T>(
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
             OpenApiFormat format,
-            OpenApiWriterSettings settings)
+            OpenApiWriterSettings settings,
+            CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(stream);
@@ -88,7 +96,7 @@ namespace Microsoft.OpenApi.Extensions
                 OpenApiFormat.Yaml => new OpenApiYamlWriter(streamWriter, settings),
                 _ => throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format)),
             };
-            element.Serialize(writer, specVersion);
+            return element.SerializeAsync(writer, specVersion, cancellationToken);
         }
 
         /// <summary>
@@ -98,7 +106,8 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">The Open API element.</param>
         /// <param name="writer">The output writer.</param>
         /// <param name="specVersion">Version of the specification the output should conform to</param>
-        public static void Serialize<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion)
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task SerializeAsync<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(element);
@@ -122,7 +131,7 @@ namespace Microsoft.OpenApi.Extensions
                     throw new OpenApiException(string.Format(SRResource.OpenApiSpecVersionNotSupported, specVersion));
             }
 
-            writer.Flush();
+            return writer.FlushAsync(cancellationToken);
         }
 
         /// <summary>
@@ -131,12 +140,14 @@ namespace Microsoft.OpenApi.Extensions
         /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
         /// <param name="element">The Open API element.</param>
         /// <param name="specVersion">The Open API specification version.</param>
-        public static string SerializeAsJson<T>(
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task<string> SerializeAsJsonAsync<T>(
             this T element,
-            OpenApiSpecVersion specVersion)
+            OpenApiSpecVersion specVersion,
+            CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            return element.Serialize(specVersion, OpenApiFormat.Json);
+            return element.SerializeAsync(specVersion, OpenApiFormat.Json, cancellationToken);
         }
 
         /// <summary>
@@ -145,12 +156,14 @@ namespace Microsoft.OpenApi.Extensions
         /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
         /// <param name="element">The Open API element.</param>
         /// <param name="specVersion">The Open API specification version.</param>
-        public static string SerializeAsYaml<T>(
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task<string> SerializeAsYamlAsync<T>(
             this T element,
-            OpenApiSpecVersion specVersion)
+            OpenApiSpecVersion specVersion,
+            CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            return element.Serialize(specVersion, OpenApiFormat.Yaml);
+            return element.SerializeAsync(specVersion, OpenApiFormat.Yaml, cancellationToken);
         }
 
         /// <summary>
@@ -160,20 +173,26 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">The Open API element.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">Open API document format.</param>
-        public static string Serialize<T>(
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<string> SerializeAsync<T>(
             this T element,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format)
+            OpenApiFormat format,
+            CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(element);
 
             using var stream = new MemoryStream();
-            element.Serialize(stream, specVersion, format);
+            await element.SerializeAsync(stream, specVersion, format, cancellationToken).ConfigureAwait(false);
             stream.Position = 0;
 
             using var streamReader = new StreamReader(stream);
-            return streamReader.ReadToEnd();
+#if NET7_0_OR_GREATER
+            return await streamReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+#else
+            return await streamReader.ReadToEndAsync().ConfigureAwait(false);
+#endif
         }
     }
 }

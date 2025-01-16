@@ -215,13 +215,13 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Fact]
-        public void SerializeBasicSchemaAsV3JsonWorks()
+        public async Task SerializeBasicSchemaAsV3JsonWorks()
         {
             // Arrange
             var expected = @"{ }";
 
             // Act
-            var actual = BasicSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -230,7 +230,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedSchemaNumberAsV3JsonWorks()
+        public async Task SerializeAdvancedSchemaNumberAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -251,7 +251,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvancedSchemaNumber.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedSchemaNumber.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -260,7 +260,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedSchemaObjectAsV3JsonWorks()
+        public async Task SerializeAdvancedSchemaObjectAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -303,7 +303,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvancedSchemaObject.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedSchemaObject.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -312,7 +312,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedSchemaWithAllOfAsV3JsonWorks()
+        public async Task SerializeAdvancedSchemaWithAllOfAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -358,7 +358,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvancedSchemaWithAllOf.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedSchemaWithAllOf.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -377,7 +377,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedSchema.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -394,7 +394,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedSchema.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -411,14 +411,14 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedSchemaWithRequiredPropertiesObject.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
-        public void SerializeAsV2ShouldSetFormatPropertyInParentSchemaIfPresentInChildrenSchema()
+        public async Task SerializeAsV2ShouldSetFormatPropertyInParentSchemaIfPresentInChildrenSchema()
         {
             // Arrange
             var schema = new OpenApiSchema
@@ -440,7 +440,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             // Serialize as V2
             schema.SerializeAsV2(openApiJsonWriter);
-            openApiJsonWriter.Flush();
+            await openApiJsonWriter.FlushAsync();
 
             var v2Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
 
@@ -604,7 +604,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSchemaWithUnrecognizedPropertiesWorks()
+        public async Task SerializeSchemaWithUnrecognizedPropertiesWorks()
         {
             // Arrange
             var schema = new OpenApiSchema
@@ -624,7 +624,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = schema.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());

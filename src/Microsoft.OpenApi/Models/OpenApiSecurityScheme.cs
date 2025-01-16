@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The type of the security scheme. Valid values are "apiKey", "http", "oauth2", "openIdConnect".
         /// </summary>
-        public virtual SecuritySchemeType Type { get; set; }
+        public virtual SecuritySchemeType? Type { get; set; }
 
         /// <summary>
         /// A short description for security scheme. CommonMark syntax MAY be used for rich text representation.
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The location of the API key. Valid values are "query", "header" or "cookie".
         /// </summary>
-        public virtual ParameterLocation In { get; set; }
+        public virtual ParameterLocation? In { get; set; }
 
         /// <summary>
         /// REQUIRED. The name of the HTTP Authorization scheme to be used
@@ -82,10 +82,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiSecurityScheme(OpenApiSecurityScheme securityScheme)
         {
-            Type = securityScheme?.Type ?? Type;
+            Type = securityScheme?.Type;
             Description = securityScheme?.Description ?? Description;
             Name = securityScheme?.Name ?? Name;
-            In = securityScheme?.In ?? In;
+            In = securityScheme?.In;
             Scheme = securityScheme?.Scheme ?? Scheme;
             BearerFormat = securityScheme?.BearerFormat ?? BearerFormat;
             Flows = securityScheme?.Flows != null ? new(securityScheme?.Flows) : null;
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Models
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);

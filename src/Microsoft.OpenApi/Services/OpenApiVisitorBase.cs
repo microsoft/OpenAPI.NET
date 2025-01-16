@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -263,6 +264,13 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiTagReference"/>
+        /// </summary>
+        public virtual void Visit(OpenApiTagReference tag)
+        {
+        }
+
+        /// <summary>
         /// Visits <see cref="OpenApiHeader"/>
         /// </summary>
         public virtual void Visit(OpenApiHeader header)
@@ -301,6 +309,13 @@ namespace Microsoft.OpenApi.Services
         /// Visits list of <see cref="OpenApiTag"/>
         /// </summary>
         public virtual void Visit(IList<OpenApiTag> openApiTags)
+        {
+        }
+
+        /// <summary>
+        /// Visits list of <see cref="OpenApiTagReference"/>
+        /// </summary>
+        public virtual void Visit(IList<OpenApiTagReference> openApiTags)
         {
         }
 

@@ -270,7 +270,7 @@ namespace Microsoft.OpenApi.Workbench
 
                 stopwatch.Reset();
                 stopwatch.Start();
-                Output = WriteContents(document);
+                Output = await WriteContentsAsync(document);
                 stopwatch.Stop();
 
                 RenderTime = $"{stopwatch.ElapsedMilliseconds} ms";
@@ -299,15 +299,15 @@ namespace Microsoft.OpenApi.Workbench
         /// <summary>
         /// Write content from the given document based on the format and version set in this class.
         /// </summary>
-        private string WriteContents(OpenApiDocument document)
+        private async Task<string> WriteContentsAsync(OpenApiDocument document)
         {
             var outputStream = new MemoryStream();
 
-            document.Serialize(
+            await document.SerializeAsync(
                 outputStream,
                 Version,
                 Format,
-                new()
+                (Writers.OpenApiWriterSettings)new()
                 {
                     InlineLocalReferences = InlineLocal,
                     InlineExternalReferences = InlineExternal
@@ -315,7 +315,7 @@ namespace Microsoft.OpenApi.Workbench
 
             outputStream.Position = 0;
 
-            return new StreamReader(outputStream).ReadToEnd();
+            return await new StreamReader(outputStream).ReadToEndAsync();
         }
 
         private static MemoryStream CreateStream(string text)

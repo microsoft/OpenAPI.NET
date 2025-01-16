@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Models
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public IList<OpenApiTag>? Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTagReference>? Tags { get; set; } = [];
 
         /// <summary>
         /// A short summary of what the operation does.
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiOperation(OpenApiOperation? operation)
         {
-            Tags = operation?.Tags != null ? new List<OpenApiTag>(operation.Tags) : null;
+            Tags = operation?.Tags != null ? new List<OpenApiTagReference>(operation.Tags) : null;
             Summary = operation?.Summary ?? Summary;
             Description = operation?.Description ?? Description;
             ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;
@@ -283,11 +283,11 @@ namespace Microsoft.OpenApi.Models
             {
                 var produces = Responses
                     .Where(static r => r.Value.Content != null)
-                    .SelectMany(static r => r.Value.Content?.Keys)
+                    .SelectMany(static r => r.Value.Content?.Keys ?? [])
                     .Concat(
                         Responses
                         .Where(static r => r.Value.Reference is {HostDocument: not null})
-                        .SelectMany(static r => r.Value.Content?.Keys))
+                        .SelectMany(static r => r.Value.Content?.Keys ?? []))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray();
 

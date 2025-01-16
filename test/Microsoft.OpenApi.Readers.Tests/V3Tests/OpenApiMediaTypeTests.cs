@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMediaTypeWithExampleShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMediaTypeWithExamplesShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseMediaTypeWithEmptyArrayInExamplesWorks()
+        public async Task ParseMediaTypeWithEmptyArrayInExamplesWorks()
         {
             // Arrange
             var expected = @"{
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             // Act
             var mediaType = OpenApiV3Deserializer.LoadMediaType(node);
-            var serialized = mediaType.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var serialized = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             serialized.MakeLineBreaksEnvironmentNeutral()

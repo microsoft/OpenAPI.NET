@@ -40,12 +40,24 @@ namespace Microsoft.OpenApi.Reader.V2
                             case "oauth2":
                                 o.Type = SecuritySchemeType.OAuth2;
                                 break;
+
+                            default:
+                                n.Context.Diagnostic.Errors.Add(new OpenApiError(n.Context.GetLocation(), $"Security scheme type {type} is not recognized."));
+                                break;
                         }
                     }
                 },
                 {"description", (o, n, _) => o.Description = n.GetScalarValue()},
                 {"name", (o, n, _) => o.Name = n.GetScalarValue()},
-                {"in", (o, n, _) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()},
+                {"in", (o, n, _) => 
+                    {
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        {
+                            return;
+                        }
+                        o.In = _in;
+                    }
+                },
                 {
                     "flow", (_, n, _) => _flowValue = n.GetScalarValue()
                 },

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -64,10 +65,7 @@ tags:
         {
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
             var result = OpenApiDocument.Parse(OpenApi, "yaml");
-            _openApiTagReference = new("user", result.Document)
-            {
-                Description = "Users operations"
-            };
+            _openApiTagReference = new("user", result.Document);
         }
 
         [Fact]
@@ -75,7 +73,8 @@ tags:
         {
             // Assert
             Assert.Equal("user", _openApiTagReference.Name);
-            Assert.Equal("Users operations", _openApiTagReference.Description);
+            Assert.Equal("Operations about users.", _openApiTagReference.Description);
+            Assert.Throws<InvalidOperationException>(() => _openApiTagReference.Description = "New Description");
         }
 
         [Theory]
@@ -89,7 +88,7 @@ tags:
 
             // Act
             _openApiTagReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert            
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -106,7 +105,7 @@ tags:
 
             // Act
             _openApiTagReference.SerializeAsV31(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

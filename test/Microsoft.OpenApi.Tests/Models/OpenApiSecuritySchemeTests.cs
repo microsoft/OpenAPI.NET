@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Fact]
-        public void SerializeApiKeySecuritySchemeAsV3JsonWorks()
+        public async Task SerializeApiKeySecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = ApiKeySecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await ApiKeySecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeApiKeySecuritySchemeAsV3YamlWorks()
+        public async Task SerializeApiKeySecuritySchemeAsV3YamlWorks()
         {
             // Arrange
             var expected =
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = ApiKeySecurityScheme.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await ApiKeySecurityScheme.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeHttpBasicSecuritySchemeAsV3JsonWorks()
+        public async Task SerializeHttpBasicSecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -172,7 +172,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = HttpBasicSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await HttpBasicSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeHttpBearerSecuritySchemeAsV3JsonWorks()
+        public async Task SerializeHttpBearerSecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = HttpBearerSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await HttpBearerSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeOAuthSingleFlowSecuritySchemeAsV3JsonWorks()
+        public async Task SerializeOAuthSingleFlowSecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = OAuth2SingleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await OAuth2SingleFlowSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeOAuthMultipleFlowSecuritySchemeAsV3JsonWorks()
+        public async Task SerializeOAuthMultipleFlowSecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -271,7 +271,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = OAuth2MultipleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await OAuth2MultipleFlowSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -280,7 +280,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeOpenIdConnectSecuritySchemeAsV3JsonWorks()
+        public async Task SerializeOpenIdConnectSecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = OpenIdConnectSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await OpenIdConnectSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -312,7 +312,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             OpenApiSecuritySchemeReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -329,7 +329,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedSecurityScheme.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

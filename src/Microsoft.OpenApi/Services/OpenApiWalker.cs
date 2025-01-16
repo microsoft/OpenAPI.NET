@@ -81,6 +81,28 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits list of <see cref="OpenApiTagReference"/> and child objects
+        /// </summary>
+        internal void Walk(IList<OpenApiTagReference> tags)
+        {
+            if (tags == null)
+            {
+                return;
+            }
+
+            _visitor.Visit(tags);
+
+            // Visit tags
+            if (tags != null)
+            {
+                for (var i = 0; i < tags.Count; i++)
+                {
+                    Walk(i.ToString(), () => Walk(tags[i]));
+                }
+            }
+        }
+
+        /// <summary>
         /// Visits <see cref="OpenApiExternalDocs"/> and child objects
         /// </summary>
         internal void Walk(string externalDocs)
@@ -424,15 +446,22 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (tag is OpenApiTagReference)
-            {
-                Walk(tag as IOpenApiReferenceable);
-                return;
-            }
-
             _visitor.Visit(tag);
             _visitor.Visit(tag.ExternalDocs);
             _visitor.Visit(tag as IOpenApiExtensible);
+        }
+
+        /// <summary>
+        /// Visits <see cref="OpenApiTagReference"/> and child objects
+        /// </summary>
+        internal void Walk(OpenApiTagReference tag)
+        {
+            if (tag == null)
+            {
+                return;
+            }
+
+            Walk(tag as IOpenApiReferenceable);
         }
 
         /// <summary>

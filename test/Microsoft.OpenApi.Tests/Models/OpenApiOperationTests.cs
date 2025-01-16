@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -87,9 +88,9 @@ namespace Microsoft.OpenApi.Tests.Models
 
         private static readonly OpenApiOperation _advancedOperationWithTagsAndSecurity = new()
         {
-            Tags = new List<OpenApiTag>
+            Tags = new List<OpenApiTagReference>
             {
-                new OpenApiTagReference("tagId1", null)
+                new OpenApiTagReference("tagId1", new OpenApiDocument{ Tags = new List<OpenApiTag>() { new OpenApiTag{Name = "tagId1"}} })
             },
             Summary = "summary1",
             Description = "operationDescription",
@@ -256,7 +257,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
         [Fact]
-        public void SerializeBasicOperationAsV3JsonWorks()
+        public async Task SerializeBasicOperationAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -267,7 +268,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = _basicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await _basicOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -276,7 +277,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeOperationWithBodyAsV3JsonWorks()
+        public async Task SerializeOperationWithBodyAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -339,7 +340,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = _operationWithBody.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await _operationWithBody.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -348,7 +349,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedOperationWithTagAndSecurityAsV3JsonWorks()
+        public async Task SerializeAdvancedOperationWithTagAndSecurityAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -423,7 +424,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = _advancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await _advancedOperationWithTagsAndSecurity.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -432,7 +433,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeBasicOperationAsV2JsonWorks()
+        public async Task SerializeBasicOperationAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -443,7 +444,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = _basicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await _basicOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -452,7 +453,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeOperationWithFormDataAsV3JsonWorks()
+        public async Task SerializeOperationWithFormDataAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -522,7 +523,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = _operationWithFormData.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await _operationWithFormData.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -531,7 +532,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeOperationWithFormDataAsV2JsonWorks()
+        public async Task SerializeOperationWithFormDataAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -578,7 +579,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = _operationWithFormData.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await _operationWithFormData.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -587,7 +588,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeOperationWithBodyAsV2JsonWorks()
+        public async Task SerializeOperationWithBodyAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -647,7 +648,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = _operationWithBody.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await _operationWithBody.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -656,7 +657,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedOperationWithTagAndSecurityAsV2JsonWorks()
+        public async Task SerializeAdvancedOperationWithTagAndSecurityAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -728,7 +729,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = _advancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await _advancedOperationWithTagsAndSecurity.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -737,7 +738,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeOperationWithNullCollectionAsV2JsonWorks()
+        public async Task SerializeOperationWithNullCollectionAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -753,7 +754,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act
-            var actual = operation.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await operation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -803,7 +804,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void EnsureOpenApiOperationCopyConstructor_SerializationResultsInSame()
+        public async Task EnsureOpenApiOperationCopyConstructor_SerializationResultsInSame()
         {
             var operations = new[]
             {
@@ -816,9 +817,9 @@ namespace Microsoft.OpenApi.Tests.Models
             foreach (var operation in operations)
             {
                 // Act
-                var expected = operation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+                var expected = await operation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
                 var openApiOperation = new OpenApiOperation(operation);
-                var actual = openApiOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+                var actual = await openApiOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
                 // Assert
                 actual.Should().Be(expected);
