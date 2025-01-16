@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using System.IO;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 

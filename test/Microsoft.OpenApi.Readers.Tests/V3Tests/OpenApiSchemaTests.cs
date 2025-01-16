@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -48,14 +47,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var schema = OpenApiV3Deserializer.LoadSchema(node, new());
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            schema.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSchema
                 {
                     Type = JsonSchemaType.String,
                     Format = "email"
-                });
+                }, schema);
         }       
 
         [Fact]
@@ -71,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic);
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
             openApiAny.Should().BeEquivalentTo(new OpenApiAny(
                 new JsonObject
@@ -94,7 +93,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic);
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
             openApiAny.Should().BeEquivalentTo(new OpenApiAny(
                 new JsonArray
@@ -119,9 +118,9 @@ get:
             var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, "yaml");
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            openApiAny.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiPathItem
                 {
                     Summary = "externally referenced path item",
@@ -138,7 +137,7 @@ get:
                             }
                         }
                     }
-                });
+                }, openApiAny);
         }
 
         [Fact]
@@ -160,9 +159,9 @@ get:
                 var schema = OpenApiV3Deserializer.LoadSchema(node, new());
 
                 // Assert
-                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+                Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-                schema.Should().BeEquivalentTo(
+                Assert.Equivalent(
                 new OpenApiSchema
                 {
                     Type = JsonSchemaType.Object,
@@ -170,7 +169,7 @@ get:
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                }, schema);
             }
         }
 
@@ -192,7 +191,7 @@ get:
             var schema = OpenApiV3Deserializer.LoadSchema(node, new());
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
             schema.Should().BeEquivalentTo(
             new OpenApiSchema
@@ -236,11 +235,11 @@ get:
             // Assert
             var components = result.Document.Components;
 
-            result.Diagnostic.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiDiagnostic()
                 {
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
-                });
+                }, result.Diagnostic);
 
             var expectedComponents = new OpenApiComponents
             {
@@ -290,7 +289,7 @@ get:
                 }
             };
 
-            components.Should().BeEquivalentTo(expectedComponents);
+            Assert.Equivalent(expectedComponents, components);
         }
 
         [Fact]
@@ -387,7 +386,7 @@ get:
             var expected = await expectedComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

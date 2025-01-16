@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -18,7 +17,6 @@ using Microsoft.OpenApi.Writers;
 using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -1485,8 +1483,7 @@ definitions:
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1505,8 +1502,7 @@ definitions:
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1534,8 +1530,7 @@ definitions:
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1616,8 +1611,7 @@ paths: { }";
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1647,8 +1641,7 @@ paths: { }";
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1677,8 +1670,7 @@ paths: { }";
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1763,8 +1755,7 @@ paths:
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1852,8 +1843,7 @@ paths:
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1907,7 +1897,7 @@ paths:
             };
 
             OpenApiJsonWriter apiWriter = new OpenApiJsonWriter(new StringWriter());
-            doc.Invoking(d => d.SerializeAsV3(apiWriter)).Should().NotThrow();
+            doc.SerializeAsV3(apiWriter);
         }
 
         [Theory]
@@ -1970,7 +1960,7 @@ webhooks:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().BeEquivalentTo(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -1998,7 +1988,7 @@ paths: { }";
             var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -2024,7 +2014,7 @@ responses:
 
             webhooks[OperationType.Get].SerializeAsV31(writer);
             var actual = stringWriter.ToString();
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -2072,7 +2062,7 @@ components:
 ";
             var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml")).Document;
             var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -2126,7 +2116,7 @@ components:
             };
 
             var actual = await doc.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

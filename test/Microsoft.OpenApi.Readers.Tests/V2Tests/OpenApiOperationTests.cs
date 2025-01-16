@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -57,104 +56,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 }
             }
         };
-
-        private static readonly OpenApiOperation _operationWithFormData =
-            new OpenApiOperation
-            {
-                Summary = "Updates a pet in the store with form data",
-                Description = "",
-                OperationId = "updatePetWithForm",
-                Parameters = new List<OpenApiParameter>
-                {
-                    new OpenApiParameter
-                    {
-                        Name = "petId",
-                        In = ParameterLocation.Path,
-                        Description = "ID of pet that needs to be updated",
-                        Required = true,
-                        Schema = new()
-                        {
-                            Type = JsonSchemaType.String
-                        }
-                    }
-                },
-                RequestBody = new OpenApiRequestBody
-                {
-                    Content =
-                    {
-                        ["application/x-www-form-urlencoded"] = new OpenApiMediaType
-                        {
-                            Schema = new()
-                            {
-                                Type = JsonSchemaType.Object,
-                                Properties =
-                                {
-                                    ["name"] = new()
-                                    {
-                                        Description = "Updated name of the pet",
-                                        Type = JsonSchemaType.String
-                                    },
-                                    ["status"] = new()
-                                    {
-                                        Description = "Updated status of the pet",
-                                        Type = JsonSchemaType.String
-                                    }
-                                },
-                                Required = new HashSet<string>
-                                {
-                                    "name"
-                                }
-                            }
-                        },
-                        ["multipart/form-data"] = new OpenApiMediaType
-                        {
-                             Schema = new()
-                            {
-                                Type = JsonSchemaType.Object,
-                                Properties =
-                                {
-                                    ["name"] = new()
-                                    {
-                                        Description = "Updated name of the pet",
-                                        Type = JsonSchemaType.String
-                                    },
-                                    ["status"] = new()
-                                    {
-                                        Description = "Updated status of the pet",
-                                        Type = JsonSchemaType.String
-                                    }
-                                },
-                                Required = new HashSet<string>
-                                {
-                                    "name"
-                                }
-                            }
-                        }
-                    }
-                },
-                Responses = new OpenApiResponses
-                {
-                    ["200"] = new OpenApiResponse
-                    {
-                        Description = "Pet updated.",
-                        Content = new Dictionary<string, OpenApiMediaType>
-                        {
-                            ["application/json"] = new OpenApiMediaType(),
-                            ["application/xml"] = new OpenApiMediaType()
-                        }
-
-                    },
-                    ["405"] = new OpenApiResponse
-                    {
-                        Description = "Invalid input",
-                        Content = new Dictionary<string, OpenApiMediaType>
-                        {
-                            ["application/json"] = new OpenApiMediaType(),
-                            ["application/xml"] = new OpenApiMediaType()
-                        }
-                    }
-                }
-            };
 
         private static readonly OpenApiOperation _operationWithBody = new OpenApiOperation
         {
@@ -231,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicOperation);
+            Assert.Equivalent(_basicOperation, operation);
         }
 
         [Fact]
@@ -249,7 +150,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicOperation);
+            Assert.Equivalent(_basicOperation, operation);
         }
 
         [Fact]
@@ -386,7 +287,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             var actual = stringBuilder.ToString();
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());            
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());            
         }
 
         [Fact]
@@ -451,7 +352,7 @@ responses:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -501,7 +402,7 @@ responses:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -552,7 +453,7 @@ responses: { }";
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -604,7 +505,7 @@ responses: { }";
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

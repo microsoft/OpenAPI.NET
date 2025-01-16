@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var openApiInfo = OpenApiV31Deserializer.LoadInfo(node, new());
 
             // Assert
-            openApiInfo.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiInfo
                 {
                     Title = "Basic Info",
@@ -52,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Name = "Apache 2.0",
                         Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html")
                     }
-                });
+                }, openApiInfo);
         }
     }
 }

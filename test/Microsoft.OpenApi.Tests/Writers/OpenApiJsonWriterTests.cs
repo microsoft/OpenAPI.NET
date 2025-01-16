@@ -13,7 +13,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -70,7 +69,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 JsonSerializer.Deserialize<List<string>>(JsonSerializer.Serialize(new List<string>(stringValues)));
 
             // Assert
-            parsedObject.Should().BeEquivalentTo(expectedObject);
+            Assert.Equivalent(expectedObject, parsedObject);
         }
 
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesSimple()
@@ -317,7 +316,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var expectedString = JsonSerializer.Serialize(dateTimeOffset, _jsonSerializerOptions.Value);
 
             // Assert
-            writtenString.Should().Be(expectedString);
+            Assert.Equal(expectedString, writtenString);
         }
 
         [Fact]

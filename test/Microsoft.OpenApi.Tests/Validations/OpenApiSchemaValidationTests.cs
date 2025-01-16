@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
@@ -39,7 +37,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
@@ -64,7 +62,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var expectedWarnings = warnings.Select(e => e.Message).ToList();
 
             // Assert
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
@@ -106,7 +104,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !warnings.Any();
 
             // Assert
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
@@ -184,7 +182,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             bool result = !warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
@@ -214,13 +212,13 @@ namespace Microsoft.OpenApi.Validations.Tests
             var result = !errors.Any();
 
             // Assert
-            result.Should().BeFalse();
-            errors.Should().BeEquivalentTo(new List<OpenApiValidatorError>
+            Assert.False(result);
+            Assert.Equivalent(new List<OpenApiValidatorError>
             {
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
                         string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                     "schema1", "property1"))
-            });
+            }, errors);
         }
 
         [Fact]
@@ -275,7 +273,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = validator.Errors;
 
             //Assert
-            errors.Should().BeEmpty();
+            Assert.Empty(errors);
         }
     }
 }

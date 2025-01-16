@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, new());
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedObject);
+            Assert.Equivalent(expectedObject, schema);
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, new(), out _);
 
             // Assert
-            actual.Should().BeEquivalentTo(expected);
+            Assert.Equivalent(expected, actual);
         }
 
         [Fact]
@@ -148,10 +148,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            schemaWithArrayCopy.Type.Should().NotBe(schemaWithTypeArray.Type);
+            Assert.NotEqual(schemaWithTypeArray.Type, schemaWithArrayCopy.Type);
             schemaWithTypeArray.Type = JsonSchemaType.String | JsonSchemaType.Null;
 
-            simpleSchemaCopy.Type.Should().NotBe(simpleSchema.Type);
+            Assert.NotEqual(simpleSchema.Type, simpleSchemaCopy.Type);
             simpleSchema.Type = JsonSchemaType.String;
         }
 
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedSchema);
+            Assert.Equivalent(expectedSchema, schema);
         }
 
         [Fact]
@@ -278,7 +278,7 @@ examples:
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml");
 
             // Assert
-            schema.Examples.Should().HaveCount(2);
+            Assert.Equal(2, schema.Examples.Count);
         }
 
         [Fact]
@@ -299,9 +299,9 @@ examples:
             clone.Default = 6;
 
             // Assert
-            clone.Enum.Should().NotBeEquivalentTo(schema.Enum);
-            clone.Examples.Should().NotBeEquivalentTo(schema.Examples);
-            clone.Default.Should().NotBeEquivalentTo(schema.Default);
+            Assert.Equivalent(new int[] {1, 2, 3, 4}, clone.Enum.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(new int[] {2, 3, 4}, clone.Examples.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(6, clone.Default.GetValue<int>());
         }
 
         [Fact]
@@ -320,7 +320,7 @@ nullable: true";
             schema.SerializeAsV3(new OpenApiYamlWriter(writer));
             var schema1String = writer.ToString();
 
-            schema1String.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schema1String.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -339,7 +339,7 @@ x-nullable: true";
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
             var schema1String = writer.ToString();
 
-            schema1String.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schema1String.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -359,7 +359,7 @@ x-nullable: true";
             schema.SerializeAsV31(new OpenApiYamlWriter(writer));
             var schemaString = writer.ToString();
 
-            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -380,7 +380,7 @@ x-nullable: true";
             schema.SerializeAsV31(new OpenApiYamlWriter(writer));
             var schemaString = writer.ToString();
 
-            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -399,7 +399,7 @@ nullable: true";
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
             var schemaString = writer.ToString();
 
-            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral()); 
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral()); 
         }
 
         [Theory]
@@ -414,7 +414,7 @@ nullable: true";
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
 
             // Assert
-            schema.Type.Should().Be(JsonSchemaType.String | JsonSchemaType.Null);
+            Assert.Equal(JsonSchemaType.String | JsonSchemaType.Null, schema.Type);
         }
 
         [Fact]
@@ -459,8 +459,8 @@ description: Schema for a person object
             var schemaString = writer.ToString();
 
             // Assert
-            schema.Vocabulary.Keys.Count.Should().Be(5);
-            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(5, schema.Vocabulary.Keys.Count);
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -496,14 +496,14 @@ description: Schema for a person object
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
-            schema.Properties["status"].Const.Should().Be("active");
-            schema.Properties["user"].Properties["role"].Const.Should().Be("admin");
+            Assert.Equal("active", schema.Properties["status"].Const);
+            Assert.Equal("admin", schema.Properties["user"].Properties["role"].Const);
 
             // serialization
             var writer = new StringWriter();
             schema.SerializeAsV31(new OpenApiJsonWriter(writer));
             var schemaString = writer.ToString();
-            schemaString.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -518,7 +518,7 @@ description: Schema for a person object
 }
 ";
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "json");
-            schema.UnrecognizedKeywords.Should().HaveCount(2);
+            Assert.Equal(2, schema.UnrecognizedKeywords.Count);
         }
 
     }

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -32,7 +31,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             var error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "name", "license"), error.Message);
+            Assert.Equal(string.Format(SRResource.Validation_FieldIsRequired, "name", "license"), error.Message);
         }
     }
 }

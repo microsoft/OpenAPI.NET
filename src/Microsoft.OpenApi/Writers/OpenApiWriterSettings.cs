@@ -1,5 +1,3 @@
-
-using System;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 

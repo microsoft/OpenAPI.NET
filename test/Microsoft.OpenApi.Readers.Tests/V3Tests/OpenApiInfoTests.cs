@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(Path.Combine(SampleFolderPath, "basicInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            openApiInfo.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiInfo
                 {
                     Title = "Basic Info",
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Name = "Apache 2.0",
                         Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html")
                     }
-                });
+                }, openApiInfo);
         }
 
         [Fact]
@@ -117,12 +117,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(stream, OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            openApiInfo.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiInfo
                 {
                     Title = "Minimal Info",
                     Version = "1.0.1"
-                });
+                }, openApiInfo);
         }
     }
 }
