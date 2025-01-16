@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 }";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -115,7 +115,7 @@ get:
 ";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic, "yaml");
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, "yaml");
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);

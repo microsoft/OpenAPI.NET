@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             memoryStream.Position = 0;
 
             // Act
-            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out var diagnostic);
+            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, new(), out var diagnostic);
 
             // Assert
             Assert.Equivalent(

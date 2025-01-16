@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseAdvancedExampleShouldSucceed()
         {
-            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0);
+            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
             var expected = new OpenApiExample
             {
                 Value = new JsonObject

@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiTag : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// The name of the tag.
@@ -39,11 +39,6 @@ namespace Microsoft.OpenApi.Models
         public bool UnresolvedReference { get; set; }
 
         /// <summary>
-        /// Reference.
-        /// </summary>
-        public OpenApiReference Reference { get; set; }
-
-        /// <summary>
         /// Parameterless constructor
         /// </summary>
         public OpenApiTag() { }
@@ -58,7 +53,6 @@ namespace Microsoft.OpenApi.Models
             ExternalDocs = tag?.ExternalDocs != null ? new(tag.ExternalDocs) : null;
             Extensions = tag?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
             UnresolvedReference = tag?.UnresolvedReference ?? UnresolvedReference;
-            Reference = tag?.Reference != null ? new(tag.Reference) : null;
         }
 
         /// <summary>

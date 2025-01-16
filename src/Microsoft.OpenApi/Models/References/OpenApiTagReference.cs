@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -10,21 +12,24 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Tag Object Reference
     /// </summary>
-    public class OpenApiTagReference : OpenApiTag
+    public class OpenApiTagReference : OpenApiTag, IOpenApiReferenceable
     {
         internal OpenApiTag _target;
-        private readonly OpenApiReference _reference;
-        private string _description;
 
-        private OpenApiTag Target
+        /// <summary>
+        /// Reference.
+        /// </summary>
+        public OpenApiReference Reference { get; set; }
+
+        /// <summary>
+        /// Resolved target of the reference.
+        /// </summary>
+        public OpenApiTag Target
         {
             get
             {
-                _target ??= Reference.HostDocument?.ResolveReferenceTo<OpenApiTag>(_reference);
-                _target ??= new OpenApiTag() { Name = _reference.Id };
-                OpenApiTag resolved = new OpenApiTag(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
+                _target ??= Reference.HostDocument?.Tags.FirstOrDefault(t => StringComparer.Ordinal.Equals(t.Name, Reference.Id));
+                return _target;
             }
         }
 
@@ -37,49 +42,43 @@ namespace Microsoft.OpenApi.Models.References
         {
             Utils.CheckArgumentNullOrEmpty(referenceId);
 
-            _reference = new OpenApiReference()
+            Reference = new OpenApiReference()
             {
                 Id = referenceId,
                 HostDocument = hostDocument,
                 Type = ReferenceType.Tag
             };
-
-            Reference = _reference;
         }
 
-        internal OpenApiTagReference(OpenApiTag target, string referenceId)
+        /// <summary>
+        /// Copy Constructor
+        /// </summary>
+        /// <param name="source">The source to copy information from.</param>
+        public OpenApiTagReference(OpenApiTagReference source):base()
         {
-            _target = target;
-
-            _reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                Type = ReferenceType.Tag,
-            };
+            Reference = source?.Reference != null ? new(source.Reference) : null;
+            _target = source?._target;
         }
 
+        private const string ReferenceErrorMessage = "Setting the value from the reference is not supported, use the target property instead.";
         /// <inheritdoc/>
-        public override string Description
-        {
-            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
-            set => _description = value;
-        }
+        public override string Description { get => Target.Description; set => throw new InvalidOperationException(ReferenceErrorMessage); }
 
         /// <inheritdoc/>
-        public override OpenApiExternalDocs ExternalDocs { get => Target?.ExternalDocs; set => Target.ExternalDocs = value; }
+        public override OpenApiExternalDocs ExternalDocs { get => Target.ExternalDocs; set => throw new InvalidOperationException(ReferenceErrorMessage); }
 
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; set => Target.Extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => throw new InvalidOperationException(ReferenceErrorMessage); }
 
         /// <inheritdoc/>
-        public override string Name { get => Target?.Name; set => Target.Name = value; }
+        public override string Name { get => Target.Name; set => throw new InvalidOperationException(ReferenceErrorMessage); }
         
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
-                _reference.SerializeAsV3(writer);
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -90,9 +89,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
-                _reference.SerializeAsV31(writer);
+                Reference.SerializeAsV31(writer);
             }
             else
             {
@@ -103,9 +102,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
-                _reference.SerializeAsV2(writer);
+                Reference.SerializeAsV2(writer);
             }
             else
             {

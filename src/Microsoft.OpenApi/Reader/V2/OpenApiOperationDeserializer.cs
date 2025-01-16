@@ -24,8 +24,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     "tags", (o, n, doc) => o.Tags = n.CreateSimpleList(
                         (valueNode, doc) =>
                             LoadTagByReference(
-                                valueNode.Context,
-                                valueNode.GetScalarValue(), doc))
+                                valueNode.GetScalarValue(), doc), doc)
                 },
                 {
                     "summary",
@@ -48,16 +47,16 @@ namespace Microsoft.OpenApi.Reader.V2
                     (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)
                 },
                 {
-                    "consumes", (_, n, _) => {
-                        var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue());
+                    "consumes", (_, n, doc) => {
+                        var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc);
                         if (consumes.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
                         }
                     }
                 },
                 {
-                    "produces", (_, n, _) => {
-                        var produces = n.CreateSimpleList((s, p) => s.GetScalarValue());
+                    "produces", (_, n, doc) => {
+                        var produces = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc);
                         if (produces.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
                         }
@@ -205,8 +204,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return requestBody;
         }
 
-        private static OpenApiTag LoadTagByReference(
-            ParsingContext context,
+        private static OpenApiTagReference LoadTagByReference(
             string tagName, OpenApiDocument hostDocument = null)
         {
             return new OpenApiTagReference(tagName, hostDocument);
