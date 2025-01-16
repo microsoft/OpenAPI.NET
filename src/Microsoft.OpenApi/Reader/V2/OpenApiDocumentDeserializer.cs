@@ -28,16 +28,16 @@ namespace Microsoft.OpenApi.Reader.V2
             {"host", (_, n, _) => n.Context.SetTempStorage("host", n.GetScalarValue())},
             {"basePath", (_, n, _) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
             {
-                "schemes", (_, n, _) => n.Context.SetTempStorage(
+                "schemes", (_, n, doc) => n.Context.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
-                        (s, p) => s.GetScalarValue()))
+                        (s, p) => s.GetScalarValue(), doc))
             },
             {
                 "consumes",
-                (_, n, _) =>
+                (_, n, doc) =>
                 {
-                    var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue());
+                    var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc);
                     if (consumes.Count > 0)
                     {
                         n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
@@ -45,8 +45,8 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             },
             {
-                "produces", (_, n, _) => {
-                    var produces = n.CreateSimpleList((s, p) => s.GetScalarValue());
+                "produces", (_, n, doc) => {
+                    var produces = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc);
                     if (produces.Count > 0)
                     {
                         n.Context.SetTempStorage(TempStorageKeys.GlobalProduces, produces);
@@ -64,12 +64,9 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "parameters",
-                (o, n, _) =>
+                (o, n, doc) =>
                 {
-                    if (o.Components == null)
-                    {
-                        o.Components = new();
-                    }
+                    o.Components ??= new();
 
                     o.Components.Parameters = n.CreateMap(LoadParameter, o);
 
@@ -77,7 +74,8 @@ namespace Microsoft.OpenApi.Reader.V2
                             {
                                 var parameter = LoadParameter(node: p, loadRequestBody: true, hostDocument: d);
                                 return parameter != null ? CreateRequestBody(p.Context, parameter) : null;
-                            }
+                            },
+                            doc
                       );
                 }
             },

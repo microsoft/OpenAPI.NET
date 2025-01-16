@@ -2,7 +2,6 @@
 // Licensed under the MIT license. 
 
 using System;
-using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -83,7 +82,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("securityScheme");
 
@@ -97,7 +96,7 @@ namespace Microsoft.OpenApi.Reader.V31
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
             {
-                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields);
+                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument);
             }
 
             return securityScheme;

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -54,12 +53,12 @@ namespace Microsoft.OpenApi.Tests.Services
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.Should().BeEquivalentTo(
+            Assert.Equivalent(
                     new List<OpenApiError>
                     {
                         new OpenApiValidatorError(nameof(OpenApiResponseRules.ResponseRequiredFields),"#/paths/~1test/get/responses/200/description",
-                            String.Format(SRResource.Validation_FieldIsRequired, "description", "response"))
-        });
+                            string.Format(SRResource.Validation_FieldIsRequired, "description", "response"))
+                    }, validator.Errors);
         }
 
         [Fact]
@@ -88,12 +87,12 @@ namespace Microsoft.OpenApi.Tests.Services
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.Should().BeEquivalentTo(
+            Assert.Equivalent(
                     new List<OpenApiError>
                     {
                         new OpenApiValidatorError(nameof(OpenApiServerRules.ServerRequiredFields), "#/servers/1/url",
-                            String.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
-        });
+                            string.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
+                    }, validator.Errors);
         }
 
         [Fact]
@@ -135,11 +134,11 @@ namespace Microsoft.OpenApi.Tests.Services
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.Should().BeEquivalentTo(
+            Assert.Equivalent(
                    new List<OpenApiError>
                    {
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
-                   });
+                   }, validator.Errors);
         }
 
         [Fact]

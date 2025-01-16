@@ -3,7 +3,6 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -31,10 +30,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             memoryStream.Position = 0;
 
             // Act
-            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, out var diagnostic);
+            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, new(), out var diagnostic);
 
             // Assert
-            discriminator.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiDiscriminator
                 {
                     PropertyName = "pet_type",
@@ -43,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             ["puppy"] = "#/components/schemas/Dog",
                             ["kitten"] = "Cat"
                     }
-                });
+                }, discriminator);
         }
     }
 }

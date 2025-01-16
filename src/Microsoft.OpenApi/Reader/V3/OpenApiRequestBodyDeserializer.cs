@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -38,7 +37,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiRequestBody LoadRequestBody(ParseNode node, OpenApiDocument hostDocument= null)
+        public static OpenApiRequestBody LoadRequestBody(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("requestBody");
 
@@ -52,7 +51,7 @@ namespace Microsoft.OpenApi.Reader.V3
             var requestBody = new OpenApiRequestBody();
             foreach (var property in mapNode)
             {
-                property.ParseField(requestBody, _requestBodyFixedFields, _requestBodyPatternFields);
+                property.ParseField(requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument);
             }
 
             return requestBody;

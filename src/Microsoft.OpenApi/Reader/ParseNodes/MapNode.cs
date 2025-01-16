@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
         }
 
-        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument = null)
+        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             var nodes = jsonMap.Select(

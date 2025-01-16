@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "required",
-                (o, n, _) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue()))
+                (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc))
             },
             {
                 "enum",
@@ -93,14 +93,14 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "items",
-                (o, n, _) => o.Items = LoadSchema(n)
+                (o, n, doc) => o.Items = LoadSchema(n, doc)
             },
             {
                 "properties",
                 (o, n, t) => o.Properties = n.CreateMap(LoadSchema, t)
             },
             {
-                "additionalProperties", (o, n, _) =>
+                "additionalProperties", (o, n, doc) =>
                 {
                     if (n is ValueNode)
                     {
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                     else
                     {
-                        o.AdditionalProperties = LoadSchema(n);
+                        o.AdditionalProperties = LoadSchema(n, doc);
                     }
                 }
             },
@@ -139,11 +139,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "xml",
-                (o, n, _) => o.Xml = LoadXml(n)
+                (o, n, doc) => o.Xml = LoadXml(n, doc)
             },
             {
                 "externalDocs",
-                (o, n, _) => o.ExternalDocs = LoadExternalDocs(n)
+                (o, n, doc) => o.ExternalDocs = LoadExternalDocs(n, doc)
             },
             {
                 "example",
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("schema");
 
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Reader.V2
  
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields);
+                propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
             }
 
             return schema;

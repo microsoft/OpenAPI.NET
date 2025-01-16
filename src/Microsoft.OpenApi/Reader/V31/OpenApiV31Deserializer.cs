@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
@@ -128,7 +127,7 @@ namespace Microsoft.OpenApi.Reader.V31
             };
         }
 
-        public static JsonNode LoadAny(ParseNode node, OpenApiDocument hostDocument = null)
+        public static JsonNode LoadAny(ParseNode node, OpenApiDocument hostDocument)
         {
             return node.CreateAny();
         }

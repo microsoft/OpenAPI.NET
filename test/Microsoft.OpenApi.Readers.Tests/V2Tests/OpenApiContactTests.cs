@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -23,18 +22,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 """;
 
             // Act
-            var contact = OpenApiModelFactory.Parse<OpenApiContact>(input, OpenApiSpecVersion.OpenApi2_0, out var diagnostic);
+            var contact = OpenApiModelFactory.Parse<OpenApiContact>(input, OpenApiSpecVersion.OpenApi2_0, new(), out var diagnostic);
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            contact.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiContact
                 {
                     Email = "support@swagger.io",
                     Name = "API Support",
                     Url = new("http://www.swagger.io/support")
-                });
+                }, contact);
         }
     }
 }

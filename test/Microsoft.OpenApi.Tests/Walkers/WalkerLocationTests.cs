@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -23,12 +22,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.Should().BeEquivalentTo(new List<string> {
+            Assert.Equivalent(new List<string> {
                 "#/info",
                 "#/servers",
                 "#/paths",
                 "#/tags"
-            });
+            }, locator.Locations);
         }
 
         [Fact]
@@ -51,7 +50,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.Should().BeEquivalentTo(new List<string> {
+            Assert.Equivalent(new List<string> {
                 "#/info",
                 "#/servers",
                 "#/servers/0",
@@ -59,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths",
                 "#/tags",
                 "#/tags/0"
-            });
+            }, locator.Locations);
         }
 
         [Fact]
@@ -96,7 +95,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.Should().BeEquivalentTo(new List<string> {
+            Assert.Equivalent(new List<string> {
                 "#/info",
                 "#/servers",
                 "#/paths",
@@ -110,9 +109,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths/~1test/get/tags",
                 "#/tags",
 
-            });
+            }, locator.Locations);
 
-            locator.Keys.Should().BeEquivalentTo(new List<string> { "/test", "Get", "200", "application/json" });
+            Assert.Equivalent(new List<string> { "/test", "Get", "200", "application/json" }, locator.Keys);
         }
 
         [Fact]
@@ -144,7 +143,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.Should().BeEquivalentTo(new List<string> {
+            Assert.Equivalent(new List<string> {
                 "#/info",
                 "#/servers",
                 "#/paths",
@@ -152,7 +151,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/components/schemas/loopy",
                 "#/components/schemas/loopy/properties/name",
                 "#/tags"
-            });
+            }, locator.Locations);
         }
 
         /// <summary>
@@ -237,13 +236,13 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.Where(l => l.StartsWith("referenceAt:")).Should().BeEquivalentTo(new List<string> {
+            Assert.Equivalent(new List<string> {
                 "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
                 "referenceAt: #/paths/~1/get/responses/200/headers/test-header/schema",
                 "referenceAt: #/components/schemas/derived/anyOf/0",
                 "referenceAt: #/components/securitySchemes/test-secScheme",
                 "referenceAt: #/components/headers/test-header/schema"
-            });
+            }, locator.Locations.Where(l => l.StartsWith("referenceAt:")));
         }
     }
 
@@ -278,7 +277,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(OpenApiResponses responses)
+        public override void Visit(OpenApiResponses response)
         {
             Locations.Add(this.PathString);
         }
@@ -325,6 +324,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
         }
 
         public override void Visit(OpenApiServer server)
+        {
+            Locations.Add(this.PathString);
+        }
+        public override void Visit(IList<OpenApiTagReference> openApiTags)
         {
             Locations.Add(this.PathString);
         }

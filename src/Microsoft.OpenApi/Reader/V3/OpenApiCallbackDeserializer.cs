@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Linq;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -25,7 +24,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("callback");
 

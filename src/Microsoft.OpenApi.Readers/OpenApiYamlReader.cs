@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
 using SharpYaml.Serialization;
-using System.Linq;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
@@ -86,6 +85,7 @@ namespace Microsoft.OpenApi.Readers
         /// <inheritdoc/>
         public T ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
+                                 OpenApiDocument openApiDocument,
                                  out OpenApiDiagnostic diagnostic,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
@@ -105,13 +105,13 @@ namespace Microsoft.OpenApi.Readers
                 return default;
             }
 
-            return ReadFragment<T>(jsonNode, version, out diagnostic, settings);
+            return ReadFragment<T>(jsonNode, version, openApiDocument, out diagnostic, settings);
         }
 
         /// <inheritdoc/>
-        public static T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            return _jsonReader.ReadFragment<T>(input, version, out diagnostic, settings);
+            return _jsonReader.ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
         }
 
         /// <summary>

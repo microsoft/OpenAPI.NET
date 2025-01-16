@@ -4,7 +4,6 @@
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Reader.V3
 {
@@ -26,16 +25,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {"servers", (o, n, _) => o.Servers = n.CreateList(LoadServer, o)},
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
-            {"tags", (o, n, _) => {o.Tags = n.CreateList(LoadTag, o);
-                foreach (var tag in o.Tags)
-                {
-                    tag.Reference = new()
-                    {
-                        Id = tag.Name,
-                        Type = ReferenceType.Tag
-                    };
-                }
-            } },
+            {"tags", (o, n, _) => o.Tags = n.CreateList(LoadTag, o) },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
             {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)}
         };

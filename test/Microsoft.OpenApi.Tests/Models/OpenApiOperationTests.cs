@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -88,9 +87,9 @@ namespace Microsoft.OpenApi.Tests.Models
 
         private static readonly OpenApiOperation _advancedOperationWithTagsAndSecurity = new()
         {
-            Tags = new List<OpenApiTag>
+            Tags = new List<OpenApiTagReference>
             {
-                new OpenApiTagReference("tagId1", null)
+                new OpenApiTagReference("tagId1", new OpenApiDocument{ Tags = new List<OpenApiTag>() { new OpenApiTag{Name = "tagId1"}} })
             },
             Summary = "summary1",
             Description = "operationDescription",
@@ -273,7 +272,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -345,7 +344,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -429,7 +428,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -449,7 +448,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -528,7 +527,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -584,7 +583,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -653,7 +652,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -734,7 +733,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -759,7 +758,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -822,7 +821,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 var actual = await openApiOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
                 // Assert
-                actual.Should().Be(expected);
+                Assert.Equal(expected, actual);
             }
         }
 

@@ -9,10 +9,9 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.Services;
 using Xunit;
-using System.Linq;
 using VerifyXunit;
+using VerifyTests;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -200,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert            
-            actual.Diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+            Assert.Equivalent(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 }, actual.Diagnostic);
             actual.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
 
@@ -391,8 +390,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             .Excluding(x => x.Webhooks["pets"].Reference)
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
-            actual.Diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+            Assert.Equivalent(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 }, actual.Diagnostic);
         }
 
         [Fact]
@@ -463,8 +462,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var actualMediaType = await mediaType.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actualSchema.Should().BeEquivalentTo(expectedSchema);
-            actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equivalent(expectedSchema, actualSchema);
+            Assert.Equal(expectedMediaType.MakeLineBreaksEnvironmentNeutral(), actualMediaType.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -501,7 +500,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             result.Document.Workspace.Contains("./externalResource.yaml");
-            responseSchema.Properties.Count.Should().Be(2); // reference has been resolved
+            Assert.Equal(2, responseSchema.Properties.Count); // reference has been resolved
         }
 
         [Fact]
@@ -524,7 +523,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             result.Document.Workspace.RegisterComponents(doc2);
 
             // Assert
-            requestBodySchema.Properties.Count.Should().Be(2); // reference has been resolved
+            Assert.Equal(2, requestBodySchema.Properties.Count); // reference has been resolved
         }
 
         [Fact]

@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "enum",
-                    (o, n, _) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue())
+                    (o, n, doc) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc)
                 },
                 {
                     "default",
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiServerVariable LoadServerVariable(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiServerVariable LoadServerVariable(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("serverVariable");
 

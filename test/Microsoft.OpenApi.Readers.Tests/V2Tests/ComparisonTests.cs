@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             result2.Document.Should().BeEquivalentTo(result1.Document,
                 options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
-            result1.Diagnostic.Errors.Should().BeEquivalentTo(result2.Diagnostic.Errors);
+            Assert.Equivalent(result2.Diagnostic.Errors, result1.Diagnostic.Errors);
         }
     }
 }

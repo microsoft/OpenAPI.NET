@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 
@@ -28,7 +27,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             T parentInstance,
             IDictionary<string, Action<T, ParseNode, OpenApiDocument>> fixedFields,
             IDictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument>> patternFields,
-            OpenApiDocument hostDocument = null)
+            OpenApiDocument hostDocument)
         {
             if (fixedFields.TryGetValue(Name, out var fixedFieldMap))
             {

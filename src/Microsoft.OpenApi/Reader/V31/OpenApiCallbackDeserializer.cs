@@ -4,7 +4,6 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
-using System.Linq;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -24,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("callback");
 

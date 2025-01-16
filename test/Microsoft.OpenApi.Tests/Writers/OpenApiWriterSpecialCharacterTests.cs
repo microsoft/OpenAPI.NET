@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 
@@ -47,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -81,7 +80,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -109,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 .Replace("\r", "");
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -135,7 +134,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 .Replace("\r", "");
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -156,7 +155,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

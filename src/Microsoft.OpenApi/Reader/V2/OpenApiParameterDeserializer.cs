@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "items",
-                    (o, n, t) => GetOrCreateSchema(o).Items = LoadSchema(n)
+                    (o, n, t) => GetOrCreateSchema(o).Items = LoadSchema(n, t)
                 },
                 {
                     "collectionFormat",
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        private static void LoadParameterExamplesExtension(OpenApiParameter parameter, ParseNode node, OpenApiDocument hostDocument = null)
+        private static void LoadParameterExamplesExtension(OpenApiParameter parameter, ParseNode node, OpenApiDocument hostDocument)
         {
             var examples = LoadExamplesExtension(node);
             node.Context.SetTempStorage(TempStorageKeys.Examples, examples, parameter);
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return p.Schema ??= new();
         }
 
-        private static void ProcessIn(OpenApiParameter o, ParseNode n, OpenApiDocument hostDocument = null)
+        private static void ProcessIn(OpenApiParameter o, ParseNode n, OpenApiDocument hostDocument)
         {
             var value = n.GetScalarValue();
             switch (value)
@@ -183,12 +183,12 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
         {
             return LoadParameter(node, false, hostDocument);
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument = null)
+        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
         {
             // Reset the local variables every time this method is called.
             node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);

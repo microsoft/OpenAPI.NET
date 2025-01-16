@@ -61,14 +61,15 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="input">Stream containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="format"></param>
+        /// <param name="openApiDocument">The OpenApiDocument object to which the fragment belongs, used to lookup references.</param>
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             format ??= InspectStreamFormat(input);
-            return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, out diagnostic, settings);
+            return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
         }
 
         /// <summary>
@@ -91,13 +92,14 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="url">The path to the OpenAPI file</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
+        /// <param name="openApiDocument">The OpenApiDocument object to which the fragment belongs, used to lookup references.</param>
         /// <param name="token"></param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement
+        public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiDocument openApiDocument, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement
         {
             var (stream, format) = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
-            return await LoadAsync<T>(stream, version, format, settings, token);
+            return await LoadAsync<T>(stream, version, openApiDocument, format, settings, token);
         }
 
         /// <summary>
@@ -145,27 +147,30 @@ namespace Microsoft.OpenApi.Reader
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
         /// <param name="version"></param>
+        /// <param name="openApiDocument">The document used to lookup tag or schema references.</param>
         /// <param name="format"></param>
         /// <param name="settings"></param>
         /// <param name="token"></param>
         /// <returns></returns>
         public static async Task<T> LoadAsync<T>(Stream input,
                                                  OpenApiSpecVersion version,
+                                                 OpenApiDocument openApiDocument,
                                                  string format = null,
                                                  OpenApiReaderSettings settings = null,
                                                  CancellationToken token = default) where T : IOpenApiElement
         {
+            Utils.CheckArgumentNull(openApiDocument);
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (input is MemoryStream memoryStream)
             {
-                return Load<T>(memoryStream, version, format, out var _, settings);
+                return Load<T>(memoryStream, version, format, openApiDocument, out var _, settings);
             }
             else
             {
                 memoryStream = new MemoryStream();
                 await input.CopyToAsync(memoryStream, 81920, token).ConfigureAwait(false);
                 memoryStream.Position = 0;
-                return Load<T>(memoryStream, version, format, out var _, settings);
+                return Load<T>(memoryStream, version, format, openApiDocument, out var _, settings);
             }
         }
 
@@ -195,12 +200,14 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="version"></param>
+        /// <param name="openApiDocument">The OpenApiDocument object to which the fragment belongs, used to lookup references.</param>
         /// <param name="diagnostic">The diagnostic entity containing information from the reading process.</param>
         /// <param name="format">The Open API format</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
         public static T Parse<T>(string input,
                                  OpenApiSpecVersion version,
+                                 OpenApiDocument openApiDocument,
                                  out OpenApiDiagnostic diagnostic,
                                  string format = null,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
@@ -209,7 +216,7 @@ namespace Microsoft.OpenApi.Reader
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
-            return Load<T>(stream, version, format, out diagnostic, settings);
+            return Load<T>(stream, version, format, openApiDocument, out diagnostic, settings);
         }
 
         private static readonly OpenApiReaderSettings DefaultReaderSettings = new();
