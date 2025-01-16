@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -66,7 +65,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
             var actual = OpenApiTypeMapper.MapTypeToOpenApiPrimitiveType(type);
 
             // Assert
-            actual.Should().BeEquivalentTo(expected);
+            Assert.Equivalent(expected, actual);
         }
 
         [Theory]
@@ -77,7 +76,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
             var actual = OpenApiTypeMapper.MapOpenApiPrimitiveTypeToSimpleType(schema);
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

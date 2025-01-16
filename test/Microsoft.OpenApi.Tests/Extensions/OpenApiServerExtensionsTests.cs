@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -24,7 +23,7 @@ public class OpenApiServerExtensionsTests
 
         var url = variable.ReplaceServerUrlVariables(new Dictionary<string, string> {{"version", "v2"}});
         
-        url.Should().Be("http://example.com/api/v2");
+        Assert.Equal("http://example.com/api/v2", url);
     }
 
     [Fact]
@@ -42,7 +41,7 @@ public class OpenApiServerExtensionsTests
 
         var url = variable.ReplaceServerUrlVariables(new Dictionary<string, string>(0));
         
-        url.Should().Be("http://example.com/api/v1");
+        Assert.Equal("http://example.com/api/v1", url);
     }
 
     [Fact]

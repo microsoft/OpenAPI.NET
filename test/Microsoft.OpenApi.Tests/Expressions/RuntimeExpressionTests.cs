@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Properties;
@@ -39,7 +38,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Assert
             var exception = Assert.Throws<OpenApiException>(test);
-            Assert.Equal(String.Format(SRResource.RuntimeExpressionHasInvalidFormat, expression), exception.Message);
+            Assert.Equal(string.Format(SRResource.RuntimeExpressionHasInvalidFormat, expression), exception.Message);
         }
 
         [Fact]
@@ -184,11 +183,11 @@ namespace Microsoft.OpenApi.Tests.Writers
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
 
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
+            Assert.Equivalent(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))
-            });
+            }, compositeExpression.ContainedExpressions);
         }
 
         [Fact]
@@ -222,17 +221,17 @@ namespace Microsoft.OpenApi.Tests.Writers
             var runtimeExpression = RuntimeExpression.Build(expression);
 
             // Assert
-            runtimeExpression.Should().NotBeNull();
-            runtimeExpression.Should().BeOfType(typeof(CompositeExpression));
+            Assert.NotNull(runtimeExpression);
+            Assert.IsType<CompositeExpression>(runtimeExpression);
             var response = (CompositeExpression)runtimeExpression;
-            response.Expression.Should().Be(expression);
+            Assert.Equal(expression, response.Expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
+            Assert.Equivalent(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))
-            });
+            }, compositeExpression.ContainedExpressions);
         }
 
         [Theory]
@@ -244,7 +243,8 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => RuntimeExpression.Build(expression);
 
             // Assert
-            test.Should().Throw<OpenApiException>().WithMessage(String.Format(SRResource.RuntimeExpressionHasInvalidFormat, invalidExpression));
+            var result = Assert.Throws<OpenApiException>(test);
+            Assert.Equal(result.Message, string.Format(SRResource.RuntimeExpressionHasInvalidFormat, invalidExpression));
         }
 
         [Theory]
@@ -262,15 +262,15 @@ namespace Microsoft.OpenApi.Tests.Writers
             var runtimeExpression = RuntimeExpression.Build(expression);
 
             // Assert
-            runtimeExpression.Should().NotBeNull();
-            runtimeExpression.Should().BeOfType(typeof(CompositeExpression));
+            Assert.NotNull(runtimeExpression);
+            Assert.IsType<CompositeExpression>(runtimeExpression);
             var response = (CompositeExpression)runtimeExpression;
-            response.Expression.Should().Be(expression);
+            Assert.Equal(expression, response.Expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
 
             // The whole string is treated as the template without any contained expressions.
-            compositeExpression.ContainedExpressions.Should().BeEmpty();
+            Assert.Empty(compositeExpression.ContainedExpressions);
         }
     }
 }

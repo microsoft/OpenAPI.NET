@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
 using SharpYaml.Serialization;
-using System.Linq;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;

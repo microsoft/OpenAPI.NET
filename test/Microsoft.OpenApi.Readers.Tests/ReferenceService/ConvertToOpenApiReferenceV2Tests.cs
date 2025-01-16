@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
@@ -31,9 +30,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = versionService.ConvertToOpenApiReference(input, null);
 
             // Assert
-            reference.ExternalResource.Should().Be(externalResource);
-            reference.Type.Should().NotBeNull();
-            reference.Id.Should().Be(id);
+            Assert.Equal(externalResource, reference.ExternalResource);
+            Assert.NotNull(reference.Type);
+            Assert.Equal(id, reference.Id);
         }
 
         [Fact]
@@ -49,9 +48,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = versionService.ConvertToOpenApiReference(input, null);
 
             // Assert
-            reference.ExternalResource.Should().Be(externalResource);
-            reference.Type.Should().BeNull();
-            reference.Id.Should().Be(id);
+            Assert.Equal(externalResource, reference.ExternalResource);
+            Assert.Null(reference.Type);
+            Assert.Equal(id, reference.Id);
         }
 
         [Fact]
@@ -67,9 +66,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = versionService.ConvertToOpenApiReference(input, referenceType);
 
             // Assert
-            reference.Type.Should().Be(referenceType);
-            reference.ExternalResource.Should().BeNull();
-            reference.Id.Should().Be(id);
+            Assert.Equal(referenceType, reference.Type);
+            Assert.Null(reference.ExternalResource);
+            Assert.Equal(id, reference.Id);
         }
 
         [Fact]
@@ -85,9 +84,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = versionService.ConvertToOpenApiReference(input, referenceType);
 
             // Assert
-            reference.Type.Should().Be(referenceType);
-            reference.ExternalResource.Should().BeNull();
-            reference.Id.Should().Be(id);
+            Assert.Equal(referenceType, reference.Type);
+            Assert.Null(reference.ExternalResource);
+            Assert.Equal(id, reference.Id);
         }
 
         [Fact]
@@ -103,9 +102,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = versionService.ConvertToOpenApiReference(input, referenceType);
 
             // Assert
-            reference.Type.Should().Be(referenceType);
-            reference.ExternalResource.Should().BeNull();
-            reference.Id.Should().Be(id);
+            Assert.Equal(referenceType, reference.Type);
+            Assert.Null(reference.ExternalResource);
+            Assert.Equal(id, reference.Id);
         }
 
         [Fact]
@@ -121,9 +120,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = versionService.ConvertToOpenApiReference(input, referenceType);
 
             // Assert
-            reference.Type.Should().Be(referenceType);
-            reference.ExternalResource.Should().BeNull();
-            reference.Id.Should().Be(id);
+            Assert.Equal(referenceType, reference.Type);
+            Assert.Null(reference.ExternalResource);
+            Assert.Equal(id, reference.Id);
         }
     }
 }

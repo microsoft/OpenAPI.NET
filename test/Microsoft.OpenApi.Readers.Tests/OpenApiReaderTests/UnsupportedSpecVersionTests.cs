@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -21,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             }
             catch (OpenApiUnsupportedSpecVersionException exception)
             {
-                exception.SpecificationVersion.Should().Be("1.0.0");
+                Assert.Equal("1.0.0", exception.SpecificationVersion);
             }
         }
     }

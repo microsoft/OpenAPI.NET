@@ -4,7 +4,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -28,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var callback = await OpenApiModelFactory.LoadAsync<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            callback.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiCallback
                 {
                     PathItems =
@@ -59,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 }
                             }
                     }
-                });
+                }, callback);
         }
 
         [Fact]
@@ -76,10 +75,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             var callback = subscribeOperation.Callbacks["simpleHook"];
 
-            result.Diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            Assert.Equivalent(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, result.Diagnostic);
 
-            callback.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiCallback
                 {
                     PathItems =
@@ -117,7 +116,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Id = "simpleHook",
                         HostDocument = result.Document
                     }
-                });
+                }, callback);
         }
 
         [Fact]
@@ -130,12 +129,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var path = result.Document.Paths.First().Value;
             var subscribeOperation = path.Operations[OperationType.Post];
 
-            result.Diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            Assert.Equivalent(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, result.Diagnostic);
 
             var callback1 = subscribeOperation.Callbacks["simpleHook"];
 
-            callback1.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiCallback
                 {
                     PathItems =
@@ -173,10 +172,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Id = "simpleHook",
                         HostDocument = result.Document
                     }
-                });
+                }, callback1);
 
             var callback2 = subscribeOperation.Callbacks["callback2"];
-            callback2.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiCallback
                 {
                     PathItems =
@@ -209,10 +208,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             },
                         }
                     }
-                });
+                }, callback2);
 
             var callback3 = subscribeOperation.Callbacks["callback3"];
-            callback3.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiCallback
                 {
                     PathItems =
@@ -252,7 +251,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     }
-                });
+                }, callback3);
         }
     }
 }

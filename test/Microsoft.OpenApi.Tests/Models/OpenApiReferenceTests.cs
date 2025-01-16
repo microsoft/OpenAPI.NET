@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -29,12 +28,12 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Assert
-            reference.ExternalResource.Should().BeNull();
-            reference.Type.Should().Be(type);
-            reference.Id.Should().Be(id);
+            Assert.Null(reference.ExternalResource);
+            Assert.Equal(type, reference.Type);
+            Assert.Equal(id, reference.Id);
 
-            reference.ReferenceV3.Should().Be(input);
-            reference.ReferenceV2.Should().Be(input.Replace("schemas", "definitions").Replace("/components", ""));
+            Assert.Equal(input, reference.ReferenceV3);
+            Assert.Equal(input.Replace("schemas", "definitions").Replace("/components", ""), reference.ReferenceV2);
         }
 
         [Theory]
@@ -55,10 +54,10 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Assert
-            reference.ExternalResource.Should().Be(externalResource);
-            reference.Id.Should().Be(id);
+            Assert.Equal(externalResource, reference.ExternalResource);
+            Assert.Equal(id, reference.Id);
 
-            reference.ReferenceV3.Should().Be(expected);
+            Assert.Equal(expected, reference.ReferenceV3);
         }
 
         [Theory]
@@ -79,10 +78,10 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Assert
-            reference.ExternalResource.Should().Be(externalResource);
-            reference.Id.Should().Be(id);
+            Assert.Equal(externalResource, reference.ExternalResource);
+            Assert.Equal(id, reference.Id);
 
-            reference.ReferenceV2.Should().Be(expected);
+            Assert.Equal(expected, reference.ReferenceV2);
         }
 
         [Fact]
@@ -103,7 +102,7 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -122,7 +121,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -146,7 +145,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected);
+            Assert.Equal(expected, actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -164,7 +163,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -191,7 +190,7 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -210,7 +209,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -232,7 +231,7 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -246,7 +245,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

@@ -2,7 +2,6 @@
 // Licensed under the MIT license. 
 
 using System.IO;
-using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -23,8 +22,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().NotBeEmpty();
-            errors.Select(e => e.Message).Should().BeEquivalentTo(error);
+            Assert.NotEmpty(errors);
+            Assert.Equivalent(new string[] {error}, errors.Select(e => e.Message).ToArray());
         }
 
         [Fact]
@@ -42,8 +41,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().NotBeEmpty();
-            errors.Select(e => e.Message).Should().BeEquivalentTo(error);
+            Assert.NotEmpty(errors);
+            Assert.Equivalent(new string[] {error}, errors.Select(e => e.Message).ToArray());
         }
         [Fact]
         public void ValidatePathsAreUniqueDoesNotConsiderMultiParametersAsIdentical()
@@ -60,7 +59,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().BeEmpty();
+            Assert.Empty(errors);
         }
         [Fact]
         public void ValidatePathsAreUniqueConsidersMultiParametersAsIdentical()
@@ -76,7 +75,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = paths.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            errors.Should().NotBeEmpty();
+            Assert.NotEmpty(errors);
         }
     }
 }

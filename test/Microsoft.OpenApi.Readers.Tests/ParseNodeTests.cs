@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
@@ -33,9 +32,9 @@ namespace Microsoft.OpenApi.Tests
 
             var result = OpenApiDocument.Parse(input, "yaml");
 
-            result.Diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
+            Assert.Equivalent(new List<OpenApiError>() {
                 new OpenApiError(new OpenApiReaderException("Expected a value."))
-            });
+            }, result.Diagnostic.Errors);
         }
 
         [Fact]
@@ -59,12 +58,12 @@ namespace Microsoft.OpenApi.Tests
 
             var res= OpenApiDocument.Parse(input, "yaml");
 
-            res.Diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
+            Assert.Equivalent(new List<OpenApiError>
             {
                 new(new OpenApiReaderException("schema must be a map/object") {
                     Pointer = "#/paths/~1foo/get/responses/200/content/application~1json/schema"
                 })
-            });
+            }, res.Diagnostic.Errors);
         }
     }
 }

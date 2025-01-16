@@ -4,7 +4,6 @@
 using System;
 using System.Globalization;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes

@@ -2,15 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
-using Microsoft.OpenApi.Services;
 using System.Threading.Tasks;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -35,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Path,
@@ -46,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                }, parameter);
         }
 
         [Fact]
@@ -56,7 +53,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Query,
@@ -73,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     },
                     Style = ParameterStyle.Form,
                     Explode = true
-                });
+                }, parameter);
         }
 
         [Fact]
@@ -83,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Query,
@@ -97,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         }
                     },
                     Style = ParameterStyle.Form
-                });
+                }, parameter);
         }
 
         [Fact]
@@ -110,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Query,
@@ -141,7 +138,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                            }
                         }
                     }
-                });
+                }, parameter);
         }
 
         [Fact]
@@ -151,7 +148,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "headerParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Header,
@@ -169,7 +166,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Format = "int64",
                         }
                     }
-                });
+                }, parameter);
         }
 
         [Fact]
@@ -179,7 +176,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
@@ -190,7 +187,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                }, parameter);
         }
 
         [Fact]
@@ -203,7 +200,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
@@ -214,7 +211,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                }, parameter);
         }
 
         [Fact]
@@ -227,7 +224,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new());
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
@@ -238,7 +235,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = JsonSchemaType.String
                     }
-                });
+                }, parameter);
         }
 
         [Fact]

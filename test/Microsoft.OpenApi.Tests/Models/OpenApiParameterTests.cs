@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -184,7 +183,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act & Assert
-            parameter.Explode.Should().Be(expectedExplode);
+            Assert.Equal(expectedExplode, parameter.Explode);
         }
 
         [Theory]
@@ -208,7 +207,7 @@ namespace Microsoft.OpenApi.Tests.Models
             parameter.SerializeAsV3(writer);
             await writer.FlushAsync();
 
-            parameter.Style.Should().Be(expectedStyle);
+            Assert.Equal(expectedStyle, parameter.Style);
         }
 
         [Fact]
@@ -226,7 +225,7 @@ schema:
             var actual = await QueryParameterWithMissingStyle.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -247,7 +246,7 @@ schema:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -291,7 +290,7 @@ schema:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -321,7 +320,7 @@ schema:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
