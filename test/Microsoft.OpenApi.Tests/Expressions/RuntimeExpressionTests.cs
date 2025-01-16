@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Properties;
@@ -184,11 +183,11 @@ namespace Microsoft.OpenApi.Tests.Writers
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
 
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
+            Assert.Equivalent(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))
-            });
+            }, compositeExpression.ContainedExpressions);
         }
 
         [Fact]
@@ -228,11 +227,11 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Equal(expression, response.Expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
+            Assert.Equivalent(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))
-            });
+            }, compositeExpression.ContainedExpressions);
         }
 
         [Theory]
