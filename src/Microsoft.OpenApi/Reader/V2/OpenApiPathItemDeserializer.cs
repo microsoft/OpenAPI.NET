@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))},
             };
 
-        public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("PathItem");
 
@@ -54,12 +54,12 @@ namespace Microsoft.OpenApi.Reader.V2
             return pathItem;
         }
 
-        private static void LoadPathParameters(OpenApiPathItem pathItem, ParseNode node, OpenApiDocument hostDocument = null)
+        private static void LoadPathParameters(OpenApiPathItem pathItem, ParseNode node, OpenApiDocument hostDocument)
         {
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
             node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);
 
-            pathItem.Parameters = node.CreateList(LoadParameter);
+            pathItem.Parameters = node.CreateList(LoadParameter, hostDocument);
 
             // Build request body based on information determined while parsing OpenApiOperation
             var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);

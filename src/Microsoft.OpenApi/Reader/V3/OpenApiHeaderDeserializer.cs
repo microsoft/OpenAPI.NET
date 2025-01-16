@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("header");
 
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Reader.V3
             var header = new OpenApiHeader();
             foreach (var property in mapNode)
             {
-                property.ParseField(header, _headerFixedFields, _headerPatternFields);
+                property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
             }
 
             return header;

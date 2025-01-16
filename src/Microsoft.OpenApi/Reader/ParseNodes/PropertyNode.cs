@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             T parentInstance,
             IDictionary<string, Action<T, ParseNode, OpenApiDocument>> fixedFields,
             IDictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument>> patternFields,
-            OpenApiDocument hostDocument = null)
+            OpenApiDocument hostDocument)
         {
             if (fixedFields.TryGetValue(Name, out var fixedFieldMap))
             {

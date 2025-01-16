@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 var node = new MapNode(context, asJsonNode);
 
                 // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
             securityScheme.Should().BeEquivalentTo(
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
             securityScheme.Should().BeEquivalentTo(

@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiExample LoadExample(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiExample LoadExample(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("example");
 
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Reader.V31
             var example = new OpenApiExample();
             foreach (var property in mapNode)
             {
-                property.ParseField(example, _exampleFixedFields, _examplePatternFields);
+                property.ParseField(example, _exampleFixedFields, _examplePatternFields, hostDocument);
             }
 
             return example;
