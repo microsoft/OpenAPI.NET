@@ -41,7 +41,7 @@ jobs:
     name: Validate Project for Trimming
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
