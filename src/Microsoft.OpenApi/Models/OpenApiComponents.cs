@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
@@ -319,7 +318,7 @@ namespace Microsoft.OpenApi.Models
         {
             var loops = writer.GetSettings().LoopDetector.Loops;
             writer.WriteStartObject();
-            if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+            if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
             {
                 writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, callback);
             }

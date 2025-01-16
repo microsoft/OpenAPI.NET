@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
@@ -49,7 +51,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="node">The JsonNode value</param>
         public static void WriteAny(this IOpenApiWriter writer, JsonNode node)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             if (node == null)
             {
@@ -57,8 +59,7 @@ namespace Microsoft.OpenApi.Writers
                 return;
             }
 
-            var element = JsonDocument.Parse(node.ToJsonString()).RootElement;
-            switch (element.ValueKind)
+            switch (node.GetValueKind())
             {
                 case JsonValueKind.Array: // Array
                     writer.WriteArray(node as JsonArray);
@@ -67,13 +68,13 @@ namespace Microsoft.OpenApi.Writers
                     writer.WriteObject(node as JsonObject);
                     break;
                 case JsonValueKind.String: // Primitive
-                    writer.WritePrimitive(element);
+                    writer.WritePrimitive(node);
                     break;
                 case JsonValueKind.Number: // Primitive
-                    writer.WritePrimitive(element);
+                    writer.WritePrimitive(node);
                     break;
                 case JsonValueKind.True or JsonValueKind.False: // Primitive
-                    writer.WritePrimitive(element);
+                    writer.WritePrimitive(node);
                     break;
                 case JsonValueKind.Null: // null
                     writer.WriteNull();
@@ -108,52 +109,71 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-        private static void WritePrimitive(this IOpenApiWriter writer, JsonElement primitive)
+        private static void WritePrimitive(this IOpenApiWriter writer, JsonNode primitive)
         {
-            if (writer == null)
+            Utils.CheckArgumentNull(writer);
+
+            var valueKind = primitive.GetValueKind();
+
+            if (valueKind == JsonValueKind.String && primitive is JsonValue jsonStrValue)
             {
-                Utils.CheckArgumentNull(writer);
+                if (jsonStrValue.TryGetValue<DateTimeOffset>(out var dto))
+                {
+                    writer.WriteValue(dto);
+                }
+                else if (jsonStrValue.TryGetValue<DateTime>(out var dt))
+                {
+                    writer.WriteValue(dt);
+                }
+                else if (jsonStrValue.TryGetValue<string>(out var strValue))
+                {
+                    // check whether string is actual string or date time object
+                    if (DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTimeOffset))
+                    {
+                        writer.WriteValue(dateTimeOffset);
+                    }
+                    else if (DateTime.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime))
+                    { // order matters, DTO needs to be checked first!!!
+                        writer.WriteValue(dateTime);
+                    }
+                    else
+                    {
+                        writer.WriteValue(strValue);
+                    }
+                }
             }
 
-            if (primitive.ValueKind == JsonValueKind.String)
+            else if (valueKind == JsonValueKind.Number && primitive is JsonValue jsonValue)
             {
-                // check whether string is actual string or date time object
-                if (primitive.TryGetDateTime(out var dateTime))
-                {
-                    writer.WriteValue(dateTime);
-                }
-                else if (primitive.TryGetDateTimeOffset(out var dateTimeOffset))
-                {
-                    writer.WriteValue(dateTimeOffset);
-                }
-                else
-                {
-                    writer.WriteValue(primitive.GetString());
-                }
-            }
 
-            if (primitive.ValueKind == JsonValueKind.Number)
-            {
-                if (primitive.TryGetDecimal(out var decimalValue))
+                if (jsonValue.TryGetValue<decimal>(out var decimalValue))
                 {
                     writer.WriteValue(decimalValue);
                 }
-                else if (primitive.TryGetDouble(out var doubleValue))
+                else if (jsonValue.TryGetValue<double>(out var doubleValue))
                 {
                     writer.WriteValue(doubleValue);
                 }
-                else if (primitive.TryGetInt64(out var longValue))
+                else if (jsonValue.TryGetValue<float>(out var floatValue))
+                {
+                    writer.WriteValue(floatValue);
+                }
+                else if (jsonValue.TryGetValue<long>(out var longValue))
                 {
                     writer.WriteValue(longValue);
                 }
-                else if (primitive.TryGetInt32(out var intValue))
+                else if (jsonValue.TryGetValue<int>(out var intValue))
                 {
                     writer.WriteValue(intValue);
                 }
             }
-            if (primitive.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            else if (valueKind is JsonValueKind.False)
             {
-                writer.WriteValue(primitive.GetBoolean());
+                writer.WriteValue(false);
+            }
+            else if (valueKind is JsonValueKind.True)
+            {
+                writer.WriteValue(true);
             }
         }
     }

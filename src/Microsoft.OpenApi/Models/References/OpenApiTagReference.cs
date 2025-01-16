@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
             writer.WriteValue(Name);
         }
     }

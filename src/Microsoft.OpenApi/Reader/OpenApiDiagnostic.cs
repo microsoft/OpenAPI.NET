@@ -48,26 +48,26 @@ namespace Microsoft.OpenApi.Reader
             }
         }
     }
-}
 
-/// <summary>
-/// Extension class for IList to add the Method "AddRange" used above
-/// </summary>
-public static class IDiagnosticExtensions
-{
     /// <summary>
-    /// Extension method for IList so that another list can be added to the current list.
+    /// Extension class for IList to add the Method "AddRange" used above
     /// </summary>
-    /// <param name="collection"></param>
-    /// <param name="enumerable"></param>
-    /// <typeparam name="T"></typeparam>
-    public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> enumerable)
+    internal static class IDiagnosticExtensions
     {
-        if (collection is null || enumerable is null) return;
-
-        foreach (var cur in enumerable)
+        /// <summary>
+        /// Extension method for IList so that another list can be added to the current list.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="enumerable"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> enumerable)
         {
-            collection.Add(cur);
+            if (collection is null || enumerable is null) return;
+
+            foreach (var cur in enumerable)
+            {
+                collection.Add(cur);
+            }
         }
     }
 }

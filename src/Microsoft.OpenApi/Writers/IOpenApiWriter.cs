@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
@@ -71,6 +74,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Flush the writer.
         /// </summary>
-        void Flush();
+        /// <param name="cancellationToken">The cancellation token.</param>
+        Task FlushAsync(CancellationToken cancellationToken = default);
     }
 }

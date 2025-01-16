@@ -46,16 +46,6 @@ namespace Microsoft.OpenApi.Validations
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRule"/> class.
-        /// </summary>        
-        /// <param name="validate">Action to perform the validation.</param>
-        [Obsolete("Please use the other constructor and specify a name")]
-        public ValidationRule(Action<IValidationContext, T> validate)
-            : this (Guid.NewGuid().ToString("D"), validate)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationRule"/> class.
         /// </summary>
         /// <param name="name">Validation rule name.</param>
         /// <param name="validate">Action to perform the validation.</param>

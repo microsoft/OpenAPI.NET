@@ -27,7 +27,11 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 "style", (o, n, _) =>
                 {
-                    o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
+                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                    {
+                        return;
+                    }
+                    o.Style = style;
                 }
             },
             {

@@ -383,8 +383,8 @@ get:
             };
 
             // We serialize so that we can get rid of the schema BaseUri properties which show up as diffs
-            var actual = result.Document.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
-            var expected = expectedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await result.Document.Components.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var expected = await expectedComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual.Should().Be(expected);

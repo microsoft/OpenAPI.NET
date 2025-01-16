@@ -120,7 +120,7 @@ components:
 
             // Act
             _localHeaderReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert            
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -137,7 +137,7 @@ components:
 
             // Act
             _localHeaderReference.SerializeAsV31(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -154,7 +154,7 @@ components:
 
             // Act
             _localHeaderReference.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

@@ -83,11 +83,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
-        /// <summary>
-        /// The unique hash code of the generated OpenAPI document
-        /// </summary>
-        public string HashCode => GenerateHashValue(this);
-
         /// <inheritdoc />
         public IDictionary<string, object>? Annotations { get; set; }
 
@@ -243,7 +238,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                          .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
@@ -414,14 +409,15 @@ namespace Microsoft.OpenApi.Models
                         return url;
                     })
                 .Where(
-                    u => Uri.Compare(
+                    u => u is not null &&
+                        Uri.Compare(
                             u,
                             firstServerUrl,
                             UriComponents.Host | UriComponents.Port | UriComponents.Path,
                             UriFormat.SafeUnescaped,
                             StringComparison.OrdinalIgnoreCase) ==
                         0 && u.IsAbsoluteUri)
-                .Select(u => u.Scheme)
+                .Select(u => u!.Scheme)
                 .Distinct()
                 .ToList();
 
@@ -457,22 +453,24 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Takes in an OpenApi document instance and generates its hash value
         /// </summary>
-        /// <param name="doc">The OpenAPI description to hash.</param>
+        /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
         /// <returns>The hash value.</returns>
-        public static string GenerateHashValue(OpenApiDocument doc)
+        public async Task<string> GetHashCodeAsync(CancellationToken cancellationToken = default)
         {
             using HashAlgorithm sha = SHA512.Create();
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
             var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
-            doc.SerializeAsV3(openApiJsonWriter);
-            openApiJsonWriter.Flush();
+            SerializeAsV3(openApiJsonWriter);
+            await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
 
+#if NET5_0_OR_GREATER
+            await cryptoStream.FlushFinalBlockAsync(cancellationToken).ConfigureAwait(false);
+#else
             cryptoStream.FlushFinalBlock();
-            var hash = sha.Hash;
-
-            return ConvertByteArrayToString(hash);
+#endif
+            return ConvertByteArrayToString(sha.Hash ?? []);
         }
 
         private static string ConvertByteArrayToString(byte[] hash)
@@ -571,6 +569,67 @@ namespace Microsoft.OpenApi.Models
                                        OpenApiReaderSettings? settings = null)
         {
             return OpenApiModelFactory.Parse(input, format, settings);
+        }
+        /// <summary>
+        /// Adds a component to the components object of the current document and registers it to the underlying workspace.
+        /// </summary>
+        /// <param name="componentToRegister">The component to add</param>
+        /// <param name="id">The id for the component</param>
+        /// <typeparam name="T">The type of the component</typeparam>
+        /// <returns>Whether the component was added to the components.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the component is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the id is null or empty.</exception>
+        public bool AddComponent<T>(string id, T componentToRegister)
+        {
+            Utils.CheckArgumentNull(componentToRegister);
+            Utils.CheckArgumentNullOrEmpty(id);
+            Components ??= new();
+            switch (componentToRegister)
+            {
+                case OpenApiSchema openApiSchema:
+                    Components.Schemas ??= new Dictionary<string, OpenApiSchema>();
+                    Components.Schemas.Add(id, openApiSchema);
+                    break;
+                case OpenApiParameter openApiParameter:
+                    Components.Parameters ??= new Dictionary<string, OpenApiParameter>();
+                    Components.Parameters.Add(id, openApiParameter);
+                    break;
+                case OpenApiResponse openApiResponse:
+                    Components.Responses ??= new Dictionary<string, OpenApiResponse>();
+                    Components.Responses.Add(id, openApiResponse);
+                    break;
+                case OpenApiRequestBody openApiRequestBody:
+                    Components.RequestBodies ??= new Dictionary<string, OpenApiRequestBody>();
+                    Components.RequestBodies.Add(id, openApiRequestBody);
+                    break;
+                case OpenApiLink openApiLink:
+                    Components.Links ??= new Dictionary<string, OpenApiLink>();
+                    Components.Links.Add(id, openApiLink);
+                    break;
+                case OpenApiCallback openApiCallback:
+                    Components.Callbacks ??= new Dictionary<string, OpenApiCallback>();
+                    Components.Callbacks.Add(id, openApiCallback);
+                    break;
+                case OpenApiPathItem openApiPathItem:
+                    Components.PathItems ??= new Dictionary<string, OpenApiPathItem>();
+                    Components.PathItems.Add(id, openApiPathItem);
+                    break;
+                case OpenApiExample openApiExample:
+                    Components.Examples ??= new Dictionary<string, OpenApiExample>();
+                    Components.Examples.Add(id, openApiExample);
+                    break;
+                case OpenApiHeader openApiHeader:
+                    Components.Headers ??= new Dictionary<string, OpenApiHeader>();
+                    Components.Headers.Add(id, openApiHeader);
+                    break;
+                case OpenApiSecurityScheme openApiSecurityScheme:
+                    Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+                    Components.SecuritySchemes.Add(id, openApiSecurityScheme);
+                    break;
+                default:
+                    throw new ArgumentException($"Component type {componentToRegister!.GetType().Name} is not supported.");
+            }
+            return Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false;
         }
     }
 
