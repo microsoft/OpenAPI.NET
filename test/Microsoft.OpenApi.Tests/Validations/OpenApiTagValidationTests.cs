@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             var error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"), error.Message);
+            Assert.Equal(string.Format(SRResource.Validation_FieldIsRequired, "name", "tag"), error.Message);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             var error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, "tagExt", "#/extensions"), error.Message);
+            Assert.Equal(string.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, "tagExt", "#/extensions"), error.Message);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Assert
             var exception = Assert.Throws<OpenApiException>(test);
-            Assert.Equal(String.Format(SRResource.RuntimeExpressionHasInvalidFormat, expression), exception.Message);
+            Assert.Equal(string.Format(SRResource.RuntimeExpressionHasInvalidFormat, expression), exception.Message);
         }
 
         [Fact]

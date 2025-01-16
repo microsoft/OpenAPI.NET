@@ -16,8 +16,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInInfo()
         {
             // Arrange
-            var titleError = String.Format(SRResource.Validation_FieldIsRequired, "title", "info");
-            var versionError = String.Format(SRResource.Validation_FieldIsRequired, "version", "info");
+            var titleError = string.Format(SRResource.Validation_FieldIsRequired, "title", "info");
+            var versionError = string.Format(SRResource.Validation_FieldIsRequired, "version", "info");
             var info = new OpenApiInfo();
 
             // Act

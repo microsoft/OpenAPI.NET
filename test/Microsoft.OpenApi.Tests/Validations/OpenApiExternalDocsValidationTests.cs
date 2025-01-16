@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.True(result);
             Assert.NotNull(errors);
             var error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"), error.Message);
+            Assert.Equal(string.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"), error.Message);
         }
     }
 }

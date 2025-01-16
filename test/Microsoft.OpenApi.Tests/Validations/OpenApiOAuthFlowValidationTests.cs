@@ -17,8 +17,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFixedFieldsIsRequiredInResponse()
         {
             // Arrange
-            var authorizationUrlError = String.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow");
-            var tokenUrlError = String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow");
+            var authorizationUrlError = string.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow");
+            var tokenUrlError = string.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow");
             IEnumerable<OpenApiError> errors;
             var oAuthFlow = new OpenApiOAuthFlow();
 

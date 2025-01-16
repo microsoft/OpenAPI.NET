@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             var error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "server"), error.Message);
+            Assert.Equal(string.Format(SRResource.Validation_FieldIsRequired, "url", "server"), error.Message);
         }
     }
 }
