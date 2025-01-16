@@ -8,6 +8,8 @@
     <PublishAot>true</PublishAot>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>IL3000</NoWarn>
+    <!-- Ignore IL3000 warning as it references a code outside our control -->
     <NoWarn>NU1903</NoWarn>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
