@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var openApiInfo = OpenApiV31Deserializer.LoadInfo(node);
+            var openApiInfo = OpenApiV31Deserializer.LoadInfo(node, new());
 
             // Assert
             Assert.Equivalent(

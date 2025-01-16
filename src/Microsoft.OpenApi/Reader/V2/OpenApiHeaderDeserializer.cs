@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "items",
-                (o, n, _) => GetOrCreateSchema(o).Items = LoadSchema(n)
+                (o, n, doc) => GetOrCreateSchema(o).Items = LoadSchema(n, doc)
             },
             {
                 "collectionFormat",
@@ -102,14 +102,14 @@ namespace Microsoft.OpenApi.Reader.V2
             return p.Schema ??= new();
         }
 
-        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("header");
             var header = new OpenApiHeader();
             
             foreach (var property in mapNode)
             {
-                property.ParseField(header, _headerFixedFields, _headerPatternFields);
+                property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
             }
 
             var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");

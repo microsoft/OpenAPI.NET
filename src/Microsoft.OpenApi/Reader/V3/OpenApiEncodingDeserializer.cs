@@ -50,14 +50,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiEncoding LoadEncoding(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiEncoding LoadEncoding(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("encoding");
 
             var encoding = new OpenApiEncoding();
             foreach (var property in mapNode)
             {
-                property.ParseField(encoding, _encodingFixedFields, _encodingPatternFields);
+                property.ParseField(encoding, _encodingFixedFields, _encodingPatternFields, hostDocument);
             }
 
             return encoding;

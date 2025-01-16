@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             Assert.Equivalent(_basicOperation, operation);
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             Assert.Equivalent(_basicOperation, operation);
@@ -164,7 +164,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             operation.Should().BeEquivalentTo(
@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             node = TestHelper.CreateYamlMapNode(stream);
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
             var expected = @"{
   ""produces"": [
     ""application/octet-stream""
@@ -299,7 +299,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             node = TestHelper.CreateYamlMapNode(stream);
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
@@ -316,7 +316,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
             var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
@@ -366,7 +366,7 @@ responses:
             }
 
             // Act
-            var operation = OpenApiV3Deserializer.LoadOperation(node);
+            var operation = OpenApiV3Deserializer.LoadOperation(node, new());
             var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
@@ -416,7 +416,7 @@ responses:
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
             var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
@@ -467,7 +467,7 @@ responses: { }";
             }
 
             // Act
-            var operation = OpenApiV3Deserializer.LoadOperation(node);
+            var operation = OpenApiV3Deserializer.LoadOperation(node, new());
             var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert

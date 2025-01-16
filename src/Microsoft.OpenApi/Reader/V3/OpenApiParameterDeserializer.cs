@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
         };
 
-        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("parameter");
 

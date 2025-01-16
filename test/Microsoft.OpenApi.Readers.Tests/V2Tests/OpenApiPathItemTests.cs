@@ -256,7 +256,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
 
             // Assert
             Assert.Equivalent(_basicPathItemWithFormData, pathItem);
@@ -273,7 +273,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.
@@ -292,7 +292,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.

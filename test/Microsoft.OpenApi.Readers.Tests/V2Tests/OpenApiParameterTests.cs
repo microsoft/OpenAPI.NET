@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
 
             // Assert
             // Body parameter is currently not translated via LoadParameter.
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
 
             // Assert
             Assert.Equivalent(
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
 
             // Assert
             Assert.Equivalent(
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
 
             // Assert
             Assert.Equivalent(
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
 
             // Assert
             Assert.Equivalent(
@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
 
             // Assert
             Assert.Equivalent(
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
 
             // Assert
             Assert.Equivalent(
@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -253,7 +253,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
             var expected = new OpenApiParameter
             {
                 In = ParameterLocation.Path,
