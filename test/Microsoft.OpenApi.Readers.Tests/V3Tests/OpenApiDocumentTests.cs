@@ -113,7 +113,7 @@ paths: {}
         [Fact]
         public async Task ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
-            var path = System.IO.Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
+            var path = Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
             var result = await OpenApiDocument.LoadAsync(path);
 
             Assert.Empty(result.Diagnostic.Errors);
@@ -144,13 +144,13 @@ paths: {}
         [Fact]
         public async Task ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
-            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
             // Copy stream to MemoryStream
             using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
-            var result = OpenApiDocument.Load(memoryStream);
+            var result = await OpenApiDocument.LoadAsync(memoryStream);
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -176,7 +176,7 @@ paths: {}
         [Fact]
         public async Task ParseMinimalDocumentShouldSucceed()
         {
-            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -199,7 +199,7 @@ paths: {}
         [Fact]
         public async Task ParseStandardPetStoreDocumentShouldSucceed()
         {
-            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "petStore.yaml"));
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
             var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
 
             var components = new OpenApiComponents
@@ -585,7 +585,7 @@ paths: {}
         [Fact]
         public async Task ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
-            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml"));
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml"));
             var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
 
             var components = new OpenApiComponents
@@ -1089,7 +1089,7 @@ paths: {}
         [Fact]
         public async Task ParsePetStoreExpandedShouldSucceed()
         {
-            var actual = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"));
+            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"));
 
             // TODO: Create the object in memory and compare with the one read from YAML file.
 
@@ -1100,7 +1100,7 @@ paths: {}
         [Fact]
         public async Task GlobalSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "securedApi.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedApi.yaml"));
 
             var securityRequirement = result.Document.SecurityRequirements[0];
 
@@ -1111,7 +1111,7 @@ paths: {}
         [Fact]
         public async Task HeaderParameterShouldAllowExample()
         {
-            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
 
             var exampleHeader = result.Document.Components?.Headers?["example-header"];
             Assert.NotNull(exampleHeader);
@@ -1179,7 +1179,7 @@ paths: {}
                 ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
             };
 
-            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), settings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), settings);
             var securityScheme = result.Document.Components.SecuritySchemes["OAuth2"];
 
             // Assert
@@ -1191,7 +1191,7 @@ paths: {}
         public async Task ParseDocumentWithJsonSchemaReferencesWorks()
         {
             // Arrange
-            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
 
             // Act
             var settings = new OpenApiReaderSettings
@@ -1311,7 +1311,7 @@ components:
         format: int32
         default: 10";
 
-            using var stream = Resources.GetStream(System.IO.Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
             // Act
             var doc = (await OpenApiDocument.LoadAsync(stream)).Document;
@@ -1400,7 +1400,7 @@ components:
         [Fact]
         public async Task ParseDocumentWithEmptyPathsSucceeds()
         {
-            var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"));
             Assert.Empty(result.Diagnostic.Errors);
         }
     }
