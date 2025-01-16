@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Extensions
         {
             var type = typeof(T);
 
-            var displayMap = EnumDisplayCache.GetOrAdd(type, GetEnumValues<T>);
+            var displayMap = EnumDisplayCache.GetOrAdd(type, _=> GetEnumValues<T>(type));
 
             if (displayMap.TryGetValue(displayName, out var cachedValue))
             {
@@ -45,8 +45,7 @@ namespace Microsoft.OpenApi.Extensions
             result = default;
             return false;
         }
-        private static ReadOnlyDictionary<string, object> GetEnumValues<T>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields
-            | DynamicallyAccessedMemberTypes.PublicProperties)] Type enumType) where T : Enum
+        private static ReadOnlyDictionary<string, object> GetEnumValues<T>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] Type enumType) where T : Enum
         {
             var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             foreach (var field in enumType.GetFields(BindingFlags.Public | BindingFlags.Static))
