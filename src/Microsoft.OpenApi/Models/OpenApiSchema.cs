@@ -846,7 +846,11 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
         }
 
+#if NET5_0_OR_GREATER
+        private static readonly Array jsonSchemaTypeValues = System.Enum.GetValues<JsonSchemaType>();
+#else
         private static readonly Array jsonSchemaTypeValues = System.Enum.GetValues(typeof(JsonSchemaType));
+#endif
 
         private void DowncastTypeArrayToV2OrV3(JsonSchemaType schemaType, IOpenApiWriter writer, OpenApiSpecVersion version)
         {

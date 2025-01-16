@@ -8,7 +8,7 @@
     <PublishAot>true</PublishAot>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>NU1903; IL3000</NoWarn>
+    <NoWarn>NU1903</NoWarn>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
