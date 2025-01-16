@@ -46,12 +46,12 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return new ValueNode(context, node as JsonValue);
         }
 
-        public virtual List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument = null)
+        public virtual List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
         {
             throw new OpenApiReaderException("Cannot create list from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument = null)
+        public virtual Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
         {
             throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
         }

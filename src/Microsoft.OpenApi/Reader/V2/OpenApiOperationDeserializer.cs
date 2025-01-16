@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument = null)
+        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument)
         {
             // Reset these temp storage parameters for each operation.
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return operation;
         }
 
-        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("Responses");
 
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Reader.V2
         }
 
         private static OpenApiTagReference LoadTagByReference(
-            string tagName, OpenApiDocument hostDocument = null)
+            string tagName, OpenApiDocument hostDocument)
         {
             return new OpenApiTagReference(tagName, hostDocument);
         }

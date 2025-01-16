@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        public static OpenApiLicense LoadLicense(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiLicense LoadLicense(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("OpenApiLicense");
 
