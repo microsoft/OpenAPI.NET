@@ -458,7 +458,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            expectedV2Schema.Should().BeEquivalentTo(v2Schema);
+            Assert.Equal(v2Schema, expectedV2Schema);
         }
 
         [Fact]

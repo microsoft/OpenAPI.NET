@@ -463,7 +463,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             Assert.Equivalent(expectedSchema, actualSchema);
-            actualMediaType.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expectedMediaType.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expectedMediaType.MakeLineBreaksEnvironmentNeutral(), actualMediaType.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]

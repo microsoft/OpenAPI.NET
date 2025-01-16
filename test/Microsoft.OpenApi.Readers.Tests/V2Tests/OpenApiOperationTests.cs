@@ -287,7 +287,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             var actual = stringBuilder.ToString();
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());            
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());            
         }
 
         [Fact]

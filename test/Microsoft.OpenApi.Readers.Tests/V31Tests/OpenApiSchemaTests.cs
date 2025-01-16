@@ -148,10 +148,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            schemaWithArrayCopy.Type.Should().NotBe(schemaWithTypeArray.Type);
+            Assert.NotEqual(schemaWithTypeArray.Type, schemaWithArrayCopy.Type);
             schemaWithTypeArray.Type = JsonSchemaType.String | JsonSchemaType.Null;
 
-            simpleSchemaCopy.Type.Should().NotBe(simpleSchema.Type);
+            Assert.NotEqual(simpleSchema.Type, simpleSchemaCopy.Type);
             simpleSchema.Type = JsonSchemaType.String;
         }
 
