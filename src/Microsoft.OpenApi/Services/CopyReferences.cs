@@ -74,6 +74,12 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
             case OpenApiSecurityScheme securityScheme:
                 AddSecuritySchemeToComponents(securityScheme);
                 break;
+            case OpenApiPathItemReference openApiPathItemReference:
+                AddPathItemToComponents(openApiPathItemReference.Target, openApiPathItemReference.Reference.Id);
+                break;
+            case OpenApiPathItem pathItem:
+                AddPathItemToComponents(pathItem);
+                break;
             default:
                 break;
         }
