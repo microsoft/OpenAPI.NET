@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Security Scheme Object Reference.
     /// </summary>
-    public class OpenApiSecuritySchemeReference : OpenApiSecurityScheme, IOpenApiReferenceable
+    public class OpenApiSecuritySchemeReference : OpenApiSecurityScheme, IOpenApiReferenceableWithTarget<OpenApiSecurityScheme>
     {
         internal OpenApiSecurityScheme _target;
         private readonly OpenApiReference _reference;

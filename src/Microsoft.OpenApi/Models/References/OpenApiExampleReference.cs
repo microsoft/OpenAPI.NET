@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Example Object Reference.
     /// </summary>
-    public class OpenApiExampleReference : OpenApiExample, IOpenApiReferenceable
+    public class OpenApiExampleReference : OpenApiExample, IOpenApiReferenceableWithTarget<OpenApiExample>
     {
         internal OpenApiExample _target;
         private readonly OpenApiReference _reference;

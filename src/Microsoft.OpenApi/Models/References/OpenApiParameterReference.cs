@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : OpenApiParameter, IOpenApiReferenceable
+    public class OpenApiParameterReference : OpenApiParameter, IOpenApiReferenceableWithTarget<OpenApiParameter>
     {
         internal OpenApiParameter _target;
         private readonly OpenApiReference _reference;

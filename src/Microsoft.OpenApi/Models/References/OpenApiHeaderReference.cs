@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Header Object Reference.
     /// </summary>
-    public class OpenApiHeaderReference : OpenApiHeader, IOpenApiReferenceable
+    public class OpenApiHeaderReference : OpenApiHeader, IOpenApiReferenceableWithTarget<OpenApiHeader>
     {
         internal OpenApiHeader _target;
         private readonly OpenApiReference _reference;

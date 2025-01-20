@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Link Object Reference.
     /// </summary>
-    public class OpenApiLinkReference : OpenApiLink, IOpenApiReferenceable
+    public class OpenApiLinkReference : OpenApiLink, IOpenApiReferenceableWithTarget<OpenApiLink>
     {
         internal OpenApiLink _target;
         private readonly OpenApiReference _reference;
