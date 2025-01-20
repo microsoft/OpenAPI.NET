@@ -4,17 +4,19 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PublishTrimmed>true</PublishTrimmed>
     <PublishAot>true</PublishAot>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>NU1903</NoWarn>
+    <NoWarn>NU1903; IL3000</NoWarn>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
     <TrimmerRootAssembly Include="Microsoft.OpenApi" />
-    <!-- TODO: Microsoft.OpenApi.Readers has not been configured for native AoT. -->
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
+    <TrimmerRootAssembly Include="Microsoft.OpenApi.Readers" />
   </ItemGroup>
 
 </Project>
