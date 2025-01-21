@@ -92,7 +92,6 @@ namespace Microsoft.OpenApi.Models.References
             if (!writer.GetSettings().ShouldInlineReference(_reference))
             {
                 _reference.SerializeAsV3(writer);
-                return;
             }
             else
             {
@@ -106,7 +105,6 @@ namespace Microsoft.OpenApi.Models.References
             if (!writer.GetSettings().ShouldInlineReference(_reference))
             {
                 _reference.SerializeAsV31(writer);
-                return;
             }
             else
             {
