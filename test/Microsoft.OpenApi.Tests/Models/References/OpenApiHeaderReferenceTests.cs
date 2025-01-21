@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
     public class OpenApiHeaderReferenceTests
     {
         // OpenApi doc with external $ref
-        private const string OpenApi= @"
+        private const string OpenApi = @"
 openapi: 3.0.0
 info:
   title: Sample API
@@ -149,7 +149,7 @@ components:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = true});
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = true });
 
             // Act
             _localHeaderReference.SerializeAsV2(writer);
@@ -157,6 +157,35 @@ components:
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public void OpenApiHeaderTargetShouldResolveReference()
+        {
+            var doc = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Headers = new System.Collections.Generic.Dictionary<string, OpenApiHeader>
+                    {
+                        { "header1", new OpenApiHeader
+                            {
+                                Description = "test header",
+                                Schema = new OpenApiSchema
+                                {
+                                    Type = JsonSchemaType.String
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            doc.Workspace.RegisterComponents(doc);
+
+            var headerReference = new OpenApiHeaderReference("header1", doc);
+            Assert.Equal("test header", headerReference.Description);
+            Assert.Equal(JsonSchemaType.String, headerReference.Schema.Type);
         }
     }
 }

@@ -24,10 +24,5 @@ namespace Microsoft.OpenApi.Writers
             return (reference.IsLocal && InlineLocalReferences)
                              || (reference.IsExternal && InlineExternalReferences);
         }
-
-        internal bool ShouldInlineReference()
-        {
-            return InlineLocalReferences || InlineExternalReferences;
-        }
     }
 }

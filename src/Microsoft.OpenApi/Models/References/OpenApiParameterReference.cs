@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : OpenApiParameter
+    public class OpenApiParameterReference : OpenApiParameter, IOpenApiReferenceableWithTarget<OpenApiParameter>
     {
         internal OpenApiParameter _target;
         private readonly OpenApiReference _reference;
@@ -20,7 +20,13 @@ namespace Microsoft.OpenApi.Models.References
         private bool? _explode;
         private ParameterStyle? _style;
 
-        private OpenApiParameter Target
+        /// <summary>
+        /// Gets the target parameter.
+        /// </summary>
+        /// <remarks>
+        /// If the reference is not resolved, this will return null.
+        /// </remarks>
+        public OpenApiParameter Target
         {
             get
             {
