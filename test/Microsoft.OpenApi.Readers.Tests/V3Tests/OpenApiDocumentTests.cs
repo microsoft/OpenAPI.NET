@@ -1411,5 +1411,17 @@ components:
             var result = await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"));
             result.Diagnostic.Errors.Should().BeEmpty();
         }
+
+        [Fact]
+        public async Task ParseDocumentWithExampleReferencesPasses()
+        {
+            // Act & Assert: Ensure no NullReferenceException is thrown
+            Func<Task> act = async () =>
+            {
+                await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"));
+            };
+
+            await act.Should().NotThrowAsync<NullReferenceException>();
+        }
     }
 }

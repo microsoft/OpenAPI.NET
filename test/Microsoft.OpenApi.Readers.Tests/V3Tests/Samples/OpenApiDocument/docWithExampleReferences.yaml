@@ -1,0 +1,68 @@
+openapi: 3.0.3
+info:
+  version: 1.1.4
+  title: GitHub v3 REST API
+  description: GitHub's v3 REST API.
+paths:
+  /actions/hosted-runners/{hosted_runner_id}:
+    get:
+      summary: Get a GitHub-hosted runner for an organization
+      description: |-
+        Gets a GitHub-hosted runner configured in an organization.
+        OAuth app tokens and personal access tokens (classic) need the `manage_runners:org` scope to use this endpoint.
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/actions-hosted-runner"
+              examples:
+                default:
+                  "$ref": "#/components/examples/actions-hosted-runner"
+  /oidc/customization/sub:
+    get:
+      summary: Get the customization template for an OIDC subject claim for an organization
+      description: |-
+        Gets the customization template for an OpenID Connect (OIDC) subject claim.
+        OAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/oidc-custom-sub"
+            examples:
+              default:
+                "$ref": "#/components/examples/oidc-custom-sub"
+      responses:
+        '200':
+          description: A JSON serialized template for OIDC subject claim customization
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/oidc-custom-sub"
+components:
+  schemas:
+    actions-hosted-runner:
+      title: GitHub-hosted runner
+      type: object
+    oidc-custom-sub:
+      title: Actions OIDC Subject customization
+      description: Actions OIDC Subject customization
+      type: object
+  examples:
+    actions-hosted-runner:
+      value:
+        id: 5
+        name: My hosted ubuntu runner
+        runner_group_id: 2
+        platform: linux-x64
+    oidc-custom-sub:
+      value:
+        include_claim_keys:
+        - repo
+        - context
+
+
+    
