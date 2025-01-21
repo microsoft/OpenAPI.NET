@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -51,39 +51,39 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Fact]
-        public void SerializeBasicOAuthFlowsAsV3JsonWorks()
+        public async Task SerializeBasicOAuthFlowsAsV3JsonWorks()
         {
             // Arrange
             var expected =
                 @"{ }";
 
             // Act
-            var actual = BasicOAuthFlows.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicOAuthFlows.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void SerializeBasicOAuthFlowsAsV3YamlWorks()
+        public async Task SerializeBasicOAuthFlowsAsV3YamlWorks()
         {
             // Arrange
             var expected =
                 @"{ }";
 
             // Act
-            var actual = BasicOAuthFlows.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicOAuthFlows.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void SerializeOAuthFlowsWithSingleFlowAsV3JsonWorks()
+        public async Task SerializeOAuthFlowsWithSingleFlowAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -100,16 +100,16 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = OAuthFlowsWithSingleFlow.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await OAuthFlowsWithSingleFlow.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void SerializeOAuthFlowsWithMultipleFlowsAsV3JsonWorks()
+        public async Task SerializeOAuthFlowsWithMultipleFlowsAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -134,12 +134,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = OAuthFlowsWithMultipleFlows.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await OAuthFlowsWithMultipleFlows.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

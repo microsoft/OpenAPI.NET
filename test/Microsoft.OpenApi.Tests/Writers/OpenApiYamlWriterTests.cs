@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         [Theory]
         [MemberData(nameof(WriteStringListAsYamlShouldMatchExpectedTestCases))]
-        public void WriteStringListAsYamlShouldMatchExpected(string[] stringValues, string expectedYaml)
+        public async Task WriteStringListAsYamlShouldMatchExpected(string[] stringValues, string expectedYaml)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             }
 
             writer.WriteEndArray();
-            writer.Flush();
+            await writer.FlushAsync();
 
             var actualYaml = outputString.GetStringBuilder()
                 .ToString()
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            actualYaml.Should().Be(expectedYaml);
+            Assert.Equal(expectedYaml, actualYaml);
         }
 
         public static IEnumerable<object[]> WriteMapAsYamlShouldMatchExpectedTestCasesSimple()
@@ -314,7 +314,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             actualYaml = actualYaml.MakeLineBreaksEnvironmentNeutral();
             expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
-            actualYaml.Should().Be(expectedYaml);
+            Assert.Equal(expectedYaml, actualYaml);
         }
 
         public static IEnumerable<object[]> WriteDateTimeAsJsonTestCases()
@@ -355,7 +355,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var expectedString = " '" + dateTimeOffset.ToString("o") + "'";
 
             // Assert
-            writtenString.Should().Be(expectedString);
+            Assert.Equal(expectedString, writtenString);
         }
 
         [Fact]
@@ -395,7 +395,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().BeEquivalentTo(expected);
+            Assert.Equivalent(expected, actual);
             Assert.Equal(expected, actual);
         }
 

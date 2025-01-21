@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.OpenApi.Extensions;
+﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -25,11 +23,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "in", (o, n, _) =>
                     {
-                        var inString = n.GetScalarValue();
-                        o.In = Enum.GetValues(typeof(ParameterLocation)).Cast<ParameterLocation>()
-                            .Select( e => e.GetDisplayName() )
-                            .Contains(inString) ? n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>() : null;
-
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        {
+                            return;
+                        }
+                        o.In = _in;
                     }
                 },
                 {
@@ -65,7 +63,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "style", (o, n, _) =>
                     {
-                        o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                        {
+                            return;
+                        }
+                        o.Style = style;
                     }
                 },
                 {
@@ -130,7 +132,7 @@ namespace Microsoft.OpenApi.Reader.V31
             }
         };
 
-        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("parameter");
 

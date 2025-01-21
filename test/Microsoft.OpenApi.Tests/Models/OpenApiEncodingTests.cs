@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -24,19 +24,19 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public void SerializeBasicEncodingAsV3Works(OpenApiFormat format, string expected)
+        public async Task SerializeBasicEncodingAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            var actual = BasicEncoding.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
+            var actual = await BasicEncoding.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void SerializeAdvanceEncodingAsV3JsonWorks()
+        public async Task SerializeAdvanceEncodingAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -50,16 +50,16 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceEncoding.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvanceEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void SerializeAdvanceEncodingAsV3YamlWorks()
+        public async Task SerializeAdvanceEncodingAsV3YamlWorks()
         {
             // Arrange
             var expected =
@@ -71,12 +71,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceEncoding.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvanceEncoding.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

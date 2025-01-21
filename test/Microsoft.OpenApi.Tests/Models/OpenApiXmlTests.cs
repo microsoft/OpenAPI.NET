@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -34,22 +34,22 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
-        public void SerializeBasicXmlWorks(
+        public async Task SerializeBasicXmlWorks(
             OpenApiSpecVersion version,
             OpenApiFormat format)
         {
             // Act
-            var actual = BasicXml.Serialize(version, format);
+            var actual = await BasicXml.SerializeAsync(version, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be("{ }");
+            Assert.Equal("{ }", actual);
         }
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeAdvancedXmlAsJsonWorks(OpenApiSpecVersion version)
+        public async Task SerializeAdvancedXmlAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected =
@@ -65,18 +65,18 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvancedXml.SerializeAsJson(version);
+            var actual = await AdvancedXml.SerializeAsJsonAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeAdvancedXmlAsYamlWorks(OpenApiSpecVersion version)
+        public async Task SerializeAdvancedXmlAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected =
@@ -90,12 +90,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvancedXml.SerializeAsYaml(version);
+            var actual = await AdvancedXml.SerializeAsYamlAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

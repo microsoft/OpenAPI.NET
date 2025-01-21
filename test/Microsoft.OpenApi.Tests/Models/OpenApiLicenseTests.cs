@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeBasicLicenseAsJsonWorks(OpenApiSpecVersion version)
+        public async Task SerializeBasicLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected =
@@ -49,35 +49,35 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = BasicLicense.SerializeAsJson(version);
+            var actual = await BasicLicense.SerializeAsJsonAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeBasicLicenseAsYamlWorks(OpenApiSpecVersion version)
+        public async Task SerializeBasicLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected = "name: Apache 2.0";
 
             // Act
-            var actual = BasicLicense.SerializeAsYaml(version);
+            var actual = await BasicLicense.SerializeAsYamlAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeAdvanceLicenseAsJsonWorks(OpenApiSpecVersion version)
+        public async Task SerializeAdvanceLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected =
@@ -90,18 +90,18 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceLicense.SerializeAsJson(version);
+            var actual = await AdvanceLicense.SerializeAsJsonAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeAdvanceLicenseAsYamlWorks(OpenApiSpecVersion version)
+        public async Task SerializeAdvanceLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected =
@@ -112,12 +112,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvanceLicense.SerializeAsYaml(version);
+            var actual = await AdvanceLicense.SerializeAsYamlAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeLicenseWithIdentifierAsJsonWorks()
+        public async Task SerializeLicenseWithIdentifierAsJsonWorks()
         {
             // Arrange
             var expected =
@@ -146,21 +146,21 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = LicenseWithIdentifier.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await LicenseWithIdentifier.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
-        public void SerializeLicenseWithIdentifierAsYamlWorks()
+        public async Task SerializeLicenseWithIdentifierAsYamlWorks()
         {
             // Arrange
             var expected = @"name: Apache 2.0
 identifier: Apache-2.0";
 
             // Act
-            var actual = LicenseWithIdentifier.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await LicenseWithIdentifier.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());

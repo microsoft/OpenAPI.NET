@@ -12,7 +12,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         [Theory]
         [MemberData(nameof(WriteStringListAsJsonShouldMatchExpectedTestCases))]
-        public void WriteStringListAsJsonShouldMatchExpected(string[] stringValues, bool produceTerseOutput)
+        public async Task WriteStringListAsJsonShouldMatchExpected(string[] stringValues, bool produceTerseOutput)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -62,14 +62,14 @@ namespace Microsoft.OpenApi.Tests.Writers
             }
 
             writer.WriteEndArray();
-            writer.Flush();
+            await writer.FlushAsync();
 
             var parsedObject = JsonSerializer.Deserialize<List<string>>(outputString.GetStringBuilder().ToString());
             var expectedObject =
                 JsonSerializer.Deserialize<List<string>>(JsonSerializer.Serialize(new List<string>(stringValues)));
 
             // Assert
-            parsedObject.Should().BeEquivalentTo(expectedObject);
+            Assert.Equivalent(expectedObject, parsedObject);
         }
 
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesSimple()
@@ -316,7 +316,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var expectedString = JsonSerializer.Serialize(dateTimeOffset, _jsonSerializerOptions.Value);
 
             // Assert
-            writtenString.Should().Be(expectedString);
+            Assert.Equal(expectedString, writtenString);
         }
 
         [Fact]

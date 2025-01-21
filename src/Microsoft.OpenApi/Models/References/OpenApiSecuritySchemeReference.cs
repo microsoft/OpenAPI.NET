@@ -11,13 +11,19 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Security Scheme Object Reference.
     /// </summary>
-    public class OpenApiSecuritySchemeReference : OpenApiSecurityScheme
+    public class OpenApiSecuritySchemeReference : OpenApiSecurityScheme, IOpenApiReferenceableWithTarget<OpenApiSecurityScheme>
     {
         internal OpenApiSecurityScheme _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
-        private OpenApiSecurityScheme Target
+        /// <summary>
+        /// Gets the target security scheme.
+        /// </summary>
+        /// <remarks>
+        /// If the reference is not resolved, this will return null.
+        /// </remarks>
+        public OpenApiSecurityScheme Target
         {
             get
             {
@@ -71,7 +77,7 @@ namespace Microsoft.OpenApi.Models.References
         public override string Name { get => Target.Name; set => Target.Name = value; }
 
         /// <inheritdoc/>
-        public override ParameterLocation In { get => Target.In; set => Target.In = value; }
+        public override ParameterLocation? In { get => Target.In; set => Target.In = value; }
 
         /// <inheritdoc/>
         public override string Scheme { get => Target.Scheme; set => Target.Scheme = value; }
@@ -89,7 +95,7 @@ namespace Microsoft.OpenApi.Models.References
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
 
         /// <inheritdoc/>
-        public override SecuritySchemeType Type { get => Target.Type; set => Target.Type = value; }
+        public override SecuritySchemeType? Type { get => Target.Type; set => Target.Type = value; }
         
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)

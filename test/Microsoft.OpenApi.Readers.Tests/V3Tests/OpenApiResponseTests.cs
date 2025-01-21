@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var expected = response.Headers.First().Value;
             var actual = result.Document.Components.Headers.First().Value;
 
-            actual.Description.Should().BeEquivalentTo(expected.Description);
+            Assert.Equal(expected.Description, actual.Description);
         }
     }
 }

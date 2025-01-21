@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -257,10 +256,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
 
             // Assert
-            pathItem.Should().BeEquivalentTo(_basicPathItemWithFormData);
+            Assert.Equivalent(_basicPathItemWithFormData, pathItem);
         }
 
         [Fact]
@@ -274,7 +273,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.
@@ -293,7 +292,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.

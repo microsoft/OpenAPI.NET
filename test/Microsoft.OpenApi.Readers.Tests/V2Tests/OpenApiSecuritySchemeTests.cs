@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -33,15 +32,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
-            securityScheme.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.Http,
                     Scheme = OpenApiConstants.Basic
-                });
+                }, securityScheme);
         }
 
         [Fact]
@@ -58,16 +57,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
-            securityScheme.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.ApiKey,
                     Name = "api_key",
                     In = ParameterLocation.Header
-                });
+                }, securityScheme);
         }
 
         [Fact]
@@ -83,10 +82,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 var node = new MapNode(context, asJsonNode);
 
                 // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
-            securityScheme.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
@@ -102,7 +101,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     }
-                });
+                }, securityScheme);
         }
 
         [Fact]
@@ -118,10 +117,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
-            securityScheme.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
@@ -137,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     }
-                });
+                }, securityScheme);
         }
 
         [Fact]
@@ -153,10 +152,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
-            securityScheme.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
@@ -172,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     }
-                });
+                }, securityScheme);
         }
 
         [Fact]
@@ -189,10 +188,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
 
             // Assert
-            securityScheme.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
@@ -208,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     }
-                });
+                }, securityScheme);
         }
 
         static YamlDocument LoadYamlDocument(Stream input)

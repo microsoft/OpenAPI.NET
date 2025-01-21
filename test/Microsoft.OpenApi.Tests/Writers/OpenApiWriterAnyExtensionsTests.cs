@@ -9,8 +9,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -31,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = await WriteAsJsonAsync(null, produceTerseOutput);
 
             // Assert
-            json.Should().Be("null");
+            Assert.Equal("null", json);
         }
 
         public static IEnumerable<object[]> IntInputs
@@ -59,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = await WriteAsJsonAsync(intValue, produceTerseOutput);
 
             // Assert
-            json.Should().Be(input.ToString());
+            Assert.Equal(input.ToString(), json);
         }
 
         public static IEnumerable<object[]> LongInputs
@@ -87,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = await WriteAsJsonAsync(longValue, produceTerseOutput);
 
             // Assert
-            json.Should().Be(input.ToString());
+            Assert.Equal(input.ToString(), json);
         }
 
         public static IEnumerable<object[]> FloatInputs
@@ -115,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = await WriteAsJsonAsync(floatValue, produceTerseOutput);
 
             // Assert
-            json.Should().Be(input.ToString());
+            Assert.Equal(input.ToString(), json);
         }
 
         public static IEnumerable<object[]> DoubleInputs
@@ -143,7 +141,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = await WriteAsJsonAsync(doubleValue, produceTerseOutput);
 
             // Assert
-            json.Should().Be(input.ToString());
+            Assert.Equal(input.ToString(), json);
         }
 
         public static IEnumerable<object[]> StringifiedDateTimes
@@ -174,7 +172,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var expectedJson = "\"" + input.ToString("o") + "\"";
 
             // Assert
-            json.Should().Be(expectedJson);
+            Assert.Equal(expectedJson, json);
         }
 
         public static IEnumerable<object[]> BooleanInputs
@@ -195,7 +193,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = await WriteAsJsonAsync(boolValue, produceTerseOutput);
 
             // Assert
-            json.Should().Be(input.ToString().ToLower());
+            Assert.Equal(input.ToString().ToLower(), json);
         }
 
         [Theory]
@@ -264,7 +262,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 new() { Terse = produceTerseOutput });
 
             writer.WriteAny(any);
-            writer.Flush();
+            await writer.FlushAsync();
             stream.Position = 0;
 
             // Act

@@ -3,7 +3,6 @@
 
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -33,15 +32,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var node = new MapNode(context, asJsonNode);
 
             // Act
-            var license = OpenApiV31Deserializer.LoadLicense(node);
+            var license = OpenApiV31Deserializer.LoadLicense(node, new());
 
             // Assert
-            license.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiLicense
                 {
                     Name = "Apache 2.0",
                     Identifier = "Apache-2.0"
-                });
+                }, license);
         }
     }
 }

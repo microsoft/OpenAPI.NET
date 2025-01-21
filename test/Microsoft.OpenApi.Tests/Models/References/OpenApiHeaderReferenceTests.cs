@@ -10,7 +10,6 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.Services;
 using VerifyXunit;
 using Xunit;
 
@@ -20,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
     public class OpenApiHeaderReferenceTests
     {
         // OpenApi doc with external $ref
-        private const string OpenApi= @"
+        private const string OpenApi = @"
 openapi: 3.0.0
 info:
   title: Sample API
@@ -120,7 +119,7 @@ components:
 
             // Act
             _localHeaderReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert            
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -137,7 +136,7 @@ components:
 
             // Act
             _localHeaderReference.SerializeAsV31(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -150,14 +149,43 @@ components:
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = true});
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = true });
 
             // Act
             _localHeaderReference.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public void OpenApiHeaderTargetShouldResolveReference()
+        {
+            var doc = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Headers = new System.Collections.Generic.Dictionary<string, OpenApiHeader>
+                    {
+                        { "header1", new OpenApiHeader
+                            {
+                                Description = "test header",
+                                Schema = new OpenApiSchema
+                                {
+                                    Type = JsonSchemaType.String
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            doc.Workspace.RegisterComponents(doc);
+
+            var headerReference = new OpenApiHeaderReference("header1", doc);
+            Assert.Equal("test header", headerReference.Description);
+            Assert.Equal(JsonSchemaType.String, headerReference.Schema.Type);
         }
     }
 }

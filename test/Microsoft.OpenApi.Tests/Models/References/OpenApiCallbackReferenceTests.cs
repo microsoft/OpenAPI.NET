@@ -9,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -170,7 +169,7 @@ components:
 
             // Act
             _externalCallbackReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert            
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -187,7 +186,7 @@ components:
 
             // Act
             _externalCallbackReference.SerializeAsV31(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

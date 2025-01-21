@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Fact]
-        public void SerializeBasicServerAsV3JsonWorks()
+        public async Task SerializeBasicServerAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -59,16 +59,16 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = BasicServer.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicServer.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void SerializeAdvancedServerAsV3JsonWorks()
+        public async Task SerializeAdvancedServerAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -97,12 +97,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = AdvancedServer.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedServer.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

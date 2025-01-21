@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
-using FluentAssertions;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 using System.IO;
@@ -27,8 +24,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         {
             var actual = await OpenApiDocument.LoadAsync("V2Tests/Samples/basic.v2.yaml");
 
-            actual.Diagnostic.Should().NotBeNull();
-            actual.Diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi2_0);
+            Assert.NotNull(actual.Diagnostic);
+            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, actual.Diagnostic.SpecificationVersion);
         }
 
         [Fact]
@@ -36,8 +33,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         {
             var actual = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
 
-            actual.Diagnostic.Should().NotBeNull();
-            actual.Diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);
+            Assert.NotNull(actual.Diagnostic);
+            Assert.Equal(OpenApiSpecVersion.OpenApi3_0, actual.Diagnostic.SpecificationVersion);
         }
 
         [Fact]
@@ -56,7 +53,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
 
             Assert.NotNull(result);
             Assert.NotNull(result.Document.Workspace);
-            result.Diagnostic.Errors.Should().BeEmpty();
+            Assert.Empty(result.Diagnostic.Errors);
         }
     }
 

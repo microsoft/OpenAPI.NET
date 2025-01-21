@@ -11,13 +11,19 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Request Body Object Reference.
     /// </summary>
-    public class OpenApiRequestBodyReference : OpenApiRequestBody
+    public class OpenApiRequestBodyReference : OpenApiRequestBody, IOpenApiReferenceableWithTarget<OpenApiRequestBody>
     {
         internal OpenApiRequestBody _target;
         private readonly OpenApiReference _reference;
         private string _description;
 
-        private OpenApiRequestBody Target
+        /// <summary>
+        /// Gets the target request body.
+        /// </summary>
+        /// <remarks>
+        /// If the reference is not resolved, this will return null.
+        /// </remarks>
+        public OpenApiRequestBody Target
         {
             get
             {

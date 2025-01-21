@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -56,104 +56,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 }
             }
         };
-
-        private static readonly OpenApiOperation _operationWithFormData =
-            new OpenApiOperation
-            {
-                Summary = "Updates a pet in the store with form data",
-                Description = "",
-                OperationId = "updatePetWithForm",
-                Parameters = new List<OpenApiParameter>
-                {
-                    new OpenApiParameter
-                    {
-                        Name = "petId",
-                        In = ParameterLocation.Path,
-                        Description = "ID of pet that needs to be updated",
-                        Required = true,
-                        Schema = new()
-                        {
-                            Type = JsonSchemaType.String
-                        }
-                    }
-                },
-                RequestBody = new OpenApiRequestBody
-                {
-                    Content =
-                    {
-                        ["application/x-www-form-urlencoded"] = new OpenApiMediaType
-                        {
-                            Schema = new()
-                            {
-                                Type = JsonSchemaType.Object,
-                                Properties =
-                                {
-                                    ["name"] = new()
-                                    {
-                                        Description = "Updated name of the pet",
-                                        Type = JsonSchemaType.String
-                                    },
-                                    ["status"] = new()
-                                    {
-                                        Description = "Updated status of the pet",
-                                        Type = JsonSchemaType.String
-                                    }
-                                },
-                                Required = new HashSet<string>
-                                {
-                                    "name"
-                                }
-                            }
-                        },
-                        ["multipart/form-data"] = new OpenApiMediaType
-                        {
-                             Schema = new()
-                            {
-                                Type = JsonSchemaType.Object,
-                                Properties =
-                                {
-                                    ["name"] = new()
-                                    {
-                                        Description = "Updated name of the pet",
-                                        Type = JsonSchemaType.String
-                                    },
-                                    ["status"] = new()
-                                    {
-                                        Description = "Updated status of the pet",
-                                        Type = JsonSchemaType.String
-                                    }
-                                },
-                                Required = new HashSet<string>
-                                {
-                                    "name"
-                                }
-                            }
-                        }
-                    }
-                },
-                Responses = new OpenApiResponses
-                {
-                    ["200"] = new OpenApiResponse
-                    {
-                        Description = "Pet updated.",
-                        Content = new Dictionary<string, OpenApiMediaType>
-                        {
-                            ["application/json"] = new OpenApiMediaType(),
-                            ["application/xml"] = new OpenApiMediaType()
-                        }
-
-                    },
-                    ["405"] = new OpenApiResponse
-                    {
-                        Description = "Invalid input",
-                        Content = new Dictionary<string, OpenApiMediaType>
-                        {
-                            ["application/json"] = new OpenApiMediaType(),
-                            ["application/xml"] = new OpenApiMediaType()
-                        }
-                    }
-                }
-            };
 
         private static readonly OpenApiOperation _operationWithBody = new OpenApiOperation
         {
@@ -227,28 +129,28 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicOperation);
+            Assert.Equivalent(_basicOperation, operation);
         }
 
         [Fact]
-        public void ParseBasicOperationTwiceShouldYieldSameObject()
+        public async Task ParseBasicOperationTwiceShouldYieldSameObject()
         {
             // Arrange
             MapNode node;
             using (var stream = new MemoryStream(
-                Encoding.Default.GetBytes(_basicOperation.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0))))
+                Encoding.Default.GetBytes(await _basicOperation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0))))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicOperation);
+            Assert.Equivalent(_basicOperation, operation);
         }
 
         [Fact]
@@ -262,25 +164,25 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
-        public void ParseOperationWithBodyTwiceShouldYieldSameObject()
+        public async Task ParseOperationWithBodyTwiceShouldYieldSameObject()
         {
             // Arrange
             MapNode node;
             using (var stream = new MemoryStream(
-                Encoding.Default.GetBytes(_operationWithBody.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0))))
+                Encoding.Default.GetBytes(await _operationWithBody.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0))))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
@@ -297,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             operation.Should().BeEquivalentTo(
@@ -361,7 +263,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             node = TestHelper.CreateYamlMapNode(stream);
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
             var expected = @"{
   ""produces"": [
     ""application/octet-stream""
@@ -385,7 +287,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             var actual = stringBuilder.ToString();
-            actual.MakeLineBreaksEnvironmentNeutral().Should().BeEquivalentTo(expected.MakeLineBreaksEnvironmentNeutral());            
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());            
         }
 
         [Fact]
@@ -397,14 +299,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             node = TestHelper.CreateYamlMapNode(stream);
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
-        public void ParseV2ResponseWithExamplesExtensionWorks()
+        public async Task ParseV2ResponseWithExamplesExtensionWorks()
         {            
             // Arrange
             MapNode node;
@@ -414,8 +316,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
-            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -450,11 +352,11 @@ responses:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void LoadV3ExamplesInResponseAsExtensionsWorks()
+        public async Task LoadV3ExamplesInResponseAsExtensionsWorks()
         {
             // Arrange
             MapNode node;
@@ -464,8 +366,8 @@ responses:
             }
 
             // Act
-            var operation = OpenApiV3Deserializer.LoadOperation(node);
-            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var operation = OpenApiV3Deserializer.LoadOperation(node, new());
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -500,11 +402,11 @@ responses:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void LoadV2OperationWithBodyParameterExamplesWorks()
+        public async Task LoadV2OperationWithBodyParameterExamplesWorks()
         {
             // Arrange
             MapNode node;
@@ -514,8 +416,8 @@ responses:
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
-            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -551,11 +453,11 @@ responses: { }";
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void LoadV3ExamplesInRequestBodyParameterAsExtensionsWorks()
+        public async Task LoadV3ExamplesInRequestBodyParameterAsExtensionsWorks()
         {
             // Arrange
             MapNode node;
@@ -565,8 +467,8 @@ responses: { }";
             }
 
             // Act
-            var operation = OpenApiV3Deserializer.LoadOperation(node);
-            var actual = operation.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            var operation = OpenApiV3Deserializer.LoadOperation(node, new());
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -603,7 +505,7 @@ responses: { }";
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

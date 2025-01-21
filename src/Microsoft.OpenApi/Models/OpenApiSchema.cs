@@ -650,7 +650,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer">The open api writer.</param>
         /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
         /// <param name="propertyName">The property name that will be serialized.</param>
-        internal void SerializeAsV2(
+        internal virtual void SerializeAsV2(
             IOpenApiWriter writer,
             ISet<string> parentRequiredProperties,
             string propertyName)
@@ -846,7 +846,11 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
         }
 
+#if NET5_0_OR_GREATER
+        private static readonly Array jsonSchemaTypeValues = System.Enum.GetValues<JsonSchemaType>();
+#else
         private static readonly Array jsonSchemaTypeValues = System.Enum.GetValues(typeof(JsonSchemaType));
+#endif
 
         private void DowncastTypeArrayToV2OrV3(JsonSchemaType schemaType, IOpenApiWriter writer, OpenApiSpecVersion version)
         {

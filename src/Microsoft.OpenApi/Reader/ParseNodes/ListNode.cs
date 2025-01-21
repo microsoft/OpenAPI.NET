@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 
@@ -22,7 +21,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             _nodeList = jsonArray;
         }
 
-        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument = null)
+        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
         {
             if (_nodeList == null)
             {
@@ -44,14 +43,14 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return list;
         }
 
-        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map)
+        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
         {
             if (_nodeList == null)
             {
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList.Select(n => map(new(Context, n), null)).ToList();
+            return _nodeList.Select(n => map(new(Context, n), openApiDocument)).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()

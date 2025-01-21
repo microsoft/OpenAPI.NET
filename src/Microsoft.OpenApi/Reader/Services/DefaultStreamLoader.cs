@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace Microsoft.OpenApi.Reader.Services
     public class DefaultStreamLoader : IStreamLoader
     {
         private readonly Uri baseUrl;
-        private HttpClient _httpClient = new();
+        private readonly HttpClient _httpClient = new();
 
         /// <summary>
         /// The default stream loader
@@ -26,16 +25,6 @@ namespace Microsoft.OpenApi.Reader.Services
         public DefaultStreamLoader(Uri baseUrl)
         {
             this.baseUrl = baseUrl;
-        }
-/// <inheritdoc/>
-
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public Stream Load(Uri uri)
-        {
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-            return LoadAsync(uri).GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         /// <summary>

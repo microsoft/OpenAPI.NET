@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -39,7 +38,14 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "style",
-                (o, n, _) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
+                (o, n, _) => 
+                {
+                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                    {
+                        return;
+                    }
+                    o.Style = style;
+                }
             },
             {
                 "explode",
@@ -64,7 +70,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("header");
 
@@ -78,7 +84,7 @@ namespace Microsoft.OpenApi.Reader.V3
             var header = new OpenApiHeader();
             foreach (var property in mapNode)
             {
-                property.ParseField(header, _headerFixedFields, _headerPatternFields);
+                property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
             }
 
             return header;

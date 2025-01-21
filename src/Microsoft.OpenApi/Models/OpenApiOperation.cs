@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Models
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public IList<OpenApiTag>? Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTagReference>? Tags { get; set; } = [];
 
         /// <summary>
         /// A short summary of what the operation does.
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiOperation(OpenApiOperation? operation)
         {
-            Tags = operation?.Tags != null ? new List<OpenApiTag>(operation.Tags) : null;
+            Tags = operation?.Tags != null ? new List<OpenApiTagReference>(operation.Tags) : null;
             Summary = operation?.Summary ?? Summary;
             Description = operation?.Description ?? Description;
             ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;
@@ -237,18 +237,18 @@ namespace Microsoft.OpenApi.Models
             List<OpenApiParameter> parameters;
             if (Parameters == null)
             {
-                parameters = new();
+                parameters = [];
             }
             else
             {
-                parameters = new(Parameters);
+                parameters = [.. Parameters];
             }
 
             if (RequestBody != null)
             {
                 // consumes
-                var consumes = RequestBody.Content.Keys.Distinct().ToList();
-                if (consumes.Any())
+                var consumes = new HashSet<string>(RequestBody.Content?.Keys.Distinct(StringComparer.OrdinalIgnoreCase) ?? [], StringComparer.OrdinalIgnoreCase);
+                if (consumes.Count > 0)
                 {
                     // This is form data. We need to split the request body into multiple parameters.
                     if (consumes.Contains("application/x-www-form-urlencoded") ||
@@ -261,19 +261,13 @@ namespace Microsoft.OpenApi.Models
                         parameters.Add(RequestBody.ConvertToBodyParameter());
                     }
                 }
-                else if (RequestBody.Reference != null)
+                else if (RequestBody.Reference != null && RequestBody.Reference.HostDocument is {} hostDocument)
                 {
-                    var hostDocument = RequestBody.Reference.HostDocument;
                     parameters.Add(
                         new OpenApiParameterReference(RequestBody.Reference.Id, hostDocument));
-
-                    if (hostDocument != null)
-                    {                        
-                        consumes = RequestBody.Content.Keys.Distinct().ToList();
-                    }
                 }
 
-                if (consumes.Any())
+                if (consumes.Count > 0)
                 {
                     writer.WritePropertyName(OpenApiConstants.Consumes);
                     writer.WriteStartArray();
@@ -289,15 +283,15 @@ namespace Microsoft.OpenApi.Models
             {
                 var produces = Responses
                     .Where(static r => r.Value.Content != null)
-                    .SelectMany(static r => r.Value.Content?.Keys)
+                    .SelectMany(static r => r.Value.Content?.Keys ?? [])
                     .Concat(
                         Responses
                         .Where(static r => r.Value.Reference is {HostDocument: not null})
-                        .SelectMany(static r => r.Value.Content?.Keys))
-                    .Distinct()
-                    .ToList();
+                        .SelectMany(static r => r.Value.Content?.Keys ?? []))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
 
-                if (produces.Any())
+                if (produces.Length > 0)
                 {
                     // produces
                     writer.WritePropertyName(OpenApiConstants.Produces);

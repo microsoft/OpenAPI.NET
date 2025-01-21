@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.OpenApi.Extensions;
+﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -47,7 +46,11 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 "style", (o, n, _) =>
                 {
-                    o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
+                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                    {
+                        return;
+                    }
+                    o.Style = style;
                 }
             },
             {
@@ -81,7 +84,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("header");
 
@@ -95,7 +98,7 @@ namespace Microsoft.OpenApi.Reader.V31
             var header = new OpenApiHeader();
             foreach (var property in mapNode)
             {
-                property.ParseField(header, _headerFixedFields, _headerPatternFields);
+                property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
             }
 
             return header;

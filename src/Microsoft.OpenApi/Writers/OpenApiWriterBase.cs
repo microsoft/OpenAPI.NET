@@ -3,15 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text.Json;
-using Microsoft.OpenApi.Any;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
-using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -45,7 +43,7 @@ namespace Microsoft.OpenApi.Writers
         /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        public OpenApiWriterBase(TextWriter textWriter) : this(textWriter, null)
+        protected OpenApiWriterBase(TextWriter textWriter) : this(textWriter, null)
         {
         }
 
@@ -54,7 +52,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter"></param>
         /// <param name="settings"></param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings)
+        protected OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
@@ -118,12 +116,14 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public abstract void WriteRaw(string value);
 
-        /// <summary>
-        /// Flush the writer.
-        /// </summary>
-        public void Flush()
+        /// <inheritdoc/>
+        public Task FlushAsync(CancellationToken cancellationToken = default)
         {
-            Writer.Flush();
+#if NET8_OR_GREATER
+            return Writer.FlushAsync(cancellationToken);
+#else
+            return Writer.FlushAsync();
+#endif
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The DateTime value.</param>
         public virtual void WriteValue(DateTime value)
         {
-            this.WriteValue(value.ToString("o"));
+            this.WriteValue(value.ToString("o", CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The DateTimeOffset value.</param>
         public virtual void WriteValue(DateTimeOffset value)
         {
-            this.WriteValue(value.ToString("o"));
+            this.WriteValue(value.ToString("o", CultureInfo.InvariantCulture));
         }
 
         /// <summary>

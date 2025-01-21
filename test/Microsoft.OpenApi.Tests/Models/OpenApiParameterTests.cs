@@ -4,9 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -185,7 +183,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act & Assert
-            parameter.Explode.Should().Be(expectedExplode);
+            Assert.Equal(expectedExplode, parameter.Explode);
         }
 
         [Theory]
@@ -194,7 +192,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(ParameterLocation.Header, ParameterStyle.Simple)]
         [InlineData(ParameterLocation.Cookie, ParameterStyle.Form)]
         [InlineData(null, ParameterStyle.Simple)]
-        public void WhenStyleAndInIsNullTheDefaultValueOfStyleShouldBeSimple(ParameterLocation? inValue, ParameterStyle expectedStyle)
+        public async Task WhenStyleAndInIsNullTheDefaultValueOfStyleShouldBeSimple(ParameterLocation? inValue, ParameterStyle expectedStyle)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -207,13 +205,13 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act & Assert
             parameter.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
-            parameter.Style.Should().Be(expectedStyle);
+            Assert.Equal(expectedStyle, parameter.Style);
         }
 
         [Fact]
-        public void SerializeQueryParameterWithMissingStyleSucceeds()
+        public async Task SerializeQueryParameterWithMissingStyleSucceeds()
         {
             // Arrange
             var expected = @"name: id
@@ -224,14 +222,14 @@ schema:
     type: integer";
 
             // Act
-            var actual = QueryParameterWithMissingStyle.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await QueryParameterWithMissingStyle.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
-        public void SerializeBasicParameterAsV3JsonWorks()
+        public async Task SerializeBasicParameterAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -243,16 +241,16 @@ schema:
                 """;
 
             // Act
-            var actual = BasicParameter.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicParameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void SerializeAdvancedParameterAsV3JsonWorks()
+        public async Task SerializeAdvancedParameterAsV3JsonWorks()
         {
             // Arrange
             var expected =
@@ -287,16 +285,16 @@ schema:
                 """;
 
             // Act
-            var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedPathParameterWithSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void SerializeAdvancedParameterAsV2JsonWorks()
+        public async Task SerializeAdvancedParameterAsV2JsonWorks()
         {
             // Arrange
             var expected =
@@ -317,12 +315,12 @@ schema:
                 """;
 
             // Act
-            var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await AdvancedPathParameterWithSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -336,7 +334,7 @@ schema:
 
             // Act
             OpenApiParameterReference.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -353,7 +351,7 @@ schema:
 
             // Act
             ReferencedParameter.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -370,7 +368,7 @@ schema:
 
             // Act
             OpenApiParameterReference.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -387,7 +385,7 @@ schema:
 
             // Act
             ReferencedParameter.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -404,7 +402,7 @@ schema:
 
             // Act
             AdvancedHeaderParameterWithSchemaTypeObject.SerializeAsV2(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -421,7 +419,7 @@ schema:
 
             // Act
             ParameterWithFormStyleAndExplodeFalse.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -438,7 +436,7 @@ schema:
 
             // Act
             ParameterWithFormStyleAndExplodeTrue.SerializeAsV3(writer);
-            writer.Flush();
+            await writer.FlushAsync();
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

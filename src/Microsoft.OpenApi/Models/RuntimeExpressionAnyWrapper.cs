@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;

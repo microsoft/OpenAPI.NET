@@ -12,12 +12,20 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Callback Object Reference: A reference to a map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallbackReference : OpenApiCallback
+    public class OpenApiCallbackReference : OpenApiCallback, IOpenApiReferenceableWithTarget<OpenApiCallback>
     {
+#nullable enable
         internal OpenApiCallback _target;
         private readonly OpenApiReference _reference;
 
-        private OpenApiCallback Target
+        /// <summary>
+        /// Gets the target callback.
+        /// </summary>
+        /// <remarks>
+        /// If the reference is not resolved, this will return null.
+        /// </remarks>
+        public OpenApiCallback Target
+#nullable restore
         {
             get
             {

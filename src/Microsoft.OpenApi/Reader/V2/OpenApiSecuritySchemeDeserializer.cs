@@ -40,12 +40,24 @@ namespace Microsoft.OpenApi.Reader.V2
                             case "oauth2":
                                 o.Type = SecuritySchemeType.OAuth2;
                                 break;
+
+                            default:
+                                n.Context.Diagnostic.Errors.Add(new OpenApiError(n.Context.GetLocation(), $"Security scheme type {type} is not recognized."));
+                                break;
                         }
                     }
                 },
                 {"description", (o, n, _) => o.Description = n.GetScalarValue()},
                 {"name", (o, n, _) => o.Name = n.GetScalarValue()},
-                {"in", (o, n, _) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()},
+                {"in", (o, n, _) => 
+                    {
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        {
+                            return;
+                        }
+                        o.In = _in;
+                    }
+                },
                 {
                     "flow", (_, n, _) => _flowValue = n.GetScalarValue()
                 },
@@ -68,7 +80,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument = null)
+        public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument)
         {
             // Reset the local variables every time this method is called.
             // TODO: Change _flow to a tempStorage variable to make the deserializer thread-safe.
@@ -80,7 +92,7 @@ namespace Microsoft.OpenApi.Reader.V2
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
             {
-                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields);
+                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument);
             }
 
             // Put the Flow object in the right Flows property based on the string in "flow"
