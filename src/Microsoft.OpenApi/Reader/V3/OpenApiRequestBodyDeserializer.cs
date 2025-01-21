@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Reader.V3
             var requestBody = new OpenApiRequestBody();
             foreach (var property in mapNode)
             {
-                property.ParseField(requestBody, _requestBodyFixedFields, _requestBodyPatternFields);
+                property.ParseField(requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument);
             }
 
             return requestBody;
