@@ -9,7 +9,7 @@
     <Nullable>enable</Nullable>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.4.19</Version>
+    <Version>1.4.20</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <SignAssembly>true</SignAssembly>
     <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
@@ -41,7 +41,7 @@
     <!-- maintaining edm on 7.X because yoko 1.X is on 7.X-->
     <PackageReference Include="Microsoft.OData.Edm" Version="7.21.6" />
     <!-- maintaining yoko to 1.X because 2.X uses oai.net 2.X -->
-    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.7.1" />
+    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.7.2" />
     <!-- maintaining api manifest to 0.5.6 because it's the last version with OAI.net 1.X-->
     <PackageReference Include="Microsoft.OpenApi.ApiManifest" Version="0.5.6-preview" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
