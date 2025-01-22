@@ -583,14 +583,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type.ToIdentifier());
 
             // format
-            if (string.IsNullOrEmpty(Format))
-            {
-                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
-            }
-
-            writer.WriteProperty(OpenApiConstants.Format, Format);
+            WriteFormatProperty(writer);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
@@ -643,6 +636,19 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
 
+        private void WriteFormatProperty(IOpenApiWriter writer)
+        {
+            var formatToWrite = Format;
+            if (string.IsNullOrEmpty(formatToWrite))
+            {
+                formatToWrite = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
+
+            writer.WriteProperty(OpenApiConstants.Format, formatToWrite);
+        }
+
         /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property
         /// as readonly if its included in the provided list of required properties of parent schema.
@@ -666,14 +672,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // format
-            if (string.IsNullOrEmpty(Format))
-            {
-                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
-            }
-
-            writer.WriteProperty(OpenApiConstants.Format, Format);
+            WriteFormatProperty(writer);
 
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
