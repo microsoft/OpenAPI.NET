@@ -10,6 +10,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Reader.V3;
@@ -506,6 +507,100 @@ responses: { }";
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public async Task SerializesBodyReferencesWorks()
+        {
+            var openApiDocument = new OpenApiDocument();
+
+            var operation = new OpenApiOperation
+            {
+                RequestBody = new OpenApiRequestBodyReference("UserRequest", openApiDocument)
+                {
+                    Description = "User request body"
+                }
+            };
+            openApiDocument.Paths.Add("/users", new OpenApiPathItem
+            {
+                Operations = new Dictionary<OperationType, OpenApiOperation>
+                {
+                    [OperationType.Post] = operation
+                }
+            });
+            openApiDocument.AddComponent("UserRequest", new OpenApiRequestBody
+            {
+                Description = "User creation request body",
+                Content =
+                {
+                    ["application/json"] = new OpenApiMediaType
+                    {
+                        Schema = new OpenApiSchemaReference("UserSchema", openApiDocument)
+                    }
+                }
+            });
+            openApiDocument.AddComponent("UserSchema", new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties =
+                {
+                    ["name"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    },
+                    ["email"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    }
+                }
+            });
+
+            var actual = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var expected =
+"""
+{
+  "swagger": "2.0",
+  "info": { },
+  "paths": {
+    "/users": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/UserRequest"
+          }
+        ],
+        "responses": { }
+      }
+    }
+  },
+  "definitions": {
+    "UserSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "UserRequest": {
+      "in": "body",
+      "name": "body",
+      "description": "User creation request body",
+      "schema": {
+        "$ref": "#/definitions/UserSchema"
+      }
+    }
+  }
+}
+""";
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
     }
 }
