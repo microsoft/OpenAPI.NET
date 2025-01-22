@@ -283,7 +283,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
                     {
-                        parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
+                        parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter(writer));
                     }
                 }
                 writer.WriteOptionalMap(

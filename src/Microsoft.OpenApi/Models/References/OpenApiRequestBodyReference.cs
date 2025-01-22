@@ -119,5 +119,18 @@ namespace Microsoft.OpenApi.Models.References
             Utils.CheckArgumentNull(writer);
             action(writer, Target);
         }
+
+        /// <inheritdoc/>
+        internal override OpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
+        {
+            if (writer.GetSettings().ShouldInlineReference(_reference))
+            {
+                return Target.ConvertToBodyParameter(writer);
+            }
+            else
+            {
+                return new OpenApiParameterReference(_reference.Id, _reference.HostDocument);
+            }
+        }
     }
 }

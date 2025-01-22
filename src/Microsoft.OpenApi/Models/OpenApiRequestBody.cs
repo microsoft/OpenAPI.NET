@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Models
             // RequestBody object does not exist in V2.
         }
 
-        internal OpenApiBodyParameter ConvertToBodyParameter()
+        internal virtual OpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
         {
             var bodyParameter = new OpenApiBodyParameter
             {
