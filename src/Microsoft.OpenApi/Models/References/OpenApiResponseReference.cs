@@ -28,9 +28,7 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument?.ResolveReferenceTo<OpenApiResponse>(_reference);
-                OpenApiResponse resolved = new OpenApiResponse(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
+                return _target;
             }
         }
 
@@ -75,21 +73,25 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
             set => _description = value;
         }
 
+        private IDictionary<string, OpenApiMediaType> _content;
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; set => Target.Content = value; }
+        public override IDictionary<string, OpenApiMediaType> Content { get => _content is not null ? _content : Target?.Content; set => _content = value; }
 
+        private IDictionary<string, OpenApiHeader> _headers;
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiHeader> Headers { get => Target.Headers; set => Target.Headers = value; }
+        public override IDictionary<string, OpenApiHeader> Headers { get => _headers is not null ? _headers : Target?.Headers; set => _headers = value; }
 
+        private IDictionary<string, OpenApiLink> _links;
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiLink> Links { get => Target.Links; set => Target.Links = value; }
+        public override IDictionary<string, OpenApiLink> Links { get => _links is not null ? _links : Target?.Links; set => _links = value; }
 
+        private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
         
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
@@ -97,7 +99,6 @@ namespace Microsoft.OpenApi.Models.References
             if (!writer.GetSettings().ShouldInlineReference(_reference))
             {
                 _reference.SerializeAsV3(writer);
-                return;
             }
             else
             {
@@ -111,7 +112,6 @@ namespace Microsoft.OpenApi.Models.References
             if (!writer.GetSettings().ShouldInlineReference(_reference))
             {
                 _reference.SerializeAsV31(writer);
-                return;
             }
             else
             {
@@ -125,7 +125,6 @@ namespace Microsoft.OpenApi.Models.References
             if (!writer.GetSettings().ShouldInlineReference(_reference))
             {
                 _reference.SerializeAsV2(writer);
-                return;
             }
             else
             {
