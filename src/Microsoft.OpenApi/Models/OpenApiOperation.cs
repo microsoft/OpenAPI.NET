@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -258,7 +258,7 @@ namespace Microsoft.OpenApi.Models
                     }
                     else
                     {
-                        parameters.Add(RequestBody.ConvertToBodyParameter());
+                        parameters.Add(RequestBody.ConvertToBodyParameter(writer));
                     }
                 }
                 else if (RequestBody.Reference != null && RequestBody.Reference.HostDocument is {} hostDocument)
