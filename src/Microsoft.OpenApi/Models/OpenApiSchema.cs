@@ -560,14 +560,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // format
-            if (string.IsNullOrEmpty(Format))
-            {
-                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
-            }
-
-            writer.WriteProperty(OpenApiConstants.Format, Format);
+            WriteFormatProperty(writer);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
@@ -620,20 +613,26 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
 
+        private void WriteFormatProperty(IOpenApiWriter writer)
+        {
+            var formatToWrite = Format;
+            if (string.IsNullOrEmpty(formatToWrite))
+            {
+                formatToWrite = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
+
+            writer.WriteProperty(OpenApiConstants.Format, formatToWrite);
+        }
+
         internal void WriteAsSchemaProperties(
             IOpenApiWriter writer,
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
             // format
-            if (string.IsNullOrEmpty(Format))
-            {
-                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
-            }
-
-            writer.WriteProperty(OpenApiConstants.Format, Format);
+            WriteFormatProperty(writer);
 
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
