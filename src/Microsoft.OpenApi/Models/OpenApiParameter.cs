@@ -358,7 +358,7 @@ namespace Microsoft.OpenApi.Models
                 foreach (var example in Examples)
                 {
                     writer.WritePropertyName(example.Key);
-                    example.Value.SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+                    example.Value.SerializeAsV2(writer);
                 }
                 writer.WriteEndObject();
             }

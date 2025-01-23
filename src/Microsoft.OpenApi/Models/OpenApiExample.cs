@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="version"></param>
-        public void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             Utils.CheckArgumentNull(writer);
 

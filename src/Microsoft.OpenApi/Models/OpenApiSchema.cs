@@ -411,9 +411,7 @@ namespace Microsoft.OpenApi.Models
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-/// <inheritdoc/>
-
-        public void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
