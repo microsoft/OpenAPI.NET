@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Interfaces
     /// A generic interface for OpenApiReferenceable objects that have a target.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IOpenApiReferenceableWithTarget<T> : IOpenApiReferenceable
+    public interface IOpenApiReferenceableWithTarget<out T> : IOpenApiReferenceable
     {
         /// <summary>
         /// Gets the resolved target object.
