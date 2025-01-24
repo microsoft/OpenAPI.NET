@@ -239,14 +239,14 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the links.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiLink> links)
+        public virtual void Visit(IDictionary<string, IOpenApiLink> links)
         {
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiLink"/>
+        /// Visits <see cref="IOpenApiLink"/>
         /// </summary>
-        public virtual void Visit(OpenApiLink link)
+        public virtual void Visit(IOpenApiLink link)
         {
         }
 

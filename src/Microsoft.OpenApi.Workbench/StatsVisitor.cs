@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Workbench
 
         public int LinkCount { get; set; }
 
-        public override void Visit(OpenApiLink link)
+        public override void Visit(IOpenApiLink link)
         {
             LinkCount++;
         }

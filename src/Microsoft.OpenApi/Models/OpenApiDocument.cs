@@ -604,7 +604,7 @@ namespace Microsoft.OpenApi.Models
                     Components.RequestBodies.Add(id, openApiRequestBody);
                     break;
                 case OpenApiLink openApiLink:
-                    Components.Links ??= new Dictionary<string, OpenApiLink>();
+                    Components.Links ??= new Dictionary<string, IOpenApiLink>();
                     Components.Links.Add(id, openApiLink);
                     break;
                 case OpenApiCallback openApiCallback:

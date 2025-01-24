@@ -3,6 +3,7 @@
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -44,7 +45,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
         };
 
-        public static OpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("link");
             var link = new OpenApiLink();

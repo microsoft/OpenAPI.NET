@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
         /// The key of the map is a short name for the link,
         /// following the naming constraints of the names for Component Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
+        public virtual IDictionary<string, IOpenApiLink> Links { get; set; } = new Dictionary<string, IOpenApiLink>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Models
             Description = response?.Description ?? Description;
             Headers = response?.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
             Content = response?.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
-            Links = response?.Links != null ? new Dictionary<string, OpenApiLink>(response.Links) : null;
+            Links = response?.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
             Extensions = response?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
             UnresolvedReference = response?.UnresolvedReference ?? UnresolvedReference;
             Reference = response?.Reference != null ? new(response?.Reference) : null;

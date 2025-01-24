@@ -45,11 +45,6 @@ namespace Microsoft.OpenApi.Tests.Models
         public static readonly OpenApiLinkReference LinkReference = new(ReferencedLink, "example1");
         public static readonly OpenApiLink ReferencedLink = new()
         {
-            Reference = new()
-            {
-                Type = ReferenceType.Link,
-                Id = "example1",
-            },
             OperationId = "operationId1",
             Parameters =
             {

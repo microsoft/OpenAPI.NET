@@ -1059,9 +1059,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiLink"/> and child objects
+        /// Visits dictionary of <see cref="IOpenApiLink"/> and child objects
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiLink> links)
+        internal void Walk(IDictionary<string, IOpenApiLink> links)
         {
             if (links == null)
             {
@@ -1084,7 +1084,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiLink"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiLink link, bool isComponent = false)
+        internal void Walk(IOpenApiLink link, bool isComponent = false)
         {
             if (link == null)
             {
@@ -1198,7 +1198,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiExternalDocs e: Walk(e); break;
                 case OpenApiHeader e: Walk(e); break;
                 case OpenApiLink e: Walk(e); break;
-                case IDictionary<string, OpenApiLink> e: Walk(e); break;
+                case IDictionary<string, IOpenApiLink> e: Walk(e); break;
                 case OpenApiMediaType e: Walk(e); break;
                 case OpenApiOAuthFlows e: Walk(e); break;
                 case OpenApiOAuthFlow e: Walk(e); break;
