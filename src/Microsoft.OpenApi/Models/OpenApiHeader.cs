@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -82,7 +83,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Examples of the media type.
         /// </summary>
-        public virtual IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public virtual IDictionary<string, IOpenApiExample> Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
         /// <summary>
         /// A map containing the representations for the header.
@@ -115,7 +116,7 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = header?.AllowReserved ?? AllowReserved;
             _schema = header?.Schema != null ? new(header.Schema) : null;
             Example = header?.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
-            Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
+            Examples = header?.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
             Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }

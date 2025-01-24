@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -89,7 +90,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         private static void ValidateMismatchedDataType(IValidationContext context,
                                                       string ruleName,
                                                       JsonNode example,
-                                                      IDictionary<string, OpenApiExample> examples,
+                                                      IDictionary<string, IOpenApiExample> examples,
                                                       OpenApiSchema schema)
         {
             // example

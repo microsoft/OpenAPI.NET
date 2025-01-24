@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiHeader _headerFragment = new()
         {
             Schema = new OpenApiSchema(),
-            Examples = new Dictionary<string, OpenApiExample>
+            Examples =
             {
                 { "example1", new OpenApiExample() }
             }
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiParameter _parameterFragment = new()
         {
             Schema = new OpenApiSchema(),
-            Examples = new Dictionary<string, OpenApiExample>
+            Examples =
             {
                 { "example1", new OpenApiExample() }
             }

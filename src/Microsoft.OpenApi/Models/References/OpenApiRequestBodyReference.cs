@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Request Body Object Reference.
     /// </summary>
-    public class OpenApiRequestBodyReference : OpenApiRequestBody, IOpenApiReferenceableWithTarget<OpenApiRequestBody>
+    public class OpenApiRequestBodyReference : OpenApiRequestBody, IOpenApiReferenceHolder<OpenApiRequestBody>
     {
         internal OpenApiRequestBody _target;
         private readonly OpenApiReference _reference;

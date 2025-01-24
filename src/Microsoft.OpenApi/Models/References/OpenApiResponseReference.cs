@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Response Object Reference.
     /// </summary>
-    public class OpenApiResponseReference : OpenApiResponse, IOpenApiReferenceableWithTarget<OpenApiResponse>
+    public class OpenApiResponseReference : OpenApiResponse, IOpenApiReferenceHolder<OpenApiResponse>
     {
         internal OpenApiResponse _target;
         private readonly OpenApiReference _reference;

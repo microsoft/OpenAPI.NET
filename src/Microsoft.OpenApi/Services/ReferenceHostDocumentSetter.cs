@@ -18,15 +18,12 @@ namespace Microsoft.OpenApi.Services
             _currentDocument = currentDocument;
         }
 
-        /// <summary>
-        /// Visits the referenceable element in the host document
-        /// </summary>
-        /// <param name="referenceable">The referenceable element in the doc.</param>
-        public override void Visit(IOpenApiReferenceable referenceable)
+        /// <inheritdoc/>
+        public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            if (referenceable.Reference != null)
+            if (referenceHolder.Reference != null)
             {
-                referenceable.Reference.HostDocument = _currentDocument;
+                referenceHolder.Reference.HostDocument = _currentDocument;
             }
         }
     }

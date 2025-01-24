@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,7 +13,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Header Object Reference.
     /// </summary>
-    public class OpenApiHeaderReference : OpenApiHeader, IOpenApiReferenceableWithTarget<OpenApiHeader>
+    public class OpenApiHeaderReference : OpenApiHeader, IOpenApiReferenceHolder<OpenApiHeader>
     {
         internal OpenApiHeader _target;
         private readonly OpenApiReference _reference;
@@ -103,7 +104,7 @@ namespace Microsoft.OpenApi.Models.References
         public override JsonNode Example { get => Target.Example; set => Target.Example = value; }
 
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }
+        public override IDictionary<string, IOpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }

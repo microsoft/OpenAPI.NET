@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Path Item Object Reference: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItemReference : OpenApiPathItem, IOpenApiReferenceableWithTarget<OpenApiPathItem>
+    public class OpenApiPathItemReference : OpenApiPathItem, IOpenApiReferenceHolder<OpenApiPathItem>
     {
         internal OpenApiPathItem _target;
         private readonly OpenApiReference _reference;

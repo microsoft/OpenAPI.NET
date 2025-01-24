@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -74,8 +75,8 @@ namespace Microsoft.OpenApi.Reader.V2
                 ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
 
             var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
-            var examples = context.GetFromTempStorage<Dictionary<string, OpenApiExample>>(TempStorageKeys.Examples, response)
-                ?? new Dictionary<string, OpenApiExample>();
+            var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response)
+                ?? new Dictionary<string, IOpenApiExample>();
 
             foreach (var produce in produces)
             {
@@ -110,10 +111,10 @@ namespace Microsoft.OpenApi.Reader.V2
             node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
         }
 
-        private static Dictionary<string, OpenApiExample> LoadExamplesExtension(ParseNode node)
+        private static Dictionary<string, IOpenApiExample> LoadExamplesExtension(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.ExamplesExtension);
-            var examples = new Dictionary<string, OpenApiExample>();
+            var examples = new Dictionary<string, IOpenApiExample>();
 
             foreach (var examplesNode in mapNode)
             {

@@ -277,11 +277,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Examples =
                     {
-                        ["example1"] = new()
+                        ["example1"] = new OpenApiExample()
                         {
                             Value = 5.0
                         },
-                        ["example2"] = new()
+                        ["example2"] = new OpenApiExample()
                         {
                             Value = (float) 7.5
                         }

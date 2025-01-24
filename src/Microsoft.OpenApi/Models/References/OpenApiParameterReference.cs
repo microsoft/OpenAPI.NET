@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,7 +13,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : OpenApiParameter, IOpenApiReferenceableWithTarget<OpenApiParameter>
+    public class OpenApiParameterReference : OpenApiParameter, IOpenApiReferenceHolder<OpenApiParameter>
     {
         internal OpenApiParameter _target;
         private readonly OpenApiReference _reference;
@@ -99,7 +100,7 @@ namespace Microsoft.OpenApi.Models.References
         public override OpenApiSchema Schema { get => Target.Schema; set => Target.Schema = value; }
 
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }
+        public override IDictionary<string, IOpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }
 
         /// <inheritdoc/>
         public override JsonNode Example { get => Target.Example; set => Target.Example = value; }

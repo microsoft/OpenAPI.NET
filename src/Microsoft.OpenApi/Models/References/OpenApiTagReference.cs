@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Tag Object Reference
     /// </summary>
-    public class OpenApiTagReference : OpenApiTag, IOpenApiReferenceableWithTarget<OpenApiTag>
+    public class OpenApiTagReference : OpenApiTag, IOpenApiReferenceHolder<OpenApiTag>
     {
         internal OpenApiTag _target;
 

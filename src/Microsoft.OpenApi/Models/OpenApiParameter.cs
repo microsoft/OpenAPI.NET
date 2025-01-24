@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -120,7 +121,7 @@ namespace Microsoft.OpenApi.Models
         /// Furthermore, if referencing a schema which contains an example,
         /// the examples value SHALL override the example provided by the schema.
         /// </summary>
-        public virtual IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public virtual IDictionary<string, IOpenApiExample> Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
         /// <summary>
         /// Example of the media type. The example SHOULD match the specified schema and encoding properties
@@ -168,7 +169,7 @@ namespace Microsoft.OpenApi.Models
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
             _schema = parameter?.Schema != null ? new(parameter.Schema) : null;
-            Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
+            Examples = parameter?.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter?.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
@@ -358,7 +359,7 @@ namespace Microsoft.OpenApi.Models
                 foreach (var example in Examples)
                 {
                     writer.WritePropertyName(example.Key);
-                    example.Value.SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+                    example.Value.SerializeAsV2(writer);
                 }
                 writer.WriteEndObject();
             }

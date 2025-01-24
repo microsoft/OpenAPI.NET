@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Exceptions;
@@ -13,7 +14,7 @@ namespace Microsoft.OpenApi.Extensions
     /// <summary>
     /// Extension methods for resolving references on <see cref="IOpenApiReferenceable"/> elements.
     /// </summary>
-    public static class OpenApiReferencableExtensions
+    public static class OpenApiReferenceableExtensions
     {
         /// <summary>
         /// Resolves a JSON Pointer with respect to an element, returning the referenced element.
@@ -57,13 +58,15 @@ namespace Microsoft.OpenApi.Extensions
             string mapKey,
             JsonPointer pointer)
         {
-            switch (propertyName)
+            if (OpenApiConstants.Examples.Equals(propertyName, StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(mapKey) &&
+                headerElement?.Examples != null &&
+                headerElement.Examples.TryGetValue(mapKey, out var exampleElement) &&
+                exampleElement is IOpenApiReferenceable referenceable)
             {
-                case OpenApiConstants.Examples when mapKey != null:
-                    return headerElement.Examples[mapKey];
-                default:
-                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
+                return referenceable;
             }
+            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
         }
 
         private static IOpenApiReferenceable ResolveReferenceOnParameterElement(
@@ -72,13 +75,15 @@ namespace Microsoft.OpenApi.Extensions
             string mapKey,
             JsonPointer pointer)
         {
-            switch (propertyName)
+            if (OpenApiConstants.Examples.Equals(propertyName, StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(mapKey) &&
+                parameterElement?.Examples != null &&
+                parameterElement.Examples.TryGetValue(mapKey, out var exampleElement) &&
+                exampleElement is IOpenApiReferenceable referenceable)
             {
-                case OpenApiConstants.Examples when mapKey != null:
-                    return parameterElement.Examples[mapKey];
-                default:
-                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
+                return referenceable;
             }
+            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
         }
 
         private static IOpenApiReferenceable ResolveReferenceOnResponseElement(

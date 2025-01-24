@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -119,15 +120,15 @@ namespace Microsoft.OpenApi.Reader.V31
             }
         };
 
-        private static readonly AnyMapFieldMap<OpenApiParameter, OpenApiExample> _parameterAnyMapOpenApiExampleFields =
-            new AnyMapFieldMap<OpenApiParameter, OpenApiExample>
+        private static readonly AnyMapFieldMap<OpenApiParameter, IOpenApiExample> _parameterAnyMapOpenApiExampleFields =
+            new AnyMapFieldMap<OpenApiParameter, IOpenApiExample>
         {
             {
                 OpenApiConstants.Examples,
-                new AnyMapFieldMapParameter<OpenApiParameter, OpenApiExample>(
+                new AnyMapFieldMapParameter<OpenApiParameter, IOpenApiExample>(
                     m => m.Examples,
                     e => e.Value,
-                    (e, v) => e.Value = v,
+                    (e, v) => {if (e is OpenApiExample ex) {ex.Value = v;}},
                     m => m.Schema)
             }
         };
