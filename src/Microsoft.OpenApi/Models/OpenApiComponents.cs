@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public virtual IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Models
             Headers = components?.Headers != null ? new Dictionary<string, OpenApiHeader>(components.Headers) : null;
             SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
             Links = components?.Links != null ? new Dictionary<string, OpenApiLink>(components.Links) : null;
-            Callbacks = components?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(components.Callbacks) : null;
+            Callbacks = components?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(components.Callbacks) : null;
             PathItems = components?.PathItems != null ? new Dictionary<string, OpenApiPathItem>(components.PathItems) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }

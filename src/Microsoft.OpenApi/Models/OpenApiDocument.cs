@@ -608,7 +608,7 @@ namespace Microsoft.OpenApi.Models
                     Components.Links.Add(id, openApiLink);
                     break;
                 case OpenApiCallback openApiCallback:
-                    Components.Callbacks ??= new Dictionary<string, OpenApiCallback>();
+                    Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
                     Components.Callbacks.Add(id, openApiCallback);
                     break;
                 case OpenApiPathItem openApiPathItem:

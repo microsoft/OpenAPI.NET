@@ -406,9 +406,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiCallback"/> and child objects
+        /// Visits <see cref="IOpenApiCallback"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiCallback callback, bool isComponent = false)
+        internal void Walk(IOpenApiCallback callback, bool isComponent = false)
         {
             if (callback == null)
             {
@@ -760,9 +760,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiCallback"/>
+        /// Visits dictionary of <see cref="IOpenApiCallback"/>
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiCallback> callbacks)
+        internal void Walk(IDictionary<string, IOpenApiCallback> callbacks)
         {
             if (callbacks == null)
             {
@@ -1191,7 +1191,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiInfo e: Walk(e); break;
                 case OpenApiComponents e: Walk(e); break;
                 case OpenApiContact e: Walk(e); break;
-                case OpenApiCallback e: Walk(e); break;
+                case IOpenApiCallback e: Walk(e); break;
                 case OpenApiEncoding e: Walk(e); break;
                 case IOpenApiExample e: Walk(e); break;
                 case IDictionary<string, IOpenApiExample> e: Walk(e); break;

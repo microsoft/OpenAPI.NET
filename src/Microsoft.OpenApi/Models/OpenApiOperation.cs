@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
@@ -80,7 +81,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, OpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -129,7 +130,7 @@ namespace Microsoft.OpenApi.Models
             Parameters = operation?.Parameters != null ? new List<OpenApiParameter>(operation.Parameters) : null;
             RequestBody = operation?.RequestBody != null ? new(operation?.RequestBody) : null;
             Responses = operation?.Responses != null ? new(operation?.Responses) : null;
-            Callbacks = operation?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(operation.Callbacks) : null;
+            Callbacks = operation?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
             Deprecated = operation?.Deprecated ?? Deprecated;
             Security = operation?.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
             Servers = operation?.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;

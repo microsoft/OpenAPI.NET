@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits callbacks.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiCallback> callbacks)
+        public virtual void Visit(IDictionary<string, IOpenApiCallback> callbacks)
         {
         }
 
@@ -251,9 +251,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiCallback"/>
+        /// Visits <see cref="IOpenApiCallback"/>
         /// </summary>
-        public virtual void Visit(OpenApiCallback callback)
+        public virtual void Visit(IOpenApiCallback callback)
         {
         }
 

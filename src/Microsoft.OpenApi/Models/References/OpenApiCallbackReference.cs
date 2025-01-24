@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -12,11 +13,15 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Callback Object Reference: A reference to a map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallbackReference : OpenApiCallback, IOpenApiReferenceHolder<OpenApiCallback>
+    public class OpenApiCallbackReference : IOpenApiCallback, IOpenApiReferenceHolder<OpenApiCallback, IOpenApiCallback>
     {
 #nullable enable
         internal OpenApiCallback _target;
-        private readonly OpenApiReference _reference;
+        /// <inheritdoc/>
+        public OpenApiReference Reference { get; set; }
+
+        /// <inheritdoc/>
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Gets the target callback.
@@ -29,7 +34,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiCallback>(_reference);
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiCallback>(Reference);
                 return _target;
             }
         }
@@ -48,22 +53,31 @@ namespace Microsoft.OpenApi.Models.References
         {
             Utils.CheckArgumentNullOrEmpty(referenceId);
 
-            _reference = new OpenApiReference()
+            Reference = new OpenApiReference()
             {                
                 Id = referenceId,
                 HostDocument = hostDocument,
                 Type = ReferenceType.Callback,
                 ExternalResource = externalResource
             };
+        }
 
-            Reference = _reference;
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="callback">The callback reference to copy</param>
+        public OpenApiCallbackReference(OpenApiCallbackReference callback)
+        {
+            Utils.CheckArgumentNull(callback);
+            Reference = callback?.Reference != null ? new(callback.Reference) : null;
+            UnresolvedReference = callback?.UnresolvedReference ?? false;
         }
 
         internal OpenApiCallbackReference(OpenApiCallback target, string referenceId)
         {
             _target = target;
 
-            _reference = new OpenApiReference()
+            Reference = new OpenApiReference()
             {
                 Id = referenceId,
                 Type = ReferenceType.Callback,
@@ -71,18 +85,17 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target.PathItems; set => Target.PathItems = value; }
+        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target.PathItems; }
 
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
 
         /// <inheritdoc/>
-        public override void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
-                _reference.SerializeAsV3(writer);
-                return;
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -91,17 +104,31 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
-                _reference.SerializeAsV31(writer);
-                return;
+                Reference.SerializeAsV31(writer);
             }
             else
             {
                 SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
             }
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiCallback CopyReferenceAsTargetElementWithOverrides(IOpenApiCallback openApiExample)
+        {
+            // the copy here is never called since callbacks do not have any overridable fields.
+            // if the spec evolves to include overridable fields for callbacks, the serialize methods will need to call this copy method.
+            return openApiExample is OpenApiCallback ? new OpenApiCallback(this) : openApiExample;
+        }
+
+        /// <inheritdoc/>
+        public void SerializeAsV2(IOpenApiWriter writer)
+        {
+            // examples components are not supported in OAS 2.0
+            Reference.SerializeAsV2(writer);
         }
 
         /// <inheritdoc/>

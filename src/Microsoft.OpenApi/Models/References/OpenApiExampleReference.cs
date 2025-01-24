@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiReference Reference { get; set; }
 
         /// <inheritdoc/>
-        public bool UnresolvedReference { get; set; } = false;
+        public bool UnresolvedReference { get; set; }
         internal OpenApiExample _target;
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             Utils.CheckArgumentNull(example);
             Reference = example?.Reference != null ? new(example.Reference) : null;
-            UnresolvedReference = example?.UnresolvedReference ?? UnresolvedReference;
+            UnresolvedReference = example?.UnresolvedReference ?? false;
             //no need to copy summary and description as if they are not overridden, they will be fetched from the target
             //if they are, the reference copy will handle it
         }
