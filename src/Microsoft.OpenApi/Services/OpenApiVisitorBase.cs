@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Services
@@ -210,7 +211,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the examples.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiExample> examples)
+        public virtual void Visit(IDictionary<string, IOpenApiExample> examples)
         {
         }
 
@@ -299,9 +300,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiExample"/>
+        /// Visits <see cref="IOpenApiExample"/>
         /// </summary>
-        public virtual void Visit(OpenApiExample example)
+        public virtual void Visit(IOpenApiExample example)
         {
         }
 
@@ -341,9 +342,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits list of <see cref="OpenApiExample"/>
+        /// Visits list of <see cref="IOpenApiExample"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiExample> example)
+        public virtual void Visit(IList<IOpenApiExample> example)
         {
         }
 
@@ -365,8 +366,8 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits IOpenApiReferenceable instances that are references and not in components
         /// </summary>
-        /// <param name="referenceable">referenced object</param>
-        public virtual void Visit(IOpenApiReferenceable referenceable)
+        /// <param name="referenceHolder">Referencing object</param>
+        public virtual void Visit(IOpenApiReferenceHolder referenceHolder)
         {
         }
     }

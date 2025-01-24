@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
 using Moq;
@@ -243,7 +244,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // Assert
             Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
             Assert.False(responseHeader?.UnresolvedReference);
-            Assert.False(mediaTypeExample?.UnresolvedReference);
+            var exampleReference = Assert.IsType<OpenApiExampleReference>(mediaTypeExample);
+            Assert.False(exampleReference?.UnresolvedReference);
             Assert.NotNull(targetHeaders);
             Assert.Single(targetHeaders);
             Assert.NotNull(targetExamples);

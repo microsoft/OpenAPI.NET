@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -215,7 +216,7 @@ namespace Microsoft.OpenApi.Reader.V2
             }
 
             // load examples from storage and add them to the parameter
-            var examples = node.Context.GetFromTempStorage<Dictionary<string, OpenApiExample>>(TempStorageKeys.Examples, parameter);
+            var examples = node.Context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, parameter);
             if (examples != null)
             {
                 parameter.Examples = examples;

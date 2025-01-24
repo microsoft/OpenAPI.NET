@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Services
@@ -17,7 +18,6 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWalker
     {
-        private OpenApiDocument _hostDocument;
         private readonly OpenApiVisitorBase _visitor;
         private readonly Stack<OpenApiSchema> _schemaLoop = new();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new();
@@ -41,7 +41,6 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            _hostDocument = doc;
             _schemaLoop.Clear();
             _pathItemLoop.Clear();
 
@@ -416,9 +415,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (callback is OpenApiCallbackReference)
+            if (callback is IOpenApiReferenceHolder openApiReferenceHolder)
             {
-                Walk(callback as IOpenApiReferenceable);
+                Walk(openApiReferenceHolder);
                 return;
             }
 
@@ -461,7 +460,10 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            Walk(tag as IOpenApiReferenceable);
+            if (tag is IOpenApiReferenceHolder openApiReferenceHolder)
+            {
+                Walk(openApiReferenceHolder);
+            }
         }
 
         /// <summary>
@@ -526,9 +528,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (pathItem is OpenApiPathItemReference)
+            if (pathItem is IOpenApiReferenceHolder openApiReferenceHolder)
             {
-                Walk(pathItem as IOpenApiReferenceable);
+                Walk(openApiReferenceHolder);
                 return;
             }
 
@@ -649,9 +651,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (parameter is OpenApiParameterReference)
+            if (parameter is IOpenApiReferenceHolder openApiReferenceHolder)
             {
-                Walk(parameter as IOpenApiReferenceable);
+                Walk(openApiReferenceHolder);
                 return;
             }
 
@@ -697,9 +699,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (response is OpenApiResponseReference)
+            if (response is IOpenApiReferenceHolder openApiReferenceHolder)
             {
-                Walk(response as IOpenApiReferenceable);
+                Walk(openApiReferenceHolder);
                 return;
             }
 
@@ -720,9 +722,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (requestBody is OpenApiRequestBodyReference)
+            if (requestBody is IOpenApiReferenceHolder openApiReferenceHolder)
             {
-                Walk(requestBody as IOpenApiReferenceable);
+                Walk(openApiReferenceHolder);
                 return;
             }
 
@@ -932,9 +934,9 @@ namespace Microsoft.OpenApi.Services
 
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiExample"/>
+        /// Visits dictionary of <see cref="IOpenApiExample"/>
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiExample> examples)
+        internal void Walk(IDictionary<string, IOpenApiExample> examples)
         {
             if (examples == null)
             {
@@ -968,18 +970,18 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiExample"/> and child objects
+        /// Visits <see cref="IOpenApiExample"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiExample example, bool isComponent = false)
+        internal void Walk(IOpenApiExample example, bool isComponent = false)
         {
             if (example == null)
             {
                 return;
             }
 
-            if (example is OpenApiExampleReference)
+            if (example is OpenApiExampleReference reference)
             {
-                Walk(example as IOpenApiReferenceable);
+                Walk(reference);
                 return;
             }
 
@@ -988,9 +990,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits the list of <see cref="OpenApiExample"/> and child objects
+        /// Visits the list of <see cref="IOpenApiExample"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiExample> examples)
+        internal void Walk(IList<IOpenApiExample> examples)
         {
             if (examples == null)
             {
@@ -1089,9 +1091,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (link is OpenApiLinkReference)
+            if (link is IOpenApiReferenceHolder openApiReferenceHolder)
             {
-                Walk(link as IOpenApiReferenceable);
+                Walk(openApiReferenceHolder);
                 return;
             }
 
@@ -1110,9 +1112,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (header is OpenApiHeaderReference)
+            if (header is IOpenApiReferenceHolder openApiReferenceHolder)
             {
-                Walk(header as IOpenApiReferenceable);
+                Walk(openApiReferenceHolder);
                 return;
             }
 
@@ -1153,9 +1155,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (securityScheme is OpenApiSecuritySchemeReference)
+            if (securityScheme is IOpenApiReferenceHolder openApiReferenceHolder)
             {
-                Walk(securityScheme as IOpenApiReferenceable);
+                Walk(openApiReferenceHolder);
                 return;
             }
 
@@ -1166,9 +1168,9 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiSecurityScheme"/> and child objects
         /// </summary>
-        internal void Walk(IOpenApiReferenceable referenceable)
+        internal void Walk(IOpenApiReferenceHolder referenceableHolder)
         {
-            _visitor.Visit(referenceable);
+            _visitor.Visit(referenceableHolder);
         }
 
         /// <summary>
@@ -1191,8 +1193,8 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiContact e: Walk(e); break;
                 case OpenApiCallback e: Walk(e); break;
                 case OpenApiEncoding e: Walk(e); break;
-                case OpenApiExample e: Walk(e); break;
-                case IDictionary<string, OpenApiExample> e: Walk(e); break;
+                case IOpenApiExample e: Walk(e); break;
+                case IDictionary<string, IOpenApiExample> e: Walk(e); break;
                 case OpenApiExternalDocs e: Walk(e); break;
                 case OpenApiHeader e: Walk(e); break;
                 case OpenApiLink e: Walk(e); break;
@@ -1232,13 +1234,13 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Identify if an element is just a reference to a component, or an actual component
         /// </summary>
-        private bool ProcessAsReference(IOpenApiReferenceable referenceable, bool isComponent = false)
+        private bool ProcessAsReference(IOpenApiReferenceHolder referenceableHolder, bool isComponent = false)
         {
-            var isReference = referenceable.Reference != null &&
-                              (!isComponent || referenceable.UnresolvedReference);
+            var isReference = referenceableHolder.Reference != null &&
+                              (!isComponent || referenceableHolder.UnresolvedReference);
             if (isReference)
             {
-                Walk(referenceable);
+                Walk(referenceableHolder);
             }
             return isReference;
         }

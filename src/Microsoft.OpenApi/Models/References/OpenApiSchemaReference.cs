@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : OpenApiSchema, IOpenApiReferenceableWithTarget<OpenApiSchema>
+    public class OpenApiSchemaReference : OpenApiSchema, IOpenApiReferenceHolder<OpenApiSchema>
     {
 #nullable enable
         private OpenApiSchema? _target;

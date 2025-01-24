@@ -15,8 +15,8 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable
-    {
+    public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiReferenceHolder
+    {//TODO remove the implementation of IOpenAPiReferenceHolder when we have removed the inheritance from the inheritance type to this type
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
         /// </summary>

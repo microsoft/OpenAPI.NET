@@ -1147,7 +1147,7 @@ paths: {}
                     AllowReserved = true,
                     Style = ParameterStyle.Simple,
                     Explode = true,
-                    Examples = new Dictionary<string, OpenApiExample>()
+                    Examples =
                     {
                             { "uuid1", new OpenApiExample()
                                 {

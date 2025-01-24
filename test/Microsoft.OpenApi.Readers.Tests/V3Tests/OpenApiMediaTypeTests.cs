@@ -57,11 +57,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Examples =
                     {
-                        ["example1"] = new()
+                        ["example1"] = new OpenApiExample()
                         {
                             Value = 5
                         },
-                        ["example2"] = new()
+                        ["example2"] = new OpenApiExample()
                         {
                             Value = 7.5
                         }

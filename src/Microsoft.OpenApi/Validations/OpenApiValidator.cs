@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Validations
@@ -125,7 +126,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IOpenApiExtension openApiExtension) => Validate(openApiExtension, openApiExtension.GetType());
 
         /// <inheritdoc/>
-        public override void Visit(IList<OpenApiExample> example) => Validate(example, example.GetType());
+        public override void Visit(IList<IOpenApiExample> example) => Validate(example, example.GetType());
 
         /// <inheritdoc/>
         public override void Visit(OpenApiPathItem pathItem) => Validate(pathItem);
@@ -149,7 +150,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiLink link) => Validate(link);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiExample example) => Validate(example);
+        public override void Visit(IOpenApiExample example) => Validate(example);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiOperation operation) => Validate(operation);
@@ -162,7 +163,7 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiExample> examples) => Validate(examples, examples.GetType());
+        public override void Visit(IDictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, OpenApiLink> links) => Validate(links, links.GetType());
         /// <inheritdoc/>
@@ -189,9 +190,9 @@ namespace Microsoft.OpenApi.Validations
             }
 
             // Validate unresolved references as references
-            if (item is IOpenApiReferenceable { UnresolvedReference: true })
+            if (item is IOpenApiReferenceHolder { UnresolvedReference: true })
             {
-                type = typeof(IOpenApiReferenceable);
+                type = typeof(IOpenApiReferenceHolder);
             }
 
             var rules = _ruleSet.FindRules(type);

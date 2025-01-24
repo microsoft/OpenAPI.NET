@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Services;
@@ -12,13 +13,10 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     private readonly OpenApiDocument _target = target;
     public OpenApiComponents Components = new();
 
-    /// <summary>
-    /// Visits IOpenApiReferenceable instances that are references and not in components.
-    /// </summary>
-    /// <param name="referenceable"> An IOpenApiReferenceable object.</param>
-    public override void Visit(IOpenApiReferenceable referenceable)
+    /// <inheritdoc/>
+    public override void Visit(IOpenApiReferenceHolder referenceHolder)
     {
-        switch (referenceable)
+        switch (referenceHolder)
         {
             case OpenApiSchemaReference openApiSchemaReference:
                 AddSchemaToComponents(openApiSchemaReference.Target, openApiSchemaReference.Reference.Id);
@@ -84,7 +82,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
                 break;
         }
 
-        base.Visit(referenceable);
+        base.Visit(referenceHolder);
     }
 
     private void AddSchemaToComponents(OpenApiSchema schema, string referenceId = null)
@@ -156,9 +154,9 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureExamplesExist();
-        if (!Components.Examples.ContainsKey(referenceId ?? example.Reference.Id))
+        if (!Components.Examples.ContainsKey(referenceId))
         {
-            Components.Examples.Add(referenceId ?? example.Reference.Id, example);
+            Components.Examples.Add(referenceId, example);
         }
     }
     private void AddPathItemToComponents(OpenApiPathItem pathItem, string referenceId = null)
@@ -222,7 +220,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 
     private void EnsureExamplesExist()
     {
-        _target.Components.Examples ??= new Dictionary<string, OpenApiExample>();
+        _target.Components.Examples ??= new Dictionary<string, IOpenApiExample>();
     }
 
     private void EnsureHeadersExist()

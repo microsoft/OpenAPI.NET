@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
@@ -615,7 +616,7 @@ namespace Microsoft.OpenApi.Models
                     Components.PathItems.Add(id, openApiPathItem);
                     break;
                 case OpenApiExample openApiExample:
-                    Components.Examples ??= new Dictionary<string, OpenApiExample>();
+                    Components.Examples ??= new Dictionary<string, IOpenApiExample>();
                     Components.Examples.Add(id, openApiExample);
                     break;
                 case OpenApiHeader openApiHeader:
@@ -645,9 +646,10 @@ namespace Microsoft.OpenApi.Models
             walker.Walk(components);
         }
 
-        public override void Visit(IOpenApiReferenceable referenceable)
+        /// <inheritdoc/>
+        public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            switch (referenceable)
+            switch (referenceHolder)
             {
                 case OpenApiSchema schema:
                     if (!Schemas.ContainsKey(schema.Reference.Id))
@@ -659,7 +661,7 @@ namespace Microsoft.OpenApi.Models
                 default:
                     break;
             }
-            base.Visit(referenceable);
+            base.Visit(referenceHolder);
         }
 
         public override void Visit(OpenApiSchema schema)

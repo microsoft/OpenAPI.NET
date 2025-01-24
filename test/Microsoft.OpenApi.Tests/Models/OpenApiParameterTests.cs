@@ -50,9 +50,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     new() { Type = JsonSchemaType.String }
                 }
             },
-            Examples = new Dictionary<string, OpenApiExample>
+            Examples =
             {
-                ["test"] = new()
+                ["test"] = new OpenApiExample()
                 {
                     Summary = "summary3",
                     Description = "description3"
@@ -135,9 +135,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 UnresolvedReference = true
             },
-            Examples = new Dictionary<string, OpenApiExample>
+            Examples =
             {
-                ["test"] = new()
+                ["test"] = new OpenApiExample()
                 {
                     Summary = "summary3",
                     Description = "description3"
@@ -159,9 +159,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Type = JsonSchemaType.Object
             },
-            Examples = new Dictionary<string, OpenApiExample>
+            Examples =
             {
-                ["test"] = new()
+                ["test"] = new OpenApiExample()
                 {
                     Summary = "summary3",
                     Description = "description3"

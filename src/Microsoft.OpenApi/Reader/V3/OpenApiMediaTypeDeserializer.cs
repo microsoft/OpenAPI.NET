@@ -3,6 +3,7 @@
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
@@ -51,7 +52,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
         };
 
-        private static readonly AnyMapFieldMap<OpenApiMediaType, OpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
+        private static readonly AnyMapFieldMap<OpenApiMediaType, IOpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
             new()
             {
             {
@@ -59,7 +60,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 new(
                     m => m.Examples,
                     e => e.Value,
-                    (e, v) => e.Value = v,
+                    (e, v) => {if (e is OpenApiExample ex) {ex.Value = v;}},
                     m => m.Schema)
             }
         };

@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(IOpenApiReferenceable referenceable)
+        public override void Visit(IOpenApiReferenceHolder referenceable)
         {
             Locations.Add("referenceAt: " + this.PathString);
         }
