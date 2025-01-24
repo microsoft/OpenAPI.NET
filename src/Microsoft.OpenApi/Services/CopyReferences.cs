@@ -145,9 +145,9 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureHeadersExist();
-        if (!Components.Headers.ContainsKey(referenceId ?? header.Reference.Id))
+        if (!Components.Headers.ContainsKey(referenceId))
         {
-            Components.Headers.Add(referenceId ?? header.Reference.Id, header);
+            Components.Headers.Add(referenceId, header);
         }
     }
     private void AddExampleToComponents(OpenApiExample example, string referenceId = null)
@@ -225,7 +225,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 
     private void EnsureHeadersExist()
     {
-        _target.Components.Headers ??= new Dictionary<string, OpenApiHeader>();
+        _target.Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
     }
 
     private void EnsureCallbacksExist()

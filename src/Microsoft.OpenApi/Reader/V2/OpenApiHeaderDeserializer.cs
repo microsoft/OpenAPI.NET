@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -102,7 +103,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return p.Schema ??= new();
         }
 
-        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("header");
             var header = new OpenApiHeader();

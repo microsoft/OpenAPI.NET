@@ -172,16 +172,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 },
                 UnresolvedReference = false
             };
+
             var testHeader = new OpenApiHeader()
             {
                 Schema = derivedSchema,
-                Reference = new()
-                {
-                    Id = "test-header",
-                    Type = ReferenceType.Header
-                },
-                UnresolvedReference = false
             };
+            var testHeaderReference = new OpenApiHeaderReference(testHeader, "test-header");
 
             var doc = new OpenApiDocument
             {
@@ -204,9 +200,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                                 Schema = derivedSchema
                                             }
                                         },
-                                        Headers = new Dictionary<string, OpenApiHeader>
+                                        Headers =
                                         {
-                                            ["test-header"] = testHeader
+                                            ["test-header"] = testHeaderReference
                                         }
                                     }
                                 }
@@ -221,7 +217,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
                     },
-                    Headers = new Dictionary<string, OpenApiHeader>
+                    Headers =
                     {
                         ["test-header"] = testHeader
                     },
@@ -238,7 +234,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             Assert.Equivalent(new List<string> {
                 "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
-                "referenceAt: #/paths/~1/get/responses/200/headers/test-header/schema",
+                "referenceAt: #/paths/~1/get/responses/200/headers/test-header",
                 "referenceAt: #/components/schemas/derived/anyOf/0",
                 "referenceAt: #/components/securitySchemes/test-secScheme",
                 "referenceAt: #/components/headers/test-header/schema"

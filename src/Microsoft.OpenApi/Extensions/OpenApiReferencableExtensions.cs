@@ -92,15 +92,24 @@ namespace Microsoft.OpenApi.Extensions
             string mapKey,
             JsonPointer pointer)
         {
-            switch (propertyName)
+            if (!string.IsNullOrEmpty(mapKey))
             {
-                case OpenApiConstants.Headers when mapKey != null:
-                    return responseElement.Headers[mapKey];
-                case OpenApiConstants.Links when mapKey != null:
-                    return responseElement.Links[mapKey];
-                default:
-                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
+                if (OpenApiConstants.Headers.Equals(propertyName, StringComparison.Ordinal) &&
+                    responseElement?.Headers != null &&
+                    responseElement.Headers.TryGetValue(mapKey, out var headerElement) &&
+                    headerElement is IOpenApiReferenceable referenceable)
+                {
+                    return referenceable;
+                }
+                if (OpenApiConstants.Links.Equals(propertyName, StringComparison.Ordinal) &&
+                    responseElement?.Links != null &&
+                    responseElement.Links.TryGetValue(mapKey, out var linkElement) &&
+                    linkElement is IOpenApiReferenceable referenceable2)
+                {
+                    return referenceable2;
+                }
             }
+            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
         }
     }
 }

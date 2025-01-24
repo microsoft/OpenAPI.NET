@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiComponents components) => Validate(components);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiHeader header) => Validate(header);
+        public override void Visit(IOpenApiHeader header) => Validate(header);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiResponse response) => Validate(response);
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(IDictionary<OperationType, OpenApiOperation> operations) => Validate(operations, operations.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiHeader> headers) => Validate(headers, headers.GetType());
+        public override void Visit(IDictionary<string, IOpenApiHeader> headers) => Validate(headers, headers.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
         /// <inheritdoc/>

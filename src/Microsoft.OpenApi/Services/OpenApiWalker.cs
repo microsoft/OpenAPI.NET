@@ -740,7 +740,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiHeader"/>
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiHeader> headers)
+        internal void Walk(IDictionary<string, IOpenApiHeader> headers)
         {
             if (headers == null)
             {
@@ -1105,7 +1105,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiHeader"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiHeader header, bool isComponent = false)
+        internal void Walk(IOpenApiHeader header, bool isComponent = false)
         {
             if (header == null)
             {

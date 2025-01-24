@@ -1132,8 +1132,7 @@ paths: {}
                         Format = "uuid"
                     },
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(e => e.Example.Parent)
-                .Excluding(x => x.Reference));
+                .Excluding(e => e.Example.Parent));
 
             var examplesHeader = result.Document.Components?.Headers?["examples-header"];
             Assert.NotNull(examplesHeader);

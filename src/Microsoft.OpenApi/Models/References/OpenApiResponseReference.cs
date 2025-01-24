@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -81,9 +82,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiMediaType> Content { get => _content is not null ? _content : Target?.Content; set => _content = value; }
 
-        private IDictionary<string, OpenApiHeader> _headers;
+        private IDictionary<string, IOpenApiHeader> _headers;
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiHeader> Headers { get => _headers is not null ? _headers : Target?.Headers; set => _headers = value; }
+        public override IDictionary<string, IOpenApiHeader> Headers { get => _headers is not null ? _headers : Target?.Headers; set => _headers = value; }
 
         private IDictionary<string, OpenApiLink> _links;
         /// <inheritdoc/>

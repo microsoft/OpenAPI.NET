@@ -16,84 +16,43 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiHeader : IOpenApiHeader, IOpenApiReferenceable, IOpenApiExtensible
     {
-        private OpenApiSchema _schema;
+        /// <inheritdoc/>
+        public string Description { get; set; }
 
-        /// <summary>
-        /// Indicates if object is populated with data or is just a reference to the data
-        /// </summary>
-        public virtual bool UnresolvedReference { get; set; }
+        /// <inheritdoc/>
+        public bool Required { get; set; }
 
-        /// <summary>
-        /// Reference pointer.
-        /// </summary>
-        public OpenApiReference Reference { get; set; }
+        /// <inheritdoc/>
+        public bool Deprecated { get; set; }
 
-        /// <summary>
-        /// A brief description of the header.
-        /// </summary>
-        public virtual string Description { get; set; }
+        /// <inheritdoc/>
+        public bool AllowEmptyValue { get; set; }
 
-        /// <summary>
-        /// Determines whether this header is mandatory.
-        /// </summary>
-        public virtual bool Required { get; set; }
+        /// <inheritdoc/>
+        public ParameterStyle? Style { get; set; }
 
-        /// <summary>
-        /// Specifies that a header is deprecated and SHOULD be transitioned out of usage.
-        /// </summary>
-        public virtual bool Deprecated { get; set; }
+        /// <inheritdoc/>
+        public bool Explode { get; set; }
 
-        /// <summary>
-        /// Sets the ability to pass empty-valued headers.
-        /// </summary>
-        public virtual bool AllowEmptyValue { get; set; }
+        /// <inheritdoc/>
+        public bool AllowReserved { get; set; }
 
-        /// <summary>
-        /// Describes how the header value will be serialized depending on the type of the header value.
-        /// </summary>
-        public virtual ParameterStyle? Style { get; set; }
+        /// <inheritdoc/>
+        public OpenApiSchema Schema { get; set; }
 
-        /// <summary>
-        /// When this is true, header values of type array or object generate separate parameters
-        /// for each value of the array or key-value pair of the map.
-        /// </summary>
-        public virtual bool Explode { get; set; }
+        /// <inheritdoc/>
+        public JsonNode Example { get; set; }
 
-        /// <summary>
-        /// Determines whether the header value SHOULD allow reserved characters, as defined by RFC3986.
-        /// </summary>
-        public virtual bool AllowReserved { get; set; }
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExample> Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
-        /// <summary>
-        /// The schema defining the type used for the request body.
-        /// </summary>
-        public virtual OpenApiSchema Schema 
-        { 
-            get => _schema; 
-            set => _schema = value;  
-        }
+        /// <inheritdoc/>
+        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
-        /// <summary>
-        /// Example of the media type.
-        /// </summary>
-        public virtual JsonNode Example { get; set; }
-
-        /// <summary>
-        /// Examples of the media type.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExample> Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
-
-        /// <summary>
-        /// A map containing the representations for the header.
-        /// </summary>
-        public virtual IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
-
-        /// <summary>
-        /// This object MAY be extended with Specification Extensions.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -103,10 +62,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiHeader"/> object
         /// </summary>
-        public OpenApiHeader(OpenApiHeader header)
+        public OpenApiHeader(IOpenApiHeader header)
         {
-            UnresolvedReference = header?.UnresolvedReference ?? UnresolvedReference;
-            Reference = header?.Reference != null ? new(header?.Reference) : null;
             Description = header?.Description ?? Description;
             Required = header?.Required ?? Required;
             Deprecated = header?.Deprecated ?? Deprecated;
@@ -114,7 +71,7 @@ namespace Microsoft.OpenApi.Models
             Style = header?.Style ?? Style;
             Explode = header?.Explode ?? Explode;
             AllowReserved = header?.AllowReserved ?? AllowReserved;
-            _schema = header?.Schema != null ? new(header.Schema) : null;
+            Schema = header?.Schema != null ? new(header.Schema) : null;
             Example = header?.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
             Examples = header?.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
@@ -124,7 +81,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.1
         /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -132,12 +89,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.0
         /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -186,7 +143,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V2 document without using reference.
         /// </summary>
-        public virtual void SerializeAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 

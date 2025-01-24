@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the data matches with the given data type.
         /// </summary>
-        public static ValidationRule<OpenApiHeader> HeaderMismatchedDataType =>
+        public static ValidationRule<IOpenApiHeader> HeaderMismatchedDataType =>
             new(nameof(HeaderMismatchedDataType),
                 (context, header) =>
                 {

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Maps a header name to its definition.
         /// </summary>
-        public virtual IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
+        public virtual IDictionary<string, IOpenApiHeader> Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
 
         /// <summary>
         /// A map containing descriptions of potential response payloads.
@@ -63,7 +64,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponse(OpenApiResponse response)
         {
             Description = response?.Description ?? Description;
-            Headers = response?.Headers != null ? new Dictionary<string, OpenApiHeader>(response.Headers) : null;
+            Headers = response?.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
             Content = response?.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
             Links = response?.Links != null ? new Dictionary<string, OpenApiLink>(response.Links) : null;
             Extensions = response?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;

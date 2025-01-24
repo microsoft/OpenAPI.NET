@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Headers =
                     {
                         ["X-Rate-Limit-Limit"] =
-                            new()
+                            new OpenApiHeader()
                             {
                                 Description = "The number of allowed requests in the current period",
                                 Schema = new()
