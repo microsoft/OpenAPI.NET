@@ -65,8 +65,8 @@ namespace Microsoft.OpenApi.Models.References
         {
             Utils.CheckArgumentNull(reference);
 
-            Reference = reference?.Reference != null ? new(reference.Reference) : null;
-            UnresolvedReference = reference?.UnresolvedReference ?? false;
+            Reference = reference.Reference != null ? new(reference.Reference) : null;
+            UnresolvedReference = reference.UnresolvedReference;
             //no need to copy summary and description as if they are not overridden, they will be fetched from the target
             //if they are, the reference copy will handle it
         }

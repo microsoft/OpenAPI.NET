@@ -69,8 +69,8 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiCallbackReference(OpenApiCallbackReference callback)
         {
             Utils.CheckArgumentNull(callback);
-            Reference = callback?.Reference != null ? new(callback.Reference) : null;
-            UnresolvedReference = callback?.UnresolvedReference ?? false;
+            Reference = callback.Reference != null ? new(callback.Reference) : null;
+            UnresolvedReference = callback.UnresolvedReference;
         }
 
         internal OpenApiCallbackReference(OpenApiCallback target, string referenceId)
