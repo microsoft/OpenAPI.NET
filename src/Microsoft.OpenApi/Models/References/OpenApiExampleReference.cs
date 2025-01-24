@@ -146,9 +146,9 @@ namespace Microsoft.OpenApi.Models.References
         }
         
         /// <inheritdoc/>
-        public IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample openApiExample)
+        public IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)
         {
-            return openApiExample is OpenApiExample ? new OpenApiExample(this) : openApiExample;
+            return source is OpenApiExample ? new OpenApiExample(this) : source;
         }
 
         /// <inheritdoc/>
