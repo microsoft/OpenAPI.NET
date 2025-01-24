@@ -85,10 +85,10 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target.PathItems; }
+        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target?.PathItems; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public void SerializeAsV3(IOpenApiWriter writer)

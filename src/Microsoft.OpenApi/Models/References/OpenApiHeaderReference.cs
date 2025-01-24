@@ -97,37 +97,37 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public bool Required { get => Target.Required; }
+        public bool Required { get => Target?.Required ?? default; }
 
         /// <inheritdoc/>
-        public bool Deprecated { get => Target.Deprecated; }
+        public bool Deprecated { get => Target?.Deprecated ?? default; }
 
         /// <inheritdoc/>
-        public bool AllowEmptyValue { get => Target.AllowEmptyValue; }
+        public bool AllowEmptyValue { get => Target?.AllowEmptyValue ?? default; }
 
         /// <inheritdoc/>
-        public OpenApiSchema Schema { get => Target.Schema; }
+        public OpenApiSchema Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
-        public ParameterStyle? Style { get => Target.Style; }
+        public ParameterStyle? Style { get => Target?.Style; }
 
         /// <inheritdoc/>
-        public bool Explode { get => Target.Explode; }
+        public bool Explode { get => Target?.Explode ?? default; }
 
         /// <inheritdoc/>
-        public bool AllowReserved { get => Target.AllowReserved; }
+        public bool AllowReserved { get => Target?.AllowReserved ?? default; }
 
         /// <inheritdoc/>
-        public JsonNode Example { get => Target.Example; }
+        public JsonNode Example { get => Target?.Example; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample> Examples { get => Target.Examples; }
+        public IDictionary<string, IOpenApiExample> Examples { get => Target?.Examples; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get => Target.Content; }
+        public IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public void SerializeAsV31(IOpenApiWriter writer)
