@@ -31,9 +31,8 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiParameter>(_reference);
-                OpenApiParameter resolved = new OpenApiParameter(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
+                if (!string.IsNullOrEmpty(_description)) _target.Description = _description;
+                return _target;
             }
         }
 
@@ -73,39 +72,48 @@ namespace Microsoft.OpenApi.Models.References
             };
         }
 
+        private string _name;
         /// <inheritdoc/>
-        public override string Name { get => Target.Name; set => Target.Name = value; }
+        public override string Name { get => !string.IsNullOrEmpty(_name) ? _name : Target?.Name; set => _name = value; }
 
         /// <inheritdoc/>
         public override string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
             set => _description = value;
         }
 
+        private bool? _required;
         /// <inheritdoc/>
-        public override bool Required { get => Target.Required; set => Target.Required = value; }
+        public override bool Required { get => _required is not null ? _required.Value : Target?.Required ?? false; set => _required = value; }
 
+        private bool? _deprecated;
         /// <inheritdoc/>
-        public override bool Deprecated { get => Target.Deprecated; set => Target.Deprecated = value; }
+        public override bool Deprecated { get => _deprecated is not null ? _deprecated.Value : Target?.Deprecated ?? false; set => _deprecated = value; }
 
+        private bool? _allowEmptyValue;
         /// <inheritdoc/>
-        public override bool AllowEmptyValue { get => Target.AllowEmptyValue; set => Target.AllowEmptyValue = value; }
+        public override bool AllowEmptyValue { get => _allowEmptyValue is not null ? _allowEmptyValue.Value : Target?.AllowEmptyValue ?? false; set => _allowEmptyValue = value; }
 
+        private bool? _allowReserved;
         /// <inheritdoc/>
-        public override bool AllowReserved { get => Target.AllowReserved; set => Target.AllowReserved = value; }
+        public override bool AllowReserved { get => _allowReserved is not null ? _allowReserved.Value : Target?.AllowReserved ?? false; set => _allowReserved = value; }
 
+        private OpenApiSchema _schema;
         /// <inheritdoc/>
-        public override OpenApiSchema Schema { get => Target.Schema; set => Target.Schema = value; }
+        public override OpenApiSchema Schema { get => _schema is not null ? _schema : Target?.Schema; set => _schema = value; }
 
+        private JsonNode _example;
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }
+        public override JsonNode Example { get => _example is not null ? _example : Target?.Example; set => _example = value; }
 
+        private IDictionary<string, OpenApiExample> _examples;
         /// <inheritdoc/>
-        public override JsonNode Example { get => Target.Example; set => Target.Example = value; }
+        public override IDictionary<string, OpenApiExample> Examples { get => _examples is not null ? _examples : Target?.Examples; set => _examples = value; }
 
+        private ParameterLocation? _in;
         /// <inheritdoc/>
-        public override ParameterLocation? In { get => Target.In; set => Target.In = value; }
+        public override ParameterLocation? In { get => _in is not null ? _in : Target?.In; set => _in = value; }
 
         /// <inheritdoc/>
         public override ParameterStyle? Style 
@@ -121,12 +129,14 @@ namespace Microsoft.OpenApi.Models.References
             set => _explode = value;
         }
 
+        private IDictionary<string, OpenApiMediaType> _content;
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }
+        public override IDictionary<string, OpenApiMediaType> Content { get => _content is not null ? _content : Target?.Content; set => _content = value; }
 
+        private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
-        
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
+
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {

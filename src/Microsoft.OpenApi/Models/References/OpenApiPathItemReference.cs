@@ -29,10 +29,9 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiPathItem>(_reference);
-                OpenApiPathItem resolved = new OpenApiPathItem(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                if (!string.IsNullOrEmpty(_summary)) resolved.Summary = _summary;
-                return resolved;
+                if (!string.IsNullOrEmpty(_description)) _target.Description = _description;
+                if (!string.IsNullOrEmpty(_summary)) _target.Summary = _summary;
+                return _target;
             }
         }
 
@@ -75,29 +74,33 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Summary
         {
-            get => string.IsNullOrEmpty(_summary) ? Target.Summary : _summary;
+            get => string.IsNullOrEmpty(_summary) ? Target?.Summary : _summary;
             set => _summary = value;
         }
 
         /// <inheritdoc/>
         public override string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
             set => _description = value;
         }
 
+        private IDictionary<OperationType, OpenApiOperation> _operations;
         /// <inheritdoc/>
-        public override IDictionary<OperationType, OpenApiOperation> Operations { get => Target.Operations; set => Target.Operations = value; }
+        public override IDictionary<OperationType, OpenApiOperation> Operations { get => _operations is not null ? _operations : Target?.Operations; set => _operations = value; }
 
+        private IList<OpenApiServer> _servers;
         /// <inheritdoc/>
-        public override IList<OpenApiServer> Servers { get => Target.Servers; set => Target.Servers = value; }
+        public override IList<OpenApiServer> Servers { get => _servers is not null ? _servers : Target?.Servers; set => _servers = value; }
 
+        private IList<OpenApiParameter> _parameters;
         /// <inheritdoc/>
-        public override IList<OpenApiParameter> Parameters { get => Target.Parameters; set => Target.Parameters = value; }
+        public override IList<OpenApiParameter> Parameters { get => _parameters is not null ? _parameters : Target?.Parameters; set => _parameters = value; }
 
+        private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
-               
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
+
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {

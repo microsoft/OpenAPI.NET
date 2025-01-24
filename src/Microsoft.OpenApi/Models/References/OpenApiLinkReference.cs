@@ -28,9 +28,8 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiLink>(_reference);
-                OpenApiLink resolved = new OpenApiLink(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
+                if (!string.IsNullOrEmpty(_description)) _target.Description = _description;
+                return _target;
             }
         }
 
@@ -70,14 +69,17 @@ namespace Microsoft.OpenApi.Models.References
             };
         }
 
+        private string _operationRef;
         /// <inheritdoc/>
-        public override string OperationRef { get => Target.OperationRef; set => Target.OperationRef = value; }
+        public override string OperationRef { get => !string.IsNullOrEmpty(_operationRef) ? _operationRef : Target?.OperationRef; set => _operationRef = value; }
 
+        private string _operationId;
         /// <inheritdoc/>
-        public override string OperationId { get => Target.OperationId; set => Target.OperationId = value; }
+        public override string OperationId { get => !string.IsNullOrEmpty(_operationId) ? _operationId : Target?.OperationId; set => _operationId = value; }
 
+        private OpenApiServer _server;
         /// <inheritdoc/>
-        public override OpenApiServer Server { get => Target.Server; set => Target.Server = value; }
+        public override OpenApiServer Server { get => _server is not null ? _server : Target?.Server; set => _server = value; }
 
         /// <inheritdoc/>
         public override string Description
@@ -86,14 +88,17 @@ namespace Microsoft.OpenApi.Models.References
             set => _description = value;
         }
 
+        private Dictionary<string, RuntimeExpressionAnyWrapper> _parameters;
         /// <inheritdoc/>
-        public override Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get => Target.Parameters; set => Target.Parameters = value; }
+        public override Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get => _parameters is not null ? _parameters : Target?.Parameters; set => _parameters = value; }
 
+        private RuntimeExpressionAnyWrapper _requestBody;
         /// <inheritdoc/>
-        public override RuntimeExpressionAnyWrapper RequestBody { get => Target.RequestBody; set => Target.RequestBody = value; }
+        public override RuntimeExpressionAnyWrapper RequestBody { get => _requestBody is not null ? _requestBody : Target?.RequestBody; set => _requestBody = value; }
 
+        private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => base.Extensions; set => base.Extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)

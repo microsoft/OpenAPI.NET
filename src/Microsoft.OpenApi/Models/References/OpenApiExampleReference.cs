@@ -30,10 +30,9 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiExample>(_reference);
-                OpenApiExample resolved = new OpenApiExample(_target);                
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                if (!string.IsNullOrEmpty(_summary)) resolved.Summary = _summary;
-                return resolved;
+                if (!string.IsNullOrEmpty(_description)) _target.Description = _description;
+                if (!string.IsNullOrEmpty(_summary)) _target.Summary = _summary;
+                return _target;
             }
         }
 
@@ -76,25 +75,28 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
             set => _description = value;
         }
 
         /// <inheritdoc/>
         public override string Summary
         {
-            get => string.IsNullOrEmpty(_summary) ? Target.Summary : _summary;
+            get => string.IsNullOrEmpty(_summary) ? Target?.Summary : _summary;
             set => _summary = value;
         }
 
+        private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
 
+        private string _externalValue;
         /// <inheritdoc/>
-        public override string ExternalValue { get => Target.ExternalValue; set => Target.ExternalValue = value; }
+        public override string ExternalValue { get => !string.IsNullOrEmpty(_externalValue) ? _externalValue : Target?.ExternalValue; set => _externalValue = value; }
 
+        private JsonNode _value;
         /// <inheritdoc/>
-        public override JsonNode Value { get => Target.Value; set => Target.Value = value; }
+        public override JsonNode Value { get => _value is not null ? _value : Target?.Value; set => _value = value; }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)

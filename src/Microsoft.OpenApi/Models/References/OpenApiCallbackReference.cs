@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -70,11 +70,13 @@ namespace Microsoft.OpenApi.Models.References
             };
         }
 
+        private Dictionary<RuntimeExpression, OpenApiPathItem> _pathItems;
         /// <inheritdoc/>
-        public override Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target.PathItems; set => Target.PathItems = value; }
+        public override Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => _pathItems is not null ? _pathItems : Target?.PathItems; set => _pathItems = value; }
 
+        private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)

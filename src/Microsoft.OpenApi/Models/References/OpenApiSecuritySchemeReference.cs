@@ -28,9 +28,8 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiSecurityScheme>(_reference);
-                OpenApiSecurityScheme resolved = new OpenApiSecurityScheme(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
+                if (!string.IsNullOrEmpty(_description)) _target.Description = _description;
+                return _target;
             }
         }
 
@@ -69,30 +68,38 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
             set => _description = value;
         }
 
+        private string _name;
         /// <inheritdoc/>
-        public override string Name { get => Target.Name; set => Target.Name = value; }
+        public override string Name { get => !string.IsNullOrEmpty(_name) ? _name : Target?.Name; set => _name = value; }
 
+        private ParameterLocation? _in;
         /// <inheritdoc/>
-        public override ParameterLocation? In { get => Target.In; set => Target.In = value; }
+        public override ParameterLocation? In { get => _in is not null ? _in : Target?.In; set => _in = value; }
 
+        private string _scheme;
         /// <inheritdoc/>
-        public override string Scheme { get => Target.Scheme; set => Target.Scheme = value; }
+        public override string Scheme { get => !string.IsNullOrEmpty(_scheme) ? _scheme : Target?.Scheme; set => _scheme = value; }
 
+        private string _bearerFormat;
         /// <inheritdoc/>
-        public override string BearerFormat { get => Target.BearerFormat; set => Target.BearerFormat = value; }
+        public override string BearerFormat { get => !string.IsNullOrEmpty(_bearerFormat) ? _bearerFormat : Target?.BearerFormat; set => _bearerFormat = value; }
 
+        private OpenApiOAuthFlows _flows;
         /// <inheritdoc/>
-        public override OpenApiOAuthFlows Flows { get => Target.Flows; set => Target.Flows = value; }
+        public override OpenApiOAuthFlows Flows { get => _flows is not null ? _flows : Target?.Flows; set => _flows = value; }
 
+        private Uri _openIdConnectUrl;
         /// <inheritdoc/>
-        public override Uri OpenIdConnectUrl { get => Target.OpenIdConnectUrl; set => Target.OpenIdConnectUrl = value; }
+        public override Uri OpenIdConnectUrl { get => _openIdConnectUrl is not null ? _openIdConnectUrl : Target?.OpenIdConnectUrl; set => _openIdConnectUrl = value; }
 
+        private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
+
 
         /// <inheritdoc/>
         public override SecuritySchemeType? Type { get => Target.Type; set => Target.Type = value; }

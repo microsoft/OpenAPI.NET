@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Models.References
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             Utils.CheckArgumentNull(writer);
-            action(writer, this);
+            action(writer, Target);
         }
     }
 }

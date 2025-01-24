@@ -81,6 +81,7 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument?.ResolveReferenceTo<OpenApiSchema>(_reference);
+                if (!string.IsNullOrEmpty(_description)) _target.Description = _description;
                 return _target;
             }
         }

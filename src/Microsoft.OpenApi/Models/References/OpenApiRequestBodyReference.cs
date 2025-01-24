@@ -28,9 +28,8 @@ namespace Microsoft.OpenApi.Models.References
             get
             {
                 _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiRequestBody>(_reference);
-                OpenApiRequestBody resolved = new OpenApiRequestBody(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
+                if (!string.IsNullOrEmpty(_description)) _target.Description = _description;
+                return _target;
             }
         }
 
@@ -73,18 +72,21 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
             set => _description = value;
         }
 
+        private IDictionary<string, OpenApiMediaType> _content;
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }
+        public override IDictionary<string, OpenApiMediaType> Content { get => _content is not null ? _content : Target?.Content; set => _content = value; }
 
+        private bool? _required;
         /// <inheritdoc/>
-        public override bool Required { get => Target.Required; set => Target.Required = value; }
+        public override bool Required { get => _required is not null ? _required.Value : Target?.Required ?? false; set => _required = value; }
 
+        private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
