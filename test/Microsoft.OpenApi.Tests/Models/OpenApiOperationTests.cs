@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Xunit;
 
@@ -25,19 +26,19 @@ namespace Microsoft.OpenApi.Tests.Models
                 Url = new("http://external.com")
             },
             OperationId = "operationId1",
-            Parameters = new List<OpenApiParameter>
-            {
-                new()
+            Parameters =
+            [
+                new OpenApiParameter()
                 {
                     In = ParameterLocation.Path,
                     Name = "parameter1",
                 },
-                new()
+                new OpenApiParameter()
                 {
                     In = ParameterLocation.Header,
                     Name = "parameter2"
                 }
-            },
+            ],
             RequestBody = new()
             {
                 Description = "description2",
@@ -99,19 +100,19 @@ namespace Microsoft.OpenApi.Tests.Models
                 Url = new("http://external.com")
             },
             OperationId = "operationId1",
-            Parameters = new List<OpenApiParameter>
-            {
-                new()
+            Parameters =
+            [
+                new OpenApiParameter()
                 {
                     In = ParameterLocation.Path,
                     Name = "parameter1"
                 },
-                new()
+                new OpenApiParameter()
                 {
                     In = ParameterLocation.Header,
                     Name = "parameter2"
                 }
-            },
+            ],
             RequestBody = new()
             {
                 Description = "description2",
@@ -176,9 +177,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 Summary = "Updates a pet in the store with form data",
                 Description = "",
                 OperationId = "updatePetWithForm",
-                Parameters = new List<OpenApiParameter>
-                {
-                    new()
+                Parameters =
+                [
+                    new OpenApiParameter()
                     {
                         Name = "petId",
                         In = ParameterLocation.Path,
@@ -189,7 +190,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             Type = JsonSchemaType.String
                         }
                     }
-                },
+                ],
                 RequestBody = new()
                 {
                     Content =

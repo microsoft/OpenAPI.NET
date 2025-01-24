@@ -260,7 +260,6 @@ schema:
                   "in": "path",
                   "description": "description1",
                   "required": true,
-                  "style": "simple",
                   "explode": true,
                   "schema": {
                     "title": "title2",

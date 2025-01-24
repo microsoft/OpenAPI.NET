@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
@@ -121,9 +122,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
                             { OperationType.Get, new() },
                             { OperationType.Patch, new() }
                         },
-                        Parameters = new List<OpenApiParameter>
-                        {
-                            new()
+                        Parameters =
+                        [
+                            new OpenApiParameter()
                             {
                                 Name = "id",
                                 In = ParameterLocation.Path,
@@ -133,7 +134,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                                     Type = JsonSchemaType.String
                                 }
                             }
-                        }
+                        ]
                     }
 
 

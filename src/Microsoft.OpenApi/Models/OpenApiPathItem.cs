@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -39,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         /// A list of parameters that are applicable for all the operations described under this path.
         /// These parameters can be overridden at the operation level, but cannot be removed there.
         /// </summary>
-        public virtual IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        public virtual IList<IOpenApiParameter> Parameters { get; set; } = new List<IOpenApiParameter>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -80,7 +81,7 @@ namespace Microsoft.OpenApi.Models
             Description = pathItem?.Description ?? Description;
             Operations = pathItem?.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
             Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
-            Parameters = pathItem?.Parameters != null ? new List<OpenApiParameter>(pathItem.Parameters) : null;
+            Parameters = pathItem?.Parameters != null ? new List<IOpenApiParameter>(pathItem.Parameters) : null;
             Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
             UnresolvedReference = pathItem?.UnresolvedReference ?? UnresolvedReference;
             Reference = pathItem?.Reference != null ? new(pathItem?.Reference) : null;

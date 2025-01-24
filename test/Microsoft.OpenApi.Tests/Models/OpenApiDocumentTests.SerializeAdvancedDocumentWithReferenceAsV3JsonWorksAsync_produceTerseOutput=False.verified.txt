@@ -30,7 +30,6 @@
             "name": "tags",
             "in": "query",
             "description": "tags to filter by",
-            "style": "form",
             "schema": {
               "type": "array",
               "items": {

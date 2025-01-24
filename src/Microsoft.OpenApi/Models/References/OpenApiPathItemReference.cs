@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -93,7 +94,7 @@ namespace Microsoft.OpenApi.Models.References
         public override IList<OpenApiServer> Servers { get => Target.Servers; set => Target.Servers = value; }
 
         /// <inheritdoc/>
-        public override IList<OpenApiParameter> Parameters { get => Target.Parameters; set => Target.Parameters = value; }
+        public override IList<IOpenApiParameter> Parameters { get => Target.Parameters; set => Target.Parameters = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }

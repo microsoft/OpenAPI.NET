@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Readers;
@@ -252,8 +253,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
-                            Parameters = new List<OpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter
                                 {
                                     Name = "tags",
@@ -281,7 +282,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int32"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["200"] = new OpenApiResponse
@@ -395,8 +396,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             Description =
                                 "Returns a user based on a single ID, if the user does not have access to the pet",
                             OperationId = "findPetById",
-                            Parameters = new List<OpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter
                                 {
                                     Name = "id",
@@ -409,7 +410,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int64"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["200"] = new OpenApiResponse
@@ -455,8 +456,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "deletes a single pet based on the ID supplied",
                             OperationId = "deletePet",
-                            Parameters = new List<OpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter
                                 {
                                     Name = "id",
@@ -469,7 +470,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int64"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["204"] = new OpenApiResponse
@@ -628,7 +629,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
-                            Parameters = new List<OpenApiParameter>
+                            Parameters = new List<IOpenApiParameter>
                             {
                                 new OpenApiParameter
                                 {
@@ -771,7 +772,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             Description =
                                 "Returns a user based on a single ID, if the user does not have access to the pet",
                             OperationId = "findPetById",
-                            Parameters = new List<OpenApiParameter>
+                            Parameters = new List<IOpenApiParameter>
                             {
                                 new OpenApiParameter
                                 {
@@ -831,7 +832,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "deletes a single pet based on the ID supplied",
                             OperationId = "deletePet",
-                            Parameters = new List<OpenApiParameter>
+                            Parameters = new List<IOpenApiParameter>
                             {
                                 new OpenApiParameter
                                 {
@@ -975,7 +976,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         [OperationType.Get] = new OpenApiOperation
                         {
                             OperationId = "addByOperand1AndByOperand2",
-                            Parameters = new List<OpenApiParameter>
+                            Parameters = new List<IOpenApiParameter>
                             {
                                 new OpenApiParameter
                                 {
@@ -1087,9 +1088,9 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
-                            Parameters = new List<OpenApiParameter>
+                            Parameters = new List<IOpenApiParameter>
                             {
-                                new()
+                                new OpenApiParameter()
                                 {
                                     Name = "tags",
                                     In = ParameterLocation.Query,
@@ -1104,7 +1105,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         }
                                     }
                                 },
-                                new()
+                                new OpenApiParameter()
                                 {
                                     Name = "limit",
                                     In = ParameterLocation.Query,
@@ -1230,9 +1231,9 @@ namespace Microsoft.OpenApi.Tests.Models
                             Description =
                                 "Returns a user based on a single ID, if the user does not have access to the pet",
                             OperationId = "findPetById",
-                            Parameters = new List<OpenApiParameter>
+                            Parameters = new List<IOpenApiParameter>
                             {
-                                new()
+                                new OpenApiParameter()
                                 {
                                     Name = "id",
                                     In = ParameterLocation.Path,
@@ -1290,9 +1291,9 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "deletes a single pet based on the ID supplied",
                             OperationId = "deletePet",
-                            Parameters = new List<OpenApiParameter>
+                            Parameters = new List<IOpenApiParameter>
                             {
-                                new()
+                                new OpenApiParameter()
                                 {
                                     Name = "id",
                                     In = ParameterLocation.Path,
@@ -1732,8 +1733,8 @@ paths:
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
-                                Parameters = new List<OpenApiParameter>
-                                {
+                                Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         In = ParameterLocation.Query,
@@ -1742,7 +1743,7 @@ paths:
                                             Type = JsonSchemaType.String
                                         }
                                     }
-                                },
+                                ],
                                 Responses = new OpenApiResponses()
                             }
                         }
@@ -1799,8 +1800,8 @@ paths:
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
-                                Parameters = new List<OpenApiParameter>
-                                {
+                                Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         Name = "id",
@@ -1814,7 +1815,7 @@ paths:
                                             }
                                         }
                                     }
-                                },
+                                ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse

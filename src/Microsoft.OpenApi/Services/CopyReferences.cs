@@ -99,9 +99,9 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureParametersExist();
-        if (!Components.Parameters.ContainsKey(referenceId ?? parameter.Reference.Id))
+        if (!Components.Parameters.ContainsKey(referenceId))
         {
-            Components.Parameters.Add(referenceId ?? parameter.Reference.Id, parameter);
+            Components.Parameters.Add(referenceId, parameter);
         }
     }
 
@@ -205,7 +205,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 
     private void EnsureParametersExist()
     {
-        _target.Components.Parameters ??= new Dictionary<string, OpenApiParameter>();
+        _target.Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
     }
 
     private void EnsureResponsesExist()

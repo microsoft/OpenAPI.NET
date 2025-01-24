@@ -623,7 +623,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        internal void Walk(IList<OpenApiParameter> parameters)
+        internal void Walk(IList<IOpenApiParameter> parameters)
         {
             if (parameters == null)
             {
@@ -644,7 +644,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiParameter"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiParameter parameter, bool isComponent = false)
+        internal void Walk(IOpenApiParameter parameter, bool isComponent = false)
         {
             if (parameter == null)
             {
@@ -1203,7 +1203,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiOAuthFlows e: Walk(e); break;
                 case OpenApiOAuthFlow e: Walk(e); break;
                 case OpenApiOperation e: Walk(e); break;
-                case OpenApiParameter e: Walk(e); break;
+                case IOpenApiParameter e: Walk(e); break;
                 case OpenApiPaths e: Walk(e); break;
                 case OpenApiRequestBody e: Walk(e); break;
                 case OpenApiResponse e: Walk(e); break;

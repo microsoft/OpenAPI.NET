@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -180,7 +181,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         internal static OpenApiRequestBody CreateRequestBody(
             ParsingContext context,
-            OpenApiParameter bodyParameter)
+            IOpenApiParameter bodyParameter)
         {
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??

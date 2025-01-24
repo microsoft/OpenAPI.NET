@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -112,7 +113,7 @@ namespace Microsoft.OpenApi.Models
             // RequestBody object does not exist in V2.
         }
 
-        internal virtual OpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
+        internal virtual IOpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
         {
             var bodyParameter = new OpenApiBodyParameter
             {

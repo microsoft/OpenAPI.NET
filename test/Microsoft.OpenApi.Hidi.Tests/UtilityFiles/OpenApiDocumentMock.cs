@@ -4,6 +4,7 @@
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Tests.UtilityFiles
@@ -78,10 +79,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     OperationId = "reports.getTeamsUserActivityCounts",
                                     Summary = "Invoke function getTeamsUserActivityUserCounts",
-                                    Parameters = new List<OpenApiParameter>
+                                    Parameters = new List<IOpenApiParameter>
                                     {
                                         {
-                                            new()
+                                            new OpenApiParameter()
                                             {
                                                 Name = "period",
                                                 In = ParameterLocation.Path,
@@ -118,10 +119,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 }
                             }
                         },
-                        Parameters = new List<OpenApiParameter>
+                        Parameters = new List<IOpenApiParameter>
                         {
                             {
-                                new()
+                                new OpenApiParameter()
                                 {
                                     Name = "period",
                                     In = ParameterLocation.Path,
@@ -143,10 +144,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     OperationId = "reports.getTeamsUserActivityUserDetail-a3f1",
                                     Summary = "Invoke function getTeamsUserActivityUserDetail",
-                                    Parameters = new List<OpenApiParameter>
+                                    Parameters = new List<IOpenApiParameter>
                                     {
                                         {
-                                            new()
+                                            new OpenApiParameter()
                                             {
                                                 Name = "period",
                                                 In = ParameterLocation.Path,
@@ -183,9 +184,9 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 }
                             }
                         },
-                        Parameters = new List<OpenApiParameter>
+                        Parameters = new List<IOpenApiParameter>
                         {
-                            new()
+                            new OpenApiParameter()
                             {
                                 Name = "period",
                                 In = ParameterLocation.Path,
@@ -316,9 +317,9 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     OperationId = "users.GetMessages",
                                     Summary = "Get messages from users",
                                     Description = "The messages in a mailbox or folder. Read-only. Nullable.",
-                                    Parameters = new List<OpenApiParameter>
+                                    Parameters = new List<IOpenApiParameter>
                                     {
-                                        new()
+                                        new OpenApiParameter()
                                         {
                                             Name = "$select",
                                             In = ParameterLocation.Query,
@@ -370,10 +371,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     OperationId = "administrativeUnits.restore",
                                     Summary = "Invoke action restore",
-                                    Parameters = new List<OpenApiParameter>
+                                    Parameters = new List<IOpenApiParameter>
                                     {
                                         {
-                                            new()
+                                            new OpenApiParameter()
                                             {
                                                 Name = "administrativeUnit-id",
                                                 In = ParameterLocation.Path,
@@ -504,9 +505,9 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     OperationId = "communications.calls.call.keepAlive",
                                     Summary = "Invoke action keepAlive",
-                                    Parameters = new List<OpenApiParameter>
+                                    Parameters = new List<IOpenApiParameter>
                                     {
-                                        new()
+                                        new OpenApiParameter()
                                         {
                                             Name = "call-id",
                                             In = ParameterLocation.Path,
@@ -552,9 +553,9 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     OperationId = "groups.group.events.event.calendar.events.delta",
                                     Summary = "Invoke function delta",
-                                    Parameters = new List<OpenApiParameter>
+                                    Parameters = new List<IOpenApiParameter>
                                     {
-                                        new()
+                                        new OpenApiParameter()
                                         {
                                             Name = "group-id",
                                             In = ParameterLocation.Path,
@@ -571,7 +572,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 }
                                             }
                                         },
-                                        new()
+                                        new OpenApiParameter()
                                         {
                                             Name = "event-id",
                                             In = ParameterLocation.Path,

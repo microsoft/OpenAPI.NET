@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
@@ -49,7 +50,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Enter("{name}");
             var walker = new OpenApiWalker(validator);
-            walker.Walk(parameter);
+            walker.Walk((IOpenApiParameter)parameter);
             var errors = validator.Errors;
             // Assert
             Assert.NotEmpty(errors);
@@ -93,8 +94,6 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateExamplesShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
-            IEnumerable<OpenApiError> warnings;
-
             var parameter = new OpenApiParameter
             {
                 Name = "parameter1",
@@ -140,26 +139,21 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var defaultRuleSet = ValidationRuleSet.GetDefaultRuleSet();
-            defaultRuleSet.Add(typeof(OpenApiParameter), OpenApiNonDefaultRules.ParameterMismatchedDataType);
+            defaultRuleSet.Add(typeof(IOpenApiParameter), OpenApiNonDefaultRules.ParameterMismatchedDataType);
 
             var validator = new OpenApiValidator(defaultRuleSet);
             validator.Enter("{parameter1}");
             var walker = new OpenApiWalker(validator);
-            walker.Walk(parameter);
-
-            warnings = validator.Warnings;
-            var result = !warnings.Any();
+            walker.Walk((IOpenApiParameter)parameter);
 
             // Assert
-            Assert.False(result);
+            Assert.NotEmpty(validator.Warnings);
         }
 
         [Fact]
         public void PathParameterNotInThePathShouldReturnAnError()
         {
             // Arrange
-            IEnumerable<OpenApiError> errors;
-
             var parameter = new OpenApiParameter
             {
                 Name = "parameter1",
@@ -175,21 +169,18 @@ namespace Microsoft.OpenApi.Validations.Tests
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
 
             var walker = new OpenApiWalker(validator);
-            walker.Walk(parameter);
-
-            errors = validator.Errors;
-            var result = errors.Any();
+            walker.Walk((IOpenApiParameter)parameter);
 
             // Assert
-            Assert.True(result);
+            Assert.NotEmpty(validator.Errors);
             Assert.Equivalent(new[]
             {
                 "PathParameterShouldBeInThePath"
-            }, errors.OfType<OpenApiValidatorError>().Select(e => e.RuleName));
+            }, validator.Errors.OfType<OpenApiValidatorError>().Select(e => e.RuleName));
             Assert.Equivalent(new[]
             {
                 "#/in"
-            }, errors.Select(e => e.Pointer));
+            }, validator.Errors.Select(e => e.Pointer));
         }
 
         [Fact]
