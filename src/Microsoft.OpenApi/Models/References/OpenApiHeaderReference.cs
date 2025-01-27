@@ -130,13 +130,5 @@ namespace Microsoft.OpenApi.Models.References
         {
             return source is OpenApiHeader ? new OpenApiHeader(this) : source;
         }
-
-        /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiHeader> action)
-        {
-            Utils.CheckArgumentNull(writer);
-            action(writer, Target);
-        }
     }
 }

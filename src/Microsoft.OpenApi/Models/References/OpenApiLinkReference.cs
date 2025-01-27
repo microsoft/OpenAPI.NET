@@ -106,13 +106,5 @@ namespace Microsoft.OpenApi.Models.References
         {
             return source is OpenApiLink ? new OpenApiLink(this) : source;
         }
-
-        /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiLink> action)
-        {
-            Utils.CheckArgumentNull(writer);
-            action(writer, Target);
-        }
     }
 }

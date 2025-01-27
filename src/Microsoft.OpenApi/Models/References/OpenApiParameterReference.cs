@@ -137,13 +137,5 @@ namespace Microsoft.OpenApi.Models.References
         {
             return source is OpenApiParameter ? new OpenApiParameter(this) : source;
         }
-
-        /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiParameter> action)
-        {
-            Utils.CheckArgumentNull(writer);
-            action(writer, Target);
-        }
     }
 }

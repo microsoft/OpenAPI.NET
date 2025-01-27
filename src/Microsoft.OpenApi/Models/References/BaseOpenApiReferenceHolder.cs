@@ -1,3 +1,4 @@
+using System;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -76,4 +77,17 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     public abstract void SerializeAsV3(IOpenApiWriter writer);
     /// <inheritdoc/>
     public abstract void SerializeAsV31(IOpenApiWriter writer);
+
+    /// <summary>
+    /// Serialize the reference as a reference or the target object.
+    /// This method is used to accelerate the serialization methods implementations.
+    /// </summary>
+    /// <param name="writer">The OpenApiWriter.</param>
+    /// <param name="action">The action to serialize the target object.</param>
+    private protected void SerializeInternal(IOpenApiWriter writer,
+        Action<IOpenApiWriter, V> action)
+    {
+        Utils.CheckArgumentNull(writer);
+        action(writer, Target);
+    }
 }
