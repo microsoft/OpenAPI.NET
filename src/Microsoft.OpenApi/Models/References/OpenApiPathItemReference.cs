@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)
         {
-            return source is OpenApiPathItem ? new OpenApiPathItem(this) : null;
+            return source is OpenApiPathItem ? new OpenApiPathItem(this) : source;
         }
 
         /// <inheritdoc/>
