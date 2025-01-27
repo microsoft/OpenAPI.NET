@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Workbench
 
         public int RequestBodyCount { get; set; }
 
-        public override void Visit(OpenApiRequestBody requestBody)
+        public override void Visit(IOpenApiRequestBody requestBody)
         {
             RequestBodyCount++;
         }

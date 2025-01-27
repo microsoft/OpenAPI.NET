@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Models
         /// has explicitly defined semantics for request bodies.
         /// In other cases where the HTTP spec is vague, requestBody SHALL be ignored by consumers.
         /// </summary>
-        public OpenApiRequestBody? RequestBody { get; set; }
+        public IOpenApiRequestBody? RequestBody { get; set; }
 
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Models
             ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;
             OperationId = operation?.OperationId ?? OperationId;
             Parameters = operation?.Parameters != null ? new List<IOpenApiParameter>(operation.Parameters) : null;
-            RequestBody = operation?.RequestBody != null ? new(operation?.RequestBody) : null;
+            RequestBody = operation?.RequestBody != null ? new OpenApiRequestBody(operation?.RequestBody) : null;
             Responses = operation?.Responses != null ? new(operation?.Responses) : null;
             Callbacks = operation?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
             Deprecated = operation?.Deprecated ?? Deprecated;
@@ -235,15 +235,7 @@ namespace Microsoft.OpenApi.Models
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
-            List<IOpenApiParameter> parameters;
-            if (Parameters == null)
-            {
-                parameters = [];
-            }
-            else
-            {
-                parameters = [.. Parameters];
-            }
+            List<IOpenApiParameter> parameters = Parameters is null ? new() : new(Parameters);
 
             if (RequestBody != null)
             {
@@ -255,17 +247,17 @@ namespace Microsoft.OpenApi.Models
                     if (consumes.Contains("application/x-www-form-urlencoded") ||
                         consumes.Contains("multipart/form-data"))
                     {
-                        parameters.AddRange(RequestBody.ConvertToFormDataParameters());
+                        parameters.AddRange(RequestBody.ConvertToFormDataParameters(writer));
                     }
                     else
                     {
                         parameters.Add(RequestBody.ConvertToBodyParameter(writer));
                     }
                 }
-                else if (RequestBody.Reference != null && RequestBody.Reference.HostDocument is {} hostDocument)
+                else if (RequestBody is OpenApiRequestBodyReference requestBodyReference)
                 {
                     parameters.Add(
-                        new OpenApiParameterReference(RequestBody.Reference.Id, hostDocument));
+                        new OpenApiParameterReference(requestBodyReference.Reference.Id, requestBodyReference.Reference.HostDocument));
                 }
 
                 if (consumes.Count > 0)

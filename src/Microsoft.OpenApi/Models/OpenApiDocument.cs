@@ -600,7 +600,7 @@ namespace Microsoft.OpenApi.Models
                     Components.Responses.Add(id, openApiResponse);
                     break;
                 case OpenApiRequestBody openApiRequestBody:
-                    Components.RequestBodies ??= new Dictionary<string, OpenApiRequestBody>();
+                    Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
                     Components.RequestBodies.Add(id, openApiRequestBody);
                     break;
                 case OpenApiLink openApiLink:

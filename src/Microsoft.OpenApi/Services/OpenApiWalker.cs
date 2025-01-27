@@ -713,9 +713,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiRequestBody"/> and child objects
+        /// Visits <see cref="IOpenApiRequestBody"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiRequestBody requestBody, bool isComponent = false)
+        internal void Walk(IOpenApiRequestBody requestBody, bool isComponent = false)
         {
             if (requestBody == null)
             {

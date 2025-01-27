@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     ],
-                    RequestBody = new()
+                    RequestBody = new OpenApiRequestBody()
                     {
                         Content =
                         {
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     ],
-                    RequestBody = new()
+                    RequestBody = new OpenApiRequestBody()
                     {
                         Content =
                         {

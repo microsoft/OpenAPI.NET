@@ -1171,7 +1171,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "Creates a new pet in the store.  Duplicates are allowed",
                             OperationId = "addPet",
-                            RequestBody = new()
+                            RequestBody = new OpenApiRequestBody()
                             {
                                 Description = "Pet to add to the store",
                                 Required = true,

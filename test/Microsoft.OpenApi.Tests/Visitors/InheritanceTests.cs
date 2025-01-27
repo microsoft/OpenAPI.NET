@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(OpenApiOperation));
             visitor.Visit(default(IList<IOpenApiParameter>));
             visitor.Visit(default(IOpenApiParameter));
-            visitor.Visit(default(OpenApiRequestBody));
+            visitor.Visit(default(IOpenApiRequestBody));
             visitor.Visit(default(IDictionary<string, IOpenApiHeader>));
             visitor.Visit(default(IDictionary<string, IOpenApiCallback>));
             visitor.Visit(default(OpenApiResponse));
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(parameter);
             }
 
-            public override void Visit(OpenApiRequestBody requestBody)
+            public override void Visit(IOpenApiRequestBody requestBody)
             {
                 EncodeCall();
                 base.Visit(requestBody);

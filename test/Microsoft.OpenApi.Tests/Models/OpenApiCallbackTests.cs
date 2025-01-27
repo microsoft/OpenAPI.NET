@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         [OperationType.Post] =
                         new()
                         {
-                            RequestBody = new()
+                            RequestBody = new OpenApiRequestBody()
                             {
                                 Content =
                                 {
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         [OperationType.Post] =
                         new()
                         {
-                            RequestBody = new()
+                            RequestBody = new OpenApiRequestBody()
                             {
                                 Content =
                                 {

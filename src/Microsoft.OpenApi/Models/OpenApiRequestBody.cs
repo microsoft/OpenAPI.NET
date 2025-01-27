@@ -15,39 +15,19 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiRequestBody
     {
-        /// <summary>
-        /// Indicates if object is populated with data or is just a reference to the data
-        /// </summary>
-        public bool UnresolvedReference { get; set; }
+        /// <inheritdoc />
+        public string Description { get; set; }
 
-        /// <summary>
-        /// Reference object.
-        /// </summary>
-        public OpenApiReference Reference { get; set; }
+        /// <inheritdoc />
+        public bool Required { get; set; }
 
-        /// <summary>
-        /// A brief description of the request body. This could contain examples of use.
-        /// CommonMark syntax MAY be used for rich text representation.
-        /// </summary>
-        public virtual string Description { get; set; }
+        /// <inheritdoc />
+        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
-        /// <summary>
-        /// Determines if the request body is required in the request. Defaults to false.
-        /// </summary>
-        public virtual bool Required { get; set; }
-
-        /// <summary>
-        /// REQUIRED. The content of the request body. The key is a media type or media type range and the value describes it.
-        /// For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
-        /// </summary>
-        public virtual IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
-
-        /// <summary>
-        /// This object MAY be extended with Specification Extensions.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        /// <inheritdoc />
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -55,12 +35,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiRequestBody() { }
 
         /// <summary>
-        /// Initializes a copy instance of an <see cref="OpenApiRequestBody"/> object
+        /// Initializes a copy instance of an <see cref="IOpenApiRequestBody"/> object
         /// </summary>
-        public OpenApiRequestBody(OpenApiRequestBody requestBody)
+        public OpenApiRequestBody(IOpenApiRequestBody requestBody)
         {
-            UnresolvedReference = requestBody?.UnresolvedReference ?? UnresolvedReference;
-            Reference = requestBody?.Reference != null ? new(requestBody?.Reference) : null;
+            Utils.CheckArgumentNull(requestBody);
             Description = requestBody?.Description ?? Description;
             Required = requestBody?.Required ?? Required;
             Content = requestBody?.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
@@ -70,7 +49,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.1
         /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -78,12 +57,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0
         /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
         
-        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -113,7 +92,8 @@ namespace Microsoft.OpenApi.Models
             // RequestBody object does not exist in V2.
         }
 
-        internal virtual IOpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
+        /// <inheritdoc/>
+        public IOpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
         {
             var bodyParameter = new OpenApiBodyParameter
             {
@@ -135,7 +115,8 @@ namespace Microsoft.OpenApi.Models
             return bodyParameter;
         }
 
-        internal IEnumerable<OpenApiFormDataParameter> ConvertToFormDataParameters()
+        /// <inheritdoc/>
+        public IEnumerable<IOpenApiParameter> ConvertToFormDataParameters(IOpenApiWriter writer)
         {
             if (Content == null || !Content.Any())
                 yield break;
@@ -143,14 +124,14 @@ namespace Microsoft.OpenApi.Models
             foreach (var property in Content.First().Value.Schema.Properties)
             {
                 var paramSchema = property.Value;
-                if ("string".Equals(paramSchema.Type.ToIdentifier(), StringComparison.OrdinalIgnoreCase)
+                if ((paramSchema.Type & JsonSchemaType.String) == JsonSchemaType.String
                     && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
                     || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
                 {
                     paramSchema.Type = "file".ToJsonSchemaType();
                     paramSchema.Format = null;
                 }
-                yield return new()
+                yield return new OpenApiFormDataParameter()
                 {
                     Description = property.Value.Description,
                     Name = property.Key,
