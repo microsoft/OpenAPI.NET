@@ -31,11 +31,8 @@ namespace Microsoft.OpenApi.Services
             _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
         }
 
-        /// <summary>
-        /// Visits <see cref="OpenApiPathItem"/>
-        /// </summary>
-        /// <param name="pathItem"> The target <see cref="OpenApiPathItem"/>.</param>
-        public override void Visit(OpenApiPathItem pathItem)
+        /// <inheritdoc/>
+        public override void Visit(IOpenApiPathItem pathItem)
         {
             foreach (var item in pathItem.Operations)
             {

@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                 },
                 Paths = new()
                 {
-                    ["/"] = new() // root path
+                    ["/"] = new OpenApiPathItem() // root path
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [getTeamsActivityByPeriodPath] = new()
+                    [getTeamsActivityByPeriodPath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [getTeamsActivityByDatePath] = new()
+                    [getTeamsActivityByDatePath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -198,7 +198,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [usersPath] = new()
+                    [usersPath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -252,7 +252,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [usersByIdPath] = new()
+                    [usersByIdPath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -307,7 +307,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [messagesByIdPath] = new()
+                    [messagesByIdPath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -362,7 +362,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [administrativeUnitRestorePath] = new()
+                    [administrativeUnitRestorePath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -420,7 +420,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [logoPath] = new()
+                    [logoPath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -442,7 +442,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [securityProfilesPath] = new()
+                    [securityProfilesPath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -496,7 +496,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [communicationsCallsKeepAlivePath] = new()
+                    [communicationsCallsKeepAlivePath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -544,7 +544,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [eventsDeltaPath] = new()
+                    [eventsDeltaPath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -627,7 +627,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             }
                         }
                     },
-                    [refPath] = new()
+                    [refPath] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {

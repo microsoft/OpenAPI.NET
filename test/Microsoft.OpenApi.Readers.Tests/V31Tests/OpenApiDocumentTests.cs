@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Version = "1.0.0",
                     Title = "Webhook Example"
                 },
-                Webhooks = new Dictionary<string, OpenApiPathItem>
+                Webhooks = new Dictionary<string, IOpenApiPathItem>
                 {
                     ["pets"] = new OpenApiPathItem
                     {
@@ -271,7 +271,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.Document);
 
-            components.PathItems = new Dictionary<string, OpenApiPathItem>
+            components.PathItems = new Dictionary<string, IOpenApiPathItem>
             {
                 ["pets"] = new OpenApiPathItem
                 {
@@ -379,7 +379,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Version = "1.0.0"
                 },
                 JsonSchemaDialect = "http://json-schema.org/draft-07/schema#",
-                Webhooks = new Dictionary<string, OpenApiPathItem>
+                Webhooks = new Dictionary<string, IOpenApiPathItem>
                 {
                     ["pets"] = components.PathItems["pets"]
                 },
@@ -388,7 +388,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             actual.Document.Should().BeEquivalentTo(expected, options => options
-            .Excluding(x => x.Webhooks["pets"].Reference)
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
             Assert.Equivalent(

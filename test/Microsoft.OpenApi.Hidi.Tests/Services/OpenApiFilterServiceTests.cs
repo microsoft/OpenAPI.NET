@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new()
                 {
-                    {"/foo", new() {
+                    {"/foo", new OpenApiPathItem() {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             { OperationType.Get, new() },
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new()
                 {
-                    ["/test/{id}"] = new()
+                    ["/test/{id}"] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {

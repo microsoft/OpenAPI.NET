@@ -891,7 +891,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Title = "Webhook Example",
                 Version = "1.0.0"
             },
-            Webhooks = new Dictionary<string, OpenApiPathItem>
+            Webhooks = new Dictionary<string, IOpenApiPathItem>
             {
                 ["newPet"] = new OpenApiPathItem
                 {
@@ -1080,7 +1080,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Paths = new()
             {
-                ["/pets"] = new()
+                ["/pets"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
@@ -1222,7 +1222,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 },
-                ["/pets/{id}"] = new()
+                ["/pets/{id}"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {

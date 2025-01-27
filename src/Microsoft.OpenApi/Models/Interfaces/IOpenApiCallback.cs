@@ -14,5 +14,5 @@ public interface IOpenApiCallback : IOpenApiSerializable, IOpenApiReadOnlyExtens
     /// <summary>
     /// A Path Item Object used to define a callback request and expected responses.
     /// </summary>
-    public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; }
+    public Dictionary<RuntimeExpression, IOpenApiPathItem> PathItems { get; }
 }

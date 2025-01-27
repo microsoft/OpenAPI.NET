@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiCallback
     {
         /// <inheritdoc/>
-        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
+        public Dictionary<RuntimeExpression, IOpenApiPathItem> PathItems { get; set; }
             = [];
 
 
@@ -40,11 +40,11 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Add a <see cref="OpenApiPathItem"/> into the <see cref="PathItems"/>.
+        /// Add a <see cref="IOpenApiPathItem"/> into the <see cref="PathItems"/>.
         /// </summary>
         /// <param name="expression">The runtime expression.</param>
         /// <param name="pathItem">The path item.</param>
-        public void AddPathItem(RuntimeExpression expression, OpenApiPathItem pathItem)
+        public void AddPathItem(RuntimeExpression expression, IOpenApiPathItem pathItem)
         {
             Utils.CheckArgumentNull(expression);
             Utils.CheckArgumentNull(pathItem);

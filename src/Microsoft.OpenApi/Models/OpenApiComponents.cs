@@ -66,9 +66,9 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
+        /// An object to hold reusable <see cref="IOpenApiPathItem"/> Object.
         /// </summary>
-        public IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+        public IDictionary<string, IOpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, IOpenApiPathItem>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Models
             SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
             Links = components?.Links != null ? new Dictionary<string, IOpenApiLink>(components.Links) : null;
             Callbacks = components?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(components.Callbacks) : null;
-            PathItems = components?.PathItems != null ? new Dictionary<string, OpenApiPathItem>(components.PathItems) : null;
+            PathItems = components?.PathItems != null ? new Dictionary<string, IOpenApiPathItem>(components.PathItems) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 

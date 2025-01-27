@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -65,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         public void LocatePathOperationContentSchema()
         {
             var doc = new OpenApiDocument();
-            doc.Paths.Add("/test", new()
+            doc.Paths.Add("/test", new OpenApiPathItem()
             {
                 Operations = new Dictionary<OperationType, OpenApiOperation>
                 {
@@ -183,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             {
                 Paths = new()
                 {
-                    ["/"] = new()
+                    ["/"] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -267,7 +268,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(OpenApiPathItem pathItem)
+        public override void Visit(IOpenApiPathItem pathItem)
         {
             Keys.Add(CurrentKeys.Path);
             Locations.Add(this.PathString);

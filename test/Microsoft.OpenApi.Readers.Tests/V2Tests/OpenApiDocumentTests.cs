@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 },
                 Paths = new()
                 {
-                    ["/items"] = new()
+                    ["/items"] = new OpenApiPathItem()
                     {
                         Operations =
                         {

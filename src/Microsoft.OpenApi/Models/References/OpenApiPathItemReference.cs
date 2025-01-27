@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -12,30 +11,8 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Path Item Object Reference: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItemReference : OpenApiPathItem, IOpenApiReferenceHolder<OpenApiPathItem>
+    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem>, IOpenApiPathItem
     {
-        internal OpenApiPathItem _target;
-        private readonly OpenApiReference _reference;
-        private string _description;
-        private string _summary;
-
-        /// <summary>
-        /// Gets the target path item.
-        /// </summary>
-        /// <remarks>
-        /// If the reference is not resolved, this will return null.
-        /// </remarks>
-        public OpenApiPathItem Target
-        {
-            get
-            {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiPathItem>(_reference);
-                OpenApiPathItem resolved = new OpenApiPathItem(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                if (!string.IsNullOrEmpty(_summary)) resolved.Summary = _summary;
-                return resolved;
-            }
-        }
 
         /// <summary>
         /// Constructor initializing the reference object.
@@ -47,78 +24,62 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiPathItemReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
+        public OpenApiPathItemReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null): base(referenceId, hostDocument, ReferenceType.PathItem, externalResource)
         {
-            Utils.CheckArgumentNullOrEmpty(referenceId);
-
-            _reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.PathItem,
-                ExternalResource = externalResource
-            };
-
-            Reference = _reference;
         }
 
-        internal OpenApiPathItemReference(OpenApiPathItem target, string referenceId)
+        internal OpenApiPathItemReference(OpenApiPathItem target, string referenceId):base(target, referenceId, ReferenceType.PathItem)
         {
-            _target = target;
-
-            _reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                Type = ReferenceType.PathItem,
-            };
         }
 
         /// <inheritdoc/>
-        public override string Summary
+        public string Summary
         {
-            get => string.IsNullOrEmpty(_summary) ? Target.Summary : _summary;
-            set => _summary = value;
-        }
-
-        /// <inheritdoc/>
-        public override string Description
-        {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
-            set => _description = value;
-        }
-
-        /// <inheritdoc/>
-        public override IDictionary<OperationType, OpenApiOperation> Operations { get => Target.Operations; set => Target.Operations = value; }
-
-        /// <inheritdoc/>
-        public override IList<OpenApiServer> Servers { get => Target.Servers; set => Target.Servers = value; }
-
-        /// <inheritdoc/>
-        public override IList<IOpenApiParameter> Parameters { get => Target.Parameters; set => Target.Parameters = value; }
-
-        /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
-               
-        /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            get => string.IsNullOrEmpty(Reference?.Summary) ? Target?.Summary : Reference.Summary;
+            set
             {
-                _reference.SerializeAsV31(writer);
-                return;
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
+                if (Reference is not null)
+                {
+                    Reference.Summary = value;
+                }
             }
         }
 
         /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
+        public string Description
         {
-            Utils.CheckArgumentNull(writer);;
-            action(writer, Target);
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            set
+            {
+                if (Reference is not null)
+                {
+                    Reference.Description = value;
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public IDictionary<OperationType, OpenApiOperation> Operations { get => Target.Operations; }
+
+        /// <inheritdoc/>
+        public IList<OpenApiServer> Servers { get => Target.Servers; }
+
+        /// <inheritdoc/>
+        public IList<IOpenApiParameter> Parameters { get => Target.Parameters; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
+
+        /// <inheritdoc/>
+        public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)
+        {
+            return source is OpenApiPathItem ? new OpenApiPathItem(this) : null;
+        }
+
+        /// <inheritdoc/>
+        public override void SerializeAsV2(IOpenApiWriter writer)
+        {
+            Reference.SerializeAsV2(writer);
         }
     }
 }
