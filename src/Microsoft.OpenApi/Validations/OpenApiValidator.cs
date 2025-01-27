@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IOpenApiHeader header) => Validate(header);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiResponse response) => Validate(response);
+        public override void Visit(IOpenApiResponse response) => Validate(response);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiMediaType mediaType) => Validate(mediaType);

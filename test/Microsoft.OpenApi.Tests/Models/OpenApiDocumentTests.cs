@@ -1120,7 +1120,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             },
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Description = "pet response",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1143,7 +1143,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         }
                                     }
                                 },
-                                ["4XX"] = new()
+                                ["4XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected client error",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1154,7 +1154,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         }
                                     }
                                 },
-                                ["5XX"] = new()
+                                ["5XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected server error",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1185,7 +1185,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             },
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Description = "pet response",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1196,7 +1196,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         },
                                     }
                                 },
-                                ["4XX"] = new()
+                                ["4XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected client error",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1207,7 +1207,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         }
                                     }
                                 },
-                                ["5XX"] = new()
+                                ["5XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected server error",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1248,7 +1248,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             },
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Description = "pet response",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1263,7 +1263,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         }
                                     }
                                 },
-                                ["4XX"] = new()
+                                ["4XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected client error",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1274,7 +1274,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         }
                                     }
                                 },
-                                ["5XX"] = new()
+                                ["5XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected server error",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1308,11 +1308,11 @@ namespace Microsoft.OpenApi.Tests.Models
                             },
                             Responses = new()
                             {
-                                ["204"] = new()
+                                ["204"] = new OpenApiResponse()
                                 {
                                     Description = "pet deleted"
                                 },
-                                ["4XX"] = new()
+                                ["4XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected client error",
                                     Content = new Dictionary<string, OpenApiMediaType>
@@ -1323,7 +1323,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         }
                                     }
                                 },
-                                ["5XX"] = new()
+                                ["5XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected server error",
                                     Content = new Dictionary<string, OpenApiMediaType>

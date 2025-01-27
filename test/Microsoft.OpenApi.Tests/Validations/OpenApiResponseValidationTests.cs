@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -22,15 +23,15 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
-            walker.Walk(response);
+            walker.Walk((IOpenApiResponse)response);
 
             errors = validator.Errors;
-            var result = !errors.Any();
 
             // Assert
-            Assert.False(result);
+            Assert.NotEmpty(errors);
             Assert.NotNull(errors);
-            var error = Assert.Single(errors) as OpenApiValidatorError;
+            Assert.Single(errors);
+            var error = Assert.IsType<OpenApiValidatorError>(errors.First());
             Assert.Equal(string.Format(SRResource.Validation_FieldIsRequired, "description", "response"), error.Message);
             Assert.Equal("#/description", error.Pointer);
         }

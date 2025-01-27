@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Reader.V2
             mediaTypeObject.Example = exampleNode;
         }
 
-        public static OpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("response");
 

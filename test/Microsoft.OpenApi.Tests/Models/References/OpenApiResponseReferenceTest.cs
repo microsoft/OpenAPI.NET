@@ -104,37 +104,41 @@ components:
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeResponseReferenceAsV3JsonWorks(bool produceTerseOutput)
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        public async Task SerializeResponseReferenceAsV3JsonWorks(bool produceTerseOutput, bool inlineLocalReferences)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput});
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = inlineLocalReferences });
 
             // Act
             _localResponseReference.SerializeAsV3(writer);
             await writer.FlushAsync();
 
             // Assert            
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeResponseReferenceAsV31JsonWorks(bool produceTerseOutput)
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        public async Task SerializeResponseReferenceAsV31JsonWorks(bool produceTerseOutput, bool inlineLocalReferences)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput});
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = inlineLocalReferences });
 
             // Act
             _localResponseReference.SerializeAsV31(writer);
             await writer.FlushAsync();
 
             // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
         }
     }
 }

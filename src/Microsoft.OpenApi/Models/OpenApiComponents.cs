@@ -23,9 +23,9 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, OpenApiSchema>? Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiResponse"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiResponse>? Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public IDictionary<string, IOpenApiResponse>? Responses { get; set; } = new Dictionary<string, IOpenApiResponse>();
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiParameter"/> Objects.
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiComponents(OpenApiComponents? components)
         {
             Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
-            Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
+            Responses = components?.Responses != null ? new Dictionary<string, IOpenApiResponse>(components.Responses) : null;
             Parameters = components?.Parameters != null ? new Dictionary<string, IOpenApiParameter>(components.Parameters) : null;
             Examples = components?.Examples != null ? new Dictionary<string, IOpenApiExample>(components.Examples) : null;
             RequestBodies = components?.RequestBodies != null ? new Dictionary<string, IOpenApiRequestBody>(components.RequestBodies) : null;

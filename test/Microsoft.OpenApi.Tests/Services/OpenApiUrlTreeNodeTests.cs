@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Tests.Services
                             Responses = new()
                             {
                                 {
-                                    "200", new()
+                                    "200", new OpenApiResponse()
                                     {
                                         Description = "Retrieved entities"
                                     }
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Tests.Services
                             Responses = new()
                             {
                                 {
-                                    "200", new()
+                                    "200", new OpenApiResponse()
                                     {
                                         Description = "Retrieved entities"
                                     }
@@ -249,7 +249,7 @@ namespace Microsoft.OpenApi.Tests.Services
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entity"
                                             }
@@ -277,7 +277,7 @@ namespace Microsoft.OpenApi.Tests.Services
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entity"
                                             }
@@ -292,7 +292,7 @@ namespace Microsoft.OpenApi.Tests.Services
                                     Responses = new()
                                     {
                                         {
-                                            "204", new()
+                                            "204", new OpenApiResponse()
                                             {
                                                 Description = "Success."
                                             }

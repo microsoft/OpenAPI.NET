@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             },
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Description = "Success"
                                 }
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             },
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Description = "Success"
                                 }

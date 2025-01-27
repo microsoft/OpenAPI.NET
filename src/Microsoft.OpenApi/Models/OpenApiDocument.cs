@@ -596,7 +596,7 @@ namespace Microsoft.OpenApi.Models
                     Components.Parameters.Add(id, openApiParameter);
                     break;
                 case OpenApiResponse openApiResponse:
-                    Components.Responses ??= new Dictionary<string, OpenApiResponse>();
+                    Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
                     Components.Responses.Add(id, openApiResponse);
                     break;
                 case OpenApiRequestBody openApiRequestBody:

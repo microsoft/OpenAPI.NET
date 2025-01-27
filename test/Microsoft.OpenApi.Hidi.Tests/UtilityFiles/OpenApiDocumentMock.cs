@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200",new()
+                                            "200",new OpenApiResponse()
                                             {
                                                 Description = "OK"
                                             }
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -210,7 +210,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entities",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -264,7 +264,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entity",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -297,7 +297,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "204", new()
+                                            "204", new OpenApiResponse()
                                             {
                                                 Description = "Success"
                                             }
@@ -335,7 +335,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved navigation property",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -390,7 +390,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -432,7 +432,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "204", new()
+                                            "204", new OpenApiResponse()
                                             {
                                                 Description = "Success"
                                             }
@@ -454,7 +454,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved navigation property",
                                                 Content = new Dictionary<string, OpenApiMediaType>
@@ -528,7 +528,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "204", new()
+                                            "204", new OpenApiResponse()
                                             {
                                                 Description = "Success"
                                             }
@@ -593,7 +593,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Responses = new()
                                     {
                                         {
-                                            "200", new()
+                                            "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
                                                 Content = new Dictionary<string, OpenApiMediaType>

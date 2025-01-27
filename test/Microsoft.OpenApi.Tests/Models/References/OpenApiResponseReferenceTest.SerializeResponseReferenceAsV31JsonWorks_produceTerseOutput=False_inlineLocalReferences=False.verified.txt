@@ -1,3 +1,4 @@
 ﻿{
+  "description": "OK response",
   "$ref": "#/components/responses/OkResponse"
 }

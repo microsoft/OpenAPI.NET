@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Responses =
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -187,7 +187,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["application/xml"] = okMediaType,
                                         }
                                     },
-                                    ["default"] = new()
+                                    ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
                                         Content =
@@ -202,7 +202,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Responses =
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -210,7 +210,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["html/text"] = okMediaType
                                         }
                                     },
-                                    ["default"] = new()
+                                    ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
                                         Content =
@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Responses =
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -233,7 +233,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["application/xml"] = okMediaType,
                                         }
                                     },
-                                    ["default"] = new()
+                                    ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
                                         Content =
