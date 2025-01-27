@@ -1,3 +1,18 @@
 ﻿{
-  "$ref": "#/components/requestBodies/UserRequest"
+  "description": "User request body",
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
 }
