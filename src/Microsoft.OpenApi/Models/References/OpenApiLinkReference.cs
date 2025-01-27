@@ -12,29 +12,8 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Link Object Reference.
     /// </summary>
-    public class OpenApiLinkReference : IOpenApiLink, IOpenApiReferenceHolder<OpenApiLink, IOpenApiLink>
+    public class OpenApiLinkReference : BaseOpenApiReferenceHolder<OpenApiLink, IOpenApiLink>, IOpenApiLink
     {
-        /// <inheritdoc/>
-        public OpenApiReference Reference { get; set; }
-
-        /// <inheritdoc/>
-        public bool UnresolvedReference { get; set; }
-        internal OpenApiLink _target;
-        /// <summary>
-        /// Gets the target link.
-        /// </summary>
-        /// <remarks>
-        /// If the reference is not resolved, this will return null.
-        /// </remarks>
-        public OpenApiLink Target
-        {
-            get
-            {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiLink>(Reference);
-                return _target;
-            }
-        }
-
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -45,41 +24,18 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiLinkReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
+        public OpenApiLinkReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Link, externalResource)
         {
-            Utils.CheckArgumentNullOrEmpty(referenceId);
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.Link,
-                ExternalResource = externalResource
-            };
         }
         /// <summary>
         /// Copy constructor.
         /// </summary>
         /// <param name="reference">The reference to copy</param>
-        public OpenApiLinkReference(OpenApiLinkReference reference)
+        public OpenApiLinkReference(OpenApiLinkReference reference):base(reference)
         {
-            Utils.CheckArgumentNull(reference);
-
-            Reference = reference.Reference != null ? new(reference.Reference) : null;
-            UnresolvedReference = reference.UnresolvedReference;
-            //no need to copy summary and description as if they are not overridden, they will be fetched from the target
-            //if they are, the reference copy will handle it
         }
-
-        internal OpenApiLinkReference(OpenApiLink target, string referenceId)
+        internal OpenApiLinkReference(OpenApiLink target, string referenceId):base(target, referenceId, ReferenceType.Link)
         {
-            _target = target;
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                Type = ReferenceType.Link,
-            };
         }
 
         /// <inheritdoc/>
@@ -114,7 +70,7 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public override void SerializeAsV3(IOpenApiWriter writer)
         {
             if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
@@ -127,7 +83,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public override void SerializeAsV31(IOpenApiWriter writer)
         {
             if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
@@ -140,13 +96,13 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public override void SerializeAsV2(IOpenApiWriter writer)
         {
             // Link object does not exist in V2.
         }
 
         /// <inheritdoc/>
-        public IOpenApiLink CopyReferenceAsTargetElementWithOverrides(IOpenApiLink source)
+        public override IOpenApiLink CopyReferenceAsTargetElementWithOverrides(IOpenApiLink source)
         {
             return source is OpenApiLink ? new OpenApiLink(this) : source;
         }

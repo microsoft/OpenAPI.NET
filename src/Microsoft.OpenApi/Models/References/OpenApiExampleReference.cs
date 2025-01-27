@@ -13,30 +13,8 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Example Object Reference.
     /// </summary>
-    public class OpenApiExampleReference : IOpenApiReferenceHolder<OpenApiExample, IOpenApiExample>, IOpenApiExample
+    public class OpenApiExampleReference : BaseOpenApiReferenceHolder<OpenApiExample, IOpenApiExample>, IOpenApiExample
     {
-        /// <inheritdoc/>
-        public OpenApiReference Reference { get; set; }
-
-        /// <inheritdoc/>
-        public bool UnresolvedReference { get; set; }
-        internal OpenApiExample _target;
-
-        /// <summary>
-        /// Gets the target example.
-        /// </summary>
-        /// <remarks>
-        /// If the reference is not resolved, this will return null.
-        /// </remarks>
-        public OpenApiExample Target
-        {
-            get
-            {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiExample>(Reference);
-                return _target;
-            }
-        }
-
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -47,41 +25,20 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
+        public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Example, externalResource)
         {
-            Utils.CheckArgumentNullOrEmpty(referenceId);
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.Example,
-                ExternalResource = externalResource
-            };
         }
 
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="example">The reference to copy.</param>
-        public OpenApiExampleReference(OpenApiExampleReference example)
+        public OpenApiExampleReference(OpenApiExampleReference example):base(example)
         {
-            Utils.CheckArgumentNull(example);
-            Reference = example.Reference != null ? new(example.Reference) : null;
-            UnresolvedReference = example.UnresolvedReference;
-            //no need to copy summary and description as if they are not overridden, they will be fetched from the target
-            //if they are, the reference copy will handle it
         }
 
-        internal OpenApiExampleReference(OpenApiExample target, string referenceId)
+        internal OpenApiExampleReference(OpenApiExample target, string referenceId):base(target, referenceId, ReferenceType.Example)
         {
-            _target = target;
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                Type = ReferenceType.Example,
-            };
         }
 
         /// <inheritdoc/>
@@ -120,7 +77,7 @@ namespace Microsoft.OpenApi.Models.References
         public JsonNode Value { get => Target?.Value; }
 
         /// <inheritdoc/>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public override void SerializeAsV3(IOpenApiWriter writer)
         {
             if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
@@ -133,7 +90,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public override void SerializeAsV31(IOpenApiWriter writer)
         {
             if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
@@ -146,13 +103,13 @@ namespace Microsoft.OpenApi.Models.References
         }
         
         /// <inheritdoc/>
-        public IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)
+        public override IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)
         {
             return source is OpenApiExample ? new OpenApiExample(this) : source;
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public override void SerializeAsV2(IOpenApiWriter writer)
         {
             // examples components are not supported in OAS 2.0
             Reference.SerializeAsV2(writer);

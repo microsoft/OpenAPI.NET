@@ -13,30 +13,8 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : IOpenApiParameter, IOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter>
+    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter>, IOpenApiParameter
     {
-        /// <inheritdoc/>
-        public OpenApiReference Reference { get; set; }
-
-        /// <inheritdoc/>
-        public bool UnresolvedReference { get; set; }
-        internal OpenApiParameter _target;
-
-        /// <summary>
-        /// Gets the target parameter.
-        /// </summary>
-        /// <remarks>
-        /// If the reference is not resolved, this will return null.
-        /// </remarks>
-        public OpenApiParameter Target
-        {
-            get
-            {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiParameter>(Reference);
-                return _target;
-            }
-        }
-
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -47,41 +25,20 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
+        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Parameter, externalResource)
         {
-            Utils.CheckArgumentNullOrEmpty(referenceId);
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.Parameter,
-                ExternalResource = externalResource
-            };
         }
 
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="parameter">The parameter reference to copy</param>
-        public OpenApiParameterReference(OpenApiParameterReference parameter)
+        public OpenApiParameterReference(OpenApiParameterReference parameter):base(parameter)
         {
-            Utils.CheckArgumentNull(parameter);
-            Reference = parameter.Reference != null ? new(parameter.Reference) : null;
-            UnresolvedReference = parameter.UnresolvedReference;
-            //no need to copy summary and description as if they are not overridden, they will be fetched from the target
-            //if they are, the reference copy will handle it
         }
 
-        internal OpenApiParameterReference(OpenApiParameter target, string referenceId)
+        internal OpenApiParameterReference(OpenApiParameter target, string referenceId):base(target, referenceId, ReferenceType.Parameter)
         {
-            _target = target;
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                Type = ReferenceType.Parameter,
-            };
         }
 
         /// <inheritdoc/>
@@ -137,7 +94,7 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
         
         /// <inheritdoc/>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public override void SerializeAsV3(IOpenApiWriter writer)
         {
             if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
@@ -150,7 +107,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public override void SerializeAsV31(IOpenApiWriter writer)
         {
             if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
@@ -163,7 +120,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public override void SerializeAsV2(IOpenApiWriter writer)
         {
             if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
@@ -176,7 +133,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter source)
+        public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter source)
         {
             return source is OpenApiParameter ? new OpenApiParameter(this) : source;
         }
