@@ -158,11 +158,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, x =>
+            SerializeInternal(writer, w =>
             {
                 // summary and description are in 3.1 but not in 3.0
-                writer.WriteProperty(OpenApiConstants.Summary, Summary);
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+                w.WriteProperty(OpenApiConstants.Summary, Summary);
+                w.WriteProperty(OpenApiConstants.Description, Description);
             });
         }
 
