@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
 {
@@ -93,45 +91,6 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
         
-        /// <inheritdoc/>
-        public override void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV3(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV3(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV31(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV31(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV2(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV2(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV2(writer));
-            }
-        }
-
         /// <inheritdoc/>
         public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter source)
         {

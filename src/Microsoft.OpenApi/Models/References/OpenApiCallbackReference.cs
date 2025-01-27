@@ -48,36 +48,8 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public override void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV3(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV31(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
-            }
-        }
-
-        /// <inheritdoc/>
         public override IOpenApiCallback CopyReferenceAsTargetElementWithOverrides(IOpenApiCallback source)
         {
-            // the copy here is never called since callbacks do not have any overridable fields.
-            // if the spec evolves to include overridable fields for callbacks, the serialize methods will need to call this copy method.
             return source is OpenApiCallback ? new OpenApiCallback(this) : source;
         }
 

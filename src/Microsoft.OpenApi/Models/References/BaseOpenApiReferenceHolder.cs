@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Models.References;
 /// </summary>
 /// <typeparam name="T">The concrete class implementation type for the model.</typeparam>
 /// <typeparam name="V">The interface type for the model.</typeparam>
-public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V
+public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiSerializable
 {
     internal T _target;
     /// <inheritdoc/>
@@ -72,11 +72,43 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
     /// <inheritdoc/>
-    public abstract void SerializeAsV2(IOpenApiWriter writer);
+    public void SerializeAsV3(IOpenApiWriter writer)
+    {
+        if (!writer.GetSettings().ShouldInlineReference(Reference))
+        {
+            Reference.SerializeAsV3(writer);
+        }
+        else
+        {
+            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV3(writer));
+        }
+    }
+
     /// <inheritdoc/>
-    public abstract void SerializeAsV3(IOpenApiWriter writer);
+    public void SerializeAsV31(IOpenApiWriter writer)
+    {
+        if (!writer.GetSettings().ShouldInlineReference(Reference))
+        {
+            Reference.SerializeAsV31(writer);
+        }
+        else
+        {
+            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV31(writer));
+        }
+    }
+
     /// <inheritdoc/>
-    public abstract void SerializeAsV31(IOpenApiWriter writer);
+    public virtual void SerializeAsV2(IOpenApiWriter writer)
+    {
+        if (!writer.GetSettings().ShouldInlineReference(Reference))
+        {
+            Reference.SerializeAsV2(writer);
+        }
+        else
+        {
+            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV2(writer));
+        }
+    }
 
     /// <summary>
     /// Serialize the reference as a reference or the target object.

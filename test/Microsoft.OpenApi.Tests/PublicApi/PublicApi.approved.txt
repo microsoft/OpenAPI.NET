@@ -1157,6 +1157,7 @@ namespace Microsoft.OpenApi.Models.References
 {
     public abstract class BaseOpenApiReferenceHolder<T, V> : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder<T>, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder<T, V>, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
         where T :  class, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, V
+        where V : Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         protected BaseOpenApiReferenceHolder(Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<T, V> source) { }
         protected BaseOpenApiReferenceHolder(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, Microsoft.OpenApi.Models.ReferenceType referenceType, string externalResource = null) { }
@@ -1164,9 +1165,9 @@ namespace Microsoft.OpenApi.Models.References
         public T Target { get; }
         public bool UnresolvedReference { get; set; }
         public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
-        public abstract void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer);
-        public abstract void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer);
-        public abstract void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer);
+        public virtual void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiCallbackReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiCallback, Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback
     {
@@ -1176,8 +1177,6 @@ namespace Microsoft.OpenApi.Models.References
         public System.Collections.Generic.Dictionary<Microsoft.OpenApi.Expressions.RuntimeExpression, Microsoft.OpenApi.Models.OpenApiPathItem> PathItems { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback source) { }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiExampleReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiExample, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
     {
@@ -1190,8 +1189,6 @@ namespace Microsoft.OpenApi.Models.References
         public System.Text.Json.Nodes.JsonNode Value { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiExample CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiExample source) { }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiHeaderReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiHeader, Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader
     {
@@ -1210,9 +1207,6 @@ namespace Microsoft.OpenApi.Models.References
         public Microsoft.OpenApi.Models.OpenApiSchema Schema { get; }
         public Microsoft.OpenApi.Models.ParameterStyle? Style { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader source) { }
-        public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiLinkReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiLink, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink
     {
@@ -1227,8 +1221,6 @@ namespace Microsoft.OpenApi.Models.References
         public Microsoft.OpenApi.Models.OpenApiServer Server { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiLink CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiLink source) { }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiParameterReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiParameter, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter
     {
@@ -1249,9 +1241,6 @@ namespace Microsoft.OpenApi.Models.References
         public Microsoft.OpenApi.Models.OpenApiSchema Schema { get; }
         public Microsoft.OpenApi.Models.ParameterStyle? Style { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter source) { }
-        public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiPathItemReference : Microsoft.OpenApi.Models.OpenApiPathItem, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiPathItem>, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {

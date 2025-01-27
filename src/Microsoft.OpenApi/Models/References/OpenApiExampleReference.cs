@@ -77,32 +77,6 @@ namespace Microsoft.OpenApi.Models.References
         public JsonNode Value { get => Target?.Value; }
 
         /// <inheritdoc/>
-        public override void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV3(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, referenceElement) => CopyReferenceAsTargetElementWithOverrides(referenceElement).SerializeAsV3(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV31(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, referenceElement) => CopyReferenceAsTargetElementWithOverrides(referenceElement).SerializeAsV31(writer));
-            }
-        }
-        
-        /// <inheritdoc/>
         public override IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)
         {
             return source is OpenApiExample ? new OpenApiExample(this) : source;

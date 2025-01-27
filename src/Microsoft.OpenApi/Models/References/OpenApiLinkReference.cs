@@ -70,32 +70,6 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public override void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV3(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV3(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV31(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV31(writer));
-            }
-        }
-
-        /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
             // Link object does not exist in V2.
