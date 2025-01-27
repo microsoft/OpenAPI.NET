@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(OpenApiParameter));
             visitor.Visit(default(OpenApiRequestBody));
             visitor.Visit(default(IDictionary<string, OpenApiHeader>));
-            visitor.Visit(default(IDictionary<string, OpenApiCallback>));
+            visitor.Visit(default(IDictionary<string, IOpenApiCallback>));
             visitor.Visit(default(OpenApiResponse));
             visitor.Visit(default(OpenApiResponses));
             visitor.Visit(default(IDictionary<string, OpenApiMediaType>));
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(OpenApiSchema));
             visitor.Visit(default(IDictionary<string, OpenApiLink>));
             visitor.Visit(default(OpenApiLink));
-            visitor.Visit(default(OpenApiCallback));
+            visitor.Visit(default(IOpenApiCallback));
             visitor.Visit(default(OpenApiTag));
             visitor.Visit(default(OpenApiHeader));
             visitor.Visit(default(OpenApiOAuthFlow));
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(headers);
             }
 
-            public override void Visit(IDictionary<string, OpenApiCallback> callbacks)
+            public override void Visit(IDictionary<string, IOpenApiCallback> callbacks)
             {
                 EncodeCall();
                 base.Visit(callbacks);
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(link);
             }
 
-            public override void Visit(OpenApiCallback callback)
+            public override void Visit(IOpenApiCallback callback)
             {
                 EncodeCall();
                 base.Visit(callback);

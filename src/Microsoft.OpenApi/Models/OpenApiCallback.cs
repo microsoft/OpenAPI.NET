@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -12,28 +13,17 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiCallback
     {
-        /// <summary>
-        /// A Path Item Object used to define a callback request and expected responses.
-        /// </summary>
-        public virtual Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
-            = new();
+        /// <inheritdoc/>
+        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
+            = [];
 
-        /// <summary>
-        /// Indicates if object is populated with data or is just a reference to the data
-        /// </summary>
-        public virtual bool UnresolvedReference { get; set; }
-
-        /// <summary>
-        /// Reference pointer.
-        /// </summary>
-        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -43,11 +33,9 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiCallback"/> object
         /// </summary>
-        public OpenApiCallback(OpenApiCallback callback)
+        public OpenApiCallback(IOpenApiCallback callback)
         {
             PathItems = callback?.PathItems != null ? new(callback?.PathItems) : null;
-            UnresolvedReference = callback?.UnresolvedReference ?? UnresolvedReference;
-            Reference = callback?.Reference != null ? new(callback?.Reference) : null;
             Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
         }
 
@@ -71,7 +59,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="writer"></param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -79,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiCallback"/> to Open Api v3.0
         /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }

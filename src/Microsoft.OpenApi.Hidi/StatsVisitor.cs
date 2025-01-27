@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Hidi
@@ -68,7 +69,7 @@ namespace Microsoft.OpenApi.Hidi
 
         public int CallbackCount { get; set; }
 
-        public override void Visit(OpenApiCallback callback)
+        public override void Visit(IOpenApiCallback callback)
         {
             CallbackCount++;
         }

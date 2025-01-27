@@ -38,6 +38,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
         bool UnresolvedReference { get; set; }
+        //TODO the UnresolvedReference property setter should be removed and a default implementation that checks whether the target is null for the getter should be provided instead
 
         /// <summary>
         /// Reference object.

@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiEncoding encoding) => Validate(encoding);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiCallback callback) => Validate(callback);
+        public override void Visit(IOpenApiCallback callback) => Validate(callback);
 
         /// <inheritdoc/>
         public override void Visit(IOpenApiExtensible openApiExtensible) => Validate(openApiExtensible);
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, OpenApiHeader> headers) => Validate(headers, headers.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
+        public override void Visit(IDictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
         /// <inheritdoc/>
