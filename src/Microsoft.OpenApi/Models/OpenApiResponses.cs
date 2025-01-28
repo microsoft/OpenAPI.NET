@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using Microsoft.OpenApi.Models.Interfaces;
+
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Responses object.
     /// </summary>
-    public class OpenApiResponses : OpenApiExtensibleDictionary<OpenApiResponse>
+    public class OpenApiResponses : OpenApiExtensibleDictionary<IOpenApiResponse>
     {
         /// <summary>
         /// Parameterless constructor

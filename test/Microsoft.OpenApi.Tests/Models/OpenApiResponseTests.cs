@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiResponseReference V2OpenApiResponseReference = new OpenApiResponseReference("example1", ReferencedV2Response);
+        public static OpenApiResponseReference V2OpenApiResponseReference = new OpenApiResponseReference(ReferencedV2Response, "example1");
         public static OpenApiResponse ReferencedV2Response = new OpenApiResponse
         {
             Description = "A complex object array response",
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             }
         };
-        public static OpenApiResponseReference V3OpenApiResponseReference = new OpenApiResponseReference("example1", ReferencedV3Response);
+        public static OpenApiResponseReference V3OpenApiResponseReference = new OpenApiResponseReference(ReferencedV3Response, "example1");
 
         public static OpenApiResponse ReferencedV3Response = new OpenApiResponse
         {

@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -16,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the field is required.
         /// </summary>
-        public static ValidationRule<OpenApiResponse> ResponseRequiredFields =>
+        public static ValidationRule<IOpenApiResponse> ResponseRequiredFields =>
             new(nameof(ResponseRequiredFields),
                 (context, response) =>
                 {

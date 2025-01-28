@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             }
 
-            foreach (var response in operation.Responses.Values)
+            foreach (var response in operation.Responses.Values.OfType<OpenApiResponse>())
             {
                 ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
             }

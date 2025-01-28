@@ -58,8 +58,22 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Responses = new()
             {
-                ["200"] = new OpenApiResponseReference("response1", hostDocument: null),
-                ["400"] = new()
+                ["200"] = new OpenApiResponseReference(new OpenApiResponse()
+                {
+                    Content = new Dictionary<string, OpenApiMediaType>
+                    {
+                        ["application/json"] = new()
+                        {
+                            Schema = new()
+                            {
+                                Type = JsonSchemaType.Number,
+                                Minimum = 5,
+                                Maximum = 10
+                            }
+                        }
+                    }
+                }, "response1"),
+                ["400"] = new OpenApiResponse()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
@@ -132,8 +146,22 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Responses = new()
             {
-                ["200"] = new OpenApiResponseReference("response1", hostDocument: null),
-                ["400"] = new()
+                ["200"] = new OpenApiResponseReference(new OpenApiResponse()
+                {
+                    Content = new Dictionary<string, OpenApiMediaType>
+                    {
+                        ["application/json"] = new()
+                        {
+                            Schema = new()
+                            {
+                                Type = JsonSchemaType.Number,
+                                Minimum = 5,
+                                Maximum = 10
+                            }
+                        }
+                    }
+                }, "response1"),
+                ["400"] = new OpenApiResponse()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
@@ -245,11 +273,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 Responses = new()
                 {
-                    ["200"] = new()
+                    ["200"] = new OpenApiResponse()
                     {
                         Description = "Pet updated."
                     },
-                    ["405"] = new()
+                    ["405"] = new OpenApiResponse()
                     {
                         Description = "Invalid input"
                     }

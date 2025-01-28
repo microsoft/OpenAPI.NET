@@ -692,7 +692,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiResponse"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiResponse response, bool isComponent = false)
+        internal void Walk(IOpenApiResponse response, bool isComponent = false)
         {
             if (response == null)
             {

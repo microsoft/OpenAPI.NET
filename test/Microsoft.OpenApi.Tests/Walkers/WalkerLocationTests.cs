@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     {
                         Responses = new()
                         {
-                            ["200"] = new()
+                            ["200"] = new OpenApiResponse()
                             {
                                 Content = new Dictionary<string, OpenApiMediaType>
                                 {
@@ -192,7 +192,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                             {
                                 Responses = new()
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Content = new Dictionary<string, OpenApiMediaType>
                                         {
@@ -284,7 +284,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Keys.Add(CurrentKeys.Operation.ToString());
             Locations.Add(this.PathString);
         }
-        public override void Visit(OpenApiResponse response)
+        public override void Visit(IOpenApiResponse response)
         {
             Keys.Add(CurrentKeys.Response);
             Locations.Add(this.PathString);

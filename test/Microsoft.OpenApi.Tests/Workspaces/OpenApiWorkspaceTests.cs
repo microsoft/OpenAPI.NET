@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Tests
                             {
                                 Responses = new OpenApiResponses()
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Content = new Dictionary<string, OpenApiMediaType>()
                                         {

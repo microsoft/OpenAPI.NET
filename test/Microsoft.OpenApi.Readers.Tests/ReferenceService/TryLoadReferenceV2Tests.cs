@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var reference = new OpenApiResponseReference("NotFound", result.Document);
 
             // Assert
-            reference.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiResponse
                 {
                     Description = "Entity not found.",
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     {
                         ["application/json"] = new()
                     }
-                }, options => options.Excluding(x => x.Reference)
+                }, reference
             );
         }
 
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var reference = new OpenApiResponseReference("GeneralError", result.Document);
 
             // Assert
-            reference.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiResponse
                 {
                     Description = "General Error",
@@ -124,13 +124,8 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                                 }
                             }
                         }
-                    },
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Response,
-                        Id = "GeneralError"
                     }
-                }, options => options.Excluding(x => x.Reference)
+                }, reference
             );
         }
     }

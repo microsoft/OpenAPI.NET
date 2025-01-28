@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
 using Xunit;
@@ -116,7 +115,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     },
                     Responses = new()
                     {
-                        ["200"] = new()
+                        ["200"] = new OpenApiResponse()
                         {
                             Description = "Pet updated.",
                             Content = new Dictionary<string, OpenApiMediaType>
@@ -125,7 +124,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["application/xml"] = new()
                                 }
                         },
-                        ["405"] = new()
+                        ["405"] = new OpenApiResponse()
                         {
                             Description = "Invalid input",
                             Content = new Dictionary<string, OpenApiMediaType>
@@ -232,7 +231,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     },
                     Responses = new()
                     {
-                        ["200"] = new()
+                        ["200"] = new OpenApiResponse()
                         {
                             Description = "Pet updated.",
                             Content = new Dictionary<string, OpenApiMediaType>

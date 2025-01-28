@@ -279,8 +279,10 @@ namespace Microsoft.OpenApi.Models
                     .SelectMany(static r => r.Value.Content?.Keys ?? [])
                     .Concat(
                         Responses
-                        .Where(static r => r.Value.Reference is {HostDocument: not null})
-                        .SelectMany(static r => r.Value.Content?.Keys ?? []))
+                        .Select(static r => r.Value)
+                        .OfType<OpenApiResponseReference>()
+                        .Where(static r => r.Reference is {HostDocument: not null})
+                        .SelectMany(static r => r.Content?.Keys ?? []))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray();
 

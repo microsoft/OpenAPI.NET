@@ -109,9 +109,9 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureResponsesExist();
-        if (!Components.Responses.ContainsKey(referenceId ?? response.Reference.Id))
+        if (!Components.Responses.ContainsKey(referenceId))
         {
-            Components.Responses.Add(referenceId ?? response.Reference.Id, response);
+            Components.Responses.Add(referenceId, response);
         }
     }
     private void AddRequestBodyToComponents(OpenApiRequestBody requestBody, string referenceId = null)
@@ -210,7 +210,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 
     private void EnsureResponsesExist()
     {
-        _target.Components.Responses ??= new Dictionary<string, OpenApiResponse>();
+        _target.Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
     }
 
     private void EnsureRequestBodiesExist()

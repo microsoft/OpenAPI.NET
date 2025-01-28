@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     rootNode.GetMap(),
                     openApiDoc.Paths.Values
                         .SelectMany(path => path.Operations?.Values ?? Enumerable.Empty<OpenApiOperation>())
-                        .SelectMany(operation => operation.Responses?.Values ?? Enumerable.Empty<OpenApiResponse>()),
+                        .SelectMany(operation => operation.Responses?.Values ?? Enumerable.Empty<IOpenApiResponse>()),
                     openApiNode.Context);
             }
 
@@ -257,11 +257,11 @@ namespace Microsoft.OpenApi.Reader.V2
             return openApiDoc;
         }
 
-        private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<OpenApiResponse> responses, ParsingContext context)
+        private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<IOpenApiResponse> responses, ParsingContext context)
         {
             if (responses != null)
             {
-                foreach (var response in responses)
+                foreach (var response in responses.OfType<OpenApiResponse>())
                 {
                     ProcessProduces(mapNode, response, context);
 

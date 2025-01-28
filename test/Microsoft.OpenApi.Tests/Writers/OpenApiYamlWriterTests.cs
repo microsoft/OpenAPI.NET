@@ -464,7 +464,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                             [OperationType.Get] = new()
                             {
                                 Responses = {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Description = "OK",
                                         Content = {
