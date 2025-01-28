@@ -80,7 +80,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         }
         else
         {
-            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV3(writer));
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
         }
     }
 
@@ -106,7 +106,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         }
         else
         {
-            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV2(writer));
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV2(writer));
         }
     }
 

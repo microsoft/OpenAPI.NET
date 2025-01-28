@@ -1,0 +1,4 @@
+﻿{
+  "description": "The URL of the newly created post",
+  "type": "string"
+}

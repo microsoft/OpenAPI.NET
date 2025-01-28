@@ -158,11 +158,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            // summary and description are in 3.1 but not in 3.0
-            writer.WriteProperty(OpenApiConstants.Summary, Summary);
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            SerializeInternal(writer);
+            SerializeInternal(writer, w =>
+            {
+                // summary and description are in 3.1 but not in 3.0
+                w.WriteProperty(OpenApiConstants.Summary, Summary);
+                w.WriteProperty(OpenApiConstants.Description, Description);
+            });
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/>
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter> callback = null)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -188,6 +189,10 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
+            if (callback is not null)
+            {
+                callback(writer);
+            }
 
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);

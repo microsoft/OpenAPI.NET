@@ -1,0 +1,4 @@
+﻿{
+  "description": "User request body",
+  "$ref": "#/components/requestBodies/UserRequest"
+}
