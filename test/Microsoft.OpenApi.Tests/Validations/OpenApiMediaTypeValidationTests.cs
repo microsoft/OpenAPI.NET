@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var mediaType = new OpenApiMediaType
             {
                 Example = 55,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,
                 }
@@ -47,10 +47,10 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             var mediaType = new OpenApiMediaType
             {
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    AdditionalProperties = new()
+                    AdditionalProperties = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer,
                     }

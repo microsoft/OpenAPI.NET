@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     In = ParameterLocation.Query,
                     Description = "number of items to skip",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer,
                         Format = "int32"
@@ -92,41 +92,37 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
             var reference = new OpenApiResponseReference("GeneralError", result.Document);
 
-            // Assert
-            Assert.Equivalent(
-                new OpenApiResponse
+            var expected = new OpenApiResponse
                 {
                     Description = "General Error",
                     Content =
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchemaReference(new OpenApiSchema()
                             {
                                 Description = "Sample description",
                                 Required = new HashSet<string> {"name" },
                                 Properties = {
-                                    ["name"] = new()
+                                    ["name"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.String
                                     },
-                                    ["tag"] = new()
+                                    ["tag"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.String
                                     }
                                 },
-
-                                Reference = new()
-                                {
-                                    Type = ReferenceType.Schema,
-                                    Id = "SampleObject2",
-                                    HostDocument = result.Document
-                                }
-                            }
+                            }, "SampleObject2")
                         }
                     }
-                }, reference
-            );
+                };
+
+            ((OpenApiSchemaReference)expected.Content["application/json"].Schema).Reference.HostDocument = result.Document;
+            var actual = reference.Target;
+
+            // Assert
+            Assert.Equivalent(expected, actual);
         }
     }
 }

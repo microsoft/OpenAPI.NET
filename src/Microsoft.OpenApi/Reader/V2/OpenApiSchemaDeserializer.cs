@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Models.Interfaces;
+using System;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -153,10 +155,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new PatternFieldMap<OpenApiSchema>
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("schema");
 

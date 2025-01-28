@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(IDictionary<string, IOpenApiExample>));
             visitor.Visit(default(OpenApiComponents));
             visitor.Visit(default(OpenApiExternalDocs));
-            visitor.Visit(default(OpenApiSchema));
+            visitor.Visit(default(IOpenApiSchema));
             visitor.Visit(default(IDictionary<string, IOpenApiLink>));
             visitor.Visit(default(IOpenApiLink));
             visitor.Visit(default(IOpenApiCallback));
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(externalDocs);
             }
 
-            public override void Visit(OpenApiSchema schema)
+            public override void Visit(IOpenApiSchema schema)
             {
                 EncodeCall();
                 base.Visit(schema);

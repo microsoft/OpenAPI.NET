@@ -121,9 +121,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var loopySchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["name"] = new() { Type = JsonSchemaType.String }
+                    ["name"] = new OpenApiSchema() { Type = JsonSchemaType.String }
                 }
             };
 
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             {
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>
+                    Schemas = new Dictionary<string, IOpenApiSchema>
                     {
                         ["loopy"] = loopySchema
                     }
@@ -161,22 +161,16 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateReferences()
         {
-            var baseSchema = new OpenApiSchemaReference("base", null);
+            var baseSchema = new OpenApiSchema();
 
             var derivedSchema = new OpenApiSchema
             {
-                AnyOf = new List<OpenApiSchema> { baseSchema },
-                Reference = new()
-                {
-                    Id = "derived",
-                    Type = ReferenceType.Schema
-                },
-                UnresolvedReference = false
+                AnyOf = new List<IOpenApiSchema> { new OpenApiSchemaReference(baseSchema, "base") },
             };
 
             var testHeader = new OpenApiHeader()
             {
-                Schema = derivedSchema,
+                Schema = new OpenApiSchemaReference(derivedSchema, "derived"),
             };
             var testHeaderReference = new OpenApiHeaderReference(testHeader, "test-header");
 
@@ -198,7 +192,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                         {
                                             ["application/json"] = new()
                                             {
-                                                Schema = derivedSchema
+                                                Schema = new OpenApiSchemaReference(derivedSchema, "derived")
                                             }
                                         },
                                         Headers =
@@ -213,7 +207,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>
+                    Schemas = new Dictionary<string, IOpenApiSchema>
                     {
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
@@ -305,7 +299,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
             Locations.Add(this.PathString);
         }

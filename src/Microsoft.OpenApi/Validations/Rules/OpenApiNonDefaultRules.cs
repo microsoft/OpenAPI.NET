@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the data matches with the given data type.
         /// </summary>
-        public static ValidationRule<OpenApiSchema> SchemaMismatchedDataType =>
+        public static ValidationRule<IOpenApiSchema> SchemaMismatchedDataType =>
             new(nameof(SchemaMismatchedDataType),
                 (context, schema) =>
                 {
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                                                       string ruleName,
                                                       JsonNode example,
                                                       IDictionary<string, IOpenApiExample> examples,
-                                                      OpenApiSchema schema)
+                                                      IOpenApiSchema schema)
         {
             // example
             context.Enter("example");

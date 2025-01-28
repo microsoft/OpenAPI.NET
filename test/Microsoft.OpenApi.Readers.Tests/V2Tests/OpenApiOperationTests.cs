@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Object
                         }
@@ -216,10 +216,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 ["application/json"] = new OpenApiMediaType()
                                 {
-                                    Schema = new()
+                                    Schema = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Array,
-                                        Items = new()
+                                        Items = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Number,
                                             Format = "float"
@@ -234,10 +234,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {
-                                    Schema = new()
+                                    Schema = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Array,
-                                        Items = new()
+                                        Items = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Number,
                                             Format = "float"

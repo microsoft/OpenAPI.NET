@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -45,38 +46,38 @@ namespace Microsoft.OpenApi.Tests.Models
         public static readonly OpenApiSchema AdvancedSchemaObject = new()
         {
             Title = "title1",
-            Properties = new Dictionary<string, OpenApiSchema>
+            Properties = new Dictionary<string, IOpenApiSchema>
             {
-                ["property1"] = new()
+                ["property1"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property2"] = new()
+                        ["property2"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer
                         },
-                        ["property3"] = new()
+                        ["property3"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
                             MaxLength = 15
                         }
                     },
                 },
-                ["property4"] = new()
+                ["property4"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property5"] = new()
+                        ["property5"] = new OpenApiSchema()
                         {
-                            Properties = new Dictionary<string, OpenApiSchema>
+                            Properties = new Dictionary<string, IOpenApiSchema>
                             {
-                                ["property6"] = new()
+                                ["property6"] = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
-                        ["property7"] = new()
+                        ["property7"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
                             MinLength = 2
@@ -94,40 +95,40 @@ namespace Microsoft.OpenApi.Tests.Models
         public static readonly OpenApiSchema AdvancedSchemaWithAllOf = new()
         {
             Title = "title1",
-            AllOf = new List<OpenApiSchema>
+            AllOf = new List<IOpenApiSchema>
             {
-                new()
+                new OpenApiSchema()
                 {
                     Title = "title2",
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property1"] = new()
+                        ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer
                         },
-                        ["property2"] = new()
+                        ["property2"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
                             MaxLength = 15
                         }
                     },
                 },
-                new()
+                new OpenApiSchema()
                 {
                     Title = "title3",
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property3"] = new()
+                        ["property3"] = new OpenApiSchema()
                         {
-                            Properties = new Dictionary<string, OpenApiSchema>
+                            Properties = new Dictionary<string, IOpenApiSchema>
                             {
-                                ["property4"] = new()
+                                ["property4"] = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
-                        ["property5"] = new()
+                        ["property5"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
                             MinLength = 2
@@ -164,18 +165,18 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Title = "title1",
             Required = new HashSet<string> { "property1" },
-            Properties = new Dictionary<string, OpenApiSchema>
+            Properties = new Dictionary<string, IOpenApiSchema>
             {
-                ["property1"] = new()
+                ["property1"] = new OpenApiSchema()
                 {
                     Required = new HashSet<string> { "property3" },
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property2"] = new()
+                        ["property2"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer
                         },
-                        ["property3"] = new()
+                        ["property3"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
                             MaxLength = 15,
@@ -184,21 +185,21 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                     ReadOnly = true,
                 },
-                ["property4"] = new()
+                ["property4"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property5"] = new()
+                        ["property5"] = new OpenApiSchema()
                         {
-                            Properties = new Dictionary<string, OpenApiSchema>
+                            Properties = new Dictionary<string, IOpenApiSchema>
                             {
-                                ["property6"] = new()
+                                ["property6"] = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Boolean
                                 }
                             }
                         },
-                        ["property7"] = new()
+                        ["property7"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
                             MinLength = 2
@@ -423,14 +424,14 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var schema = new OpenApiSchema
             {
-                OneOf = new List<OpenApiSchema>
+                OneOf = new List<IOpenApiSchema>
                 {
-                    new()
+                    new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "decimal"
                     },
-                    new() { Type = JsonSchemaType.String },
+                    new OpenApiSchema() { Type = JsonSchemaType.String },
                 }
             };
 
@@ -634,7 +635,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             public List<string> Titles = new();
 
-            public override void Visit(OpenApiSchema schema)
+            public override void Visit(IOpenApiSchema schema)
             {
                 Titles.Add(schema.Title);
             }

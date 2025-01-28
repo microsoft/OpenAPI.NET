@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Object
                                                 }
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Object
                                                 }
@@ -180,7 +180,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.String
                                                 }
@@ -215,7 +215,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Object
                                                 }

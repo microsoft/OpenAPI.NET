@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Models.Interfaces;
+using System;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -147,18 +148,20 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Properties = formParameters.ToDictionary(
                         k => k.Name,
-                        v =>
+                        v => 
                         {
-                            var schema = v.Schema;
-                            schema.Description = v.Description;
-                            schema.Extensions = v.Extensions;
-                            return schema;
+                            var schema = new OpenApiSchema(v.Schema)
+                            {
+                                Description = v.Description,
+                                Extensions = v.Extensions
+                            };
+                            return (IOpenApiSchema)schema;
                         }),
-                    Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
+                    Required = new HashSet<string>(formParameters.Where(static p => p.Required).Select(static p => p.Name), StringComparer.Ordinal)
                 }
             };
 
@@ -173,8 +176,8 @@ namespace Microsoft.OpenApi.Reader.V2
                     _ => mediaType)
             };
 
-            foreach (var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && x.Schema.Type == null))
-                value.Schema.Type = JsonSchemaType.Object;
+            foreach (var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && x.Schema.Type == null).Select(static x => x.Schema).OfType<OpenApiSchema>())
+                value.Type = JsonSchemaType.Object;
 
             return formBody;
         }

@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var property in Content.First().Value.Schema.Properties)
             {
-                var paramSchema = property.Value;
+                var paramSchema = new OpenApiSchema(property.Value);
                 if ((paramSchema.Type & JsonSchemaType.String) == JsonSchemaType.String
                     && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
                     || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
