@@ -18,14 +18,14 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             Paths = new()
             {
-                ["/"] = new()
+                ["/"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
                         [OperationType.Get] = new(),
                     }
                 },
-                ["/houses"] = new()
+                ["/houses"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Tests.Services
                         [OperationType.Post] = new()
                     }
                 },
-                ["/cars"] = new()
+                ["/cars"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
@@ -47,9 +47,9 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             Paths = new()
             {
-                ["/"] = new(),
-                ["/hotels"] = new(),
-                ["/offices"] = new()
+                ["/"] = new OpenApiPathItem(),
+                ["/hotels"] = new OpenApiPathItem(),
+                ["/offices"] = new OpenApiPathItem()
             }
         };
 
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Paths = new()
                 {
-                    ["/"] = new()
+                    ["/"] = new OpenApiPathItem()
                 }
             };
 
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Paths = new()
                 {
-                    ["/houses"] = new()
+                    ["/houses"] = new OpenApiPathItem()
                 }
             };
 
@@ -211,9 +211,9 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Paths = new()
                 {
-                    ["/"] = new(),
-                    ["/houses/apartments/{apartment-id}"] = new(),
-                    ["/cars/coupes"] = new()
+                    ["/"] = new OpenApiPathItem(),
+                    ["/houses/apartments/{apartment-id}"] = new OpenApiPathItem(),
+                    ["/cars/coupes"] = new OpenApiPathItem()
                 }
             };
 
@@ -236,9 +236,9 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Paths = new()
                 {
-                    ["/"] = new(),
-                    ["/houses"] = new(),
-                    ["/cars/{car-id}"] = new()
+                    ["/"] = new OpenApiPathItem(),
+                    ["/houses"] = new OpenApiPathItem(),
+                    ["/cars/{car-id}"] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Paths = new()
                 {
-                    ["/cars/{car-id}"] = new()
+                    ["/cars/{car-id}"] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -330,8 +330,8 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Paths = new()
                 {
-                    ["/"] = new(),
-                    ["/houses/apartments/{apartment-id}"] = new()
+                    ["/"] = new OpenApiPathItem(),
+                    ["/houses/apartments/{apartment-id}"] = new OpenApiPathItem()
                 }
             };
 
@@ -482,7 +482,7 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Paths = new()
                 {
-                    [path] = new()
+                    [path] = new OpenApiPathItem()
                 }
             };
 

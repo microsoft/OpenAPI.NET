@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 {
                     "/test",
-                    new()
+                    new OpenApiPathItem()
                     {
                         Operations =
                     {

@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             document.Paths = new()
             {
-                ["/"] = new()
+                ["/"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             document.Paths = new()
             {
-                ["/"] = new()
+                ["/"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {

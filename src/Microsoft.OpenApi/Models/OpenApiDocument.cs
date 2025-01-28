@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         /// A map of requests initiated other than by an API call, for example by an out of band registration. 
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
-        public IDictionary<string, OpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
+        public IDictionary<string, IOpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, IOpenApiPathItem>();
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Models
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
             Paths = document?.Paths != null ? new(document?.Paths) : new OpenApiPaths();
-            Webhooks = document?.Webhooks != null ? new Dictionary<string, OpenApiPathItem>(document.Webhooks) : null;
+            Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
@@ -612,7 +612,7 @@ namespace Microsoft.OpenApi.Models
                     Components.Callbacks.Add(id, openApiCallback);
                     break;
                 case OpenApiPathItem openApiPathItem:
-                    Components.PathItems ??= new Dictionary<string, OpenApiPathItem>();
+                    Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
                     Components.PathItems.Add(id, openApiPathItem);
                     break;
                 case OpenApiExample openApiExample:

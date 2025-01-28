@@ -458,7 +458,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 },
                 Paths = new()
                 {
-                    ["/"] = new()
+                    ["/"] = new OpenApiPathItem()
                     {
                         Operations = {
                             [OperationType.Get] = new()

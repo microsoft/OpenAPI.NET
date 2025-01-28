@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Paths = new OpenApiPaths()
                 {
-                    ["/"] = new()
+                    ["/"] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>()
                         {
@@ -73,7 +73,6 @@ namespace Microsoft.OpenApi.Tests
         [Fact]
         public void OpenApiWorkspacesCanResolveExternalReferences()
         {
-            var refUri = new Uri("https://everything.json/common#/components/schemas/test");
             var workspace = new OpenApiWorkspace();
             var externalDoc = CreateCommonDocument();
                        

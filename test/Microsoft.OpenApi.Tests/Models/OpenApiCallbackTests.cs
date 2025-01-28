@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models
             PathItems =
             {
                 [RuntimeExpression.Build("$request.body#/url")]
-                = new()
+                = new OpenApiPathItem()
                 {
                     Operations =
                     {
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
             PathItems =
             {
                 [RuntimeExpression.Build("$request.body#/url")]
-                = new()
+                = new OpenApiPathItem()
                 {
                     Operations =
                     {

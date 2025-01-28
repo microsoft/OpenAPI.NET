@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -30,7 +31,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Dictionary of labels and Path Item objects that describe the operations available on a node.
         /// </summary>
-        public IDictionary<string, OpenApiPathItem> PathItems { get; } = new Dictionary<string, OpenApiPathItem>();
+        public IDictionary<string, IOpenApiPathItem> PathItems { get; } = new Dictionary<string, IOpenApiPathItem>();
 
         /// <summary>
         /// A dictionary of key value pairs that contain information about a node.
@@ -136,7 +137,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="label">A name tag for labelling the <see cref="OpenApiUrlTreeNode"/> node.</param>
         /// <returns>An <see cref="OpenApiUrlTreeNode"/> node describing an OpenAPI path.</returns>
         public OpenApiUrlTreeNode Attach(string path,
-                                         OpenApiPathItem pathItem,
+                                         IOpenApiPathItem pathItem,
                                          string label)
         {
             Utils.CheckArgumentNullOrEmpty(label);
@@ -173,7 +174,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="currentPath">The relative path of a node.</param>
         /// <returns>An <see cref="OpenApiUrlTreeNode"/> node with all constituent properties assembled.</returns>
         private OpenApiUrlTreeNode Attach(IEnumerable<string> segments,
-                                          OpenApiPathItem pathItem,
+                                          IOpenApiPathItem pathItem,
                                           string label,
                                           string currentPath)
         {

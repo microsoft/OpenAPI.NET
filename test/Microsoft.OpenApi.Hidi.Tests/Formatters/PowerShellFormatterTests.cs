@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new()
                 {
-                    { path, new() {
+                    { path, new OpenApiPathItem() {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             { operationType, new() { OperationId = operationId } }
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 Info = new() { Title = "Test", Version = "1.0" },
                 Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new() {
-                    { "/foo", new()
+                    { "/foo", new OpenApiPathItem()
                         {
                             Operations = new Dictionary<OperationType, OpenApiOperation>
                             {

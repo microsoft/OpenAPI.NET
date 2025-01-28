@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Services
     {
         private readonly OpenApiVisitorBase _visitor;
         private readonly Stack<OpenApiSchema> _schemaLoop = new();
-        private readonly Stack<OpenApiPathItem> _pathItemLoop = new();
+        private readonly Stack<IOpenApiPathItem> _pathItemLoop = new();
 
         /// <summary>
         /// Initializes the <see cref="OpenApiWalker"/> class.
@@ -281,7 +281,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits Webhooks and child objects
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiPathItem> webhooks)
+        internal void Walk(IDictionary<string, IOpenApiPathItem> webhooks)
         {
             if (webhooks == null)
             {
@@ -521,7 +521,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiPathItem"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiPathItem pathItem, bool isComponent = false)
+        internal void Walk(IOpenApiPathItem pathItem, bool isComponent = false)
         {
             if (pathItem == null)
             {

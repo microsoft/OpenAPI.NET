@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Workbench
 
         public int PathItemCount { get; set; }
 
-        public override void Visit(OpenApiPathItem pathItem)
+        public override void Visit(IOpenApiPathItem pathItem)
         {
             PathItemCount++;
         }

@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IList<IOpenApiExample> example) => Validate(example, example.GetType());
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiPathItem pathItem) => Validate(pathItem);
+        public override void Visit(IOpenApiPathItem pathItem) => Validate(pathItem);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiServerVariable serverVariable) => Validate(serverVariable);

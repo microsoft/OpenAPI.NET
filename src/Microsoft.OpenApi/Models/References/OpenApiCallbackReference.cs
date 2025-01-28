@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target?.PathItems; }
+        public Dictionary<RuntimeExpression, IOpenApiPathItem> PathItems { get => Target?.PathItems; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }

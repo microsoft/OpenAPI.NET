@@ -3,6 +3,7 @@
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -16,12 +17,6 @@ namespace Microsoft.OpenApi.Reader.V3
     {
         private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new()
         {
-            {
-                "$ref", (o, n, _) => {
-                    o.Reference = new() { ExternalResource = n.GetScalarValue() };
-                    o.UnresolvedReference =true;
-                }
-            },
             {
                 "summary",
                 (o, n, _) => o.Summary = n.GetScalarValue()
@@ -48,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("PathItem");
 

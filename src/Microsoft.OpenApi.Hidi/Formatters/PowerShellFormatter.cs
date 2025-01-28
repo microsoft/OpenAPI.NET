@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             base.Visit(schema);
         }
 
-        public override void Visit(OpenApiPathItem pathItem)
+        public override void Visit(IOpenApiPathItem pathItem)
         {
             if (pathItem.Operations.TryGetValue(OperationType.Put, out var value) &&
                 value.OperationId != null)
@@ -81,13 +81,13 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             operationId = ResolveODataCastOperationId(operationId);
             operationId = ResolveByRefOperationId(operationId);
             // Verb segment resolution should always be last. user.get -> user_Get
-            operationId = ResolveVerbSegmentInOpertationId(operationId);
+            operationId = ResolveVerbSegmentInOperationId(operationId);
 
             operation.OperationId = operationId;
             base.Visit(operation);
         }
 
-        private static string ResolveVerbSegmentInOpertationId(string operationId)
+        private static string ResolveVerbSegmentInOperationId(string operationId)
         {
             var charPos = operationId.LastIndexOf('.', operationId.Length - 1);
             if (operationId.Contains('_', StringComparison.OrdinalIgnoreCase) || charPos < 0)
