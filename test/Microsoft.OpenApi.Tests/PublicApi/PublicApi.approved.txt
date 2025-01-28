@@ -843,7 +843,7 @@ namespace Microsoft.OpenApi.Models
         public System.Text.Json.Nodes.JsonNode? Example { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample>? Examples { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
-        public virtual Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Schema { get; set; }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Schema { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }

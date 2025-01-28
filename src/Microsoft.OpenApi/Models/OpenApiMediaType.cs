@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual IOpenApiSchema? Schema { get; set; }
+        public IOpenApiSchema? Schema { get; set; }
 
         /// <summary>
         /// Example of the media type.
