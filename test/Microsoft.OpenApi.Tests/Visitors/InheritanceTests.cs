@@ -44,8 +44,8 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(OpenApiComponents));
             visitor.Visit(default(OpenApiExternalDocs));
             visitor.Visit(default(OpenApiSchema));
-            visitor.Visit(default(IDictionary<string, OpenApiLink>));
-            visitor.Visit(default(OpenApiLink));
+            visitor.Visit(default(IDictionary<string, IOpenApiLink>));
+            visitor.Visit(default(IOpenApiLink));
             visitor.Visit(default(IOpenApiCallback));
             visitor.Visit(default(OpenApiTag));
             visitor.Visit(default(IOpenApiHeader));
@@ -238,13 +238,13 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(schema);
             }
 
-            public override void Visit(IDictionary<string, OpenApiLink> links)
+            public override void Visit(IDictionary<string, IOpenApiLink> links)
             {
                 EncodeCall();
                 base.Visit(links);
             }
 
-            public override void Visit(OpenApiLink link)
+            public override void Visit(IOpenApiLink link)
             {
                 EncodeCall();
                 base.Visit(link);

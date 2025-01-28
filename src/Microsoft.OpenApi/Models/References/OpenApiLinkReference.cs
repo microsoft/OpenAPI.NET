@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -11,12 +12,14 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Link Object Reference.
     /// </summary>
-    public class OpenApiLinkReference : OpenApiLink, IOpenApiReferenceHolder<OpenApiLink>
+    public class OpenApiLinkReference : IOpenApiLink, IOpenApiReferenceHolder<OpenApiLink, IOpenApiLink>
     {
-        internal OpenApiLink _target;
-        private readonly OpenApiReference _reference;
-        private string _description;
+        /// <inheritdoc/>
+        public OpenApiReference Reference { get; set; }
 
+        /// <inheritdoc/>
+        public bool UnresolvedReference { get; set; }
+        internal OpenApiLink _target;
         /// <summary>
         /// Gets the target link.
         /// </summary>
@@ -27,10 +30,8 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiLink>(_reference);
-                OpenApiLink resolved = new OpenApiLink(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiLink>(Reference);
+                return _target;
             }
         }
 
@@ -48,22 +49,33 @@ namespace Microsoft.OpenApi.Models.References
         {
             Utils.CheckArgumentNullOrEmpty(referenceId);
 
-            _reference = new OpenApiReference()
+            Reference = new OpenApiReference()
             {
                 Id = referenceId,
                 HostDocument = hostDocument,
                 Type = ReferenceType.Link,
                 ExternalResource = externalResource
             };
+        }
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        /// <param name="reference">The reference to copy</param>
+        public OpenApiLinkReference(OpenApiLinkReference reference)
+        {
+            Utils.CheckArgumentNull(reference);
 
-            Reference = _reference;
+            Reference = reference.Reference != null ? new(reference.Reference) : null;
+            UnresolvedReference = reference.UnresolvedReference;
+            //no need to copy summary and description as if they are not overridden, they will be fetched from the target
+            //if they are, the reference copy will handle it
         }
 
         internal OpenApiLinkReference(OpenApiLink target, string referenceId)
         {
             _target = target;
 
-            _reference = new OpenApiReference()
+            Reference = new OpenApiReference()
             {
                 Id = referenceId,
                 Type = ReferenceType.Link,
@@ -71,63 +83,79 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override string OperationRef { get => Target.OperationRef; set => Target.OperationRef = value; }
-
-        /// <inheritdoc/>
-        public override string OperationId { get => Target.OperationId; set => Target.OperationId = value; }
-
-        /// <inheritdoc/>
-        public override OpenApiServer Server { get => Target.Server; set => Target.Server = value; }
-
-        /// <inheritdoc/>
-        public override string Description
+        public string Description
         {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
-            set => _description = value;
-        }
-
-        /// <inheritdoc/>
-        public override Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get => Target.Parameters; set => Target.Parameters = value; }
-
-        /// <inheritdoc/>
-        public override RuntimeExpressionAnyWrapper RequestBody { get => Target.RequestBody; set => Target.RequestBody = value; }
-
-        /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => base.Extensions; set => base.Extensions = value; }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            set 
             {
-                _reference.SerializeAsV3(writer);
-                return;
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
+                if (Reference is not null)
+                {
+                    Reference.Description = value;
+                }
             }
         }
 
         /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
+        public string OperationRef { get => Target?.OperationRef; }
+
+        /// <inheritdoc/>
+        public string OperationId { get => Target?.OperationId; }
+
+        /// <inheritdoc/>
+        public OpenApiServer Server { get => Target?.Server; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, RuntimeExpressionAnyWrapper> Parameters { get => Target?.Parameters; }
+
+        /// <inheritdoc/>
+        public RuntimeExpressionAnyWrapper RequestBody { get => Target?.RequestBody; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+
+        /// <inheritdoc/>
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
-                _reference.SerializeAsV31(writer);
-                return;
+                Reference.SerializeAsV3(writer);
             }
             else
             {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
+                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV3(writer));
             }
-        }           
+        }
+
+        /// <inheritdoc/>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
+            {
+                Reference.SerializeAsV31(writer);
+            }
+            else
+            {
+                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV31(writer));
+            }
+        }
+
+        /// <inheritdoc/>
+        public void SerializeAsV2(IOpenApiWriter writer)
+        {
+            // Link object does not exist in V2.
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiLink CopyReferenceAsTargetElementWithOverrides(IOpenApiLink source)
+        {
+            return source is OpenApiLink ? new OpenApiLink(this) : source;
+        }
 
         /// <inheritdoc/>
         private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
+            Action<IOpenApiWriter, IOpenApiLink> action)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
             action(writer, Target);
         }
     }

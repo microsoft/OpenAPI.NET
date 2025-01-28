@@ -127,9 +127,9 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureLinksExist();
-        if (!Components.Links.ContainsKey(referenceId ?? link.Reference.Id))
+        if (!Components.Links.ContainsKey(referenceId))
         {
-            Components.Links.Add(referenceId ?? link.Reference.Id, link);
+            Components.Links.Add(referenceId, link);
         }
     }
     private void AddCallbackToComponents(OpenApiCallback callback, string referenceId = null)
@@ -235,7 +235,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 
     private void EnsureLinksExist()
     {
-        _target.Components.Links ??= new Dictionary<string, OpenApiLink>();
+        _target.Components.Links ??= new Dictionary<string, IOpenApiLink>();
     }
 
     private void EnsureSecuritySchemesExist()

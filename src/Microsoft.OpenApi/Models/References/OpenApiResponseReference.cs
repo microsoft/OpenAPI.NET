@@ -86,9 +86,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override IDictionary<string, IOpenApiHeader> Headers { get => _headers is not null ? _headers : Target?.Headers; set => _headers = value; }
 
-        private IDictionary<string, OpenApiLink> _links;
+        private IDictionary<string, IOpenApiLink> _links;
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiLink> Links { get => _links is not null ? _links : Target?.Links; set => _links = value; }
+        public override IDictionary<string, IOpenApiLink> Links { get => _links is not null ? _links : Target?.Links; set => _links = value; }
 
         private IDictionary<string, IOpenApiExtension> _extensions;
         /// <inheritdoc/>

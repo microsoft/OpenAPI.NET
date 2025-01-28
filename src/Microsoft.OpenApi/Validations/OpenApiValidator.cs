@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiPaths paths) => Validate(paths);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiLink link) => Validate(link);
+        public override void Visit(IOpenApiLink link) => Validate(link);
 
         /// <inheritdoc/>
         public override void Visit(IOpenApiExample example) => Validate(example);
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiLink> links) => Validate(links, links.GetType());
+        public override void Visit(IDictionary<string, IOpenApiLink> links) => Validate(links, links.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, OpenApiServerVariable> serverVariables) => Validate(serverVariables, serverVariables.GetType());
         /// <inheritdoc/>
