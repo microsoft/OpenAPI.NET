@@ -11,6 +11,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
@@ -322,8 +323,8 @@ paths: {}
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
-                                Parameters = new List<OpenApiParameter>
-                                {
+                                Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         Name = "tags",
@@ -351,7 +352,7 @@ paths: {}
                                             Format = "int32"
                                         }
                                     }
-                                },
+                                ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -465,8 +466,8 @@ paths: {}
                                 Description =
                                     "Returns a user based on a single ID, if the user does not have access to the pet",
                                 OperationId = "findPetById",
-                                Parameters = new List<OpenApiParameter>
-                                {
+                                Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         Name = "id",
@@ -479,7 +480,7 @@ paths: {}
                                             Format = "int64"
                                         }
                                     }
-                                },
+                                ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -525,8 +526,8 @@ paths: {}
                             {
                                 Description = "deletes a single pet based on the ID supplied",
                                 OperationId = "deletePet",
-                                Parameters = new List<OpenApiParameter>
-                                {
+                                Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         Name = "id",
@@ -539,7 +540,7 @@ paths: {}
                                             Format = "int64"
                                         }
                                     }
-                                },
+                                ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["204"] = new OpenApiResponse
@@ -769,8 +770,8 @@ paths: {}
                                     },
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
-                                Parameters = new List<OpenApiParameter>
-                                    {
+                                Parameters =
+                                    [
                                         new OpenApiParameter
                                         {
                                             Name = "tags",
@@ -798,7 +799,7 @@ paths: {}
                                                 Format = "int32"
                                             }
                                         }
-                                    },
+                                    ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -929,8 +930,8 @@ paths: {}
                                 Description =
                                     "Returns a user based on a single ID, if the user does not have access to the pet",
                                 OperationId = "findPetById",
-                                Parameters = new List<OpenApiParameter>
-                                    {
+                                Parameters =
+                                    [
                                         new OpenApiParameter
                                         {
                                             Name = "id",
@@ -943,7 +944,7 @@ paths: {}
                                                 Format = "int64"
                                             }
                                         }
-                                    },
+                                    ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -989,8 +990,8 @@ paths: {}
                             {
                                 Description = "deletes a single pet based on the ID supplied",
                                 OperationId = "deletePet",
-                                Parameters = new List<OpenApiParameter>
-                                    {
+                                Parameters =
+                                    [
                                         new OpenApiParameter
                                         {
                                             Name = "id",
@@ -1003,7 +1004,7 @@ paths: {}
                                                 Format = "int64"
                                             }
                                         }
-                                    },
+                                    ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["204"] = new OpenApiResponse
@@ -1224,6 +1225,19 @@ paths: {}
         [Fact]
         public async Task ParseDocWithRefsUsingProxyReferencesSucceeds()
         {
+            var parameter = new OpenApiParameter
+            {
+                Name = "limit",
+                In = ParameterLocation.Query,
+                Description = "Limit the number of pets returned",
+                Required = false,
+                Schema = new()
+                {
+                    Type = JsonSchemaType.Integer,
+                    Format = "int32",
+                    Default = 10
+                },
+            };
             // Arrange
             var expected = new OpenApiDocument
             {
@@ -1243,24 +1257,7 @@ paths: {}
                                 Summary = "Returns all pets",
                                 Parameters =
                                 [
-                                    new OpenApiParameter
-                                    {
-                                        Name = "limit",
-                                        In = ParameterLocation.Query,
-                                        Description = "Limit the number of pets returned",
-                                        Required = false,
-                                        Schema = new()
-                                        { 
-                                            Type = JsonSchemaType.Integer,
-                                            Format = "int32",
-                                            Default = 10
-                                        },
-                                        Reference = new OpenApiReference
-                                        {
-                                            Id = "LimitParameter",
-                                            Type = ReferenceType.Parameter
-                                        }
-                                    }
+                                    new OpenApiParameterReference(parameter, "LimitParameter"),
                                 ],
                                 Responses = new OpenApiResponses()
                             }
@@ -1269,21 +1266,9 @@ paths: {}
                 },
                 Components = new OpenApiComponents
                 {
-                    Parameters = new Dictionary<string, OpenApiParameter>
+                    Parameters = new Dictionary<string, IOpenApiParameter>
                     {
-                        ["LimitParameter"] = new OpenApiParameter
-                        {
-                            Name = "limit",
-                            In = ParameterLocation.Query,
-                            Description = "Limit the number of pets returned",
-                            Required = false,
-                            Schema = new()
-                            {
-                                Type = JsonSchemaType.Integer,
-                                Format = "int32",
-                                Default = 10
-                            },
-                        }
+                        ["LimitParameter"] = parameter
                     }
                 }
             };
@@ -1317,10 +1302,15 @@ components:
             var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var outputDoc = (await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0)).MakeLineBreaksEnvironmentNeutral();
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
+            var expectedParamReference = Assert.IsType<OpenApiParameterReference>(expectedParam);
+            expectedParamReference.Reference.HostDocument = doc;
+
+            var actualParamReference = Assert.IsType<OpenApiParameterReference>(actualParam);
 
             // Assert
-            actualParam.Should().BeEquivalentTo(expectedParam, options => options
-                .Excluding(x => x.Reference.HostDocument)
+            actualParamReference.Should().BeEquivalentTo(expectedParamReference, options => options
+                .Excluding(x => x.Reference)
+                .Excluding(x => x.Target)
                 .Excluding(x => x.Schema.Default.Parent)
                 .Excluding(x => x.Schema.Default.Options)
                 .IgnoringCyclicReferences());

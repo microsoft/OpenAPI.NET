@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Models
         /// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
         /// The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
         /// </summary>
-        public IList<OpenApiParameter>? Parameters { get; set; } = new List<OpenApiParameter>();
+        public IList<IOpenApiParameter>? Parameters { get; set; } = [];
 
         /// <summary>
         /// The request body applicable for this operation.
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Models
             Description = operation?.Description ?? Description;
             ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;
             OperationId = operation?.OperationId ?? OperationId;
-            Parameters = operation?.Parameters != null ? new List<OpenApiParameter>(operation.Parameters) : null;
+            Parameters = operation?.Parameters != null ? new List<IOpenApiParameter>(operation.Parameters) : null;
             RequestBody = operation?.RequestBody != null ? new(operation?.RequestBody) : null;
             Responses = operation?.Responses != null ? new(operation?.Responses) : null;
             Callbacks = operation?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Models
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
-            List<OpenApiParameter> parameters;
+            List<IOpenApiParameter> parameters;
             if (Parameters == null)
             {
                 parameters = [];

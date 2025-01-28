@@ -10,6 +10,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -30,8 +31,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Summary = "Updates a pet in the store",
             Description = "",
             OperationId = "updatePet",
-            Parameters = new List<OpenApiParameter>
-            {
+            Parameters =
+            [
                 new OpenApiParameter
                 {
                     Name = "petId",
@@ -43,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Type = JsonSchemaType.String
                     }
                 }
-            },
+            ],
             Responses = new OpenApiResponses
             {
                 ["200"] = new OpenApiResponse
@@ -63,8 +64,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Summary = "Updates a pet in the store with request body",
             Description = "",
             OperationId = "updatePetWithBody",
-            Parameters = new List<OpenApiParameter>
-            {
+            Parameters =
+            [
                 new OpenApiParameter
                 {
                     Name = "petId",
@@ -76,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Type = JsonSchemaType.String
                     }
                 },
-            },
+            ],
             RequestBody = new OpenApiRequestBody
             {
                 Description = "Pet to update with",

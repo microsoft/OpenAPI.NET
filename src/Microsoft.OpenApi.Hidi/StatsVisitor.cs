@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Hidi
     {
         public int ParameterCount { get; set; }
 
-        public override void Visit(OpenApiParameter parameter)
+        public override void Visit(IOpenApiParameter parameter)
         {
             ParameterCount++;
         }

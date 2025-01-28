@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -24,6 +25,6 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Parameters object
         /// </summary>
-        public IList<OpenApiParameter> Parameters { get; set; }
+        public IList<IOpenApiParameter> Parameters { get; set; }
     }
 }

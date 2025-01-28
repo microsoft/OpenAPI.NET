@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Hidi.Formatters;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
@@ -109,9 +110,9 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                     OperationType.Get, new()
                                     {
                                         OperationId = "Foo.GetFoo",
-                                        Parameters = new List<OpenApiParameter>
-                                        {
-                                            new()
+                                        Parameters =
+                                        [
+                                            new OpenApiParameter()
                                             {
                                                 Name = "ids",
                                                 In = ParameterLocation.Query,
@@ -133,7 +134,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                                     }
                                                 }
                                             }
-                                        },
+                                        ],
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
                                             {

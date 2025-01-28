@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Writers;
 using Xunit;
 using VerifyXunit;
 using VerifyTests;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -106,8 +107,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
-                                Parameters = new List<OpenApiParameter>
-                                    {
+                                Parameters =
+                                    [
                                         new OpenApiParameter
                                         {
                                             Name = "tags",
@@ -135,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                                 Format = "int32"
                                             }
                                         }
-                                    },
+                                    ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -280,8 +281,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
-                            Parameters = new List<OpenApiParameter>
-                                {
+                            Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         Name = "tags",
@@ -309,7 +310,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             Format = "int32"
                                         }
                                     }
-                                },
+                                ],
                             Responses = new OpenApiResponses
                             {
                                 ["200"] = new OpenApiResponse

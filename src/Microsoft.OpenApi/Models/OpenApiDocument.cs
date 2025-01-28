@@ -277,8 +277,8 @@ namespace Microsoft.OpenApi.Models
 
                 // parameters
                 var parameters = Components?.Parameters != null
-                    ? new Dictionary<string, OpenApiParameter>(Components.Parameters)
-                    : new Dictionary<string, OpenApiParameter>();
+                    ? new Dictionary<string, IOpenApiParameter>(Components.Parameters)
+                    : [];
 
                 if (Components?.RequestBodies != null)
                 {
@@ -592,7 +592,7 @@ namespace Microsoft.OpenApi.Models
                     Components.Schemas.Add(id, openApiSchema);
                     break;
                 case OpenApiParameter openApiParameter:
-                    Components.Parameters ??= new Dictionary<string, OpenApiParameter>();
+                    Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
                     Components.Parameters.Add(id, openApiParameter);
                     break;
                 case OpenApiResponse openApiResponse:

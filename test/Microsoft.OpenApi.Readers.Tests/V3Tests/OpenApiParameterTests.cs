@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -300,6 +302,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseParameterWithReferenceWorks()
         {
             // Arrange
+            var parameter = new OpenApiParameter
+            {
+                Name = "tags",
+                In = ParameterLocation.Query,
+                Description = "tags to filter by",
+                Required = false,
+                Schema = new()
+                {
+                    Type = JsonSchemaType.Array,
+                    Items = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    }
+                }
+            };
             var document = new OpenApiDocument
             {
                 Info = new OpenApiInfo
@@ -324,44 +341,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
-                                Parameters = new List<OpenApiParameter>
-                                {
-                                    new() {
-                                        Reference = new OpenApiReference
-                                        {
-                                            Type = ReferenceType.Parameter,
-                                            Id = "tagsParameter"
-                                        }
-                                    }
-                                },
+                                Parameters =
+                                [
+                                    new OpenApiParameterReference (parameter, "tagsParameter"),
+                                ],
                             }
                         }
                     }
                 },
                 Components = new OpenApiComponents
                 {
-                    Parameters = new Dictionary<string, OpenApiParameter>()
+                    Parameters = new Dictionary<string, IOpenApiParameter>()
                     {
-                        ["tagsParameter"] = new OpenApiParameter
-                        {
-                            Name = "tags",
-                            In = ParameterLocation.Query,
-                            Description = "tags to filter by",
-                            Required = false,
-                            Schema = new()
-                            {
-                                Type = JsonSchemaType.Array,
-                                Items = new OpenApiSchema
-                                {
-                                    Type = JsonSchemaType.String
-                                }
-                            },
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.Parameter,
-                                Id = "tagsParameter"
-                            }
-                        }
+                        ["tagsParameter"] = parameter,
                     }
                 }
             };
@@ -377,7 +369,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var param = OpenApiV3Deserializer.LoadParameter(node, document);
 
             // Assert
-            param.Should().BeEquivalentTo(expected, options => options.Excluding(p => p.Reference.HostDocument));
+            Assert.Equivalent(expected, param);
         }
     }
 }

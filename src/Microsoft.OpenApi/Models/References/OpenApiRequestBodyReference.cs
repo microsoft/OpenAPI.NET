@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -121,7 +122,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        internal override OpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
+        internal override IOpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
         {
             if (writer.GetSettings().ShouldInlineReference(_reference))
             {

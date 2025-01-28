@@ -30,8 +30,8 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(OpenApiServerVariable));
             visitor.Visit(default(IDictionary<OperationType, OpenApiOperation>));
             visitor.Visit(default(OpenApiOperation));
-            visitor.Visit(default(IList<OpenApiParameter>));
-            visitor.Visit(default(OpenApiParameter));
+            visitor.Visit(default(IList<IOpenApiParameter>));
+            visitor.Visit(default(IOpenApiParameter));
             visitor.Visit(default(OpenApiRequestBody));
             visitor.Visit(default(IDictionary<string, IOpenApiHeader>));
             visitor.Visit(default(IDictionary<string, IOpenApiCallback>));
@@ -154,13 +154,13 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(operation);
             }
 
-            public override void Visit(IList<OpenApiParameter> parameters)
+            public override void Visit(IList<IOpenApiParameter> parameters)
             {
                 EncodeCall();
                 base.Visit(parameters);
             }
 
-            public override void Visit(OpenApiParameter parameter)
+            public override void Visit(IOpenApiParameter parameter)
             {
                 EncodeCall();
                 base.Visit(parameter);

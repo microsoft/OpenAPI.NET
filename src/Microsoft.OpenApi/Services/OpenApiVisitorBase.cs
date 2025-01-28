@@ -141,14 +141,14 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiParameter> parameters)
+        public virtual void Visit(IList<IOpenApiParameter> parameters)
         {
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiParameter"/>
         /// </summary>
-        public virtual void Visit(OpenApiParameter parameter)
+        public virtual void Visit(IOpenApiParameter parameter)
         {
         }
 

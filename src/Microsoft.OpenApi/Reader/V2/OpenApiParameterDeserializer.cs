@@ -184,12 +184,12 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
         {
             return LoadParameter(node, false, hostDocument);
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
+        public static IOpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
         {
             // Reset the local variables every time this method is called.
             node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);

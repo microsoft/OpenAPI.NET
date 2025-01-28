@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
 using Xunit;
@@ -19,9 +20,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
         private static readonly OpenApiPathItem _basicPathItemWithFormData = new()
         {
-            Parameters = new List<OpenApiParameter>
-            {
-                new()
+            Parameters =
+            [
+                new OpenApiParameter()
                 {
                     Name = "id",
                     In = ParameterLocation.Path,
@@ -37,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     },
                     Style = ParameterStyle.Simple
                 }
-            },
+            ],
             Operations =
             {
                 [OperationType.Put] = new()
@@ -45,9 +46,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Summary = "Puts a pet in the store with form data",
                     Description = "",
                     OperationId = "putPetWithForm",
-                    Parameters = new List<OpenApiParameter>
-                    {
-                        new()
+                    Parameters =
+                    [
+                        new OpenApiParameter()
                         {
                             Name = "petId",
                             In = ParameterLocation.Path,
@@ -58,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 Type = JsonSchemaType.String
                             }
                         }
-                    },
+                    ],
                     RequestBody = new()
                     {
                         Content =
@@ -140,9 +141,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Summary = "Posts a pet in the store with form data",
                     Description = "",
                     OperationId = "postPetWithForm",
-                    Parameters = new List<OpenApiParameter>
-                    {
-                        new()
+                    Parameters =
+                    [
+                        new OpenApiParameter()
                         {
                             Name = "petId",
                             In = ParameterLocation.Path,
@@ -153,7 +154,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 Type = JsonSchemaType.String
                             }
                         },
-                        new()
+                        new OpenApiParameter()
                         {
                             Name = "petName",
                             In = ParameterLocation.Path,
@@ -164,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 Type = JsonSchemaType.String
                             }
                         }
-                    },
+                    ],
                     RequestBody = new()
                     {
                         Content =

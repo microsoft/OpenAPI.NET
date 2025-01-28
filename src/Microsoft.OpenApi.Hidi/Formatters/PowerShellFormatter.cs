@@ -7,6 +7,7 @@ using Humanizer;
 using Humanizer.Inflections;
 using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Hidi.Formatters
@@ -69,13 +70,13 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
             var operationId = operation.OperationId;
             var operationTypeExtension = operation.Extensions?.GetExtension("x-ms-docs-operation-type");
-            if (operationTypeExtension.IsEquals("function"))
-                operation.Parameters = ResolveFunctionParameters(operation.Parameters ?? new List<OpenApiParameter>());
+            if (operationTypeExtension.IsEquals("function") && operation.Parameters is { Count :> 0})
+                ResolveFunctionParameters(operation.Parameters);
 
             // Order matters. Resolve operationId.
             operationId = RemoveHashSuffix(operationId);
             if (operationTypeExtension.IsEquals("action") || operationTypeExtension.IsEquals("function"))
-                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? new List<OpenApiParameter>());
+                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? new List<IOpenApiParameter>());
             operationId = SingularizeAndDeduplicateOperationId(operationId.SplitByChar('.'));
             operationId = ResolveODataCastOperationId(operationId);
             operationId = ResolveByRefOperationId(operationId);
@@ -143,7 +144,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return s_hashSuffixRegex.Match(operationId).Value;
         }
 
-        private static string RemoveKeyTypeSegment(string operationId, IList<OpenApiParameter> parameters)
+        private static string RemoveKeyTypeSegment(string operationId, IList<IOpenApiParameter> parameters)
         {
             var segments = operationId.SplitByChar('.');
             foreach (var parameter in parameters)
@@ -157,9 +158,9 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return string.Join('.', segments);
         }
 
-        private static IList<OpenApiParameter> ResolveFunctionParameters(IList<OpenApiParameter> parameters)
+        private static void ResolveFunctionParameters(IList<IOpenApiParameter> parameters)
         {
-            foreach (var parameter in parameters.Where(static p => p.Content?.Any() ?? false))
+            foreach (var parameter in parameters.OfType<OpenApiParameter>().Where(static p => p.Content?.Any() ?? false))
             {
                 // Replace content with a schema object of type array
                 // for structured or collection-valued function parameters
@@ -173,7 +174,6 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                     }
                 };
             }
-            return parameters;
         }
 
         private void AddAdditionalPropertiesToSchema(OpenApiSchema schema)

@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -16,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the field is required.
         /// </summary>
-        public static ValidationRule<OpenApiParameter> ParameterRequiredFields =>
+        public static ValidationRule<IOpenApiParameter> ParameterRequiredFields =>
             new(nameof(ParameterRequiredFields),
                 (context, item) =>
                 {
@@ -42,7 +43,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the "required" field is true when "in" is path.
         /// </summary>
-        public static ValidationRule<OpenApiParameter> RequiredMustBeTrueWhenInIsPath =>
+        public static ValidationRule<IOpenApiParameter> RequiredMustBeTrueWhenInIsPath =>
             new(nameof(RequiredMustBeTrueWhenInIsPath),
                 (context, item) =>
                 {
@@ -61,7 +62,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate that a path parameter should always appear in the path
         /// </summary>
-        public static ValidationRule<OpenApiParameter> PathParameterShouldBeInThePath =>
+        public static ValidationRule<IOpenApiParameter> PathParameterShouldBeInThePath =>
             new(nameof(PathParameterShouldBeInThePath),
                 (context, parameter) =>
                 {

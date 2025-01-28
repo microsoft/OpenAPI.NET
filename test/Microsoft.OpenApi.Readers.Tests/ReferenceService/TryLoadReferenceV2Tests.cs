@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var reference = new OpenApiParameterReference("skipParam", result.Document);
 
             // Assert
-            reference.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     Name = "skip",
@@ -43,7 +43,8 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                         Format = "int32"
                     }
                     
-                }, options => options.Excluding(x => x.Reference)
+                },
+                reference
             );
         }
 
