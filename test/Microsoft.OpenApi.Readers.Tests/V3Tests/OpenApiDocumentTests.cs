@@ -1390,12 +1390,8 @@ components:
         public async Task ParseDocumentWithExampleReferencesPasses()
         {
             // Act & Assert: Ensure no NullReferenceException is thrown
-            Func<Task> act = async () =>
-            {
-                await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"));
-            };
-
-            await act.Should().NotThrowAsync<NullReferenceException>();
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"));
+            Assert.Empty(result.Diagnostic.Errors);
         }
     }
 }
