@@ -166,7 +166,7 @@ components:
             {
                 Components = new OpenApiComponents
                 {
-                    Headers = new System.Collections.Generic.Dictionary<string, OpenApiHeader>
+                    Headers =
                     {
                         { "header1", new OpenApiHeader
                             {

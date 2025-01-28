@@ -620,7 +620,7 @@ namespace Microsoft.OpenApi.Models
                     Components.Examples.Add(id, openApiExample);
                     break;
                 case OpenApiHeader openApiHeader:
-                    Components.Headers ??= new Dictionary<string, OpenApiHeader>();
+                    Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
                     Components.Headers.Add(id, openApiHeader);
                     break;
                 case OpenApiSecurityScheme openApiSecurityScheme:

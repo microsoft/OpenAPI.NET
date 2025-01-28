@@ -36,11 +36,11 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiRequestBody _requestBodyFragment = new();
         private static readonly OpenApiResponse _responseFragment = new()
         {
-            Headers = new Dictionary<string, OpenApiHeader>
+            Headers =
             {
                 { "header1", new OpenApiHeader() }
             },
-            Links = new Dictionary<string, OpenApiLink>
+            Links =
             {
                 { "link1", new OpenApiLink() }
             }

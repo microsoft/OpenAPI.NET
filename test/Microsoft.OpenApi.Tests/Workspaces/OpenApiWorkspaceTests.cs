@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
             var responseFragment = new OpenApiResponse
             {
-                Headers = new Dictionary<string, OpenApiHeader>
+                Headers =
                 {
                     { "header1", new OpenApiHeader() }
                 }

@@ -85,10 +85,10 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target.PathItems; }
+        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target?.PathItems; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public void SerializeAsV3(IOpenApiWriter writer)
@@ -117,11 +117,11 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public IOpenApiCallback CopyReferenceAsTargetElementWithOverrides(IOpenApiCallback openApiExample)
+        public IOpenApiCallback CopyReferenceAsTargetElementWithOverrides(IOpenApiCallback source)
         {
             // the copy here is never called since callbacks do not have any overridable fields.
             // if the spec evolves to include overridable fields for callbacks, the serialize methods will need to call this copy method.
-            return openApiExample is OpenApiCallback ? new OpenApiCallback(this) : openApiExample;
+            return source is OpenApiCallback ? new OpenApiCallback(this) : source;
         }
 
         /// <inheritdoc/>

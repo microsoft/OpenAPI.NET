@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits headers.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiHeader> headers)
+        public virtual void Visit(IDictionary<string, IOpenApiHeader> headers)
         {
         }
 
@@ -274,7 +274,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiHeader"/>
         /// </summary>
-        public virtual void Visit(OpenApiHeader header)
+        public virtual void Visit(IOpenApiHeader header)
         {
         }
 

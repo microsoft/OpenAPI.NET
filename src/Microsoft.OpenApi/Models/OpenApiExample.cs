@@ -41,11 +41,12 @@ namespace Microsoft.OpenApi.Models
         /// <param name="example">The <see cref="IOpenApiExample"/> object</param>
         public OpenApiExample(IOpenApiExample example)
         {
-            Summary = example?.Summary ?? Summary;
-            Description = example?.Description ?? Description;
-            Value = example?.Value != null ? JsonNodeCloneHelper.Clone(example.Value) : null;
-            ExternalValue = example?.ExternalValue ?? ExternalValue;
-            Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
+            Utils.CheckArgumentNull(example);
+            Summary = example.Summary ?? Summary;
+            Description = example.Description ?? Description;
+            Value = example.Value != null ? JsonNodeCloneHelper.Clone(example.Value) : null;
+            ExternalValue = example.ExternalValue ?? ExternalValue;
+            Extensions = example.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
         }
 
         /// <inheritdoc/>
