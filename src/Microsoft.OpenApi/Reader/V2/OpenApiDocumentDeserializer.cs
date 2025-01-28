@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Services;
@@ -303,8 +304,8 @@ namespace Microsoft.OpenApi.Reader.V2
 
     internal class RequestBodyReferenceFixer : OpenApiVisitorBase
     {
-        private readonly IDictionary<string, OpenApiRequestBody> _requestBodies;
-        public RequestBodyReferenceFixer(IDictionary<string, OpenApiRequestBody> requestBodies)
+        private readonly IDictionary<string, IOpenApiRequestBody> _requestBodies;
+        public RequestBodyReferenceFixer(IDictionary<string, IOpenApiRequestBody> requestBodies)
         {
             _requestBodies = requestBodies;
         }
@@ -318,15 +319,7 @@ namespace Microsoft.OpenApi.Reader.V2
             if (body != null)
             {
                 operation.Parameters.Remove(body);
-                operation.RequestBody = new()
-                {
-                    UnresolvedReference = true,
-                    Reference = new()
-                    {
-                        Id = body.Reference.Id,
-                        Type = ReferenceType.RequestBody
-                    }
-                };
+                operation.RequestBody = new OpenApiRequestBodyReference(body.Reference.Id, body.Reference.HostDocument);
             }
         }
     }

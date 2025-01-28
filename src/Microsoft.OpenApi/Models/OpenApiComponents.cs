@@ -39,10 +39,10 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiRequestBody"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiRequestBody"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiRequestBody>? RequestBodies { get; set; } =
-            new Dictionary<string, OpenApiRequestBody>();
+        public IDictionary<string, IOpenApiRequestBody>? RequestBodies { get; set; } =
+            new Dictionary<string, IOpenApiRequestBody>();
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiHeader"/> Objects.
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Models
             Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
             Parameters = components?.Parameters != null ? new Dictionary<string, IOpenApiParameter>(components.Parameters) : null;
             Examples = components?.Examples != null ? new Dictionary<string, IOpenApiExample>(components.Examples) : null;
-            RequestBodies = components?.RequestBodies != null ? new Dictionary<string, OpenApiRequestBody>(components.RequestBodies) : null;
+            RequestBodies = components?.RequestBodies != null ? new Dictionary<string, IOpenApiRequestBody>(components.RequestBodies) : null;
             Headers = components?.Headers != null ? new Dictionary<string, IOpenApiHeader>(components.Headers) : null;
             SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
             Links = components?.Links != null ? new Dictionary<string, IOpenApiLink>(components.Links) : null;

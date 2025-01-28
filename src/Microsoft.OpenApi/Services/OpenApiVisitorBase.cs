@@ -153,9 +153,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiRequestBody"/>
+        /// Visits <see cref="IOpenApiRequestBody"/>
         /// </summary>
-        public virtual void Visit(OpenApiRequestBody requestBody)
+        public virtual void Visit(IOpenApiRequestBody requestBody)
         {
         }
 

@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Name = "parameter2"
                 }
             ],
-            RequestBody = new()
+            RequestBody = new OpenApiRequestBody()
             {
                 Description = "description2",
                 Required = true,
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Name = "parameter2"
                 }
             ],
-            RequestBody = new()
+            RequestBody = new OpenApiRequestBody()
             {
                 Description = "description2",
                 Required = true,
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 ],
-                RequestBody = new()
+                RequestBody = new OpenApiRequestBody()
                 {
                     Content =
                     {

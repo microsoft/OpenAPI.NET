@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiSecurityRequirement securityRequirement) => Validate(securityRequirement);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiRequestBody requestBody) => Validate(requestBody);
+        public override void Visit(IOpenApiRequestBody requestBody) => Validate(requestBody);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiPaths paths) => Validate(paths);
