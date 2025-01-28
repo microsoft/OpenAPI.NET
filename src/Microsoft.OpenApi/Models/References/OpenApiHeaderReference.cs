@@ -13,29 +13,8 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Header Object Reference.
     /// </summary>
-    public class OpenApiHeaderReference : IOpenApiHeader, IOpenApiReferenceHolder<OpenApiHeader, IOpenApiHeader>
+    public class OpenApiHeaderReference : BaseOpenApiReferenceHolder<OpenApiHeader, IOpenApiHeader>, IOpenApiHeader
     {
-        /// <inheritdoc/>
-        public OpenApiReference Reference { get; set; }
-
-        /// <inheritdoc/>
-        public bool UnresolvedReference { get; set; }
-        internal OpenApiHeader _target;
-        /// <summary>
-        /// Gets the target header.
-        /// </summary>
-        /// <remarks>
-        /// If the reference is not resolved, this will return null.
-        /// </remarks>
-        public OpenApiHeader Target
-        {
-            get
-            {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiHeader>(Reference);
-                return _target;
-            }
-        }
-
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -46,41 +25,20 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
+        public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Header, externalResource)
         {
-            Utils.CheckArgumentNullOrEmpty(referenceId);
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.Header,
-                ExternalResource = externalResource
-            };
         }
 
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="header">The <see cref="OpenApiHeaderReference"/> object to copy</param>
-        public OpenApiHeaderReference(OpenApiHeaderReference header)
+        public OpenApiHeaderReference(OpenApiHeaderReference header):base(header)
         {
-            Utils.CheckArgumentNull(header);
-            Reference = header.Reference != null ? new(header.Reference) : null;
-            UnresolvedReference = header.UnresolvedReference;
-            //no need to copy description as if they are not overridden, they will be fetched from the target
-            //if they are, the reference copy will handle it
         }
 
-        internal OpenApiHeaderReference(OpenApiHeader target, string referenceId)
+        internal OpenApiHeaderReference(OpenApiHeader target, string referenceId):base(target, referenceId, ReferenceType.Header)
         {
-            _target = target;
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                Type = ReferenceType.Header,
-            };
         }
 
         /// <inheritdoc/>
@@ -130,55 +88,9 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public void SerializeAsV31(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV31(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV31(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV3(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV3(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV2(writer);
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV2(writer));
-            }
-        }
-        /// <inheritdoc/>
-        public IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader source)
+        public override IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader source)
         {
             return source is OpenApiHeader ? new OpenApiHeader(this) : source;
-        }
-
-        /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiHeader> action)
-        {
-            Utils.CheckArgumentNull(writer);
-            action(writer, Target);
         }
     }
 }

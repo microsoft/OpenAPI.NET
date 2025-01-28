@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Interfaces;
 namespace Microsoft.OpenApi.Models.Interfaces;
 
 /// <summary>
-/// Defines the base properties for the example object.
+/// Defines the base properties for the parameter object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
 public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible
