@@ -299,6 +299,9 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// </summary>
     public IDictionary<string, JsonNode> UnrecognizedKeywords { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Any annotation to attach to the schema to be used by the application.
+    /// Annotations are NOT (de)serialized with the schema and can be used for custom properties.
+    /// </summary>
     public IDictionary<string, object> Annotations { get; }
 }
