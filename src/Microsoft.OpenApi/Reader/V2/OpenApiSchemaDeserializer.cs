@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new PatternFieldMap<OpenApiSchema>
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)

@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiPaths> _pathsPatternFields = new()
         {
             {s => s.StartsWith("/", StringComparison.OrdinalIgnoreCase), (o, k, n, t) => o.Add(k, LoadPathItem(n, t))},
-            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         public static OpenApiPaths LoadPaths(ParseNode node, OpenApiDocument hostDocument)

@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static readonly PatternFieldMap<OpenApiLink> _linkPatternFields = new()
         {
-            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
         };
 
         public static IOpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument)

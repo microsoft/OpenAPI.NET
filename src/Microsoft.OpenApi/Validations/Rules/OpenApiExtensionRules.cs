@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, item) =>
                 {
                     context.Enter("extensions");
-                    foreach (var extensible in item.Extensions.Keys.Where(static x => !x.StartsWith("x-", StringComparison.OrdinalIgnoreCase)))
+                    foreach (var extensible in item.Extensions.Keys.Where(static x => !x.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)))
                     {
                         context.CreateError(nameof(ExtensionNameMustStartWithXDash),
                             string.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible, context.PathString));
