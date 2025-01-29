@@ -459,6 +459,16 @@ namespace Microsoft.OpenApi.Models.Interfaces
         bool WriteOnly { get; }
         Microsoft.OpenApi.Models.OpenApiXml Xml { get; }
     }
+    public interface IOpenApiSecurityScheme : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement
+    {
+        string BearerFormat { get; }
+        Microsoft.OpenApi.Models.OpenApiOAuthFlows Flows { get; }
+        Microsoft.OpenApi.Models.ParameterLocation? In { get; }
+        string Name { get; }
+        System.Uri OpenIdConnectUrl { get; }
+        string Scheme { get; }
+        Microsoft.OpenApi.Models.SecuritySchemeType? Type { get; }
+    }
     public interface IOpenApiSummarizedElement : Microsoft.OpenApi.Interfaces.IOpenApiElement
     {
         string Summary { get; set; }
@@ -502,7 +512,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody>? RequestBodies { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiResponse>? Responses { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? Schemas { get; set; }
-        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSecurityScheme>? SecuritySchemes { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme>? SecuritySchemes { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1051,31 +1061,29 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiSecurityRequirement : System.Collections.Generic.Dictionary<Microsoft.OpenApi.Models.OpenApiSecurityScheme, System.Collections.Generic.IList<string>>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiSecurityRequirement : System.Collections.Generic.Dictionary<Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme, System.Collections.Generic.IList<string>>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         public OpenApiSecurityRequirement() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiSecurityScheme : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiSecurityScheme : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme
     {
         public OpenApiSecurityScheme() { }
-        public OpenApiSecurityScheme(Microsoft.OpenApi.Models.OpenApiSecurityScheme securityScheme) { }
-        public Microsoft.OpenApi.Models.OpenApiReference Reference { get; set; }
-        public bool UnresolvedReference { get; set; }
-        public virtual string BearerFormat { get; set; }
-        public virtual string Description { get; set; }
-        public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
-        public virtual Microsoft.OpenApi.Models.OpenApiOAuthFlows Flows { get; set; }
-        public virtual Microsoft.OpenApi.Models.ParameterLocation? In { get; set; }
-        public virtual string Name { get; set; }
-        public virtual System.Uri OpenIdConnectUrl { get; set; }
-        public virtual string Scheme { get; set; }
-        public virtual Microsoft.OpenApi.Models.SecuritySchemeType? Type { get; set; }
-        public virtual void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public virtual void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public virtual void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public OpenApiSecurityScheme(Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme securityScheme) { }
+        public string BearerFormat { get; set; }
+        public string Description { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiOAuthFlows Flows { get; set; }
+        public Microsoft.OpenApi.Models.ParameterLocation? In { get; set; }
+        public string Name { get; set; }
+        public System.Uri OpenIdConnectUrl { get; set; }
+        public string Scheme { get; set; }
+        public Microsoft.OpenApi.Models.SecuritySchemeType? Type { get; set; }
+        public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiServer : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -1404,22 +1412,19 @@ namespace Microsoft.OpenApi.Models.References
         public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiSecuritySchemeReference : Microsoft.OpenApi.Models.OpenApiSecurityScheme, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiSecurityScheme>, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiSecuritySchemeReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiSecurityScheme, Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme
     {
         public OpenApiSecuritySchemeReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, string externalResource = null) { }
-        public Microsoft.OpenApi.Models.OpenApiSecurityScheme Target { get; }
-        public override string BearerFormat { get; set; }
-        public override string Description { get; set; }
-        public override System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
-        public override Microsoft.OpenApi.Models.OpenApiOAuthFlows Flows { get; set; }
-        public override Microsoft.OpenApi.Models.ParameterLocation? In { get; set; }
-        public override string Name { get; set; }
-        public override System.Uri OpenIdConnectUrl { get; set; }
-        public override string Scheme { get; set; }
-        public override Microsoft.OpenApi.Models.SecuritySchemeType? Type { get; set; }
-        public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
-        public override void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public string BearerFormat { get; }
+        public string Description { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; }
+        public Microsoft.OpenApi.Models.OpenApiOAuthFlows Flows { get; }
+        public Microsoft.OpenApi.Models.ParameterLocation? In { get; }
+        public string Name { get; }
+        public System.Uri OpenIdConnectUrl { get; }
+        public string Scheme { get; }
+        public Microsoft.OpenApi.Models.SecuritySchemeType? Type { get; }
+        public override Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme source) { }
     }
     public class OpenApiTagReference : Microsoft.OpenApi.Models.OpenApiTag, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiTag>, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
@@ -1622,6 +1627,7 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody requestBody) { }
         public virtual void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiResponse response) { }
         public virtual void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema schema) { }
+        public virtual void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme securityScheme) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiComponents components) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiContact contact) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
@@ -1635,7 +1641,6 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiPaths paths) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiResponses response) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiSecurityRequirement securityRequirement) { }
-        public virtual void Visit(Microsoft.OpenApi.Models.OpenApiSecurityScheme securityScheme) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiServer server) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiServerVariable serverVariable) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiTag tag) { }
@@ -1721,6 +1726,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody requestBody) { }
         public override void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiResponse response) { }
         public override void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema schema) { }
+        public override void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiSecurityScheme securityScheme) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiComponents components) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiContact contact) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
@@ -1734,7 +1740,6 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(Microsoft.OpenApi.Models.OpenApiPaths paths) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiResponses response) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiSecurityRequirement securityRequirement) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiSecurityScheme securityScheme) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiServer server) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiServerVariable serverVariable) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiTag tag) { }
