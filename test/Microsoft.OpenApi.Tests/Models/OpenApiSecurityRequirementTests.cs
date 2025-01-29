@@ -223,22 +223,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = SecuritySchemeType.ApiKey,
                 Name = "apiKeyName1",
                 In = ParameterLocation.Header,
-                Reference = new()
-                {
-                    Id = "securityScheme1",
-                    Type = ReferenceType.SecurityScheme
-                }
             };
 
             var securityScheme2 = new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OpenIdConnect,
                 OpenIdConnectUrl = new("http://example.com"),
-                Reference = new()
-                {
-                    Id = "securityScheme2",
-                    Type = ReferenceType.SecurityScheme
-                }
             };
 
             var securityScheme1Duplicate = new OpenApiSecurityScheme
@@ -246,11 +236,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = SecuritySchemeType.ApiKey,
                 Name = "apiKeyName1",
                 In = ParameterLocation.Header,
-                Reference = new()
-                {
-                    Id = "securityScheme1",
-                    Type = ReferenceType.SecurityScheme
-                }
             };
 
             var securityScheme1WithDifferentProperties = new OpenApiSecurityScheme
@@ -258,11 +243,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = SecuritySchemeType.ApiKey,
                 Name = "apiKeyName2",
                 In = ParameterLocation.Query,
-                Reference = new()
-                {
-                    Id = "securityScheme1",
-                    Type = ReferenceType.SecurityScheme
-                }
             };
 
             // Act

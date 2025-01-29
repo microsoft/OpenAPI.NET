@@ -664,7 +664,7 @@ paths: {}
                         }
                     },
                 },
-                SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+                SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                 {
                     ["securitySchemeName1"] = new OpenApiSecurityScheme
                     {
@@ -700,21 +700,11 @@ paths: {}
 
             var tagReference2 = new OpenApiTagReference("tagName2", null);
 
-            var securityScheme1 = await CloneSecuritySchemeAsync(components.SecuritySchemes["securitySchemeName1"]);
+            var securityScheme1Cast = Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName1"]);
+            var securityScheme1 = await CloneSecuritySchemeAsync(securityScheme1Cast);
 
-            securityScheme1.Reference = new OpenApiReference
-            {
-                Id = "securitySchemeName1",
-                Type = ReferenceType.SecurityScheme
-            };
-
-            var securityScheme2 = await CloneSecuritySchemeAsync(components.SecuritySchemes["securitySchemeName2"]);
-
-            securityScheme2.Reference = new OpenApiReference
-            {
-                Id = "securitySchemeName2",
-                Type = ReferenceType.SecurityScheme
-            };
+            var securityScheme2Cast = Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName2"]);
+            var securityScheme2 = await CloneSecuritySchemeAsync(securityScheme2Cast);
 
             var expected = new OpenApiDocument
             {
@@ -1098,8 +1088,7 @@ paths: {}
 
             var securityRequirement = result.Document.SecurityRequirements[0];
 
-            securityRequirement.Keys.First().Should().BeEquivalentTo(result.Document.Components.SecuritySchemes.First().Value,
-                options => options.Excluding(x => x.Reference));
+            Assert.Equivalent(result.Document.Components.SecuritySchemes.First().Value, securityRequirement.Keys.First());
         }
 
         [Fact]
@@ -1176,7 +1165,6 @@ paths: {}
             var securityScheme = result.Document.Components.SecuritySchemes["OAuth2"];
 
             // Assert
-            Assert.False(securityScheme.UnresolvedReference);
             Assert.NotNull(securityScheme.Flows);
         }
 
