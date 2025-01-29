@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Reader.V31
             return securityRequirement;
         }
 
-        private static IOpenApiSecurityScheme LoadSecuritySchemeByReference(string schemeName, OpenApiDocument hostDocument)
+        private static OpenApiSecuritySchemeReference LoadSecuritySchemeByReference(string schemeName, OpenApiDocument hostDocument)
         {
             return new OpenApiSecuritySchemeReference(schemeName, hostDocument);
         }

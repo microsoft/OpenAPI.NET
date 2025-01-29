@@ -889,8 +889,8 @@ paths: {}
                                     {
                                         new OpenApiSecurityRequirement
                                         {
-                                            [securityScheme1] = new List<string>(),
-                                            [securityScheme2] = new List<string>
+                                            [new OpenApiSecuritySchemeReference(securityScheme1, "securitySchemeName1")] = new List<string>(),
+                                            [new OpenApiSecuritySchemeReference(securityScheme2, "securitySchemeName2")] = new List<string>
                                             {
                                                 "scope1",
                                                 "scope2"
@@ -1035,8 +1035,8 @@ paths: {}
                     {
                         new OpenApiSecurityRequirement
                         {
-                            [securityScheme1] = new List<string>(),
-                            [securityScheme2] = new List<string>
+                            [new OpenApiSecuritySchemeReference(securityScheme1, "securitySchemeName1")] = new List<string>(),
+                            [new OpenApiSecuritySchemeReference(securityScheme2, "securitySchemeName2")] = new List<string>
                             {
                                 "scope1",
                                 "scope2",

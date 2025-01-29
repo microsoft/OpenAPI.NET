@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Models
     /// then the value is a list of scope names required for the execution.
     /// For other security scheme types, the array MUST be empty.
     /// </summary>
-    public class OpenApiSecurityRequirement : Dictionary<IOpenApiSecurityScheme, IList<string>>,
+    public class OpenApiSecurityRequirement : Dictionary<OpenApiSecuritySchemeReference, IList<string>>,
         IOpenApiSerializable
     {
         /// <summary>
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
+            SerializeInternal(writer, (w, s) => w.WritePropertyName(s.Reference.ReferenceV3));
         }
 
         /// <summary>
@@ -44,32 +45,34 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, (w, s) => w.WritePropertyName(s.Reference.ReferenceV3));
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> 
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, OpenApiSecuritySchemeReference> callback)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
+
+            // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
+            // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
+            // string to output.
+            var validPairs = this.Where(static p => p.Key?.Target is not null).ToArray();
+
+            if (validPairs.Length == 0)
+            {
+                return;
+            }
 
             writer.WriteStartObject();
 
-            foreach (var securitySchemeAndScopesValuePair in this)
+            foreach (var securitySchemeAndScopesValuePair in validPairs)
             {
                 var securityScheme = securitySchemeAndScopesValuePair.Key;
                 var scopes = securitySchemeAndScopesValuePair.Value;
 
-                if (securityScheme is not OpenApiSecuritySchemeReference schemeReference || schemeReference.Reference is null)
-                {
-                    // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
-                    // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
-                    // string to output.
-                    continue;
-                }
-
-                writer.WritePropertyName(schemeReference.Reference.ReferenceV3);
+                callback(writer, securityScheme);
 
                 writer.WriteStartArray();
 
@@ -89,48 +92,19 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
-
-            writer.WriteStartObject();
-
-            foreach (var securitySchemeAndScopesValuePair in this)
-            {
-                var securityScheme = securitySchemeAndScopesValuePair.Key;
-                var scopes = securitySchemeAndScopesValuePair.Value;
-
-                if (securityScheme is not OpenApiSecuritySchemeReference schemeReference || schemeReference.Reference is null)
-                {
-                    // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
-                    // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
-                    // string to output.
-                    continue;
-                }
-
-                securityScheme.SerializeAsV2(writer);
-
-                writer.WriteStartArray();
-
-                foreach (var scope in scopes)
-                {
-                    writer.WriteValue(scope);
-                }
-
-                writer.WriteEndArray();
-            }
-
-            writer.WriteEndObject();
+            SerializeInternal(writer, (w, s) => s.SerializeAsV2(w));
         }
 
         /// <summary>
         /// Comparer for OpenApiSecurityScheme that only considers the Id in the Reference
         /// (i.e. the string that will actually be displayed in the written document)
         /// </summary>
-        private sealed class OpenApiSecuritySchemeReferenceEqualityComparer : IEqualityComparer<IOpenApiSecurityScheme>
+        private sealed class OpenApiSecuritySchemeReferenceEqualityComparer : IEqualityComparer<OpenApiSecuritySchemeReference>
         {
             /// <summary>
             /// Determines whether the specified objects are equal.
             /// </summary>
-            public bool Equals(IOpenApiSecurityScheme x, IOpenApiSecurityScheme y)
+            public bool Equals(OpenApiSecuritySchemeReference x, OpenApiSecuritySchemeReference y)
             {
                 if (x == null && y == null)
                 {
@@ -148,17 +122,13 @@ namespace Microsoft.OpenApi.Models
             /// <summary>
             /// Returns a hash code for the specified object.
             /// </summary>
-            public int GetHashCode(IOpenApiSecurityScheme obj)
+            public int GetHashCode(OpenApiSecuritySchemeReference obj)
             {
                 if (obj is null)
                 {
                     return 0;
                 }
-                else if (obj is OpenApiSecuritySchemeReference reference)
-                {
-                    return string.IsNullOrEmpty(reference?.Reference?.Id) ? 0 : reference.Reference.Id.GetHashCode();
-                }
-                return obj.GetHashCode();
+                return string.IsNullOrEmpty(obj?.Reference?.Id) ? 0 : obj.Reference.Id.GetHashCode();
             }
         }
     }
