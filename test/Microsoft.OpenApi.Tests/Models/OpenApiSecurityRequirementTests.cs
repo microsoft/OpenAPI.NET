@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeBasicSecurityRequirementAsV3JsonWorks()
         {
             // Arrange
-            var expected = string.Empty;
+            var expected = @"{ }";
 
             // Act
             var actual = await BasicSecurityRequirement.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
