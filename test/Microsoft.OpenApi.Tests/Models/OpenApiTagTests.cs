@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -30,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiTag ReferencedTag = new OpenApiTagReference("pet", null);
+        public static IOpenApiTag ReferencedTag = new OpenApiTagReference(AdvancedTag, "pet");
 
         [Theory]
         [InlineData(true)]
