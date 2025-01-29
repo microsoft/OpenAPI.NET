@@ -55,19 +55,13 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(writer);
 
+            writer.WriteStartObject();
+
             // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
             // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
             // string to output.
-            var validPairs = this.Where(static p => p.Key?.Target is not null).ToArray();
 
-            if (validPairs.Length == 0)
-            {
-                return;
-            }
-
-            writer.WriteStartObject();
-
-            foreach (var securitySchemeAndScopesValuePair in validPairs)
+            foreach (var securitySchemeAndScopesValuePair in this.Where(static p => p.Key?.Target is not null))
             {
                 var securityScheme = securitySchemeAndScopesValuePair.Key;
                 var scopes = securitySchemeAndScopesValuePair.Value;
