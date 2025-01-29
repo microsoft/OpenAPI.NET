@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Extensions;
+﻿using System;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -14,8 +15,8 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static readonly PatternFieldMap<OpenApiPaths> _pathsPatternFields = new()
         {
-            {s => s.StartsWith("/"), (o, k, n, t) => o.Add(k, LoadPathItem(n, t))},
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("/", StringComparison.OrdinalIgnoreCase), (o, k, n, t) => o.Add(k, LoadPathItem(n, t))},
+            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiPaths LoadPaths(ParseNode node, OpenApiDocument hostDocument)

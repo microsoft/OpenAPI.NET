@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Writers
             // wrap the string in single quote.
             // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
             if (_yamlPlainStringForbiddenCombinations.Any(fc => input.Contains(fc)) ||
-                _yamlIndicators.Any(i => input.StartsWith(i)) ||
+                _yamlIndicators.Any(i => input.StartsWith(i, StringComparison.Ordinal)) ||
                 _yamlPlainStringForbiddenTerminals.Any(i => input.EndsWith(i)) ||
                 input.Trim() != input)
             {
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Writers
 
         internal static bool IsHexadecimalNotation(string input)
         {
-            return input.StartsWith("0x") && int.TryParse(input.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _);
+            return input.StartsWith("0x", StringComparison.Ordinal) && int.TryParse(input.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _);
         }
     }
 }
