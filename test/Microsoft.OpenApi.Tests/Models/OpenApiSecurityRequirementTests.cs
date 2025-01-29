@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     "scope3",
                 },
                 [
-                    new()
+                    new OpenApiSecurityScheme()
                     {
                         // This security scheme is unreferenced, so this key value pair cannot be serialized.
                         Name = "brokenUnreferencedScheme"

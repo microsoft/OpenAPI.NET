@@ -172,9 +172,9 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureSecuritySchemesExist();
-        if (!Components.SecuritySchemes.ContainsKey(referenceId ?? securityScheme.Reference.Id))
+        if (!Components.SecuritySchemes.ContainsKey(referenceId))
         {
-            Components.SecuritySchemes.Add(referenceId ?? securityScheme.Reference.Id, securityScheme);
+            Components.SecuritySchemes.Add(referenceId, securityScheme);
         }
     }
 
@@ -236,7 +236,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 
     private void EnsureSecuritySchemesExist()
     {
-        _target.Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+        _target.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
     }
     private void EnsurePathItemsExist()
     {
