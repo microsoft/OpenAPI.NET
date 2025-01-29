@@ -154,12 +154,13 @@ namespace Microsoft.OpenApi.Reader.V2
                         k => k.Name,
                         v => 
                         {
-                            var schema = new OpenApiSchema(v.Schema)
+                            var schema = v.Schema.CreateShallowCopy();
+                            schema.Description = v.Description;
+                            if (schema is OpenApiSchema openApiSchema)
                             {
-                                Description = v.Description,
-                                Extensions = v.Extensions
-                            };
-                            return (IOpenApiSchema)schema;
+                                openApiSchema.Extensions = v.Extensions;
+                            }
+                            return schema;
                         }),
                     Required = new HashSet<string>(formParameters.Where(static p => p.Required).Select(static p => p.Name), StringComparer.Ordinal)
                 }

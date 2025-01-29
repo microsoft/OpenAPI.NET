@@ -193,5 +193,12 @@ namespace Microsoft.OpenApi.Models.References
         {
             return source is OpenApiSchema ? new OpenApiSchema(this) : source;
         }
+        /// <inheritdoc/>
+        public IOpenApiSchema CreateShallowCopy()
+        {
+            return _target is null ?
+                new OpenApiSchemaReference(Reference.Id, Reference?.HostDocument, Reference?.ExternalResource) :
+                new OpenApiSchemaReference(_target, Reference.Id);
+        }
     }
 }

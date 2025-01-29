@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter.Style ?? Style;
             Explode = parameter.Explode;
             AllowReserved = parameter.AllowReserved;
-            Schema = parameter.Schema != null ? new OpenApiSchema(parameter.Schema) : null;
+            Schema = parameter.Schema.CreateShallowCopy();
             Examples = parameter.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
             Content = parameter.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
