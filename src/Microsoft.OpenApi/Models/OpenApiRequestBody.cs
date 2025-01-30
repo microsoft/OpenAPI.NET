@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -123,19 +124,27 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var property in Content.First().Value.Schema.Properties)
             {
-                var paramSchema = new OpenApiSchema(property.Value);
+                var paramSchema = property.Value.CreateShallowCopy();
                 if ((paramSchema.Type & JsonSchemaType.String) == JsonSchemaType.String
                     && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
                     || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
                 {
-                    paramSchema.Type = "file".ToJsonSchemaType();
-                    paramSchema.Format = null;
+                    var updatedSchema = paramSchema switch {
+                        OpenApiSchema s => s, // we already have a copy
+                        // we have a copy of a reference but don't want to mutate the source schema
+                        // TODO might need recursive resolution of references here
+                        OpenApiSchemaReference r => (OpenApiSchema)r.Target.CreateShallowCopy(),
+                        _ => throw new InvalidOperationException("Unexpected schema type")
+                    };
+                    updatedSchema.Type = "file".ToJsonSchemaType();
+                    updatedSchema.Format = null;
+                    paramSchema = updatedSchema;
                 }
                 yield return new OpenApiFormDataParameter()
                 {
-                    Description = property.Value.Description,
+                    Description = paramSchema.Description,
                     Name = property.Key,
-                    Schema = property.Value,
+                    Schema = paramSchema,
                     Examples = Content.Values.FirstOrDefault()?.Examples,
                     Required = Content.First().Value.Schema.Required?.Contains(property.Key) ?? false
                 };
