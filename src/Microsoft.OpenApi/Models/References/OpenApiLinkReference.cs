@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models.References
         /// Copy constructor.
         /// </summary>
         /// <param name="reference">The reference to copy</param>
-        public OpenApiLinkReference(OpenApiLinkReference reference):base(reference)
+        private OpenApiLinkReference(OpenApiLinkReference reference):base(reference)
         {
         }
         internal OpenApiLinkReference(OpenApiLink target, string referenceId):base(target, referenceId, ReferenceType.Link)

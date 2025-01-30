@@ -28,6 +28,13 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Example, externalResource)
         {
         }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="example">The example reference to copy</param>
+        private OpenApiExampleReference(OpenApiExampleReference example):base(example)
+        {
+        }
 
         internal OpenApiExampleReference(OpenApiExample target, string referenceId):base(target, referenceId, ReferenceType.Example)
         {
@@ -84,9 +91,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public IOpenApiExample CreateShallowCopy()
         {
-            return _target is null ?
-                new OpenApiExampleReference(Reference.Id, Reference.HostDocument, Reference.ExternalResource) :
-                new OpenApiExampleReference(_target, Reference.Id);
+            return new OpenApiExampleReference(this);
         }
     }
 }

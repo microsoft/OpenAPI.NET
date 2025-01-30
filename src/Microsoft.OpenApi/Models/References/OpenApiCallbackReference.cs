@@ -28,6 +28,14 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Callback, externalResource)
         {
         }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="callback">The reference to copy</param>
+        private OpenApiCallbackReference(OpenApiCallbackReference callback):base(callback)
+        {
+            
+        }
 
         internal OpenApiCallbackReference(OpenApiCallback target, string referenceId):base(target, referenceId, ReferenceType.Callback)
         {
@@ -55,9 +63,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public IOpenApiCallback CreateShallowCopy()
         {
-            return _target is null ?
-                new OpenApiCallbackReference(Reference.Id, Reference.HostDocument, Reference.ExternalResource) :
-                new OpenApiCallbackReference(_target, Reference.Id);
+            return new OpenApiCallbackReference(this);
         }
     }
 }

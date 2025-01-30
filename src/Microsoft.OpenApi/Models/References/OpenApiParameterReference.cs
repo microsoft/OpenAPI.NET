@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models.References
         /// Copy constructor
         /// </summary>
         /// <param name="parameter">The parameter reference to copy</param>
-        public OpenApiParameterReference(OpenApiParameterReference parameter):base(parameter)
+        private OpenApiParameterReference(OpenApiParameterReference parameter):base(parameter)
         {
         }
 
