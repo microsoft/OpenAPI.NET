@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
 {
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Models.References
         /// Copy constructor
         /// </summary>
         /// <param name="header">The <see cref="OpenApiHeaderReference"/> object to copy</param>
-        public OpenApiHeaderReference(OpenApiHeaderReference header):base(header)
+        private OpenApiHeaderReference(OpenApiHeaderReference header):base(header)
         {
         }
 
@@ -91,6 +90,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader source)
         {
             return source is OpenApiHeader ? new OpenApiHeader(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiHeader CreateShallowCopy()
+        {
+            return new OpenApiHeaderReference(this);
         }
     }
 }

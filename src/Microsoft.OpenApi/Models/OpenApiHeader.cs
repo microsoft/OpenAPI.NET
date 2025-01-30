@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiHeader"/> object
         /// </summary>
-        public OpenApiHeader(IOpenApiHeader header)
+        internal OpenApiHeader(IOpenApiHeader header)
         {
             Description = header?.Description ?? Description;
             Required = header?.Required ?? Required;
@@ -186,6 +186,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiHeader CreateShallowCopy()
+        {
+            return new OpenApiHeader(this);
         }
     }
 }
