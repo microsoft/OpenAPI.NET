@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of <see cref="IOpenApiSecurityScheme"/> object
         /// </summary>
-        public OpenApiSecurityScheme(IOpenApiSecurityScheme securityScheme)
+        internal OpenApiSecurityScheme(IOpenApiSecurityScheme securityScheme)
         {
             Utils.CheckArgumentNull(securityScheme);
             Type = securityScheme?.Type;
@@ -228,6 +228,12 @@ namespace Microsoft.OpenApi.Models
 
             // scopes
             writer.WriteOptionalMap(OpenApiConstants.Scopes, flow.Scopes, (w, s) => w.WriteValue(s));
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiSecurityScheme CreateShallowCopy()
+        {
+            return new OpenApiSecurityScheme(this);
         }
     }
 }

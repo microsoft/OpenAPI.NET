@@ -26,6 +26,14 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiResponseReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Response, externalResource)
         {
         }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="openApiResponseReference">The reference to copy</param>
+        private OpenApiResponseReference(OpenApiResponseReference openApiResponseReference):base(openApiResponseReference)
+        {
+            
+        }
 
         internal OpenApiResponseReference(OpenApiResponse target, string referenceId):base(target, referenceId, ReferenceType.Response)
         {
@@ -60,6 +68,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiResponse CopyReferenceAsTargetElementWithOverrides(IOpenApiResponse source)
         {
             return source is OpenApiResponse ? new OpenApiResponse(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiResponse CreateShallowCopy()
+        {
+            return new OpenApiResponseReference(this);
         }
     }
 }
