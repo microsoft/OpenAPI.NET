@@ -35,6 +35,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal OpenApiCallback(IOpenApiCallback callback)
         {
+            Utils.CheckArgumentNull(callback);
             PathItems = callback?.PathItems != null ? new(callback?.PathItems) : null;
             Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
         }

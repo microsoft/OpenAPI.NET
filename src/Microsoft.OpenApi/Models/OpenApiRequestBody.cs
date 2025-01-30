@@ -41,10 +41,10 @@ namespace Microsoft.OpenApi.Models
         internal OpenApiRequestBody(IOpenApiRequestBody requestBody)
         {
             Utils.CheckArgumentNull(requestBody);
-            Description = requestBody?.Description ?? Description;
-            Required = requestBody?.Required ?? Required;
-            Content = requestBody?.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
-            Extensions = requestBody?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
+            Description = requestBody.Description ?? Description;
+            Required = requestBody.Required;
+            Content = requestBody.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
+            Extensions = requestBody.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
         }
 
         /// <summary>

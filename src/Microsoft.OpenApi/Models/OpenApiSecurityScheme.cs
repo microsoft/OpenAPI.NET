@@ -53,15 +53,15 @@ namespace Microsoft.OpenApi.Models
         internal OpenApiSecurityScheme(IOpenApiSecurityScheme securityScheme)
         {
             Utils.CheckArgumentNull(securityScheme);
-            Type = securityScheme?.Type;
-            Description = securityScheme?.Description ?? Description;
-            Name = securityScheme?.Name ?? Name;
-            In = securityScheme?.In;
-            Scheme = securityScheme?.Scheme ?? Scheme;
-            BearerFormat = securityScheme?.BearerFormat ?? BearerFormat;
-            Flows = securityScheme?.Flows != null ? new(securityScheme?.Flows) : null;
-            OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
-            Extensions = securityScheme?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
+            Type = securityScheme.Type;
+            Description = securityScheme.Description ?? Description;
+            Name = securityScheme.Name ?? Name;
+            In = securityScheme.In;
+            Scheme = securityScheme.Scheme ?? Scheme;
+            BearerFormat = securityScheme.BearerFormat ?? BearerFormat;
+            Flows = securityScheme.Flows != null ? new(securityScheme.Flows) : null;
+            OpenIdConnectUrl = securityScheme.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            Extensions = securityScheme.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
         }
 
         /// <summary>
