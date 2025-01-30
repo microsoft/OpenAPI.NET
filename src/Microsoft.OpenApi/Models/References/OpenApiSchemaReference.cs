@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Models.References
         public IOpenApiSchema CreateShallowCopy()
         {
             return _target is null ?
-                new OpenApiSchemaReference(Reference.Id, Reference?.HostDocument, Reference?.ExternalResource) :
+                new OpenApiSchemaReference(Reference.Id, Reference.HostDocument, Reference.ExternalResource) :
                 new OpenApiSchemaReference(_target, Reference.Id);
         }
     }

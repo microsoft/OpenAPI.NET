@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiCallback"/> object
         /// </summary>
-        public OpenApiCallback(IOpenApiCallback callback)
+        internal OpenApiCallback(IOpenApiCallback callback)
         {
             PathItems = callback?.PathItems != null ? new(callback?.PathItems) : null;
             Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
@@ -97,6 +97,12 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Callback object does not exist in V2.
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiCallback CreateShallowCopy()
+        {
+            return new OpenApiCallback(this);
         }
     }
 }

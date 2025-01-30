@@ -29,14 +29,6 @@ namespace Microsoft.OpenApi.Models.References
         {
         }
 
-        /// <summary>
-        /// Copy constructor
-        /// </summary>
-        /// <param name="callback">The callback reference to copy</param>
-        public OpenApiCallbackReference(OpenApiCallbackReference callback):base(callback)
-        {
-        }
-
         internal OpenApiCallbackReference(OpenApiCallback target, string referenceId):base(target, referenceId, ReferenceType.Callback)
         {
         }
@@ -58,6 +50,14 @@ namespace Microsoft.OpenApi.Models.References
         {
             // examples components are not supported in OAS 2.0
             Reference.SerializeAsV2(writer);
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiCallback CreateShallowCopy()
+        {
+            return _target is null ?
+                new OpenApiCallbackReference(Reference.Id, Reference.HostDocument, Reference.ExternalResource) :
+                new OpenApiCallbackReference(_target, Reference.Id);
         }
     }
 }
