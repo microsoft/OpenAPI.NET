@@ -587,43 +587,43 @@ namespace Microsoft.OpenApi.Models
             Components ??= new();
             switch (componentToRegister)
             {
-                case OpenApiSchema openApiSchema:
+                case IOpenApiSchema openApiSchema:
                     Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
                     Components.Schemas.Add(id, openApiSchema);
                     break;
-                case OpenApiParameter openApiParameter:
+                case IOpenApiParameter openApiParameter:
                     Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
                     Components.Parameters.Add(id, openApiParameter);
                     break;
-                case OpenApiResponse openApiResponse:
+                case IOpenApiResponse openApiResponse:
                     Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
                     Components.Responses.Add(id, openApiResponse);
                     break;
-                case OpenApiRequestBody openApiRequestBody:
+                case IOpenApiRequestBody openApiRequestBody:
                     Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
                     Components.RequestBodies.Add(id, openApiRequestBody);
                     break;
-                case OpenApiLink openApiLink:
+                case IOpenApiLink openApiLink:
                     Components.Links ??= new Dictionary<string, IOpenApiLink>();
                     Components.Links.Add(id, openApiLink);
                     break;
-                case OpenApiCallback openApiCallback:
+                case IOpenApiCallback openApiCallback:
                     Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
                     Components.Callbacks.Add(id, openApiCallback);
                     break;
-                case OpenApiPathItem openApiPathItem:
+                case IOpenApiPathItem openApiPathItem:
                     Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
                     Components.PathItems.Add(id, openApiPathItem);
                     break;
-                case OpenApiExample openApiExample:
+                case IOpenApiExample openApiExample:
                     Components.Examples ??= new Dictionary<string, IOpenApiExample>();
                     Components.Examples.Add(id, openApiExample);
                     break;
-                case OpenApiHeader openApiHeader:
+                case IOpenApiHeader openApiHeader:
                     Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
                     Components.Headers.Add(id, openApiHeader);
                     break;
-                case OpenApiSecurityScheme openApiSecurityScheme:
+                case IOpenApiSecurityScheme openApiSecurityScheme:
                     Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
                     Components.SecuritySchemes.Add(id, openApiSecurityScheme);
                     break;
