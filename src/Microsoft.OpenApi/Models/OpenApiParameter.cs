@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a clone instance of <see cref="OpenApiParameter"/> object
         /// </summary>
-        public OpenApiParameter(IOpenApiParameter parameter)
+        internal OpenApiParameter(IOpenApiParameter parameter)
         {
             Utils.CheckArgumentNull(parameter);
             Name = parameter.Name ?? Name;
@@ -301,6 +301,12 @@ namespace Microsoft.OpenApi.Models
                 ParameterLocation.Cookie => ParameterStyle.Form,
                 _ => (ParameterStyle?)ParameterStyle.Simple,
             };
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiParameter CreateShallowCopy()
+        {
+            return new OpenApiParameter(this);
         }
     }
 

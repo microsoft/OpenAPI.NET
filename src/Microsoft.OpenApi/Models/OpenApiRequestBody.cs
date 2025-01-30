@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy instance of an <see cref="IOpenApiRequestBody"/> object
         /// </summary>
-        public OpenApiRequestBody(IOpenApiRequestBody requestBody)
+        internal OpenApiRequestBody(IOpenApiRequestBody requestBody)
         {
             Utils.CheckArgumentNull(requestBody);
             Description = requestBody?.Description ?? Description;
@@ -149,6 +149,12 @@ namespace Microsoft.OpenApi.Models
                     Required = Content.First().Value.Schema.Required?.Contains(property.Key) ?? false
                 };
             }
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiRequestBody CreateShallowCopy()
+        {
+            return new OpenApiRequestBody(this);
         }
     }
 }

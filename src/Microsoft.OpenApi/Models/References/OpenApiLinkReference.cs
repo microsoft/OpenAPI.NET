@@ -80,5 +80,11 @@ namespace Microsoft.OpenApi.Models.References
         {
             return source is OpenApiLink ? new OpenApiLink(this) : source;
         }
+
+        /// <inheritdoc/>
+        public IOpenApiLink CreateShallowCopy()
+        {
+            return new OpenApiLinkReference(this);
+        }
     }
 }

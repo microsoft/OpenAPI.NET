@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiLink"/> object
         /// </summary>
-        public OpenApiLink(IOpenApiLink link)
+        internal OpenApiLink(IOpenApiLink link)
         {
             Utils.CheckArgumentNull(link);
             OperationRef = link.OperationRef ?? OperationRef;
@@ -101,6 +101,12 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Link object does not exist in V2.
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiLink CreateShallowCopy()
+        {
+            return new OpenApiLink(this);
         }
     }
 }

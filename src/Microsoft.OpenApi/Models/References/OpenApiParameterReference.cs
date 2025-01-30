@@ -96,5 +96,11 @@ namespace Microsoft.OpenApi.Models.References
         {
             return source is OpenApiParameter ? new OpenApiParameter(this) : source;
         }
+
+        /// <inheritdoc/>
+        public IOpenApiParameter CreateShallowCopy()
+        {
+            return new OpenApiParameterReference(this);
+        }
     }
 }

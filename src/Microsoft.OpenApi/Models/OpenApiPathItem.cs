@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a clone of an <see cref="OpenApiPathItem"/> object
         /// </summary>
-        public OpenApiPathItem(IOpenApiPathItem pathItem)
+        internal OpenApiPathItem(IOpenApiPathItem pathItem)
         {
             Utils.CheckArgumentNull(pathItem);
             Summary = pathItem?.Summary ?? Summary;
@@ -150,6 +150,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiPathItem CreateShallowCopy()
+        {
+            return new OpenApiPathItem(this);
         }
     }
 }

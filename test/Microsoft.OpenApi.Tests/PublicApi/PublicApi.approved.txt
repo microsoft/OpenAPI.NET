@@ -363,7 +363,7 @@ namespace Microsoft.OpenApi.Models.Interfaces
         Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Schema { get; }
         Microsoft.OpenApi.Models.ParameterStyle? Style { get; }
     }
-    public interface IOpenApiLink : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement
+    public interface IOpenApiLink : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement
     {
         string OperationId { get; }
         string OperationRef { get; }
@@ -371,7 +371,7 @@ namespace Microsoft.OpenApi.Models.Interfaces
         Microsoft.OpenApi.Models.RuntimeExpressionAnyWrapper RequestBody { get; }
         Microsoft.OpenApi.Models.OpenApiServer Server { get; }
     }
-    public interface IOpenApiParameter : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement
+    public interface IOpenApiParameter : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement
     {
         bool AllowEmptyValue { get; }
         bool AllowReserved { get; }
@@ -386,7 +386,7 @@ namespace Microsoft.OpenApi.Models.Interfaces
         Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Schema { get; }
         Microsoft.OpenApi.Models.ParameterStyle? Style { get; }
     }
-    public interface IOpenApiPathItem : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
+    public interface IOpenApiPathItem : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
     {
         System.Collections.Generic.IDictionary<Microsoft.OpenApi.Models.OperationType, Microsoft.OpenApi.Models.OpenApiOperation> Operations { get; }
         System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter> Parameters { get; }
@@ -396,7 +396,7 @@ namespace Microsoft.OpenApi.Models.Interfaces
     {
         string Description { get; }
     }
-    public interface IOpenApiRequestBody : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement
+    public interface IOpenApiRequestBody : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement
     {
         System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType> Content { get; }
         bool Required { get; }
@@ -839,10 +839,9 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiLink : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink
+    public class OpenApiLink : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink
     {
         public OpenApiLink() { }
-        public OpenApiLink(Microsoft.OpenApi.Models.Interfaces.IOpenApiLink link) { }
         public string Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public string OperationId { get; set; }
@@ -850,6 +849,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.RuntimeExpressionAnyWrapper> Parameters { get; set; }
         public Microsoft.OpenApi.Models.RuntimeExpressionAnyWrapper RequestBody { get; set; }
         public Microsoft.OpenApi.Models.OpenApiServer Server { get; set; }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiLink CreateShallowCopy() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -897,7 +897,7 @@ namespace Microsoft.OpenApi.Models
     {
         public const bool DeprecatedDefault = false;
         public OpenApiOperation() { }
-        public OpenApiOperation(Microsoft.OpenApi.Models.OpenApiOperation? operation) { }
+        public OpenApiOperation(Microsoft.OpenApi.Models.OpenApiOperation operation) { }
         public System.Collections.Generic.IDictionary<string, object>? Annotations { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback>? Callbacks { get; set; }
         public bool Deprecated { get; set; }
@@ -916,10 +916,9 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiParameter : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter
+    public class OpenApiParameter : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter
     {
         public OpenApiParameter() { }
-        public OpenApiParameter(Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter parameter) { }
         public bool AllowEmptyValue { get; set; }
         public bool AllowReserved { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType> Content { get; set; }
@@ -934,14 +933,14 @@ namespace Microsoft.OpenApi.Models
         public bool Required { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Schema { get; set; }
         public Microsoft.OpenApi.Models.ParameterStyle? Style { get; set; }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter CreateShallowCopy() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiPathItem : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
+    public class OpenApiPathItem : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
     {
         public OpenApiPathItem() { }
-        public OpenApiPathItem(Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem pathItem) { }
         public string Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public System.Collections.Generic.IDictionary<Microsoft.OpenApi.Models.OperationType, Microsoft.OpenApi.Models.OpenApiOperation> Operations { get; set; }
@@ -949,6 +948,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer> Servers { get; set; }
         public string Summary { get; set; }
         public void AddOperation(Microsoft.OpenApi.Models.OperationType operationType, Microsoft.OpenApi.Models.OpenApiOperation operation) { }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem CreateShallowCopy() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -977,16 +977,16 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiRequestBody : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody
+    public class OpenApiRequestBody : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody
     {
         public OpenApiRequestBody() { }
-        public OpenApiRequestBody(Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody requestBody) { }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType> Content { get; set; }
         public string Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public bool Required { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter ConvertToBodyParameter(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter> ConvertToFormDataParameters(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody CreateShallowCopy() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1292,7 +1292,7 @@ namespace Microsoft.OpenApi.Models.References
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader source) { }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader CreateShallowCopy() { }
     }
-    public class OpenApiLinkReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiLink, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink
+    public class OpenApiLinkReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiLink, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink
     {
         public OpenApiLinkReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, string externalResource = null) { }
         public string Description { get; set; }
@@ -1303,9 +1303,10 @@ namespace Microsoft.OpenApi.Models.References
         public Microsoft.OpenApi.Models.RuntimeExpressionAnyWrapper RequestBody { get; }
         public Microsoft.OpenApi.Models.OpenApiServer Server { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiLink CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiLink source) { }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiLink CreateShallowCopy() { }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiParameterReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiParameter, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter
+    public class OpenApiParameterReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiParameter, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter
     {
         public OpenApiParameterReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, string externalResource = null) { }
         public bool AllowEmptyValue { get; }
@@ -1323,8 +1324,9 @@ namespace Microsoft.OpenApi.Models.References
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Schema { get; }
         public Microsoft.OpenApi.Models.ParameterStyle? Style { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter source) { }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter CreateShallowCopy() { }
     }
-    public class OpenApiPathItemReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
+    public class OpenApiPathItemReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
     {
         public OpenApiPathItemReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, string externalResource = null) { }
         public string Description { get; set; }
@@ -1334,9 +1336,10 @@ namespace Microsoft.OpenApi.Models.References
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer> Servers { get; }
         public string Summary { get; set; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem source) { }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem CreateShallowCopy() { }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
-    public class OpenApiRequestBodyReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiRequestBody, Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody
+    public class OpenApiRequestBodyReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiRequestBody, Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody
     {
         public OpenApiRequestBodyReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, string externalResource = null) { }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType> Content { get; }
@@ -1346,6 +1349,7 @@ namespace Microsoft.OpenApi.Models.References
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter ConvertToBodyParameter(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter> ConvertToFormDataParameters(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody source) { }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiRequestBody CreateShallowCopy() { }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
     }
     public class OpenApiResponseReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiResponse, Microsoft.OpenApi.Models.Interfaces.IOpenApiResponse>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiResponse
