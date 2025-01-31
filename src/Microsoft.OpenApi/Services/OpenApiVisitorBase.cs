@@ -293,9 +293,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSecurityScheme"/>
+        /// Visits <see cref="IOpenApiSecurityScheme"/>
         /// </summary>
-        public virtual void Visit(OpenApiSecurityScheme securityScheme)
+        public virtual void Visit(IOpenApiSecurityScheme securityScheme)
         {
         }
 

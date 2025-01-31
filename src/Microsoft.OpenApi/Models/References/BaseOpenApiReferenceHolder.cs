@@ -16,7 +16,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     {
         get
         {
-            _target ??= Reference.HostDocument.ResolveReferenceTo<T>(Reference);
+            _target ??= Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
             return _target;
         }
     }

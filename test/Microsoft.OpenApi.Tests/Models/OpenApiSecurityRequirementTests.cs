@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
             new()
             {
                 [
-                    new OpenApiSecuritySchemeReference("scheme1", hostDocument: null)
+                    new OpenApiSecuritySchemeReference(new OpenApiSecurityScheme(), "scheme1")
                 ] = new List<string>
                 {
                     "scope1",
@@ -33,14 +33,14 @@ namespace Microsoft.OpenApi.Tests.Models
                     "scope3",
                 },
                 [
-                    new OpenApiSecuritySchemeReference("scheme2", hostDocument: null)
+                    new OpenApiSecuritySchemeReference(new OpenApiSecurityScheme(), "scheme2")
                 ] = new List<string>
                 {
                     "scope4",
                     "scope5",
                 },
                 [
-                    new OpenApiSecuritySchemeReference("scheme3", hostDocument: null)
+                    new OpenApiSecuritySchemeReference(new OpenApiSecurityScheme(), "scheme3")
                 ] = new List<string>()
             };
 
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
             new()
             {
                 [
-                    new OpenApiSecuritySchemeReference("scheme1", hostDocument: null)
+                    new OpenApiSecuritySchemeReference(new OpenApiSecurityScheme(), "scheme1")
                 ] = new List<string>
                 {
                     "scope1",
@@ -56,18 +56,14 @@ namespace Microsoft.OpenApi.Tests.Models
                     "scope3",
                 },
                 [
-                    new()
-                    {
-                        // This security scheme is unreferenced, so this key value pair cannot be serialized.
-                        Name = "brokenUnreferencedScheme"
-                    }
+                    new OpenApiSecuritySchemeReference("brokenUnreferencedScheme", hostDocument: null)
                 ] = new List<string>
                 {
                     "scope4",
                     "scope5",
                 },
                 [
-                    new OpenApiSecuritySchemeReference("scheme3", hostDocument: null)
+                    new OpenApiSecuritySchemeReference(new OpenApiSecurityScheme(), "scheme3")
                 ] = new List<string>()
             };
 
@@ -223,22 +219,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = SecuritySchemeType.ApiKey,
                 Name = "apiKeyName1",
                 In = ParameterLocation.Header,
-                Reference = new()
-                {
-                    Id = "securityScheme1",
-                    Type = ReferenceType.SecurityScheme
-                }
             };
 
             var securityScheme2 = new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OpenIdConnect,
                 OpenIdConnectUrl = new("http://example.com"),
-                Reference = new()
-                {
-                    Id = "securityScheme2",
-                    Type = ReferenceType.SecurityScheme
-                }
             };
 
             var securityScheme1Duplicate = new OpenApiSecurityScheme
@@ -246,11 +232,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = SecuritySchemeType.ApiKey,
                 Name = "apiKeyName1",
                 In = ParameterLocation.Header,
-                Reference = new()
-                {
-                    Id = "securityScheme1",
-                    Type = ReferenceType.SecurityScheme
-                }
             };
 
             var securityScheme1WithDifferentProperties = new OpenApiSecurityScheme
@@ -258,21 +239,16 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = SecuritySchemeType.ApiKey,
                 Name = "apiKeyName2",
                 In = ParameterLocation.Query,
-                Reference = new()
-                {
-                    Id = "securityScheme1",
-                    Type = ReferenceType.SecurityScheme
-                }
             };
 
             // Act
-            securityRequirement.Add(securityScheme1, new List<string>());
-            securityRequirement.Add(securityScheme2, new List<string> { "scope1", "scope2" });
+            securityRequirement.Add(new OpenApiSecuritySchemeReference(securityScheme1, "securityScheme1"), new List<string>());
+            securityRequirement.Add(new OpenApiSecuritySchemeReference(securityScheme2, "securityScheme2"), new List<string> { "scope1", "scope2" });
 
             var addSecurityScheme1Duplicate = () =>
-                securityRequirement.Add(securityScheme1Duplicate, new List<string>());
+                securityRequirement.Add(new OpenApiSecuritySchemeReference(securityScheme1Duplicate, "securityScheme1"), new List<string>());
             var addSecurityScheme1WithDifferentProperties = () =>
-                securityRequirement.Add(securityScheme1WithDifferentProperties, new List<string>());
+                securityRequirement.Add(new OpenApiSecuritySchemeReference(securityScheme1WithDifferentProperties, "securityScheme1"), new List<string>());
 
             // Assert
             // Only the first two should be added successfully since the latter two are duplicates of securityScheme1.
@@ -287,8 +263,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     // This should work with any security scheme object
                     // as long as Reference.Id os securityScheme1
-                    [securityScheme1WithDifferentProperties] = new List<string>(),
-                    [securityScheme2] = new List<string> { "scope1", "scope2" },
+                    [new OpenApiSecuritySchemeReference(securityScheme1WithDifferentProperties, "securityScheme1")] = new List<string>(),
+                    [new OpenApiSecuritySchemeReference(securityScheme2, "securityScheme2")] = new List<string> { "scope1", "scope2" },
                 });
         }
     }

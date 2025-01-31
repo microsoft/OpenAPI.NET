@@ -7,7 +7,6 @@ info:
   license:
     name: Apache 2.0
     identifier: Apache-2.0 # SPDX license identifier, a new 3.1 feature to define an API's SPDX license expression
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
 
 # JSON Schema 2020-12 feature
 jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
@@ -89,6 +88,11 @@ paths:
                   - name
                 $dynamicAnchor: "addressDef"
 components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
   schemas:
     Pet:
       $id: 'https://example.com/schemas/pet.json'

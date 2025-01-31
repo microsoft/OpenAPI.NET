@@ -181,8 +181,8 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 new()
                 {
-                    [new OpenApiSecuritySchemeReference("securitySchemeId1", hostDocument: null)] = new List<string>(),
-                    [new OpenApiSecuritySchemeReference("securitySchemeId2", hostDocument: null)] = new List<string>
+                    [new OpenApiSecuritySchemeReference(new OpenApiSecurityScheme(), "securitySchemeId1")] = new List<string>(),
+                    [new OpenApiSecuritySchemeReference(new OpenApiSecurityScheme(), "securitySchemeId2")] = new List<string>
                     {
                         "scopeName1",
                         "scopeName2"

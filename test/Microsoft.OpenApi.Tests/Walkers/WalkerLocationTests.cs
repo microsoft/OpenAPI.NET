@@ -216,7 +216,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     {
                         ["test-header"] = testHeader
                     },
-                    SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+                    SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                     {
                         ["test-secScheme"] = new OpenApiSecuritySchemeReference("reference-to-scheme", null, null)
                     }

@@ -34,9 +34,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+            SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
             {
-                ["securityScheme1"] = new()
+                ["securityScheme1"] = new OpenApiSecurityScheme()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OAuth2,
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 },
-                ["securityScheme2"] = new()
+                ["securityScheme2"] = new OpenApiSecurityScheme()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OpenIdConnect,
@@ -89,9 +89,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 },
             },
-            SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+            SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
             {
-                ["securityScheme1"] = new()
+                ["securityScheme1"] = new OpenApiSecurityScheme()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OAuth2,
@@ -107,23 +107,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             AuthorizationUrl = new("https://example.com/api/oauth")
                         }
                     },
-                    Reference = new()
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "securityScheme1"
-                    }
                 },
-                ["securityScheme2"] = new()
+                ["securityScheme2"] = new OpenApiSecurityScheme()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OpenIdConnect,
                     Scheme = OpenApiConstants.Bearer,
                     OpenIdConnectUrl = new("https://example.com/openIdConnect"),
-                    Reference = new()
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "securityScheme2"
-                    }
                 }
             }
         };

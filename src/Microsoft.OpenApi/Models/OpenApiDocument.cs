@@ -624,7 +624,7 @@ namespace Microsoft.OpenApi.Models
                     Components.Headers.Add(id, openApiHeader);
                     break;
                 case OpenApiSecurityScheme openApiSecurityScheme:
-                    Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+                    Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
                     Components.SecuritySchemes.Add(id, openApiSecurityScheme);
                     break;
                 default:

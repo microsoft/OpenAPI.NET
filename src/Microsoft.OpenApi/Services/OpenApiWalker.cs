@@ -1146,9 +1146,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSecurityScheme"/> and child objects
+        /// Visits <see cref="IOpenApiSecurityScheme"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiSecurityScheme securityScheme, bool isComponent = false)
+        internal void Walk(IOpenApiSecurityScheme securityScheme, bool isComponent = false)
         {
             if (securityScheme == null)
             {

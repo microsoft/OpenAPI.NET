@@ -56,13 +56,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var reference = new OpenApiSecuritySchemeReference("api_key_sample", result.Document);
 
             // Assert
-            reference.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.ApiKey,
                     Name = "api_key",
                     In = ParameterLocation.Header
-                }, options => options.Excluding(x => x.Reference)
+                }, reference
             );
         }
 
