@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -26,7 +27,7 @@ namespace Microsoft.OpenApi.Extensions
             Utils.CheckArgumentNull(element);
             Utils.CheckArgumentNullOrEmpty(name);
 
-            if (!name.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix))
+            if (!name.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase))
             {
                 throw new OpenApiException(string.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
             }

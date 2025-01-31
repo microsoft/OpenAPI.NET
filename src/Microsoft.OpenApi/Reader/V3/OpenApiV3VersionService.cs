@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
                 else if (segments.Length == 2)
                 {
-                    if (reference.StartsWith("#"))
+                    if (reference.StartsWith("#", StringComparison.OrdinalIgnoreCase))
                     {
                         // "$ref": "#/components/schemas/Pet"
                         try
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Reader.V3
                     var openApiReference = new OpenApiReference();
 
                     // $ref: externalSource.yaml#/Pet
-                    if (id.StartsWith("/components/"))
+                    if (id.StartsWith("/components/", StringComparison.Ordinal))
                     {
                         var localSegments = segments[1].Split('/');
                         localSegments[2].TryGetEnumFromDisplayName<ReferenceType>(out var referencedType);
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Reader.V3
                         }
                         id = localSegments[3];
                     }
-                    else if (id.StartsWith("/paths/"))
+                    else if (id.StartsWith("/paths/", StringComparison.Ordinal))
                     {
                         var localSegments = segments[1].Split(_pathSeparator, StringSplitOptions.RemoveEmptyEntries);
                         if (localSegments.Length == 2)

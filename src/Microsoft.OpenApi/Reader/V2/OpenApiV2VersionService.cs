@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
                 else if (segments.Length == 2)
                 {
-                    if (reference.StartsWith("#"))
+                    if (reference.StartsWith("#", StringComparison.OrdinalIgnoreCase))
                     {
                         // "$ref": "#/definitions/Pet"
                         try
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
                     var id = segments[1];
                     // $ref: externalSource.yaml#/Pet
-                    if (id.StartsWith("/definitions/"))
+                    if (id.StartsWith("/definitions/", StringComparison.Ordinal))
                     {
                         var localSegments = id.Split('/');
                         var referencedType = GetReferenceTypeV2FromName(localSegments[1]);

@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
                 else if (segments.Length == 2)
                 {
-                    if (reference.StartsWith("#"))
+                    if (reference.StartsWith("#", StringComparison.OrdinalIgnoreCase))
                     {
                         // "$ref": "#/components/schemas/Pet"
                         try
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
                     string id = segments[1];
                     // $ref: externalSource.yaml#/Pet
-                    if (id.StartsWith("/components/"))
+                    if (id.StartsWith("/components/", StringComparison.Ordinal))
                     {
                         var localSegments = segments[1].Split('/');
                         localSegments[2].TryGetEnumFromDisplayName<ReferenceType>(out var referencedType);

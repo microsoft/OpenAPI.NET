@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
 
@@ -37,19 +38,19 @@ namespace Microsoft.OpenApi.Expressions
                 var expressions = expression.Split('.');
                 if (expressions.Length == 2)
                 {
-                    if (expression.StartsWith(HeaderExpression.Header))
+                    if (expression.StartsWith(HeaderExpression.Header, StringComparison.Ordinal))
                     {
                         // header.
                         return new HeaderExpression(expressions[1]);
                     }
 
-                    if (expression.StartsWith(QueryExpression.Query))
+                    if (expression.StartsWith(QueryExpression.Query, StringComparison.Ordinal))
                     {
                         // query.
                         return new QueryExpression(expressions[1]);
                     }
 
-                    if (expression.StartsWith(PathExpression.Path))
+                    if (expression.StartsWith(PathExpression.Path, StringComparison.Ordinal))
                     {
                         // path.
                         return new PathExpression(expressions[1]);
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Expressions
                 }
 
                 // body
-                if (expression.StartsWith(BodyExpression.Body))
+                if (expression.StartsWith(BodyExpression.Body, StringComparison.Ordinal))
                 {
                     var subString = expression.Substring(BodyExpression.Body.Length);
                     if (string.IsNullOrEmpty(subString))
