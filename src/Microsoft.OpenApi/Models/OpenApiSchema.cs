@@ -635,8 +635,7 @@ namespace Microsoft.OpenApi.Models
             var isNullable = Nullable || 
                                 Extensions is not null &&
                                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) && 
-                                nullExtRawValue is OpenApiAny openApiAny &&
-                                openApiAny.Node is JsonNode jsonNode &&
+                                nullExtRawValue is OpenApiAny { Node: JsonNode jsonNode} &&
                                 jsonNode.GetValueKind() is JsonValueKind.True;
             if (type is null)
             {
