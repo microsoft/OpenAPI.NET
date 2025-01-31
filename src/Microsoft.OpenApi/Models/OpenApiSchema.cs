@@ -706,7 +706,14 @@ namespace Microsoft.OpenApi.Models
             var list = (from JsonSchemaType? flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
                         where temporaryType.HasFlag(flag)
                         select flag.ToIdentifier()).ToList();
-            writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
+            if (list.Count > 1)
+            {
+                writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.Type, list[0]);
+            }
         }
 
 #if NET5_0_OR_GREATER
