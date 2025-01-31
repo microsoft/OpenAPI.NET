@@ -16,17 +16,17 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiComponents AdvancedComponents = new()
         {
-            Schemas = new Dictionary<string, OpenApiSchema>
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
-                ["schema1"] = new()
+                ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property2"] = new()
+                        ["property2"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer
                         },
-                        ["property3"] = new()
+                        ["property3"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
                             MaxLength = 15
@@ -34,9 +34,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+            SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
             {
-                ["securityScheme1"] = new()
+                ["securityScheme1"] = new OpenApiSecurityScheme()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OAuth2,
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 },
-                ["securityScheme2"] = new()
+                ["securityScheme2"] = new OpenApiSecurityScheme()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OpenIdConnect,
@@ -65,33 +65,33 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents AdvancedComponentsWithReference = new()
         {
-            Schemas = new Dictionary<string, OpenApiSchema>
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
-                ["schema1"] = new()
+                ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property2"] = new()
+                        ["property2"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer
                         },
                         ["property3"] = new OpenApiSchemaReference("schema2", null)                        
                     }
                 },
-                ["schema2"] = new()
+                ["schema2"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, OpenApiSchema>
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
-                        ["property2"] = new()
+                        ["property2"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer
                         }
                     }
                 },
             },
-            SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+            SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
             {
-                ["securityScheme1"] = new()
+                ["securityScheme1"] = new OpenApiSecurityScheme()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OAuth2,
@@ -107,23 +107,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             AuthorizationUrl = new("https://example.com/api/oauth")
                         }
                     },
-                    Reference = new()
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "securityScheme1"
-                    }
                 },
-                ["securityScheme2"] = new()
+                ["securityScheme2"] = new OpenApiSecurityScheme()
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OpenIdConnect,
                     Scheme = OpenApiConstants.Bearer,
                     OpenIdConnectUrl = new("https://example.com/openIdConnect"),
-                    Reference = new()
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "securityScheme2"
-                    }
                 }
             }
         };
@@ -132,22 +122,22 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents BrokenComponents = new()
         {
-            Schemas = new Dictionary<string, OpenApiSchema>
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
-                ["schema1"] = new()
+                ["schema1"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String
                 },
                 ["schema2"] = null,
                 ["schema3"] = null,
-                ["schema4"] = new()
+                ["schema4"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,
-                    AllOf = new List<OpenApiSchema>
+                    AllOf = new List<IOpenApiSchema>
                     {
                         null,
                         null,
-                        new()
+                        new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         },
@@ -163,12 +153,12 @@ namespace Microsoft.OpenApi.Tests.Models
             Schemas =
             {
                 ["schema1"] = new OpenApiSchemaReference("schema2", null),
-                ["schema2"] = new()
+                ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
                     Properties =
                     {
-                        ["property1"] = new()
+                        ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -181,23 +171,23 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new()
+                ["schema1"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
                     Properties =
                     {
-                        ["property1"] = new()
+                        ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
                     }
                 },
-                ["schema2"] = new()
+                ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
                     Properties =
                     {
-                        ["property1"] = new()
+                        ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -216,11 +206,11 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents ComponentsWithPathItem = new OpenApiComponents
         {
-            Schemas = new Dictionary<string, OpenApiSchema>()
+            Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, OpenApiSchema>()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -230,9 +220,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 },                
 
-                ["schema2"] = new()
+                ["schema2"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, OpenApiSchema>()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {

@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
-        public static OpenApiSecuritySchemeReference OpenApiSecuritySchemeReference = new(target: ReferencedSecurityScheme, referenceId: "sampleSecurityScheme");
+        public static OpenApiSecuritySchemeReference OpenApiSecuritySchemeReference = new(ReferencedSecurityScheme, "sampleSecurityScheme");
         public static OpenApiSecurityScheme ReferencedSecurityScheme = new()
         {
             Description = "description1",

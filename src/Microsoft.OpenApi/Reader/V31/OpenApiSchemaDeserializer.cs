@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using System;
@@ -240,7 +241,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 

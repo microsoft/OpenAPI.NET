@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IOpenApiParameter parameter) => Validate(parameter);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiSchema schema) => Validate(schema);
+        public override void Visit(IOpenApiSchema schema) => Validate(schema);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiServer server) => Validate(server);
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiServerVariable serverVariable) => Validate(serverVariable);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiSecurityScheme securityScheme) => Validate(securityScheme);
+        public override void Visit(IOpenApiSecurityScheme securityScheme) => Validate(securityScheme);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiSecurityRequirement securityRequirement) => Validate(securityRequirement);

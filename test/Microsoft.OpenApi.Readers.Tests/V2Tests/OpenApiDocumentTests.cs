@@ -10,6 +10,7 @@ using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -73,12 +74,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Schemas =
                         {
-                            ["sampleSchema"] = new()
+                            ["sampleSchema"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Object,
                                 Properties =
                                 {
-                                    ["sampleProperty"] = new()
+                                    ["sampleProperty"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Number,
                                         Minimum = (decimal)100.54,
@@ -106,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okSchema = new OpenApiSchema
             {
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     { "id", new OpenApiSchema
                         {
@@ -119,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var errorSchema = new OpenApiSchema
             {
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     { "code", new OpenApiSchema
                         {
@@ -142,7 +143,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okMediaType = new OpenApiMediaType
             {
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Array,
                     Items = new OpenApiSchemaReference("Item", result.Document)
@@ -276,7 +277,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var responses = result.Document.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)
             {
-                var targetSchema = response.Key == "200" ? successSchema : errorSchema;
+                var targetSchema = response.Key == "200" ? (IOpenApiSchema)successSchema : errorSchema;
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
@@ -294,9 +295,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Act
             var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "ComponentRootReference.json"))).Document;
             var schema1 = actual.Components.Schemas["AllPets"];
-            Assert.False(schema1.UnresolvedReference);
-            var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
-            if (schema2.UnresolvedReference && schema1.Reference.Id == schema2.Reference.Id)
+            var schema1Reference = Assert.IsType<OpenApiSchemaReference>(schema1);
+            Assert.False(schema1Reference.UnresolvedReference);
+            var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1Reference.Reference);
+            Assert.IsType<OpenApiSchema>(schema2);
+            if (string.IsNullOrEmpty(schema1Reference.Reference.Id) || schema1Reference.UnresolvedReference)
             {
                 // detected a cycle - this code gets triggered
                 Assert.Fail("A cycle should not be detected");

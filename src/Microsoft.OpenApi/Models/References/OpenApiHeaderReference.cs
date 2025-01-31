@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Models.References
         public bool AllowEmptyValue { get => Target?.AllowEmptyValue ?? default; }
 
         /// <inheritdoc/>
-        public OpenApiSchema Schema { get => Target?.Schema; }
+        public IOpenApiSchema Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
         public ParameterStyle? Style { get => Target?.Style; }

@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new()
                 {
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new()
                 {
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }

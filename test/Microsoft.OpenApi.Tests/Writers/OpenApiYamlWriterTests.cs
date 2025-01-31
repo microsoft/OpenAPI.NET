@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 
@@ -441,12 +442,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             var thingSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                UnresolvedReference = false,
-                Reference = new()
-                {
-                    Id = "thing",
-                    Type = ReferenceType.Schema
-                }
             };
 
             var doc = new OpenApiDocument()
@@ -470,7 +465,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                                         Content = {
                                              ["application/json"] = new()
                                              {
-                                                     Schema = thingSchema
+                                                     Schema = new OpenApiSchemaReference(thingSchema, "thing")
                                              }
                                         }
                                     }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -11,32 +12,19 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiTag : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiTag, IOpenApiDescribedElement
     {
-        /// <summary>
-        /// The name of the tag.
-        /// </summary>
-        public virtual string Name { get; set; }
+        /// <inheritdoc/>
+        public string Name { get; set; }
 
-        /// <summary>
-        /// A short description for the tag.
-        /// </summary>
-        public virtual string Description { get; set; }
+        /// <inheritdoc/>
+        public string Description { get; set; }
 
-        /// <summary>
-        /// Additional external documentation for this tag.
-        /// </summary>
-        public virtual OpenApiExternalDocs ExternalDocs { get; set; }
+        /// <inheritdoc/>
+        public OpenApiExternalDocs ExternalDocs { get; set; }
 
-        /// <summary>
-        /// This object MAY be extended with Specification Extensions.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Indicates if object is populated with data or is just a reference to the data
-        /// </summary>
-        public bool UnresolvedReference { get; set; }
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -44,21 +32,20 @@ namespace Microsoft.OpenApi.Models
         public OpenApiTag() { }
 
         /// <summary>
-        /// Initializes a copy of an <see cref="OpenApiTag"/> object
+        /// Initializes a copy of an <see cref="IOpenApiTag"/> object
         /// </summary>
-        public OpenApiTag(OpenApiTag tag)
+        public OpenApiTag(IOpenApiTag tag)
         {
             Name = tag?.Name ?? Name;
             Description = tag?.Description ?? Description;
             ExternalDocs = tag?.ExternalDocs != null ? new(tag.ExternalDocs) : null;
             Extensions = tag?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
-            UnresolvedReference = tag?.UnresolvedReference ?? UnresolvedReference;
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.1
         /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer) 
+        public void SerializeAsV31(IOpenApiWriter writer) 
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1,
                 (writer, element) => element.SerializeAsV31(writer));
@@ -67,13 +54,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer) 
+        public void SerializeAsV3(IOpenApiWriter writer) 
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0,
                 (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
@@ -96,7 +83,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
         /// </summary>
-        public virtual void SerializeAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             writer.WriteStartObject();
 

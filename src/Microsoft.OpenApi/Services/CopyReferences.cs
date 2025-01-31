@@ -89,9 +89,9 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureSchemasExist();
-        if (!Components.Schemas.ContainsKey(referenceId ?? schema.Reference.Id))
+        if (!Components.Schemas.ContainsKey(referenceId))
         {
-            Components.Schemas.Add(referenceId ?? schema.Reference.Id, schema);
+            Components.Schemas.Add(referenceId, schema);
         }
     }
 
@@ -172,23 +172,19 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureSecuritySchemesExist();
-        if (!Components.SecuritySchemes.ContainsKey(referenceId ?? securityScheme.Reference.Id))
+        if (!Components.SecuritySchemes.ContainsKey(referenceId))
         {
-            Components.SecuritySchemes.Add(referenceId ?? securityScheme.Reference.Id, securityScheme);
+            Components.SecuritySchemes.Add(referenceId, securityScheme);
         }
     }
 
     /// <inheritdoc/>
-    public override void Visit(OpenApiSchema schema)
+    public override void Visit(IOpenApiSchema schema)
     {
         // This is needed to handle schemas used in Responses in components
         if (schema is OpenApiSchemaReference openApiSchemaReference)
         {
             AddSchemaToComponents(openApiSchemaReference.Target, openApiSchemaReference.Reference.Id);
-        }
-        else if (schema.Reference != null)
-        {
-            AddSchemaToComponents(schema);
         }
         base.Visit(schema);
     }
@@ -200,7 +196,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 
     private void EnsureSchemasExist()
     {
-        _target.Components.Schemas ??= new Dictionary<string, OpenApiSchema>();
+        _target.Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
     }
 
     private void EnsureParametersExist()
@@ -240,7 +236,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 
     private void EnsureSecuritySchemesExist()
     {
-        _target.Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+        _target.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
     }
     private void EnsurePathItemsExist()
     {

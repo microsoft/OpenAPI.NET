@@ -92,12 +92,14 @@ components:
             // Assert
             var localContent = _localResponseReference.Content.FirstOrDefault();
             Assert.Equal("text/plain", localContent.Key);                     
-            Assert.Equal("Pong", localContent.Value.Schema.Reference.Id);
+            var localContentSchema = Assert.IsType<OpenApiSchemaReference>(localContent.Value.Schema);
+            Assert.Equal("Pong", localContentSchema.Reference.Id);
             Assert.Equal("OK response", _localResponseReference.Description);
 
             var externalContent = _externalResponseReference.Content.FirstOrDefault();
             Assert.Equal("text/plain", externalContent.Key);
-            Assert.Equal("Pong", externalContent.Value.Schema.Reference.Id);
+            var externalContentSchema = Assert.IsType<OpenApiSchemaReference>(externalContent.Value.Schema);
+            Assert.Equal("Pong", externalContentSchema.Reference.Id);
             Assert.Equal("External reference: OK response", _externalResponseReference.Description);
 
             Assert.Equal("OK", _openApiDoc_2.Components.Responses.First().Value.Description);

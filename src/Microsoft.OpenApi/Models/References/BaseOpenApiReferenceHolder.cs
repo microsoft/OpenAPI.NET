@@ -10,13 +10,16 @@ namespace Microsoft.OpenApi.Models.References;
 /// <typeparam name="V">The interface type for the model.</typeparam>
 public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiSerializable
 {
-    internal T _target;
+    /// <summary>
+    /// The resolved target object.
+    /// </summary>
+    protected T _target;
     /// <inheritdoc/>
-    public T Target
+    public virtual T Target
     {
         get
         {
-            _target ??= Reference.HostDocument.ResolveReferenceTo<T>(Reference);
+            _target ??= Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
             return _target;
         }
     }
@@ -72,7 +75,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
     /// <inheritdoc/>
-    public void SerializeAsV3(IOpenApiWriter writer)
+    public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
         if (!writer.GetSettings().ShouldInlineReference(Reference))
         {
@@ -85,7 +88,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     }
 
     /// <inheritdoc/>
-    public void SerializeAsV31(IOpenApiWriter writer)
+    public virtual void SerializeAsV31(IOpenApiWriter writer)
     {
         if (!writer.GetSettings().ShouldInlineReference(Reference))
         {

@@ -239,10 +239,10 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
+                if (loops.TryGetValue(typeof(IOpenApiSchema), out var schemas))
                 {
-                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
-                         .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
+                    var openApiSchemas = schemas.Cast<IOpenApiSchema>().Distinct().OfType<OpenApiSchemaReference>()
+                         .ToDictionary<OpenApiSchemaReference, string, IOpenApiSchema>(k => k.Reference.Id, v => v);
 
                     foreach (var schema in openApiSchemas.Values.ToList())
                     {
@@ -588,7 +588,7 @@ namespace Microsoft.OpenApi.Models
             switch (componentToRegister)
             {
                 case OpenApiSchema openApiSchema:
-                    Components.Schemas ??= new Dictionary<string, OpenApiSchema>();
+                    Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
                     Components.Schemas.Add(id, openApiSchema);
                     break;
                 case OpenApiParameter openApiParameter:
@@ -624,7 +624,7 @@ namespace Microsoft.OpenApi.Models
                     Components.Headers.Add(id, openApiHeader);
                     break;
                 case OpenApiSecurityScheme openApiSecurityScheme:
-                    Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+                    Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
                     Components.SecuritySchemes.Add(id, openApiSecurityScheme);
                     break;
                 default:
@@ -636,9 +636,9 @@ namespace Microsoft.OpenApi.Models
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, OpenApiSchema> Schemas = new();
+        private Dictionary<string, IOpenApiSchema> Schemas = new(StringComparer.Ordinal);
 
-        public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, OpenApiSchema> schemas)
+        public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, IOpenApiSchema> schemas)
         {
             var visitor = new FindSchemaReferences();
             visitor.Schemas = schemas;
@@ -651,7 +651,7 @@ namespace Microsoft.OpenApi.Models
         {
             switch (referenceHolder)
             {
-                case OpenApiSchema schema:
+                case OpenApiSchemaReference schema:
                     if (!Schemas.ContainsKey(schema.Reference.Id))
                     {
                         Schemas.Add(schema.Reference.Id, schema);
@@ -664,12 +664,12 @@ namespace Microsoft.OpenApi.Models
             base.Visit(referenceHolder);
         }
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
             // This is needed to handle schemas used in Responses in components
-            if (schema.Reference != null && !Schemas.ContainsKey(schema.Reference.Id))
+            if (schema is OpenApiSchemaReference {Reference: not null} schemaReference && !Schemas.ContainsKey(schemaReference.Reference.Id))
             {
-                Schemas.Add(schema.Reference.Id, schema);
+                Schemas.Add(schemaReference.Reference.Id, schema);
             }
             base.Visit(schema);
         }

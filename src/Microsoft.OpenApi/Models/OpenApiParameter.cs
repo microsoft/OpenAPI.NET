@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Models
         public bool AllowReserved { get; set; }
 
         /// <inheritdoc/>
-        public OpenApiSchema Schema { get; set; }
+        public IOpenApiSchema Schema { get; set; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExample> Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
@@ -89,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter.Style ?? Style;
             Explode = parameter.Explode;
             AllowReserved = parameter.AllowReserved;
-            Schema = parameter.Schema != null ? new(parameter.Schema) : null;
+            Schema = parameter.Schema != null ? new OpenApiSchema(parameter.Schema) : null;
             Examples = parameter.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
             Content = parameter.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
@@ -207,7 +208,7 @@ namespace Microsoft.OpenApi.Models
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
-            else if (Schema?.UnresolvedReference == true || Schema?.Type == JsonSchemaType.Object)
+            else if (Schema is OpenApiSchemaReference { UnresolvedReference: true } || (Schema?.Type & JsonSchemaType.Object) == JsonSchemaType.Object)
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }
@@ -230,9 +231,14 @@ namespace Microsoft.OpenApi.Models
                 // uniqueItems
                 // enum
                 // multipleOf
-                if (Schema != null)
+                var targetSchema = Schema switch {
+                    OpenApiSchemaReference schemaReference => schemaReference.Target,
+                    OpenApiSchema schema => schema,
+                    _ => null,
+                };
+                if (targetSchema is not null)
                 {
-                    Schema.WriteAsItemsProperties(writer);
+                    targetSchema.WriteAsItemsProperties(writer);
                     var extensions = Schema.Extensions;
                     if (extensions != null)
                     {

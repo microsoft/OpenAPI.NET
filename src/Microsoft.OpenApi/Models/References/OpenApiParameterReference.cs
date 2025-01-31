@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models.References
         public bool AllowReserved { get => Target?.AllowReserved ?? default; }
 
         /// <inheritdoc/>
-        public OpenApiSchema Schema { get => Target?.Schema; }
+        public IOpenApiSchema Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExample> Examples { get => Target?.Examples; }

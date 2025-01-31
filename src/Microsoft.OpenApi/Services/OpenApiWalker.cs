@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiWalker
     {
         private readonly OpenApiVisitorBase _visitor;
-        private readonly Stack<OpenApiSchema> _schemaLoop = new();
+        private readonly Stack<IOpenApiSchema> _schemaLoop = new();
         private readonly Stack<IOpenApiPathItem> _pathItemLoop = new();
 
         /// <summary>
@@ -864,11 +864,11 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSchema"/> and child objects
+        /// Visits <see cref="IOpenApiSchema"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiSchema schema, bool isComponent = false)
+        internal void Walk(IOpenApiSchema schema, bool isComponent = false)
         {
-            if (schema == null || ProcessAsReference(schema, isComponent))
+            if (schema == null || schema is IOpenApiReferenceHolder holder && ProcessAsReference(holder, isComponent))
             {
                 return;
             }
@@ -1012,9 +1012,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits a list of <see cref="OpenApiSchema"/> and child objects
+        /// Visits a list of <see cref="IOpenApiSchema"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiSchema> schemas)
+        internal void Walk(IList<IOpenApiSchema> schemas)
         {
             if (schemas == null)
             {
@@ -1146,9 +1146,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSecurityScheme"/> and child objects
+        /// Visits <see cref="IOpenApiSecurityScheme"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiSecurityScheme securityScheme, bool isComponent = false)
+        internal void Walk(IOpenApiSecurityScheme securityScheme, bool isComponent = false)
         {
             if (securityScheme == null)
             {

@@ -109,13 +109,15 @@ components:
             // Assert
             var localContent = _localRequestBodyReference.Content.Values.FirstOrDefault();
             Assert.NotNull(localContent);
-            Assert.Equal("UserSchema", localContent.Schema.Reference.Id);
+            var localContentSchema = Assert.IsType<OpenApiSchemaReference>(localContent.Schema);
+            Assert.Equal("UserSchema", localContentSchema.Reference.Id);
             Assert.Equal("User request body", _localRequestBodyReference.Description);
             Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
 
             var externalContent = _externalRequestBodyReference.Content.Values.FirstOrDefault();
             Assert.NotNull(externalContent);
-            Assert.Equal("UserSchema", externalContent.Schema.Reference.Id);
+            var externalContentSchema = Assert.IsType<OpenApiSchemaReference>(externalContent.Schema);
+            Assert.Equal("UserSchema", externalContentSchema.Reference.Id);
 
             Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);
             Assert.Equal("User creation request body", _openApiDoc_2.Components.RequestBodies.First().Value.Description);
