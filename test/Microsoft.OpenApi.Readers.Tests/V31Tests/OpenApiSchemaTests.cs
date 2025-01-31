@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
@@ -42,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Schema = "https://json-schema.org/draft/2020-12/schema",
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["fruits"] = new OpenApiSchema
                     {
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = JsonSchemaType.Array
                     }
                 },
-                Definitions = new Dictionary<string, OpenApiSchema>
+                Definitions = new Dictionary<string, IOpenApiSchema>
                 {
                     ["veggie"] = new OpenApiSchema
                     {
@@ -67,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "veggieName",
                             "veggieLike"
                         },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
                             ["veggieName"] = new OpenApiSchema
                             {
@@ -165,9 +166,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["one"] = new()
+                    ["one"] = new OpenApiSchema()
                     {
                         Description = "type array",
                         Type = JsonSchemaType.Integer | JsonSchemaType.String
@@ -189,29 +190,29 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["one"] = new()
+                    ["one"] = new OpenApiSchema()
                     {
                         Description = "type array",
                         Type = JsonSchemaType.Integer | JsonSchemaType.String
                     },
-                    ["two"] = new()
+                    ["two"] = new OpenApiSchema()
                     {
                         Description = "type 'null'",
                         Type = JsonSchemaType.Null
                     },
-                    ["three"] = new()
+                    ["three"] = new OpenApiSchema()
                     {
                         Description = "type array including 'null'",
                         Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
-                    ["four"] = new()
+                    ["four"] = new OpenApiSchema()
                     {
                         Description = "array with no items",
                         Type = JsonSchemaType.Array
                     },
-                    ["five"] = new()
+                    ["five"] = new OpenApiSchema()
                     {
                         Description = "singular example",
                         Type = JsonSchemaType.String,
@@ -220,37 +221,37 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "exampleValue"
                         }
                     },
-                    ["six"] = new()
+                    ["six"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum true",
                         V31ExclusiveMinimum = 10
                     },
-                    ["seven"] = new()
+                    ["seven"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum false",
                         Minimum = 10
                     },
-                    ["eight"] = new()
+                    ["eight"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum true",
                         V31ExclusiveMaximum = 20
                     },
-                    ["nine"] = new()
+                    ["nine"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum false",
                         Maximum = 20
                     },
-                    ["ten"] = new()
+                    ["ten"] = new OpenApiSchema()
                     {
                         Description = "nullable string",
                         Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
-                    ["eleven"] = new()
+                    ["eleven"] = new OpenApiSchema()
                     {
                         Description = "x-nullable string",
                         Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
-                    ["twelve"] = new()
+                    ["twelve"] = new OpenApiSchema()
                     {
                         Description = "file/binary"
                     }

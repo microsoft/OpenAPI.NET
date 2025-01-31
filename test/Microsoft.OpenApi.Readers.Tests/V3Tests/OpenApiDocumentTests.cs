@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
         }
 
-        private static async Task<T> CloneAsync<T>(T element) where T : IOpenApiSerializable
+        private static async Task<T> CloneAsync<T>(T element) where T : class, IOpenApiSerializable
         {
             using var stream = new MemoryStream();
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
@@ -205,9 +205,9 @@ paths: {}
 
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, OpenApiSchema>
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["pet1"] = new()
+                    ["pet1"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -215,48 +215,48 @@ paths: {}
                                 "id",
                                 "name"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["newPet"] = new()
+                    ["newPet"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "name"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["errorModel"] = new()
+                    ["errorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -264,14 +264,14 @@ paths: {}
                                 "code",
                                 "message"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["code"] = new()
+                            ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int32"
                             },
-                            ["message"] = new()
+                            ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -331,10 +331,10 @@ paths: {}
                                         In = ParameterLocation.Query,
                                         Description = "tags to filter by",
                                         Required = false,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Array,
-                                            Items = new()
+                                            Items = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.String
                                             }
@@ -346,7 +346,7 @@ paths: {}
                                         In = ParameterLocation.Query,
                                         Description = "maximum number of results to return",
                                         Required = false,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Integer,
                                             Format = "int32"
@@ -362,7 +362,7 @@ paths: {}
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
                                                     Items = petSchema
@@ -370,7 +370,7 @@ paths: {}
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
                                                     Items = petSchema
@@ -474,7 +474,7 @@ paths: {}
                                         In = ParameterLocation.Path,
                                         Description = "ID of pet to fetch",
                                         Required = true,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Integer,
                                             Format = "int64"
@@ -534,7 +534,7 @@ paths: {}
                                         In = ParameterLocation.Path,
                                         Description = "ID of pet to delete",
                                         Required = true,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Integer,
                                             Format = "int64"
@@ -591,9 +591,9 @@ paths: {}
 
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, OpenApiSchema>
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["pet1"] = new()
+                    ["pet1"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -601,48 +601,48 @@ paths: {}
                                 "id",
                                 "name"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["newPet"] = new()
+                    ["newPet"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "name"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["errorModel"] = new()
+                    ["errorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -650,14 +650,14 @@ paths: {}
                                 "code",
                                 "message"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["code"] = new()
+                            ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int32"
                             },
-                            ["message"] = new()
+                            ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -681,31 +681,20 @@ paths: {}
             };
 
             // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = await CloneAsync(components.Schemas["pet1"]);
-            petSchema.Reference = new()
-            {
-                Id = "pet1",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.Document
-            };
+            var petSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["pet1"]);
+            var petSchema = await CloneAsync(petSchemaSource);
+            var castPetSchema = Assert.IsType<OpenApiSchema>(petSchema);
+            var petSchemaReference = new OpenApiSchemaReference(castPetSchema, "pet1");
 
-            var newPetSchema = await CloneAsync(components.Schemas["newPet"]);
+            var newPetSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["newPet"]);
+            var newPetSchema = await CloneAsync(newPetSchemaSource);
+            var castNewPetSchema = Assert.IsType<OpenApiSchema>(newPetSchema);
+            var newPetSchemaReference = new OpenApiSchemaReference(castNewPetSchema, "newPet");
 
-            newPetSchema.Reference = new()
-            {
-                Id = "newPet",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.Document
-            };
-
-            var errorModelSchema = await CloneAsync(components.Schemas["errorModel"]);
-
-            errorModelSchema.Reference = new()
-            {
-                Id = "errorModel",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.Document
-            };
+            var errorModelSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["errorModel"]);
+            var errorModelSchema = await CloneAsync(errorModelSchemaSource);
+            var castErrorModelSchema = Assert.IsType<OpenApiSchema>(errorModelSchema);
+            var errorModelSchemaReference = new OpenApiSchemaReference(castErrorModelSchema, "errorModel");
 
             var tagReference1 = new OpenApiTagReference("tagName1", null);
 
@@ -778,10 +767,10 @@ paths: {}
                                             In = ParameterLocation.Query,
                                             Description = "tags to filter by",
                                             Required = false,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Array,
-                                                Items = new()
+                                                Items = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.String
                                                 }
@@ -793,7 +782,7 @@ paths: {}
                                             In = ParameterLocation.Query,
                                             Description = "maximum number of results to return",
                                             Required = false,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Integer,
                                                 Format = "int32"
@@ -809,18 +798,18 @@ paths: {}
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
-                                                    Items = petSchema
+                                                    Items = petSchemaReference
                                                 }
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
-                                                    Items = petSchema
+                                                    Items = petSchemaReference
                                                 }
                                             }
                                         }
@@ -832,7 +821,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     },
@@ -843,7 +832,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     }
@@ -866,7 +855,7 @@ paths: {}
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = newPetSchema
+                                            Schema = newPetSchemaReference
                                         }
                                     }
                                 },
@@ -879,7 +868,7 @@ paths: {}
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = petSchema
+                                                Schema = petSchemaReference
                                             },
                                         }
                                     },
@@ -890,7 +879,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     },
@@ -901,7 +890,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     }
@@ -938,7 +927,7 @@ paths: {}
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to fetch",
                                             Required = true,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Integer,
                                                 Format = "int64"
@@ -954,11 +943,11 @@ paths: {}
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = petSchema
+                                                Schema = petSchemaReference
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = petSchema
+                                                Schema = petSchemaReference
                                             }
                                         }
                                     },
@@ -969,7 +958,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     },
@@ -980,7 +969,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     }
@@ -998,7 +987,7 @@ paths: {}
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to delete",
                                             Required = true,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Integer,
                                                 Format = "int64"
@@ -1018,7 +1007,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     },
@@ -1029,7 +1018,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     }
@@ -1069,8 +1058,12 @@ paths: {}
 
             tagReference1.Reference.HostDocument = expected;
             tagReference2.Reference.HostDocument = expected;
+            petSchemaReference.Reference.HostDocument = expected;
+            newPetSchemaReference.Reference.HostDocument = expected;
+            errorModelSchemaReference.Reference.HostDocument = expected;
 
             actual.Document.Should().BeEquivalentTo(expected, options => options
+            .IgnoringCyclicReferences()
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference.HostDocument)
             .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Target)
@@ -1127,7 +1120,7 @@ paths: {}
                     Style = ParameterStyle.Simple,
                     Explode = true,
                     Example = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String,
                         Format = "uuid"
@@ -1160,7 +1153,7 @@ paths: {}
                                 }
                             }
                     },
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String,
                         Format = "uuid"
@@ -1231,7 +1224,7 @@ paths: {}
                 In = ParameterLocation.Query,
                 Description = "Limit the number of pets returned",
                 Required = false,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Integer,
                     Format = "int32",
@@ -1397,12 +1390,8 @@ components:
         public async Task ParseDocumentWithExampleReferencesPasses()
         {
             // Act & Assert: Ensure no NullReferenceException is thrown
-            Func<Task> act = async () =>
-            {
-                await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"));
-            };
-
-            await act.Should().NotThrowAsync<NullReferenceException>();
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"));
+            Assert.Empty(result.Diagnostic.Errors);
         }
     }
 }

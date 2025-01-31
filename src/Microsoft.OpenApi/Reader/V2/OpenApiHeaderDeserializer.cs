@@ -95,12 +95,15 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         private static OpenApiSchema GetOrCreateSchema(OpenApiHeader p)
         {
-            return p.Schema ??= new();
+            return p.Schema switch {
+                OpenApiSchema schema => schema,
+                _ => (OpenApiSchema)(p.Schema = new OpenApiSchema()),
+            };
         }
 
         public static IOpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
@@ -113,7 +116,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
             }
 
-            var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
+            var schema = node.Context.GetFromTempStorage<IOpenApiSchema>("schema");
             if (schema != null)
             {
                 header.Schema = schema;

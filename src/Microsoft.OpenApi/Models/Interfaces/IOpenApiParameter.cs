@@ -72,7 +72,7 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializa
     /// <summary>
     /// The schema defining the type used for the parameter.
     /// </summary>
-    public OpenApiSchema Schema { get; }
+    public IOpenApiSchema Schema { get; }
 
     /// <summary>
     /// Examples of the media type. Each example SHOULD contain a value

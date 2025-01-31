@@ -18,9 +18,9 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSchema>? Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
+        public IDictionary<string, IOpenApiSchema>? Schemas { get; set; } = new Dictionary<string, IOpenApiSchema>();
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiResponse"/> Objects.
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents? components)
         {
-            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
+            Schemas = components?.Schemas != null ? new Dictionary<string, IOpenApiSchema>(components.Schemas) : null;
             Responses = components?.Responses != null ? new Dictionary<string, IOpenApiResponse>(components.Responses) : null;
             Parameters = components?.Parameters != null ? new Dictionary<string, IOpenApiParameter>(components.Parameters) : null;
             Examples = components?.Examples != null ? new Dictionary<string, IOpenApiExample>(components.Examples) : null;

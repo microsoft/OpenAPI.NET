@@ -122,10 +122,10 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                                         "application/json",
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new()
+                                                            Schema = new OpenApiSchema()
                                                             {
                                                                 Type = JsonSchemaType.Array,
-                                                                Items = new()
+                                                                Items = new OpenApiSchema()
                                                                 {
                                                                     Type = JsonSchemaType.String
                                                                 }
@@ -149,20 +149,20 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>
+                    Schemas = new Dictionary<string, IOpenApiSchema>
                     {
                         { "TestSchema",  new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Properties = new Dictionary<string, OpenApiSchema>
+                                Properties = new Dictionary<string, IOpenApiSchema>
                                 {
                                     {
                                         "averageAudioDegradation", new OpenApiSchema
                                         {
-                                            AnyOf = new List<OpenApiSchema>
+                                            AnyOf = new List<IOpenApiSchema>
                                             {
-                                                new() { Type = JsonSchemaType.Number },
-                                                new() { Type = JsonSchemaType.String }
+                                                new OpenApiSchema() { Type = JsonSchemaType.Number },
+                                                new OpenApiSchema() { Type = JsonSchemaType.String }
                                             },
                                             Format = "float",
                                             Nullable = true
@@ -171,10 +171,10 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                     {
                                         "defaultPrice", new OpenApiSchema
                                         {
-                                            OneOf = new List<OpenApiSchema>
+                                            OneOf = new List<IOpenApiSchema>
                                             {
-                                                new() { Type = JsonSchemaType.Number, Format = "double" },
-                                                new() { Type = JsonSchemaType.String }
+                                                new OpenApiSchema() { Type = JsonSchemaType.Number, Format = "double" },
+                                                new OpenApiSchema() { Type = JsonSchemaType.String }
                                             }
                                         }
                                     }

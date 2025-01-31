@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -16,14 +18,14 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validates Schema Discriminator
         /// </summary>
-        public static ValidationRule<OpenApiSchema> ValidateSchemaDiscriminator =>
+        public static ValidationRule<IOpenApiSchema> ValidateSchemaDiscriminator =>
             new(nameof(ValidateSchemaDiscriminator),
                 (context, schema) =>
                 {
                     // discriminator
                     context.Enter("discriminator");
 
-                    if (schema.Reference != null && schema.Discriminator != null)
+                    if (schema is not null && schema.Discriminator != null)
                     {
                         var discriminatorName = schema.Discriminator?.PropertyName;
 
@@ -31,7 +33,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                         {
                             context.CreateError(nameof(ValidateSchemaDiscriminator),
                             string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
-                                schema.Reference.Id, discriminatorName));
+                                schema is OpenApiSchemaReference { Reference: not null} schemaReference ? schemaReference.Reference.Id : string.Empty, discriminatorName));
                         }
                     }
 
@@ -44,7 +46,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <param name="schema">The parent schema.</param>
         /// <param name="discriminatorName">Adds support for polymorphism. The discriminator is an object name that is used to differentiate
         /// between other schemas which may satisfy the payload description.</param>
-        public static bool ValidateChildSchemaAgainstDiscriminator(OpenApiSchema schema, string discriminatorName)
+        public static bool ValidateChildSchemaAgainstDiscriminator(IOpenApiSchema schema, string discriminatorName)
         {
             if (!schema.Required?.Contains(discriminatorName) ?? false)
             {
@@ -77,7 +79,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// between other schemas which may satisfy the payload description.</param>
         /// <param name="childSchema">The child schema.</param>
         /// <returns></returns>
-        public static bool TraverseSchemaElements(string discriminatorName, IList<OpenApiSchema> childSchema)
+        public static bool TraverseSchemaElements(string discriminatorName, IList<IOpenApiSchema> childSchema)
         {
             foreach (var childItem in childSchema)
             {

@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 In = ParameterLocation.Path,
                 Required = true,
                 Example = 55,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,
                 }
@@ -99,10 +99,10 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    AdditionalProperties = new()
+                    AdditionalProperties = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer,
                     }
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,
                 }
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,
                 }

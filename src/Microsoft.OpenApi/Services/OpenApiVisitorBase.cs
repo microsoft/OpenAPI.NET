@@ -230,9 +230,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSchema"/>
+        /// Visits <see cref="IOpenApiSchema"/>
         /// </summary>
-        public virtual void Visit(OpenApiSchema schema)
+        public virtual void Visit(IOpenApiSchema schema)
         {
         }
 

@@ -45,7 +45,7 @@ public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// The schema defining the type used for the request body.
     /// </summary>
-    public OpenApiSchema Schema { get; }
+    public IOpenApiSchema Schema { get; }
 
     /// <summary>
     /// Example of the media type.

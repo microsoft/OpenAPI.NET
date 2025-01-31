@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new()
                     {
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Number,
                             Minimum = 5,
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
                                 Minimum = 5,
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
                                 Minimum = 5,
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new()
                     {
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Number,
                             Minimum = 5,
@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
                                 Minimum = 5,
@@ -167,7 +167,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
                                 Minimum = 5,
@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -225,16 +225,16 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/x-www-form-urlencoded"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Properties =
                                 {
-                                    ["name"] = new()
+                                    ["name"] = new OpenApiSchema()
                                     {
                                         Description = "Updated name of the pet",
                                         Type = JsonSchemaType.String
                                     },
-                                    ["status"] = new()
+                                    ["status"] = new OpenApiSchema()
                                     {
                                         Description = "Updated status of the pet",
                                         Type = JsonSchemaType.String
@@ -248,16 +248,16 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         ["multipart/form-data"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Properties =
                                 {
-                                    ["name"] = new()
+                                    ["name"] = new OpenApiSchema()
                                     {
                                         Description = "Updated name of the pet",
                                         Type = JsonSchemaType.String
                                     },
-                                    ["status"] = new()
+                                    ["status"] = new OpenApiSchema()
                                     {
                                         Description = "Updated status of the pet",
                                         Type = JsonSchemaType.String

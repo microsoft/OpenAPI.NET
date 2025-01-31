@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
     {
         private const string DefaultPutPrefix = ".Update";
         private const string PowerShellPutPrefix = ".Set";
-        private readonly Stack<OpenApiSchema> _schemaLoop = new();
+        private readonly Stack<IOpenApiSchema> _schemaLoop = new();
         private static readonly Regex s_oDataCastRegex = new("(.*(?<=[a-z]))\\.(As(?=[A-Z]).*)", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         private static readonly Regex s_hashSuffixRegex = new(@"^[^-]+", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         private static readonly Regex s_oDataRefRegex = new("(?<=[a-z])Ref(?=[A-Z])", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         // 5. Fix anyOf and oneOf schema.
         // 6. Add AdditionalProperties to object schemas.
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
             AddAdditionalPropertiesToSchema(schema);
             ResolveAnyOfSchema(schema);
@@ -165,10 +165,10 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                 // Replace content with a schema object of type array
                 // for structured or collection-valued function parameters
                 parameter.Content = null;
-                parameter.Schema = new()
+                parameter.Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Array,
-                    Items = new()
+                    Items = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -176,11 +176,11 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             }
         }
 
-        private void AddAdditionalPropertiesToSchema(OpenApiSchema schema)
+        private void AddAdditionalPropertiesToSchema(IOpenApiSchema schema)
         {
-            if (schema != null && !_schemaLoop.Contains(schema) && schema.Type.Equals(JsonSchemaType.Object))
+            if (schema is OpenApiSchema openApiSchema && !_schemaLoop.Contains(schema) && schema.Type.Equals(JsonSchemaType.Object))
             {
-                schema.AdditionalProperties = new() { Type = JsonSchemaType.Object };
+                openApiSchema.AdditionalProperties = new OpenApiSchema() { Type = JsonSchemaType.Object };
 
                 /* Because 'additionalProperties' are now being walked,
                  * we need a way to keep track of visited schemas to avoid
@@ -190,39 +190,29 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             }
         }
 
-        private static void ResolveOneOfSchema(OpenApiSchema schema)
+        private static void ResolveOneOfSchema(IOpenApiSchema schema)
         {
-            if (schema.OneOf?.FirstOrDefault() is { } newSchema)
+            if (schema is OpenApiSchema openApiSchema && schema.OneOf?.FirstOrDefault() is OpenApiSchema newSchema)
             {
-                schema.OneOf = null;
-                FlattenSchema(schema, newSchema);
+                openApiSchema.OneOf = null;
+                FlattenSchema(openApiSchema, newSchema);
             }
         }
 
-        private static void ResolveAnyOfSchema(OpenApiSchema schema)
+        private static void ResolveAnyOfSchema(IOpenApiSchema schema)
         {
-            if (schema.AnyOf?.FirstOrDefault() is { } newSchema)
+            if (schema is OpenApiSchema openApiSchema && schema.AnyOf?.FirstOrDefault() is OpenApiSchema newSchema)
             {
-                schema.AnyOf = null;
-                FlattenSchema(schema, newSchema);
+                openApiSchema.AnyOf = null;
+                FlattenSchema(openApiSchema, newSchema);
             }
         }
 
         private static void FlattenSchema(OpenApiSchema schema, OpenApiSchema newSchema)
         {
-            if (newSchema != null)
-            {
-                if (newSchema.Reference != null)
-                {
-                    schema.Reference = newSchema.Reference;
-                    schema.UnresolvedReference = true;
-                }
-                else
-                {
-                    // Copies schema properties based on https://github.com/microsoft/OpenAPI.NET.OData/pull/264.
-                    CopySchema(schema, newSchema);
-                }
-            }
+            if (newSchema is null) return;
+            // Copies schema properties based on https://github.com/microsoft/OpenAPI.NET.OData/pull/264.
+            CopySchema(schema, newSchema);
         }
 
         private static void CopySchema(OpenApiSchema schema, OpenApiSchema newSchema)

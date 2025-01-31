@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             {
                 Schemas =
                 {
-                    ["petSchema"] =  new()
+                    ["petSchema"] =  new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -46,42 +46,42 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "id",
                             "name"
                         },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["newPetSchema"] = new()
+                    ["newPetSchema"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                         {
                             "name"
                         },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
@@ -115,10 +115,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             In = ParameterLocation.Query,
                                             Description = "tags to filter by",
                                             Required = false,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Array,
-                                                Items = new()
+                                                Items = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.String
                                                 }
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             In = ParameterLocation.Query,
                                             Description = "maximum number of results to return",
                                             Required = false,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Integer,
                                                 Format = "int32"
@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
                                                     Items = petSchema
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
                                                     Items = petSchema
@@ -212,9 +212,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, OpenApiSchema>
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["petSchema"] = new()
+                    ["petSchema"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -222,42 +222,42 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "id",
                             "name"
                         },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["newPetSchema"] = new()
+                    ["newPetSchema"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                         {
                             "name"
                         },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
@@ -289,10 +289,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         In = ParameterLocation.Query,
                                         Description = "tags to filter by",
                                         Required = false,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Array,
-                                            Items = new()
+                                            Items = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.String
                                             }
@@ -304,7 +304,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                         In = ParameterLocation.Query,
                                         Description = "maximum number of results to return",
                                         Required = false,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Integer,
                                             Format = "int32"
@@ -419,7 +419,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["prop1"] = new OpenApiSchema
                     {
@@ -434,7 +434,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = JsonSchemaType.String
                     }
                 },
-                PatternProperties = new Dictionary<string, OpenApiSchema>
+                PatternProperties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["^x-.*$"] = new OpenApiSchema
                     {

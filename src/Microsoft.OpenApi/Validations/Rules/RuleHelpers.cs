@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -44,7 +45,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             IValidationContext context,
             string ruleName,
             JsonNode value,
-            OpenApiSchema schema)
+            IOpenApiSchema schema)
         {
             if (schema == null)
             {

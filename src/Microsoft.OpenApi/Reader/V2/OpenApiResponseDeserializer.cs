@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces)
                 ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
 
-            var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+            var schema = context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response);
             var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response)
                 ?? new Dictionary<string, IOpenApiExample>();
 
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 mediaTypeObject = new()
                 {
-                    Schema = node.Context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response)
+                    Schema = node.Context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response)
                 };
                 response.Content.Add(mediaType, mediaTypeObject);
             }

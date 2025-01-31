@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
 {
@@ -17,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             Func<T, IDictionary<string, U>> propertyMapGetter,
             Func<U, JsonNode> propertyGetter,
             Action<U, JsonNode> propertySetter,
-            Func<T, OpenApiSchema> schemaGetter)
+            Func<T, IOpenApiSchema> schemaGetter)
         {
             this.PropertyMapGetter = propertyMapGetter;
             this.PropertyGetter = propertyGetter;
@@ -43,6 +44,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// <summary>
         /// Function to get the schema to apply to the property.
         /// </summary>
-        public Func<T, OpenApiSchema> SchemaGetter { get; }
+        public Func<T, IOpenApiSchema> SchemaGetter { get; }
     }
 }

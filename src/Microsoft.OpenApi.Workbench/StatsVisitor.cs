@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Workbench
 
         public int SchemaCount { get; set; }
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
             SchemaCount++;
         }

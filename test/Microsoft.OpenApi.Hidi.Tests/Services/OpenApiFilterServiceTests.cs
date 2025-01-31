@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                                 Name = "id",
                                 In = ParameterLocation.Path,
                                 Required = true,
-                                Schema = new()
+                                Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.String
                                 }

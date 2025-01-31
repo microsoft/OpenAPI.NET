@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiHeader AdvancedHeader = new()
         {
             Description = "sampleHeader",
-            Schema = new()
+            Schema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Integer,
                 Format = "int32"
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiHeader ReferencedHeader = new()
         {
             Description = "sampleHeader",
-            Schema = new()
+            Schema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Integer,
                 Format = "int32"
