@@ -389,7 +389,7 @@ namespace Microsoft.OpenApi.Models
             else
             {
                 var relativeUrl = firstServerUrl.OriginalString;
-                if (relativeUrl.StartsWith("//"))
+                if (relativeUrl.StartsWith("//", StringComparison.OrdinalIgnoreCase))
                 {
                     var pathPosition = relativeUrl.IndexOf('/', 3);
                     writer.WriteProperty(OpenApiConstants.Host, relativeUrl.Substring(0, pathPosition));

@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Workbench
             {
                 if (!string.IsNullOrWhiteSpace(_inputFile))
                 {
-                    stream = _inputFile.StartsWith("http") ? await _httpClient.GetStreamAsync(_inputFile) 
+                    stream = _inputFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? await _httpClient.GetStreamAsync(_inputFile) 
                         : new FileStream(_inputFile, FileMode.Open);
                 }
                 else
@@ -241,7 +241,7 @@ namespace Microsoft.OpenApi.Workbench
                 };
                 if (ResolveExternal && !string.IsNullOrWhiteSpace(_inputFile))
                 {
-                    settings.BaseUrl = _inputFile.StartsWith("http") ? new(_inputFile) 
+                    settings.BaseUrl = _inputFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? new(_inputFile) 
                         : new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                 }
 

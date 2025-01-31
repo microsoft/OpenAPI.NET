@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
@@ -233,7 +234,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "referenceAt: #/components/schemas/derived/anyOf/0",
                 "referenceAt: #/components/securitySchemes/test-secScheme",
                 "referenceAt: #/components/headers/test-header/schema"
-            }, locator.Locations.Where(l => l.StartsWith("referenceAt:")));
+            }, locator.Locations.Where(l => l.StartsWith("referenceAt:", StringComparison.OrdinalIgnoreCase)));
         }
     }
 
