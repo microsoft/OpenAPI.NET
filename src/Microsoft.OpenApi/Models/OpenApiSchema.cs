@@ -632,7 +632,8 @@ namespace Microsoft.OpenApi.Models
         private void SerializeTypeProperty(JsonSchemaType? type, IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             // check whether nullable is true for upcasting purposes
-            var isNullable = Nullable || 
+            var isNullable = Nullable ||
+                            Type is JsonSchemaType.Null ||
                                 Extensions is not null &&
                                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) && 
                                 nullExtRawValue is OpenApiAny { Node: JsonNode jsonNode} &&
@@ -652,9 +653,14 @@ namespace Microsoft.OpenApi.Models
                     case OpenApiSpecVersion.OpenApi3_1 when isNullable:
                         UpCastSchemaTypeToV31(type.Value, writer);
                         break;
-                    case OpenApiSpecVersion.OpenApi3_0 when isNullable:
+                    case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value == JsonSchemaType.Null:
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        goto default;
+                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.ToIdentifier());
+                        break;
+                    case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value != JsonSchemaType.Null:
+                        writer.WriteProperty(OpenApiConstants.Nullable, true);
+                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
+                        break;
                     default:
                         writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
                         break;
