@@ -633,6 +633,7 @@ namespace Microsoft.OpenApi.Models
         {
             // check whether nullable is true for upcasting purposes
             var isNullable = Nullable || 
+                                Extensions is not null &&
                                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) && 
                                 nullExtRawValue is OpenApiAny openApiAny &&
                                 openApiAny.Node is JsonNode jsonNode &&
