@@ -242,9 +242,9 @@ namespace Microsoft.OpenApi.Tests.Models
                   "maximum": 42,
                   "minimum": 10,
                   "exclusiveMinimum": true,
+                  "nullable": true,
                   "type": "integer",
                   "default": 15,
-                  "nullable": true,
                   "externalDocs": {
                     "url": "http://example.com/externalDocs"
                   }
@@ -268,6 +268,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "title": "title1",
+                  "nullable": true,
                   "properties": {
                     "property1": {
                       "properties": {
@@ -296,7 +297,6 @@ namespace Microsoft.OpenApi.Tests.Models
                       }
                     }
                   },
-                  "nullable": true,
                   "externalDocs": {
                     "url": "http://example.com/externalDocs"
                   }
@@ -320,6 +320,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "title": "title1",
+                  "nullable": true,
                   "allOf": [
                     {
                       "title": "title2",
@@ -335,6 +336,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                     {
                       "title": "title3",
+                      "nullable": true,
                       "properties": {
                         "property3": {
                           "properties": {
@@ -347,11 +349,9 @@ namespace Microsoft.OpenApi.Tests.Models
                           "minLength": 2,
                           "type": "string"
                         }
-                      },
-                      "nullable": true
+                      }
                     }
                   ],
-                  "nullable": true,
                   "externalDocs": {
                     "url": "http://example.com/externalDocs"
                   }

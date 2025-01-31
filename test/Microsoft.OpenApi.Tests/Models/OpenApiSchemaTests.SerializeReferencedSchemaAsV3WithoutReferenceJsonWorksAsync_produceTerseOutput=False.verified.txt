@@ -4,9 +4,9 @@
   "maximum": 42,
   "minimum": 10,
   "exclusiveMinimum": true,
+  "nullable": true,
   "type": "integer",
   "default": 15,
-  "nullable": true,
   "externalDocs": {
     "url": "http://example.com/externalDocs"
   }

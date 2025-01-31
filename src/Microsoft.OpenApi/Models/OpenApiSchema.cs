@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -355,12 +357,6 @@ namespace Microsoft.OpenApi.Models
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
-            // nullable
-            if (version is OpenApiSpecVersion.OpenApi3_0)
-            {
-                writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
-            }
-
             // discriminator
             writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, callback);
 
@@ -635,20 +631,33 @@ namespace Microsoft.OpenApi.Models
 
         private void SerializeTypeProperty(JsonSchemaType? type, IOpenApiWriter writer, OpenApiSpecVersion version)
         {
+            // check whether nullable is true for upcasting purposes
+            var isNullable = Nullable || 
+                                Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) && 
+                                nullExtRawValue is OpenApiAny openApiAny &&
+                                openApiAny.Node is JsonNode jsonNode &&
+                                jsonNode.GetValueKind() is JsonValueKind.True;
             if (type is null)
             {
-                return;
-            }
-            if (!HasMultipleTypes(type.Value))
-            {
-                // check whether nullable is true for upcasting purposes
-                if (version is OpenApiSpecVersion.OpenApi3_1 && (Nullable || Extensions.ContainsKey(OpenApiConstants.NullableExtension)))
+                if (version is OpenApiSpecVersion.OpenApi3_0 && isNullable)
                 {
-                    UpCastSchemaTypeToV31(type, writer);
+                    writer.WriteProperty(OpenApiConstants.Nullable, true);
                 }
-                else
+            }
+            else if (!HasMultipleTypes(type.Value))
+            {
+                
+                switch (version)
                 {
-                    writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
+                    case OpenApiSpecVersion.OpenApi3_1 when isNullable:
+                        UpCastSchemaTypeToV31(type.Value, writer);
+                        break;
+                    case OpenApiSpecVersion.OpenApi3_0 when isNullable:
+                        writer.WriteProperty(OpenApiConstants.Nullable, true);
+                        goto default;
+                    default:
+                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
+                        break;
                 }
             }
             else
@@ -663,6 +672,10 @@ namespace Microsoft.OpenApi.Models
                     var list = (from JsonSchemaType flag in jsonSchemaTypeValues
                                 where type.Value.HasFlag(flag)
                                 select flag).ToList();
+                    if (Nullable && !list.Contains(JsonSchemaType.Null))
+                    {
+                        list.Add(JsonSchemaType.Null);
+                    }
                     writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s.ToIdentifier()));
                 }
             } 
@@ -680,12 +693,12 @@ namespace Microsoft.OpenApi.Models
                     schemaTypeNumeric != (int)JsonSchemaType.Null;
         }
 
-        private void UpCastSchemaTypeToV31(JsonSchemaType? type, IOpenApiWriter writer)
+        private void UpCastSchemaTypeToV31(JsonSchemaType type, IOpenApiWriter writer)
         {
             // create a new array and insert the type and "null" as values
-            Type = type | JsonSchemaType.Null;
+            var temporaryType = type | JsonSchemaType.Null;
             var list = (from JsonSchemaType? flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
-                        where Type.Value.HasFlag(flag)
+                        where temporaryType.HasFlag(flag)
                         select flag.ToIdentifier()).ToList();
             writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
         }
