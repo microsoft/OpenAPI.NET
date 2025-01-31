@@ -74,7 +74,6 @@ tags:
             // Assert
             Assert.Equal("user", _openApiTagReference.Name);
             Assert.Equal("Operations about users.", _openApiTagReference.Description);
-            Assert.Throws<InvalidOperationException>(() => _openApiTagReference.Description = "New Description");
         }
 
         [Theory]
