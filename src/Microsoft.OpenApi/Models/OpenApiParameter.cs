@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a clone instance of <see cref="OpenApiParameter"/> object
         /// </summary>
-        public OpenApiParameter(IOpenApiParameter parameter)
+        internal OpenApiParameter(IOpenApiParameter parameter)
         {
             Utils.CheckArgumentNull(parameter);
             Name = parameter.Name ?? Name;
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter.Style ?? Style;
             Explode = parameter.Explode;
             AllowReserved = parameter.AllowReserved;
-            Schema = parameter.Schema != null ? new OpenApiSchema(parameter.Schema) : null;
+            Schema = parameter.Schema.CreateShallowCopy();
             Examples = parameter.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
             Content = parameter.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
@@ -301,6 +301,12 @@ namespace Microsoft.OpenApi.Models
                 ParameterLocation.Cookie => ParameterStyle.Form,
                 _ => (ParameterStyle?)ParameterStyle.Simple,
             };
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiParameter CreateShallowCopy()
+        {
+            return new OpenApiParameter(this);
         }
     }
 

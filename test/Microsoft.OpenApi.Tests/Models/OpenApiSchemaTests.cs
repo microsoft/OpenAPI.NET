@@ -471,10 +471,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 Format = "date"
             };
 
-            var actualSchema = new OpenApiSchema(baseSchema)
-            {
-                Nullable = true
-            };
+            var actualSchema = baseSchema.CreateShallowCopy() as OpenApiSchema;
+            actualSchema.Nullable = true;
 
             Assert.Equal(JsonSchemaType.String, actualSchema.Type);
             Assert.Equal("date", actualSchema.Format);
@@ -493,7 +491,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             };
 
-            var actualSchema = new OpenApiSchema(baseSchema);
+            var actualSchema = baseSchema.CreateShallowCopy();
 
             Assert.Equal(baseSchema.Annotations["key1"], actualSchema.Annotations["key1"]);
 
@@ -531,7 +529,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act && Assert
-            var schemaCopy = new OpenApiSchema(schema);
+            var schemaCopy = schema.CreateShallowCopy();
 
             // Act && Assert
             schema.Example.Should().BeEquivalentTo(schemaCopy.Example, options => options
@@ -552,7 +550,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act && Assert
-            var schemaCopy = new OpenApiSchema(schema);
+            var schemaCopy = schema.CreateShallowCopy() as OpenApiSchema;
             Assert.Single(schemaCopy.Extensions);
 
             // Act && Assert

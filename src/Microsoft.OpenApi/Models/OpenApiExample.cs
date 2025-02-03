@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Models
         /// Initializes a copy of <see cref="OpenApiExample"/> object
         /// </summary>
         /// <param name="example">The <see cref="IOpenApiExample"/> object</param>
-        public OpenApiExample(IOpenApiExample example)
+        internal OpenApiExample(IOpenApiExample example)
         {
             Utils.CheckArgumentNull(example);
             Summary = example.Summary ?? Summary;
@@ -89,6 +89,12 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiExample CreateShallowCopy()
+        {
+            return new OpenApiExample(this);
         }
     }
 }

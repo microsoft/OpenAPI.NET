@@ -34,12 +34,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="IOpenApiTag"/> object
         /// </summary>
-        public OpenApiTag(IOpenApiTag tag)
+        internal OpenApiTag(IOpenApiTag tag)
         {
-            Name = tag?.Name ?? Name;
-            Description = tag?.Description ?? Description;
-            ExternalDocs = tag?.ExternalDocs != null ? new(tag.ExternalDocs) : null;
-            Extensions = tag?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
+            Utils.CheckArgumentNull(tag);
+            Name = tag.Name ?? Name;
+            Description = tag.Description ?? Description;
+            ExternalDocs = tag.ExternalDocs != null ? new(tag.ExternalDocs) : null;
+            Extensions = tag.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
         }
 
         /// <summary>
@@ -100,6 +101,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiTag CreateShallowCopy()
+        {
+            return new OpenApiTag(this);
         }
     }
 }

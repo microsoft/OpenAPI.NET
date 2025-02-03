@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models.References
         /// Copy constructor.
         /// </summary>
         /// <param name="reference">The reference to copy</param>
-        public OpenApiLinkReference(OpenApiLinkReference reference):base(reference)
+        private OpenApiLinkReference(OpenApiLinkReference reference):base(reference)
         {
         }
         internal OpenApiLinkReference(OpenApiLink target, string referenceId):base(target, referenceId, ReferenceType.Link)
@@ -79,6 +79,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiLink CopyReferenceAsTargetElementWithOverrides(IOpenApiLink source)
         {
             return source is OpenApiLink ? new OpenApiLink(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiLink CreateShallowCopy()
+        {
+            return new OpenApiLinkReference(this);
         }
     }
 }

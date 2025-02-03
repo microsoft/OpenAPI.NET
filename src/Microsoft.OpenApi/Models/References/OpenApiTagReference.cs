@@ -34,6 +34,14 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiTagReference(string referenceId, OpenApiDocument hostDocument):base(referenceId, hostDocument, ReferenceType.Tag)
         {
         }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="openApiTagReference">The reference to copy</param>
+        private OpenApiTagReference(OpenApiTagReference openApiTagReference):base(openApiTagReference)
+        {
+            
+        }
 
         internal OpenApiTagReference(OpenApiTag target, string referenceId):base(target, referenceId, ReferenceType.Tag)
         {
@@ -57,6 +65,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
         {
             return source is OpenApiTag ? new OpenApiTag(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiTag CreateShallowCopy()
+        {
+            return new OpenApiTagReference(this);
         }
     }
 }

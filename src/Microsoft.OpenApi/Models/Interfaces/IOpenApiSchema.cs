@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the schema object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible
+public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiSchema>
 {
     
     /// <summary>

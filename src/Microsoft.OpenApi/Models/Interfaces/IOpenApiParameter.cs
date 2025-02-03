@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the parameter object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible
+public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiParameter>
 {
     /// <summary>
     /// REQUIRED. The name of the parameter. Parameter names are case sensitive.

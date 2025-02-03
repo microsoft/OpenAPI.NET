@@ -28,6 +28,15 @@ namespace Microsoft.OpenApi.Models.References
         {
         }
 
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="pathItem">The reference to copy</param>
+        private OpenApiPathItemReference(OpenApiPathItemReference pathItem):base(pathItem)
+        {
+            
+        }
+
         internal OpenApiPathItemReference(OpenApiPathItem target, string referenceId):base(target, referenceId, ReferenceType.PathItem)
         {
         }
@@ -74,6 +83,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)
         {
             return source is OpenApiPathItem ? new OpenApiPathItem(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiPathItem CreateShallowCopy()
+        {
+            return new OpenApiPathItemReference(this);
         }
 
         /// <inheritdoc/>
