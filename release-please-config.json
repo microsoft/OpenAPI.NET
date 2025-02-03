@@ -1,5 +1,5 @@
 {
-  "bootstrap-sha": "8943e2ad40babb0204dedb11ad6f9273adf9cd53",
+  "bootstrap-sha": "dfa9c8a12ea2279905ee3e67e21212fa3b8bb95c",
   "exclude-paths": [
     ".azure-pipelines",
     ".github",
@@ -13,9 +13,6 @@
   "include-component-in-tag": false,
   "include-v-in-tag": true,
   "draft": false,
-  "prerelease": true,
-  "versioning": "prerelease",
-  "prerelease-type": "preview",
   "packages": {
     ".": {
       "package-name": "Microsoft.OpenApi",
