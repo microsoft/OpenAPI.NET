@@ -8,6 +8,9 @@ trigger:
     - main
     - dev
     - support/v1
+  tags:
+    include:
+    - 'v*'
 pr:
   branches:
     include:
@@ -194,7 +197,7 @@ extends:
             content: '*.nupkg'
             
     - stage: deploy
-      condition: and(or(contains(variables['build.sourceBranch'], 'refs/heads/main'),contains(variables['build.sourceBranch'], 'refs/heads/support/v1')), succeeded())
+      condition: and(contains(variables['build.sourceBranch'], 'refs/tags/v'), succeeded())
       dependsOn: build
       jobs:
       - deployment: deploy_hidi
@@ -305,18 +308,10 @@ extends:
                 condition: succeededOrFailed()
                 inputs:
                   gitHubConnection: 'Github-MaggieKimani1'
-                  action: create
+                  action: edit
                   tagSource: userSpecifiedTag
-                  tag: '$(artifactVersion)'
-                  title: '$(artifactVersion)'
+                  tag: 'v$(artifactVersion)'
                   releaseNotesSource: inline
                   assets: '$(Pipeline.Workspace)\**\*.exe'
-                  changeLogType: issueBased
-                  changeLogLabels: '[ 
-                    { "label" : "feature-work", "feature", "displayName" : "New Features", "state" : "closed" }, 
-                    { "label" : "enhancement", "V2-Enhancement", "displayName" : "Enhancements", "state" : "closed" }, 
-                    { "label" : "bug", "bug-fix", "displayName" : "Bugs", "state" : "closed" }, 
-                    { "label" : "documentation", "doc", "displayName" : "Documentation", "state" : "closed"}, 
-                    { "label" : "dependencies", "displayName" : "Package Updates", "state" : "closed" }
-                    ]'
+                  addChangeLog: false
 
