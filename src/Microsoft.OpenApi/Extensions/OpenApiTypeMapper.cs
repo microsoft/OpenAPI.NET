@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Extensions
                 throw new ArgumentNullException(nameof(schema));
             }
 
-            var type = ((schema.Type.Value ^ JsonSchemaType.Null).ToIdentifier(), schema.Format?.ToLowerInvariant(), schema.Type.Value & JsonSchemaType.Null) switch
+            var type = ((schema.Type & ~JsonSchemaType.Null).ToIdentifier(), schema.Format?.ToLowerInvariant(), schema.Type & JsonSchemaType.Null) switch
             {
                 ("integer" or "number", "int32", JsonSchemaType.Null) => typeof(int?),
                 ("integer" or "number", "int64", JsonSchemaType.Null) => typeof(long?),

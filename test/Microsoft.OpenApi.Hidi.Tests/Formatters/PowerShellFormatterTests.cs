@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             Assert.NotNull(openApiDocument.Components.Schemas);
             Assert.NotNull(testSchema);
             Assert.Null(averageAudioDegradationProperty.AnyOf);
-            Assert.Equal(JsonSchemaType.Number, averageAudioDegradationProperty.Type);
+            Assert.Equal(JsonSchemaType.Number | JsonSchemaType.Null, averageAudioDegradationProperty.Type);
             Assert.Equal("float", averageAudioDegradationProperty.Format);
             Assert.Equal(JsonSchemaType.Null, averageAudioDegradationProperty.Type & JsonSchemaType.Null);
             Assert.Null(defaultPriceProperty.OneOf);
@@ -163,11 +163,10 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                         {
                                             AnyOf = new List<IOpenApiSchema>
                                             {
-                                                new OpenApiSchema() { Type = JsonSchemaType.Number },
+                                                new OpenApiSchema() { Type = JsonSchemaType.Number | JsonSchemaType.Null },
                                                 new OpenApiSchema() { Type = JsonSchemaType.String }
                                             },
                                             Format = "float",
-                                            Type = JsonSchemaType.Number | JsonSchemaType.Null | JsonSchemaType.String
                                         }
                                     },
                                     {

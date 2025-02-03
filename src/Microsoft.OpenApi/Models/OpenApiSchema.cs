@@ -726,9 +726,7 @@ namespace Microsoft.OpenApi.Models
                 ? OpenApiConstants.NullableExtension
                 : OpenApiConstants.Nullable;
 
-            var nullable = (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null;
-
-            if (!HasMultipleTypes(schemaType ^ JsonSchemaType.Null) && nullable) // checks for two values and one is null
+            if (!HasMultipleTypes(schemaType & ~JsonSchemaType.Null) && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
             {
                 foreach (JsonSchemaType flag in jsonSchemaTypeValues)
                 {
@@ -739,10 +737,7 @@ namespace Microsoft.OpenApi.Models
                         writer.WriteProperty(OpenApiConstants.Type, flag.ToIdentifier());
                     }
                 }
-                if (!nullable || version is not OpenApiSpecVersion.OpenApi2_0)
-                {
-                    writer.WriteProperty(nullableProp, true);
-                }
+                writer.WriteProperty(nullableProp, true);
             }
             else if (!HasMultipleTypes(schemaType))
             {
