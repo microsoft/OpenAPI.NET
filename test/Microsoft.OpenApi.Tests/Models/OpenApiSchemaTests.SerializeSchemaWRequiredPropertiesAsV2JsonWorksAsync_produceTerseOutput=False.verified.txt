@@ -1,4 +1,5 @@
 ﻿{
+  "type": "object",
   "title": "title1",
   "required": [
     "property1"

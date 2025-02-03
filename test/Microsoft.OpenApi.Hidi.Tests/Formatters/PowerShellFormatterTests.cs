@@ -58,21 +58,23 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var testSchema = openApiDocument.Components?.Schemas?["TestSchema"];
-            var averageAudioDegradationProperty = testSchema?.Properties["averageAudioDegradation"];
-            var defaultPriceProperty = testSchema?.Properties["defaultPrice"];
+            Assert.NotNull(openApiDocument.Components);
+            Assert.NotNull(openApiDocument.Components.Schemas);
+            var testSchema = openApiDocument.Components.Schemas["TestSchema"];
+            var averageAudioDegradationProperty = testSchema.Properties["averageAudioDegradation"];
+            var defaultPriceProperty = testSchema.Properties["defaultPrice"];
 
             // Assert
             Assert.NotNull(openApiDocument.Components);
             Assert.NotNull(openApiDocument.Components.Schemas);
             Assert.NotNull(testSchema);
-            Assert.Null(averageAudioDegradationProperty?.AnyOf);
-            Assert.Equal(JsonSchemaType.Number, averageAudioDegradationProperty?.Type);
-            Assert.Equal("float", averageAudioDegradationProperty?.Format);
-            Assert.True(averageAudioDegradationProperty?.Nullable);
-            Assert.Null(defaultPriceProperty?.OneOf);
-            Assert.Equal(JsonSchemaType.Number, defaultPriceProperty?.Type);
-            Assert.Equal("double", defaultPriceProperty?.Format);
+            Assert.Null(averageAudioDegradationProperty.AnyOf);
+            Assert.Equal(JsonSchemaType.Number, averageAudioDegradationProperty.Type);
+            Assert.Equal("float", averageAudioDegradationProperty.Format);
+            Assert.Equal(JsonSchemaType.Null, averageAudioDegradationProperty.Type & JsonSchemaType.Null);
+            Assert.Null(defaultPriceProperty.OneOf);
+            Assert.Equal(JsonSchemaType.Number, defaultPriceProperty.Type);
+            Assert.Equal("double", defaultPriceProperty.Format);
             Assert.NotNull(testSchema.AdditionalProperties);
         }
 
@@ -165,7 +167,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                                 new OpenApiSchema() { Type = JsonSchemaType.String }
                                             },
                                             Format = "float",
-                                            Nullable = true
+                                            Type = JsonSchemaType.Number | JsonSchemaType.Null | JsonSchemaType.String
                                         }
                                     },
                                     {

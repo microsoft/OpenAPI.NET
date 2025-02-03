@@ -243,7 +243,6 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             schema.Enum ??= newSchema.Enum;
             schema.ReadOnly = !schema.ReadOnly ? newSchema.ReadOnly : schema.ReadOnly;
             schema.WriteOnly = !schema.WriteOnly ? newSchema.WriteOnly : schema.WriteOnly;
-            schema.Nullable = !schema.Nullable ? newSchema.Nullable : schema.Nullable;
             schema.Deprecated = !schema.Deprecated ? newSchema.Deprecated : schema.Deprecated;
         }
     }

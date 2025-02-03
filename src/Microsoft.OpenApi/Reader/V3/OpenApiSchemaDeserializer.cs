@@ -86,7 +86,14 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "type",
-                (o, n, _) => o.Type = n.GetScalarValue().ToJsonSchemaType()
+                (o, n, _) => {
+                    var type = n.GetScalarValue().ToJsonSchemaType();
+                    // so we don't loose the value from nullable
+                    if (o.Type.HasValue)
+                        o.Type |= type;
+                    else
+                        o.Type = type;
+                }
             },
             {
                 "allOf",
@@ -139,7 +146,16 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "nullable",
-                (o, n, _) => o.Nullable = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
+                    {
+                        if (o.Type.HasValue)
+                            o.Type |= JsonSchemaType.Null;
+                        else
+                            o.Type = JsonSchemaType.Null;
+                    }
+                }
             },
             {
                 "discriminator",

@@ -142,8 +142,6 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public IList<JsonNode> Enum { get => Target?.Enum; }
         /// <inheritdoc/>
-        public bool Nullable { get => Target?.Nullable ?? false; }
-        /// <inheritdoc/>
         public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? false; }
         /// <inheritdoc/>
         public OpenApiExternalDocs ExternalDocs { get => Target?.ExternalDocs; }

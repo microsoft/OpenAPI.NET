@@ -33,9 +33,8 @@ namespace Microsoft.OpenApi.Tests.Models
             ExclusiveMinimum = true,
             Minimum = 10,
             Default = 15,
-            Type = JsonSchemaType.Integer,
+            Type = JsonSchemaType.Integer | JsonSchemaType.Null,
 
-            Nullable = true,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -85,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                 },
             },
-            Nullable = true,
+            Type = JsonSchemaType.Object | JsonSchemaType.Null,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -134,10 +133,10 @@ namespace Microsoft.OpenApi.Tests.Models
                             MinLength = 2
                         }
                     },
-                    Nullable = true
+                    Type = JsonSchemaType.Object | JsonSchemaType.Null,
                 },
             },
-            Nullable = true,
+            Type = JsonSchemaType.Object | JsonSchemaType.Null,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -152,9 +151,8 @@ namespace Microsoft.OpenApi.Tests.Models
             ExclusiveMinimum = true,
             Minimum = 10,
             Default = 15,
-            Type = JsonSchemaType.Integer,
+            Type = JsonSchemaType.Integer | JsonSchemaType.Null,
 
-            Nullable = true,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -208,7 +206,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     ReadOnly = true,
                 },
             },
-            Nullable = true,
+            Type = JsonSchemaType.Object | JsonSchemaType.Null,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -472,11 +470,11 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             var actualSchema = baseSchema.CreateShallowCopy() as OpenApiSchema;
-            actualSchema.Nullable = true;
+            actualSchema.Type |= JsonSchemaType.Null;
 
             Assert.Equal(JsonSchemaType.String, actualSchema.Type);
             Assert.Equal("date", actualSchema.Format);
-            Assert.True(actualSchema.Nullable);
+            Assert.Equal(JsonSchemaType.Null, actualSchema.Type & JsonSchemaType.Null);
         }
 
         [Fact]
