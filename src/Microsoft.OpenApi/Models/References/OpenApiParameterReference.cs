@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models.References
         /// Copy constructor
         /// </summary>
         /// <param name="parameter">The parameter reference to copy</param>
-        public OpenApiParameterReference(OpenApiParameterReference parameter):base(parameter)
+        private OpenApiParameterReference(OpenApiParameterReference parameter):base(parameter)
         {
         }
 
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Name { get => Target.Name; }
+        public string Name { get => Target?.Name; }
 
         /// <inheritdoc/>
         public string Description
@@ -86,15 +86,21 @@ namespace Microsoft.OpenApi.Models.References
         public bool Explode { get => Target?.Explode ?? default; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get => Target.Content; }
+        public IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
         
         /// <inheritdoc/>
         public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter source)
         {
             return source is OpenApiParameter ? new OpenApiParameter(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiParameter CreateShallowCopy()
+        {
+            return new OpenApiParameterReference(this);
         }
     }
 }

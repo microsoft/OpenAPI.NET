@@ -140,13 +140,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Act
-            var schemaWithArrayCopy = new OpenApiSchema(schemaWithTypeArray);
+            var schemaWithArrayCopy = schemaWithTypeArray.CreateShallowCopy() as OpenApiSchema;
             schemaWithArrayCopy.Type = JsonSchemaType.String;
 
-            var simpleSchemaCopy = new OpenApiSchema(simpleSchema)
-            {
-                Type = JsonSchemaType.String | JsonSchemaType.Null
-            };
+            var simpleSchemaCopy = simpleSchema.CreateShallowCopy() as OpenApiSchema;
+            simpleSchemaCopy.Type = JsonSchemaType.String | JsonSchemaType.Null;
 
             // Assert
             Assert.NotEqual(schemaWithTypeArray.Type, schemaWithArrayCopy.Type);
@@ -294,7 +292,7 @@ examples:
                 Enum = [1, 2, 3]
             };
 
-            var clone = new OpenApiSchema(schema);
+            var clone = schema.CreateShallowCopy() as OpenApiSchema;
             clone.Examples.Add(4);
             clone.Enum.Add(4);
             clone.Default = 6;

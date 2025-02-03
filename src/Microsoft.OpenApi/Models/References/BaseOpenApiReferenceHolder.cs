@@ -31,7 +31,6 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     {
         Utils.CheckArgumentNull(source);
         Reference = source.Reference != null ? new(source.Reference) : null;
-        UnresolvedReference = source.UnresolvedReference;
         //no need to copy summary and description as if they are not overridden, they will be fetched from the target
         //if they are, the reference copy will handle it
     }
@@ -69,7 +68,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         };
     }
     /// <inheritdoc/>
-    public bool UnresolvedReference { get; set; }
+    public bool UnresolvedReference { get => Reference is null || Target is null; }
     /// <inheritdoc/>
     public OpenApiReference Reference { get; set; }
     /// <inheritdoc/>

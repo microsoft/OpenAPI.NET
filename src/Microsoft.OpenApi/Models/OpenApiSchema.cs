@@ -186,60 +186,61 @@ namespace Microsoft.OpenApi.Models
         /// Initializes a copy of <see cref="IOpenApiSchema"/> object
         /// </summary>
         /// <param name="schema">The schema object to copy from.</param>
-        public OpenApiSchema(IOpenApiSchema schema)
+        internal OpenApiSchema(IOpenApiSchema schema)
         {
-            Title = schema?.Title ?? Title;
-            Id = schema?.Id ?? Id;
-            Const = schema?.Const ?? Const;
-            Schema = schema?.Schema ?? Schema;
-            Comment = schema?.Comment ?? Comment;
-            Vocabulary = schema?.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
-            DynamicAnchor = schema?.DynamicAnchor ?? DynamicAnchor;
-            DynamicRef = schema?.DynamicRef ?? DynamicRef;
-            Definitions = schema?.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
-            UnevaluatedProperties = schema?.UnevaluatedProperties ?? UnevaluatedProperties;
-            V31ExclusiveMaximum = schema?.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
-            V31ExclusiveMinimum = schema?.V31ExclusiveMinimum ?? V31ExclusiveMinimum;
-            Type = schema?.Type ?? Type;
-            Format = schema?.Format ?? Format;
-            Description = schema?.Description ?? Description;
-            Maximum = schema?.Maximum ?? Maximum;
-            ExclusiveMaximum = schema?.ExclusiveMaximum ?? ExclusiveMaximum;
-            Minimum = schema?.Minimum ?? Minimum;
-            ExclusiveMinimum = schema?.ExclusiveMinimum ?? ExclusiveMinimum;
-            MaxLength = schema?.MaxLength ?? MaxLength;
-            MinLength = schema?.MinLength ?? MinLength;
-            Pattern = schema?.Pattern ?? Pattern;
-            MultipleOf = schema?.MultipleOf ?? MultipleOf;
-            Default = schema?.Default != null ? JsonNodeCloneHelper.Clone(schema?.Default) : null;
-            ReadOnly = schema?.ReadOnly ?? ReadOnly;
-            WriteOnly = schema?.WriteOnly ?? WriteOnly;
-            AllOf = schema?.AllOf != null ? new List<IOpenApiSchema>(schema.AllOf) : null;
-            OneOf = schema?.OneOf != null ? new List<IOpenApiSchema>(schema.OneOf) : null;
-            AnyOf = schema?.AnyOf != null ? new List<IOpenApiSchema>(schema.AnyOf) : null;
-            Not = schema?.Not != null ? new OpenApiSchema(schema?.Not) : null;
-            Required = schema?.Required != null ? new HashSet<string>(schema.Required) : null;
-            Items = schema?.Items != null ? new OpenApiSchema(schema?.Items) : null;
-            MaxItems = schema?.MaxItems ?? MaxItems;
-            MinItems = schema?.MinItems ?? MinItems;
-            UniqueItems = schema?.UniqueItems ?? UniqueItems;
-            Properties = schema?.Properties != null ? new Dictionary<string, IOpenApiSchema>(schema.Properties) : null;
-            PatternProperties = schema?.PatternProperties != null ? new Dictionary<string, IOpenApiSchema>(schema.PatternProperties) : null;
-            MaxProperties = schema?.MaxProperties ?? MaxProperties;
-            MinProperties = schema?.MinProperties ?? MinProperties;
-            AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
-            AdditionalProperties = schema?.AdditionalProperties != null ? new OpenApiSchema(schema?.AdditionalProperties) : null;
-            Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null; 
-            Example = schema?.Example != null ? JsonNodeCloneHelper.Clone(schema?.Example) : null;
-            Examples = schema?.Examples != null ? new List<JsonNode>(schema.Examples) : null;
-            Enum = schema?.Enum != null ? new List<JsonNode>(schema.Enum) : null;
-            Nullable = schema?.Nullable ?? Nullable;
-            ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
-            Deprecated = schema?.Deprecated ?? Deprecated;
-            Xml = schema?.Xml != null ? new(schema?.Xml) : null;
-            Extensions = schema?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
-            Annotations = schema?.Annotations != null ? new Dictionary<string, object>(schema?.Annotations) : null;
-            UnrecognizedKeywords = schema?.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema?.UnrecognizedKeywords) : null;
+            Utils.CheckArgumentNull(schema);
+            Title = schema.Title ?? Title;
+            Id = schema.Id ?? Id;
+            Const = schema.Const ?? Const;
+            Schema = schema.Schema ?? Schema;
+            Comment = schema.Comment ?? Comment;
+            Vocabulary = schema.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
+            DynamicAnchor = schema.DynamicAnchor ?? DynamicAnchor;
+            DynamicRef = schema.DynamicRef ?? DynamicRef;
+            Definitions = schema.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
+            UnevaluatedProperties = schema.UnevaluatedProperties;
+            V31ExclusiveMaximum = schema.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
+            V31ExclusiveMinimum = schema.V31ExclusiveMinimum ?? V31ExclusiveMinimum;
+            Type = schema.Type ?? Type;
+            Format = schema.Format ?? Format;
+            Description = schema.Description ?? Description;
+            Maximum = schema.Maximum ?? Maximum;
+            ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
+            Minimum = schema.Minimum ?? Minimum;
+            ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
+            MaxLength = schema.MaxLength ?? MaxLength;
+            MinLength = schema.MinLength ?? MinLength;
+            Pattern = schema.Pattern ?? Pattern;
+            MultipleOf = schema.MultipleOf ?? MultipleOf;
+            Default = schema.Default != null ? JsonNodeCloneHelper.Clone(schema.Default) : null;
+            ReadOnly = schema.ReadOnly;
+            WriteOnly = schema.WriteOnly;
+            AllOf = schema.AllOf != null ? new List<IOpenApiSchema>(schema.AllOf) : null;
+            OneOf = schema.OneOf != null ? new List<IOpenApiSchema>(schema.OneOf) : null;
+            AnyOf = schema.AnyOf != null ? new List<IOpenApiSchema>(schema.AnyOf) : null;
+            Not = schema.Not?.CreateShallowCopy();
+            Required = schema.Required != null ? new HashSet<string>(schema.Required) : null;
+            Items = schema.Items?.CreateShallowCopy();
+            MaxItems = schema.MaxItems ?? MaxItems;
+            MinItems = schema.MinItems ?? MinItems;
+            UniqueItems = schema.UniqueItems ?? UniqueItems;
+            Properties = schema.Properties != null ? new Dictionary<string, IOpenApiSchema>(schema.Properties) : null;
+            PatternProperties = schema.PatternProperties != null ? new Dictionary<string, IOpenApiSchema>(schema.PatternProperties) : null;
+            MaxProperties = schema.MaxProperties ?? MaxProperties;
+            MinProperties = schema.MinProperties ?? MinProperties;
+            AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
+            AdditionalProperties = schema.AdditionalProperties?.CreateShallowCopy();
+            Discriminator = schema.Discriminator != null ? new(schema.Discriminator) : null; 
+            Example = schema.Example != null ? JsonNodeCloneHelper.Clone(schema.Example) : null;
+            Examples = schema.Examples != null ? new List<JsonNode>(schema.Examples) : null;
+            Enum = schema.Enum != null ? new List<JsonNode>(schema.Enum) : null;
+            Nullable = schema.Nullable;
+            ExternalDocs = schema.ExternalDocs != null ? new(schema.ExternalDocs) : null;
+            Deprecated = schema.Deprecated;
+            Xml = schema.Xml != null ? new(schema.Xml) : null;
+            Extensions = schema.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
+            Annotations = schema.Annotations != null ? new Dictionary<string, object>(schema.Annotations) : null;
+            UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
         }
 
         /// <inheritdoc />
@@ -735,6 +736,12 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteProperty(OpenApiConstants.Type, schemaType.ToIdentifier());
                 }
             }
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiSchema CreateShallowCopy()
+        {
+            return new OpenApiSchema(this);
         }
     }
 }

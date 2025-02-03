@@ -63,20 +63,21 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiHeader"/> object
         /// </summary>
-        public OpenApiHeader(IOpenApiHeader header)
+        internal OpenApiHeader(IOpenApiHeader header)
         {
-            Description = header?.Description ?? Description;
-            Required = header?.Required ?? Required;
-            Deprecated = header?.Deprecated ?? Deprecated;
-            AllowEmptyValue = header?.AllowEmptyValue ?? AllowEmptyValue;
-            Style = header?.Style ?? Style;
-            Explode = header?.Explode ?? Explode;
-            AllowReserved = header?.AllowReserved ?? AllowReserved;
-            Schema = header?.Schema != null ? new OpenApiSchema(header.Schema) : null;
-            Example = header?.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
-            Examples = header?.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
-            Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
-            Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
+            Utils.CheckArgumentNull(header);
+            Description = header.Description ?? Description;
+            Required = header.Required;
+            Deprecated = header.Deprecated;
+            AllowEmptyValue = header.AllowEmptyValue;
+            Style = header.Style ?? Style;
+            Explode = header.Explode;
+            AllowReserved = header.AllowReserved;
+            Schema = header.Schema.CreateShallowCopy();
+            Example = header.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
+            Examples = header.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
+            Content = header.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
+            Extensions = header.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
 
         /// <summary>
@@ -186,6 +187,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiHeader CreateShallowCopy()
+        {
+            return new OpenApiHeader(this);
         }
     }
 }

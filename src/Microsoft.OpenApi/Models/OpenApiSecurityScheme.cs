@@ -50,18 +50,18 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of <see cref="IOpenApiSecurityScheme"/> object
         /// </summary>
-        public OpenApiSecurityScheme(IOpenApiSecurityScheme securityScheme)
+        internal OpenApiSecurityScheme(IOpenApiSecurityScheme securityScheme)
         {
             Utils.CheckArgumentNull(securityScheme);
-            Type = securityScheme?.Type;
-            Description = securityScheme?.Description ?? Description;
-            Name = securityScheme?.Name ?? Name;
-            In = securityScheme?.In;
-            Scheme = securityScheme?.Scheme ?? Scheme;
-            BearerFormat = securityScheme?.BearerFormat ?? BearerFormat;
-            Flows = securityScheme?.Flows != null ? new(securityScheme?.Flows) : null;
-            OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
-            Extensions = securityScheme?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
+            Type = securityScheme.Type;
+            Description = securityScheme.Description ?? Description;
+            Name = securityScheme.Name ?? Name;
+            In = securityScheme.In;
+            Scheme = securityScheme.Scheme ?? Scheme;
+            BearerFormat = securityScheme.BearerFormat ?? BearerFormat;
+            Flows = securityScheme.Flows != null ? new(securityScheme.Flows) : null;
+            OpenIdConnectUrl = securityScheme.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            Extensions = securityScheme.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
         }
 
         /// <summary>
@@ -228,6 +228,12 @@ namespace Microsoft.OpenApi.Models
 
             // scopes
             writer.WriteOptionalMap(OpenApiConstants.Scopes, flow.Scopes, (w, s) => w.WriteValue(s));
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiSecurityScheme CreateShallowCopy()
+        {
+            return new OpenApiSecurityScheme(this);
         }
     }
 }

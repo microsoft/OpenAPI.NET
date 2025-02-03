@@ -30,7 +30,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                 BaseUrl = new("file://c:\\")
             };
 
-            // Todo: this should be ReadAsync
             var stream = new MemoryStream();
             var doc = """
                       openapi: 3.0.0

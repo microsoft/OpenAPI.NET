@@ -28,12 +28,11 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Example, externalResource)
         {
         }
-
         /// <summary>
         /// Copy constructor
         /// </summary>
-        /// <param name="example">The reference to copy.</param>
-        public OpenApiExampleReference(OpenApiExampleReference example):base(example)
+        /// <param name="example">The example reference to copy</param>
+        private OpenApiExampleReference(OpenApiExampleReference example):base(example)
         {
         }
 
@@ -87,6 +86,12 @@ namespace Microsoft.OpenApi.Models.References
         {
             // examples components are not supported in OAS 2.0
             Reference.SerializeAsV2(writer);
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiExample CreateShallowCopy()
+        {
+            return new OpenApiExampleReference(this);
         }
     }
 }

@@ -28,6 +28,14 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiRequestBodyReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.RequestBody, externalResource)
         {
         }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="openApiRequestBodyReference">The reference to copy</param>
+        private OpenApiRequestBodyReference(OpenApiRequestBodyReference openApiRequestBodyReference):base(openApiRequestBodyReference)
+        {
+            
+        }
         internal OpenApiRequestBodyReference(OpenApiRequestBody target, string referenceId):base(target, referenceId, ReferenceType.RequestBody)
         {
         }
@@ -88,6 +96,12 @@ namespace Microsoft.OpenApi.Models.References
                 return [];
 
             return Content.First().Value.Schema.Properties.Select(x => new OpenApiParameterReference(x.Key, Reference.HostDocument));
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiRequestBody CreateShallowCopy()
+        {
+            return new OpenApiRequestBodyReference(this);
         }
     }
 }

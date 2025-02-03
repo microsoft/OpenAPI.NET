@@ -22,6 +22,14 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.SecurityScheme, externalResource)
         {
         }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="openApiSecuritySchemeReference">The reference to copy</param>
+        private OpenApiSecuritySchemeReference(OpenApiSecuritySchemeReference openApiSecuritySchemeReference):base(openApiSecuritySchemeReference)
+        {
+            
+        }
         internal OpenApiSecuritySchemeReference(OpenApiSecurityScheme target, string referenceId):base(target, referenceId, ReferenceType.SecurityScheme)
         {
         }
@@ -67,6 +75,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiSecurityScheme CopyReferenceAsTargetElementWithOverrides(IOpenApiSecurityScheme source)
         {
             return source is OpenApiSecurityScheme ? new OpenApiSecurityScheme(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiSecurityScheme CreateShallowCopy()
+        {
+            return new OpenApiSecuritySchemeReference(this);
         }
     }
 }

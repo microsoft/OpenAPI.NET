@@ -28,6 +28,13 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiSchemaReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
         {
         }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="schema">The schema reference to copy</param>
+        private OpenApiSchemaReference(OpenApiSchemaReference schema):base(schema)
+        {
+        }
 
         internal OpenApiSchemaReference(OpenApiSchema target, string referenceId):base(target, referenceId, ReferenceType.Schema)
         {
@@ -192,6 +199,11 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiSchema CopyReferenceAsTargetElementWithOverrides(IOpenApiSchema source)
         {
             return source is OpenApiSchema ? new OpenApiSchema(this) : source;
+        }
+        /// <inheritdoc/>
+        public IOpenApiSchema CreateShallowCopy()
+        {
+            return new OpenApiSchemaReference(this);
         }
     }
 }
