@@ -699,11 +699,11 @@ namespace Microsoft.OpenApi.Models
                     schemaTypeNumeric != (int)JsonSchemaType.Null;
         }
 
-        private void UpCastSchemaTypeToV31(JsonSchemaType type, IOpenApiWriter writer)
+        private static void UpCastSchemaTypeToV31(JsonSchemaType type, IOpenApiWriter writer)
         {
             // create a new array and insert the type and "null" as values
             var temporaryType = type | JsonSchemaType.Null;
-            var list = (from JsonSchemaType? flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
+            var list = (from JsonSchemaType flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
                         where temporaryType.HasFlag(flag)
                         select flag.ToIdentifier()).ToList();
             if (list.Count > 1)
@@ -736,7 +736,7 @@ namespace Microsoft.OpenApi.Models
 
             if (!HasMultipleTypes(schemaType ^ JsonSchemaType.Null) && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
             {
-                foreach (JsonSchemaType? flag in jsonSchemaTypeValues)
+                foreach (JsonSchemaType flag in jsonSchemaTypeValues)
                 {
                     // Skip if the flag is not set or if it's the Null flag
                     if (schemaType.HasFlag(flag) && flag != JsonSchemaType.Null)
