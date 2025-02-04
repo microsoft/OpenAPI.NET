@@ -78,10 +78,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public bool IsFragment { get; init; }
 
+        private OpenApiDocument openApiDocument;        
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
-        public OpenApiDocument HostDocument { get; init; }
+        public OpenApiDocument HostDocument { get => openApiDocument; init => openApiDocument = value; }
 
         /// <summary>
         /// Gets the full reference string for v3.0.
@@ -290,6 +291,17 @@ namespace Microsoft.OpenApi.Models
                 _ => null,// If the reference type is not supported in V2, simply return null
                           // to indicate that the reference is not pointing to any object.
             };
+        }
+
+        /// <summary>
+        /// Sets the host document after deserialization or before serialization.
+        /// This method is internal on purpose to avoid consumers mutating the host document.
+        /// </summary>
+        /// <param name="currentDocument">Host document to set if none is present</param>
+        internal void EnsureHostDocumentIsSet(OpenApiDocument currentDocument)
+        {
+            Utils.CheckArgumentNull(currentDocument);
+            openApiDocument ??= currentDocument;
         }
     }
 }

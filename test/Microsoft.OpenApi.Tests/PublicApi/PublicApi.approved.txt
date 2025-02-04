@@ -224,8 +224,8 @@ namespace Microsoft.OpenApi.Interfaces
     }
     public interface IOpenApiReferenceHolder : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
-        Microsoft.OpenApi.Models.OpenApiReference Reference { get; set; }
         bool UnresolvedReference { get; }
+        Microsoft.OpenApi.Models.OpenApiReference Reference { get; init; }
     }
     public interface IOpenApiReferenceHolder<out T, V> : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
         where out T : Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, V
@@ -1243,9 +1243,9 @@ namespace Microsoft.OpenApi.Models.References
         protected readonly T _target;
         protected BaseOpenApiReferenceHolder(Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<T, V> source) { }
         protected BaseOpenApiReferenceHolder(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, Microsoft.OpenApi.Models.ReferenceType referenceType, string externalResource = null) { }
-        public Microsoft.OpenApi.Models.OpenApiReference Reference { get; set; }
         public virtual T Target { get; }
         public bool UnresolvedReference { get; }
+        public Microsoft.OpenApi.Models.OpenApiReference Reference { get; init; }
         public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
         public virtual void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }

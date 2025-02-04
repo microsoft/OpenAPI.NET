@@ -71,7 +71,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public bool UnresolvedReference { get => Reference is null || Target is null; }
     /// <inheritdoc/>
-    public OpenApiReference Reference { get; set; }
+    public OpenApiReference Reference { get; init; }
     /// <inheritdoc/>
     public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
     /// <inheritdoc/>

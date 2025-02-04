@@ -118,11 +118,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     }
                 };
 
-            var schemaReference = (OpenApiSchemaReference)expected.Content["application/json"].Schema;
-            schemaReference.Reference = new OpenApiReference(schemaReference.Reference)
-            {
-                HostDocument = result.Document,
-            };
+            ((OpenApiSchemaReference)expected.Content["application/json"].Schema).Reference.EnsureHostDocumentIsSet(result.Document);
             var actual = reference.Target;
 
             // Assert
