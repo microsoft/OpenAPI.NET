@@ -193,7 +193,11 @@ namespace Microsoft.OpenApi.Reader.V3
             var refId = refSegments.Last();
             var isExternalResource = !refSegments.First().StartsWith("#", StringComparison.OrdinalIgnoreCase);
 
-            string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
+            string externalResource = null;
+            if (isExternalResource)
+            {
+                externalResource = pointer.Split('#').FirstOrDefault()?.TrimEnd('#');
+            }
 
             return (refId, externalResource);
         }
