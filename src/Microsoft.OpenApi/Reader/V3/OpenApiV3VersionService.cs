@@ -183,11 +183,12 @@ namespace Microsoft.OpenApi.Reader.V3
         /// <inheritdoc />
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
-            if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)))
+            if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)) &&
+                mapNode
+                .Where(x => x.Name.Equals(scalarValue))
+                .Select(static x => x.Value)
+                .OfType<ValueNode>().FirstOrDefault() is {} valueNode)
             {
-                var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
-                .Select(static x => x.Value).OfType<ValueNode>().FirstOrDefault();
-
                 return valueNode.GetScalarValue();
             }
 
