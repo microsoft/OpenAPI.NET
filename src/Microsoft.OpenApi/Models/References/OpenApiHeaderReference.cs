@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Header, externalResource)
+        public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Header, externalResource)
         {
         }
 
@@ -33,10 +33,6 @@ namespace Microsoft.OpenApi.Models.References
         /// </summary>
         /// <param name="header">The <see cref="OpenApiHeaderReference"/> object to copy</param>
         private OpenApiHeaderReference(OpenApiHeaderReference header):base(header)
-        {
-        }
-
-        internal OpenApiHeaderReference(OpenApiHeader target, string referenceId):base(target, referenceId, ReferenceType.Header)
         {
         }
 

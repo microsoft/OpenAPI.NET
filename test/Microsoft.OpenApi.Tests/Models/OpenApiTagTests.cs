@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static IOpenApiTag ReferencedTag = new OpenApiTagReference(AdvancedTag, "pet");
+        public static IOpenApiTag ReferencedTag = new OpenApiTagReference("pet");
 
         [Theory]
         [InlineData(true)]

@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private static OpenApiCallbackReference CallbackProxy => new(ReferencedCallback, "simpleHook");
+        private static OpenApiCallbackReference CallbackProxy => new("simpleHook");
 
         private static OpenApiCallback ReferencedCallback => new()
         {

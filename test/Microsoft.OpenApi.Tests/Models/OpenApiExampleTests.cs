@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private static OpenApiExampleReference OpenApiExampleReference => new(ReferencedExample, "example1");
+        private static OpenApiExampleReference OpenApiExampleReference => new("example1");
         private static OpenApiExample ReferencedExample => new()
         {
             Value = new JsonObject

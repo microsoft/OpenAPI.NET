@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <param name="referenceId">The reference Id.</param>
         /// <param name="hostDocument">The host OpenAPI document.</param>
         /// <param name="externalResource">The externally referenced file.</param>
-        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.SecurityScheme, externalResource)
+        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.SecurityScheme, externalResource)
         {
         }
         /// <summary>
@@ -29,9 +29,6 @@ namespace Microsoft.OpenApi.Models.References
         private OpenApiSecuritySchemeReference(OpenApiSecuritySchemeReference openApiSecuritySchemeReference):base(openApiSecuritySchemeReference)
         {
             
-        }
-        internal OpenApiSecuritySchemeReference(OpenApiSecurityScheme target, string referenceId):base(target, referenceId, ReferenceType.SecurityScheme)
-        {
         }
 
         /// <inheritdoc/>

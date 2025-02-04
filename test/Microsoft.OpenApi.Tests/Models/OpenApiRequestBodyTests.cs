@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private static OpenApiRequestBodyReference OpenApiRequestBodyReference => new(ReferencedRequestBody, "example1");
+        private static OpenApiRequestBodyReference OpenApiRequestBodyReference => new("example1");
         private static OpenApiRequestBody ReferencedRequestBody => new()
         {
             Description = "description",

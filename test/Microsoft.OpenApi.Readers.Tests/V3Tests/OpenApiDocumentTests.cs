@@ -684,21 +684,21 @@ paths: {}
             var petSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["pet1"]);
             var petSchema = await CloneAsync(petSchemaSource);
             var castPetSchema = Assert.IsType<OpenApiSchema>(petSchema);
-            var petSchemaReference = new OpenApiSchemaReference(castPetSchema, "pet1");
+            var petSchemaReference = new OpenApiSchemaReference("pet1");
 
             var newPetSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["newPet"]);
             var newPetSchema = await CloneAsync(newPetSchemaSource);
             var castNewPetSchema = Assert.IsType<OpenApiSchema>(newPetSchema);
-            var newPetSchemaReference = new OpenApiSchemaReference(castNewPetSchema, "newPet");
+            var newPetSchemaReference = new OpenApiSchemaReference("newPet");
 
             var errorModelSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["errorModel"]);
             var errorModelSchema = await CloneAsync(errorModelSchemaSource);
             var castErrorModelSchema = Assert.IsType<OpenApiSchema>(errorModelSchema);
-            var errorModelSchemaReference = new OpenApiSchemaReference(castErrorModelSchema, "errorModel");
+            var errorModelSchemaReference = new OpenApiSchemaReference("errorModel");
 
-            var tagReference1 = new OpenApiTagReference("tagName1", null);
+            var tagReference1 = new OpenApiTagReference("tagName1");
 
-            var tagReference2 = new OpenApiTagReference("tagName2", null);
+            var tagReference2 = new OpenApiTagReference("tagName2");
 
             var securityScheme1Cast = Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName1"]);
             var securityScheme1 = await CloneSecuritySchemeAsync(securityScheme1Cast);
@@ -889,8 +889,8 @@ paths: {}
                                     {
                                         new OpenApiSecurityRequirement
                                         {
-                                            [new OpenApiSecuritySchemeReference(securityScheme1, "securitySchemeName1")] = new List<string>(),
-                                            [new OpenApiSecuritySchemeReference(securityScheme2, "securitySchemeName2")] = new List<string>
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
                                             {
                                                 "scope1",
                                                 "scope2"
@@ -1035,8 +1035,8 @@ paths: {}
                     {
                         new OpenApiSecurityRequirement
                         {
-                            [new OpenApiSecuritySchemeReference(securityScheme1, "securitySchemeName1")] = new List<string>(),
-                            [new OpenApiSecuritySchemeReference(securityScheme2, "securitySchemeName2")] = new List<string>
+                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
+                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
                             {
                                 "scope1",
                                 "scope2",
@@ -1045,6 +1045,8 @@ paths: {}
                         }
                     }
             };
+            expected.RegisterComponents();
+            expected.SetReferenceHostDocument();
 
             tagReference1.Reference.EnsureHostDocumentIsSet(expected);
             tagReference2.Reference.EnsureHostDocumentIsSet(expected);
@@ -1238,7 +1240,7 @@ paths: {}
                                 Summary = "Returns all pets",
                                 Parameters =
                                 [
-                                    new OpenApiParameterReference(parameter, "LimitParameter"),
+                                    new OpenApiParameterReference("LimitParameter"),
                                 ],
                                 Responses = new OpenApiResponses()
                             }

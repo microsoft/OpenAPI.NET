@@ -166,14 +166,14 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             var derivedSchema = new OpenApiSchema
             {
-                AnyOf = new List<IOpenApiSchema> { new OpenApiSchemaReference(baseSchema, "base") },
+                AnyOf = new List<IOpenApiSchema> { new OpenApiSchemaReference("base") },
             };
 
             var testHeader = new OpenApiHeader()
             {
-                Schema = new OpenApiSchemaReference(derivedSchema, "derived"),
+                Schema = new OpenApiSchemaReference("derived"),
             };
-            var testHeaderReference = new OpenApiHeaderReference(testHeader, "test-header");
+            var testHeaderReference = new OpenApiHeaderReference("test-header");
 
             var doc = new OpenApiDocument
             {
@@ -193,7 +193,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                         {
                                             ["application/json"] = new()
                                             {
-                                                Schema = new OpenApiSchemaReference(derivedSchema, "derived")
+                                                Schema = new OpenApiSchemaReference("derived")
                                             }
                                         },
                                         Headers =
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     },
                     SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                     {
-                        ["test-secScheme"] = new OpenApiSecuritySchemeReference("reference-to-scheme", null, null)
+                        ["test-secScheme"] = new OpenApiSecuritySchemeReference("reference-to-scheme")
                     }
                 }
             };

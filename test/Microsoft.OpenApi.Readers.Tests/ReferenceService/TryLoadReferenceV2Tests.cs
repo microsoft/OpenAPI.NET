@@ -99,21 +99,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new OpenApiSchemaReference(new OpenApiSchema()
-                            {
-                                Description = "Sample description",
-                                Required = new HashSet<string> {"name" },
-                                Properties = {
-                                    ["name"] = new OpenApiSchema()
-                                    {
-                                        Type = JsonSchemaType.String
-                                    },
-                                    ["tag"] = new OpenApiSchema()
-                                    {
-                                        Type = JsonSchemaType.String
-                                    }
-                                },
-                            }, "SampleObject2")
+                            Schema = new OpenApiSchemaReference("SampleObject2")
                         }
                     }
                 };

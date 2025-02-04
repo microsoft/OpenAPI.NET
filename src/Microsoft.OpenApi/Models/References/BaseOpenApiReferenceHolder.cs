@@ -10,16 +10,11 @@ namespace Microsoft.OpenApi.Models.References;
 /// <typeparam name="V">The interface type for the model.</typeparam>
 public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiSerializable
 {
-    /// <summary>
-    /// The resolved target object. This should remain readonly, otherwise mutating the reference will have side effects.
-    /// </summary>
-    protected readonly T _target;
     /// <inheritdoc/>
     public virtual T Target
     {
         get
         {
-            if (_target is not null) return _target;
             return Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
         }
     }
@@ -34,17 +29,6 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         //no need to copy summary and description as if they are not overridden, they will be fetched from the target
         //if they are, the reference copy will handle it
     }
-    private protected BaseOpenApiReferenceHolder(T target, string referenceId, ReferenceType referenceType)
-    {
-        Utils.CheckArgumentNull(target);
-        _target = target;
-
-        Reference = new OpenApiReference()
-        {
-            Id = referenceId,
-            Type = referenceType,
-        };
-    }
     /// <summary>
     /// Constructor initializing the reference object.
     /// </summary>
@@ -56,9 +40,11 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// 1. a absolute/relative file path, for example:  ../commons/pet.json
     /// 2. a Url, for example: http://localhost/pet.json
     /// </param>
-    protected BaseOpenApiReferenceHolder(string referenceId, OpenApiDocument hostDocument, ReferenceType referenceType, string externalResource = null)
+    protected BaseOpenApiReferenceHolder(string referenceId, OpenApiDocument hostDocument, ReferenceType referenceType, string externalResource)
     {
         Utils.CheckArgumentNullOrEmpty(referenceId);
+        // we're not checking for null hostDocument as it's optional and can be set via additional methods by a walker
+        // this way object initialization of a whole document is supported
 
         Reference = new OpenApiReference()
         {

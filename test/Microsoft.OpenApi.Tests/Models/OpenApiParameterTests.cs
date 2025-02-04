@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
             In = ParameterLocation.Path
         };
 
-        private static OpenApiParameterReference OpenApiParameterReference => new(ReferencedParameter, "example1");
+        private static OpenApiParameterReference OpenApiParameterReference => new("example1");
         private static OpenApiParameter ReferencedParameter => new()
         {
             Name = "name1",

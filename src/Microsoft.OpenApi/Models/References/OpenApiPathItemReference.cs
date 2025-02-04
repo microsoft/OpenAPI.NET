@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiPathItemReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null): base(referenceId, hostDocument, ReferenceType.PathItem, externalResource)
+        public OpenApiPathItemReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null): base(referenceId, hostDocument, ReferenceType.PathItem, externalResource)
         {
         }
 
@@ -35,10 +35,6 @@ namespace Microsoft.OpenApi.Models.References
         private OpenApiPathItemReference(OpenApiPathItemReference pathItem):base(pathItem)
         {
             
-        }
-
-        internal OpenApiPathItemReference(OpenApiPathItem target, string referenceId):base(target, referenceId, ReferenceType.PathItem)
-        {
         }
 
         /// <inheritdoc/>

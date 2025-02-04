@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private static OpenApiHeaderReference OpenApiHeaderReference => new(ReferencedHeader, "example1");
+        private static OpenApiHeaderReference OpenApiHeaderReference => new("example1");
 
         private static OpenApiHeader ReferencedHeader => new()
         {

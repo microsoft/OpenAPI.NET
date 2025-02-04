@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private static OpenApiLinkReference LinkReference => new(ReferencedLink, "example1");
+        private static OpenApiLinkReference LinkReference => new("example1");
         private static OpenApiLink ReferencedLink => new()
         {
             OperationId = "operationId1",
