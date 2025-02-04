@@ -49,23 +49,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
         }
 
-        private static async Task<OpenApiSecurityScheme> CloneSecuritySchemeAsync(OpenApiSecurityScheme element)
-        {
-            using var stream = new MemoryStream();
-            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
-            {
-                InlineLocalReferences = true
-            });
-            element.SerializeAsV3(writer);
-            await writer.FlushAsync();
-            stream.Position = 0;
-
-            using var streamReader = new StreamReader(stream);
-            var result = await streamReader.ReadToEndAsync();
-            return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
-        }
-
         [Fact]
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
@@ -683,28 +666,26 @@ paths: {}
             // Create a clone of the schema to avoid modifying things in components.
             var petSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["pet1"]);
             var petSchema = await CloneAsync(petSchemaSource);
-            var castPetSchema = Assert.IsType<OpenApiSchema>(petSchema);
+            Assert.IsType<OpenApiSchema>(petSchema);
             var petSchemaReference = new OpenApiSchemaReference("pet1");
 
             var newPetSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["newPet"]);
             var newPetSchema = await CloneAsync(newPetSchemaSource);
-            var castNewPetSchema = Assert.IsType<OpenApiSchema>(newPetSchema);
+            Assert.IsType<OpenApiSchema>(newPetSchema);
             var newPetSchemaReference = new OpenApiSchemaReference("newPet");
 
             var errorModelSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["errorModel"]);
             var errorModelSchema = await CloneAsync(errorModelSchemaSource);
-            var castErrorModelSchema = Assert.IsType<OpenApiSchema>(errorModelSchema);
+            Assert.IsType<OpenApiSchema>(errorModelSchema);
             var errorModelSchemaReference = new OpenApiSchemaReference("errorModel");
 
             var tagReference1 = new OpenApiTagReference("tagName1");
 
             var tagReference2 = new OpenApiTagReference("tagName2");
 
-            var securityScheme1Cast = Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName1"]);
-            var securityScheme1 = await CloneSecuritySchemeAsync(securityScheme1Cast);
+            Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName1"]);
 
-            var securityScheme2Cast = Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName2"]);
-            var securityScheme2 = await CloneSecuritySchemeAsync(securityScheme2Cast);
+            Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName2"]);
 
             var expected = new OpenApiDocument
             {
@@ -1047,12 +1028,6 @@ paths: {}
             };
             expected.RegisterComponents();
             expected.SetReferenceHostDocument();
-
-            tagReference1.Reference.EnsureHostDocumentIsSet(expected);
-            tagReference2.Reference.EnsureHostDocumentIsSet(expected);
-            petSchemaReference.Reference.EnsureHostDocumentIsSet(expected);
-            newPetSchemaReference.Reference.EnsureHostDocumentIsSet(expected);
-            errorModelSchemaReference.Reference.EnsureHostDocumentIsSet(expected);
 
             actual.Document.Should().BeEquivalentTo(expected, options => options
             .IgnoringCyclicReferences()
