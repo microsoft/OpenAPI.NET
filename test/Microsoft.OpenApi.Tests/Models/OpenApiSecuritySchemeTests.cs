@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiSecuritySchemeTests
     {
-        public static OpenApiSecurityScheme ApiKeySecurityScheme = new()
+        private static OpenApiSecurityScheme ApiKeySecurityScheme => new()
         {
             Description = "description1",
             Name = "parameterName",
@@ -25,14 +25,14 @@ namespace Microsoft.OpenApi.Tests.Models
             In = ParameterLocation.Query,
         };
 
-        public static OpenApiSecurityScheme HttpBasicSecurityScheme = new()
+        private static OpenApiSecurityScheme HttpBasicSecurityScheme => new()
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
             Scheme = OpenApiConstants.Basic
         };
 
-        public static OpenApiSecurityScheme HttpBearerSecurityScheme = new()
+        private static OpenApiSecurityScheme HttpBearerSecurityScheme => new()
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Models
             BearerFormat = OpenApiConstants.Jwt
         };
 
-        public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new()
+        private static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme => new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OAuth2,
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSecurityScheme OAuth2MultipleFlowSecurityScheme = new()
+        private static OpenApiSecurityScheme OAuth2MultipleFlowSecurityScheme => new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OAuth2,
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSecurityScheme OpenIdConnectSecurityScheme = new()
+        private static OpenApiSecurityScheme OpenIdConnectSecurityScheme => new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
@@ -104,8 +104,8 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
-        public static OpenApiSecuritySchemeReference OpenApiSecuritySchemeReference = new(ReferencedSecurityScheme, "sampleSecurityScheme");
-        public static OpenApiSecurityScheme ReferencedSecurityScheme = new()
+        private static OpenApiSecuritySchemeReference OpenApiSecuritySchemeReference => new(ReferencedSecurityScheme, "sampleSecurityScheme");
+        private static OpenApiSecurityScheme ReferencedSecurityScheme => new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,

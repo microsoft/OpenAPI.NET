@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiCallbackTests
     {
-        public static OpenApiCallback AdvancedCallback = new()
+        private static OpenApiCallback AdvancedCallback => new()
         {
             PathItems =
             {
@@ -54,9 +54,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiCallbackReference CallbackProxy = new(ReferencedCallback, "simpleHook");
+        private static OpenApiCallbackReference CallbackProxy => new(ReferencedCallback, "simpleHook");
 
-        public static OpenApiCallback ReferencedCallback = new()
+        private static OpenApiCallback ReferencedCallback => new()
         {
             PathItems =
             {

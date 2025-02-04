@@ -1240,7 +1240,7 @@ namespace Microsoft.OpenApi.Models.References
         where T :  class, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, V
         where V : Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
-        protected T _target;
+        protected readonly T _target;
         protected BaseOpenApiReferenceHolder(Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<T, V> source) { }
         protected BaseOpenApiReferenceHolder(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument, Microsoft.OpenApi.Models.ReferenceType referenceType, string externalResource = null) { }
         public Microsoft.OpenApi.Models.OpenApiReference Reference { get; set; }

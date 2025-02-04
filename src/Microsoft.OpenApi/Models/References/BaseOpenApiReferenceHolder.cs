@@ -13,14 +13,14 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <summary>
     /// The resolved target object.
     /// </summary>
-    protected T _target;
+    protected readonly T _target;
     /// <inheritdoc/>
     public virtual T Target
     {
         get
         {
-            _target ??= Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
-            return _target;
+            if (_target is not null) return _target;
+            return Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
         }
     }
     /// <summary>
@@ -36,6 +36,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     }
     private protected BaseOpenApiReferenceHolder(T target, string referenceId, ReferenceType referenceType)
     {
+        Utils.CheckArgumentNull(target);
         _target = target;
 
         Reference = new OpenApiReference()
