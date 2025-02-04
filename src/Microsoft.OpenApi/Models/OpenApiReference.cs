@@ -7,19 +7,6 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-#if !NET5_0_OR_GREATER
-namespace System.Runtime.CompilerServices {
-   using System.ComponentModel;
-   /// <summary>
-   /// Reserved to be used by the compiler for tracking metadata.
-   /// This class should not be used by developers in source code.
-   /// </summary>
-   [EditorBrowsable(EditorBrowsableState.Never)]
-   internal static class IsExternalInit {
-   }
-}
-#endif
-
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -78,11 +65,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public bool IsFragment { get; init; }
 
-        private OpenApiDocument openApiDocument;        
+        private OpenApiDocument hostDocument;        
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
-        public OpenApiDocument HostDocument { get => openApiDocument; init => openApiDocument = value; }
+        public OpenApiDocument HostDocument { get => hostDocument; init => hostDocument = value; }
 
         /// <summary>
         /// Gets the full reference string for v3.0.
@@ -301,7 +288,7 @@ namespace Microsoft.OpenApi.Models
         internal void EnsureHostDocumentIsSet(OpenApiDocument currentDocument)
         {
             Utils.CheckArgumentNull(currentDocument);
-            openApiDocument ??= currentDocument;
+            hostDocument ??= currentDocument;
         }
     }
 }
