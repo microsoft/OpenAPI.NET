@@ -1,0 +1,7 @@
+﻿manifest: true
+primaryBranch: main
+handleGHRelease: true
+branches:
+  - branch: support/v1
+    manifest: true
+    handleGHRelease: true
