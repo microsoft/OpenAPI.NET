@@ -1,0 +1,33 @@
+{
+  "bootstrap-sha": "8943e2ad40babb0204dedb11ad6f9273adf9cd53",
+  "exclude-paths": [
+    ".azure-pipelines",
+    ".github",
+    ".idea",
+    ".vs",
+    ".vscode"
+  ],
+  "release-type": "simple",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "include-component-in-tag": false,
+  "include-v-in-tag": true,
+  "draft": false,
+  "prerelease": true,
+  "versioning": "prerelease",
+  "prerelease-type": "preview",
+  "packages": {
+    ".": {
+      "package-name": "Microsoft.OpenApi",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "xml",
+          "path": "Directory.Build.props",
+          "xpath": "//Project/PropertyGroup/Version"
+        }
+      ]
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}
