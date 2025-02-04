@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models.References;
 public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiSerializable
 {
     /// <summary>
-    /// The resolved target object.
+    /// The resolved target object. This should remain readonly, otherwise mutating the reference will have side effects.
     /// </summary>
     protected readonly T _target;
     /// <inheritdoc/>
