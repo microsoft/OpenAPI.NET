@@ -1046,11 +1046,11 @@ paths: {}
                     }
             };
 
-            tagReference1.Reference.HostDocument = expected;
-            tagReference2.Reference.HostDocument = expected;
-            petSchemaReference.Reference.HostDocument = expected;
-            newPetSchemaReference.Reference.HostDocument = expected;
-            errorModelSchemaReference.Reference.HostDocument = expected;
+            tagReference1.Reference = new OpenApiReference(tagReference1.Reference) {HostDocument = expected };
+            tagReference2.Reference = new OpenApiReference(tagReference2.Reference) {HostDocument = expected };
+            petSchemaReference.Reference = new OpenApiReference(petSchemaReference.Reference) {HostDocument = expected };
+            newPetSchemaReference.Reference = new OpenApiReference(newPetSchemaReference.Reference) {HostDocument = expected };
+            errorModelSchemaReference.Reference = new OpenApiReference(errorModelSchemaReference.Reference) {HostDocument = expected };
 
             actual.Document.Should().BeEquivalentTo(expected, options => options
             .IgnoringCyclicReferences()
@@ -1284,7 +1284,7 @@ components:
             var outputDoc = (await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0)).MakeLineBreaksEnvironmentNeutral();
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var expectedParamReference = Assert.IsType<OpenApiParameterReference>(expectedParam);
-            expectedParamReference.Reference.HostDocument = doc;
+            expectedParamReference.Reference = new OpenApiReference(expectedParamReference.Reference) {HostDocument = doc};
 
             var actualParamReference = Assert.IsType<OpenApiParameterReference>(actualParam);
 

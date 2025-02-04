@@ -957,21 +957,21 @@ namespace Microsoft.OpenApi.Models
         public OpenApiPaths() { }
         public OpenApiPaths(Microsoft.OpenApi.Models.OpenApiPaths paths) { }
     }
-    public class OpenApiReference : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
+    public class OpenApiReference : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
     {
-        public bool IsFragment;
         public OpenApiReference() { }
         public OpenApiReference(Microsoft.OpenApi.Models.OpenApiReference reference) { }
         public string Description { get; set; }
-        public string ExternalResource { get; set; }
-        public Microsoft.OpenApi.Models.OpenApiDocument HostDocument { get; set; }
-        public string Id { get; set; }
         public bool IsExternal { get; }
         public bool IsLocal { get; }
         public string ReferenceV2 { get; }
         public string ReferenceV3 { get; }
         public string Summary { get; set; }
-        public Microsoft.OpenApi.Models.ReferenceType? Type { get; set; }
+        public string ExternalResource { get; init; }
+        public Microsoft.OpenApi.Models.OpenApiDocument HostDocument { get; init; }
+        public string Id { get; init; }
+        public bool IsFragment { get; init; }
+        public Microsoft.OpenApi.Models.ReferenceType? Type { get; init; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }

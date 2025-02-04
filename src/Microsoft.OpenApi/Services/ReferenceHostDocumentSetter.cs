@@ -23,7 +23,10 @@ namespace Microsoft.OpenApi.Services
         {
             if (referenceHolder.Reference != null)
             {
-                referenceHolder.Reference.HostDocument = _currentDocument;
+                referenceHolder.Reference = new OpenApiReference(referenceHolder.Reference)
+                {
+                    HostDocument = _currentDocument,
+                };
             }
         }
     }

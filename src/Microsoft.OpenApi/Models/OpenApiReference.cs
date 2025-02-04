@@ -4,14 +4,28 @@
 using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
+
+#if !NET5_0_OR_GREATER
+namespace System.Runtime.CompilerServices {
+   using System.ComponentModel;
+   /// <summary>
+   /// Reserved to be used by the compiler for tracking metadata.
+   /// This class should not be used by developers in source code.
+   /// </summary>
+   [EditorBrowsable(EditorBrowsableState.Never)]
+   internal static class IsExternalInit {
+   }
+}
+#endif
 
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// A simple object to allow referencing other components in the specification, internally and externally.
     /// </summary>
-    public class OpenApiReference : IOpenApiSerializable
+    public class OpenApiReference : IOpenApiSerializable, IOpenApiDescribedElement, IOpenApiSummarizedElement
     {
         /// <summary>
         /// A short summary which by default SHOULD override that of the referenced component.
@@ -32,13 +46,13 @@ namespace Microsoft.OpenApi.Models
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </summary>
-        public string ExternalResource { get; set; }
+        public string ExternalResource { get; init; }
 
         /// <summary>
         /// The element type referenced.
         /// </summary>
         /// <remarks>This must be present if <see cref="ExternalResource"/> is not present.</remarks>
-        public ReferenceType? Type { get; set; }
+        public ReferenceType? Type { get; init; }
 
         /// <summary>
         /// The identifier of the reusable component of one particular ReferenceType.
@@ -47,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// If ExternalResource is not present, this is the name of the component without the reference type name.
         /// For example, if the reference is '#/components/schemas/componentName', the Id is 'componentName'.
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; init; }
 
         /// <summary>
         /// Gets a flag indicating whether this reference is an external reference.
@@ -62,12 +76,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets a flag indicating whether a file is a valid OpenAPI document or a fragment
         /// </summary>
-        public bool IsFragment = false;
+        public bool IsFragment { get; init; }
 
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
-        public OpenApiDocument HostDocument { get; set; }
+        public OpenApiDocument HostDocument { get; init; }
 
         /// <summary>
         /// Gets the full reference string for v3.0.
@@ -145,12 +159,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiReference(OpenApiReference reference)
         {
-            Summary = reference?.Summary;
-            Description = reference?.Description;
-            ExternalResource = reference?.ExternalResource;
-            Type = reference?.Type;
-            Id = reference?.Id;
-            HostDocument = reference?.HostDocument;
+            Utils.CheckArgumentNull(reference);
+            Summary = reference.Summary;
+            Description = reference.Description;
+            ExternalResource = reference.ExternalResource;
+            Type = reference.Type;
+            Id = reference.Id;
+            HostDocument = reference.HostDocument;
         }
 
         /// <summary>
