@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = await WriteAsJsonAsync(floatValue, produceTerseOutput);
 
             // Assert
-            Assert.Equal(input.ToString(), json);
+            Assert.Equal(input.ToString(CultureInfo.InvariantCulture), json);
         }
 
         public static IEnumerable<object[]> DoubleInputs
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = await WriteAsJsonAsync(doubleValue, produceTerseOutput);
 
             // Assert
-            Assert.Equal(input.ToString(), json);
+            Assert.Equal(input.ToString(CultureInfo.InvariantCulture), json);
         }
 
         public static IEnumerable<object[]> StringifiedDateTimes
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             get
             {
                 return
-                    from input in new [] {
+                    from input in new[] {
                         "2017-1-2",
                         "1999-01-02T12:10:22",
                         "1999-01-03",
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public static IEnumerable<object[]> BooleanInputs
         {
             get =>
-                from input in new [] { true, false }
+                from input in new[] { true, false }
                 from shouldBeTerse in shouldProduceTerseOutputValues
                 select new object[] { input, shouldBeTerse };
         }
@@ -258,7 +258,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Arrange (continued)
             using var stream = new MemoryStream();
             var writer = new OpenApiJsonWriter(
-                new StreamWriter(stream),
+                new CultureInvariantStreamWriter(stream),
                 new() { Terse = produceTerseOutput });
 
             writer.WriteAny(any);
@@ -279,5 +279,15 @@ namespace Microsoft.OpenApi.Tests.Writers
                 _ => value.MakeLineBreaksEnvironmentNeutral(),
             };
         }
+
+        private class CultureInvariantStreamWriter : StreamWriter
+        {
+            public CultureInvariantStreamWriter(Stream stream) : base(stream)
+            {
+            }
+
+            public override IFormatProvider FormatProvider => CultureInfo.InvariantCulture;
+        }
+
     }
 }
