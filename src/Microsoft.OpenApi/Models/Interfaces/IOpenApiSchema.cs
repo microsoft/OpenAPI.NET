@@ -268,11 +268,6 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     public IList<JsonNode> Enum { get; }
 
     /// <summary>
-    /// Allows sending a null value for the defined schema. Default value is false.
-    /// </summary>
-    public bool Nullable { get; }
-
-    /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
     public bool UnevaluatedProperties { get; } 

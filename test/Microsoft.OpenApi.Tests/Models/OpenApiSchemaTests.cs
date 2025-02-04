@@ -33,9 +33,8 @@ namespace Microsoft.OpenApi.Tests.Models
             ExclusiveMinimum = true,
             Minimum = 10,
             Default = 15,
-            Type = JsonSchemaType.Integer,
+            Type = JsonSchemaType.Integer | JsonSchemaType.Null,
 
-            Nullable = true,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -85,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                 },
             },
-            Nullable = true,
+            Type = JsonSchemaType.Object | JsonSchemaType.Null,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -134,10 +133,10 @@ namespace Microsoft.OpenApi.Tests.Models
                             MinLength = 2
                         }
                     },
-                    Nullable = true
+                    Type = JsonSchemaType.Object | JsonSchemaType.Null,
                 },
             },
-            Nullable = true,
+            Type = JsonSchemaType.Object | JsonSchemaType.Null,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -152,9 +151,8 @@ namespace Microsoft.OpenApi.Tests.Models
             ExclusiveMinimum = true,
             Minimum = 10,
             Default = 15,
-            Type = JsonSchemaType.Integer,
+            Type = JsonSchemaType.Integer | JsonSchemaType.Null,
 
-            Nullable = true,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -208,7 +206,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     ReadOnly = true,
                 },
             },
-            Nullable = true,
+            Type = JsonSchemaType.Object | JsonSchemaType.Null,
             ExternalDocs = new()
             {
                 Url = new("http://example.com/externalDocs")
@@ -242,8 +240,8 @@ namespace Microsoft.OpenApi.Tests.Models
                   "maximum": 42,
                   "minimum": 10,
                   "exclusiveMinimum": true,
-                  "nullable": true,
                   "type": "integer",
+                  "nullable": true,
                   "default": 15,
                   "externalDocs": {
                     "url": "http://example.com/externalDocs"
@@ -255,9 +253,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await AdvancedSchemaNumber.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -268,6 +264,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "title": "title1",
+                  "type": "object",
                   "nullable": true,
                   "properties": {
                     "property1": {
@@ -307,9 +304,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await AdvancedSchemaObject.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -320,6 +315,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "title": "title1",
+                  "type": "object",
                   "nullable": true,
                   "allOf": [
                     {
@@ -336,6 +332,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                     {
                       "title": "title3",
+                      "type": "object",
                       "nullable": true,
                       "properties": {
                         "property3": {
@@ -362,9 +359,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await AdvancedSchemaWithAllOf.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonObject.DeepEquals(JsonObject.Parse(expected), JsonObject.Parse(actual)));
         }
 
         [Theory]
@@ -472,11 +467,11 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             var actualSchema = baseSchema.CreateShallowCopy() as OpenApiSchema;
-            actualSchema.Nullable = true;
+            actualSchema.Type |= JsonSchemaType.Null;
 
-            Assert.Equal(JsonSchemaType.String, actualSchema.Type);
+            Assert.Equal(JsonSchemaType.String, actualSchema.Type & JsonSchemaType.String);
+            Assert.Equal(JsonSchemaType.Null, actualSchema.Type & JsonSchemaType.Null);
             Assert.Equal("date", actualSchema.Format);
-            Assert.True(actualSchema.Nullable);
         }
 
         [Fact]

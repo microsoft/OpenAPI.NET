@@ -443,7 +443,6 @@ namespace Microsoft.OpenApi.Models.Interfaces
         decimal? Minimum { get; }
         decimal? MultipleOf { get; }
         Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Not { get; }
-        bool Nullable { get; }
         System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> OneOf { get; }
         string Pattern { get; }
         System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> PatternProperties { get; }
@@ -1046,7 +1045,6 @@ namespace Microsoft.OpenApi.Models
         public decimal? Minimum { get; set; }
         public decimal? MultipleOf { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Not { get; set; }
-        public bool Nullable { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> OneOf { get; set; }
         public string Pattern { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> PatternProperties { get; set; }
@@ -1400,7 +1398,6 @@ namespace Microsoft.OpenApi.Models.References
         public decimal? Minimum { get; }
         public decimal? MultipleOf { get; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Not { get; }
-        public bool Nullable { get; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> OneOf { get; }
         public string Pattern { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> PatternProperties { get; }

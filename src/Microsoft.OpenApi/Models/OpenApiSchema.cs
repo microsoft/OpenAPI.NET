@@ -156,9 +156,6 @@ namespace Microsoft.OpenApi.Models
         public IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
 
         /// <inheritdoc />
-        public bool Nullable { get; set; }
-
-        /// <inheritdoc />
         public bool UnevaluatedProperties { get; set;}
 
         /// <inheritdoc />
@@ -236,7 +233,6 @@ namespace Microsoft.OpenApi.Models
             Example = schema.Example != null ? JsonNodeCloneHelper.Clone(schema.Example) : null;
             Examples = schema.Examples != null ? new List<JsonNode>(schema.Examples) : null;
             Enum = schema.Enum != null ? new List<JsonNode>(schema.Enum) : null;
-            Nullable = schema.Nullable;
             ExternalDocs = schema.ExternalDocs != null ? new(schema.ExternalDocs) : null;
             Deprecated = schema.Deprecated;
             Xml = schema.Xml != null ? new(schema.Xml) : null;
@@ -633,8 +629,7 @@ namespace Microsoft.OpenApi.Models
         private void SerializeTypeProperty(JsonSchemaType? type, IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             // check whether nullable is true for upcasting purposes
-            var isNullable = Nullable ||
-                            (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null))  ||
+            var isNullable = (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null))  ||
                                 Extensions is not null &&
                                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) && 
                                 nullExtRawValue is OpenApiAny { Node: JsonNode jsonNode} &&
@@ -679,10 +674,6 @@ namespace Microsoft.OpenApi.Models
                     var list = (from JsonSchemaType flag in jsonSchemaTypeValues
                                 where type.Value.HasFlag(flag)
                                 select flag).ToList();
-                    if (Nullable && !list.Contains(JsonSchemaType.Null))
-                    {
-                        list.Add(JsonSchemaType.Null);
-                    }
                     writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s.ToIdentifier()));
                 }
             } 
@@ -735,7 +726,7 @@ namespace Microsoft.OpenApi.Models
                 ? OpenApiConstants.NullableExtension
                 : OpenApiConstants.Nullable;
 
-            if (!HasMultipleTypes(schemaType ^ JsonSchemaType.Null) && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
+            if (!HasMultipleTypes(schemaType & ~JsonSchemaType.Null) && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
             {
                 foreach (JsonSchemaType flag in jsonSchemaTypeValues)
                 {
@@ -746,10 +737,7 @@ namespace Microsoft.OpenApi.Models
                         writer.WriteProperty(OpenApiConstants.Type, flag.ToIdentifier());
                     }
                 }
-                if (!Nullable)
-                {
-                    writer.WriteProperty(nullableProp, true);
-                }
+                writer.WriteProperty(nullableProp, true);
             }
             else if (!HasMultipleTypes(schemaType))
             {

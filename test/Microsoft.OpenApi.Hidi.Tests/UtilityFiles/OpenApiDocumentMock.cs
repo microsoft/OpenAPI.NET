@@ -377,14 +377,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         {
                                                             Schema = new OpenApiSchema()
                                                             {
-                                                                AnyOf = new List<IOpenApiSchema>
-                                                                {
-                                                                    new OpenApiSchema()
-                                                                    {
-                                                                        Type = JsonSchemaType.String
-                                                                    }
-                                                                },
-                                                                Nullable = true
+                                                                Type = JsonSchemaType.String | JsonSchemaType.Null
                                                             }
                                                         }
                                                     }
@@ -627,9 +620,8 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     {
                                         "description", new OpenApiSchema
                                         {
-                                            Type = JsonSchemaType.String,
+                                            Type = JsonSchemaType.String | JsonSchemaType.Null,
                                             Description = "Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).",
-                                            Nullable = true
                                         }
                                     }
                                 }

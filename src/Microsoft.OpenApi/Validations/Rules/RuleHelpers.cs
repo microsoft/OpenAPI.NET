@@ -57,11 +57,10 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             var type = schema.Type.ToIdentifier();
             var format = schema.Format;
-            var nullable = schema.Nullable;
 
             // Before checking the type, check first if the schema allows null.
             // If so and the data given is also null, this is allowed for any type.
-            if (nullable && valueKind is JsonValueKind.Null)
+            if ((schema.Type.Value & JsonSchemaType.Null) is JsonSchemaType.Null && valueKind is JsonValueKind.Null)
             {
                 return;
             }
