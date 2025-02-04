@@ -1230,8 +1230,12 @@ paths: {}
                     }
                 }
             };
+            expected.RegisterComponents();
+            expected.SetReferenceHostDocument();
 
-            var expectedSerializedDoc = @"openapi: 3.0.4
+            var expectedSerializedDoc = 
+"""
+openapi: 3.0.4
 info:
   title: Pet Store with Referenceable Parameter
   version: 1.0.0
@@ -1251,7 +1255,8 @@ components:
       schema:
         type: integer
         format: int32
-        default: 10";
+        default: 10
+""";
 
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
@@ -1261,7 +1266,6 @@ components:
             var outputDoc = (await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0)).MakeLineBreaksEnvironmentNeutral();
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var expectedParamReference = Assert.IsType<OpenApiParameterReference>(expectedParam);
-            expectedParamReference.Reference.EnsureHostDocumentIsSet(doc);
 
             var actualParamReference = Assert.IsType<OpenApiParameterReference>(actualParam);
 
