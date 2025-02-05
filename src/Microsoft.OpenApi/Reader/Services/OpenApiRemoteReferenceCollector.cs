@@ -26,13 +26,10 @@ namespace Microsoft.OpenApi.Reader.Services
             }
         }
 
-        /// <summary>
-        /// Collect reference for each reference
-        /// </summary>
-        /// <param name="referenceable"></param>
-        public override void Visit(IOpenApiReferenceable referenceable)
+        /// <inheritdoc/>
+        public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            AddExternalReferences(referenceable.Reference);
+            AddExternalReferences(referenceHolder.Reference);
         }
 
         /// <summary>

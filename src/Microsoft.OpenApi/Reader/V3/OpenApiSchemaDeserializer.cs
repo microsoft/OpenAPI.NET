@@ -1,10 +1,12 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -84,7 +86,14 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "type",
-                (o, n, _) => o.Type = n.GetScalarValue().ToJsonSchemaType()
+                (o, n, _) => {
+                    var type = n.GetScalarValue().ToJsonSchemaType();
+                    // so we don't loose the value from nullable
+                    if (o.Type.HasValue)
+                        o.Type |= type;
+                    else
+                        o.Type = type;
+                }
             },
             {
                 "allOf",
@@ -137,7 +146,16 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "nullable",
-                (o, n, _) => o.Nullable = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
+                    {
+                        if (o.Type.HasValue)
+                            o.Type |= JsonSchemaType.Null;
+                        else
+                            o.Type = JsonSchemaType.Null;
+                    }
+                }
             },
             {
                 "discriminator",
@@ -171,10 +189,10 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 

@@ -10,6 +10,8 @@ using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Reader.V3;
@@ -29,20 +31,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Summary = "Updates a pet in the store",
             Description = "",
             OperationId = "updatePet",
-            Parameters = new List<OpenApiParameter>
-            {
+            Parameters =
+            [
                 new OpenApiParameter
                 {
                     Name = "petId",
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
                 }
-            },
+            ],
             Responses = new OpenApiResponses
             {
                 ["200"] = new OpenApiResponse
@@ -62,20 +64,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Summary = "Updates a pet in the store with request body",
             Description = "",
             OperationId = "updatePetWithBody",
-            Parameters = new List<OpenApiParameter>
-            {
+            Parameters =
+            [
                 new OpenApiParameter
                 {
                     Name = "petId",
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
                 },
-            },
+            ],
             RequestBody = new OpenApiRequestBody
             {
                 Description = "Pet to update with",
@@ -84,7 +86,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Object
                         }
@@ -214,10 +216,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 ["application/json"] = new OpenApiMediaType()
                                 {
-                                    Schema = new()
+                                    Schema = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Array,
-                                        Items = new()
+                                        Items = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Number,
                                             Format = "float"
@@ -232,10 +234,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {
-                                    Schema = new()
+                                    Schema = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Array,
-                                        Items = new()
+                                        Items = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Number,
                                             Format = "float"
@@ -506,6 +508,100 @@ responses: { }";
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public async Task SerializesBodyReferencesWorks()
+        {
+            var openApiDocument = new OpenApiDocument();
+
+            var operation = new OpenApiOperation
+            {
+                RequestBody = new OpenApiRequestBodyReference("UserRequest", openApiDocument)
+                {
+                    Description = "User request body"
+                }
+            };
+            openApiDocument.Paths.Add("/users", new OpenApiPathItem
+            {
+                Operations = new Dictionary<OperationType, OpenApiOperation>
+                {
+                    [OperationType.Post] = operation
+                }
+            });
+            openApiDocument.AddComponent("UserRequest", new OpenApiRequestBody
+            {
+                Description = "User creation request body",
+                Content =
+                {
+                    ["application/json"] = new OpenApiMediaType
+                    {
+                        Schema = new OpenApiSchemaReference("UserSchema", openApiDocument)
+                    }
+                }
+            });
+            openApiDocument.AddComponent("UserSchema", new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties =
+                {
+                    ["name"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    },
+                    ["email"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    }
+                }
+            });
+
+            var actual = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var expected =
+"""
+{
+  "swagger": "2.0",
+  "info": { },
+  "paths": {
+    "/users": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/UserRequest"
+          }
+        ],
+        "responses": { }
+      }
+    }
+  },
+  "definitions": {
+    "UserSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "UserRequest": {
+      "in": "body",
+      "name": "body",
+      "description": "User creation request body",
+      "schema": {
+        "$ref": "#/definitions/UserSchema"
+      }
+    }
+  }
+}
+""";
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
     }
 }

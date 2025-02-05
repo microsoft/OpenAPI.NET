@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -12,49 +13,26 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable
+    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiPathItem
     {
-        /// <summary>
-        /// An optional, string summary, intended to apply to all operations in this path.
-        /// </summary>
-        public virtual string Summary { get; set; }
+        /// <inheritdoc/>
+        public string Summary { get; set; }
 
-        /// <summary>
-        /// An optional, string description, intended to apply to all operations in this path.
-        /// </summary>
-        public virtual string Description { get; set; }
+        /// <inheritdoc/>
+        public string Description { get; set; }
 
-        /// <summary>
-        /// Gets the definition of operations on this path.
-        /// </summary>
-        public virtual IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
+        /// <inheritdoc/>
+        public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
             = new Dictionary<OperationType, OpenApiOperation>();
 
-        /// <summary>
-        /// An alternative server array to service all operations in this path.
-        /// </summary>
-        public virtual IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        /// <inheritdoc/>
+        public IList<OpenApiServer> Servers { get; set; } = [];
 
-        /// <summary>
-        /// A list of parameters that are applicable for all the operations described under this path.
-        /// These parameters can be overridden at the operation level, but cannot be removed there.
-        /// </summary>
-        public virtual IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        /// <inheritdoc/>
+        public IList<IOpenApiParameter> Parameters { get; set; } = [];
 
-        /// <summary>
-        /// This object MAY be extended with Specification Extensions.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Indicates if object is populated with data or is just a reference to the data
-        /// </summary>
-        public bool UnresolvedReference { get; set; }
-
-        /// <summary>
-        /// Reference object.
-        /// </summary>
-        public OpenApiReference Reference { get; set; }
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Add one operation into this path item.
@@ -74,22 +52,21 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a clone of an <see cref="OpenApiPathItem"/> object
         /// </summary>
-        public OpenApiPathItem(OpenApiPathItem pathItem)
+        internal OpenApiPathItem(IOpenApiPathItem pathItem)
         {
-            Summary = pathItem?.Summary ?? Summary;
-            Description = pathItem?.Description ?? Description;
-            Operations = pathItem?.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
-            Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
-            Parameters = pathItem?.Parameters != null ? new List<OpenApiParameter>(pathItem.Parameters) : null;
-            Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
-            UnresolvedReference = pathItem?.UnresolvedReference ?? UnresolvedReference;
-            Reference = pathItem?.Reference != null ? new(pathItem?.Reference) : null;
+            Utils.CheckArgumentNull(pathItem);
+            Summary = pathItem.Summary ?? Summary;
+            Description = pathItem.Description ?? Description;
+            Operations = pathItem.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
+            Servers = pathItem.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
+            Parameters = pathItem.Parameters != null ? new List<IOpenApiParameter>(pathItem.Parameters) : null;
+            Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.1
         /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -97,7 +74,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
         /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
@@ -173,6 +150,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiPathItem CreateShallowCopy()
+        {
+            return new OpenApiPathItem(this);
         }
     }
 }

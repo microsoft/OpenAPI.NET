@@ -109,50 +109,56 @@ components:
             // Assert
             var localContent = _localRequestBodyReference.Content.Values.FirstOrDefault();
             Assert.NotNull(localContent);
-            Assert.Equal("UserSchema", localContent.Schema.Reference.Id);
+            var localContentSchema = Assert.IsType<OpenApiSchemaReference>(localContent.Schema);
+            Assert.Equal("UserSchema", localContentSchema.Reference.Id);
             Assert.Equal("User request body", _localRequestBodyReference.Description);
             Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
 
             var externalContent = _externalRequestBodyReference.Content.Values.FirstOrDefault();
             Assert.NotNull(externalContent);
-            Assert.Equal("UserSchema", externalContent.Schema.Reference.Id);
+            var externalContentSchema = Assert.IsType<OpenApiSchemaReference>(externalContent.Schema);
+            Assert.Equal("UserSchema", externalContentSchema.Reference.Id);
 
             Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);
             Assert.Equal("User creation request body", _openApiDoc_2.Components.RequestBodies.First().Value.Description);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeRequestBodyReferenceAsV3JsonWorks(bool produceTerseOutput)
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        public async Task SerializeRequestBodyReferenceAsV3JsonWorks(bool produceTerseOutput, bool inlineLocalReferences)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput});
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = inlineLocalReferences });
 
             // Act
             _localRequestBodyReference.SerializeAsV3(writer);
             await writer.FlushAsync();
 
             // Assert            
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeRequestBodyReferenceAsV31JsonWorks(bool produceTerseOutput)
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        public async Task SerializeRequestBodyReferenceAsV31JsonWorks(bool produceTerseOutput, bool inlineLocalReferences)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = inlineLocalReferences });
 
             // Act
             _localRequestBodyReference.SerializeAsV31(writer);
             await writer.FlushAsync();
 
             // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
         }
     }
 }

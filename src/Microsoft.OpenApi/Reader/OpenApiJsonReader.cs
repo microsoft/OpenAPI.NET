@@ -60,11 +60,9 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
-        /// <param name="format">The OpenAPI format.</param>
         /// <returns></returns>
         public ReadResult Read(JsonNode jsonNode,
-                               OpenApiReaderSettings settings,
-                               string format = null)
+                               OpenApiReaderSettings settings)
         {
             if (jsonNode is null) throw new ArgumentNullException(nameof(jsonNode));
             if (settings is null) throw new ArgumentNullException(nameof(settings));

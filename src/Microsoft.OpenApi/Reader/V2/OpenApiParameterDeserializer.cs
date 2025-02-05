@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -105,7 +106,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new()
             {
-                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase),
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase) && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase),
                     (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))} 
             };
 
@@ -146,7 +147,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static OpenApiSchema GetOrCreateSchema(OpenApiParameter p)
         {
-            return p.Schema ??= new();
+            return p.Schema switch {
+                OpenApiSchema schema => schema,
+                _ => (OpenApiSchema)(p.Schema = new OpenApiSchema()),
+            };
         }
 
         private static void ProcessIn(OpenApiParameter o, ParseNode n, OpenApiDocument hostDocument)
@@ -183,12 +187,12 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
         {
             return LoadParameter(node, false, hostDocument);
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
+        public static IOpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
         {
             // Reset the local variables every time this method is called.
             node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
@@ -207,7 +211,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, doc: hostDocument);
 
-            var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
+            var schema = node.Context.GetFromTempStorage<IOpenApiSchema>("schema");
             if (schema != null)
             {
                 parameter.Schema = schema;
@@ -215,7 +219,7 @@ namespace Microsoft.OpenApi.Reader.V2
             }
 
             // load examples from storage and add them to the parameter
-            var examples = node.Context.GetFromTempStorage<Dictionary<string, OpenApiExample>>(TempStorageKeys.Examples, parameter);
+            var examples = node.Context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, parameter);
             if (examples != null)
             {
                 parameter.Examples = examples;

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -79,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, result.Diagnostic);
 
             Assert.Equivalent(
-                new OpenApiCallback
+                new OpenApiCallbackReference("simpleHook", result.Document)
                 {
                     PathItems =
                     {
@@ -93,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Object
                                                 }
@@ -110,12 +111,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Callback,
-                        Id = "simpleHook",
-                        HostDocument = result.Document
-                    }
                 }, callback);
         }
 
@@ -135,7 +130,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var callback1 = subscribeOperation.Callbacks["simpleHook"];
 
             Assert.Equivalent(
-                new OpenApiCallback
+                new OpenApiCallbackReference("simpleHook", result.Document)
                 {
                     PathItems =
                     {
@@ -149,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Object
                                                 }
@@ -166,12 +161,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Callback,
-                        Id = "simpleHook",
-                        HostDocument = result.Document
-                    }
                 }, callback1);
 
             var callback2 = subscribeOperation.Callbacks["callback2"];
@@ -191,7 +180,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.String
                                                 }
@@ -226,7 +215,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         {
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Object
                                                 }

@@ -1,0 +1,1 @@
+﻿{"description":"Use the id returned as the userId in `GET /users/{userId}`","$ref":"#/components/links/GetUserByUserId"}

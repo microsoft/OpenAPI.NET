@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -87,7 +89,7 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new()
@@ -101,7 +103,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
         };
 
-        private static readonly AnyMapFieldMap<OpenApiParameter, OpenApiExample> _parameterAnyMapOpenApiExampleFields =
+        private static readonly AnyMapFieldMap<OpenApiParameter, IOpenApiExample> _parameterAnyMapOpenApiExampleFields =
             new()
             {
             {
@@ -109,12 +111,12 @@ namespace Microsoft.OpenApi.Reader.V3
                 new(
                     m => m.Examples,
                     e => e.Value,
-                    (e, v) => e.Value = v,
+                    (e, v) => {if (e is OpenApiExample ex) {ex.Value = v;}},
                     m => m.Schema)
             }
         };
 
-        public static OpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("parameter");
 

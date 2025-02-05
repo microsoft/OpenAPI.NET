@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -39,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -60,10 +62,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
-                        Items = new()
+                        Items = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -85,10 +87,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "freeForm",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
-                        AdditionalProperties = new()
+                        AdditionalProperties = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer
                         }
@@ -116,7 +118,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["application/json"] = new()
                         {
-                           Schema = new()
+                           Schema = new OpenApiSchema()
                            {
                                 Type = JsonSchemaType.Object,
                                 Required =
@@ -126,11 +128,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 },
                                 Properties =
                                 {
-                                    ["lat"] = new()
+                                    ["lat"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Number
                                     },
-                                    ["long"] = new()
+                                    ["long"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Number
                                     }
@@ -157,10 +159,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
-                        Items = new()
+                        Items = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer,
                             Format = "int64",
@@ -183,7 +185,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -207,7 +209,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -231,7 +233,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -253,7 +255,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Example = (float)5.0,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float"
@@ -277,16 +279,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Examples =
                     {
-                        ["example1"] = new()
+                        ["example1"] = new OpenApiExample()
                         {
                             Value = 5.0
                         },
-                        ["example2"] = new()
+                        ["example2"] = new OpenApiExample()
                         {
                             Value = (float) 7.5
                         }
                     },
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float"
@@ -300,6 +302,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseParameterWithReferenceWorks()
         {
             // Arrange
+            var parameter = new OpenApiParameter
+            {
+                Name = "tags",
+                In = ParameterLocation.Query,
+                Description = "tags to filter by",
+                Required = false,
+                Schema = new OpenApiSchema()
+                {
+                    Type = JsonSchemaType.Array,
+                    Items = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    }
+                }
+            };
             var document = new OpenApiDocument
             {
                 Info = new OpenApiInfo
@@ -324,44 +341,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
-                                Parameters = new List<OpenApiParameter>
-                                {
-                                    new() {
-                                        Reference = new OpenApiReference
-                                        {
-                                            Type = ReferenceType.Parameter,
-                                            Id = "tagsParameter"
-                                        }
-                                    }
-                                },
+                                Parameters =
+                                [
+                                    new OpenApiParameterReference("tagsParameter"),
+                                ],
                             }
                         }
                     }
                 },
                 Components = new OpenApiComponents
                 {
-                    Parameters = new Dictionary<string, OpenApiParameter>()
+                    Parameters = new Dictionary<string, IOpenApiParameter>()
                     {
-                        ["tagsParameter"] = new OpenApiParameter
-                        {
-                            Name = "tags",
-                            In = ParameterLocation.Query,
-                            Description = "tags to filter by",
-                            Required = false,
-                            Schema = new()
-                            {
-                                Type = JsonSchemaType.Array,
-                                Items = new OpenApiSchema
-                                {
-                                    Type = JsonSchemaType.String
-                                }
-                            },
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.Parameter,
-                                Id = "tagsParameter"
-                            }
-                        }
+                        ["tagsParameter"] = parameter,
                     }
                 }
             };
@@ -377,7 +369,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var param = OpenApiV3Deserializer.LoadParameter(node, document);
 
             // Assert
-            param.Should().BeEquivalentTo(expected, options => options.Excluding(p => p.Reference.HostDocument));
+            Assert.Equivalent(expected, param);
         }
     }
 }

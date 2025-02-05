@@ -1,5 +1,7 @@
-﻿using Microsoft.OpenApi.Extensions;
+﻿using System;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -81,10 +83,10 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("header");
 

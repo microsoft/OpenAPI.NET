@@ -5,8 +5,8 @@
   "minimum": 10,
   "exclusiveMinimum": true,
   "type": "integer",
-  "default": 15,
   "nullable": true,
+  "default": 15,
   "externalDocs": {
     "url": "http://example.com/externalDocs"
   }

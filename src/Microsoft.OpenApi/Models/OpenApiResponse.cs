@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -12,45 +13,22 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiResponse
     {
-        /// <summary>
-        /// REQUIRED. A short description of the response.
-        /// </summary>
-        public virtual string Description { get; set; }
+        /// <inheritdoc/>
+        public string Description { get; set; }
 
-        /// <summary>
-        /// Maps a header name to its definition.
-        /// </summary>
-        public virtual IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiHeader> Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
 
-        /// <summary>
-        /// A map containing descriptions of potential response payloads.
-        /// The key is a media type or media type range and the value describes it.
-        /// </summary>
-        public virtual IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        /// <inheritdoc/>
+        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
-        /// <summary>
-        /// A map of operations links that can be followed from the response.
-        /// The key of the map is a short name for the link,
-        /// following the naming constraints of the names for Component Objects.
-        /// </summary>
-        public virtual IDictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiLink> Links { get; set; } = new Dictionary<string, IOpenApiLink>();
 
-        /// <summary>
-        /// This object MAY be extended with Specification Extensions.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Indicates if object is populated with data or is just a reference to the data
-        /// </summary>
-        public bool UnresolvedReference { get; set; }
-
-        /// <summary>
-        /// Reference pointer.
-        /// </summary>
-        public OpenApiReference Reference { get; set; }
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -58,23 +36,22 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponse() { }
 
         /// <summary>
-        /// Initializes a copy of <see cref="OpenApiResponse"/> object
+        /// Initializes a copy of <see cref="IOpenApiResponse"/> object
         /// </summary>
-        public OpenApiResponse(OpenApiResponse response)
+        internal OpenApiResponse(IOpenApiResponse response)
         {
-            Description = response?.Description ?? Description;
-            Headers = response?.Headers != null ? new Dictionary<string, OpenApiHeader>(response.Headers) : null;
-            Content = response?.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
-            Links = response?.Links != null ? new Dictionary<string, OpenApiLink>(response.Links) : null;
-            Extensions = response?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
-            UnresolvedReference = response?.UnresolvedReference ?? UnresolvedReference;
-            Reference = response?.Reference != null ? new(response?.Reference) : null;
+            Utils.CheckArgumentNull(response);
+            Description = response.Description ?? Description;
+            Headers = response.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
+            Content = response.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
+            Links = response.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
+            Extensions = response.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.1
         /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -82,12 +59,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.0.
         /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -115,7 +92,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V2 document without using reference.
         /// </summary>
-        public virtual void SerializeAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -162,7 +139,7 @@ namespace Microsoft.OpenApi.Models
                             .SelectMany(mediaTypePair => mediaTypePair.Value.Examples))
                         {
                             writer.WritePropertyName(example.Key);
-                            example.Value.SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+                            example.Value.SerializeAsV2(writer);
                         }
 
                         writer.WriteEndObject();
@@ -186,6 +163,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiResponse CreateShallowCopy()
+        {
+            return new OpenApiResponse(this);
         }
     }
 }

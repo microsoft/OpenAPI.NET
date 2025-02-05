@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Services
@@ -86,20 +87,20 @@ namespace Microsoft.OpenApi.Services
             var results = FindOperations(source, predicate);
             foreach (var result in results)
             {
-                OpenApiPathItem pathItem;
+                IOpenApiPathItem pathItem;
                 var pathKey = result.CurrentKeys.Path;
 
                 if (subset.Paths == null)
                 {
                     subset.Paths = new();
-                    pathItem = new();
+                    pathItem = new OpenApiPathItem();
                     subset.Paths.Add(pathKey, pathItem);
                 }
                 else
                 {
                     if (!subset.Paths.TryGetValue(pathKey, out pathItem))
                     {
-                        pathItem = new();
+                        pathItem = new OpenApiPathItem();
                         subset.Paths.Add(pathKey, pathItem);
                     }
                 }

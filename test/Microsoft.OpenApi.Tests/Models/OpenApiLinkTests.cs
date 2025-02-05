@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiLinkTests
     {
-        public static readonly OpenApiLink AdvancedLink = new()
+        private static OpenApiLink AdvancedLink => new()
         {
             OperationId = "operationId1",
             Parameters =
@@ -42,14 +42,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static readonly OpenApiLinkReference LinkReference = new(ReferencedLink, "example1");
-        public static readonly OpenApiLink ReferencedLink = new()
+        private static OpenApiLinkReference LinkReference => new("example1");
+        private static OpenApiLink ReferencedLink => new()
         {
-            Reference = new()
-            {
-                Type = ReferenceType.Link,
-                Id = "example1",
-            },
             OperationId = "operationId1",
             Parameters =
             {

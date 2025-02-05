@@ -7,6 +7,8 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Services;
 
@@ -109,7 +111,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new()
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, RootNode rootNode)
@@ -233,7 +235,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     rootNode.GetMap(),
                     openApiDoc.Paths.Values
                         .SelectMany(path => path.Operations?.Values ?? Enumerable.Empty<OpenApiOperation>())
-                        .SelectMany(operation => operation.Responses?.Values ?? Enumerable.Empty<OpenApiResponse>()),
+                        .SelectMany(operation => operation.Responses?.Values ?? Enumerable.Empty<IOpenApiResponse>()),
                     openApiNode.Context);
             }
 
@@ -255,11 +257,11 @@ namespace Microsoft.OpenApi.Reader.V2
             return openApiDoc;
         }
 
-        private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<OpenApiResponse> responses, ParsingContext context)
+        private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<IOpenApiResponse> responses, ParsingContext context)
         {
             if (responses != null)
             {
-                foreach (var response in responses)
+                foreach (var response in responses.OfType<OpenApiResponse>())
                 {
                     ProcessProduces(mapNode, response, context);
 
@@ -302,30 +304,22 @@ namespace Microsoft.OpenApi.Reader.V2
 
     internal class RequestBodyReferenceFixer : OpenApiVisitorBase
     {
-        private IDictionary<string, OpenApiRequestBody> _requestBodies;
-        public RequestBodyReferenceFixer(IDictionary<string, OpenApiRequestBody> requestBodies)
+        private readonly IDictionary<string, IOpenApiRequestBody> _requestBodies;
+        public RequestBodyReferenceFixer(IDictionary<string, IOpenApiRequestBody> requestBodies)
         {
             _requestBodies = requestBodies;
         }
 
         public override void Visit(OpenApiOperation operation)
         {
-            var body = operation.Parameters.FirstOrDefault(
+            var body = operation.Parameters.OfType<OpenApiParameterReference>().FirstOrDefault(
                 p => p.UnresolvedReference
                      && _requestBodies.ContainsKey(p.Reference.Id));
 
             if (body != null)
             {
                 operation.Parameters.Remove(body);
-                operation.RequestBody = new()
-                {
-                    UnresolvedReference = true,
-                    Reference = new()
-                    {
-                        Id = body.Reference.Id,
-                        Type = ReferenceType.RequestBody
-                    }
-                };
+                operation.RequestBody = new OpenApiRequestBodyReference(body.Reference.Id, body.Reference.HostDocument);
             }
         }
     }

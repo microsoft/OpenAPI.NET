@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -86,10 +86,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
-                        Items = new()
+                        Items = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -233,7 +233,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float",
@@ -260,7 +260,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Name = "username",
                 Description = "username to fetch",
                 Required = true,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Number,
                     Format = "float",

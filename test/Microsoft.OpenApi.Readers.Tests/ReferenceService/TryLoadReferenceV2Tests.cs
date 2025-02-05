@@ -30,20 +30,21 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var reference = new OpenApiParameterReference("skipParam", result.Document);
 
             // Assert
-            reference.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiParameter
                 {
                     Name = "skip",
                     In = ParameterLocation.Query,
                     Description = "number of items to skip",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer,
                         Format = "int32"
                     }
                     
-                }, options => options.Excluding(x => x.Reference)
+                },
+                reference
             );
         }
 
@@ -55,13 +56,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var reference = new OpenApiSecuritySchemeReference("api_key_sample", result.Document);
 
             // Assert
-            reference.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.ApiKey,
                     Name = "api_key",
                     In = ParameterLocation.Header
-                }, options => options.Excluding(x => x.Reference)
+                }, reference
             );
         }
 
@@ -73,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var reference = new OpenApiResponseReference("NotFound", result.Document);
 
             // Assert
-            reference.Should().BeEquivalentTo(
+            Assert.Equivalent(
                 new OpenApiResponse
                 {
                     Description = "Entity not found.",
@@ -81,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     {
                         ["application/json"] = new()
                     }
-                }, options => options.Excluding(x => x.Reference)
+                }, reference
             );
         }
 
@@ -91,46 +92,23 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
             var reference = new OpenApiResponseReference("GeneralError", result.Document);
 
-            // Assert
-            reference.Should().BeEquivalentTo(
-                new OpenApiResponse
+            var expected = new OpenApiResponse
                 {
                     Description = "General Error",
                     Content =
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
-                            {
-                                Description = "Sample description",
-                                Required = new HashSet<string> {"name" },
-                                Properties = {
-                                    ["name"] = new()
-                                    {
-                                        Type = JsonSchemaType.String
-                                    },
-                                    ["tag"] = new()
-                                    {
-                                        Type = JsonSchemaType.String
-                                    }
-                                },
-
-                                Reference = new()
-                                {
-                                    Type = ReferenceType.Schema,
-                                    Id = "SampleObject2",
-                                    HostDocument = result.Document
-                                }
-                            }
+                            Schema = new OpenApiSchemaReference("SampleObject2")
                         }
-                    },
-                    Reference = new()
-                    {
-                        Type = ReferenceType.Response,
-                        Id = "GeneralError"
                     }
-                }, options => options.Excluding(x => x.Reference)
-            );
+                };
+
+            ((OpenApiSchemaReference)expected.Content["application/json"].Schema).Reference.EnsureHostDocumentIsSet(result.Document);
+            var actual = reference.Target;
+
+            // Assert
+            Assert.Equivalent(expected, actual);
         }
     }
 }

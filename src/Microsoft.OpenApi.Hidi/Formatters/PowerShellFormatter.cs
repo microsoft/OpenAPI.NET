@@ -7,6 +7,7 @@ using Humanizer;
 using Humanizer.Inflections;
 using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Hidi.Formatters
@@ -15,7 +16,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
     {
         private const string DefaultPutPrefix = ".Update";
         private const string PowerShellPutPrefix = ".Set";
-        private readonly Stack<OpenApiSchema> _schemaLoop = new();
+        private readonly Stack<IOpenApiSchema> _schemaLoop = new();
         private static readonly Regex s_oDataCastRegex = new("(.*(?<=[a-z]))\\.(As(?=[A-Z]).*)", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         private static readonly Regex s_hashSuffixRegex = new(@"^[^-]+", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         private static readonly Regex s_oDataRefRegex = new("(?<=[a-z])Ref(?=[A-Z])", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         // 5. Fix anyOf and oneOf schema.
         // 6. Add AdditionalProperties to object schemas.
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
             AddAdditionalPropertiesToSchema(schema);
             ResolveAnyOfSchema(schema);
@@ -50,7 +51,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             base.Visit(schema);
         }
 
-        public override void Visit(OpenApiPathItem pathItem)
+        public override void Visit(IOpenApiPathItem pathItem)
         {
             if (pathItem.Operations.TryGetValue(OperationType.Put, out var value) &&
                 value.OperationId != null)
@@ -69,24 +70,24 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
             var operationId = operation.OperationId;
             var operationTypeExtension = operation.Extensions?.GetExtension("x-ms-docs-operation-type");
-            if (operationTypeExtension.IsEquals("function"))
-                operation.Parameters = ResolveFunctionParameters(operation.Parameters ?? new List<OpenApiParameter>());
+            if (operationTypeExtension.IsEquals("function") && operation.Parameters is { Count :> 0})
+                ResolveFunctionParameters(operation.Parameters);
 
             // Order matters. Resolve operationId.
             operationId = RemoveHashSuffix(operationId);
             if (operationTypeExtension.IsEquals("action") || operationTypeExtension.IsEquals("function"))
-                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? new List<OpenApiParameter>());
+                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? new List<IOpenApiParameter>());
             operationId = SingularizeAndDeduplicateOperationId(operationId.SplitByChar('.'));
             operationId = ResolveODataCastOperationId(operationId);
             operationId = ResolveByRefOperationId(operationId);
             // Verb segment resolution should always be last. user.get -> user_Get
-            operationId = ResolveVerbSegmentInOpertationId(operationId);
+            operationId = ResolveVerbSegmentInOperationId(operationId);
 
             operation.OperationId = operationId;
             base.Visit(operation);
         }
 
-        private static string ResolveVerbSegmentInOpertationId(string operationId)
+        private static string ResolveVerbSegmentInOperationId(string operationId)
         {
             var charPos = operationId.LastIndexOf('.', operationId.Length - 1);
             if (operationId.Contains('_', StringComparison.OrdinalIgnoreCase) || charPos < 0)
@@ -143,7 +144,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return s_hashSuffixRegex.Match(operationId).Value;
         }
 
-        private static string RemoveKeyTypeSegment(string operationId, IList<OpenApiParameter> parameters)
+        private static string RemoveKeyTypeSegment(string operationId, IList<IOpenApiParameter> parameters)
         {
             var segments = operationId.SplitByChar('.');
             foreach (var parameter in parameters)
@@ -157,30 +158,29 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return string.Join('.', segments);
         }
 
-        private static IList<OpenApiParameter> ResolveFunctionParameters(IList<OpenApiParameter> parameters)
+        private static void ResolveFunctionParameters(IList<IOpenApiParameter> parameters)
         {
-            foreach (var parameter in parameters.Where(static p => p.Content?.Any() ?? false))
+            foreach (var parameter in parameters.OfType<OpenApiParameter>().Where(static p => p.Content?.Any() ?? false))
             {
                 // Replace content with a schema object of type array
                 // for structured or collection-valued function parameters
                 parameter.Content = null;
-                parameter.Schema = new()
+                parameter.Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Array,
-                    Items = new()
+                    Items = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
                 };
             }
-            return parameters;
         }
 
-        private void AddAdditionalPropertiesToSchema(OpenApiSchema schema)
+        private void AddAdditionalPropertiesToSchema(IOpenApiSchema schema)
         {
-            if (schema != null && !_schemaLoop.Contains(schema) && schema.Type.Equals(JsonSchemaType.Object))
+            if (schema is OpenApiSchema openApiSchema && !_schemaLoop.Contains(schema) && schema.Type.Equals(JsonSchemaType.Object))
             {
-                schema.AdditionalProperties = new() { Type = JsonSchemaType.Object };
+                openApiSchema.AdditionalProperties = new OpenApiSchema() { Type = JsonSchemaType.Object };
 
                 /* Because 'additionalProperties' are now being walked,
                  * we need a way to keep track of visited schemas to avoid
@@ -190,39 +190,29 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             }
         }
 
-        private static void ResolveOneOfSchema(OpenApiSchema schema)
+        private static void ResolveOneOfSchema(IOpenApiSchema schema)
         {
-            if (schema.OneOf?.FirstOrDefault() is { } newSchema)
+            if (schema is OpenApiSchema openApiSchema && schema.OneOf?.FirstOrDefault() is OpenApiSchema newSchema)
             {
-                schema.OneOf = null;
-                FlattenSchema(schema, newSchema);
+                openApiSchema.OneOf = null;
+                FlattenSchema(openApiSchema, newSchema);
             }
         }
 
-        private static void ResolveAnyOfSchema(OpenApiSchema schema)
+        private static void ResolveAnyOfSchema(IOpenApiSchema schema)
         {
-            if (schema.AnyOf?.FirstOrDefault() is { } newSchema)
+            if (schema is OpenApiSchema openApiSchema && schema.AnyOf?.FirstOrDefault() is OpenApiSchema newSchema)
             {
-                schema.AnyOf = null;
-                FlattenSchema(schema, newSchema);
+                openApiSchema.AnyOf = null;
+                FlattenSchema(openApiSchema, newSchema);
             }
         }
 
         private static void FlattenSchema(OpenApiSchema schema, OpenApiSchema newSchema)
         {
-            if (newSchema != null)
-            {
-                if (newSchema.Reference != null)
-                {
-                    schema.Reference = newSchema.Reference;
-                    schema.UnresolvedReference = true;
-                }
-                else
-                {
-                    // Copies schema properties based on https://github.com/microsoft/OpenAPI.NET.OData/pull/264.
-                    CopySchema(schema, newSchema);
-                }
-            }
+            if (newSchema is null) return;
+            // Copies schema properties based on https://github.com/microsoft/OpenAPI.NET.OData/pull/264.
+            CopySchema(schema, newSchema);
         }
 
         private static void CopySchema(OpenApiSchema schema, OpenApiSchema newSchema)
@@ -253,7 +243,6 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             schema.Enum ??= newSchema.Enum;
             schema.ReadOnly = !schema.ReadOnly ? newSchema.ReadOnly : schema.ReadOnly;
             schema.WriteOnly = !schema.WriteOnly ? newSchema.WriteOnly : schema.WriteOnly;
-            schema.Nullable = !schema.Nullable ? newSchema.Nullable : schema.Nullable;
             schema.Deprecated = !schema.Deprecated ? newSchema.Deprecated : schema.Deprecated;
         }
     }

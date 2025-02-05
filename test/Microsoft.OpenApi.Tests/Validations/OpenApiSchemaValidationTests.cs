@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
@@ -89,7 +90,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                     }).Node
                 },
                 Type = JsonSchemaType.Object,
-                AdditionalProperties = new()
+                AdditionalProperties = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Integer
                 }
@@ -111,39 +112,38 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateDefaultShouldNotHaveDataTypeMismatchForComplexSchema()
         {
             // Arrange
-            IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
                 Properties =
                 {
-                    ["property1"] = new()
+                    ["property1"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
-                        Items = new()
+                        Items = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer,
                             Format = "int64"
                         }
                     },
-                    ["property2"] = new()
+                    ["property2"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
-                        Items = new()
+                        Items = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Object,
-                            AdditionalProperties = new()
+                            AdditionalProperties = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Boolean
                             }
                         }
                     },
-                    ["property3"] = new()
+                    ["property3"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String,
                         Format = "password"
                     },
-                    ["property4"] = new()
+                    ["property4"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -173,22 +173,18 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var defaultRuleSet = ValidationRuleSet.GetDefaultRuleSet();
-            defaultRuleSet.Add(typeof(OpenApiSchema), OpenApiNonDefaultRules.SchemaMismatchedDataType);
+            defaultRuleSet.Add(typeof(IOpenApiSchema), OpenApiNonDefaultRules.SchemaMismatchedDataType);
             var validator = new OpenApiValidator(defaultRuleSet);
             var walker = new OpenApiWalker(validator);
-            walker.Walk(schema);
-
-            warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            walker.Walk((IOpenApiSchema)schema);
 
             // Assert
-            Assert.False(result);
+            Assert.NotEmpty(validator.Warnings);
         }
 
         [Fact]
         public void ValidateSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator()
         {
-            IEnumerable<OpenApiError> errors;
             var components = new OpenApiComponents
             {
                 Schemas = {
@@ -198,7 +194,6 @@ namespace Microsoft.OpenApi.Validations.Tests
                         {
                             Type = JsonSchemaType.Object,
                             Discriminator = new() { PropertyName = "property1" },
-                            Reference = new() { Id = "schema1" }
                         }
                     }
                 }
@@ -208,17 +203,14 @@ namespace Microsoft.OpenApi.Validations.Tests
             var walker = new OpenApiWalker(validator);
             walker.Walk(components);
 
-            errors = validator.Errors;
-            var result = !errors.Any();
-
             // Assert
-            Assert.False(result);
+            Assert.NotEmpty(validator.Errors);
             Assert.Equivalent(new List<OpenApiValidatorError>
             {
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
                         string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
-                                    "schema1", "property1"))
-            }, errors);
+                                    string.Empty, "property1"))
+            }, validator.Errors);
         }
 
         [Fact]
@@ -238,9 +230,9 @@ namespace Microsoft.OpenApi.Validations.Tests
                             {
                                 PropertyName = "type"
                             },
-                            OneOf = new List<OpenApiSchema>
+                            OneOf = new List<IOpenApiSchema>
                             {
-                                new()
+                                new OpenApiSchema()
                                 {
                                     Properties =
                                     {
@@ -252,14 +244,8 @@ namespace Microsoft.OpenApi.Validations.Tests
                                             }
                                         }
                                     },
-                                    Reference = new()
-                                    {
-                                        Type = ReferenceType.Schema,
-                                        Id = "Person"
-                                    }
                                 }
                             },
-                            Reference = new() { Id = "Person" }
                         }
                     }
                 }

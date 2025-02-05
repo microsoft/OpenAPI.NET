@@ -120,11 +120,10 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         }
 
         public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId, string summary = null, string description = null)
-            where T : IOpenApiReferenceable, new()
+            where T : IOpenApiReferenceHolder, new()
         {
             return new()
             {
-                UnresolvedReference = true,
                 Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType, summary, description)
             };
         }

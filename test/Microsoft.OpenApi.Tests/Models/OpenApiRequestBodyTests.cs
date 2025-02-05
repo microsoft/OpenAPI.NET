@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiRequestBodyTests
     {
-        public static OpenApiRequestBody AdvancedRequestBody = new()
+        private static OpenApiRequestBody AdvancedRequestBody => new()
         {
             Description = "description",
             Required = true,
@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new()
                 {
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -31,8 +31,8 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiRequestBodyReference OpenApiRequestBodyReference = new(ReferencedRequestBody, "example1");
-        public static OpenApiRequestBody ReferencedRequestBody = new()
+        private static OpenApiRequestBodyReference OpenApiRequestBodyReference => new("example1");
+        private static OpenApiRequestBody ReferencedRequestBody => new()
         {
             Description = "description",
             Required = true,
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new()
                 {
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }

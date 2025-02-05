@@ -4,10 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -15,316 +18,160 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable
+    public class OpenApiSchema : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiSchema
     {
-        /// <summary>
-        /// Follow JSON Schema definition. Short text providing information about the data.
-        /// </summary>
-        public virtual string Title { get; set; }
+        /// <inheritdoc />
+        public string Title { get; set; }
 
-        /// <summary>
-        /// $schema, a JSON Schema dialect identifier. Value must be a URI
-        /// </summary>
-        public virtual string Schema { get; set; }
+        /// <inheritdoc />
+        public string Schema { get; set; }
 
-        /// <summary>
-        /// $id - Identifies a schema resource with its canonical URI.
-        /// </summary>
-        public virtual string Id { get; set; }
+        /// <inheritdoc />
+        public string Id { get; set; }
 
-        /// <summary>
-        /// $comment - reserves a location for comments from schema authors to readers or maintainers of the schema.
-        /// </summary>
-        public virtual string Comment { get; set; }
+        /// <inheritdoc />
+        public string Comment { get; set; }
 
-        /// <summary>
-        /// $vocabulary- used in meta-schemas to identify the vocabularies available for use in schemas described by that meta-schema.
-        /// </summary>
-        public virtual IDictionary<string, bool> Vocabulary { get; set; }
+        /// <inheritdoc />
+        public IDictionary<string, bool> Vocabulary { get; set; }
 
-        /// <summary>
-        /// $dynamicRef - an applicator that allows for deferring the full resolution until runtime, at which point it is resolved each time it is encountered while evaluating an instance
-        /// </summary>
-        public virtual string DynamicRef { get; set; }
+        /// <inheritdoc />
+        public string DynamicRef { get; set; }
 
-        /// <summary>
-        /// $dynamicAnchor - used to create plain name fragments that are not tied to any particular structural location for referencing purposes, which are taken into consideration for dynamic referencing.
-        /// </summary>
-        public virtual string DynamicAnchor { get; set; }
+        /// <inheritdoc />
+        public string DynamicAnchor { get; set; }
 
-        /// <summary>
-        /// $defs - reserves a location for schema authors to inline re-usable JSON Schemas into a more general schema. 
-        /// The keyword does not directly affect the validation result
-        /// </summary>
-        public virtual IDictionary<string, OpenApiSchema> Definitions { get; set; }
+        /// <inheritdoc />
+        public IDictionary<string, IOpenApiSchema> Definitions { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual decimal? V31ExclusiveMaximum { get; set; }
+        /// <inheritdoc />
+        public decimal? V31ExclusiveMaximum { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual decimal? V31ExclusiveMinimum { get; set; }
+        /// <inheritdoc />
+        public decimal? V31ExclusiveMinimum { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual bool UnEvaluatedProperties { get; set; }     
+        /// <inheritdoc />
+        public bool UnEvaluatedProperties { get; set; }     
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Value MUST be a string in V2 and V3.
-        /// </summary>
-        public virtual JsonSchemaType? Type { get; set; }
+        /// <inheritdoc />
+        public JsonSchemaType? Type { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
-        /// </summary>
-        public virtual string Const { get; set; }
+        /// <inheritdoc />
+        public string Const { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// While relying on JSON Schema's defined formats,
-        /// the OAS offers a few additional predefined formats.
-        /// </summary>
-        public virtual string Format { get; set; }
+        /// <inheritdoc />
+        public string Format { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// CommonMark syntax MAY be used for rich text representation.
-        /// </summary>
-        public virtual string Description { get; set; }
+        /// <inheritdoc />
+        public string Description { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual decimal? Maximum { get; set; }
+        /// <inheritdoc />
+        public decimal? Maximum { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual bool? ExclusiveMaximum { get; set; }
+        /// <inheritdoc />
+        public bool? ExclusiveMaximum { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual decimal? Minimum { get; set; }
+        /// <inheritdoc />
+        public decimal? Minimum { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual bool? ExclusiveMinimum { get; set; }
+        /// <inheritdoc />
+        public bool? ExclusiveMinimum { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual int? MaxLength { get; set; }
+        /// <inheritdoc />
+        public int? MaxLength { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual int? MinLength { get; set; }
+        /// <inheritdoc />
+        public int? MinLength { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect
-        /// </summary>
-        public virtual string Pattern { get; set; }
+        /// <inheritdoc />
+        public string Pattern { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual decimal? MultipleOf { get; set; }
+        /// <inheritdoc />
+        public decimal? MultipleOf { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// The default value represents what would be assumed by the consumer of the input as the value of the schema if one is not provided.
-        /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
-        /// For example, if type is string, then default can be "foo" but cannot be 1.
-        /// </summary>
-        public virtual JsonNode Default { get; set; }
+        /// <inheritdoc />
+        public JsonNode Default { get; set; }
 
-        /// <summary>
-        /// Relevant only for Schema "properties" definitions. Declares the property as "read only".
-        /// This means that it MAY be sent as part of a response but SHOULD NOT be sent as part of the request.
-        /// If the property is marked as readOnly being true and is in the required list,
-        /// the required will take effect on the response only.
-        /// A property MUST NOT be marked as both readOnly and writeOnly being true.
-        /// Default value is false.
-        /// </summary>
-        public virtual bool ReadOnly { get; set; }
+        /// <inheritdoc />
+        public bool ReadOnly { get; set; }
 
-        /// <summary>
-        /// Relevant only for Schema "properties" definitions. Declares the property as "write only".
-        /// Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response.
-        /// If the property is marked as writeOnly being true and is in the required list,
-        /// the required will take effect on the request only.
-        /// A property MUST NOT be marked as both readOnly and writeOnly being true.
-        /// Default value is false.
-        /// </summary>
-        public virtual bool WriteOnly { get; set; }
+        /// <inheritdoc />
+        public bool WriteOnly { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
-        /// </summary>
-        public virtual IList<OpenApiSchema> AllOf { get; set; } = new List<OpenApiSchema>();
+        /// <inheritdoc />
+        public IList<IOpenApiSchema> AllOf { get; set; } = [];
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
-        /// </summary>
-        public virtual IList<OpenApiSchema> OneOf { get; set; } = new List<OpenApiSchema>();
+        /// <inheritdoc />
+        public IList<IOpenApiSchema> OneOf { get; set; } = [];
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
-        /// </summary>
-        public virtual IList<OpenApiSchema> AnyOf { get; set; } = new List<OpenApiSchema>();
+        /// <inheritdoc />
+        public IList<IOpenApiSchema> AnyOf { get; set; } = [];
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
-        /// </summary>
-        public virtual OpenApiSchema Not { get; set; }
+        /// <inheritdoc />
+        public IOpenApiSchema Not { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual ISet<string> Required { get; set; } = new HashSet<string>();
+        /// <inheritdoc />
+        public ISet<string> Required { get; set; } = new HashSet<string>();
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Value MUST be an object and not an array. Inline or referenced schema MUST be of a Schema Object
-        /// and not a standard JSON Schema. items MUST be present if the type is array.
-        /// </summary>
-        public virtual OpenApiSchema Items { get; set; }
+        /// <inheritdoc />
+        public IOpenApiSchema Items { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual int? MaxItems { get; set; }
+        /// <inheritdoc />
+        public int? MaxItems { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual int? MinItems { get; set; }
+        /// <inheritdoc />
+        public int? MinItems { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual bool? UniqueItems { get; set; }
+        /// <inheritdoc />
+        public bool? UniqueItems { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Property definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced).
-        /// </summary>
-        public virtual IDictionary<string, OpenApiSchema> Properties { get; set; } = new Dictionary<string, OpenApiSchema>();
+        /// <inheritdoc />
+        public IDictionary<string, IOpenApiSchema> Properties { get; set; } = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// PatternProperty definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced)
-        /// Each property name of this object SHOULD be a valid regular expression according to the ECMA 262 r
-        /// egular expression dialect. Each property value of this object MUST be an object, and each object MUST 
-        /// be a valid Schema Object not a standard JSON Schema.
-        /// </summary>
-        public virtual IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
+        /// <inheritdoc />
+        public IDictionary<string, IOpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual int? MaxProperties { get; set; }
+        /// <inheritdoc />
+        public int? MaxProperties { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual int? MinProperties { get; set; }
+        /// <inheritdoc />
+        public int? MinProperties { get; set; }
 
-        /// <summary>
-        /// Indicates if the schema can contain properties other than those defined by the properties map.
-        /// </summary>
-        public virtual bool AdditionalPropertiesAllowed { get; set; } = true;
+        /// <inheritdoc />
+        public bool AdditionalPropertiesAllowed { get; set; } = true;
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Value can be boolean or object. Inline or referenced schema
-        /// MUST be of a Schema Object and not a standard JSON Schema.
-        /// </summary>
-        public virtual OpenApiSchema AdditionalProperties { get; set; }
+        /// <inheritdoc />
+        public IOpenApiSchema AdditionalProperties { get; set; }
 
-        /// <summary>
-        /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate
-        /// between other schemas which may satisfy the payload description.
-        /// </summary>
-        public virtual OpenApiDiscriminator Discriminator { get; set; }
+        /// <inheritdoc />
+        public OpenApiDiscriminator Discriminator { get; set; }
 
-        /// <summary>
-        /// A free-form property to include an example of an instance for this schema.
-        /// To represent examples that cannot be naturally represented in JSON or YAML,
-        /// a string value can be used to contain the example with escaping where necessary.
-        /// </summary>
-        public virtual JsonNode Example { get; set; }
+        /// <inheritdoc />
+        public JsonNode Example { get; set; }
 
-        /// <summary>
-        /// A free-form property to include examples of an instance for this schema. 
-        /// To represent examples that cannot be naturally represented in JSON or YAML, 
-        /// a list of values can be used to contain the examples with escaping where necessary.
-        /// </summary>
-        public virtual IList<JsonNode> Examples { get; set; }
+        /// <inheritdoc />
+        public IList<JsonNode> Examples { get; set; }
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
+        /// <inheritdoc />
+        public IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
 
-        /// <summary>
-        /// Allows sending a null value for the defined schema. Default value is false.
-        /// </summary>
-        public virtual bool Nullable { get; set; }
+        /// <inheritdoc />
+        public bool UnevaluatedProperties { get; set;}
 
-        /// <summary>
-        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// </summary>
-        public virtual bool UnevaluatedProperties { get; set;}
+        /// <inheritdoc />
+        public OpenApiExternalDocs ExternalDocs { get; set; }
 
-        /// <summary>
-        /// Additional external documentation for this schema.
-        /// </summary>
-        public virtual OpenApiExternalDocs ExternalDocs { get; set; }
+        /// <inheritdoc />
+        public bool Deprecated { get; set; }
 
-        /// <summary>
-        /// Specifies that a schema is deprecated and SHOULD be transitioned out of usage.
-        /// Default value is false.
-        /// </summary>
-        public virtual bool Deprecated { get; set; }
+        /// <inheritdoc />
+        public OpenApiXml Xml { get; set; }
 
-        /// <summary>
-        /// This MAY be used only on properties schemas. It has no effect on root schemas.
-        /// Adds additional metadata to describe the XML representation of this property.
-        /// </summary>
-        public virtual OpenApiXml Xml { get; set; }
+        /// <inheritdoc />
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
-        /// <summary>
-        /// This object MAY be extended with Specification Extensions.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// This object stores any unrecognized keywords found in the schema.
-        /// </summary>
-        public virtual IDictionary<string, JsonNode> UnrecognizedKeywords { get; set; } = new Dictionary<string, JsonNode>();
-
-        /// <summary>
-        /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
-        /// </summary>
-        public virtual bool UnresolvedReference { get; set; }
-
-        /// <summary>
-        /// Reference object.
-        /// </summary>
-        public virtual OpenApiReference Reference { get; set; }
+        /// <inheritdoc />
+        public IDictionary<string, JsonNode> UnrecognizedKeywords { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <inheritdoc />
         public IDictionary<string, object> Annotations { get; set; }
@@ -335,85 +182,78 @@ namespace Microsoft.OpenApi.Models
         public OpenApiSchema() { }
 
         /// <summary>
-        /// Initializes a copy of <see cref="OpenApiSchema"/> object
+        /// Initializes a copy of <see cref="IOpenApiSchema"/> object
         /// </summary>
-        public OpenApiSchema(OpenApiSchema schema)
+        /// <param name="schema">The schema object to copy from.</param>
+        internal OpenApiSchema(IOpenApiSchema schema)
         {
-            Title = schema?.Title ?? Title;
-            Id = schema?.Id ?? Id;
-            Const = schema?.Const ?? Const;
-            Schema = schema?.Schema ?? Schema;
-            Comment = schema?.Comment ?? Comment;
-            Vocabulary = schema?.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
-            DynamicAnchor = schema?.DynamicAnchor ?? DynamicAnchor;
-            DynamicRef = schema?.DynamicRef ?? DynamicRef;
-            Definitions = schema?.Definitions != null ? new Dictionary<string, OpenApiSchema>(schema.Definitions) : null;
-            UnevaluatedProperties = schema?.UnevaluatedProperties ?? UnevaluatedProperties;
-            V31ExclusiveMaximum = schema?.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
-            V31ExclusiveMinimum = schema?.V31ExclusiveMinimum ?? V31ExclusiveMinimum;
-            Type = schema?.Type ?? Type;
-            Format = schema?.Format ?? Format;
-            Description = schema?.Description ?? Description;
-            Maximum = schema?.Maximum ?? Maximum;
-            ExclusiveMaximum = schema?.ExclusiveMaximum ?? ExclusiveMaximum;
-            Minimum = schema?.Minimum ?? Minimum;
-            ExclusiveMinimum = schema?.ExclusiveMinimum ?? ExclusiveMinimum;
-            MaxLength = schema?.MaxLength ?? MaxLength;
-            MinLength = schema?.MinLength ?? MinLength;
-            Pattern = schema?.Pattern ?? Pattern;
-            MultipleOf = schema?.MultipleOf ?? MultipleOf;
-            Default = schema?.Default != null ? JsonNodeCloneHelper.Clone(schema?.Default) : null;
-            ReadOnly = schema?.ReadOnly ?? ReadOnly;
-            WriteOnly = schema?.WriteOnly ?? WriteOnly;
-            AllOf = schema?.AllOf != null ? new List<OpenApiSchema>(schema.AllOf) : null;
-            OneOf = schema?.OneOf != null ? new List<OpenApiSchema>(schema.OneOf) : null;
-            AnyOf = schema?.AnyOf != null ? new List<OpenApiSchema>(schema.AnyOf) : null;
-            Not = schema?.Not != null ? new(schema?.Not) : null;
-            Required = schema?.Required != null ? new HashSet<string>(schema.Required) : null;
-            Items = schema?.Items != null ? new(schema?.Items) : null;
-            MaxItems = schema?.MaxItems ?? MaxItems;
-            MinItems = schema?.MinItems ?? MinItems;
-            UniqueItems = schema?.UniqueItems ?? UniqueItems;
-            Properties = schema?.Properties != null ? new Dictionary<string, OpenApiSchema>(schema.Properties) : null;
-            PatternProperties = schema?.PatternProperties != null ? new Dictionary<string, OpenApiSchema>(schema.PatternProperties) : null;
-            MaxProperties = schema?.MaxProperties ?? MaxProperties;
-            MinProperties = schema?.MinProperties ?? MinProperties;
-            AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
-            AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
-            Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null; 
-            Example = schema?.Example != null ? JsonNodeCloneHelper.Clone(schema?.Example) : null;
-            Examples = schema?.Examples != null ? new List<JsonNode>(schema.Examples) : null;
-            Enum = schema?.Enum != null ? new List<JsonNode>(schema.Enum) : null;
-            Nullable = schema?.Nullable ?? Nullable;
-            ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
-            Deprecated = schema?.Deprecated ?? Deprecated;
-            Xml = schema?.Xml != null ? new(schema?.Xml) : null;
-            Extensions = schema?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
-            UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
-            Reference = schema?.Reference != null ? new(schema?.Reference) : null;
-            Annotations = schema?.Annotations != null ? new Dictionary<string, object>(schema?.Annotations) : null;
-            UnrecognizedKeywords = schema?.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema?.UnrecognizedKeywords) : null;
+            Utils.CheckArgumentNull(schema);
+            Title = schema.Title ?? Title;
+            Id = schema.Id ?? Id;
+            Const = schema.Const ?? Const;
+            Schema = schema.Schema ?? Schema;
+            Comment = schema.Comment ?? Comment;
+            Vocabulary = schema.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
+            DynamicAnchor = schema.DynamicAnchor ?? DynamicAnchor;
+            DynamicRef = schema.DynamicRef ?? DynamicRef;
+            Definitions = schema.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
+            UnevaluatedProperties = schema.UnevaluatedProperties;
+            V31ExclusiveMaximum = schema.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
+            V31ExclusiveMinimum = schema.V31ExclusiveMinimum ?? V31ExclusiveMinimum;
+            Type = schema.Type ?? Type;
+            Format = schema.Format ?? Format;
+            Description = schema.Description ?? Description;
+            Maximum = schema.Maximum ?? Maximum;
+            ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
+            Minimum = schema.Minimum ?? Minimum;
+            ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
+            MaxLength = schema.MaxLength ?? MaxLength;
+            MinLength = schema.MinLength ?? MinLength;
+            Pattern = schema.Pattern ?? Pattern;
+            MultipleOf = schema.MultipleOf ?? MultipleOf;
+            Default = schema.Default != null ? JsonNodeCloneHelper.Clone(schema.Default) : null;
+            ReadOnly = schema.ReadOnly;
+            WriteOnly = schema.WriteOnly;
+            AllOf = schema.AllOf != null ? new List<IOpenApiSchema>(schema.AllOf) : null;
+            OneOf = schema.OneOf != null ? new List<IOpenApiSchema>(schema.OneOf) : null;
+            AnyOf = schema.AnyOf != null ? new List<IOpenApiSchema>(schema.AnyOf) : null;
+            Not = schema.Not?.CreateShallowCopy();
+            Required = schema.Required != null ? new HashSet<string>(schema.Required) : null;
+            Items = schema.Items?.CreateShallowCopy();
+            MaxItems = schema.MaxItems ?? MaxItems;
+            MinItems = schema.MinItems ?? MinItems;
+            UniqueItems = schema.UniqueItems ?? UniqueItems;
+            Properties = schema.Properties != null ? new Dictionary<string, IOpenApiSchema>(schema.Properties) : null;
+            PatternProperties = schema.PatternProperties != null ? new Dictionary<string, IOpenApiSchema>(schema.PatternProperties) : null;
+            MaxProperties = schema.MaxProperties ?? MaxProperties;
+            MinProperties = schema.MinProperties ?? MinProperties;
+            AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
+            AdditionalProperties = schema.AdditionalProperties?.CreateShallowCopy();
+            Discriminator = schema.Discriminator != null ? new(schema.Discriminator) : null; 
+            Example = schema.Example != null ? JsonNodeCloneHelper.Clone(schema.Example) : null;
+            Examples = schema.Examples != null ? new List<JsonNode>(schema.Examples) : null;
+            Enum = schema.Enum != null ? new List<JsonNode>(schema.Enum) : null;
+            ExternalDocs = schema.ExternalDocs != null ? new(schema.ExternalDocs) : null;
+            Deprecated = schema.Deprecated;
+            Xml = schema.Xml != null ? new(schema.Xml) : null;
+            Extensions = schema.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
+            Annotations = schema.Annotations != null ? new Dictionary<string, object>(schema.Annotations) : null;
+            UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.1
-        /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        /// <inheritdoc />
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0
-        /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        /// <inheritdoc />
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-/// <inheritdoc/>
-
-        public void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
@@ -514,12 +354,6 @@ namespace Microsoft.OpenApi.Models
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
-            // nullable
-            if (version is OpenApiSpecVersion.OpenApi3_0)
-            {
-                writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
-            }
-
             // discriminator
             writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, callback);
 
@@ -553,9 +387,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-/// <inheritdoc/>
-
-        public virtual void SerializeAsV2(IOpenApiWriter writer)
+        /// <inheritdoc />
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }
@@ -583,14 +416,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type.ToIdentifier());
 
             // format
-            if (string.IsNullOrEmpty(Format))
-            {
-                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
-            }
-
-            writer.WriteProperty(OpenApiConstants.Format, Format);
+            WriteFormatProperty(writer);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
@@ -643,6 +469,19 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
 
+        private void WriteFormatProperty(IOpenApiWriter writer)
+        {
+            var formatToWrite = Format;
+            if (string.IsNullOrEmpty(formatToWrite))
+            {
+                formatToWrite = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
+
+            writer.WriteProperty(OpenApiConstants.Format, formatToWrite);
+        }
+
         /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property
         /// as readonly if its included in the provided list of required properties of parent schema.
@@ -650,7 +489,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer">The open api writer.</param>
         /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
         /// <param name="propertyName">The property name that will be serialized.</param>
-        internal virtual void SerializeAsV2(
+        private void SerializeAsV2(
             IOpenApiWriter writer,
             ISet<string> parentRequiredProperties,
             string propertyName)
@@ -666,14 +505,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // format
-            if (string.IsNullOrEmpty(Format))
-            {
-                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
-            }
-
-            writer.WriteProperty(OpenApiConstants.Format, Format);
+            WriteFormatProperty(writer);
 
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
@@ -748,7 +580,12 @@ namespace Microsoft.OpenApi.Models
 
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, key, s) =>
-                s.SerializeAsV2(w, Required, key));
+            {
+                if (s is OpenApiSchema oais)
+                    oais.SerializeAsV2(w, Required, key);
+                else
+                    s.SerializeAsV2(w);
+            });
 
             // additionalProperties
             if (AdditionalPropertiesAllowed)
@@ -791,20 +628,38 @@ namespace Microsoft.OpenApi.Models
 
         private void SerializeTypeProperty(JsonSchemaType? type, IOpenApiWriter writer, OpenApiSpecVersion version)
         {
+            // check whether nullable is true for upcasting purposes
+            var isNullable = (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null))  ||
+                                Extensions is not null &&
+                                Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) && 
+                                nullExtRawValue is OpenApiAny { Node: JsonNode jsonNode} &&
+                                jsonNode.GetValueKind() is JsonValueKind.True;
             if (type is null)
             {
-                return;
-            }
-            if (!HasMultipleTypes(type.Value))
-            {
-                // check whether nullable is true for upcasting purposes
-                if (version is OpenApiSpecVersion.OpenApi3_1 && (Nullable || Extensions.ContainsKey(OpenApiConstants.NullableExtension)))
+                if (version is OpenApiSpecVersion.OpenApi3_0 && isNullable)
                 {
-                    UpCastSchemaTypeToV31(type, writer);
+                    writer.WriteProperty(OpenApiConstants.Nullable, true);
                 }
-                else
+            }
+            else if (!HasMultipleTypes(type.Value))
+            {
+                
+                switch (version)
                 {
-                    writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
+                    case OpenApiSpecVersion.OpenApi3_1 when isNullable:
+                        UpCastSchemaTypeToV31(type.Value, writer);
+                        break;
+                    case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value == JsonSchemaType.Null:
+                        writer.WriteProperty(OpenApiConstants.Nullable, true);
+                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.ToIdentifier());
+                        break;
+                    case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value != JsonSchemaType.Null:
+                        writer.WriteProperty(OpenApiConstants.Nullable, true);
+                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
+                        break;
+                    default:
+                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
+                        break;
                 }
             }
             else
@@ -836,14 +691,21 @@ namespace Microsoft.OpenApi.Models
                     schemaTypeNumeric != (int)JsonSchemaType.Null;
         }
 
-        private void UpCastSchemaTypeToV31(JsonSchemaType? type, IOpenApiWriter writer)
+        private static void UpCastSchemaTypeToV31(JsonSchemaType type, IOpenApiWriter writer)
         {
             // create a new array and insert the type and "null" as values
-            Type = type | JsonSchemaType.Null;
-            var list = (from JsonSchemaType? flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
-                        where Type.Value.HasFlag(flag)
+            var temporaryType = type | JsonSchemaType.Null;
+            var list = (from JsonSchemaType flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
+                        where temporaryType.HasFlag(flag)
                         select flag.ToIdentifier()).ToList();
-            writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
+            if (list.Count > 1)
+            {
+                writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.Type, list[0]);
+            }
         }
 
 #if NET5_0_OR_GREATER
@@ -864,9 +726,9 @@ namespace Microsoft.OpenApi.Models
                 ? OpenApiConstants.NullableExtension
                 : OpenApiConstants.Nullable;
 
-            if (!HasMultipleTypes(schemaType ^ JsonSchemaType.Null) && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
+            if (!HasMultipleTypes(schemaType & ~JsonSchemaType.Null) && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
             {
-                foreach (JsonSchemaType? flag in jsonSchemaTypeValues)
+                foreach (JsonSchemaType flag in jsonSchemaTypeValues)
                 {
                     // Skip if the flag is not set or if it's the Null flag
                     if (schemaType.HasFlag(flag) && flag != JsonSchemaType.Null)
@@ -875,10 +737,7 @@ namespace Microsoft.OpenApi.Models
                         writer.WriteProperty(OpenApiConstants.Type, flag.ToIdentifier());
                     }
                 }
-                if (!Nullable)
-                {
-                    writer.WriteProperty(nullableProp, true);
-                }
+                writer.WriteProperty(nullableProp, true);
             }
             else if (!HasMultipleTypes(schemaType))
             {
@@ -891,6 +750,12 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteProperty(OpenApiConstants.Type, schemaType.ToIdentifier());
                 }
             }
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiSchema CreateShallowCopy()
+        {
+            return new OpenApiSchema(this);
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -19,11 +20,11 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
             new()
             {
-            {s => !s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n, t))},
-            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
+            {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n, t))},
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
-        public static OpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("callback");
 

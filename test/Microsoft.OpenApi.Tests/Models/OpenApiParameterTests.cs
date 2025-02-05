@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -18,20 +19,20 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiParameterTests
     {
-        public static OpenApiParameter BasicParameter = new()
+        private static OpenApiParameter BasicParameter => new()
         {
             Name = "name1",
             In = ParameterLocation.Path
         };
 
-        public static OpenApiParameterReference OpenApiParameterReference = new(ReferencedParameter, "example1");
-        public static OpenApiParameter ReferencedParameter = new()
+        private static OpenApiParameterReference OpenApiParameterReference => new("example1");
+        private static OpenApiParameter ReferencedParameter => new()
         {
             Name = "name1",
             In = ParameterLocation.Path
         };
 
-        public static OpenApiParameter AdvancedPathParameterWithSchema = new()
+        private static OpenApiParameter AdvancedPathParameterWithSchema => new()
         {
             Name = "name1",
             In = ParameterLocation.Path,
@@ -40,19 +41,19 @@ namespace Microsoft.OpenApi.Tests.Models
             Deprecated = false,
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema = new()
+            Schema = new OpenApiSchema()
             {
                 Title = "title2",
                 Description = "description2",
-                OneOf = new List<OpenApiSchema>
+                OneOf = new List<IOpenApiSchema>
                 {
-                    new() { Type = JsonSchemaType.Number, Format = "double" },
-                    new() { Type = JsonSchemaType.String }
+                    new OpenApiSchema() { Type = JsonSchemaType.Number, Format = "double" },
+                    new OpenApiSchema() { Type = JsonSchemaType.String }
                 }
             },
-            Examples = new Dictionary<string, OpenApiExample>
+            Examples =
             {
-                ["test"] = new()
+                ["test"] = new OpenApiExample()
                 {
                     Summary = "summary3",
                     Description = "description3"
@@ -60,17 +61,17 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter ParameterWithFormStyleAndExplodeFalse = new()
+        private static OpenApiParameter ParameterWithFormStyleAndExplodeFalse => new()
         {
             Name = "name1",
             In = ParameterLocation.Query,
             Description = "description1",
             Style = ParameterStyle.Form,
             Explode = false,
-            Schema = new()
+            Schema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Array,
-                Items = new()
+                Items = new OpenApiSchema()
                 {
                     Enum =
                     {
@@ -81,17 +82,17 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new()
+        private static OpenApiParameter ParameterWithFormStyleAndExplodeTrue => new()
         {
             Name = "name1",
             In = ParameterLocation.Query,
             Description = "description1",
             Style = ParameterStyle.Form,
             Explode = true,
-            Schema = new()
+            Schema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Array,
-                Items = new()
+                Items = new OpenApiSchema()
                 {
                     Enum =
                     [
@@ -102,11 +103,11 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter QueryParameterWithMissingStyle = new OpenApiParameter
+        private static OpenApiParameter QueryParameterWithMissingStyle => new OpenApiParameter
         {
             Name = "id",
             In = ParameterLocation.Query,
-            Schema = new()
+            Schema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
                 AdditionalProperties = new OpenApiSchema
@@ -116,7 +117,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter
+        private static OpenApiParameter AdvancedHeaderParameterWithSchemaTypeObject => new()
         {
             Name = "name1",
             In = ParameterLocation.Header,
@@ -126,42 +127,13 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema = new()
-            {
-                Reference = new()
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "schemaObject1"
-                },
-                UnresolvedReference = true
-            },
-            Examples = new Dictionary<string, OpenApiExample>
-            {
-                ["test"] = new()
-                {
-                    Summary = "summary3",
-                    Description = "description3"
-                }
-            }
-        };
-
-        public static OpenApiParameter AdvancedHeaderParameterWithSchemaTypeObject = new()
-        {
-            Name = "name1",
-            In = ParameterLocation.Header,
-            Description = "description1",
-            Required = true,
-            Deprecated = false,
-
-            Style = ParameterStyle.Simple,
-            Explode = true,
-            Schema = new()
+            Schema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object
             },
-            Examples = new Dictionary<string, OpenApiExample>
+            Examples =
             {
-                ["test"] = new()
+                ["test"] = new OpenApiExample()
                 {
                     Summary = "summary3",
                     Description = "description3"
@@ -260,7 +232,6 @@ schema:
                   "in": "path",
                   "description": "description1",
                   "required": true,
-                  "style": "simple",
                   "explode": true,
                   "schema": {
                     "title": "title2",

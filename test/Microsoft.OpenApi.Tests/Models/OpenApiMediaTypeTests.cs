@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -79,7 +80,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiMediaType MediaTypeWithObjectExamples = new()
         {
             Examples = {
-                ["object1"] = new()
+                ["object1"] = new OpenApiExample()
                 {
                     Value = new JsonObject
                     {
@@ -433,7 +434,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var clone = new OpenApiMediaType(MediaTypeWithObjectExamples)
             {
                 Example = 42,
-                Examples = new Dictionary<string, OpenApiExample>(),
+                Examples = new Dictionary<string, IOpenApiExample>(),
                 Encoding = new Dictionary<string, OpenApiEncoding>(),
                 Extensions = new Dictionary<string, IOpenApiExtension>()
             };

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase), 
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase) && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase), 
                     (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
@@ -73,9 +74,9 @@ namespace Microsoft.OpenApi.Reader.V2
                 ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces)
                 ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
 
-            var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
-            var examples = context.GetFromTempStorage<Dictionary<string, OpenApiExample>>(TempStorageKeys.Examples, response)
-                ?? new Dictionary<string, OpenApiExample>();
+            var schema = context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+            var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response)
+                ?? new Dictionary<string, IOpenApiExample>();
 
             foreach (var produce in produces)
             {
@@ -110,10 +111,10 @@ namespace Microsoft.OpenApi.Reader.V2
             node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
         }
 
-        private static Dictionary<string, OpenApiExample> LoadExamplesExtension(ParseNode node)
+        private static Dictionary<string, IOpenApiExample> LoadExamplesExtension(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.ExamplesExtension);
-            var examples = new Dictionary<string, OpenApiExample>();
+            var examples = new Dictionary<string, IOpenApiExample>();
 
             foreach (var examplesNode in mapNode)
             {
@@ -170,7 +171,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 mediaTypeObject = new()
                 {
-                    Schema = node.Context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response)
+                    Schema = node.Context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response)
                 };
                 response.Content.Add(mediaType, mediaTypeObject);
             }
@@ -178,7 +179,7 @@ namespace Microsoft.OpenApi.Reader.V2
             mediaTypeObject.Example = exampleNode;
         }
 
-        public static OpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("response");
 

@@ -1,0 +1,1 @@
+﻿{"summary":"Local reference: User path item summary","description":"Local reference: User path item description","$ref":"#/components/pathItems/userPathItem"}

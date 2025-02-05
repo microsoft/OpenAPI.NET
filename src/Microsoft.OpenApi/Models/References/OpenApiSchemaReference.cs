@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 using System;
 using System.Collections.Generic;
@@ -12,79 +13,8 @@ namespace Microsoft.OpenApi.Models.References
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : OpenApiSchema, IOpenApiReferenceableWithTarget<OpenApiSchema>
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema>, IOpenApiSchema
     {
-#nullable enable
-        private OpenApiSchema? _target;
-        private readonly OpenApiReference _reference;
-        private string? _description;
-        private JsonNode? _default;
-        private JsonNode? _example;
-        private IList<JsonNode>? _examples;
-        private bool? _nullable;
-        private IDictionary<string, OpenApiSchema>? _properties;
-        private string? _title;
-        private string? _schema;
-        private string? _comment;
-        private string? _id;
-        private string? _dynamicRef;
-        private string? _dynamicAnchor;
-        private IDictionary<string, bool>? _vocabulary;
-        private IDictionary<string, OpenApiSchema>? _definitions;
-        private decimal? _v31ExclusiveMaximum;
-        private decimal? _v31ExclusiveMinimum;
-        private bool? _unEvaluatedProperties;
-        private JsonSchemaType? _type;
-        private string? _const;
-        private string? _format;
-        private decimal? _maximum;
-        private bool? _exclusiveMaximum;
-        private decimal? _minimum;
-        private bool? _exclusiveMinimum;
-        private int? _maxLength;
-        private int? _minLength;
-        private string? _pattern;
-        private decimal? _multipleOf;
-        private bool? _readOnly;
-        private bool? _writeOnly;
-        private IList<OpenApiSchema>? _allOf;
-        private IList<OpenApiSchema>? _oneOf;
-        private IList<OpenApiSchema>? _anyOf;
-        private OpenApiSchema? _not;
-        private ISet<string>? _required;
-        private OpenApiSchema _items;
-        private int? _maxItems;
-        private int? _minItems;
-        private bool? _uniqueItems;
-        private IDictionary<string, OpenApiSchema>? _patternProperties;
-        private int? _maxProperties;
-        private int? _minProperties;
-        private bool? _additionalPropertiesAllowed;
-        private OpenApiSchema? _additionalProperties;
-        private OpenApiDiscriminator? _discriminator;
-        private OpenApiExternalDocs? _externalDocs;
-        private bool? _deprecated;
-        private OpenApiXml? _xml;
-        private IDictionary<string, IOpenApiExtension>? _extensions;
-        private bool? _unevaluatedProperties;
-        private IList<JsonNode>? _enum;
-
-        /// <summary>
-        /// Gets the target schema.
-        /// </summary>
-        /// <remarks>
-        /// If the reference is not resolved, this will return null.
-        /// </remarks>
-        public OpenApiSchema? Target
-#nullable restore
-        {
-            get
-            {
-                _target ??= Reference.HostDocument?.ResolveReferenceTo<OpenApiSchema>(_reference);
-                return _target;
-            }
-        }
-
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -95,214 +25,179 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiSchemaReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
+        public OpenApiSchemaReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
         {
-            Utils.CheckArgumentNullOrEmpty(referenceId);
+        }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="schema">The schema reference to copy</param>
+        private OpenApiSchemaReference(OpenApiSchemaReference schema):base(schema)
+        {
+        }
 
-            _reference = new OpenApiReference()
+        /// <inheritdoc/>
+        public string Description
+        {
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            set
             {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.Schema,
-                ExternalResource = externalResource
-            };
-
-            Reference = _reference;
-        }
-
-        internal OpenApiSchemaReference(OpenApiSchema target, string referenceId)
-        {
-            _target = target;
-
-            _reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                Type = ReferenceType.Schema,
-            };
+                if (Reference is not null)
+                {
+                    Reference.Description = value;
+                }
+            }
         }
 
         /// <inheritdoc/>
-        public override string Title { get => string.IsNullOrEmpty(_title) ? Target?.Title : _title; set => _title = value; }
+        public string Title { get => Target?.Title; }
         /// <inheritdoc/>
-        public override string Schema { get => string.IsNullOrEmpty(_schema) ? Target?.Schema : _schema; set => _schema = value; }
+        public string Schema { get => Target?.Schema; }
         /// <inheritdoc/>
-        public override string Id { get => string.IsNullOrEmpty(_id) ? Target?.Id : _id; set => _id = value; }
+        public string Id { get => Target?.Id; }
         /// <inheritdoc/>
-        public override string Comment { get => string.IsNullOrEmpty(_comment) ? Target?.Comment : _comment; set => _comment = value; }
+        public string Comment { get => Target?.Comment; }
         /// <inheritdoc/>
-        public override IDictionary<string, bool> Vocabulary { get => _vocabulary is not null ? _vocabulary : Target?.Vocabulary; set => _vocabulary = value; }
+        public IDictionary<string, bool> Vocabulary { get => Target?.Vocabulary; }
         /// <inheritdoc/>
-        public override string DynamicRef { get => string.IsNullOrEmpty(_dynamicRef) ? Target?.DynamicRef : _dynamicRef; set => _dynamicRef = value; }
+        public string DynamicRef { get => Target?.DynamicRef; }
         /// <inheritdoc/>
-        public override string DynamicAnchor { get => string.IsNullOrEmpty(_dynamicAnchor) ? Target?.DynamicAnchor : _dynamicAnchor; set => _dynamicAnchor = value; }
+        public string DynamicAnchor { get => Target?.DynamicAnchor; }
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiSchema> Definitions { get => _definitions is not null ? _definitions : Target?.Definitions; set => _definitions = value; }
+        public IDictionary<string, IOpenApiSchema> Definitions { get => Target?.Definitions; }
         /// <inheritdoc/>
-        public override decimal? V31ExclusiveMaximum { get => _v31ExclusiveMaximum is not null ? _v31ExclusiveMaximum.Value : Target?.V31ExclusiveMaximum; set => _v31ExclusiveMaximum = value; }
+        public decimal? V31ExclusiveMaximum { get => Target?.V31ExclusiveMaximum; }
         /// <inheritdoc/>
-        public override decimal? V31ExclusiveMinimum { get => _v31ExclusiveMinimum is not null ? _v31ExclusiveMinimum.Value : Target?.V31ExclusiveMinimum; set => _v31ExclusiveMinimum = value; }
+        public decimal? V31ExclusiveMinimum { get => Target?.V31ExclusiveMinimum; }
         /// <inheritdoc/>
-        public override bool UnEvaluatedProperties { get => _unEvaluatedProperties is not null ? _unEvaluatedProperties.Value : Target?.UnEvaluatedProperties ?? false; set => _unEvaluatedProperties = value; }
+        public bool UnEvaluatedProperties { get => Target?.UnEvaluatedProperties ?? false; }
         /// <inheritdoc/>
-        public override JsonSchemaType? Type { get => _type is not null ? _type.Value : Target?.Type; set => _type = value; }
+        public JsonSchemaType? Type { get => Target?.Type; }
         /// <inheritdoc/>
-        public override string Const { get => string.IsNullOrEmpty(_const) ? Target?.Const : _const; set => _const = value; }
+        public string Const { get => Target?.Const; }
         /// <inheritdoc/>
-        public override string Format { get => string.IsNullOrEmpty(_format) ? Target?.Format : _format; set => _format = value; }
+        public string Format { get => Target?.Format; }
         /// <inheritdoc/>
-        public override string Description
-        {
-            get => string.IsNullOrEmpty(_description) ? Target?.Description : _description;
-            set => _description = value;
-        }
+        public decimal? Maximum { get => Target?.Maximum; }
         /// <inheritdoc/>
-        public override decimal? Maximum { get => _maximum is not null ? _maximum : Target?.Maximum; set => _maximum = value; }
+        public bool? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
         /// <inheritdoc/>
-        public override bool? ExclusiveMaximum { get => _exclusiveMaximum is not null ? _exclusiveMaximum : Target?.ExclusiveMaximum; set => _exclusiveMaximum = value; }
+        public decimal? Minimum { get => Target?.Minimum; }
         /// <inheritdoc/>
-        public override decimal? Minimum { get => _minimum is not null ? _minimum : Target?.Minimum; set => _minimum = value; }
+        public bool? ExclusiveMinimum { get => Target?.ExclusiveMinimum; }
         /// <inheritdoc/>
-        public override bool? ExclusiveMinimum { get => _exclusiveMinimum is not null ? _exclusiveMinimum : Target?.ExclusiveMinimum; set => _exclusiveMinimum = value; }
+        public int? MaxLength { get => Target?.MaxLength; }
         /// <inheritdoc/>
-        public override int? MaxLength { get => _maxLength is not null ? _maxLength : Target?.MaxLength; set => _maxLength = value; }
+        public int? MinLength { get => Target?.MinLength; }
         /// <inheritdoc/>
-        public override int? MinLength { get => _minLength is not null ? _minLength : Target?.MinLength; set => _minLength = value; }
+        public string Pattern { get => Target?.Pattern; }
         /// <inheritdoc/>
-        public override string Pattern { get => string.IsNullOrEmpty(_pattern) ? Target?.Pattern : _pattern; set => _pattern = value; }
+        public decimal? MultipleOf { get => Target?.MultipleOf; }
         /// <inheritdoc/>
-        public override decimal? MultipleOf { get => _multipleOf is not null ? _multipleOf : Target?.MultipleOf; set => _multipleOf = value; }
+        public JsonNode Default { get => Target?.Default; }
         /// <inheritdoc/>
-        public override JsonNode Default { get => _default is not null ? _default : Target?.Default; set => _default = value; }
+        public bool ReadOnly { get => Target?.ReadOnly ?? false; }
         /// <inheritdoc/>
-        public override bool ReadOnly { get => _readOnly is not null ? _readOnly.Value : Target?.ReadOnly ?? false; set => _readOnly = value; }
+        public bool WriteOnly { get => Target?.WriteOnly ?? false; }
         /// <inheritdoc/>
-        public override bool WriteOnly { get => _writeOnly is not null ? _writeOnly.Value : Target?.WriteOnly ?? false; set => _writeOnly = value; }
+        public IList<IOpenApiSchema> AllOf { get => Target?.AllOf; }
         /// <inheritdoc/>
-        public override IList<OpenApiSchema> AllOf { get => _allOf is not null ? _allOf : Target?.AllOf; set => _allOf = value; }
+        public IList<IOpenApiSchema> OneOf { get => Target?.OneOf; }
         /// <inheritdoc/>
-        public override IList<OpenApiSchema> OneOf { get => _oneOf is not null ? _oneOf : Target?.OneOf; set => _oneOf = value; }
+        public IList<IOpenApiSchema> AnyOf { get => Target?.AnyOf; }
         /// <inheritdoc/>
-        public override IList<OpenApiSchema> AnyOf { get => _anyOf is not null ? _anyOf : Target?.AnyOf; set => _anyOf = value; }
+        public IOpenApiSchema Not { get => Target?.Not; }
         /// <inheritdoc/>
-        public override OpenApiSchema Not { get => _not is not null ? _not : Target?.Not; set => _not = value; }
+        public ISet<string> Required { get => Target?.Required; }
         /// <inheritdoc/>
-        public override ISet<string> Required { get => _required is not null ? _required : Target?.Required; set => _required = value; }
+        public IOpenApiSchema Items { get => Target?.Items; }
         /// <inheritdoc/>
-        public override OpenApiSchema Items { get => _items is not null ? _items : Target?.Items; set => _items = value; }
+        public int? MaxItems { get => Target?.MaxItems; }
         /// <inheritdoc/>
-        public override int? MaxItems { get => _maxItems is not null ? _maxItems : Target?.MaxItems; set => _maxItems = value; }
+        public int? MinItems { get => Target?.MinItems; }
         /// <inheritdoc/>
-        public override int? MinItems { get => _minItems is not null ? _minItems : Target?.MinItems; set => _minItems = value; }
+        public bool? UniqueItems { get => Target?.UniqueItems; }
         /// <inheritdoc/>
-        public override bool? UniqueItems { get => _uniqueItems is not null ? _uniqueItems : Target?.UniqueItems; set => _uniqueItems = value; }
+        public IDictionary<string, IOpenApiSchema> Properties { get => Target?.Properties; }
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiSchema> Properties { get => _properties is not null ? _properties : Target?.Properties; set => _properties = value; }
+        public IDictionary<string, IOpenApiSchema> PatternProperties { get => Target?.PatternProperties; }
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiSchema> PatternProperties { get => _patternProperties is not null ? _patternProperties : Target?.PatternProperties; set => _patternProperties = value; }
+        public int? MaxProperties { get => Target?.MaxProperties; }
         /// <inheritdoc/>
-        public override int? MaxProperties { get => _maxProperties is not null ? _maxProperties : Target?.MaxProperties; set => _maxProperties = value; }
+        public int? MinProperties { get => Target?.MinProperties; }
         /// <inheritdoc/>
-        public override int? MinProperties { get => _minProperties is not null ? _minProperties : Target?.MinProperties; set => _minProperties = value; }
+        public bool AdditionalPropertiesAllowed { get => Target?.AdditionalPropertiesAllowed ?? true; }
         /// <inheritdoc/>
-        public override bool AdditionalPropertiesAllowed { get => _additionalPropertiesAllowed is not null ? _additionalPropertiesAllowed.Value : Target?.AdditionalPropertiesAllowed ?? true; set => _additionalPropertiesAllowed = value; }
+        public IOpenApiSchema AdditionalProperties { get => Target?.AdditionalProperties; }
         /// <inheritdoc/>
-        public override OpenApiSchema AdditionalProperties { get => _additionalProperties is not null ? _additionalProperties : Target?.AdditionalProperties; set => _additionalProperties = value; }
+        public OpenApiDiscriminator Discriminator { get => Target?.Discriminator; }
         /// <inheritdoc/>
-        public override OpenApiDiscriminator Discriminator { get => _discriminator is not null ? _discriminator : Target?.Discriminator; set => _discriminator = value; }
+        public JsonNode Example { get => Target?.Example; }
         /// <inheritdoc/>
-        public override JsonNode Example { get => _example is not null ? _example : Target?.Example; set => _example = value; }
+        public IList<JsonNode> Examples { get => Target?.Examples; }
         /// <inheritdoc/>
-        public override IList<JsonNode> Examples { get => _examples is not null ? _examples : Target?.Examples; set => _examples = value; }
+        public IList<JsonNode> Enum { get => Target?.Enum; }
         /// <inheritdoc/>
-        public override IList<JsonNode> Enum { get => _enum is not null ? _enum : Target?.Enum; set => _enum = value; }
+        public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? false; }
         /// <inheritdoc/>
-        public override bool Nullable { get => _nullable is not null ? _nullable.Value : Target?.Nullable ?? false; set => _nullable = value; }
+        public OpenApiExternalDocs ExternalDocs { get => Target?.ExternalDocs; }
         /// <inheritdoc/>
-        public override bool UnevaluatedProperties { get => _unevaluatedProperties is not null ? _unevaluatedProperties.Value : Target?.UnevaluatedProperties ?? false; set => _unevaluatedProperties = value; }
+        public bool Deprecated { get => Target?.Deprecated ?? false; }
         /// <inheritdoc/>
-        public override OpenApiExternalDocs ExternalDocs { get => _externalDocs is not null ? _externalDocs : Target?.ExternalDocs; set => _externalDocs = value; }
+        public OpenApiXml Xml { get => Target?.Xml; }
         /// <inheritdoc/>
-        public override bool Deprecated { get => _deprecated is not null ? _deprecated.Value : Target?.Deprecated ?? false; set => _deprecated = value; }
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+
         /// <inheritdoc/>
-        public override OpenApiXml Xml { get => _xml is not null ? _xml : Target?.Xml; set => _xml = value; }
+        public IDictionary<string, JsonNode> UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
+
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => _extensions is not null ? _extensions : Target?.Extensions; set => _extensions = value; }
+        public IDictionary<string, object> Annotations { get => Target?.Annotations; }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
-            {
-                _reference.SerializeAsV31(writer);
-                return;
-            }
-            // If Loop is detected then just Serialize as a reference.
-            else if (!writer.GetSettings().LoopDetector.PushLoop<OpenApiSchema>(this))
-            {
-                writer.GetSettings().LoopDetector.SaveLoop(this);
-                _reference.SerializeAsV31(writer);
-                return;
-            }
-
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
-            writer.GetSettings().LoopDetector.PopLoop<OpenApiSchema>();
+            SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV3(w));
         }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
-            {
-                _reference.SerializeAsV3(writer);
-                return;
-            }
-            // If Loop is detected then just Serialize as a reference.
-            else if (!writer.GetSettings().LoopDetector.PushLoop<OpenApiSchema>(this))
-            {
-                writer.GetSettings().LoopDetector.SaveLoop(this);
-                _reference.SerializeAsV3(writer);
-                return;
-            }
-
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
-            writer.GetSettings().LoopDetector.PopLoop<OpenApiSchema>();
+            SerializeAsWithoutLoops(writer, (w, element) => element.SerializeAsV3(w));
         }
-
-        /// <inheritdoc/>
-        internal override void SerializeAsV2(
-            IOpenApiWriter writer,
-            ISet<string> parentRequiredProperties,
-            string propertyName)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
-            {
-                _reference.SerializeAsV2(writer);
-            }
-            else
-            {
-                base.SerializeAsV2(writer, parentRequiredProperties, propertyName);
-            }
-        }
-
         /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
+            SerializeAsWithoutLoops(writer, (w, element) => element.SerializeAsV2(w));
+        }
+        private void SerializeAsWithoutLoops(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> action)
+        {
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
-                _reference.SerializeAsV2(writer);
+                action(writer, Reference);
+            }
+            // If Loop is detected then just Serialize as a reference.
+            else if (!writer.GetSettings().LoopDetector.PushLoop<IOpenApiSchema>(this))
+            {
+                writer.GetSettings().LoopDetector.SaveLoop<IOpenApiSchema>(this);
+                action(writer, Reference);
             }
             else
             {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV2(writer));
+                SerializeInternal(writer, (w, element) => action(w, element));
+                writer.GetSettings().LoopDetector.PopLoop<IOpenApiSchema>();
             }
-        }
 
+        }
         /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
+        public override IOpenApiSchema CopyReferenceAsTargetElementWithOverrides(IOpenApiSchema source)
         {
-            Utils.CheckArgumentNull(writer);
-            action(writer, Target);
+            return source is OpenApiSchema ? new OpenApiSchema(this) : source;
+        }
+        /// <inheritdoc/>
+        public IOpenApiSchema CreateShallowCopy()
+        {
+            return new OpenApiSchemaReference(this);
         }
     }
 }

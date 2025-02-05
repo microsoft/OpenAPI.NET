@@ -1,5 +1,7 @@
-﻿using Microsoft.OpenApi.Extensions;
+﻿using System;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V31
@@ -42,7 +44,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new AnyFieldMap<OpenApiMediaType>
@@ -57,15 +59,15 @@ namespace Microsoft.OpenApi.Reader.V31
         };
 
 
-        private static readonly AnyMapFieldMap<OpenApiMediaType, OpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
-            new AnyMapFieldMap<OpenApiMediaType, OpenApiExample>
+        private static readonly AnyMapFieldMap<OpenApiMediaType, IOpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
+            new AnyMapFieldMap<OpenApiMediaType, IOpenApiExample>
         {
             {
                 OpenApiConstants.Examples,
-                new AnyMapFieldMapParameter<OpenApiMediaType, OpenApiExample>(
+                new AnyMapFieldMapParameter<OpenApiMediaType, IOpenApiExample>(
                     m => m.Examples,
                     e => e.Value,
-                    (e, v) => e.Value = v,
+                    (e, v) => {if (e is OpenApiExample ex) {ex.Value = v;}},
                     m => m.Schema)
             }
         };

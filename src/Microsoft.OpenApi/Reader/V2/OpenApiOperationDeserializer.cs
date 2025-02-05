@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Models.Interfaces;
+using System;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -79,7 +81,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields = new();
@@ -87,8 +89,8 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiResponses> _responsesPatternFields =
             new()
             {
-                {s => !s.StartsWith("x-"), (o, p, n, t) => o.Add(p, LoadResponse(n, t))},
-                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.Add(p, LoadResponse(n, t))},
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument)
@@ -120,7 +122,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             }
 
-            foreach (var response in operation.Responses.Values)
+            foreach (var response in operation.Responses.Values.OfType<OpenApiResponse>())
             {
                 ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
             }
@@ -146,18 +148,21 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Properties = formParameters.ToDictionary(
                         k => k.Name,
-                        v =>
+                        v => 
                         {
-                            var schema = v.Schema;
+                            var schema = v.Schema.CreateShallowCopy();
                             schema.Description = v.Description;
-                            schema.Extensions = v.Extensions;
+                            if (schema is OpenApiSchema openApiSchema)
+                            {
+                                openApiSchema.Extensions = v.Extensions;
+                            }
                             return schema;
                         }),
-                    Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
+                    Required = new HashSet<string>(formParameters.Where(static p => p.Required).Select(static p => p.Name), StringComparer.Ordinal)
                 }
             };
 
@@ -172,15 +177,15 @@ namespace Microsoft.OpenApi.Reader.V2
                     _ => mediaType)
             };
 
-            foreach (var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && x.Schema.Type == null))
-                value.Schema.Type = JsonSchemaType.Object;
+            foreach (var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && x.Schema.Type == null).Select(static x => x.Schema).OfType<OpenApiSchema>())
+                value.Type = JsonSchemaType.Object;
 
             return formBody;
         }
 
-        internal static OpenApiRequestBody CreateRequestBody(
+        internal static IOpenApiRequestBody CreateRequestBody(
             ParsingContext context,
-            OpenApiParameter bodyParameter)
+            IOpenApiParameter bodyParameter)
         {
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??

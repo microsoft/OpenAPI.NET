@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -148,7 +149,7 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             var value = node.GetScalarValue();
 
-            if (value != null && value.StartsWith("$"))
+            if (value != null && value.StartsWith("$", StringComparison.OrdinalIgnoreCase))
             {
                 return new()
                 {
@@ -190,7 +191,7 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             var refSegments = pointer.Split('/');
             var refId = refSegments.Last();
-            var isExternalResource = !refSegments.First().StartsWith("#");
+            var isExternalResource = !refSegments.First().StartsWith("#", StringComparison.OrdinalIgnoreCase);
 
             string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
 

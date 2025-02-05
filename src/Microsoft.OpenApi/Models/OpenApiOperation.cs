@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Models
         /// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
         /// The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
         /// </summary>
-        public IList<OpenApiParameter>? Parameters { get; set; } = new List<OpenApiParameter>();
+        public IList<IOpenApiParameter>? Parameters { get; set; } = [];
 
         /// <summary>
         /// The request body applicable for this operation.
@@ -65,7 +66,7 @@ namespace Microsoft.OpenApi.Models
         /// has explicitly defined semantics for request bodies.
         /// In other cases where the HTTP spec is vague, requestBody SHALL be ignored by consumers.
         /// </summary>
-        public OpenApiRequestBody? RequestBody { get; set; }
+        public IOpenApiRequestBody? RequestBody { get; set; }
 
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
@@ -80,7 +81,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, OpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -119,22 +120,23 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiOperation"/> object
         /// </summary>
-        public OpenApiOperation(OpenApiOperation? operation)
+        public OpenApiOperation(OpenApiOperation operation)
         {
-            Tags = operation?.Tags != null ? new List<OpenApiTagReference>(operation.Tags) : null;
-            Summary = operation?.Summary ?? Summary;
-            Description = operation?.Description ?? Description;
-            ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;
-            OperationId = operation?.OperationId ?? OperationId;
-            Parameters = operation?.Parameters != null ? new List<OpenApiParameter>(operation.Parameters) : null;
-            RequestBody = operation?.RequestBody != null ? new(operation?.RequestBody) : null;
-            Responses = operation?.Responses != null ? new(operation?.Responses) : null;
-            Callbacks = operation?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(operation.Callbacks) : null;
-            Deprecated = operation?.Deprecated ?? Deprecated;
-            Security = operation?.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
-            Servers = operation?.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;
-            Extensions = operation?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
-            Annotations = operation?.Annotations != null ? new Dictionary<string, object>(operation.Annotations) : null;
+            Utils.CheckArgumentNull(operation);
+            Tags = operation.Tags != null ? new List<OpenApiTagReference>(operation.Tags) : null;
+            Summary = operation.Summary ?? Summary;
+            Description = operation.Description ?? Description;
+            ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;
+            OperationId = operation.OperationId ?? OperationId;
+            Parameters = operation.Parameters != null ? new List<IOpenApiParameter>(operation.Parameters) : null;
+            RequestBody = operation.RequestBody?.CreateShallowCopy();
+            Responses = operation.Responses != null ? new(operation.Responses) : null;
+            Callbacks = operation.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
+            Deprecated = operation.Deprecated;
+            Security = operation.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
+            Servers = operation.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;
+            Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
+            Annotations = operation.Annotations != null ? new Dictionary<string, object>(operation.Annotations) : null;
         }
 
         /// <summary>
@@ -158,7 +160,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -212,7 +214,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -234,15 +236,7 @@ namespace Microsoft.OpenApi.Models
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
-            List<OpenApiParameter> parameters;
-            if (Parameters == null)
-            {
-                parameters = [];
-            }
-            else
-            {
-                parameters = [.. Parameters];
-            }
+            List<IOpenApiParameter> parameters = Parameters is null ? new() : new(Parameters);
 
             if (RequestBody != null)
             {
@@ -254,17 +248,17 @@ namespace Microsoft.OpenApi.Models
                     if (consumes.Contains("application/x-www-form-urlencoded") ||
                         consumes.Contains("multipart/form-data"))
                     {
-                        parameters.AddRange(RequestBody.ConvertToFormDataParameters());
+                        parameters.AddRange(RequestBody.ConvertToFormDataParameters(writer));
                     }
                     else
                     {
-                        parameters.Add(RequestBody.ConvertToBodyParameter());
+                        parameters.Add(RequestBody.ConvertToBodyParameter(writer));
                     }
                 }
-                else if (RequestBody.Reference != null && RequestBody.Reference.HostDocument is {} hostDocument)
+                else if (RequestBody is OpenApiRequestBodyReference requestBodyReference)
                 {
                     parameters.Add(
-                        new OpenApiParameterReference(RequestBody.Reference.Id, hostDocument));
+                        new OpenApiParameterReference(requestBodyReference.Reference.Id, requestBodyReference.Reference.HostDocument));
                 }
 
                 if (consumes.Count > 0)
@@ -284,10 +278,7 @@ namespace Microsoft.OpenApi.Models
                 var produces = Responses
                     .Where(static r => r.Value.Content != null)
                     .SelectMany(static r => r.Value.Content?.Keys ?? [])
-                    .Concat(
-                        Responses
-                        .Where(static r => r.Value.Reference is {HostDocument: not null})
-                        .SelectMany(static r => r.Value.Content?.Keys ?? []))
+                    .Where(static m => !string.IsNullOrEmpty(m))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray();
 

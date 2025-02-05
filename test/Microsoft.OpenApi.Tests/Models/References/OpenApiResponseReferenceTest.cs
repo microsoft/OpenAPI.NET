@@ -92,49 +92,55 @@ components:
             // Assert
             var localContent = _localResponseReference.Content.FirstOrDefault();
             Assert.Equal("text/plain", localContent.Key);                     
-            Assert.Equal("Pong", localContent.Value.Schema.Reference.Id);
+            var localContentSchema = Assert.IsType<OpenApiSchemaReference>(localContent.Value.Schema);
+            Assert.Equal("Pong", localContentSchema.Reference.Id);
             Assert.Equal("OK response", _localResponseReference.Description);
 
             var externalContent = _externalResponseReference.Content.FirstOrDefault();
             Assert.Equal("text/plain", externalContent.Key);
-            Assert.Equal("Pong", externalContent.Value.Schema.Reference.Id);
+            var externalContentSchema = Assert.IsType<OpenApiSchemaReference>(externalContent.Value.Schema);
+            Assert.Equal("Pong", externalContentSchema.Reference.Id);
             Assert.Equal("External reference: OK response", _externalResponseReference.Description);
 
             Assert.Equal("OK", _openApiDoc_2.Components.Responses.First().Value.Description);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeResponseReferenceAsV3JsonWorks(bool produceTerseOutput)
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        public async Task SerializeResponseReferenceAsV3JsonWorks(bool produceTerseOutput, bool inlineLocalReferences)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput});
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = inlineLocalReferences });
 
             // Act
             _localResponseReference.SerializeAsV3(writer);
             await writer.FlushAsync();
 
             // Assert            
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeResponseReferenceAsV31JsonWorks(bool produceTerseOutput)
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        public async Task SerializeResponseReferenceAsV31JsonWorks(bool produceTerseOutput, bool inlineLocalReferences)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput});
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput, InlineLocalReferences = inlineLocalReferences });
 
             // Act
             _localResponseReference.SerializeAsV31(writer);
             await writer.FlushAsync();
 
             // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
         }
     }
 }

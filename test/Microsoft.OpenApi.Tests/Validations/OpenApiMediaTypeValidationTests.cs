@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var mediaType = new OpenApiMediaType
             {
                 Example = 55,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,
                 }
@@ -47,21 +47,21 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             var mediaType = new OpenApiMediaType
             {
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    AdditionalProperties = new()
+                    AdditionalProperties = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer,
                     }
                 },
                 Examples =
                     {
-                        ["example0"] = new()
+                        ["example0"] = new OpenApiExample()
                         {
                             Value = "1",
                         },
-                        ["example1"] = new()
+                        ["example1"] = new OpenApiExample()
                         {
                            Value = new JsonObject()
                             {
@@ -70,11 +70,11 @@ namespace Microsoft.OpenApi.Validations.Tests
                                 ["z"] = "200"
                             }
                         },
-                        ["example2"] = new()
+                        ["example2"] = new OpenApiExample()
                         {
                             Value = new JsonArray(){3}
                         },
-                        ["example3"] = new()
+                        ["example3"] = new OpenApiExample()
                         {
                             Value = new JsonObject()
                             {

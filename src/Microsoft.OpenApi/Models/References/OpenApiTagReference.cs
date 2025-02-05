@@ -5,31 +5,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Models.References
 {
     /// <summary>
     /// Tag Object Reference
     /// </summary>
-    public class OpenApiTagReference : OpenApiTag, IOpenApiReferenceableWithTarget<OpenApiTag>
+    public class OpenApiTagReference : BaseOpenApiReferenceHolder<OpenApiTag, IOpenApiTag>, IOpenApiTag
     {
-        internal OpenApiTag _target;
-
-        /// <summary>
-        /// Reference.
-        /// </summary>
-        public OpenApiReference Reference { get; set; }
-
         /// <summary>
         /// Resolved target of the reference.
         /// </summary>
-        public OpenApiTag Target
+        public override OpenApiTag Target
         {
             get
             {
-                _target ??= Reference.HostDocument?.Tags.FirstOrDefault(t => StringComparer.Ordinal.Equals(t.Name, Reference.Id));
-                return _target;
+                return Reference.HostDocument?.Tags.FirstOrDefault(t => StringComparer.Ordinal.Equals(t.Name, Reference.Id));
             }
         }
 
@@ -38,85 +30,47 @@ namespace Microsoft.OpenApi.Models.References
         /// </summary>
         /// <param name="referenceId">The reference Id.</param>
         /// <param name="hostDocument">The host OpenAPI document.</param>
-        public OpenApiTagReference(string referenceId, OpenApiDocument hostDocument)
+        /// <param name="externalResource">Optional: External resource in the reference.
+        /// It may be:
+        /// 1. a absolute/relative file path, for example:  ../commons/pet.json
+        /// 2. a Url, for example: http://localhost/pet.json
+        /// </param>
+        public OpenApiTagReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Tag, externalResource)
         {
-            Utils.CheckArgumentNullOrEmpty(referenceId);
-
-            Reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.Tag
-            };
         }
-
         /// <summary>
-        /// Copy Constructor
+        /// Copy constructor
         /// </summary>
-        /// <param name="source">The source to copy information from.</param>
-        public OpenApiTagReference(OpenApiTagReference source):base()
+        /// <param name="openApiTagReference">The reference to copy</param>
+        private OpenApiTagReference(OpenApiTagReference openApiTagReference):base(openApiTagReference)
         {
-            Reference = source?.Reference != null ? new(source.Reference) : null;
-            _target = source?._target;
-        }
-
-        private const string ReferenceErrorMessage = "Setting the value from the reference is not supported, use the target property instead.";
-        /// <inheritdoc/>
-        public override string Description { get => Target.Description; set => throw new InvalidOperationException(ReferenceErrorMessage); }
-
-        /// <inheritdoc/>
-        public override OpenApiExternalDocs ExternalDocs { get => Target.ExternalDocs; set => throw new InvalidOperationException(ReferenceErrorMessage); }
-
-        /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => throw new InvalidOperationException(ReferenceErrorMessage); }
-
-        /// <inheritdoc/>
-        public override string Name { get => Target.Name; set => throw new InvalidOperationException(ReferenceErrorMessage); }
-        
-        /// <inheritdoc/>
-        public override void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV3(writer);
-            }
-            else
-            {
-                SerializeInternal(writer);
-            }
+            
         }
 
         /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
+        public string Description
         {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV31(writer);
-            }
-            else
-            {
-                SerializeInternal(writer);
-            }
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
         }
 
         /// <inheritdoc/>
-        public override void SerializeAsV2(IOpenApiWriter writer)
+        public OpenApiExternalDocs ExternalDocs { get => Target?.ExternalDocs; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+
+        /// <inheritdoc/>
+        public string Name { get => Target?.Name; }
+        /// <inheritdoc/>
+        public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
         {
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                Reference.SerializeAsV2(writer);
-            }
-            else
-            {
-                SerializeInternal(writer);
-            }
+            return source is OpenApiTag ? new OpenApiTag(this) : source;
         }
 
         /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer)
+        public IOpenApiTag CreateShallowCopy()
         {
-            Utils.CheckArgumentNull(writer);
-            writer.WriteValue(Name);
+            return new OpenApiTagReference(this);
         }
     }
 }

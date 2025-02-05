@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static readonly PatternFieldMap<OpenApiInfo> InfoPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, k, n, _) => o.AddExtension(k,LoadExtension(k, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, k, n, _) => o.AddExtension(k,LoadExtension(k, n))}
         };
 
         public static OpenApiInfo LoadInfo(ParseNode node, OpenApiDocument hostDocument)

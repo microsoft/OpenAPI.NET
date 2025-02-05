@@ -1,1 +1,0 @@
-﻿{"name":"pet","description":"Pets operations","externalDocs":{"description":"Find more info here","url":"https://example.com"},"x-tag-extension":null}
