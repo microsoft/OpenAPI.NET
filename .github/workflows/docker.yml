@@ -3,8 +3,7 @@ on:
   workflow_dispatch:
   push:
     tags: ["v*"]
-    branches: [main, support/v1]
-    paths: ['src/Microsoft.OpenApi.Hidi/**', '.github/workflows/**']
+    branches: [main]
   pull_request:
 env:
   REGISTRY: msgraphprod.azurecr.io
