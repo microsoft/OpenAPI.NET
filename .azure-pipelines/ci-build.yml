@@ -6,7 +6,6 @@ trigger:
   branches:
     include:
     - main
-    - dev
     - support/v1
   tags:
     include:
@@ -15,7 +14,6 @@ pr:
   branches:
     include:
     - main
-    - dev
     - support/v1
 variables:
   buildPlatform: 'Any CPU'
