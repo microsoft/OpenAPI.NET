@@ -39,7 +39,11 @@ namespace Microsoft.OpenApi.Reader
                                       string format = null,
                                       OpenApiReaderSettings settings = null)
         {
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(stream);
+#else
             if (stream is null) throw new ArgumentNullException(nameof(stream));
+#endif
             settings ??= new OpenApiReaderSettings();
 
             // Get the format of the stream if not provided
@@ -112,7 +116,11 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(Stream input, string format = null, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(input);
+#else
             if (input is null) throw new ArgumentNullException(nameof(input));
+#endif
             settings ??= new OpenApiReaderSettings();
 
             Stream preparedStream;
@@ -160,7 +168,11 @@ namespace Microsoft.OpenApi.Reader
                                                  CancellationToken token = default) where T : IOpenApiElement
         {
             Utils.CheckArgumentNull(openApiDocument);
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(input);
+#else
             if (input is null) throw new ArgumentNullException(nameof(input));
+#endif
             if (input is MemoryStream memoryStream)
             {
                 return Load<T>(memoryStream, version, format, openApiDocument, out var _, settings);
@@ -185,7 +197,11 @@ namespace Microsoft.OpenApi.Reader
                                        string format = null,
                                        OpenApiReaderSettings settings = null)
         {
-            if (input is null) throw new ArgumentNullException(nameof(input));
+#if NET6_0_OR_GREATER
+            ArgumentException.ThrowIfNullOrEmpty(input);
+#else
+            if (string.IsNullOrEmpty(input)) throw new ArgumentNullException(nameof(input));
+#endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
 
@@ -212,7 +228,11 @@ namespace Microsoft.OpenApi.Reader
                                  string format = null,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            if (input is null) throw new ArgumentNullException(nameof(input));
+#if NET6_0_OR_GREATER
+            ArgumentException.ThrowIfNullOrEmpty(input);
+#else
+            if (string.IsNullOrEmpty(input)) throw new ArgumentNullException(nameof(input));
+#endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
@@ -325,8 +345,12 @@ namespace Microsoft.OpenApi.Reader
 
         private static string InspectStreamFormat(Stream stream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));            
-            
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(stream);
+#else
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+#endif
+
             long initialPosition = stream.Position;
             int firstByte = stream.ReadByte();
 
