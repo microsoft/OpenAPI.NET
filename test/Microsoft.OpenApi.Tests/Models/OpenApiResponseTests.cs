@@ -20,9 +20,9 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiResponseTests
     {
-        public static OpenApiResponse BasicResponse = new OpenApiResponse();
+        private static OpenApiResponse BasicResponse => new OpenApiResponse();
 
-        public static OpenApiResponse AdvancedV2Response = new OpenApiResponse
+        private static OpenApiResponse AdvancedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             }
         };
-        public static OpenApiResponse AdvancedV3Response = new OpenApiResponse
+        private static OpenApiResponse AdvancedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =
@@ -101,8 +101,8 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiResponseReference V2OpenApiResponseReference = new OpenApiResponseReference(ReferencedV2Response, "example1");
-        public static OpenApiResponse ReferencedV2Response = new OpenApiResponse
+        private static OpenApiResponseReference V2OpenApiResponseReference => new OpenApiResponseReference("example1");
+        private static OpenApiResponse ReferencedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =
@@ -136,9 +136,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             }
         };
-        public static OpenApiResponseReference V3OpenApiResponseReference = new OpenApiResponseReference(ReferencedV3Response, "example1");
+        private static OpenApiResponseReference V3OpenApiResponseReference => new OpenApiResponseReference("example1");
 
-        public static OpenApiResponse ReferencedV3Response = new OpenApiResponse
+        private static OpenApiResponse ReferencedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =

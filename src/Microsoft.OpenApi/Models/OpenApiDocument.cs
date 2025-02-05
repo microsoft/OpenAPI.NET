@@ -27,6 +27,13 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
     {
         /// <summary>
+        /// Register components in the document to the workspace
+        /// </summary>
+        public void RegisterComponents()
+        {
+            Workspace?.RegisterComponents(this);
+        }
+        /// <summary>
         /// Related workspace containing components that are referenced in a document
         /// </summary>
         public OpenApiWorkspace? Workspace { get; set; }

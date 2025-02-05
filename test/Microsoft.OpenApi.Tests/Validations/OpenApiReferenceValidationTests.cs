@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                                     {
                                         ["application/json"] = new()
                                         {
-                                            Schema = new OpenApiSchemaReference(sharedSchema, "test")
+                                            Schema = new OpenApiSchemaReference("test")
                                         }
                                     }
                                 }
@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                                     {
                                         ["application/json"] = new()
                                         {
-                                            Schema = new OpenApiSchemaReference(sharedSchema, "test")
+                                            Schema = new OpenApiSchemaReference("test")
                                         }
                                     }
                                 }

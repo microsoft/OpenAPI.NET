@@ -34,6 +34,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Reference object.
         /// </summary>
-        OpenApiReference Reference { get; set; }
+        OpenApiReference Reference { get; init; }
     }
 }

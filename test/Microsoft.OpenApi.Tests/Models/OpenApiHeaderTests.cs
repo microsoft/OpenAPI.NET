@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiHeaderTests
     {
-        public static OpenApiHeader AdvancedHeader = new()
+        private static OpenApiHeader AdvancedHeader => new()
         {
             Description = "sampleHeader",
             Schema = new OpenApiSchema()
@@ -25,9 +25,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiHeaderReference OpenApiHeaderReference = new(ReferencedHeader, "example1");
+        private static OpenApiHeaderReference OpenApiHeaderReference => new("example1");
 
-        public static OpenApiHeader ReferencedHeader = new()
+        private static OpenApiHeader ReferencedHeader => new()
         {
             Description = "sampleHeader",
             Schema = new OpenApiSchema()

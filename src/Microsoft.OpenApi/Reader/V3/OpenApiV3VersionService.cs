@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
                     var id = segments[1];
-                    var openApiReference = new OpenApiReference();
+                    var isFragment = false;
 
                     // $ref: externalSource.yaml#/Pet
                     if (id.StartsWith("/components/", StringComparison.Ordinal))
@@ -152,12 +152,16 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                     else
                     {
-                        openApiReference.IsFragment = true;
+                        isFragment = true;
                     }
 
-                    openApiReference.ExternalResource = segments[0];
-                    openApiReference.Type = type;
-                    openApiReference.Id = id;
+                    var openApiReference = new OpenApiReference
+                    {
+                        ExternalResource = segments[0],
+                        Type = type,
+                        Id = id,
+                        IsFragment = isFragment,
+                    };
 
                     return openApiReference;
                 }
@@ -179,11 +183,12 @@ namespace Microsoft.OpenApi.Reader.V3
         /// <inheritdoc />
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
-            if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)))
+            if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)) &&
+                mapNode
+                .Where(x => x.Name.Equals(scalarValue))
+                .Select(static x => x.Value)
+                .OfType<ValueNode>().FirstOrDefault() is {} valueNode)
             {
-                var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
-                .Select(static x => x.Value).OfType<ValueNode>().FirstOrDefault();
-
                 return valueNode.GetScalarValue();
             }
 

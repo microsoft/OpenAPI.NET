@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
-                                                Schema = new OpenApiSchemaReference(testSchema, "test")
+                                                Schema = new OpenApiSchemaReference("test")
                                             }
                                         }
                                     }

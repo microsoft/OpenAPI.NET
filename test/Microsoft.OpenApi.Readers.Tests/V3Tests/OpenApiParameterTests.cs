@@ -343,7 +343,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 OperationId = "findPets",
                                 Parameters =
                                 [
-                                    new OpenApiParameterReference (parameter, "tagsParameter"),
+                                    new OpenApiParameterReference("tagsParameter"),
                                 ],
                             }
                         }

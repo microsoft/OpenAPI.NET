@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiSchemaReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
+        public OpenApiSchemaReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
         {
         }
         /// <summary>
@@ -33,10 +33,6 @@ namespace Microsoft.OpenApi.Models.References
         /// </summary>
         /// <param name="schema">The schema reference to copy</param>
         private OpenApiSchemaReference(OpenApiSchemaReference schema):base(schema)
-        {
-        }
-
-        internal OpenApiSchemaReference(OpenApiSchema target, string referenceId):base(target, referenceId, ReferenceType.Schema)
         {
         }
 

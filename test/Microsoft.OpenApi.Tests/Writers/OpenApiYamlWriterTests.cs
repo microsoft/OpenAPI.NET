@@ -463,10 +463,10 @@ namespace Microsoft.OpenApi.Tests.Writers
                                     {
                                         Description = "OK",
                                         Content = {
-                                             ["application/json"] = new()
-                                             {
-                                                     Schema = new OpenApiSchemaReference(thingSchema, "thing")
-                                             }
+                                            ["application/json"] = new()
+                                            {
+                                                Schema = new OpenApiSchemaReference("thing")
+                                            }
                                         }
                                     }
                                 }
@@ -480,6 +480,8 @@ namespace Microsoft.OpenApi.Tests.Writers
                         ["thing"] = thingSchema}
                 }
             };
+            doc.RegisterComponents();
+            doc.SetReferenceHostDocument();
 
             return doc;
         }

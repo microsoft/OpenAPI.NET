@@ -19,20 +19,20 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiParameterTests
     {
-        public static OpenApiParameter BasicParameter = new()
+        private static OpenApiParameter BasicParameter => new()
         {
             Name = "name1",
             In = ParameterLocation.Path
         };
 
-        public static OpenApiParameterReference OpenApiParameterReference = new(ReferencedParameter, "example1");
-        public static OpenApiParameter ReferencedParameter = new()
+        private static OpenApiParameterReference OpenApiParameterReference => new("example1");
+        private static OpenApiParameter ReferencedParameter => new()
         {
             Name = "name1",
             In = ParameterLocation.Path
         };
 
-        public static OpenApiParameter AdvancedPathParameterWithSchema = new()
+        private static OpenApiParameter AdvancedPathParameterWithSchema => new()
         {
             Name = "name1",
             In = ParameterLocation.Path,
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter ParameterWithFormStyleAndExplodeFalse = new()
+        private static OpenApiParameter ParameterWithFormStyleAndExplodeFalse => new()
         {
             Name = "name1",
             In = ParameterLocation.Query,
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new()
+        private static OpenApiParameter ParameterWithFormStyleAndExplodeTrue => new()
         {
             Name = "name1",
             In = ParameterLocation.Query,
@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter QueryParameterWithMissingStyle = new OpenApiParameter
+        private static OpenApiParameter QueryParameterWithMissingStyle => new OpenApiParameter
         {
             Name = "id",
             In = ParameterLocation.Query,
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiParameter AdvancedHeaderParameterWithSchemaTypeObject = new()
+        private static OpenApiParameter AdvancedHeaderParameterWithSchemaTypeObject => new()
         {
             Name = "name1",
             In = ParameterLocation.Header,

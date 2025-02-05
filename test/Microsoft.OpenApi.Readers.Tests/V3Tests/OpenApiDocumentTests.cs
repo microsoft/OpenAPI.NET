@@ -49,23 +49,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
         }
 
-        private static async Task<OpenApiSecurityScheme> CloneSecuritySchemeAsync(OpenApiSecurityScheme element)
-        {
-            using var stream = new MemoryStream();
-            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
-            {
-                InlineLocalReferences = true
-            });
-            element.SerializeAsV3(writer);
-            await writer.FlushAsync();
-            stream.Position = 0;
-
-            using var streamReader = new StreamReader(stream);
-            var result = await streamReader.ReadToEndAsync();
-            return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
-        }
-
         [Fact]
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
@@ -683,28 +666,26 @@ paths: {}
             // Create a clone of the schema to avoid modifying things in components.
             var petSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["pet1"]);
             var petSchema = await CloneAsync(petSchemaSource);
-            var castPetSchema = Assert.IsType<OpenApiSchema>(petSchema);
-            var petSchemaReference = new OpenApiSchemaReference(castPetSchema, "pet1");
+            Assert.IsType<OpenApiSchema>(petSchema);
+            var petSchemaReference = new OpenApiSchemaReference("pet1");
 
             var newPetSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["newPet"]);
             var newPetSchema = await CloneAsync(newPetSchemaSource);
-            var castNewPetSchema = Assert.IsType<OpenApiSchema>(newPetSchema);
-            var newPetSchemaReference = new OpenApiSchemaReference(castNewPetSchema, "newPet");
+            Assert.IsType<OpenApiSchema>(newPetSchema);
+            var newPetSchemaReference = new OpenApiSchemaReference("newPet");
 
             var errorModelSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["errorModel"]);
             var errorModelSchema = await CloneAsync(errorModelSchemaSource);
-            var castErrorModelSchema = Assert.IsType<OpenApiSchema>(errorModelSchema);
-            var errorModelSchemaReference = new OpenApiSchemaReference(castErrorModelSchema, "errorModel");
+            Assert.IsType<OpenApiSchema>(errorModelSchema);
+            var errorModelSchemaReference = new OpenApiSchemaReference("errorModel");
 
-            var tagReference1 = new OpenApiTagReference("tagName1", null);
+            var tagReference1 = new OpenApiTagReference("tagName1");
 
-            var tagReference2 = new OpenApiTagReference("tagName2", null);
+            var tagReference2 = new OpenApiTagReference("tagName2");
 
-            var securityScheme1Cast = Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName1"]);
-            var securityScheme1 = await CloneSecuritySchemeAsync(securityScheme1Cast);
+            Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName1"]);
 
-            var securityScheme2Cast = Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName2"]);
-            var securityScheme2 = await CloneSecuritySchemeAsync(securityScheme2Cast);
+            Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName2"]);
 
             var expected = new OpenApiDocument
             {
@@ -889,8 +870,8 @@ paths: {}
                                     {
                                         new OpenApiSecurityRequirement
                                         {
-                                            [new OpenApiSecuritySchemeReference(securityScheme1, "securitySchemeName1")] = new List<string>(),
-                                            [new OpenApiSecuritySchemeReference(securityScheme2, "securitySchemeName2")] = new List<string>
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
                                             {
                                                 "scope1",
                                                 "scope2"
@@ -1035,8 +1016,8 @@ paths: {}
                     {
                         new OpenApiSecurityRequirement
                         {
-                            [new OpenApiSecuritySchemeReference(securityScheme1, "securitySchemeName1")] = new List<string>(),
-                            [new OpenApiSecuritySchemeReference(securityScheme2, "securitySchemeName2")] = new List<string>
+                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
+                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
                             {
                                 "scope1",
                                 "scope2",
@@ -1045,12 +1026,8 @@ paths: {}
                         }
                     }
             };
-
-            tagReference1.Reference.HostDocument = expected;
-            tagReference2.Reference.HostDocument = expected;
-            petSchemaReference.Reference.HostDocument = expected;
-            newPetSchemaReference.Reference.HostDocument = expected;
-            errorModelSchemaReference.Reference.HostDocument = expected;
+            expected.RegisterComponents();
+            expected.SetReferenceHostDocument();
 
             actual.Document.Should().BeEquivalentTo(expected, options => options
             .IgnoringCyclicReferences()
@@ -1238,7 +1215,7 @@ paths: {}
                                 Summary = "Returns all pets",
                                 Parameters =
                                 [
-                                    new OpenApiParameterReference(parameter, "LimitParameter"),
+                                    new OpenApiParameterReference("LimitParameter"),
                                 ],
                                 Responses = new OpenApiResponses()
                             }
@@ -1253,8 +1230,12 @@ paths: {}
                     }
                 }
             };
+            expected.RegisterComponents();
+            expected.SetReferenceHostDocument();
 
-            var expectedSerializedDoc = @"openapi: 3.0.4
+            var expectedSerializedDoc = 
+"""
+openapi: 3.0.4
 info:
   title: Pet Store with Referenceable Parameter
   version: 1.0.0
@@ -1274,7 +1255,8 @@ components:
       schema:
         type: integer
         format: int32
-        default: 10";
+        default: 10
+""";
 
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
@@ -1284,7 +1266,6 @@ components:
             var outputDoc = (await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0)).MakeLineBreaksEnvironmentNeutral();
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var expectedParamReference = Assert.IsType<OpenApiParameterReference>(expectedParam);
-            expectedParamReference.Reference.HostDocument = doc;
 
             var actualParamReference = Assert.IsType<OpenApiParameterReference>(actualParam);
 

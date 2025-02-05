@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiRequestBodyReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.RequestBody, externalResource)
+        public OpenApiRequestBodyReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.RequestBody, externalResource)
         {
         }
         /// <summary>
@@ -35,9 +35,6 @@ namespace Microsoft.OpenApi.Models.References
         private OpenApiRequestBodyReference(OpenApiRequestBodyReference openApiRequestBodyReference):base(openApiRequestBodyReference)
         {
             
-        }
-        internal OpenApiRequestBodyReference(OpenApiRequestBody target, string referenceId):base(target, referenceId, ReferenceType.RequestBody)
-        {
         }
 
         /// <inheritdoc/>
