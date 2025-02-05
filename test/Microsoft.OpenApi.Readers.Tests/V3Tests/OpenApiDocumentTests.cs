@@ -26,6 +26,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
+        private const string codacyApi = "https://api.codacy.com/api/api-docs/swagger.yaml";
 
         public OpenApiDocumentTests()
         {
@@ -1361,6 +1362,14 @@ components:
             // Act & Assert: Ensure no NullReferenceException is thrown
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"));
             Assert.Empty(result.Diagnostic.Errors);
+        }
+
+        [Fact]
+        public async Task ParseDocumentWithNonStandardMIMETypePasses()
+        {
+            // Act & Assert: Ensure NotSupportedException is not thrown for non-standard MIME type: text/x-yaml
+            var result = await OpenApiDocument.LoadAsync(codacyApi);
+            Assert.NotNull(result.Document); 
         }
     }
 }
