@@ -279,10 +279,14 @@ namespace Microsoft.OpenApi.Reader
                     var mediaType = response.Content.Headers.ContentType.MediaType;
                     var contentType = mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
                     format = contentType.Split('/').LastOrDefault();
+                    if (!string.IsNullOrEmpty(format) && format.Contains('-'))
+                    {
+                        format = format.Split('-').LastOrDefault(); // for non-standard MIME types e.g. text/x-yaml used in older libs or apps
+                    }
 #if NETSTANDARD2_0
                     stream = await response.Content.ReadAsStreamAsync();
 #else
-                    stream = await response.Content.ReadAsStreamAsync(token).ConfigureAwait(false);;
+                    stream = await response.Content.ReadAsStreamAsync(token).ConfigureAwait(false);
 #endif
                     return (stream, format);
                 }
