@@ -624,6 +624,36 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
+        [Fact]
+        public async Task WriteAsItemsPropertiesDoesNotWriteNull()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Number | JsonSchemaType.Null
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+            writer.WriteStartObject();
+
+            // Act
+            schema.WriteAsItemsProperties(writer);
+            writer.WriteEndObject();
+            await writer.FlushAsync();
+
+            // Assert
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+            var expected =
+            """
+            {
+                "type": "number"
+            }
+            """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+
         internal class SchemaVisitor : OpenApiVisitorBase
         {
             public List<string> Titles = new();

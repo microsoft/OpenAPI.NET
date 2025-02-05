@@ -413,7 +413,7 @@ namespace Microsoft.OpenApi.Models
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
         {
             // type
-            writer.WriteProperty(OpenApiConstants.Type, Type.ToIdentifier());
+            writer.WriteProperty(OpenApiConstants.Type, (Type & ~JsonSchemaType.Null).ToIdentifier());
 
             // format
             WriteFormatProperty(writer);
