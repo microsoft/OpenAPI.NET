@@ -77,9 +77,9 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <inheritdoc/>
-        public static ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings, string format = null)
+        public static ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings)
         {
-            return _jsonReader.Read(jsonNode, settings, OpenApiConstants.Yaml);
+            return _jsonReader.Read(jsonNode, settings);
         }
 
         /// <inheritdoc/>
