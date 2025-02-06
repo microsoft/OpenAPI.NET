@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Reader;
 using SharpYaml.Serialization;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace Microsoft.OpenApi.Readers
@@ -123,8 +124,12 @@ namespace Microsoft.OpenApi.Readers
         {
             var yamlStream = new YamlStream();
             yamlStream.Load(input);
-            var yamlDocument = yamlStream.Documents[0];
-            return yamlDocument.ToJsonNode();
+            if (yamlStream.Documents.Any())
+            {
+                return yamlStream.Documents[0].ToJsonNode();
+            }
+
+            throw new InvalidOperationException("No documents found in the YAML stream.");
         }
     }
 }
