@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview7](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview6...v2.0.0-preview7) (2025-02-06)
+
+
+### Bug Fixes
+
+* do not write null for types on parameters in v2 ([f889937](https://github.com/microsoft/OpenAPI.NET/commit/f8899379d34054e919c670ab2f8dca876bc418d5))
+* do not write null for types on parameters in v2 ([4aef7b7](https://github.com/microsoft/OpenAPI.NET/commit/4aef7b7aa4d6f19be86f7bdaf1c37edb7d174317))
+
 ## [2.0.0-preview6](https://github.com/microsoft/openapi.net/compare/2.0.0-preview5...v2.0.0-preview6) (2025-02-05)
 
 
