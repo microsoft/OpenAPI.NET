@@ -11,8 +11,8 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using VerifyXunit;
-using VerifyTests;
 using Microsoft.OpenApi.Models.Interfaces;
+using System;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -538,6 +538,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             await Verifier.Verify(actual);
+        }
+
+        [Fact]
+        public void ParseEmptyMemoryStreamThrowsAnArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() => OpenApiDocument.Load(new MemoryStream()));
         }
     }
 }

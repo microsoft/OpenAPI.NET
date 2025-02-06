@@ -126,8 +126,7 @@ namespace Microsoft.OpenApi.Readers
             yamlStream.Load(input);
             if (yamlStream.Documents.Any())
             {
-                var yamlDocument = yamlStream.Documents[0];
-                return yamlDocument.ToJsonNode();
+                return yamlStream.Documents[0].ToJsonNode();
             }
 
             throw new InvalidOperationException("No documents found in the YAML stream.");
