@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview8](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview7...v2.0.0-preview8) (2025-02-06)
+
+
+### Bug Fixes
+
+* add meaningful exception message during validation ([4a6547d](https://github.com/microsoft/OpenAPI.NET/commit/4a6547d08c86194e1783ce7f52e8248ca15556e0))
+* add meaningful exception message during validation ([74d20ed](https://github.com/microsoft/OpenAPI.NET/commit/74d20edebb6c5ee6150e8e03a42a40ed8c01d1da))
+
 ## [2.0.0-preview7](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview6...v2.0.0-preview7) (2025-02-06)
 
 
