@@ -278,10 +278,13 @@ namespace Microsoft.OpenApi.Reader
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
             }
+            if (input.Length == 0 || input.Position == input.Length)
+            {
+                throw new ArgumentException($"Cannot parse the stream: {nameof(input)} is empty or contains no elements.");
+            }
 
             var reader = OpenApiReaderRegistry.GetReader(format);
             var readResult = reader.Read(input, settings);
-
             return readResult;
         }
 
