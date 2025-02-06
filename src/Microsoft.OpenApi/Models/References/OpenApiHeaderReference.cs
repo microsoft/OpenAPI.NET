@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
 {
@@ -25,7 +24,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Header, externalResource)
+        public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Header, externalResource)
         {
         }
 
@@ -33,11 +32,7 @@ namespace Microsoft.OpenApi.Models.References
         /// Copy constructor
         /// </summary>
         /// <param name="header">The <see cref="OpenApiHeaderReference"/> object to copy</param>
-        public OpenApiHeaderReference(OpenApiHeaderReference header):base(header)
-        {
-        }
-
-        internal OpenApiHeaderReference(OpenApiHeader target, string referenceId):base(target, referenceId, ReferenceType.Header)
+        private OpenApiHeaderReference(OpenApiHeaderReference header):base(header)
         {
         }
 
@@ -64,7 +59,7 @@ namespace Microsoft.OpenApi.Models.References
         public bool AllowEmptyValue { get => Target?.AllowEmptyValue ?? default; }
 
         /// <inheritdoc/>
-        public OpenApiSchema Schema { get => Target?.Schema; }
+        public IOpenApiSchema Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
         public ParameterStyle? Style { get => Target?.Style; }
@@ -91,6 +86,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader source)
         {
             return source is OpenApiHeader ? new OpenApiHeader(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiHeader CreateShallowCopy()
+        {
+            return new OpenApiHeaderReference(this);
         }
     }
 }

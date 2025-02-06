@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the request body object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiRequestBody : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible
+public interface IOpenApiRequestBody : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiRequestBody>
 {
     /// <summary>
     /// Determines if the request body is required in the request. Defaults to false.

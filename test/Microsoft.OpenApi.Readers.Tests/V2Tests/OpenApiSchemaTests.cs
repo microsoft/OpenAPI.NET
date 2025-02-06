@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -108,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var targetSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["prop1"] = new OpenApiSchema()
                     {
@@ -121,7 +122,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var referenceSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["propA"] = new OpenApiSchemaReference(referenceId, workingDocument),
                 }

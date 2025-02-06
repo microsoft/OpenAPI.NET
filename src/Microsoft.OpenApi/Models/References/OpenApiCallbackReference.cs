@@ -25,20 +25,16 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. an absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Callback, externalResource)
+        public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Callback, externalResource)
         {
         }
-
         /// <summary>
         /// Copy constructor
         /// </summary>
-        /// <param name="callback">The callback reference to copy</param>
-        public OpenApiCallbackReference(OpenApiCallbackReference callback):base(callback)
+        /// <param name="callback">The reference to copy</param>
+        private OpenApiCallbackReference(OpenApiCallbackReference callback):base(callback)
         {
-        }
-
-        internal OpenApiCallbackReference(OpenApiCallback target, string referenceId):base(target, referenceId, ReferenceType.Callback)
-        {
+            
         }
 
         /// <inheritdoc/>
@@ -58,6 +54,12 @@ namespace Microsoft.OpenApi.Models.References
         {
             // examples components are not supported in OAS 2.0
             Reference.SerializeAsV2(writer);
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiCallback CreateShallowCopy()
+        {
+            return new OpenApiCallbackReference(this);
         }
     }
 }

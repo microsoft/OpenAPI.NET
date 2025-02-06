@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(IDictionary<string, IOpenApiExample>));
             visitor.Visit(default(OpenApiComponents));
             visitor.Visit(default(OpenApiExternalDocs));
-            visitor.Visit(default(OpenApiSchema));
+            visitor.Visit(default(IOpenApiSchema));
             visitor.Visit(default(IDictionary<string, IOpenApiLink>));
             visitor.Visit(default(IOpenApiLink));
             visitor.Visit(default(IOpenApiCallback));
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(IOpenApiHeader));
             visitor.Visit(default(OpenApiOAuthFlow));
             visitor.Visit(default(OpenApiSecurityRequirement));
-            visitor.Visit(default(OpenApiSecurityScheme));
+            visitor.Visit(default(IOpenApiSecurityScheme));
             visitor.Visit(default(IOpenApiExample));
             visitor.Visit(default(IList<OpenApiTag>));
             visitor.Visit(default(IList<OpenApiSecurityRequirement>));
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(externalDocs);
             }
 
-            public override void Visit(OpenApiSchema schema)
+            public override void Visit(IOpenApiSchema schema)
             {
                 EncodeCall();
                 base.Visit(schema);
@@ -280,7 +280,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(securityRequirement);
             }
 
-            public override void Visit(OpenApiSecurityScheme securityScheme)
+            public override void Visit(IOpenApiSecurityScheme securityScheme)
             {
                 EncodeCall();
                 base.Visit(securityScheme);

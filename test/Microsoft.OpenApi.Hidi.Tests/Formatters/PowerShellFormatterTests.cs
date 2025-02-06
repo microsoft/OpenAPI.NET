@@ -58,21 +58,23 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var testSchema = openApiDocument.Components?.Schemas?["TestSchema"];
-            var averageAudioDegradationProperty = testSchema?.Properties["averageAudioDegradation"];
-            var defaultPriceProperty = testSchema?.Properties["defaultPrice"];
+            Assert.NotNull(openApiDocument.Components);
+            Assert.NotNull(openApiDocument.Components.Schemas);
+            var testSchema = openApiDocument.Components.Schemas["TestSchema"];
+            var averageAudioDegradationProperty = testSchema.Properties["averageAudioDegradation"];
+            var defaultPriceProperty = testSchema.Properties["defaultPrice"];
 
             // Assert
             Assert.NotNull(openApiDocument.Components);
             Assert.NotNull(openApiDocument.Components.Schemas);
             Assert.NotNull(testSchema);
-            Assert.Null(averageAudioDegradationProperty?.AnyOf);
-            Assert.Equal(JsonSchemaType.Number, averageAudioDegradationProperty?.Type);
-            Assert.Equal("float", averageAudioDegradationProperty?.Format);
-            Assert.True(averageAudioDegradationProperty?.Nullable);
-            Assert.Null(defaultPriceProperty?.OneOf);
-            Assert.Equal(JsonSchemaType.Number, defaultPriceProperty?.Type);
-            Assert.Equal("double", defaultPriceProperty?.Format);
+            Assert.Null(averageAudioDegradationProperty.AnyOf);
+            Assert.Equal(JsonSchemaType.Number | JsonSchemaType.Null, averageAudioDegradationProperty.Type);
+            Assert.Equal("float", averageAudioDegradationProperty.Format);
+            Assert.Equal(JsonSchemaType.Null, averageAudioDegradationProperty.Type & JsonSchemaType.Null);
+            Assert.Null(defaultPriceProperty.OneOf);
+            Assert.Equal(JsonSchemaType.Number, defaultPriceProperty.Type);
+            Assert.Equal("double", defaultPriceProperty.Format);
             Assert.NotNull(testSchema.AdditionalProperties);
         }
 
@@ -122,10 +124,10 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                                         "application/json",
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new()
+                                                            Schema = new OpenApiSchema()
                                                             {
                                                                 Type = JsonSchemaType.Array,
-                                                                Items = new()
+                                                                Items = new OpenApiSchema()
                                                                 {
                                                                     Type = JsonSchemaType.String
                                                                 }
@@ -149,32 +151,31 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>
+                    Schemas = new Dictionary<string, IOpenApiSchema>
                     {
                         { "TestSchema",  new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Properties = new Dictionary<string, OpenApiSchema>
+                                Properties = new Dictionary<string, IOpenApiSchema>
                                 {
                                     {
                                         "averageAudioDegradation", new OpenApiSchema
                                         {
-                                            AnyOf = new List<OpenApiSchema>
+                                            AnyOf = new List<IOpenApiSchema>
                                             {
-                                                new() { Type = JsonSchemaType.Number },
-                                                new() { Type = JsonSchemaType.String }
+                                                new OpenApiSchema() { Type = JsonSchemaType.Number | JsonSchemaType.Null },
+                                                new OpenApiSchema() { Type = JsonSchemaType.String }
                                             },
                                             Format = "float",
-                                            Nullable = true
                                         }
                                     },
                                     {
                                         "defaultPrice", new OpenApiSchema
                                         {
-                                            OneOf = new List<OpenApiSchema>
+                                            OneOf = new List<IOpenApiSchema>
                                             {
-                                                new() { Type = JsonSchemaType.Number, Format = "double" },
-                                                new() { Type = JsonSchemaType.String }
+                                                new OpenApiSchema() { Type = JsonSchemaType.Number, Format = "double" },
+                                                new OpenApiSchema() { Type = JsonSchemaType.String }
                                             }
                                         }
                                     }

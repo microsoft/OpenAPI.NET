@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new()
             {
-                {s => s.StartsWith("x-") && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase),
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase) && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase),
                     (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))} 
             };
 
@@ -147,7 +147,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static OpenApiSchema GetOrCreateSchema(OpenApiParameter p)
         {
-            return p.Schema ??= new();
+            return p.Schema switch {
+                OpenApiSchema schema => schema,
+                _ => (OpenApiSchema)(p.Schema = new OpenApiSchema()),
+            };
         }
 
         private static void ProcessIn(OpenApiParameter o, ParseNode n, OpenApiDocument hostDocument)
@@ -208,7 +211,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, doc: hostDocument);
 
-            var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
+            var schema = node.Context.GetFromTempStorage<IOpenApiSchema>("schema");
             if (schema != null)
             {
                 parameter.Schema = schema;

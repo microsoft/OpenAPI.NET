@@ -27,10 +27,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet to use",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
-                        Items = new()
+                        Items = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "ID of pet that needs to be updated",
                             Required = true,
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -65,17 +65,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
-                                Schema = new()
+                                Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
                                     Properties =
                                     {
-                                        ["name"] = new()
+                                        ["name"] = new OpenApiSchema()
                                         {
                                             Description = "Updated name of the pet",
                                             Type = JsonSchemaType.String
                                         },
-                                        ["status"] = new()
+                                        ["status"] = new OpenApiSchema()
                                         {
                                             Description = "Updated status of the pet",
                                             Type = JsonSchemaType.String
@@ -89,17 +89,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             },
                             ["multipart/form-data"] = new()
                             {
-                               Schema = new()
+                               Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
                                     Properties =
                                     {
-                                        ["name"] = new()
+                                        ["name"] = new OpenApiSchema()
                                         {
                                             Description = "Updated name of the pet",
                                             Type = JsonSchemaType.String
                                         },
-                                        ["status"] = new()
+                                        ["status"] = new OpenApiSchema()
                                         {
                                             Description = "Updated status of the pet",
                                             Type = JsonSchemaType.String
@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "ID of pet that needs to be updated",
                             Required = true,
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "Name of pet that needs to be updated",
                             Required = true,
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -171,22 +171,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
-                                Schema = new()
+                                Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
                                     Properties =
                                     {
-                                        ["name"] = new()
+                                        ["name"] = new OpenApiSchema()
                                         {
                                             Description = "Updated name of the pet",
                                             Type = JsonSchemaType.String
                                         },
-                                        ["status"] = new()
+                                        ["status"] = new OpenApiSchema()
                                         {
                                             Description = "Updated status of the pet",
                                             Type = JsonSchemaType.String
                                         },
-                                        ["skill"] = new()
+                                        ["skill"] = new OpenApiSchema()
                                         {
                                             Description = "Updated skill of the pet",
                                             Type = JsonSchemaType.String
@@ -200,22 +200,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             },
                             ["multipart/form-data"] = new()
                             {
-                                Schema = new()
+                                Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
                                     Properties =
                                     {
-                                        ["name"] = new()
+                                        ["name"] = new OpenApiSchema()
                                         {
                                             Description = "Updated name of the pet",
                                             Type = JsonSchemaType.String
                                         },
-                                        ["status"] = new()
+                                        ["status"] = new OpenApiSchema()
                                         {
                                             Description = "Updated status of the pet",
                                             Type = JsonSchemaType.String
                                         },
-                                        ["skill"] = new()
+                                        ["skill"] = new OpenApiSchema()
                                         {
                                             Description = "Updated skill of the pet",
                                             Type = JsonSchemaType.String
@@ -249,11 +249,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseBasicPathItemWithFormDataShouldSucceed()
         {
             // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicPathItemWithFormData.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicPathItemWithFormData.yaml"));
+            var node = TestHelper.CreateYamlMapNode(stream);
 
             // Act
             var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());

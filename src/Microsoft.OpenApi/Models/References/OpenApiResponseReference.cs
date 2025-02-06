@@ -23,12 +23,16 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiResponseReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Response, externalResource)
+        public OpenApiResponseReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Response, externalResource)
         {
         }
-
-        internal OpenApiResponseReference(OpenApiResponse target, string referenceId):base(target, referenceId, ReferenceType.Response)
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="openApiResponseReference">The reference to copy</param>
+        private OpenApiResponseReference(OpenApiResponseReference openApiResponseReference):base(openApiResponseReference)
         {
+            
         }
 
         /// <inheritdoc/>
@@ -60,6 +64,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiResponse CopyReferenceAsTargetElementWithOverrides(IOpenApiResponse source)
         {
             return source is OpenApiResponse ? new OpenApiResponse(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiResponse CreateShallowCopy()
+        {
+            return new OpenApiResponseReference(this);
         }
     }
 }

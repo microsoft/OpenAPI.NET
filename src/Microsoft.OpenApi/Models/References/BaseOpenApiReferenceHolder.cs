@@ -10,14 +10,12 @@ namespace Microsoft.OpenApi.Models.References;
 /// <typeparam name="V">The interface type for the model.</typeparam>
 public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiSerializable
 {
-    internal T _target;
     /// <inheritdoc/>
-    public T Target
+    public virtual T Target
     {
         get
         {
-            _target ??= Reference.HostDocument.ResolveReferenceTo<T>(Reference);
-            return _target;
+            return Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
         }
     }
     /// <summary>
@@ -28,19 +26,8 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     {
         Utils.CheckArgumentNull(source);
         Reference = source.Reference != null ? new(source.Reference) : null;
-        UnresolvedReference = source.UnresolvedReference;
         //no need to copy summary and description as if they are not overridden, they will be fetched from the target
         //if they are, the reference copy will handle it
-    }
-    private protected BaseOpenApiReferenceHolder(T target, string referenceId, ReferenceType referenceType)
-    {
-        _target = target;
-
-        Reference = new OpenApiReference()
-        {
-            Id = referenceId,
-            Type = referenceType,
-        };
     }
     /// <summary>
     /// Constructor initializing the reference object.
@@ -53,9 +40,11 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// 1. a absolute/relative file path, for example:  ../commons/pet.json
     /// 2. a Url, for example: http://localhost/pet.json
     /// </param>
-    protected BaseOpenApiReferenceHolder(string referenceId, OpenApiDocument hostDocument, ReferenceType referenceType, string externalResource = null)
+    protected BaseOpenApiReferenceHolder(string referenceId, OpenApiDocument hostDocument, ReferenceType referenceType, string externalResource)
     {
         Utils.CheckArgumentNullOrEmpty(referenceId);
+        // we're not checking for null hostDocument as it's optional and can be set via additional methods by a walker
+        // this way object initialization of a whole document is supported
 
         Reference = new OpenApiReference()
         {
@@ -66,13 +55,13 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         };
     }
     /// <inheritdoc/>
-    public bool UnresolvedReference { get; set; }
+    public bool UnresolvedReference { get => Reference is null || Target is null; }
     /// <inheritdoc/>
-    public OpenApiReference Reference { get; set; }
+    public OpenApiReference Reference { get; init; }
     /// <inheritdoc/>
     public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
     /// <inheritdoc/>
-    public void SerializeAsV3(IOpenApiWriter writer)
+    public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
         if (!writer.GetSettings().ShouldInlineReference(Reference))
         {
@@ -85,7 +74,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     }
 
     /// <inheritdoc/>
-    public void SerializeAsV31(IOpenApiWriter writer)
+    public virtual void SerializeAsV31(IOpenApiWriter writer)
     {
         if (!writer.GetSettings().ShouldInlineReference(Reference))
         {

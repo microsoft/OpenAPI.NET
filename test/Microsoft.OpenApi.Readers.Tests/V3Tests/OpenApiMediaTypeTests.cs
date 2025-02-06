@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiMediaType
                 {
                     Example = 5,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float"
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Value = 7.5
                         }
                     },
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float"

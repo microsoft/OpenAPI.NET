@@ -27,6 +27,13 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
     {
         /// <summary>
+        /// Register components in the document to the workspace
+        /// </summary>
+        public void RegisterComponents()
+        {
+            Workspace?.RegisterComponents(this);
+        }
+        /// <summary>
         /// Related workspace containing components that are referenced in a document
         /// </summary>
         public OpenApiWorkspace? Workspace { get; set; }
@@ -239,10 +246,10 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
+                if (loops.TryGetValue(typeof(IOpenApiSchema), out var schemas))
                 {
-                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
-                         .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
+                    var openApiSchemas = schemas.Cast<IOpenApiSchema>().Distinct().OfType<OpenApiSchemaReference>()
+                         .ToDictionary<OpenApiSchemaReference, string, IOpenApiSchema>(k => k.Reference.Id, v => v);
 
                     foreach (var schema in openApiSchemas.Values.ToList())
                     {
@@ -389,7 +396,7 @@ namespace Microsoft.OpenApi.Models
             else
             {
                 var relativeUrl = firstServerUrl.OriginalString;
-                if (relativeUrl.StartsWith("//"))
+                if (relativeUrl.StartsWith("//", StringComparison.OrdinalIgnoreCase))
                 {
                     var pathPosition = relativeUrl.IndexOf('/', 3);
                     writer.WriteProperty(OpenApiConstants.Host, relativeUrl.Substring(0, pathPosition));
@@ -587,44 +594,44 @@ namespace Microsoft.OpenApi.Models
             Components ??= new();
             switch (componentToRegister)
             {
-                case OpenApiSchema openApiSchema:
-                    Components.Schemas ??= new Dictionary<string, OpenApiSchema>();
+                case IOpenApiSchema openApiSchema:
+                    Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
                     Components.Schemas.Add(id, openApiSchema);
                     break;
-                case OpenApiParameter openApiParameter:
+                case IOpenApiParameter openApiParameter:
                     Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
                     Components.Parameters.Add(id, openApiParameter);
                     break;
-                case OpenApiResponse openApiResponse:
+                case IOpenApiResponse openApiResponse:
                     Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
                     Components.Responses.Add(id, openApiResponse);
                     break;
-                case OpenApiRequestBody openApiRequestBody:
+                case IOpenApiRequestBody openApiRequestBody:
                     Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
                     Components.RequestBodies.Add(id, openApiRequestBody);
                     break;
-                case OpenApiLink openApiLink:
+                case IOpenApiLink openApiLink:
                     Components.Links ??= new Dictionary<string, IOpenApiLink>();
                     Components.Links.Add(id, openApiLink);
                     break;
-                case OpenApiCallback openApiCallback:
+                case IOpenApiCallback openApiCallback:
                     Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
                     Components.Callbacks.Add(id, openApiCallback);
                     break;
-                case OpenApiPathItem openApiPathItem:
+                case IOpenApiPathItem openApiPathItem:
                     Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
                     Components.PathItems.Add(id, openApiPathItem);
                     break;
-                case OpenApiExample openApiExample:
+                case IOpenApiExample openApiExample:
                     Components.Examples ??= new Dictionary<string, IOpenApiExample>();
                     Components.Examples.Add(id, openApiExample);
                     break;
-                case OpenApiHeader openApiHeader:
+                case IOpenApiHeader openApiHeader:
                     Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
                     Components.Headers.Add(id, openApiHeader);
                     break;
-                case OpenApiSecurityScheme openApiSecurityScheme:
-                    Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+                case IOpenApiSecurityScheme openApiSecurityScheme:
+                    Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
                     Components.SecuritySchemes.Add(id, openApiSecurityScheme);
                     break;
                 default:
@@ -636,9 +643,9 @@ namespace Microsoft.OpenApi.Models
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, OpenApiSchema> Schemas = new();
+        private Dictionary<string, IOpenApiSchema> Schemas = new(StringComparer.Ordinal);
 
-        public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, OpenApiSchema> schemas)
+        public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, IOpenApiSchema> schemas)
         {
             var visitor = new FindSchemaReferences();
             visitor.Schemas = schemas;
@@ -651,7 +658,7 @@ namespace Microsoft.OpenApi.Models
         {
             switch (referenceHolder)
             {
-                case OpenApiSchema schema:
+                case OpenApiSchemaReference schema:
                     if (!Schemas.ContainsKey(schema.Reference.Id))
                     {
                         Schemas.Add(schema.Reference.Id, schema);
@@ -664,12 +671,12 @@ namespace Microsoft.OpenApi.Models
             base.Visit(referenceHolder);
         }
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
             // This is needed to handle schemas used in Responses in components
-            if (schema.Reference != null && !Schemas.ContainsKey(schema.Reference.Id))
+            if (schema is OpenApiSchemaReference {Reference: not null} schemaReference && !Schemas.ContainsKey(schemaReference.Reference.Id))
             {
-                Schemas.Add(schema.Reference.Id, schema);
+                Schemas.Add(schemaReference.Reference.Id, schema);
             }
             base.Visit(schema);
         }

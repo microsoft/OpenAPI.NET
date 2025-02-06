@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -62,10 +62,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
-                        Items = new()
+                        Items = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -87,10 +87,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "freeForm",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
-                        AdditionalProperties = new()
+                        AdditionalProperties = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer
                         }
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["application/json"] = new()
                         {
-                           Schema = new()
+                           Schema = new OpenApiSchema()
                            {
                                 Type = JsonSchemaType.Object,
                                 Required =
@@ -128,11 +128,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 },
                                 Properties =
                                 {
-                                    ["lat"] = new()
+                                    ["lat"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Number
                                     },
-                                    ["long"] = new()
+                                    ["long"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Number
                                     }
@@ -159,10 +159,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
-                        Items = new()
+                        Items = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer,
                             Format = "int64",
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -233,7 +233,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Example = (float)5.0,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float"
@@ -288,7 +288,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Value = (float) 7.5
                         }
                     },
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float"
@@ -308,7 +308,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 In = ParameterLocation.Query,
                 Description = "tags to filter by",
                 Required = false,
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Array,
                     Items = new OpenApiSchema
@@ -343,7 +343,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 OperationId = "findPets",
                                 Parameters =
                                 [
-                                    new OpenApiParameterReference (parameter, "tagsParameter"),
+                                    new OpenApiParameterReference("tagsParameter"),
                                 ],
                             }
                         }

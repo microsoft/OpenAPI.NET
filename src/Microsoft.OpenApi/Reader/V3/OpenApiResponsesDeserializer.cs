@@ -18,8 +18,8 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static readonly PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new()
         {
-            {s => !s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.Add(p, LoadResponse(n, t))},
-            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.Add(p, LoadResponse(n, t))},
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument hostDocument)

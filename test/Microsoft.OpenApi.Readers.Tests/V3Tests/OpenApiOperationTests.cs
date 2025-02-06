@@ -27,8 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
 
             var securityScheme = result.Document.Paths["/"].Operations[OperationType.Get].Security[0].Keys.First();
-            securityScheme.Should().BeEquivalentTo(result.Document.Components.SecuritySchemes.First().Value, 
-                options => options.Excluding(x => x.Reference));
+            Assert.Equivalent(result.Document.Components.SecuritySchemes.First().Value, securityScheme);
         }
 
         [Fact]
@@ -56,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Name = "username",
                         Description = "The user name for login",
                         Required = true,
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -67,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Description = "The password for login in clear text",
                         In = ParameterLocation.Query,
                         Required = true,
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }

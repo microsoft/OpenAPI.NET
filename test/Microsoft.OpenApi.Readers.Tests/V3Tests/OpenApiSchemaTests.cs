@@ -165,7 +165,7 @@ get:
                 new OpenApiSchema
                 {
                     Type = JsonSchemaType.Object,
-                    AdditionalProperties = new()
+                    AdditionalProperties = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -199,12 +199,12 @@ get:
                 Type = JsonSchemaType.Object,
                 Properties =
                 {
-                        ["id"] = new()
+                        ["id"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer,
                             Format = "int64"
                         },
-                        ["name"] = new()
+                        ["name"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -245,18 +245,18 @@ get:
             {
                 Schemas =
                 {
-                    ["ErrorModel"] = new()
+                    ["ErrorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Properties =
                         {
-                            ["code"] = new()
+                            ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Minimum = 100,
                                 Maximum = 600
                             },
-                            ["message"] = new()
+                            ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -267,7 +267,7 @@ get:
                             "code"
                         }
                     },
-                    ["ExtendedErrorModel"] = new()
+                    ["ExtendedErrorModel"] = new OpenApiSchema()
                     {
                         AllOf =
                         {
@@ -278,7 +278,7 @@ get:
                                 Required = {"rootCause"},
                                 Properties =
                                 {
-                                    ["rootCause"] = new()
+                                    ["rootCause"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.String
                                     }
@@ -302,7 +302,7 @@ get:
             {
                 Schemas =
                 {
-                    ["Pet"] = new()
+                    ["Pet"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Discriminator = new()
@@ -311,11 +311,11 @@ get:
                         },
                         Properties =
                         {
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["petType"] = new()
+                            ["petType"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -326,7 +326,7 @@ get:
                             "petType"
                         }
                     },
-                    ["Cat"] = new()
+                    ["Cat"] = new OpenApiSchema()
                     {
                         Description = "A representation of a cat",
                         AllOf =
@@ -338,7 +338,7 @@ get:
                                 Required = {"huntingSkill"},
                                 Properties =
                                 {
-                                    ["huntingSkill"] = new()
+                                    ["huntingSkill"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.String,
                                         Description = "The measured skill for hunting",
@@ -354,7 +354,7 @@ get:
                             }
                         }
                     },
-                    ["Dog"] = new()
+                    ["Dog"] = new OpenApiSchema()
                     {
                         Description = "A representation of a dog",
                         AllOf =
@@ -366,7 +366,7 @@ get:
                                 Required = {"packSize"},
                                 Properties =
                                 {
-                                    ["packSize"] = new()
+                                    ["packSize"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Integer,
                                         Format = "int32",

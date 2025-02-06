@@ -38,14 +38,14 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of <see cref="IOpenApiResponse"/> object
         /// </summary>
-        public OpenApiResponse(IOpenApiResponse response)
+        internal OpenApiResponse(IOpenApiResponse response)
         {
             Utils.CheckArgumentNull(response);
-            Description = response?.Description ?? Description;
-            Headers = response?.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
-            Content = response?.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
-            Links = response?.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
-            Extensions = response?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
+            Description = response.Description ?? Description;
+            Headers = response.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
+            Content = response.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
+            Links = response.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
+            Extensions = response.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
         }
 
         /// <summary>
@@ -163,6 +163,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiResponse CreateShallowCopy()
+        {
+            return new OpenApiResponse(this);
         }
     }
 }

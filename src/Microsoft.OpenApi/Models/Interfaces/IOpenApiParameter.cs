@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the parameter object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible
+public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiParameter>
 {
     /// <summary>
     /// REQUIRED. The name of the parameter. Parameter names are case sensitive.
@@ -72,7 +72,7 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializa
     /// <summary>
     /// The schema defining the type used for the parameter.
     /// </summary>
-    public OpenApiSchema Schema { get; }
+    public IOpenApiSchema Schema { get; }
 
     /// <summary>
     /// Examples of the media type. Each example SHOULD contain a value

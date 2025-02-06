@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -47,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new()
                     {
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Number,
                             Minimum = 5,
@@ -58,28 +59,14 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Responses = new()
             {
-                ["200"] = new OpenApiResponseReference(new OpenApiResponse()
-                {
-                    Content = new Dictionary<string, OpenApiMediaType>
-                    {
-                        ["application/json"] = new()
-                        {
-                            Schema = new()
-                            {
-                                Type = JsonSchemaType.Number,
-                                Minimum = 5,
-                                Maximum = 10
-                            }
-                        }
-                    }
-                }, "response1"),
+                ["200"] = new OpenApiResponseReference("response1"),
                 ["400"] = new OpenApiResponse()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
                                 Minimum = 5,
@@ -100,7 +87,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Annotations = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } },
         };
 
-        private static readonly OpenApiOperation _advancedOperationWithTagsAndSecurity = new()
+        private static OpenApiOperation _advancedOperationWithTagsAndSecurity => new()
         {
             Tags = new List<OpenApiTagReference>
             {
@@ -135,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new()
                     {
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Number,
                             Minimum = 5,
@@ -146,28 +133,14 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Responses = new()
             {
-                ["200"] = new OpenApiResponseReference(new OpenApiResponse()
-                {
-                    Content = new Dictionary<string, OpenApiMediaType>
-                    {
-                        ["application/json"] = new()
-                        {
-                            Schema = new()
-                            {
-                                Type = JsonSchemaType.Number,
-                                Minimum = 5,
-                                Maximum = 10
-                            }
-                        }
-                    }
-                }, "response1"),
+                ["200"] = new OpenApiResponseReference("response1"),
                 ["400"] = new OpenApiResponse()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
                                 Minimum = 5,
@@ -181,8 +154,8 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 new()
                 {
-                    [new OpenApiSecuritySchemeReference("securitySchemeId1", hostDocument: null)] = new List<string>(),
-                    [new OpenApiSecuritySchemeReference("securitySchemeId2", hostDocument: null)] = new List<string>
+                    [new OpenApiSecuritySchemeReference("securitySchemeId1", __advancedOperationWithTagsAndSecurity_supportingDocument)] = new List<string>(),
+                    [new OpenApiSecuritySchemeReference("securitySchemeId2", __advancedOperationWithTagsAndSecurity_supportingDocument)] = new List<string>
                     {
                         "scopeName1",
                         "scopeName2"
@@ -198,6 +171,34 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             }
         };
+        private static OpenApiDocument __advancedOperationWithTagsAndSecurity_supportingDocument 
+        {
+            get
+            {
+                var document = new OpenApiDocument()
+                {
+                    Components = new() 
+                    {
+                        SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+                        {
+                            ["securitySchemeId1"] = new OpenApiSecurityScheme
+                            {
+                                Type = SecuritySchemeType.ApiKey,
+                                Name = "apiKeyName1",
+                                In = ParameterLocation.Header,
+                            },
+                            ["securitySchemeId2"] = new OpenApiSecurityScheme
+                            {
+                                Type = SecuritySchemeType.OpenIdConnect,
+                                OpenIdConnectUrl = new("http://example.com"),
+                            }
+                        }
+                    }
+                };
+                document.RegisterComponents();
+                return document;
+            }
+        }
 
         private static readonly OpenApiOperation _operationWithFormData =
             new()
@@ -213,7 +214,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -225,16 +226,16 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/x-www-form-urlencoded"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Properties =
                                 {
-                                    ["name"] = new()
+                                    ["name"] = new OpenApiSchema()
                                     {
                                         Description = "Updated name of the pet",
                                         Type = JsonSchemaType.String
                                     },
-                                    ["status"] = new()
+                                    ["status"] = new OpenApiSchema()
                                     {
                                         Description = "Updated status of the pet",
                                         Type = JsonSchemaType.String
@@ -248,16 +249,16 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         ["multipart/form-data"] = new()
                         {
-                            Schema = new()
+                            Schema = new OpenApiSchema()
                             {
                                 Properties =
                                 {
-                                    ["name"] = new()
+                                    ["name"] = new OpenApiSchema()
                                     {
                                         Description = "Updated name of the pet",
                                         Type = JsonSchemaType.String
                                     },
-                                    ["status"] = new()
+                                    ["status"] = new OpenApiSchema()
                                     {
                                         Description = "Updated status of the pet",
                                         Type = JsonSchemaType.String
@@ -455,9 +456,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await _advancedOperationWithTagsAndSecurity.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -475,9 +474,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await _basicOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -554,9 +551,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await _operationWithFormData.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -610,9 +605,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await _operationWithFormData.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -679,9 +672,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await _operationWithBody.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -760,9 +751,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await _advancedOperationWithTagsAndSecurity.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -785,9 +774,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await operation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Fact]

@@ -31,31 +31,31 @@ namespace Microsoft.OpenApi.Expressions
         {
             Utils.CheckArgumentNullOrEmpty(expression);
 
-            if (!expression.StartsWith(Prefix))
+            if (!expression.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
             {
                 return new CompositeExpression(expression);
             }
 
             // $url
-            if (expression == UrlExpression.Url)
+            if (expression.Equals(UrlExpression.Url, StringComparison.Ordinal))
             {
                 return new UrlExpression();
             }
 
             // $method
-            if (expression == MethodExpression.Method)
+            if (expression.Equals(MethodExpression.Method, StringComparison.Ordinal))
             {
                 return new MethodExpression();
             }
 
             // $statusCode
-            if (expression == StatusCodeExpression.StatusCode)
+            if (expression.Equals(StatusCodeExpression.StatusCode, StringComparison.Ordinal))
             {
                 return new StatusCodeExpression();
             }
 
             // $request.
-            if (expression.StartsWith(RequestExpression.Request))
+            if (expression.StartsWith(RequestExpression.Request, StringComparison.Ordinal))
             {
                 var subString = expression.Substring(RequestExpression.Request.Length);
                 var source = SourceExpression.Build(subString);
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Expressions
             }
 
             // $response.
-            if (expression.StartsWith(ResponseExpression.Response))
+            if (expression.StartsWith(ResponseExpression.Response, StringComparison.Ordinal))
             {
                 var subString = expression.Substring(ResponseExpression.Response.Length);
                 var source = SourceExpression.Build(subString);

@@ -21,10 +21,7 @@ namespace Microsoft.OpenApi.Services
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            if (referenceHolder.Reference != null)
-            {
-                referenceHolder.Reference.HostDocument = _currentDocument;
-            }
+            referenceHolder.Reference?.EnsureHostDocumentIsSet(_currentDocument);
         }
     }
 }

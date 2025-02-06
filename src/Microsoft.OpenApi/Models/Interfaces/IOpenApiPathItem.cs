@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the path item object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiPathItem : IOpenApiDescribedElement, IOpenApiSummarizedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible
+public interface IOpenApiPathItem : IOpenApiDescribedElement, IOpenApiSummarizedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiPathItem>
 {
     /// <summary>
     /// Gets the definition of operations on this path.

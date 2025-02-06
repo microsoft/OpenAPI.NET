@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
 
 namespace Microsoft.OpenApi.Writers
@@ -189,7 +190,7 @@ namespace Microsoft.OpenApi.Writers
                 WriteChompingIndicator(value);
 
                 // Write indentation indicator when it starts with spaces
-                if (value.StartsWith(" "))
+                if (value.StartsWith(" ", StringComparison.OrdinalIgnoreCase))
                 {
                     Writer.Write(IndentationString.Length);
                 }

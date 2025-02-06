@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Flag indicating whether a node segment is a path parameter.
         /// </summary>
-        public bool IsParameter => Segment.StartsWith("{");
+        public bool IsParameter => Segment.StartsWith("{", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// The subdirectory of a relative path.
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Services
             Utils.CheckArgumentNullOrEmpty(path);
             Utils.CheckArgumentNull(pathItem);
 
-            if (path.StartsWith(RootPathSegment))
+            if (path.StartsWith(RootPathSegment, StringComparison.OrdinalIgnoreCase))
             {
                 // Remove leading slash
                 path = path.Substring(1);

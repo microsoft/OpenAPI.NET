@@ -52,15 +52,15 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a clone of an <see cref="OpenApiPathItem"/> object
         /// </summary>
-        public OpenApiPathItem(IOpenApiPathItem pathItem)
+        internal OpenApiPathItem(IOpenApiPathItem pathItem)
         {
             Utils.CheckArgumentNull(pathItem);
-            Summary = pathItem?.Summary ?? Summary;
-            Description = pathItem?.Description ?? Description;
-            Operations = pathItem?.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
-            Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
-            Parameters = pathItem?.Parameters != null ? new List<IOpenApiParameter>(pathItem.Parameters) : null;
-            Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
+            Summary = pathItem.Summary ?? Summary;
+            Description = pathItem.Description ?? Description;
+            Operations = pathItem.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
+            Servers = pathItem.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
+            Parameters = pathItem.Parameters != null ? new List<IOpenApiParameter>(pathItem.Parameters) : null;
+            Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
         }
 
         /// <summary>
@@ -150,6 +150,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiPathItem CreateShallowCopy()
+        {
+            return new OpenApiPathItem(this);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Parameter, externalResource)
+        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Parameter, externalResource)
         {
         }
 
@@ -31,16 +31,12 @@ namespace Microsoft.OpenApi.Models.References
         /// Copy constructor
         /// </summary>
         /// <param name="parameter">The parameter reference to copy</param>
-        public OpenApiParameterReference(OpenApiParameterReference parameter):base(parameter)
-        {
-        }
-
-        internal OpenApiParameterReference(OpenApiParameter target, string referenceId):base(target, referenceId, ReferenceType.Parameter)
+        private OpenApiParameterReference(OpenApiParameterReference parameter):base(parameter)
         {
         }
 
         /// <inheritdoc/>
-        public string Name { get => Target.Name; }
+        public string Name { get => Target?.Name; }
 
         /// <inheritdoc/>
         public string Description
@@ -68,7 +64,7 @@ namespace Microsoft.OpenApi.Models.References
         public bool AllowReserved { get => Target?.AllowReserved ?? default; }
 
         /// <inheritdoc/>
-        public OpenApiSchema Schema { get => Target?.Schema; }
+        public IOpenApiSchema Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExample> Examples { get => Target?.Examples; }
@@ -86,15 +82,21 @@ namespace Microsoft.OpenApi.Models.References
         public bool Explode { get => Target?.Explode ?? default; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get => Target.Content; }
+        public IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; }
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
         
         /// <inheritdoc/>
         public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter source)
         {
             return source is OpenApiParameter ? new OpenApiParameter(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiParameter CreateShallowCopy()
+        {
+            return new OpenApiParameterReference(this);
         }
     }
 }

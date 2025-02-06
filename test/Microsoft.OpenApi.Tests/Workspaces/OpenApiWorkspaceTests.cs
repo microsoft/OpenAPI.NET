@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
@@ -15,6 +16,11 @@ namespace Microsoft.OpenApi.Tests
         [Fact]
         public void OpenApiWorkspacesCanAddComponentsFromAnotherDocument()
         {
+            var testSchema = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.String,
+                Description = "The referenced one"
+            };
             var doc = new OpenApiDocument()
             {
                 Paths = new OpenApiPaths()
@@ -33,14 +39,7 @@ namespace Microsoft.OpenApi.Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
-                                                Schema = new()
-                                                {
-                                                    Reference = new()
-                                                    {
-                                                        Id = "test",
-                                                        Type = ReferenceType.Schema
-                                                    }
-                                                }
+                                                Schema = new OpenApiSchemaReference("test")
                                             }
                                         }
                                     }
@@ -56,11 +55,7 @@ namespace Microsoft.OpenApi.Tests
                 Components = new OpenApiComponents()
                 {
                     Schemas = {
-                        ["test"] = new()
-                        {
-                            Type = JsonSchemaType.String,
-                            Description = "The referenced one"
-                        }
+                        ["test"] = testSchema
                     }
                 }
             };
@@ -76,7 +71,8 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
             var externalDoc = CreateCommonDocument();
                        
-            workspace.RegisterComponent<IOpenApiReferenceable>("https://everything.json/common#/components/schemas/test", externalDoc.Components.Schemas["test"]);
+            var castSchema = Assert.IsType<OpenApiSchema>(externalDoc.Components.Schemas["test"]);
+            workspace.RegisterComponent<IOpenApiReferenceable>("https://everything.json/common#/components/schemas/test", castSchema);
 
             var schema = workspace.ResolveReference<OpenApiSchema>("https://everything.json/common#/components/schemas/test");
            
@@ -135,7 +131,7 @@ namespace Microsoft.OpenApi.Tests
                 {
                     Schemas = 
                     {
-                        ["test"] = new()
+                        ["test"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
                             Description = "The referenced one"

@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiExampleTests
     {
-        public static OpenApiExample AdvancedExample = new()
+        private static OpenApiExample AdvancedExample => new()
         {
             Value = new JsonObject
             {
@@ -57,8 +57,8 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiExampleReference OpenApiExampleReference = new(ReferencedExample, "example1");
-        public static OpenApiExample ReferencedExample = new()
+        private static OpenApiExampleReference OpenApiExampleReference => new("example1");
+        private static OpenApiExample ReferencedExample => new()
         {
             Value = new JsonObject
             {

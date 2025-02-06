@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the headers object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible
+public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiHeader>
 {
     /// <summary>
     /// Determines whether this header is mandatory.
@@ -45,7 +45,7 @@ public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// The schema defining the type used for the request body.
     /// </summary>
-    public OpenApiSchema Schema { get; }
+    public IOpenApiSchema Schema { get; }
 
     /// <summary>
     /// Example of the media type.

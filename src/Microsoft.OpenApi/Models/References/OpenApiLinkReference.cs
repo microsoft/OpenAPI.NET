@@ -24,17 +24,14 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiLinkReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Link, externalResource)
+        public OpenApiLinkReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Link, externalResource)
         {
         }
         /// <summary>
         /// Copy constructor.
         /// </summary>
         /// <param name="reference">The reference to copy</param>
-        public OpenApiLinkReference(OpenApiLinkReference reference):base(reference)
-        {
-        }
-        internal OpenApiLinkReference(OpenApiLink target, string referenceId):base(target, referenceId, ReferenceType.Link)
+        private OpenApiLinkReference(OpenApiLinkReference reference):base(reference)
         {
         }
 
@@ -79,6 +76,12 @@ namespace Microsoft.OpenApi.Models.References
         public override IOpenApiLink CopyReferenceAsTargetElementWithOverrides(IOpenApiLink source)
         {
             return source is OpenApiLink ? new OpenApiLink(this) : source;
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiLink CreateShallowCopy()
+        {
+            return new OpenApiLinkReference(this);
         }
     }
 }

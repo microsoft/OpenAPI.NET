@@ -19,16 +19,10 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible
     {
-        private OpenApiSchema? _schema;
-
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public virtual OpenApiSchema? Schema
-        {
-            get => _schema;
-            set => _schema = value;
-        }
+        public IOpenApiSchema? Schema { get; set; }
 
         /// <summary>
         /// Example of the media type.
@@ -65,7 +59,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType? mediaType)
         {
-            _schema = mediaType?.Schema != null ? new(mediaType.Schema) : null;
+            Schema = mediaType?.Schema?.CreateShallowCopy();
             Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
             Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
@@ -94,7 +88,7 @@ namespace Microsoft.OpenApi.Models
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

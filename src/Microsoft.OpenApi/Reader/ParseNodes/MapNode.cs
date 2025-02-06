@@ -124,7 +124,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         {
             return new()
             {
-                UnresolvedReference = true,
                 Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType, summary, description)
             };
         }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -39,10 +40,9 @@ namespace Microsoft.OpenApi.Reader.V31
             return securityRequirement;
         }
 
-        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(string schemeName, OpenApiDocument hostDocument)
+        private static OpenApiSecuritySchemeReference LoadSecuritySchemeByReference(string schemeName, OpenApiDocument hostDocument)
         {
-            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, hostDocument);
-            return securitySchemeObject;
+            return new OpenApiSecuritySchemeReference(schemeName, hostDocument);
         }
     }
 }
