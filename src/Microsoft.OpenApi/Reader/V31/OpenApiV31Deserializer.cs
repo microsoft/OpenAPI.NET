@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Reader.V31
             string externalResource = null;
             if (isExternalResource && pointer.Contains('#'))
             {
-                externalResource = pointer.Split('#').FirstOrDefault()?.TrimEnd('#');
+                externalResource = pointer.Split('#')[0].TrimEnd('#');
             }
 
             return (refId, externalResource);

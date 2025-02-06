@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Reader.V3
             string externalResource = null;
             if (isExternalResource)
             {
-                externalResource = pointer.Split('#').FirstOrDefault()?.TrimEnd('#');
+                externalResource = pointer.Split('#')[0].TrimEnd('#');
             }
 
             return (refId, externalResource);
