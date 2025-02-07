@@ -388,5 +388,65 @@ get:
             // Assert
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public async Task ParseExternalReferenceSchemaShouldSucceed()
+        {
+            // Act
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalReferencesSchema.yaml"));
+
+            // Assert
+            var components = result.Document.Components;
+
+            Assert.Equivalent(
+                new OpenApiDiagnostic()
+                {
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                }, result.Diagnostic);
+
+            var expectedComponents = new OpenApiComponents
+            {
+                Schemas =
+                {
+                    ["RelativePathModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalRelativePathModel", result.Document, "./FirstLevel/SecondLevel/ThridLevel/File.json")
+                        }
+                    },
+                    ["SimpleRelativePathModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalSimpleRelativePathModel", result.Document, "File.json")
+                        }
+                    },
+                    ["AbsoluteWindowsPathModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalAbsWindowsPathModel", result.Document, @"A:\Dir\File.json")
+                        }
+                    },
+                    ["AbsoluteUnixPathModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalAbsUnixPathModel", result.Document, "/Dir/File.json")
+                        }
+                    },
+                    ["HttpsUrlModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalHttpsModel", result.Document, "https://host.lan:1234/path/to/file/resource.json")
+                        }
+                    }
+                }
+            };
+
+            Assert.Equivalent(expectedComponents, components);
+        }
     }
 }
