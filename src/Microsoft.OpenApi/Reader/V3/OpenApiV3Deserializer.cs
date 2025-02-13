@@ -159,9 +159,12 @@ namespace Microsoft.OpenApi.Reader.V3
             var refSegments = pointer.Split('/');
             var refId = refSegments[refSegments.Count() -1];
             var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
-
-            string? externalResource = isExternalResource ? $"{refSegments[0]}/{refSegments[1].TrimEnd('#')}" : null;
-
+          
+            string? externalResource = null;
+            if (isExternalResource)
+            {
+                externalResource = pointer.Split('#')[0].TrimEnd('#');
+            }
             return (refId, externalResource);
         }
     }
