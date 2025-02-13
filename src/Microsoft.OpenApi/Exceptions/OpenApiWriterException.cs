@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Exceptions
         /// </summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <param name="innerException">The inner exception that is the cause of this exception to be thrown.</param>
-        public OpenApiWriterException(string message, Exception innerException)
+        public OpenApiWriterException(string message, Exception? innerException)
             : base(message, innerException)
         {
         }

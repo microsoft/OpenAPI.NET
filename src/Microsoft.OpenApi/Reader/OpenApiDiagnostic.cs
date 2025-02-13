@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="diagnosticToAdd">The diagnostic instance of which the errors and warnings are to be appended to this diagnostic's</param>
         /// <param name="fileNameToAdd">The originating file of the diagnostic to be appended, this is prefixed to each error and warning to indicate the originating file</param>
-        public void AppendDiagnostic(OpenApiDiagnostic diagnosticToAdd, string fileNameToAdd = null)
+        public void AppendDiagnostic(OpenApiDiagnostic diagnosticToAdd, string? fileNameToAdd = null)
         {
             var fileNameIsSupplied = !string.IsNullOrEmpty(fileNameToAdd);
             foreach (var err in diagnosticToAdd.Errors)

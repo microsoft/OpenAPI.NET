@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Exceptions
         /// </summary>
         /// <param name="message">Plain text error message for this exception.</param>
         /// <param name="node">Parsing node where error occured</param>
-        public OpenApiReaderException(string message, JsonNode node) : base(message)
+        public OpenApiReaderException(string message, JsonNode? node) : base(message)
         {
             // This only includes line because using a char range causes tests to break due to CR/LF & LF differences
             // See https://tools.ietf.org/html/rfc5147 for syntax

@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Exceptions
         /// Initializes the <see cref="OpenApiUnsupportedSpecVersionException"/> class with a specification version.
         /// </summary>
         /// <param name="specificationVersion">Version that caused this exception to be thrown.</param>
-        public OpenApiUnsupportedSpecVersionException(string specificationVersion)
+        public OpenApiUnsupportedSpecVersionException(string? specificationVersion)
             : base(string.Format(CultureInfo.InvariantCulture, messagePattern, specificationVersion))
         {
             this.SpecificationVersion = specificationVersion;
@@ -39,6 +39,6 @@ namespace Microsoft.OpenApi.Exceptions
         /// <summary>
         /// The unsupported specification version.
         /// </summary>
-        public string SpecificationVersion { get; }
+        public string? SpecificationVersion { get; }
     }
 }

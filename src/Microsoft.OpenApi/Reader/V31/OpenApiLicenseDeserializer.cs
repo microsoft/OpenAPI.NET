@@ -26,11 +26,16 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
             },
             {
-                "url", (o, n, _) =>
+                "url",
+                (o, n, _) =>
                 {
-                    o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                    var url = n.GetScalarValue();
+                    if (url != null)
+                    {
+                        o.Url = new(url, UriKind.RelativeOrAbsolute);
+                    }
                 }
-            },
+            }
         };
 
         private static readonly PatternFieldMap<OpenApiLicense> _licensePatternFields = new()

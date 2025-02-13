@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -24,7 +25,10 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 var scheme = LoadSecuritySchemeByReference(hostDocument, property.Name);
 
-                var scopes = property.Value.CreateSimpleList((value, p) => value.GetScalarValue(), hostDocument);
+                var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument)
+                    .Where(scope => scope != null)
+                    .Cast<string>()
+                    .ToList();
 
                 if (scheme != null)
                 {

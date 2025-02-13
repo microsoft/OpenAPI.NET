@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <param name="referenceId">The reference Id.</param>
         /// <param name="hostDocument">The host OpenAPI document.</param>
         /// <param name="externalResource">The externally referenced file.</param>
-        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.SecurityScheme, externalResource)
+        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.SecurityScheme, externalResource)
         {
         }
         /// <summary>
@@ -32,9 +32,9 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference?.Description;
             set
             {
                 if (Reference is not null)
@@ -45,31 +45,31 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Name { get => Target?.Name; }
+        public string? Name { get => Target?.Name; }
 
         /// <inheritdoc/>
         public ParameterLocation? In { get => Target?.In; }
 
         /// <inheritdoc/>
-        public string Scheme { get => Target?.Scheme; }
+        public string? Scheme { get => Target?.Scheme; }
 
         /// <inheritdoc/>
-        public string BearerFormat { get => Target?.BearerFormat; }
+        public string? BearerFormat { get => Target?.BearerFormat; }
 
         /// <inheritdoc/>
-        public OpenApiOAuthFlows Flows { get => Target?.Flows; }
+        public OpenApiOAuthFlows? Flows { get => Target?.Flows; }
 
         /// <inheritdoc/>
-        public Uri OpenIdConnectUrl { get => Target?.OpenIdConnectUrl; }
+        public Uri? OpenIdConnectUrl { get => Target?.OpenIdConnectUrl; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public SecuritySchemeType? Type { get => Target?.Type; }
 
         /// <inheritdoc/>
-        public override IOpenApiSecurityScheme CopyReferenceAsTargetElementWithOverrides(IOpenApiSecurityScheme source)
+        public override IOpenApiSecurityScheme? CopyReferenceAsTargetElementWithOverrides(IOpenApiSecurityScheme? source)
         {
             return source is OpenApiSecurityScheme ? new OpenApiSecurityScheme(this) : source;
         }

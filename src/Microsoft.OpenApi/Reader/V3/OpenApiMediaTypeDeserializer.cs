@@ -54,8 +54,8 @@ namespace Microsoft.OpenApi.Reader.V3
         };
 
         private static readonly AnyMapFieldMap<OpenApiMediaType, IOpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
-            new()
-            {
+        new()
+        {
             {
                 OpenApiConstants.Examples,
                 new(

@@ -23,13 +23,13 @@ namespace Microsoft.OpenApi.Models
         private ParameterStyle? _style;
 
         /// <inheritdoc/>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <inheritdoc/>
         public ParameterLocation? In { get; set; }
 
         /// <inheritdoc/>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc/>
         public bool Required { get; set; }
@@ -58,19 +58,19 @@ namespace Microsoft.OpenApi.Models
         public bool AllowReserved { get; set; }
 
         /// <inheritdoc/>
-        public IOpenApiSchema Schema { get; set; }
+        public IOpenApiSchema? Schema { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample> Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
+        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
         /// <inheritdoc/>
-        public JsonNode Example { get; set; }
+        public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// A parameterless constructor
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter.Style ?? Style;
             Explode = parameter.Explode;
             AllowReserved = parameter.AllowReserved;
-            Schema = parameter.Schema.CreateShallowCopy();
+            Schema = parameter.Schema?.CreateShallowCopy();
             Examples = parameter.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
             Content = parameter.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Models
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
-            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+            var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
 
             // schema
             if (this is OpenApiBodyParameter)
@@ -239,14 +239,14 @@ namespace Microsoft.OpenApi.Models
                 if (targetSchema is not null)
                 {
                     targetSchema.WriteAsItemsProperties(writer);
-                    var extensions = Schema.Extensions;
+                    var extensions = Schema?.Extensions;
                     if (extensions != null)
                     {
                         foreach (var key in extensions.Keys)
                         {
                             // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
                             // so remove it from the cloned collection so we don't write it again.
-                            extensionsClone.Remove(key);
+                            extensionsClone?.Remove(key);
                         }
                     }
                 }

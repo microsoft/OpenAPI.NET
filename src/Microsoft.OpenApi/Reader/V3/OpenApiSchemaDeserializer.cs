@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Reader.ParseNodes;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Reader.V3
 {
@@ -26,31 +27,80 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "multipleOf",
-                (o, n, _) => o.MultipleOf = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var multipleOf = n.GetScalarValue();
+                    if (multipleOf != null)
+                    {
+                        o.MultipleOf = decimal.Parse(multipleOf, NumberStyles.Float, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "maximum",
-                (o, n, _) => o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n,_) =>
+                {
+                    var max = n.GetScalarValue();
+                    if (max != null)
+                    {
+                        o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(max, decimal.MaxValue);
+                    }
+                }
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) => o.ExclusiveMaximum = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var exMax = n.GetScalarValue();
+                    if (exMax != null)
+                    {
+                        o.ExclusiveMaximum = bool.Parse(exMax);
+                    }
+                }
             },
             {
                 "minimum",
-                (o, n, _) => o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
+                (o, n, _) =>
+                {
+                    var min = n.GetScalarValue();
+                    if (min != null)
+                    {
+                        o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(min, decimal.MinValue);
+                    }
+                }
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) => o.ExclusiveMinimum = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var exMin = n.GetScalarValue();
+                    if (exMin != null)
+                    {
+                        o.ExclusiveMinimum = bool.Parse(exMin);
+                    }
+                }
             },
             {
                 "maxLength",
-                (o, n, _) => o.MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var maxLength = n.GetScalarValue();
+                    if (maxLength != null)
+                    {
+                        o.MaxLength = int.Parse(maxLength, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "minLength",
-                (o, n, _) => o.MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var minLength = n.GetScalarValue();
+                    if (minLength != null)
+                    {
+                        o.MinLength = int.Parse(minLength, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "pattern",
@@ -58,27 +108,62 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "maxItems",
-                (o, n, _) => o.MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var maxItems = n.GetScalarValue();
+                    if (maxItems != null)
+                    {
+                        o.MaxItems = int.Parse(maxItems, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "minItems",
-                (o, n, _) => o.MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var minItems = n.GetScalarValue();
+                    if (minItems != null)
+                    {
+                        o.MinItems = int.Parse(minItems, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "uniqueItems",
-                (o, n, _) => o.UniqueItems = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var uniqueItems = n.GetScalarValue();
+                    if (uniqueItems != null)
+                    {
+                        o.UniqueItems = bool.Parse(uniqueItems);
+                    }
+                }
             },
             {
                 "maxProperties",
-                (o, n, _) => o.MaxProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var maxProps = n.GetScalarValue();
+                    if (maxProps != null)
+                    {
+                        o.MaxProperties = int.Parse(maxProps, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "minProperties",
-                (o, n, _) => o.MinProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var minProps = n.GetScalarValue();
+                    if (minProps != null)
+                    {
+                        o.MinProperties = int.Parse(minProps, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "required",
-                (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc))
+                (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc).Where(s => s != null)!)
             },
             {
                 "enum",
@@ -87,7 +172,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 "type",
                 (o, n, _) => {
-                    var type = n.GetScalarValue().ToJsonSchemaType();
+                    var type = n.GetScalarValue()?.ToJsonSchemaType();
                     // so we don't loose the value from nullable
                     if (o.Type.HasValue)
                         o.Type |= type;
@@ -124,7 +209,11 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     if (n is ValueNode)
                     {
-                        o.AdditionalPropertiesAllowed = bool.Parse(n.GetScalarValue());
+                        var value = n.GetScalarValue();
+                        if (value is not null)
+                        {
+                            o.AdditionalPropertiesAllowed = bool.Parse(value);
+                        }
                     }
                     else
                     {
@@ -163,11 +252,25 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "readOnly",
-                (o, n, _) => o.ReadOnly = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var readOnly = n.GetScalarValue();
+                    if (readOnly != null)
+                    {
+                        o.ReadOnly = bool.Parse(readOnly);
+                    }
+                }
             },
             {
                 "writeOnly",
-                (o, n, _) => o.WriteOnly = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var writeOnly = n.GetScalarValue();
+                    if (writeOnly != null)
+                    {
+                        o.WriteOnly = bool.Parse(writeOnly);
+                    }
+                }
             },
             {
                 "xml",
@@ -183,7 +286,14 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "deprecated",
-                (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                (o, n, t) =>
+                {
+                    var deprecated = n.GetScalarValue();
+                    if (deprecated != null)
+                    {
+                        o.Deprecated = bool.Parse(deprecated);
+                    }
+                }
             },
         };
 

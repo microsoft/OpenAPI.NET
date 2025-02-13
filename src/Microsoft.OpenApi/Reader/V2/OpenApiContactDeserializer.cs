@@ -22,7 +22,14 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "url",
-                (o, n, t) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                (o, n, t) =>
+                {
+                    var url = n.GetScalarValue();
+                    if (url != null)
+                    {
+                        o.Url = new(url, UriKind.RelativeOrAbsolute); 
+                    }
+                }
             },
             {
                 "email",

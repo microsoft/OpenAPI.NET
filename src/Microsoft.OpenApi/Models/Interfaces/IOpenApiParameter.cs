@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 
@@ -16,7 +16,7 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializa
     /// If in is "header" and the name field is "Accept", "Content-Type" or "Authorization", the parameter definition SHALL be ignored.
     /// For all other cases, the name corresponds to the parameter name used by the in property.
     /// </summary>
-    public string Name { get; }
+    public string? Name { get; }
 
     /// <summary>
     /// REQUIRED. The location of the parameter.
@@ -72,7 +72,7 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializa
     /// <summary>
     /// The schema defining the type used for the parameter.
     /// </summary>
-    public IOpenApiSchema Schema { get; }
+    public IOpenApiSchema? Schema { get; }
 
     /// <summary>
     /// Examples of the media type. Each example SHOULD contain a value
@@ -81,7 +81,7 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializa
     /// Furthermore, if referencing a schema which contains an example,
     /// the examples value SHALL override the example provided by the schema.
     /// </summary>
-    public IDictionary<string, IOpenApiExample> Examples { get; }
+    public IDictionary<string, IOpenApiExample>? Examples { get; }
 
     /// <summary>
     /// Example of the media type. The example SHOULD match the specified schema and encoding properties
@@ -91,7 +91,7 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializa
     /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
     /// a string value can contain the example with escaping where necessary.
     /// </summary>
-    public JsonNode Example { get; }
+    public JsonNode? Example { get; }
 
     /// <summary>
     /// A map containing the representations for the parameter.
@@ -102,5 +102,5 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiSerializa
     /// When example or examples are provided in conjunction with the schema object,
     /// the example MUST follow the prescribed serialization strategy for the parameter.
     /// </summary>
-    public IDictionary<string, OpenApiMediaType> Content { get; }    
+    public IDictionary<string, OpenApiMediaType>? Content { get; }    
 }

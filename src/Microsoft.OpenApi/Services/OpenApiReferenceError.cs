@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// The reference that caused the error.
         /// </summary>
-        public readonly OpenApiReference Reference;
+        public readonly OpenApiReference? Reference;
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class using the message and pointer from the given exception.
         /// </summary>

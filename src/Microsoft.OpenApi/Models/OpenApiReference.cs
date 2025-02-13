@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -18,14 +18,14 @@ namespace Microsoft.OpenApi.Models
         /// A short summary which by default SHOULD override that of the referenced component.
         /// If the referenced object-type does not allow a summary field, then this field has no effect.
         /// </summary>
-        public string Summary { get; set; }
+        public string? Summary { get; set; }
 
         /// <summary>
         /// A description which by default SHOULD override that of the referenced component.
         /// CommonMark syntax MAY be used for rich text representation.
         /// If the referenced object-type does not allow a description field, then this field has no effect.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// External resource in the reference.
@@ -33,8 +33,8 @@ namespace Microsoft.OpenApi.Models
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </summary>
-        public string ExternalResource { get; init; }
-
+        public string? ExternalResource { get; init; }
+        
         /// <summary>
         /// The element type referenced.
         /// </summary>
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Models
         /// If ExternalResource is not present, this is the name of the component without the reference type name.
         /// For example, if the reference is '#/components/schemas/componentName', the Id is 'componentName'.
         /// </summary>
-        public string Id { get; init; }
+        public string? Id { get; init; }
 
         /// <summary>
         /// Gets a flag indicating whether this reference is an external reference.
@@ -65,16 +65,16 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public bool IsFragment { get; init; }
 
-        private OpenApiDocument hostDocument;        
+        private OpenApiDocument? hostDocument;        
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
-        public OpenApiDocument HostDocument { get => hostDocument; init => hostDocument = value; }
+        public OpenApiDocument? HostDocument { get => hostDocument; init => hostDocument = value; }
 
         /// <summary>
         /// Gets the full reference string for v3.0.
         /// </summary>
-        public string ReferenceV3
+        public string? ReferenceV3
         {
             get
             {
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     return Id;
                 }
-                if (Id.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (Id is not null && Id.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
                     return Id;
                 }
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets the full reference string for V2.0
         /// </summary>
-        public string ReferenceV2
+        public string? ReferenceV2
         {
             get
             {
@@ -180,7 +180,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/>
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter> callback = null)
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter>? callback = null)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private string GetExternalReferenceV3()
+        private string? GetExternalReferenceV3()
         {
             if (Id != null)
             {
@@ -255,9 +255,9 @@ namespace Microsoft.OpenApi.Models
             return ExternalResource;
         }
 
-        private string GetExternalReferenceV2()
+        private string? GetExternalReferenceV2()
         {
-            if (Id != null)
+            if (Id is not null && Type is not null)
             {
                 return ExternalResource + "#/" + GetReferenceTypeNameAsV2((ReferenceType)Type) + "/" + Id;
             }
@@ -265,7 +265,7 @@ namespace Microsoft.OpenApi.Models
             return ExternalResource;
         }
 
-        private string GetReferenceTypeNameAsV2(ReferenceType type)
+        private static string? GetReferenceTypeNameAsV2(ReferenceType type)
         {
             return type switch
             {

@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Hidi
             return apiDependency;
         }
 
-        private static OpenApiDocument ApplyFilters(HidiOptions options, ILogger logger, ApiDependency? apiDependency, JsonDocument? postmanCollection, OpenApiDocument document)
+        private static OpenApiDocument? ApplyFilters(HidiOptions options, ILogger logger, ApiDependency? apiDependency, JsonDocument? postmanCollection, OpenApiDocument? document)
         {
             Dictionary<string, List<string>> requestUrls;
             if (apiDependency != null)
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static async Task WriteOpenApiAsync(HidiOptions options, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
+        private static async Task WriteOpenApiAsync(HidiOptions options, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument? document, ILogger logger, CancellationToken cancellationToken)
         {
             using (logger.BeginScope("Output"))
             {
@@ -225,9 +225,9 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL
-        private static async Task<OpenApiDocument> GetOpenApiAsync(HidiOptions options, string format, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
+        private static async Task<OpenApiDocument?> GetOpenApiAsync(HidiOptions options, string format, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
         {
-            OpenApiDocument document;
+            OpenApiDocument? document;
             Stream stream;
 
             if (!string.IsNullOrEmpty(options.Csdl))
@@ -248,7 +248,7 @@ namespace Microsoft.OpenApi.Hidi
 
                     document = await ConvertCsdlToOpenApiAsync(filteredStream ?? stream, format, metadataVersion, options.SettingsConfig, cancellationToken).ConfigureAwait(false);
                     stopwatch.Stop();
-                    logger.LogTrace("{Timestamp}ms: Generated OpenAPI with {Paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+                    logger.LogTrace("{Timestamp}ms: Generated OpenAPI with {Paths} paths.", stopwatch.ElapsedMilliseconds, document?.Paths.Count);
                 }
             }
             else if (!string.IsNullOrEmpty(options.OpenApi))
@@ -262,7 +262,7 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static Func<string, OperationType?, OpenApiOperation, bool>? FilterOpenApiDocument(string? filterByOperationIds, string? filterByTags, Dictionary<string, List<string>> requestUrls, OpenApiDocument document, ILogger logger)
+        private static Func<string, OperationType?, OpenApiOperation, bool>? FilterOpenApiDocument(string? filterByOperationIds, string? filterByTags, Dictionary<string, List<string>> requestUrls, OpenApiDocument? document, ILogger logger)
         {
             Func<string, OperationType?, OpenApiOperation, bool>? predicate = null;
 
@@ -376,7 +376,7 @@ namespace Microsoft.OpenApi.Hidi
 
             if (result is null) return null;
 
-            return result.Diagnostic.Errors.Count == 0;
+            return result.Diagnostic?.Errors.Count == 0;
         }
 
         private static async Task<ReadResult> ParseOpenApiAsync(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
@@ -411,7 +411,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApiAsync(Stream csdl, string format, string? metadataVersion = null, IConfiguration? settings = null, CancellationToken token = default)
+        public static async Task<OpenApiDocument?> ConvertCsdlToOpenApiAsync(Stream csdl, string format, string? metadataVersion = null, IConfiguration? settings = null, CancellationToken token = default)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync(token).ConfigureAwait(false);
@@ -429,7 +429,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="document"> The converted OpenApiDocument.</param>
         /// <returns> A valid OpenApiDocument instance.</returns>
-        public static OpenApiDocument FixReferences(OpenApiDocument document, string format)
+        public static OpenApiDocument? FixReferences(OpenApiDocument document, string format)
         {
             // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
             // So we write it out, and read it back in again to fix it up.
@@ -648,7 +648,7 @@ namespace Microsoft.OpenApi.Hidi
         private static void LogErrors(ILogger logger, ReadResult result)
         {
             var context = result.Diagnostic;
-            if (context.Errors.Count != 0)
+            if (context is not null && context.Errors.Count != 0)
             {
                 using (logger.BeginScope("Detected errors"))
                 {
@@ -660,11 +660,11 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        internal static void WriteTreeDocumentAsMarkdown(string openapiUrl, OpenApiDocument document, StreamWriter writer)
+        internal static void WriteTreeDocumentAsMarkdown(string openapiUrl, OpenApiDocument? document, StreamWriter writer)
         {
             var rootNode = OpenApiUrlTreeNode.Create(document, "main");
 
-            writer.WriteLine("# " + document.Info.Title);
+            writer.WriteLine("# " + document?.Info.Title);
             writer.WriteLine();
             writer.WriteLine("API Description: " + openapiUrl);
 
@@ -681,7 +681,7 @@ namespace Microsoft.OpenApi.Hidi
             writer.WriteLine("```");
         }
 
-        internal static void WriteTreeDocumentAsHtml(string sourceUrl, OpenApiDocument document, StreamWriter writer, bool asHtmlFile = false)
+        internal static void WriteTreeDocumentAsHtml(string sourceUrl, OpenApiDocument? document, StreamWriter writer, bool asHtmlFile = false)
         {
             var rootNode = OpenApiUrlTreeNode.Create(document, "main");
 
@@ -700,7 +700,7 @@ namespace Microsoft.OpenApi.Hidi
                 </style>
                 <body>
                 """);
-            writer.WriteLine("<h1>" + document.Info.Title + "</h1>");
+            writer.WriteLine("<h1>" + document?.Info.Title + "</h1>");
             writer.WriteLine();
             writer.WriteLine($"<h3> API Description: <a href='{sourceUrl}'>{sourceUrl}</a></h3>");
 
@@ -771,9 +771,13 @@ namespace Microsoft.OpenApi.Hidi
             await WriteOpenApiAsync(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_1, document, logger, cancellationToken).ConfigureAwait(false);
 
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
-            var manifest = new OpenAIPluginManifest(document.Info?.Title ?? "Title", document.Info?.Title ?? "Title", "https://go.microsoft.com/fwlink/?LinkID=288890", document.Info?.Contact?.Email ?? "placeholder@contoso.com", document.Info?.License?.Url.ToString() ?? "https://placeholderlicenseurl.com")
+            var manifest = new OpenAIPluginManifest(document?.Info.Title ?? "Title",
+                                                    document?.Info.Title ?? "Title",
+                                                    "https://go.microsoft.com/fwlink/?LinkID=288890",
+                                                    document?.Info?.Contact?.Email ?? "placeholder@contoso.com",
+                                                    document?.Info?.License?.Url?.ToString() ?? "https://placeholderlicenseurl.com")
             {
-                DescriptionForHuman = document.Info?.Description ?? "Description placeholder",
+                DescriptionForHuman = document?.Info.Description ?? "Description placeholder",
                 Api = new("openapi", "./openapi.json"),
                 Auth = new ManifestNoAuth(),
             };

@@ -30,7 +30,14 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "termsOfService",
-                (o, n, _) => o.TermsOfService = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                (o, n, _) =>
+                {
+                    var terms = n.GetScalarValue();
+                    if (terms != null)
+                    {
+                        o.TermsOfService = new(terms, UriKind.RelativeOrAbsolute);
+                    }
+                }
             },
             {
                 "contact",

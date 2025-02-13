@@ -15,25 +15,25 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiLink
     {
         /// <inheritdoc/>
-        public string OperationRef { get; set; }
+        public string? OperationRef { get; set; }
 
         /// <inheritdoc/>
-        public string OperationId { get; set; }
+        public string? OperationId { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } = new Dictionary<string, RuntimeExpressionAnyWrapper>();
+        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; } = new Dictionary<string, RuntimeExpressionAnyWrapper>();
 
         /// <inheritdoc/>
-        public RuntimeExpressionAnyWrapper RequestBody { get; set; }
+        public RuntimeExpressionAnyWrapper? RequestBody { get; set; }
 
         /// <inheritdoc/>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public OpenApiServer Server { get; set; }
+        public OpenApiServer? Server { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor

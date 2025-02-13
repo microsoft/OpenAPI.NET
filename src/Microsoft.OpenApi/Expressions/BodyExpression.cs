@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Expressions
         /// Initializes a new instance of the <see cref="BodyExpression"/> class.
         /// </summary>
         /// <param name="pointer">a JSON Pointer [RFC 6901](https://tools.ietf.org/html/rfc6901).</param>
-        public BodyExpression(JsonPointer pointer)
+        public BodyExpression(JsonPointer? pointer)
             : base(pointer?.ToString())
         {
             Utils.CheckArgumentNull(pointer);
@@ -55,6 +55,6 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the fragment string.
         /// </summary>
-        public string Fragment { get => Value; }
+        public string? Fragment { get => Value; }
     }
 }

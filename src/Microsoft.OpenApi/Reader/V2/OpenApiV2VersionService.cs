@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Reader.V2
             Diagnostic = diagnostic;
         }
 
-        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new()
+        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new()
         {
             [typeof(OpenApiAny)] = OpenApiV2Deserializer.LoadAny,
             [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
@@ -125,14 +125,14 @@ namespace Microsoft.OpenApi.Reader.V2
                     return ReferenceType.SecurityScheme;
 
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException(nameof(referenceType));
             }
         }
 
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
-        public OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type, string summary = null, string description = null)
+        public OpenApiReference? ConvertToOpenApiReference(string reference, ReferenceType? type, string? summary = null, string? description = null)
         {
             if (!string.IsNullOrWhiteSpace(reference))
             {
@@ -216,7 +216,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
         {
-            return (T)_loaders[typeof(T)](node, doc);
+            return (T)_loaders[typeof(T)](node, doc)!;
         }
 
         /// <inheritdoc />

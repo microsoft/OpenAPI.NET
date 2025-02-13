@@ -44,8 +44,8 @@ namespace Microsoft.OpenApi.Validations.Rules
         public static void ValidateDataTypeMismatch(
             IValidationContext context,
             string ruleName,
-            JsonNode value,
-            IOpenApiSchema schema)
+            JsonNode? value,
+            IOpenApiSchema? schema)
         {
             if (schema == null)
             {
@@ -53,14 +53,14 @@ namespace Microsoft.OpenApi.Validations.Rules
             }
 
             // convert value to JsonElement and access the ValueKind property to determine the type.
-            var valueKind = value.GetValueKind();
+            var valueKind = value?.GetValueKind();
 
             var type = schema.Type.ToIdentifier();
             var format = schema.Format;
 
             // Before checking the type, check first if the schema allows null.
             // If so and the data given is also null, this is allowed for any type.
-            if ((schema.Type.Value & JsonSchemaType.Null) is JsonSchemaType.Null && valueKind is JsonValueKind.Null)
+            if (schema.Type is not null && (schema.Type.Value & JsonSchemaType.Null) is JsonSchemaType.Null && valueKind is JsonValueKind.Null)
             {
                 return;
             }

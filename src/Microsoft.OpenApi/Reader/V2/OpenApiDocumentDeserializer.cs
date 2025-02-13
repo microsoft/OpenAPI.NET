@@ -70,15 +70,18 @@ namespace Microsoft.OpenApi.Reader.V2
                 {
                     o.Components ??= new();
 
-                    o.Components.Parameters = n.CreateMap(LoadParameter, o);
+                    o.Components.Parameters = n.CreateMap(LoadParameter, o)
+                        .Where(kvp => kvp.Value != null)
+                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value!);
 
-                    o.Components.RequestBodies = n.CreateMap((p, d) =>
-                            {
-                                var parameter = LoadParameter(node: p, loadRequestBody: true, hostDocument: d);
-                                return parameter != null ? CreateRequestBody(p.Context, parameter) : null;
-                            },
-                            doc
-                      );
+                o.Components.RequestBodies = n.CreateMap((p, d) =>
+                        {
+                            var parameter = LoadParameter(node: p, loadRequestBody: true, hostDocument: d);
+                            return parameter != null ? CreateRequestBody(p.Context, parameter) : null;
+                        },
+                        doc
+                  ).Where(kvp => kvp.Value != null)
+                   .ToDictionary(kvp => kvp.Key, kvp => kvp.Value!);
                 }
             },
             {
@@ -179,14 +182,14 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 // Server Urls are always appended to Paths and Paths must start with /
                 // so removing the slash prevents a double slash.
-                if (server.Url.EndsWith("/"))
+                if (server.Url is not null && server.Url.EndsWith("/"))
                 {
                     server.Url = server.Url.Substring(0, server.Url.Length - 1);
                 }
             }
         }
 
-        private static string BuildUrl(string scheme, string host, string basePath)
+        private static string BuildUrl(string? scheme, string? host, string? basePath)
         {
             if (string.IsNullOrEmpty(scheme) && !string.IsNullOrEmpty(host))
             {
@@ -201,9 +204,12 @@ namespace Microsoft.OpenApi.Reader.V2
             if (!String.IsNullOrEmpty(host) && host.Contains(':'))
 #endif
             {
-                var pieces = host.Split(':');
-                host = pieces.First();
-                port = int.Parse(pieces.Last(), CultureInfo.InvariantCulture);
+                var pieces = host?.Split(':');
+                if (pieces is not null)
+                {
+                    host = pieces[0];
+                    port = int.Parse(pieces[0], CultureInfo.InvariantCulture);
+                }                
             }
 
             var uriBuilder = new UriBuilder
@@ -252,12 +258,12 @@ namespace Microsoft.OpenApi.Reader.V2
             FixRequestBodyReferences(openApiDoc);
 
             // Register components
-            openApiDoc.Workspace.RegisterComponents(openApiDoc);
+            openApiDoc.Workspace?.RegisterComponents(openApiDoc);
 
             return openApiDoc;
         }
 
-        private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<IOpenApiResponse> responses, ParsingContext context)
+        private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<IOpenApiResponse>? responses, ParsingContext context)
         {
             if (responses != null)
             {
@@ -280,9 +286,9 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             // Walk all unresolved parameter references
             // if id matches with request body Id, change type
-            if (doc.Components?.RequestBodies is {Count: > 0})
+            if (doc.Components?.RequestBodies != null && doc.Components?.RequestBodies is { Count: > 0 })
             {
-                var fixer = new RequestBodyReferenceFixer(doc.Components?.RequestBodies);
+                var fixer = new RequestBodyReferenceFixer(doc.Components.RequestBodies);
                 var walker = new OpenApiWalker(fixer);
                 walker.Walk(doc);
             }
@@ -312,14 +318,15 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public override void Visit(OpenApiOperation operation)
         {
-            var body = operation.Parameters.OfType<OpenApiParameterReference>().FirstOrDefault(
+            var body = operation.Parameters?.OfType<OpenApiParameterReference>().FirstOrDefault(
                 p => p.UnresolvedReference
+                     && p.Reference?.Id != null
                      && _requestBodies.ContainsKey(p.Reference.Id));
-
-            if (body != null)
+            var id = body?.Reference?.Id;
+            if (body != null && id is not null)
             {
-                operation.Parameters.Remove(body);
-                operation.RequestBody = new OpenApiRequestBodyReference(body.Reference.Id, body.Reference.HostDocument);
+                operation.Parameters?.Remove(body);
+                operation.RequestBody = new OpenApiRequestBodyReference(id, body.Reference?.HostDocument);
             }
         }
     }

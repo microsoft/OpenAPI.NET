@@ -15,17 +15,17 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The name of the property in the payload that will hold the discriminator value.
         /// </summary>
-        public string PropertyName { get; set; }
+        public string? PropertyName { get; set; }
 
         /// <summary>
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
-        public IDictionary<string, string> Mapping { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, string>? Mapping { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor

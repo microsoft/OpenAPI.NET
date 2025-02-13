@@ -21,37 +21,39 @@ public static class OpenApiServerExtensions
     ///   1. A substitution has no valid value in both the supplied dictionary and the default
     ///   2. A substitution's value is not available in the enum provided
     /// </exception>
-    public static string ReplaceServerUrlVariables(this OpenApiServer server, IDictionary<string, string> values = null)
+    public static string? ReplaceServerUrlVariables(this OpenApiServer server, IDictionary<string, string>? values = null)
     {
         var parsedUrl = server.Url;
-        foreach (var variable in server.Variables)
+        if (server.Variables is not null && parsedUrl is not null)
         {
-            // Try to get the value from the provided values
-            if (values is not { } v || !v.TryGetValue(variable.Key, out var value) || string.IsNullOrEmpty(value))
+            foreach (var variable in server.Variables)
             {
-                // Fall back to the default value
-                value = variable.Value.Default;
+                // Try to get the value from the provided values
+                if (values is not { } v || !v.TryGetValue(variable.Key, out var value) || string.IsNullOrEmpty(value))
+                {
+                    // Fall back to the default value
+                    value = variable.Value.Default;
+                }
+
+                // Validate value
+                if (string.IsNullOrEmpty(value))
+                {
+                    // According to the spec, the variable's default value is required.
+                    // This code path should be hit when a value isn't provided & a default value isn't available
+                    throw new ArgumentException(
+                        string.Format(SRResource.ParseServerUrlDefaultValueNotAvailable, variable.Key), nameof(server));
+                }
+
+                // If an enum is provided, the array should not be empty & the value should exist in the enum
+                if (value is not null && variable.Value.Enum is { } e && (e.Count == 0 || !e.Contains(value)))
+                {
+                    throw new ArgumentException(
+                        string.Format(SRResource.ParseServerUrlValueNotValid, value, variable.Key), nameof(values));
+                }
+
+                parsedUrl = parsedUrl?.Replace($"{{{variable.Key}}}", value);
             }
-
-            // Validate value
-            if (string.IsNullOrEmpty(value))
-            {
-                // According to the spec, the variable's default value is required.
-                // This code path should be hit when a value isn't provided & a default value isn't available
-                throw new ArgumentException(
-                    string.Format(SRResource.ParseServerUrlDefaultValueNotAvailable, variable.Key), nameof(server));
-            }
-
-            // If an enum is provided, the array should not be empty & the value should exist in the enum
-            if (variable.Value.Enum is {} e && (e.Count == 0 || !e.Contains(value)))
-            {
-                throw new ArgumentException(
-                    string.Format(SRResource.ParseServerUrlValueNotValid, value, variable.Key), nameof(values));
-            }
-
-            parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", value);
-        }
-
+        }        
         return parsedUrl;
     }
 }

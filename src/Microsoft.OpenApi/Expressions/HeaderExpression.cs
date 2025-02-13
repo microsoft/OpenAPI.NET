@@ -31,6 +31,6 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the token string.
         /// </summary>
-        public string Token { get => Value; }
+        public string? Token { get => Value; }
     }
 }

@@ -41,6 +41,6 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// 
         /// </summary>
-        OpenApiDocument HostDocument { get; }
+        OpenApiDocument? HostDocument { get; }
     }
 }

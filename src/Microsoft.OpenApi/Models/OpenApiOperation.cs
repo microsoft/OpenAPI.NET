@@ -248,17 +248,25 @@ namespace Microsoft.OpenApi.Models
                     if (consumes.Contains("application/x-www-form-urlencoded") ||
                         consumes.Contains("multipart/form-data"))
                     {
-                        parameters.AddRange(RequestBody.ConvertToFormDataParameters(writer));
+                        var formDataParameters = RequestBody.ConvertToFormDataParameters(writer);
+                        if (formDataParameters != null)
+                        {
+                            parameters.AddRange(formDataParameters);
+                        }
                     }
                     else
                     {
-                        parameters.Add(RequestBody.ConvertToBodyParameter(writer));
+                        var bodyParameter = RequestBody.ConvertToBodyParameter(writer);
+                        if (bodyParameter != null)
+                        {
+                            parameters.Add(bodyParameter);
+                        }
                     }
                 }
                 else if (RequestBody is OpenApiRequestBodyReference requestBodyReference)
                 {
                     parameters.Add(
-                        new OpenApiParameterReference(requestBodyReference.Reference.Id, requestBodyReference.Reference.HostDocument));
+                        new OpenApiParameterReference(requestBodyReference.Reference?.Id, requestBodyReference.Reference?.HostDocument));
                 }
 
                 if (consumes.Count > 0)
@@ -319,7 +327,7 @@ namespace Microsoft.OpenApi.Models
                     .Distinct()
                     .ToList();
 
-                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes.Where(scheme => scheme is not null).ToString(), (w, s) => w.WriteValue(s));
             }
 
             // deprecated

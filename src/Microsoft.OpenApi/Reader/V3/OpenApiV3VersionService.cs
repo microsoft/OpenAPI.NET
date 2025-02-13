@@ -75,8 +75,8 @@ namespace Microsoft.OpenApi.Reader.V3
         public OpenApiReference ConvertToOpenApiReference(
             string reference,
             ReferenceType? type,
-            string summary = null,
-            string description = null)
+            string? summary = null,
+            string? description = null)
         {
             if (!string.IsNullOrWhiteSpace(reference))
             {
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Reader.V3
         }
 
         /// <inheritdoc />
-        public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
+        public string? GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
             if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)) &&
                 mapNode

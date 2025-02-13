@@ -28,9 +28,10 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject), hostDocument))
+            var list = _nodeList.Select(n => map(new MapNode(Context, n as JsonObject), hostDocument))
                 .Where(i => i != null)
                 .ToList();
+            return list;
         }
 
         public override List<JsonNode> CreateListOfAny()

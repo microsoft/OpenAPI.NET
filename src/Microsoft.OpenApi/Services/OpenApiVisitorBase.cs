@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiComponents"/>
         /// </summary>
-        public virtual void Visit(OpenApiExternalDocs externalDocs)
+        public virtual void Visit(OpenApiExternalDocs? externalDocs)
         {
         }
 
@@ -330,7 +330,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="IOpenApiExtensible"/>
         /// </summary>
-        public virtual void Visit(IOpenApiExtensible openApiExtensible)
+        public virtual void Visit(IOpenApiExtensible? openApiExtensible)
         {
         }
 

@@ -29,13 +29,16 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     context.Exit();
                     context.Enter("variables");
-                    foreach (var variable in server.Variables)
+                    if (server.Variables is not null)
                     {
-                        context.Enter(variable.Key);
-                        ValidateServerVariableRequiredFields(context, variable.Key, variable.Value);
+                        foreach (var variable in server.Variables)
+                        {
+                            context.Enter(variable.Key);
+                            ValidateServerVariableRequiredFields(context, variable.Key, variable.Value);
+                            context.Exit();
+                        }
                         context.Exit();
-                    }
-                    context.Exit();
+                    }                   
                 });
 
         // add more rules

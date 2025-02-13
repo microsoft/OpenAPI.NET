@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
     {
         private readonly JsonValue _node;
 
-        public ValueNode(ParsingContext context, JsonNode node) : base(
+        public ValueNode(ParsingContext context, JsonNode? node) : base(
             context, node)
         {
             if (node is not JsonValue scalarNode)
@@ -22,9 +22,10 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             _node = scalarNode;
         }
 
-        public override string GetScalarValue()
+        public override string? GetScalarValue()
         {
-            return Convert.ToString(_node.GetValue<object>(), CultureInfo.InvariantCulture);
+            var scalarValue = _node.GetValue<object>();
+            return Convert.ToString(scalarValue, CultureInfo.InvariantCulture);
         }
 
         /// <summary>

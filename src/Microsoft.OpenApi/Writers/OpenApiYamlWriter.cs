@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings"></param>
-        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
+        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings? settings) : base(textWriter, settings)
         {
 
         }
@@ -135,46 +135,48 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the property name and the delimiter.
         /// </summary>
-        public override void WritePropertyName(string name)
+        public override void WritePropertyName(string? name)
         {
             VerifyCanWritePropertyName(name);
 
             var currentScope = CurrentScope();
-
-            // If this is NOT the first property in the object, always start a new line and add indentation.
-            if (currentScope.ObjectCount != 0)
+            if (currentScope is not null)
             {
-                Writer.WriteLine();
-                WriteIndentation();
-            }
-            // Only add newline and indentation when this object is not in the top level scope and not in an array.
-            // The top level scope should have no indentation and it is already in its own line.
-            // The first property of an object inside array can go after the array prefix (-) directly.
-            else if (!IsTopLevelScope() && !currentScope.IsInArray)
-            {
-                Writer.WriteLine();
-                WriteIndentation();
-            }
+                // If this is NOT the first property in the object, always start a new line and add indentation.
+                if (currentScope.ObjectCount != 0)
+                {
+                    Writer.WriteLine();
+                    WriteIndentation();
+                }
+                // Only add newline and indentation when this object is not in the top level scope and not in an array.
+                // The top level scope should have no indentation and it is already in its own line.
+                // The first property of an object inside array can go after the array prefix (-) directly.
+                else if (!IsTopLevelScope() && !currentScope.IsInArray)
+                {
+                    Writer.WriteLine();
+                    WriteIndentation();
+                }
 
-            name = name.GetYamlCompatibleString();
+                name = name?.GetYamlCompatibleString();
 
-            Writer.Write(name);
-            Writer.Write(":");
+                Writer.Write(name);
+                Writer.Write(":");
 
-            currentScope.ObjectCount++;
+                currentScope.ObjectCount++;
+            }          
         }
 
         /// <summary>
         /// Write string value.
         /// </summary>
         /// <param name="value">The string value.</param>
-        public override void WriteValue(string value)
+        public override void WriteValue(string? value)
         {
-            if (!UseLiteralStyle || value.IndexOfAny(new[] { '\n', '\r' }) == -1)
+            if (!UseLiteralStyle || value?.IndexOfAny(new[] { '\n', '\r' }) == -1)
             {
                 WriteValueSeparator();
 
-                value = value.GetYamlCompatibleString();
+                value = value?.GetYamlCompatibleString();
 
                 Writer.Write(value);
             }
@@ -190,7 +192,7 @@ namespace Microsoft.OpenApi.Writers
                 WriteChompingIndicator(value);
 
                 // Write indentation indicator when it starts with spaces
-                if (value.StartsWith(" ", StringComparison.OrdinalIgnoreCase))
+                if (value is not null && value.StartsWith(" ", StringComparison.OrdinalIgnoreCase))
                 {
                     Writer.Write(IndentationString.Length);
                 }
@@ -199,8 +201,9 @@ namespace Microsoft.OpenApi.Writers
 
                 IncreaseIndentation();
 
-                using (var reader = new StringReader(value))
+                if (value is not null)
                 {
+                    using var reader = new StringReader(value);
                     var firstLine = true;
                     while (reader.ReadLine() is var line && line != null)
                     {
@@ -217,32 +220,32 @@ namespace Microsoft.OpenApi.Writers
 
                         Writer.Write(line);
                     }
-                }
+                }               
 
                 DecreaseIndentation();
             }
         }
 
-        private void WriteChompingIndicator(string value)
+        private void WriteChompingIndicator(string? value)
         {
             var trailingNewlines = 0;
-            var end = value.Length - 1;
+            var end = value?.Length - 1;
             // We only need to know whether there are 0, 1, or more trailing newlines
             while (end >= 0 && trailingNewlines < 2)
             {
-                var found = value.LastIndexOfAny(new[] { '\n', '\r' }, end, 2);
+                var found = value?.LastIndexOfAny(new[] { '\n', '\r' }, end.Value, 2);
                 if (found == -1 || found != end)
                 {
                     // does not ends with newline
                     break;
                 }
 
-                if (value[end] == '\r')
+                if (value?[end.Value] == '\r')
                 {
                     // ends with \r
                     end--;
                 }
-                else if (end > 0 && value[end - 1] == '\r')
+                else if (end > 0 && value?[end.Value - 1] == '\r')
                 {
                     // ends with \r\n
                     end -= 2;
@@ -286,10 +289,11 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         protected override void WriteValueSeparator()
         {
-            if (IsArrayScope())
+            var currentScopeCount = CurrentScope()?.ObjectCount;
+            if (currentScopeCount is not null && IsArrayScope())
             {
                 // If array is the outermost scope and this is the first item, there is no need to insert a newline.
-                if (!IsTopLevelScope() || CurrentScope().ObjectCount != 0)
+                if (!IsTopLevelScope() || currentScopeCount != 0)
                 {
                     Writer.WriteLine();
                 }
@@ -297,7 +301,7 @@ namespace Microsoft.OpenApi.Writers
                 WriteIndentation();
                 Writer.Write(WriterConstants.PrefixOfArrayItem);
 
-                CurrentScope().ObjectCount++;
+                currentScopeCount++;
             }
             else
             {

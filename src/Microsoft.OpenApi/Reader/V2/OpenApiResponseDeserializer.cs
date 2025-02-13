@@ -196,12 +196,14 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 property.ParseField(response, _responseFixedFields, _responsePatternFields, hostDocument);
             }
-
-            foreach (var mediaType in response.Content.Values)
+            if (response.Content?.Values is not null)
             {
-                if (mediaType.Schema != null)
+                foreach (var mediaType in response.Content.Values)
                 {
-                    ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                    if (mediaType.Schema != null)
+                    {
+                        ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                    }
                 }
             }
 

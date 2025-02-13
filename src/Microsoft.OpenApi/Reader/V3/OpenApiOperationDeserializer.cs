@@ -58,7 +58,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "deprecated",
-                    (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                    (o, n, _) =>
+                    {
+                        var deprecated = n.GetScalarValue();
+                        if (deprecated != null)
+                        {
+                            o.Deprecated = bool.Parse(deprecated);
+                        }
+                    }
                 },
                 {
                     "security",
@@ -88,7 +95,7 @@ namespace Microsoft.OpenApi.Reader.V3
         }
 
         private static OpenApiTagReference LoadTagByReference(
-            string tagName, OpenApiDocument hostDocument)
+            string? tagName, OpenApiDocument hostDocument)
         {
             return new OpenApiTagReference(tagName, hostDocument);
         }
