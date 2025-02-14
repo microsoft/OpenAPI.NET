@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Interfaces
     }
     public interface IStreamLoader
     {
-        System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri);
+        System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri, System.Threading.CancellationToken cancellationToken = default);
     }
 }
 namespace Microsoft.OpenApi
@@ -1554,7 +1554,7 @@ namespace Microsoft.OpenApi.Reader.Services
     public class DefaultStreamLoader : Microsoft.OpenApi.Interfaces.IStreamLoader
     {
         public DefaultStreamLoader(System.Uri baseUrl) { }
-        public System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri) { }
+        public System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri, System.Threading.CancellationToken cancellationToken = default) { }
     }
 }
 namespace Microsoft.OpenApi.Services
