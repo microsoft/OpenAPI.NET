@@ -58,14 +58,7 @@ namespace Microsoft.OpenApi.Extensions
                 var attribute = e.GetAttributeOfType<DisplayAttribute>();
 
                 // Return the DisplayAttribute name if it exists, otherwise return the enum's string representation
-                if (attribute?.Name is not null)
-                {
-                    return attribute.Name;
-                }
-                else
-                {
-                    return e.ToString();
-                }
+                return attribute?.Name is not null ? attribute.Name : e.ToString();
             });
         }
     }
