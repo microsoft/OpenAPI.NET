@@ -9,13 +9,11 @@
     <NoWarn>NU1903</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.12.19">
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.1" />
-    <!-- Microsoft.Windows.Compatibility 8.0.8 depends on 8.0.0 this dependency can be removed once they update theirs -->
-    <PackageReference Include="System.Formats.Asn1" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Themes\Metro\HowToApplyTheme.txt" />
