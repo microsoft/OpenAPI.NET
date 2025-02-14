@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))},
             };
 
-        public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("PathItem");
 
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return pathItem;
         }
 
-        private static void LoadPathParameters(OpenApiPathItem pathItem, ParseNode node, OpenApiDocument hostDocument)
+        private static void LoadPathParameters(OpenApiPathItem pathItem, ParseNode node, OpenApiDocument? hostDocument)
         {
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
             node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);

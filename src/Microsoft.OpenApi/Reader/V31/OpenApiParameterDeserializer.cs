@@ -158,7 +158,7 @@ namespace Microsoft.OpenApi.Reader.V31
             }
         };
 
-        public static IOpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiParameter LoadParameter(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("parameter");
 

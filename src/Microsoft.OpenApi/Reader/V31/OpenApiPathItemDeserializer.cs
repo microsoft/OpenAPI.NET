@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static IOpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("PathItem");
 

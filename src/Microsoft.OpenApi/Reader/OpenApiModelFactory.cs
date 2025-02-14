@@ -299,7 +299,7 @@ namespace Microsoft.OpenApi.Reader
                     var response = await _httpClient.GetAsync(url, token).ConfigureAwait(false);
                     var mediaType = response.Content.Headers.ContentType?.MediaType;
                     var contentType = mediaType?.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
-                    format = contentType?.Split('/')[0].Split('+')[0].Split('-')[0];
+                    format = contentType?.Split('/').Last().Split('+').Last().Split('-').Last();
                     // for non-standard MIME types e.g. text/x-yaml used in older libs or apps
 #if NETSTANDARD2_0
                     stream = await response.Content.ReadAsStreamAsync();

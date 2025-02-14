@@ -208,10 +208,9 @@ namespace Microsoft.OpenApi.Reader.V31
                 "type",
                 (o, n, doc) => 
                 {
-                    var typeValue = n.GetScalarValue();
-                    if (n is ValueNode && typeValue is not null)
+                    if (n is ValueNode)
                     {
-                        o.Type = typeValue.ToJsonSchemaType();
+                        o.Type = n.GetScalarValue()?.ToJsonSchemaType();
                     }
                     else
                     {
@@ -365,7 +364,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 

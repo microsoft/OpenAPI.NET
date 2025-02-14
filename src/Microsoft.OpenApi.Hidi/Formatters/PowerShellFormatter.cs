@@ -180,8 +180,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         {
             if (schema is OpenApiSchema openApiSchema 
                 && !_schemaLoop.Contains(schema) 
-                && schema.Type.Equals(JsonSchemaType.Object) 
-                && schema.AdditionalProperties is not null)
+                && schema.Type.Equals(JsonSchemaType.Object))
             {
                 openApiSchema.AdditionalProperties = new OpenApiSchema() { Type = JsonSchemaType.Object };
 
@@ -189,7 +188,10 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                  * we need a way to keep track of visited schemas to avoid
                  * endlessly creating and walking them in an infinite recursion.
                  */
-                _schemaLoop.Push(schema.AdditionalProperties);
+                if (schema.AdditionalProperties is not null)
+                {
+                    _schemaLoop.Push(schema.AdditionalProperties);
+                }
             }
         }
 

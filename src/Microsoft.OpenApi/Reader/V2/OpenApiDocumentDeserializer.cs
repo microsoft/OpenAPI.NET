@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 if (pieces is not null)
                 {
                     host = pieces[0];
-                    port = int.Parse(pieces[0], CultureInfo.InvariantCulture);
+                    port = int.Parse(pieces[pieces.Count() -1], CultureInfo.InvariantCulture);
                 }                
             }
 

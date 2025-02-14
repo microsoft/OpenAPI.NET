@@ -25,11 +25,11 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
 
         public void ParseField<T>(
             T parentInstance,
-            IDictionary<string, Action<T, ParseNode, OpenApiDocument>> fixedFields,
-            IDictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument>> patternFields,
+            IDictionary<string, Action<T, ParseNode, OpenApiDocument?>> fixedFields,
+            IDictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument?>> patternFields,
             OpenApiDocument? hostDocument)
         {
-            if (fixedFields.TryGetValue(Name, out var fixedFieldMap) && hostDocument is not null)
+            if (fixedFields.TryGetValue(Name, out var fixedFieldMap))
             {
                 try
                 {
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             else
             {
                 var map = patternFields.Where(p => p.Key(Name)).Select(p => p.Value).FirstOrDefault();
-                if (map != null && hostDocument is not null)
+                if (map != null)
                 {
                     try
                     {

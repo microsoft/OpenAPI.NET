@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Reader.V2
             };
         }
 
-        public static IOpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiHeader LoadHeader(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("header");
             var header = new OpenApiHeader();

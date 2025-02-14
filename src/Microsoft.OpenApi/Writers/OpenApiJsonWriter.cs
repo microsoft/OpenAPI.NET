@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Object);
 
-            if (previousScope is {Type: ScopeType.Array})
+            if (previousScope is { Type: ScopeType.Array })
             {
                 currentScope.IsInArray = true;
 
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Array);
 
-            if (previousScope is {Type: ScopeType.Array})
+            if (previousScope is { Type: ScopeType.Array })
             {
                 currentScope.IsInArray = true;
 
@@ -158,17 +158,14 @@ namespace Microsoft.OpenApi.Writers
             VerifyCanWritePropertyName(name);
 
             var currentScope = CurrentScope();
-            if (currentScope is not null)
+            if (currentScope?.ObjectCount != 0)
             {
-                if (currentScope.ObjectCount != 0)
-                {
-                    Writer.Write(WriterConstants.ObjectMemberSeparator);
-                }
-
-                WriteLine();
-
-                currentScope.ObjectCount++;
+                Writer.Write(WriterConstants.ObjectMemberSeparator);
             }
+
+            WriteLine();
+
+            currentScope!.ObjectCount++;
 
             WriteIndentation();
 

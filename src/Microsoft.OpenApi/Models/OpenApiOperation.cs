@@ -327,7 +327,7 @@ namespace Microsoft.OpenApi.Models
                     .Distinct()
                     .ToList();
 
-                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes.Where(scheme => scheme is not null).ToString(), (w, s) => w.WriteValue(s));
+                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
             }
 
             // deprecated

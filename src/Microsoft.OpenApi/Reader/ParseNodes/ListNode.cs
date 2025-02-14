@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             _nodeList = jsonArray;
         }
 
-        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
+        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument?, T> map, OpenApiDocument? hostDocument)
         {
             if (_nodeList == null)
             {
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return list;
         }
 
-        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
+        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
         {
             if (_nodeList == null)
             {

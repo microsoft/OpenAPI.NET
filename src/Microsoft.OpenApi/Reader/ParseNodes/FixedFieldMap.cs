@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
 {
-    internal class FixedFieldMap<T> : Dictionary<string, Action<T, ParseNode, OpenApiDocument>>
+    internal class FixedFieldMap<T> : Dictionary<string, Action<T, ParseNode, OpenApiDocument?>>
     {
     }
 }

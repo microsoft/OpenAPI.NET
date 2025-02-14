@@ -46,17 +46,17 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return new ValueNode(context, node as JsonValue);
         }
 
-        public virtual List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
+        public virtual List<T> CreateList<T>(Func<MapNode, OpenApiDocument?, T> map, OpenApiDocument? hostDocument)
         {
             throw new OpenApiReaderException("Cannot create list from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
+        public virtual Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument?, T> map, OpenApiDocument? hostDocument)
         {
             throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
         }
 
-        public virtual List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
+        public virtual List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
         {
             throw new OpenApiReaderException("Cannot create simple list from this type of node.", Context);
         }

@@ -191,8 +191,8 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalCollection(
             this IOpenApiWriter writer,
             string name,
-            IEnumerable<string>? elements,
-            Action<IOpenApiWriter, string> action)
+            IEnumerable<string?>? elements,
+            Action<IOpenApiWriter, string?> action)
         {
             if (elements != null && elements.Any())
             {

@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Reader.V3
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap, 
-            OpenApiDocument hostDocument)
+            OpenApiDocument? hostDocument)
         {
             if (mapNode == null)
             {
