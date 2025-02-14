@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -27,13 +28,8 @@ namespace Microsoft.OpenApi.Reader.Services
             this.baseUrl = baseUrl;
         }
 
-        /// <summary>
-        /// Use Uri to locate data and convert into an input object.
-        /// </summary>
-        /// <param name="uri">Identifier of some source of an OpenAPI Description</param>
-        /// <returns>A data object that can be processed by a reader to generate an <see cref="OpenApiDocument"/></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public async Task<Stream> LoadAsync(Uri uri)
+        /// <inheritdoc/>
+        public async Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
         {
             Uri absoluteUri;
             absoluteUri = baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) ? new Uri(Directory.GetCurrentDirectory() + uri) 
@@ -45,7 +41,11 @@ namespace Microsoft.OpenApi.Reader.Services
                     return File.OpenRead(absoluteUri.AbsolutePath);
                 case "http":
                 case "https":
-                    return await _httpClient.GetStreamAsync(absoluteUri);
+#if NET5_0_OR_GREATER
+                    return await _httpClient.GetStreamAsync(absoluteUri, cancellationToken).ConfigureAwait(false);
+#else
+                    return await _httpClient.GetStreamAsync(absoluteUri).ConfigureAwait(false);
+#endif
                 default:
                     throw new ArgumentException("Unsupported scheme");
             }
