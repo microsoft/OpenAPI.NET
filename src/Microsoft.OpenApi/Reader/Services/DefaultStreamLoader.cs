@@ -31,24 +31,26 @@ namespace Microsoft.OpenApi.Reader.Services
         /// <inheritdoc/>
         public async Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
         {
-            Uri absoluteUri;
-            absoluteUri = baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) ? new Uri(Directory.GetCurrentDirectory() + uri) 
-                : new Uri(baseUrl, uri);
-
-            switch (absoluteUri.Scheme)
+            var absoluteUri = (baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri), baseUrl.IsAbsoluteUri, uri.IsAbsoluteUri) switch
             {
-                case "file":
-                    return File.OpenRead(absoluteUri.AbsolutePath);
-                case "http":
-                case "https":
+                (true, _, _) => new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())),
+                // this overcomes a URI concatenation issue for local paths on linux OSes
+                (_, true, false) when baseUrl.Scheme.Equals("file", StringComparison.OrdinalIgnoreCase) =>
+                    new Uri(Path.Combine(baseUrl.AbsoluteUri, uri.ToString())),
+                (_, _, _) => new Uri(baseUrl, uri),
+            };
+
+            return absoluteUri.Scheme switch
+            {
+                "file" => File.OpenRead(absoluteUri.AbsolutePath),
+                "http" or "https" =>
 #if NET5_0_OR_GREATER
-                    return await _httpClient.GetStreamAsync(absoluteUri, cancellationToken).ConfigureAwait(false);
+                    await _httpClient.GetStreamAsync(absoluteUri, cancellationToken).ConfigureAwait(false),
 #else
-                    return await _httpClient.GetStreamAsync(absoluteUri).ConfigureAwait(false);
+                    await _httpClient.GetStreamAsync(absoluteUri).ConfigureAwait(false),
 #endif
-                default:
-                    throw new ArgumentException("Unsupported scheme");
-            }
+                _ => throw new ArgumentException("Unsupported scheme"),
+            };
         }
     }
 }
