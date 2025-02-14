@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
@@ -35,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.Services
             {
                 (true, _, _) => new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())),
                 // this overcomes a URI concatenation issue for local paths on linux OSes
-                (_, true, false) when baseUrl.Scheme.Equals("file", StringComparison.OrdinalIgnoreCase) =>
+                (_, true, false) when baseUrl.Scheme.Equals("file", StringComparison.OrdinalIgnoreCase) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) =>
                     new Uri(Path.Combine(baseUrl.AbsoluteUri, uri.ToString())),
                 (_, _, _) => new Uri(baseUrl, uri),
             };
