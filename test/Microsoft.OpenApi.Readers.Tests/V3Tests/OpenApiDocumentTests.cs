@@ -1134,12 +1134,7 @@ paths: {}
         public async Task ParseDocumentWithReferencedSecuritySchemeWorks()
         {
             // Act
-            var settings = new OpenApiReaderSettings
-            {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
-            };
-
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), settings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"));
             var securityScheme = result.Document.Components.SecuritySchemes["OAuth2"];
 
             // Assert
@@ -1153,11 +1148,7 @@ paths: {}
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
 
             // Act
-            var settings = new OpenApiReaderSettings
-            {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
-            };
-            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, settings);
+            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
 
             var actualSchema = result.Document.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
@@ -1170,11 +1161,7 @@ paths: {}
         public async Task ValidateExampleShouldNotHaveDataTypeMismatch()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
-            {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
-
-            });
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"));
 
             // Assert
             var warnings = result.Diagnostic.Warnings;

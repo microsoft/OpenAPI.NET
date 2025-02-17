@@ -236,7 +236,6 @@ namespace Microsoft.OpenApi.Workbench
 
                 var settings = new OpenApiReaderSettings
                 {
-                    ReferenceResolution = ResolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 };
                 if (ResolveExternal && !string.IsNullOrWhiteSpace(_inputFile))
