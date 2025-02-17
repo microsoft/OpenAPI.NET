@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-preview8](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview7...v2.0.0-preview8) (2025-02-17)
+
+
+### Bug Fixes
+
+* a bug where external reference loading for local files would not work on linux ([df99a00](https://github.com/microsoft/OpenAPI.NET/commit/df99a00010001b35b34f9b74bbf12437f90b6b18))
+* add meaningful exception message during validation ([4a6547d](https://github.com/microsoft/OpenAPI.NET/commit/4a6547d08c86194e1783ce7f52e8248ca15556e0))
+* add meaningful exception message during validation ([74d20ed](https://github.com/microsoft/OpenAPI.NET/commit/74d20edebb6c5ee6150e8e03a42a40ed8c01d1da))
+* adds a cancellation token argument to external document loading ([a5ffab1](https://github.com/microsoft/OpenAPI.NET/commit/a5ffab1e77c19987fe468b9297e19e8f4c48f47a))
+* parsing failure on nodes set to null ([20aacc1](https://github.com/microsoft/OpenAPI.NET/commit/20aacc1a21510dbfe8cb21fb6ec2fc8b7720f2aa))
+* parsing failure on nodes set to null ([4245de9](https://github.com/microsoft/OpenAPI.NET/commit/4245de9ff333a1d34e125ba72c543b6e78db6980))
+
 ## [2.0.0-preview7](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview6...v2.0.0-preview7) (2025-02-06)
 
 
