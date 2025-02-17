@@ -1500,7 +1500,6 @@ namespace Microsoft.OpenApi.Reader
         public System.Collections.Generic.Dictionary<string, System.Func<System.Text.Json.Nodes.JsonNode, Microsoft.OpenApi.OpenApiSpecVersion, Microsoft.OpenApi.Interfaces.IOpenApiExtension>> ExtensionParsers { get; set; }
         public bool LeaveStreamOpen { get; set; }
         public bool LoadExternalRefs { get; set; }
-        public Microsoft.OpenApi.Reader.ReferenceResolutionSetting ReferenceResolution { get; set; }
         public Microsoft.OpenApi.Validations.ValidationRuleSet RuleSet { get; set; }
         public void AddMicrosoftExtensionParsers() { }
     }
@@ -1534,12 +1533,6 @@ namespace Microsoft.OpenApi.Reader
         public Microsoft.OpenApi.Reader.OpenApiDiagnostic Diagnostic { get; set; }
         public Microsoft.OpenApi.Models.OpenApiDocument Document { get; set; }
         public void Deconstruct(out Microsoft.OpenApi.Models.OpenApiDocument document, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic) { }
-    }
-    public enum ReferenceResolutionSetting
-    {
-        DoNotResolveReferences = 0,
-        ResolveLocalReferences = 1,
-        ResolveAllReferences = 2,
     }
 }
 namespace Microsoft.OpenApi.Reader.ParseNodes
