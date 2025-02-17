@@ -45,8 +45,8 @@ namespace Microsoft.OpenApi.Reader.Services
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
-                    var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
-                    var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken);
+                    var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
+                    var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken).ConfigureAwait(false);
                     // Merge diagnostics
                     if (result.Diagnostic != null)
                     {
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Reader.Services
                     }
                     if (result.Document != null)
                     {
-                        var loadDiagnostic = await LoadAsync(item, result.Document, format, diagnostic, cancellationToken);
+                        var loadDiagnostic = await LoadAsync(item, result.Document, format, diagnostic, cancellationToken).ConfigureAwait(false);
                         diagnostic = loadDiagnostic;
                     }
                 }

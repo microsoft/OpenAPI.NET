@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -80,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             return null;
         }
 
-        public Task<Stream> LoadAsync(Uri uri)
+        public Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<Stream>(null);
         }
@@ -93,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             return null;
         }
 
-        public Task<Stream> LoadAsync(Uri uri)
+        public Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
         {
             var path = new Uri(new("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
             path = path[1..]; // remove leading slash
