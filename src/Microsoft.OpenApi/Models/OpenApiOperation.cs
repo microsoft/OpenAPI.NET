@@ -248,8 +248,7 @@ namespace Microsoft.OpenApi.Models
                     if (consumes.Contains("application/x-www-form-urlencoded") ||
                         consumes.Contains("multipart/form-data"))
                     {
-                        var formDataParameters = RequestBody.ConvertToFormDataParameters(writer);
-                        if (formDataParameters != null)
+                        if (RequestBody.ConvertToFormDataParameters(writer) is {} formDataParameters)
                         {
                             parameters.AddRange(formDataParameters);
                         }
