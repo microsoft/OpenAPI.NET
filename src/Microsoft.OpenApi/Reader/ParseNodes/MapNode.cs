@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
 
             _node = mapNode;
-            _nodes = _node.Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
+            _nodes = _node.Where(static p => p.Value is not null).Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
         }
 
         public PropertyNode this[string key]
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                           : default;
                     }
                     finally
-                    {    
+                    {
                         Context.EndObject();
                     }
                     return new
