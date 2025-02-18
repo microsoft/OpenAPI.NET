@@ -40,10 +40,10 @@ public class OpenApiPrimaryErrorMessageExtension : IOpenApiExtension
     /// <returns>The <see cref="OpenApiPrimaryErrorMessageExtension"/>.</returns>
     public static OpenApiPrimaryErrorMessageExtension Parse(JsonNode source)
     {
-        if (source is not JsonNode rawObject) return null;
+        if (source is not JsonValue rawObject) return null;
         return new()
         {
-            IsPrimaryErrorMessage = rawObject.GetValue<bool>()
+            IsPrimaryErrorMessage = rawObject.TryGetValue<bool>(out var value) && value
         };
     }
 }

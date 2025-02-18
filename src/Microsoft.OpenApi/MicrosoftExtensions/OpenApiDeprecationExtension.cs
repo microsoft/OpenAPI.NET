@@ -116,10 +116,10 @@ public class OpenApiDeprecationExtension : IOpenApiExtension
             RemovalDate = GetDateTimeOffsetValue(nameof(RemovalDate), rawObject),
             Date = GetDateTimeOffsetValue(nameof(Date), rawObject)
         };
-        if (rawObject.TryGetPropertyValue(nameof(Version).ToFirstCharacterLowerCase(), out var version) && version is JsonNode versionValue)
-            extension.Version = versionValue.GetValue<string>();
-        if (rawObject.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var description) && description is JsonNode descriptionValue)
-            extension.Description = descriptionValue.GetValue<string>();
+        if (rawObject.TryGetPropertyValue(nameof(Version).ToFirstCharacterLowerCase(), out var version) && version is JsonValue versionValue && versionValue.TryGetValue<string>(out var versionStr))
+            extension.Version = versionStr;
+        if (rawObject.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var description) && description is JsonValue descriptionValue && descriptionValue.TryGetValue<string>(out var descriptionStr))
+            extension.Description = descriptionStr;
         return extension;
     }
 }
