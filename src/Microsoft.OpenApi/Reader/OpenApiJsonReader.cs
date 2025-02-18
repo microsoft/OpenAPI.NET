@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (settings is null) throw new ArgumentNullException(nameof(settings));
 
-            JsonNode jsonNode;
+            JsonNode? jsonNode;
             var diagnostic = new OpenApiDiagnostic();
             settings ??= new OpenApiReaderSettings();
 
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
-        public ReadResult Read(JsonNode jsonNode,
+        public ReadResult Read(JsonNode? jsonNode,
                                OpenApiReaderSettings settings)
         {
             if (jsonNode is null) throw new ArgumentNullException(nameof(jsonNode));
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Reader
                 DefaultContentType = settings.DefaultContentType
             };
 
-            OpenApiDocument document = null;
+            OpenApiDocument? document = null;
             try
             {
                 // Parse the OpenAPI Document
@@ -90,15 +90,18 @@ namespace Microsoft.OpenApi.Reader
             // Validate the document
             if (settings.RuleSet != null && settings.RuleSet.Rules.Any())
             {
-                var openApiErrors = document.Validate(settings.RuleSet);
-                foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
+                var openApiErrors = document?.Validate(settings.RuleSet);
+                if(openApiErrors is not null)
                 {
-                    diagnostic.Errors.Add(item);
-                }
-                foreach (var item in openApiErrors.OfType<OpenApiValidatorWarning>())
-                {
-                    diagnostic.Warnings.Add(item);
-                }
+                    foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
+                    {
+                        diagnostic.Errors.Add(item);
+                    }
+                    foreach (var item in openApiErrors.OfType<OpenApiValidatorWarning>())
+                    {
+                        diagnostic.Warnings.Add(item);
+                    }
+                }                
             }
 
             return new()
@@ -122,7 +125,7 @@ namespace Microsoft.OpenApi.Reader
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (settings is null) throw new ArgumentNullException(nameof(settings));
 
-            JsonNode jsonNode;
+            JsonNode? jsonNode;
             var diagnostic = new OpenApiDiagnostic();
 
             // Parse the JSON text in the stream into JsonNodes
@@ -144,16 +147,16 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(MemoryStream input,
+        public T? ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  OpenApiDocument openApiDocument,
                                  out OpenApiDiagnostic diagnostic,
-                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+                                 OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             Utils.CheckArgumentNull(input);
             Utils.CheckArgumentNull(openApiDocument);
 
-            JsonNode jsonNode;
+            JsonNode? jsonNode;
 
             // Parse the JSON
             try
@@ -171,11 +174,11 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(JsonNode input,
-                         OpenApiSpecVersion version,
-                         OpenApiDocument openApiDocument,
-                         out OpenApiDiagnostic diagnostic,
-                         OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public T ReadFragment<T>(JsonNode? input,
+                 OpenApiSpecVersion version,
+                 OpenApiDocument openApiDocument,
+                 out OpenApiDiagnostic diagnostic,
+                 OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             diagnostic = new();
             settings ??= new OpenApiReaderSettings();
@@ -184,7 +187,7 @@ namespace Microsoft.OpenApi.Reader
                 ExtensionParsers = settings.ExtensionParsers
             };
 
-            IOpenApiElement element = null;
+            IOpenApiElement? element = null;
             try
             {
                 // Parse the OpenAPI element
@@ -198,14 +201,17 @@ namespace Microsoft.OpenApi.Reader
             // Validate the element
             if (settings.RuleSet != null && settings.RuleSet.Rules.Any())
             {
-                var errors = element.Validate(settings.RuleSet);
-                foreach (var item in errors)
+                var errors = element?.Validate(settings.RuleSet);
+                if (errors is not null)
                 {
-                    diagnostic.Errors.Add(item);
+                    foreach (var item in errors)
+                    {
+                        diagnostic.Errors.Add(item);
+                    }
                 }
             }
 
-            return (T)element;
+            return (T?)element!;
         }
     }
 }

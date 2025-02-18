@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Example, externalResource)
+        public OpenApiExampleReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Example, externalResource)
         {
         }
         /// <summary>
@@ -37,9 +37,9 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference?.Description;
             set 
             {
                 if (Reference is not null)
@@ -50,9 +50,9 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Summary
+        public string? Summary
         {
-            get => string.IsNullOrEmpty(Reference?.Summary) ? Target?.Summary : Reference.Summary;
+            get => string.IsNullOrEmpty(Reference?.Summary) ? Target?.Summary : Reference?.Summary;
             set
             {
                 if (Reference is not null)
@@ -63,16 +63,16 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public string ExternalValue { get => Target?.ExternalValue; }
+        public string? ExternalValue { get => Target?.ExternalValue; }
 
         /// <inheritdoc/>
-        public JsonNode Value { get => Target?.Value; }
+        public JsonNode? Value { get => Target?.Value; }
 
         /// <inheritdoc/>
-        public override IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)
+        public override IOpenApiExample? CopyReferenceAsTargetElementWithOverrides(IOpenApiExample? source)
         {
             return source is OpenApiExample ? new OpenApiExample(this) : source;
         }
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Models.References
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
             // examples components are not supported in OAS 2.0
-            Reference.SerializeAsV2(writer);
+            Reference?.SerializeAsV2(writer);
         }
 
         /// <inheritdoc/>

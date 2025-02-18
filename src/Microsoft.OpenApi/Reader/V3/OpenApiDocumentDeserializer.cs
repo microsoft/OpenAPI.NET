@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Reader.V3
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, openApiDoc);
 
             // Register components
-            openApiDoc.Workspace.RegisterComponents(openApiDoc);
+            openApiDoc.Workspace?.RegisterComponents(openApiDoc);
 
             return openApiDoc;
         }

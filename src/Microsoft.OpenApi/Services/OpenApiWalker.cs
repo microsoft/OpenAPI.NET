@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Services
         /// Visits list of <see cref="OpenApiDocument"/> and child objects
         /// </summary>
         /// <param name="doc">OpenApiDocument to be walked</param>
-        public void Walk(OpenApiDocument doc)
+        public void Walk(OpenApiDocument? doc)
         {
             if (doc == null)
             {
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiTag> tags)
+        internal void Walk(IList<OpenApiTag>? tags)
         {
             if (tags == null)
             {
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiTagReference> tags)
+        internal void Walk(IList<OpenApiTagReference>? tags)
         {
             if (tags == null)
             {
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiExternalDocs"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiExternalDocs externalDocs)
+        internal void Walk(OpenApiExternalDocs? externalDocs)
         {
             if (externalDocs == null)
             {
@@ -281,7 +281,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits Webhooks and child objects
         /// </summary>
-        internal void Walk(IDictionary<string, IOpenApiPathItem> webhooks)
+        internal void Walk(IDictionary<string, IOpenApiPathItem>? webhooks)
         {
             if (webhooks == null)
             {
@@ -299,13 +299,13 @@ namespace Microsoft.OpenApi.Services
                     Walk(pathItem.Key, () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
                     _visitor.CurrentKeys.Path = null;
                 }
-            };
+            }
         }
 
         /// <summary>
         /// Visits list of  <see cref="OpenApiServer"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiServer> servers)
+        internal void Walk(IList<OpenApiServer>? servers)
         {
             if (servers == null)
             {
@@ -346,7 +346,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of extensions
         /// </summary>
-        internal void Walk(IOpenApiExtensible openApiExtensible)
+        internal void Walk(IOpenApiExtensible? openApiExtensible)
         {
             if (openApiExtensible == null)
             {
@@ -382,7 +382,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiLicense"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiLicense license)
+        internal void Walk(OpenApiLicense? license)
         {
             if (license == null)
             {
@@ -395,7 +395,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiContact"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiContact contact)
+        internal void Walk(OpenApiContact? contact)
         {
             if (contact == null)
             {
@@ -423,7 +423,7 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(callback);
 
-            if (callback != null)
+            if (callback.PathItems != null)
             {
                 foreach (var item in callback.PathItems)
                 {
@@ -469,7 +469,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiServer"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiServer server)
+        internal void Walk(OpenApiServer? server)
         {
             if (server == null)
             {
@@ -477,14 +477,14 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(server);
-            Walk(OpenApiConstants.Variables, () => Walk(server.Variables));
+            Walk(OpenApiConstants.Variables, () => Walk(server?.Variables));
             _visitor.Visit(server as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiServerVariable"/>
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiServerVariable> serverVariables)
+        internal void Walk(IDictionary<string, OpenApiServerVariable>? serverVariables)
         {
             if (serverVariables == null)
             {
@@ -558,7 +558,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiOperation"/>
         /// </summary>
-        internal void Walk(IDictionary<OperationType, OpenApiOperation> operations)
+        internal void Walk(IDictionary<OperationType, OpenApiOperation>? operations)
         {
             if (operations == null)
             {
@@ -602,7 +602,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiSecurityRequirement"/>
         /// </summary>
-        internal void Walk(IList<OpenApiSecurityRequirement> securityRequirements)
+        internal void Walk(IList<OpenApiSecurityRequirement>? securityRequirements)
         {
             if (securityRequirements == null)
             {
@@ -623,7 +623,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        internal void Walk(IList<IOpenApiParameter> parameters)
+        internal void Walk(IList<IOpenApiParameter>? parameters)
         {
             if (parameters == null)
             {
@@ -668,7 +668,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiResponses"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiResponses responses)
+        internal void Walk(OpenApiResponses? responses)
         {
             if (responses == null)
             {
@@ -715,7 +715,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="IOpenApiRequestBody"/> and child objects
         /// </summary>
-        internal void Walk(IOpenApiRequestBody requestBody, bool isComponent = false)
+        internal void Walk(IOpenApiRequestBody? requestBody, bool isComponent = false)
         {
             if (requestBody == null)
             {
@@ -740,7 +740,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiHeader"/>
         /// </summary>
-        internal void Walk(IDictionary<string, IOpenApiHeader> headers)
+        internal void Walk(IDictionary<string, IOpenApiHeader>? headers)
         {
             if (headers == null)
             {
@@ -762,7 +762,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="IOpenApiCallback"/>
         /// </summary>
-        internal void Walk(IDictionary<string, IOpenApiCallback> callbacks)
+        internal void Walk(IDictionary<string, IOpenApiCallback>? callbacks)
         {
             if (callbacks == null)
             {
@@ -784,7 +784,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiMediaType"/>
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiMediaType> content)
+        internal void Walk(IDictionary<string, OpenApiMediaType>? content)
         {
             if (content == null)
             {
@@ -824,7 +824,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiEncoding"/>
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiEncoding> encodings)
+        internal void Walk(IDictionary<string, OpenApiEncoding>? encodings)
         {
             if (encodings == null)
             {
@@ -866,7 +866,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="IOpenApiSchema"/> and child objects
         /// </summary>
-        internal void Walk(IOpenApiSchema schema, bool isComponent = false)
+        internal void Walk(IOpenApiSchema? schema, bool isComponent = false)
         {
             if (schema == null || schema is IOpenApiReferenceHolder holder && ProcessAsReference(holder, isComponent))
             {
@@ -936,7 +936,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="IOpenApiExample"/>
         /// </summary>
-        internal void Walk(IDictionary<string, IOpenApiExample> examples)
+        internal void Walk(IDictionary<string, IOpenApiExample>? examples)
         {
             if (examples == null)
             {
@@ -959,7 +959,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiAny"/> and child objects
         /// </summary>
-        internal void Walk(JsonNode example)
+        internal void Walk(JsonNode? example)
         {
             if (example == null)
             {
@@ -1061,7 +1061,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="IOpenApiLink"/> and child objects
         /// </summary>
-        internal void Walk(IDictionary<string, IOpenApiLink> links)
+        internal void Walk(IDictionary<string, IOpenApiLink>? links)
         {
             if (links == null)
             {
@@ -1254,7 +1254,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Current Path key
         /// </summary>
-        public string Path { get; set; }
+        public string? Path { get; set; }
 
         /// <summary>
         /// Current Operation Type
@@ -1264,46 +1264,46 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Current Response Status Code
         /// </summary>
-        public string Response { get; set; }
+        public string? Response { get; set; }
 
         /// <summary>
         /// Current Content Media Type
         /// </summary>
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         /// <summary>
         /// Current Callback Key
         /// </summary>
-        public string Callback { get; set; }
+        public string? Callback { get; set; }
 
         /// <summary>
         /// Current Link Key
         /// </summary>
-        public string Link { get; set; }
+        public string? Link { get; set; }
 
         /// <summary>
         /// Current Header Key
         /// </summary>
-        public string Header { get; internal set; }
+        public string? Header { get; internal set; }
 
         /// <summary>
         /// Current Encoding Key
         /// </summary>
-        public string Encoding { get; internal set; }
+        public string? Encoding { get; internal set; }
 
         /// <summary>
         /// Current Example Key
         /// </summary>
-        public string Example { get; internal set; }
+        public string? Example { get; internal set; }
 
         /// <summary>
         /// Current Extension Key
         /// </summary>
-        public string Extension { get; internal set; }
+        public string? Extension { get; internal set; }
 
         /// <summary>
         /// Current ServerVariable
         /// </summary>
-        public string ServerVariable { get; internal set; }
+        public string? ServerVariable { get; internal set; }
     }
 }

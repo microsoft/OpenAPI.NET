@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         public override void Visit(IOpenApiPathItem pathItem)
         {
-            if (pathItem.Operations.TryGetValue(OperationType.Put, out var value) &&
+            if (pathItem.Operations is not null && pathItem.Operations.TryGetValue(OperationType.Put, out var value) &&
                 value.OperationId != null)
             {
                 var operationId = value.OperationId;
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             var segments = operationId.SplitByChar('.');
             foreach (var parameter in parameters)
             {
-                var keyTypeExtension = parameter.Extensions.GetExtension("x-ms-docs-key-type");
+                var keyTypeExtension = parameter.Extensions?.GetExtension("x-ms-docs-key-type");
                 if (keyTypeExtension != null && operationId.Contains(keyTypeExtension, StringComparison.OrdinalIgnoreCase))
                 {
                     segments.Remove(keyTypeExtension);
@@ -178,7 +178,9 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private void AddAdditionalPropertiesToSchema(IOpenApiSchema schema)
         {
-            if (schema is OpenApiSchema openApiSchema && !_schemaLoop.Contains(schema) && schema.Type.Equals(JsonSchemaType.Object))
+            if (schema is OpenApiSchema openApiSchema 
+                && !_schemaLoop.Contains(schema) 
+                && schema.Type.Equals(JsonSchemaType.Object))
             {
                 openApiSchema.AdditionalProperties = new OpenApiSchema() { Type = JsonSchemaType.Object };
 
@@ -186,7 +188,10 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                  * we need a way to keep track of visited schemas to avoid
                  * endlessly creating and walking them in an infinite recursion.
                  */
-                _schemaLoop.Push(schema.AdditionalProperties);
+                if (schema.AdditionalProperties is not null)
+                {
+                    _schemaLoop.Push(schema.AdditionalProperties);
+                }
             }
         }
 

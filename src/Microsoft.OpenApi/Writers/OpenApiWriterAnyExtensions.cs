@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer">The Open API writer.</param>
         /// <param name="extensions">The specification extensions.</param>
         /// <param name="specVersion">Version of the OpenAPI specification that that will be output.</param>
-        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions, OpenApiSpecVersion specVersion)
+        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension>? extensions, OpenApiSpecVersion specVersion)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="writer">The Open API writer.</param>
         /// <param name="node">The JsonNode value</param>
-        public static void WriteAny(this IOpenApiWriter writer, JsonNode node)
+        public static void WriteAny(this IOpenApiWriter writer, JsonNode? node)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -84,28 +84,31 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        private static void WriteArray(this IOpenApiWriter writer, JsonArray array)
+        private static void WriteArray(this IOpenApiWriter writer, JsonArray? array)
         {
             writer.WriteStartArray();
-
-            foreach (var item in array)
+            if (array is not null)
             {
-                writer.WriteAny(item);
-            }
+                foreach (var item in array)
+                {
+                    writer.WriteAny(item);
+                }
+            }            
 
             writer.WriteEndArray();
         }
 
-        private static void WriteObject(this IOpenApiWriter writer, JsonObject entity)
+        private static void WriteObject(this IOpenApiWriter writer, JsonObject? entity)
         {
             writer.WriteStartObject();
-
-            foreach (var item in entity)
+            if (entity is not null)
             {
-                writer.WritePropertyName(item.Key);
-                writer.WriteAny(item.Value);
+                foreach (var item in entity)
+                {
+                    writer.WritePropertyName(item.Key);
+                    writer.WriteAny(item.Value);
+                }
             }
-
             writer.WriteEndObject();
         }
 

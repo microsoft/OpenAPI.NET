@@ -23,12 +23,15 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, item) =>
                 {
                     context.Enter("extensions");
-                    foreach (var extensible in item.Extensions.Keys.Where(static x => !x.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)))
+                    if (item.Extensions is not null)
                     {
-                        context.CreateError(nameof(ExtensionNameMustStartWithXDash),
-                            string.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible, context.PathString));
-                    }
-                    context.Exit();
+                        foreach (var extensible in item.Extensions.Keys.Where(static x => !x.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            context.CreateError(nameof(ExtensionNameMustStartWithXDash),
+                                string.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible, context.PathString));
+                        }
+                        context.Exit();
+                    }                    
                 });
     }
 }

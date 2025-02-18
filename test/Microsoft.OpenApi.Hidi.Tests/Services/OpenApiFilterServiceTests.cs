@@ -100,9 +100,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: openApiDocument);
 
             // Then
-            Assert.True(predicate("/foo", OperationType.Get, null));
-            Assert.True(predicate("/foo", OperationType.Post, null));
-            Assert.False(predicate("/foo", OperationType.Patch, null));
+            Assert.True(predicate("/foo", OperationType.Get, null!));
+            Assert.True(predicate("/foo", OperationType.Post, null!));
+            Assert.False(predicate("/foo", OperationType.Patch, null!));
         }
 
         [Fact]
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // Assert that there's only 1 parameter in the subset document
             Assert.NotNull(subsetDoc);
             Assert.NotEmpty(subsetDoc.Paths);
-            Assert.Single(subsetDoc.Paths.First().Value.Parameters);
+            Assert.Single(subsetDoc.Paths.First().Value.Parameters!);
         }
 
         [Fact]
@@ -236,14 +236,14 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
 
-            var response = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get]?.Responses?["200"];
-            var responseHeader = response?.Headers["x-custom-header"];
-            var mediaTypeExample = response?.Content["application/json"]?.Examples?.First().Value;
+            var response = subsetOpenApiDocument.Paths["/items"].Operations?[OperationType.Get]?.Responses?["200"];
+            var responseHeader = response?.Headers?["x-custom-header"];
+            var mediaTypeExample = response?.Content?["application/json"]?.Examples?.First().Value;
             var targetHeaders = subsetOpenApiDocument.Components?.Headers;
             var targetExamples = subsetOpenApiDocument.Components?.Examples;
 
             // Assert
-            Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
+            Assert.Same(doc?.Servers, subsetOpenApiDocument.Servers);
             var headerReference = Assert.IsType<OpenApiHeaderReference>(responseHeader);
             Assert.False(headerReference.UnresolvedReference);
             var exampleReference = Assert.IsType<OpenApiExampleReference>(mediaTypeExample);
@@ -266,8 +266,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // Assert
             foreach (var pathItem in subsetOpenApiDocument.Paths)
             {
-                Assert.True(pathItem.Value.Parameters.Any());
-                Assert.Single(pathItem.Value.Parameters);
+                Assert.True(pathItem.Value.Parameters!.Any());
+                Assert.Single(pathItem.Value.Parameters!);
             }
         }
     }

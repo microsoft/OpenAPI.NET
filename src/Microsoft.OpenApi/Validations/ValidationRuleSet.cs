@@ -18,9 +18,9 @@ namespace Microsoft.OpenApi.Validations
     {
         private Dictionary<Type, IList<ValidationRule>> _rulesDictionary = new();
 
-        private static ValidationRuleSet _defaultRuleSet;
+        private static ValidationRuleSet? _defaultRuleSet;
 
-        private List<ValidationRule> _emptyRules = new();
+        private readonly List<ValidationRule>? _emptyRules = new();
 
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         /// <param name="type">The type that is to be validated</param>
         /// <returns>Either the rules related to the type, or an empty list.</returns>
-        public IList<ValidationRule> FindRules(Type type)
+        public IList<ValidationRule>? FindRules(Type type)
         {
             _rulesDictionary.TryGetValue(type, out var results);
             return results ?? _emptyRules;
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true if the rule is successfully removed; otherwise, false.</returns>
         public bool Remove(Type key, ValidationRule rule)
         {
-            if (_rulesDictionary.TryGetValue(key, out IList<ValidationRule> validationRules))
+            if (_rulesDictionary.TryGetValue(key, out IList<ValidationRule>? validationRules))
             {
                 return validationRules.Remove(rule);
             }
@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns></returns>
         public bool Contains(Type key, ValidationRule rule)
         {
-            return _rulesDictionary.TryGetValue(key, out IList<ValidationRule> validationRules) && validationRules.Contains(rule);
+            return _rulesDictionary.TryGetValue(key, out IList<ValidationRule>? validationRules) && validationRules.Contains(rule);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace Microsoft.OpenApi.Validations
         ///  key is found; otherwise, an empty <see cref="IList{ValidationRule}"/> object.
         ///  This parameter is passed uninitialized.</param>
         /// <returns>true if the specified key has rules.</returns>
-        public bool TryGetValue(Type key, out IList<ValidationRule> rules)
+        public bool TryGetValue(Type key, out IList<ValidationRule>? rules)
         {
             return _rulesDictionary.TryGetValue(key, out rules);
         }

@@ -54,12 +54,12 @@ namespace Microsoft.OpenApi.Extensions
 
         private static IOpenApiReferenceable ResolveReferenceOnHeaderElement(
             OpenApiHeader headerElement,
-            string propertyName,
-            string mapKey,
+            string? propertyName,
+            string? mapKey,
             JsonPointer pointer)
         {
             if (OpenApiConstants.Examples.Equals(propertyName, StringComparison.Ordinal) &&
-                !string.IsNullOrEmpty(mapKey) &&
+                mapKey is not null &&
                 headerElement?.Examples != null &&
                 headerElement.Examples.TryGetValue(mapKey, out var exampleElement) &&
                 exampleElement is IOpenApiReferenceable referenceable)
@@ -71,12 +71,12 @@ namespace Microsoft.OpenApi.Extensions
 
         private static IOpenApiReferenceable ResolveReferenceOnParameterElement(
             OpenApiParameter parameterElement,
-            string propertyName,
-            string mapKey,
+            string? propertyName,
+            string? mapKey,
             JsonPointer pointer)
         {
             if (OpenApiConstants.Examples.Equals(propertyName, StringComparison.Ordinal) &&
-                !string.IsNullOrEmpty(mapKey) &&
+                mapKey is not null &&
                 parameterElement?.Examples != null &&
                 parameterElement.Examples.TryGetValue(mapKey, out var exampleElement) &&
                 exampleElement is IOpenApiReferenceable referenceable)
@@ -88,11 +88,11 @@ namespace Microsoft.OpenApi.Extensions
 
         private static IOpenApiReferenceable ResolveReferenceOnResponseElement(
             OpenApiResponse responseElement,
-            string propertyName,
-            string mapKey,
+            string? propertyName,
+            string? mapKey,
             JsonPointer pointer)
         {
-            if (!string.IsNullOrEmpty(mapKey))
+            if (mapKey is not null)
             {
                 if (OpenApiConstants.Headers.Equals(propertyName, StringComparison.Ordinal) &&
                     responseElement?.Headers != null &&

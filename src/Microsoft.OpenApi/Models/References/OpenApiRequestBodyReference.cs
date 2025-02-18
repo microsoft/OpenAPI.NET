@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiRequestBodyReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.RequestBody, externalResource)
+        public OpenApiRequestBodyReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.RequestBody, externalResource)
         {
         }
         /// <summary>
@@ -38,9 +38,9 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference?.Description;
             set
             {
                 if (Reference is not null)
@@ -51,16 +51,16 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
         public bool Required { get => Target?.Required ?? false; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public override IOpenApiRequestBody CopyReferenceAsTargetElementWithOverrides(IOpenApiRequestBody source)
+        public override IOpenApiRequestBody? CopyReferenceAsTargetElementWithOverrides(IOpenApiRequestBody? source)
         {
             return source is OpenApiRequestBody ? new OpenApiRequestBody(this) : source;
         }
@@ -70,29 +70,34 @@ namespace Microsoft.OpenApi.Models.References
             // doesn't exist in v2
         }
         /// <inheritdoc/>
-        public IOpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
+        public IOpenApiParameter? ConvertToBodyParameter(IOpenApiWriter writer)
         {
-            if (writer.GetSettings().ShouldInlineReference(Reference))
+            if (Reference is not null && writer.GetSettings().ShouldInlineReference(Reference))
             {
-                return Target.ConvertToBodyParameter(writer);
+                return Target?.ConvertToBodyParameter(writer);
             }
             else
             {
-                return new OpenApiParameterReference(Reference.Id, Reference.HostDocument);
+                var id = Reference?.Id;
+                if (id is not null)
+                {
+                    return new OpenApiParameterReference(id, Reference?.HostDocument);
+                }                
             }
+            return null;
         }
         /// <inheritdoc/>
-        public IEnumerable<IOpenApiParameter> ConvertToFormDataParameters(IOpenApiWriter writer)
+        public IEnumerable<IOpenApiParameter>? ConvertToFormDataParameters(IOpenApiWriter writer)
         {
-            if (writer.GetSettings().ShouldInlineReference(Reference))
+            if (Reference is not null && writer.GetSettings().ShouldInlineReference(Reference))
             {
-                return Target.ConvertToFormDataParameters(writer);
+                return Target?.ConvertToFormDataParameters(writer);
             }
 
             if (Content == null || !Content.Any())
                 return [];
 
-            return Content.First().Value.Schema.Properties.Select(x => new OpenApiParameterReference(x.Key, Reference.HostDocument));
+            return Content.First().Value.Schema?.Properties?.Select(x => new OpenApiParameterReference(x.Key, Reference?.HostDocument));
         }
 
         /// <inheritdoc/>

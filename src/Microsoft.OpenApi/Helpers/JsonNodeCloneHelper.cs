@@ -7,9 +7,9 @@ namespace Microsoft.OpenApi.Helpers
 {
     internal static class JsonNodeCloneHelper
     {
-        internal static JsonNode Clone(JsonNode value)
+        internal static JsonNode? Clone(JsonNode? value)
         {
-            return value.DeepClone();
+            return value?.DeepClone();
         }
     }
 }

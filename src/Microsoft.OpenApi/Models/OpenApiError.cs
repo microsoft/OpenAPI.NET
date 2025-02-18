@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class.
         /// </summary>
-        public OpenApiError(string pointer, string message)
+        public OpenApiError(string? pointer, string message)
         {
             Pointer = pointer;
             Message = message;
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Pointer to the location of the error.
         /// </summary>
-        public string Pointer { get; set; }
+        public string? Pointer { get; set; }
 
         /// <summary>
         /// Gets the string representation of <see cref="OpenApiError"/>.

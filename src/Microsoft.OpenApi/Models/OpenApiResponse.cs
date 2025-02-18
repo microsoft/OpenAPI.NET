@@ -16,19 +16,19 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiResponse
     {
         /// <inheritdoc/>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiHeader> Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
+        public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiLink> Links { get; set; } = new Dictionary<string, IOpenApiLink>();
+        public IDictionary<string, IOpenApiLink>? Links { get; set; } = new Dictionary<string, IOpenApiLink>();
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -101,7 +101,11 @@ namespace Microsoft.OpenApi.Models
             // description
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
-            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+            Dictionary<string, IOpenApiExtension>? extensionsClone = null;
+            if (Extensions is not null)
+            {
+                extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+            }            
 
             if (Content != null)
             {
@@ -136,7 +140,7 @@ namespace Microsoft.OpenApi.Models
 
                         foreach (var example in Content
                             .Where(mediaTypePair => mediaTypePair.Value.Examples != null && mediaTypePair.Value.Examples.Any())
-                            .SelectMany(mediaTypePair => mediaTypePair.Value.Examples))
+                            .SelectMany(mediaTypePair => mediaTypePair.Value.Examples!))
                         {
                             writer.WritePropertyName(example.Key);
                             example.Value.SerializeAsV2(writer);
@@ -147,12 +151,15 @@ namespace Microsoft.OpenApi.Models
 
                     writer.WriteExtensions(mediatype.Value.Extensions, OpenApiSpecVersion.OpenApi2_0);
 
-                    foreach (var key in mediatype.Value.Extensions.Keys)
+                    if (mediatype.Value.Extensions is not null)
                     {
-                        // The extension will already have been serialized as part of the call above,
-                        // so remove it from the cloned collection so we don't write it again.
-                        extensionsClone.Remove(key);
-                    }
+                        foreach (var key in mediatype.Value.Extensions.Keys)
+                        {
+                            // The extension will already have been serialized as part of the call above,
+                            // so remove it from the cloned collection so we don't write it again.
+                            extensionsClone?.Remove(key);
+                        }
+                    }                    
                 }
             }
 

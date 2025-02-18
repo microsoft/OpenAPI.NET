@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Globalization;
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Extensions
             Stream stream,
             OpenApiSpecVersion specVersion,
             OpenApiFormat format,
-            OpenApiWriterSettings settings,
+            OpenApiWriterSettings? settings,
             CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="writer">The output writer.</param>
         /// <param name="specVersion">Version of the specification the output should conform to</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public static Task SerializeAsync<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
+        public static Task SerializeAsync<T>(this T? element, IOpenApiWriter writer, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(element);
@@ -116,15 +116,15 @@ namespace Microsoft.OpenApi.Extensions
             switch (specVersion)
             {
                 case OpenApiSpecVersion.OpenApi3_1:
-                    element.SerializeAsV31(writer);
+                    element?.SerializeAsV31(writer);
                     break;
 
                 case OpenApiSpecVersion.OpenApi3_0:
-                    element.SerializeAsV3(writer);
+                    element?.SerializeAsV3(writer);
                     break;
 
                 case OpenApiSpecVersion.OpenApi2_0:
-                    element.SerializeAsV2(writer);
+                    element?.SerializeAsV2(writer);
                     break;
 
                 default:

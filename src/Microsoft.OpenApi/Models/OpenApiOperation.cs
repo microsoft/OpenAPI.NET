@@ -248,17 +248,24 @@ namespace Microsoft.OpenApi.Models
                     if (consumes.Contains("application/x-www-form-urlencoded") ||
                         consumes.Contains("multipart/form-data"))
                     {
-                        parameters.AddRange(RequestBody.ConvertToFormDataParameters(writer));
+                        if (RequestBody.ConvertToFormDataParameters(writer) is {} formDataParameters)
+                        {
+                            parameters.AddRange(formDataParameters);
+                        }
                     }
                     else
                     {
-                        parameters.Add(RequestBody.ConvertToBodyParameter(writer));
+                        var bodyParameter = RequestBody.ConvertToBodyParameter(writer);
+                        if (bodyParameter != null)
+                        {
+                            parameters.Add(bodyParameter);
+                        }
                     }
                 }
                 else if (RequestBody is OpenApiRequestBodyReference requestBodyReference)
                 {
                     parameters.Add(
-                        new OpenApiParameterReference(requestBodyReference.Reference.Id, requestBodyReference.Reference.HostDocument));
+                        new OpenApiParameterReference(requestBodyReference.Reference?.Id, requestBodyReference.Reference?.HostDocument));
                 }
 
                 if (consumes.Count > 0)

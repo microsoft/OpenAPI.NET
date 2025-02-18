@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Extensions
         /// The attribute of the specified type or null.
         /// </returns>
         [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Fields are never trimmed for enum types.")]
-        public static T GetAttributeOfType<T>(this Enum enumValue) where T : Attribute
+        public static T? GetAttributeOfType<T>(this Enum enumValue) where T : Attribute
         {
             var type = enumValue.GetType();
             // Use GetField to get the field info for the enum value
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Extensions
                 var attribute = e.GetAttributeOfType<DisplayAttribute>();
 
                 // Return the DisplayAttribute name if it exists, otherwise return the enum's string representation
-                return attribute == null ? e.ToString() : attribute.Name;
+                return attribute?.Name is not null ? attribute.Name : e.ToString();
             });
         }
     }

@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Header, externalResource)
+        public OpenApiHeaderReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Header, externalResource)
         {
         }
 
@@ -37,9 +37,9 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference?.Description;
             set 
             {
                 if (Reference is not null)
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Models.References
         public bool AllowEmptyValue { get => Target?.AllowEmptyValue ?? default; }
 
         /// <inheritdoc/>
-        public IOpenApiSchema Schema { get => Target?.Schema; }
+        public IOpenApiSchema? Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
         public ParameterStyle? Style { get => Target?.Style; }
@@ -71,19 +71,19 @@ namespace Microsoft.OpenApi.Models.References
         public bool AllowReserved { get => Target?.AllowReserved ?? default; }
 
         /// <inheritdoc/>
-        public JsonNode Example { get => Target?.Example; }
+        public JsonNode? Example { get => Target?.Example; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample> Examples { get => Target?.Examples; }
+        public IDictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public override IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader source)
+        public override IOpenApiHeader? CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader? source)
         {
             return source is OpenApiHeader ? new OpenApiHeader(this) : source;
         }

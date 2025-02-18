@@ -15,11 +15,11 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Gets the resolved target object.
         /// </summary>
-        T Target { get; }
+        T? Target { get; }
         /// <summary>
         /// Copy the reference as a target element with overrides.
         /// </summary>
-        V CopyReferenceAsTargetElementWithOverrides(V source);
+        V? CopyReferenceAsTargetElementWithOverrides(V? source);
     }
     /// <summary>
     /// A generic interface for OpenApiReferenceable objects that have a target.
@@ -34,6 +34,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Reference object.
         /// </summary>
-        OpenApiReference Reference { get; init; }
+        OpenApiReference? Reference { get; init; }
     }
 }

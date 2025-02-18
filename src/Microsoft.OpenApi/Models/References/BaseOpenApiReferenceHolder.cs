@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -11,11 +11,11 @@ namespace Microsoft.OpenApi.Models.References;
 public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiSerializable
 {
     /// <inheritdoc/>
-    public virtual T Target
+    public virtual T? Target
     {
         get
         {
-            return Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
+            return Reference?.HostDocument?.ResolveReferenceTo<T>(Reference);
         }
     }
     /// <summary>
@@ -40,7 +40,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// 1. a absolute/relative file path, for example:  ../commons/pet.json
     /// 2. a Url, for example: http://localhost/pet.json
     /// </param>
-    protected BaseOpenApiReferenceHolder(string referenceId, OpenApiDocument hostDocument, ReferenceType referenceType, string externalResource)
+    protected BaseOpenApiReferenceHolder(string? referenceId, OpenApiDocument? hostDocument, ReferenceType referenceType, string? externalResource)
     {
         Utils.CheckArgumentNullOrEmpty(referenceId);
         // we're not checking for null hostDocument as it's optional and can be set via additional methods by a walker
@@ -57,45 +57,45 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public bool UnresolvedReference { get => Reference is null || Target is null; }
     /// <inheritdoc/>
-    public OpenApiReference Reference { get; init; }
+    public OpenApiReference? Reference { get; init; }
     /// <inheritdoc/>
-    public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
+    public abstract V? CopyReferenceAsTargetElementWithOverrides(V? source);
     /// <inheritdoc/>
     public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
-        if (!writer.GetSettings().ShouldInlineReference(Reference))
+        if (Reference is not null && !writer.GetSettings().ShouldInlineReference(Reference))
         {
             Reference.SerializeAsV3(writer);
         }
         else
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, (writer, element) => element?.SerializeAsV3(writer));
         }
     }
 
     /// <inheritdoc/>
     public virtual void SerializeAsV31(IOpenApiWriter writer)
     {
-        if (!writer.GetSettings().ShouldInlineReference(Reference))
+        if (Reference is not null && !writer.GetSettings().ShouldInlineReference(Reference))
         {
             Reference.SerializeAsV31(writer);
         }
         else
         {
-            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV31(writer));
+            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element)?.SerializeAsV31(writer));
         }
     }
 
     /// <inheritdoc/>
     public virtual void SerializeAsV2(IOpenApiWriter writer)
     {
-        if (!writer.GetSettings().ShouldInlineReference(Reference))
+        if (Reference is not null && !writer.GetSettings().ShouldInlineReference(Reference))
         {
             Reference.SerializeAsV2(writer);
         }
         else
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV2(writer));
+            SerializeInternal(writer, (writer, element) => element?.SerializeAsV2(writer));
         }
     }
 
@@ -106,7 +106,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <param name="writer">The OpenApiWriter.</param>
     /// <param name="action">The action to serialize the target object.</param>
     private protected void SerializeInternal(IOpenApiWriter writer,
-        Action<IOpenApiWriter, V> action)
+        Action<IOpenApiWriter, V?> action)
     {
         Utils.CheckArgumentNull(writer);
         action(writer, Target);

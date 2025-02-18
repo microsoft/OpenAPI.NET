@@ -71,11 +71,11 @@ namespace Microsoft.OpenApi.Reader.V31
         /// <param name="type">The type of object refefenced based on the context of the reference</param>
         /// <param name="summary">The summary of the reference</param>
         /// <param name="description">A reference description</param>
-        public OpenApiReference ConvertToOpenApiReference(
+        public OpenApiReference? ConvertToOpenApiReference(
             string reference,
             ReferenceType? type,
-            string summary = null,
-            string description = null)
+            string? summary = null,
+            string? description = null)
         {
             if (!string.IsNullOrWhiteSpace(reference))
             {
@@ -164,7 +164,7 @@ namespace Microsoft.OpenApi.Reader.V31
         }
 
         /// <inheritdoc />
-        public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
+        public string? GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
             if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)))
             {
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Reader.V31
             return null;
         }
 
-        private OpenApiReference ParseLocalReference(string localReference, string summary = null, string description = null)
+        private OpenApiReference ParseLocalReference(string localReference, string? summary = null, string? description = null)
         {
             if (string.IsNullOrWhiteSpace(localReference))
             {
