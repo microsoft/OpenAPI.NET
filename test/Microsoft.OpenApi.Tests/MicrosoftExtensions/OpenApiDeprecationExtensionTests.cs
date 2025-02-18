@@ -75,10 +75,10 @@ public class OpenApiDeprecationExtensionTests
     {
         var oaiValue = new JsonObject
         {
-            { "date", new OpenApiAny(new DateTimeOffset(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0))).Node},
-            { "removalDate", new OpenApiAny(new DateTimeOffset(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0))).Node},
-            { "version", new OpenApiAny("v1.0").Node},
-            { "description", new OpenApiAny("removing").Node}
+            { "date", new DateTimeOffset(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0))},
+            { "removalDate", new DateTimeOffset(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0))},
+            { "version", "v1.0"},
+            { "description", "removing"}
         };
         var value = OpenApiDeprecationExtension.Parse(oaiValue);
         Assert.NotNull(value);
@@ -86,6 +86,23 @@ public class OpenApiDeprecationExtensionTests
         Assert.Equal("removing", value.Description);
         Assert.Equal(new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new(4, 0, 0)), value.Date);
         Assert.Equal(new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new(4, 0, 0)), value.RemovalDate);
+    }
+    [Fact]
+    public void ParsesStringValues()
+    {
+        var oaiValue = new JsonObject
+        {
+            { "date", "2023-05-04T16:00:00Z"},
+            { "removalDate", "2023-05-04"},
+            { "version", "v1.0"},
+            { "description", "removing"}
+        };
+        var value = OpenApiDeprecationExtension.Parse(oaiValue);
+        Assert.NotNull(value);
+        Assert.Equal("v1.0", value.Version);
+        Assert.Equal("removing", value.Description);
+        Assert.Equal(new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new(0, 0, 0)), value.Date);
+        Assert.Equal(new DateTimeOffset(2023, 05, 04, 0, 0, 0, 0, 0, new(0, 0, 0)), value.RemovalDate);
     }
     [Fact]
     public void Serializes()
