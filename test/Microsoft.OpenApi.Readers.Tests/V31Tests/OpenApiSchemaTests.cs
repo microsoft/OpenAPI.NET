@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
         public OpenApiSchemaTests()
         {
-           OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
         }
 
         [Fact]
@@ -298,8 +299,8 @@ examples:
             clone.Default = 6;
 
             // Assert
-            Assert.Equivalent(new int[] {1, 2, 3, 4}, clone.Enum.Select(static x => x.GetValue<int>()).ToArray());
-            Assert.Equivalent(new int[] {2, 3, 4}, clone.Examples.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(new int[] { 1, 2, 3, 4 }, clone.Enum.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(new int[] { 2, 3, 4 }, clone.Examples.Select(static x => x.GetValue<int>()).ToArray());
             Assert.Equivalent(6, clone.Default.GetValue<int>());
         }
 
@@ -398,7 +399,7 @@ nullable: true";
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
             var schemaString = writer.ToString();
 
-            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral()); 
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Theory]
@@ -506,7 +507,7 @@ description: Schema for a person object
         }
 
         [Fact]
-        public void ParseSchemaWithUnrecognizedKeywordsWorks() 
+        public void ParseSchemaWithUnrecognizedKeywordsWorks()
         {
             var input = @"{
     ""type"": ""string"",
@@ -520,5 +521,36 @@ description: Schema for a person object
             Assert.Equal(2, schema.UnrecognizedKeywords.Count);
         }
 
+        [Theory]
+        [InlineData(JsonSchemaType.Integer | JsonSchemaType.String, new[] { "integer", "string" })]
+        [InlineData(JsonSchemaType.Integer | JsonSchemaType.Null, new[] { "integer", "null" })]
+        [InlineData(JsonSchemaType.Integer, new[] { "integer" })]
+        public void NormalizeFlaggableJsonSchemaTypeEnumWorks(JsonSchemaType type, string[] expected)
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = type
+            };
+
+            var actual = schema.Type.ToIdentifier();
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(new[] { "integer", "string" }, JsonSchemaType.Integer | JsonSchemaType.String)]
+        [InlineData(new[] { "integer", "null" }, JsonSchemaType.Integer | JsonSchemaType.Null)]
+        [InlineData(new[] { "integer" }, JsonSchemaType.Integer)]
+        public void ArrayIdentifierToEnumConversionWorks(string[] type, JsonSchemaType expected)
+        {
+            var actual = type.ToJsonSchemaType();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void StringIdentifierToEnumConversionWorks()
+        {
+            var actual = "integer".ToJsonSchemaType();
+            Assert.Equal(JsonSchemaType.Integer, actual);
+        }
     }
 }
