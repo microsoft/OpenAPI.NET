@@ -72,6 +72,21 @@ namespace Microsoft.OpenApi.Extensions
             };
         }
 
+        /// <summary>
+        /// Converts a schema type's identifier into the enum equivalent
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        public static JsonSchemaType ToJsonSchemaType(this string[] identifier)
+        {
+            JsonSchemaType type = 0;
+            foreach (var id in identifier)
+            {
+                type |= id.ToJsonSchemaType();
+            }
+            return type;
+        }
+
         private static readonly Dictionary<Type, Func<OpenApiSchema>> _simpleTypeToOpenApiSchema = new()
         {
             [typeof(bool)] = () => new() { Type = JsonSchemaType.Boolean },
