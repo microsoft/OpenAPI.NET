@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string? ToIdentifier(this JsonSchemaType? schemaType)
+        public static string[]? ToIdentifier(this JsonSchemaType? schemaType)
         {
             if (schemaType is null)
             {
@@ -33,20 +34,21 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string? ToIdentifier(this JsonSchemaType schemaType)
+        public static string[] ToIdentifier(this JsonSchemaType schemaType)
         {
-            return schemaType switch
-            {
-                JsonSchemaType.Null => "null",
-                JsonSchemaType.Boolean => "boolean",
-                JsonSchemaType.Integer => "integer",
-                JsonSchemaType.Number => "number",
-                JsonSchemaType.String => "string",
-                JsonSchemaType.Array => "array",
-                JsonSchemaType.Object => "object",
-                _ => null,
-            };
+            var types = new List<string>();
+            
+            if (schemaType.HasFlag(JsonSchemaType.Boolean)) types.Add("boolean");
+            if (schemaType.HasFlag(JsonSchemaType.Integer)) types.Add("integer");
+            if (schemaType.HasFlag(JsonSchemaType.Number)) types.Add("number");
+            if (schemaType.HasFlag(JsonSchemaType.String)) types.Add("string");
+            if (schemaType.HasFlag(JsonSchemaType.Object)) types.Add("object");
+            if (schemaType.HasFlag(JsonSchemaType.Array)) types.Add("array");
+            if (schemaType.HasFlag(JsonSchemaType.Null)) types.Add("null");
+
+            return types.ToArray();
         }
+
 #nullable restore
 
         /// <summary>
@@ -141,7 +143,7 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// Maps an JsonSchema data type and format to a simple type.
+        /// Maps a JsonSchema data type and format to a simple type.
         /// </summary>
         /// <param name="schema">The OpenApi data type</param>
         /// <returns>The simple type</returns>
@@ -152,21 +154,24 @@ namespace Microsoft.OpenApi.Extensions
             {
                 throw new ArgumentNullException(nameof(schema));
             }
+            var typeIdentifier = schema.Type.ToIdentifier();
+            var isNullable = typeIdentifier.Contains("null");
+            var nonNullable = typeIdentifier.FirstOrDefault(t => t != "null");
 
-            var type = ((schema.Type & ~JsonSchemaType.Null).ToIdentifier(), schema.Format?.ToLowerInvariant(), schema.Type & JsonSchemaType.Null) switch
+            var type = (nonNullable, schema.Format?.ToLowerInvariant(), isNullable) switch
             {
-                ("integer" or "number", "int32", JsonSchemaType.Null) => typeof(int?),
-                ("integer" or "number", "int64", JsonSchemaType.Null) => typeof(long?),
-                ("integer", null, JsonSchemaType.Null) => typeof(long?),
-                ("number", "float", JsonSchemaType.Null) => typeof(float?),
-                ("number", "double", JsonSchemaType.Null) => typeof(double?),
-                ("number", null, JsonSchemaType.Null) => typeof(double?),
-                ("number", "decimal", JsonSchemaType.Null) => typeof(decimal?),
-                ("string", "byte", JsonSchemaType.Null) => typeof(byte?),
-                ("string", "date-time", JsonSchemaType.Null) => typeof(DateTimeOffset?),
-                ("string", "uuid", JsonSchemaType.Null) => typeof(Guid?),
-                ("string", "char", JsonSchemaType.Null) => typeof(char?),
-                ("boolean", null, JsonSchemaType.Null) => typeof(bool?),
+                ("integer" or "number", "int32", true) => typeof(int?),
+                ("integer" or "number", "int64", true) => typeof(long?),
+                ("integer", null, true) => typeof(long?),
+                ("number", "float", true) => typeof(float?),
+                ("number", "double", true) => typeof(double?),
+                ("number", null, true) => typeof(double?),
+                ("number", "decimal", true) => typeof(decimal?),
+                ("string", "byte", true) => typeof(byte?),
+                ("string", "date-time", true) => typeof(DateTimeOffset?),
+                ("string", "uuid", true) => typeof(Guid?),
+                ("string", "char", true) => typeof(char?),
+                ("boolean", null, true) => typeof(bool?),
                 ("boolean", null, _) => typeof(bool),
                 // integer is technically not valid with format, but we must provide some compatibility
                 ("integer" or "number", "int32", _) => typeof(int),
