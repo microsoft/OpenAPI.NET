@@ -1973,8 +1973,8 @@ namespace Microsoft.OpenApi.Writers
         protected void VerifyCanWritePropertyName(string name) { }
         public abstract void WriteEndArray();
         public abstract void WriteEndObject();
+        public virtual void WriteHashSet(System.Collections.Generic.IEnumerable<object> value) { }
         public virtual void WriteIndentation() { }
-        public virtual void WriteKeyValuePair(object key, object value) { }
         public abstract void WriteNull();
         public abstract void WritePropertyName(string name);
         public abstract void WriteRaw(string value);
