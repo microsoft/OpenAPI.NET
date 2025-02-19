@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 
@@ -299,4 +299,9 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// Annotations are NOT (de)serialized with the schema and can be used for custom properties.
     /// </summary>
     public IDictionary<string, object> Annotations { get; }
+
+    /// <summary>
+    /// Follow JSON Schema definition:https://tools.ietf.org/html/draft-handrews-json-schema-validation-02
+    /// </summary>
+    public IDictionary<string, ISet<string>> DependentRequired { get; }
 }

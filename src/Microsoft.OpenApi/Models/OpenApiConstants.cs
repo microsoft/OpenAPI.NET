@@ -720,6 +720,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public const string NullableExtension = "x-nullable";
 
+        /// <summary>
+        /// Field: DependentRequired
+        /// </summary>
+        public const string DependentRequired = "dependentRequired";
+
         #region V2.0
 
         /// <summary>

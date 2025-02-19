@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
@@ -211,6 +213,33 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write KeyValuePair value.
+        /// </summary>
+        /// <param name="key">The key of the KeyValuePair.</param>
+        /// <param name="value">The value of the KeyValuePair.</param>
+        public virtual void WriteKeyValuePair(object key, object value)
+        {
+            WriteStartObject();
+            WritePropertyName(key?.ToString() ?? string.Empty);
+            WriteValue(value);
+            WriteEndObject();
+        }
+
+        /// <summary>
+        /// Write hashSet value.
+        /// </summary>
+        /// <param name="value">The HashSet value.</param>
+        private void WriteHashSet(IEnumerable<object> value)
+        {
+            WriteStartArray();
+            foreach (var item in value)
+            {
+                WriteValue(item);
+            }
+            WriteEndArray();
+        }
+
+        /// <summary>
         /// Write object value.
         /// </summary>
         /// <param name="value">The object value.</param>
@@ -263,6 +292,20 @@ namespace Microsoft.OpenApi.Writers
             else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
             {
                 WriteValue((DateTimeOffset)value);
+            }
+            else if (value is IEnumerable<object> hashSet && value.GetType().GetGenericTypeDefinition() == typeof(HashSet<>))
+            {
+                WriteHashSet(hashSet);
+            }
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+            {
+                var key = type.GetProperty("Key")?.GetValue(value, null);
+                var val = type.GetProperty("Value")?.GetValue(value, null);
+
+                if (key != null)
+                {
+                    WriteKeyValuePair(key, val);
+                }
             }
             else
             {

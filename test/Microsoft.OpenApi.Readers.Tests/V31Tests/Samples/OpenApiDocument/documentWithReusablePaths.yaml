@@ -13,6 +13,9 @@ components:
         required:
         - id
         - name
+        dependentRequired:
+          tag:
+            - category
         properties:
             id:
               type: integer
@@ -20,11 +23,16 @@ components:
             name:
               type: string
             tag:
+              type: string
+            category:
               type: string
     newPetSchema:
         type: object
         required:
         - name
+        dependentRequired:
+          tag:
+            - category
         properties:
             id:
               type: integer
@@ -32,6 +40,8 @@ components:
             name:
               type: string
             tag:
+              type: string
+            category:
               type: string
   pathItems:
      pets:

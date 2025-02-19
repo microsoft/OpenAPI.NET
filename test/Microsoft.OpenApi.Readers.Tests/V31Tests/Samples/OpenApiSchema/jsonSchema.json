@@ -26,7 +26,22 @@
         "veggieLike": {
           "type": "boolean",
           "description": "Do I like this vegetable?"
+        },
+        "veggieType": {
+          "type": "string",
+          "description": "The type of vegetable (e.g., root, leafy, etc.)."
+        },
+        "veggieColor": {
+          "type": "string",
+          "description": "The color of the vegetable."
+        },
+        "veggieSize": {
+          "type": "string",
+          "description": "The size of the vegetable."
         }
+      },
+      "dependentRequired": {
+        "veggieType": [ "veggieColor", "veggieSize" ]
       }
     }
   }
