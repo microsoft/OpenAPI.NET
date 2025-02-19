@@ -169,9 +169,8 @@ namespace Microsoft.OpenApi.Extensions
             {
                 throw new ArgumentNullException(nameof(schema));
             }
-            var typeIdentifier = schema.Type.ToIdentifier();
-            var isNullable = typeIdentifier.Contains("null");
-            var nonNullable = typeIdentifier.FirstOrDefault(t => t != "null");
+            var isNullable = (schema.Type & JsonSchemaType.Null) == JsonSchemaType.Null;
+            var nonNullable = (schema.Type & ~JsonSchemaType.Null).ToIdentifier().FirstOrDefault();
 
             var type = (nonNullable, schema.Format?.ToLowerInvariant(), isNullable) switch
             {
