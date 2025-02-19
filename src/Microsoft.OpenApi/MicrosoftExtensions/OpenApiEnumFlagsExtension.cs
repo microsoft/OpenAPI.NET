@@ -47,9 +47,9 @@ public class OpenApiEnumFlagsExtension : IOpenApiExtension
     {
         if (source is not JsonObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
         var extension = new OpenApiEnumFlagsExtension();
-        if (rawObject.TryGetPropertyValue(nameof(IsFlags).ToFirstCharacterLowerCase(), out var flagsValue) && flagsValue is JsonNode isFlags)
+        if (rawObject.TryGetPropertyValue(nameof(IsFlags).ToFirstCharacterLowerCase(), out var flagsValue) && flagsValue is JsonValue isFlags && isFlags.TryGetValue<bool>(out var isFlagsValue))
         {
-            extension.IsFlags = isFlags.GetValue<bool>();
+            extension.IsFlags = isFlagsValue;
         }
         return extension;
     }
