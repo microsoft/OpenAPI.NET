@@ -49,6 +49,17 @@ namespace Microsoft.OpenApi.Extensions
             return types.ToArray();
         }
 
+        /// <summary>
+        /// Returns the first identifier from a string array.
+        /// </summary>
+        /// <param name="schemaType"></param>
+        /// <returns></returns>
+        public static string FirstIdentifier(this JsonSchemaType schemaType)
+        {
+            var identifier = schemaType.ToIdentifier();
+            return identifier[0];
+        }
+
 #nullable restore
 
         /// <summary>
@@ -77,8 +88,13 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns></returns>
-        public static JsonSchemaType ToJsonSchemaType(this string[] identifier)
+        public static JsonSchemaType? ToJsonSchemaType(this string[] identifier)
         {
+            if (identifier == null)
+            {
+                return null;
+            }
+
             JsonSchemaType type = 0;
             foreach (var id in identifier)
             {
@@ -170,7 +186,7 @@ namespace Microsoft.OpenApi.Extensions
                 throw new ArgumentNullException(nameof(schema));
             }
             var isNullable = (schema.Type & JsonSchemaType.Null) == JsonSchemaType.Null;
-            var nonNullable = (schema.Type & ~JsonSchemaType.Null).ToIdentifier().FirstOrDefault();
+            var nonNullable = (schema.Type & ~JsonSchemaType.Null)?.FirstIdentifier();
 
             var type = (nonNullable, schema.Format?.ToLowerInvariant(), isNullable) switch
             {
