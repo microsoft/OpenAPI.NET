@@ -301,7 +301,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     public IDictionary<string, object> Annotations { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition:https://tools.ietf.org/html/draft-handrews-json-schema-validation-02
+    /// Follow JSON Schema definition:https://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.4
     /// </summary>
     public IDictionary<string, ISet<string>> DependentRequired { get; }
 }
