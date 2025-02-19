@@ -213,23 +213,10 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write KeyValuePair value.
-        /// </summary>
-        /// <param name="key">The key of the KeyValuePair.</param>
-        /// <param name="value">The value of the KeyValuePair.</param>
-        public virtual void WriteKeyValuePair(object key, object value)
-        {
-            WriteStartObject();
-            WritePropertyName(key?.ToString() ?? string.Empty);
-            WriteValue(value);
-            WriteEndObject();
-        }
-
-        /// <summary>
         /// Write hashSet value.
         /// </summary>
         /// <param name="value">The HashSet value.</param>
-        private void WriteHashSet(IEnumerable<object> value)
+        public virtual void WriteHashSet(IEnumerable<object> value)
         {
             WriteStartArray();
             foreach (var item in value)
@@ -296,16 +283,6 @@ namespace Microsoft.OpenApi.Writers
             else if (value is IEnumerable<object> hashSet && value.GetType().GetGenericTypeDefinition() == typeof(HashSet<>))
             {
                 WriteHashSet(hashSet);
-            }
-            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
-            {
-                var key = type.GetProperty("Key")?.GetValue(value, null);
-                var val = type.GetProperty("Value")?.GetValue(value, null);
-
-                if (key != null)
-                {
-                    WriteKeyValuePair(key, val);
-                }
             }
             else
             {
