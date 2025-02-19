@@ -68,6 +68,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "veggieName",
                             "veggieLike"
                         },
+                        DependentRequired = new Dictionary<string, ISet<string>>
+                        {
+                            { "veggieType", new HashSet<string> { "veggieColor", "veggieSize" } }
+                        },
                         Properties = new Dictionary<string, IOpenApiSchema>
                         {
                             ["veggieName"] = new OpenApiSchema
@@ -79,6 +83,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Type = JsonSchemaType.Boolean,
                                 Description = "Do I like this vegetable?"
+                            },
+                            ["veggieType"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The type of vegetable (e.g., root, leafy, etc.)."
+                            },
+                            ["veggieColor"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The color of the vegetable."
+                            },
+                            ["veggieSize"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The size of the vegetable."
                             }
                         }
                     }
