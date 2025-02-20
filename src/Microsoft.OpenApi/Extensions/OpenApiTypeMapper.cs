@@ -72,10 +72,6 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns></returns>
         public static string ToSingleIdentifier(this JsonSchemaType schemaType)
         {
-            if (schemaType.ToIdentifiers().Length != 1)
-            {
-                throw new OpenApiException($"Schema type {schemaType} must have exactly one identifier.");
-            }
             return schemaType.ToIdentifiersInternal().Single();
         }
 
