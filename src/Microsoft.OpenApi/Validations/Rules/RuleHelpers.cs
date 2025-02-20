@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             // convert value to JsonElement and access the ValueKind property to determine the type.
             var valueKind = value.GetValueKind();
 
-            var type = (schema.Type & ~JsonSchemaType.Null)?.FirstIdentifier();
+            var type = (schema.Type & ~JsonSchemaType.Null)?.ToFirstIdentifier();
             var format = schema.Format;
 
             // Before checking the type, check first if the schema allows null.

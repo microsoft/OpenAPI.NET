@@ -20,13 +20,13 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string[]? ToIdentifier(this JsonSchemaType? schemaType)
+        public static string[]? ToIdentifiers(this JsonSchemaType? schemaType)
         {
             if (schemaType is null)
             {
                 return null;
             }
-            return schemaType.Value.ToIdentifier();
+            return schemaType.Value.ToIdentifiers();
         }
 
         /// <summary>
@@ -56,8 +56,22 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns></returns>
         internal static string ToFirstIdentifier(this JsonSchemaType schemaType)
         {
-            var identifier = schemaType.ToIdentifier();
+            var identifier = schemaType.ToIdentifiers();
             return identifier[0];
+        }
+
+        /// <summary>
+        /// Returns a single identifier from an array with only one item.
+        /// </summary>
+        /// <param name="schemaType"></param>
+        /// <returns></returns>
+        public static string ToSingleIdentifier(this JsonSchemaType schemaType)
+        {
+            if (schemaType.ToIdentifiers().Length != 1)
+            {
+                throw new OpenApiException($"Schema type {schemaType} must have exactly one identifier.");
+            }
+            return schemaType.ToFirstIdentifier();
         }
 
 #nullable restore
@@ -185,40 +199,37 @@ namespace Microsoft.OpenApi.Extensions
             {
                 throw new ArgumentNullException(nameof(schema));
             }
-            var isNullable = (schema.Type & JsonSchemaType.Null) == JsonSchemaType.Null;
-            var nonNullable = (schema.Type & ~JsonSchemaType.Null)?.FirstIdentifier();
 
-            var type = (nonNullable, schema.Format?.ToLowerInvariant(), isNullable) switch
+            var type = (schema.Type, schema.Format?.ToLowerInvariant()) switch
             {
-                ("integer" or "number", "int32", true) => typeof(int?),
-                ("integer" or "number", "int64", true) => typeof(long?),
-                ("integer", null, true) => typeof(long?),
-                ("number", "float", true) => typeof(float?),
-                ("number", "double", true) => typeof(double?),
-                ("number", null, true) => typeof(double?),
-                ("number", "decimal", true) => typeof(decimal?),
-                ("string", "byte", true) => typeof(byte?),
-                ("string", "date-time", true) => typeof(DateTimeOffset?),
-                ("string", "uuid", true) => typeof(Guid?),
-                ("string", "char", true) => typeof(char?),
-                ("boolean", null, true) => typeof(bool?),
-                ("boolean", null, _) => typeof(bool),
+                (JsonSchemaType.Integer | JsonSchemaType.Null or JsonSchemaType.Number | JsonSchemaType.Null, "int32") => typeof(int?),
+                (JsonSchemaType.Integer | JsonSchemaType.Null or JsonSchemaType.Number | JsonSchemaType.Null, "int64") => typeof(long?),
+                (JsonSchemaType.Integer | JsonSchemaType.Null, null) => typeof(long?),
+                (JsonSchemaType.Number | JsonSchemaType.Null, "float") => typeof(float?),
+                (JsonSchemaType.Number | JsonSchemaType.Null, "double") => typeof(double?),
+                (JsonSchemaType.Number | JsonSchemaType.Null, null) => typeof(double?),
+                (JsonSchemaType.Number | JsonSchemaType.Null, "decimal") => typeof(decimal?),
+                (JsonSchemaType.String | JsonSchemaType.Null, "byte") => typeof(byte?),
+                (JsonSchemaType.String | JsonSchemaType.Null, "date-time") => typeof(DateTimeOffset?),
+                (JsonSchemaType.String | JsonSchemaType.Null, "uuid") => typeof(Guid?),
+                (JsonSchemaType.String | JsonSchemaType.Null, "char") => typeof(char?),
+                (JsonSchemaType.Boolean | JsonSchemaType.Null, null) => typeof(bool?),
+                (JsonSchemaType.Boolean, null) => typeof(bool),
                 // integer is technically not valid with format, but we must provide some compatibility
-                ("integer" or "number", "int32", _) => typeof(int),
-                ("integer" or "number", "int64", _) => typeof(long),
-                ("integer", null, _) => typeof(long),
-                ("number", "float", _) => typeof(float),
-                ("number", "double", _) => typeof(double),
-                ("number", "decimal", _) => typeof(decimal),
-                ("number", null, _) => typeof(double),
-                ("string", "byte", _) => typeof(byte),
-                ("string", "date-time", _) => typeof(DateTimeOffset),
-                ("string", "uuid", _) => typeof(Guid),
-                ("string", "duration", _) => typeof(TimeSpan),
-                ("string", "char", _) => typeof(char),
-                ("string", null, _) => typeof(string),
-                ("object", null, _) => typeof(object),
-                ("string", "uri", _) => typeof(Uri),
+                (JsonSchemaType.Integer or JsonSchemaType.Number, "int32") => typeof(int),
+                (JsonSchemaType.Integer or JsonSchemaType.Number, "int64") => typeof(long),
+                (JsonSchemaType.Integer, null) => typeof(long),
+                (JsonSchemaType.Number, "float") => typeof(float),
+                (JsonSchemaType.Number, "double") => typeof(double),
+                (JsonSchemaType.Number, "decimal") => typeof(decimal),
+                (JsonSchemaType.Number, null) => typeof(double),
+                (JsonSchemaType.String, "byte") => typeof(byte),
+                (JsonSchemaType.String, "date-time") => typeof(DateTimeOffset),
+                (JsonSchemaType.String, "uuid") => typeof(Guid),
+                (JsonSchemaType.String, "char") => typeof(char),
+                (JsonSchemaType.String, null) => typeof(string),
+                (JsonSchemaType.Object, null) => typeof(object),
+                (JsonSchemaType.String, "uri") => typeof(Uri),
                 _ => typeof(string),
             };
 

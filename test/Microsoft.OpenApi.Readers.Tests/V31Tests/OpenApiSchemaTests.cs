@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using Microsoft.OpenApi.Exceptions;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -532,7 +533,7 @@ description: Schema for a person object
                 Type = type
             };
 
-            var actual = schema.Type.ToIdentifier();
+            var actual = schema.Type.ToIdentifiers();
             Assert.Equal(expected, actual);
         }
 
@@ -551,6 +552,16 @@ description: Schema for a person object
         {
             var actual = "integer".ToJsonSchemaType();
             Assert.Equal(JsonSchemaType.Integer, actual);
+        }
+
+        [Fact]
+        public void ReturnSingleIdentifierWorks()
+        {
+            var type = JsonSchemaType.Integer;
+            var types = JsonSchemaType.Integer | JsonSchemaType.Null;
+
+            Assert.Equal("integer", type.ToSingleIdentifier());
+            Assert.Throws<OpenApiException>(() => types.ToSingleIdentifier());
         }
     }
 }

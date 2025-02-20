@@ -413,7 +413,7 @@ namespace Microsoft.OpenApi.Models
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
         {
             // type
-            writer.WriteProperty(OpenApiConstants.Type, (Type & ~JsonSchemaType.Null)?.FirstIdentifier());
+            writer.WriteProperty(OpenApiConstants.Type, (Type & ~JsonSchemaType.Null)?.ToFirstIdentifier());
 
             // format
             WriteFormatProperty(writer);
@@ -651,14 +651,14 @@ namespace Microsoft.OpenApi.Models
                         break;
                     case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value == JsonSchemaType.Null:
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.FirstIdentifier());
+                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.ToFirstIdentifier());
                         break;
                     case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value != JsonSchemaType.Null:
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, type.Value.FirstIdentifier());
+                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToFirstIdentifier());
                         break;
                     default:
-                        writer.WriteProperty(OpenApiConstants.Type, type.Value.FirstIdentifier());
+                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToFirstIdentifier());
                         break;
                 }
             }
@@ -676,7 +676,7 @@ namespace Microsoft.OpenApi.Models
                                 select flag).ToList();
                     writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) =>
                     {
-                        foreach(var item in s.ToIdentifier())
+                        foreach(var item in s.ToIdentifiers())
                         {
                             w.WriteValue(item);
                         }
@@ -703,7 +703,7 @@ namespace Microsoft.OpenApi.Models
             var temporaryType = type | JsonSchemaType.Null;
             var list = (from JsonSchemaType flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
                         where temporaryType.HasFlag(flag)
-                        select flag.FirstIdentifier()).ToList();
+                        select flag.ToFirstIdentifier()).ToList();
             if (list.Count > 1)
             {
                 writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
@@ -740,7 +740,7 @@ namespace Microsoft.OpenApi.Models
                     if (schemaType.HasFlag(flag) && flag != JsonSchemaType.Null)
                     {
                         // Write the non-null flag value to the writer
-                        writer.WriteProperty(OpenApiConstants.Type, flag.FirstIdentifier());
+                        writer.WriteProperty(OpenApiConstants.Type, flag.ToFirstIdentifier());
                     }
                 }
                 writer.WriteProperty(nullableProp, true);
@@ -753,7 +753,7 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
-                    writer.WriteProperty(OpenApiConstants.Type, schemaType.FirstIdentifier());
+                    writer.WriteProperty(OpenApiConstants.Type, schemaType.ToFirstIdentifier());
                 }
             }
         }
