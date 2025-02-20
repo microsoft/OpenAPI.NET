@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string ToSingleIdentifier(this JsonSchemaType schemaType)
+        internal static string ToSingleIdentifier(this JsonSchemaType schemaType)
         {
             return schemaType.ToIdentifiersInternal().Single();
         }

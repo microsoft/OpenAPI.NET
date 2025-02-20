@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Microsoft.OpenApi.Exceptions;
+using System;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -561,7 +562,7 @@ description: Schema for a person object
             var types = JsonSchemaType.Integer | JsonSchemaType.Null;
 
             Assert.Equal("integer", type.ToSingleIdentifier());
-            Assert.Throws<OpenApiException>(() => types.ToSingleIdentifier());
+            Assert.Throws<InvalidOperationException>(() => types.ToSingleIdentifier());
         }
     }
 }

@@ -194,7 +194,6 @@ namespace Microsoft.OpenApi.Extensions
         public static string[]? ToIdentifiers(this Microsoft.OpenApi.Models.JsonSchemaType? schemaType) { }
         public static Microsoft.OpenApi.Models.JsonSchemaType ToJsonSchemaType(this string identifier) { }
         public static Microsoft.OpenApi.Models.JsonSchemaType? ToJsonSchemaType(this string[] identifier) { }
-        public static string ToSingleIdentifier(this Microsoft.OpenApi.Models.JsonSchemaType schemaType) { }
     }
 }
 namespace Microsoft.OpenApi.Interfaces
