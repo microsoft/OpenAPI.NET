@@ -36,17 +36,20 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns></returns>
         public static string[] ToIdentifiers(this JsonSchemaType schemaType)
         {
-            var types = new List<string>();
-            
-            if (schemaType.HasFlag(JsonSchemaType.Boolean)) types.Add("boolean");
-            if (schemaType.HasFlag(JsonSchemaType.Integer)) types.Add("integer");
-            if (schemaType.HasFlag(JsonSchemaType.Number)) types.Add("number");
-            if (schemaType.HasFlag(JsonSchemaType.String)) types.Add("string");
-            if (schemaType.HasFlag(JsonSchemaType.Object)) types.Add("object");
-            if (schemaType.HasFlag(JsonSchemaType.Array)) types.Add("array");
-            if (schemaType.HasFlag(JsonSchemaType.Null)) types.Add("null");
-
-            return types.ToArray();
+            return schemaType.ToIdentifiersInternal().ToArray();
+        }
+        private static readonly Dictionary<JsonSchemaType, string> allSchemaTypes = [
+            { JsonSchemaType.Boolean, "boolean"},
+            { JsonSchemaType.Integer, "integer" },
+            { JsonSchemaType.Number, "number" },
+            { JsonSchemaType.String, "string" },
+            { JsonSchemaType.Object, "object" },
+            { JsonSchemaType.Array, "array" },
+            { JsonSchemaType.Null, "null" },
+        ];
+        private static IEnumerable<string> ToIdentifiersInternal(this JsonSchemaType schemaType)
+        {
+            return allSchemaTypes.Where(kvp => schemaType.HasFlag(kvp.Key)).Select(static kvp => kvp.Value);
         }
 
         /// <summary>
