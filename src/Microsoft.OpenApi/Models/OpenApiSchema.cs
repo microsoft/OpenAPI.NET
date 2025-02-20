@@ -418,7 +418,7 @@ namespace Microsoft.OpenApi.Models
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
         {
             // type
-            writer.WriteProperty(OpenApiConstants.Type, (Type & ~JsonSchemaType.Null).ToIdentifier());
+            writer.WriteProperty(OpenApiConstants.Type, (Type & ~JsonSchemaType.Null)?.ToFirstIdentifier());
 
             // format
             WriteFormatProperty(writer);
@@ -634,10 +634,10 @@ namespace Microsoft.OpenApi.Models
         private void SerializeTypeProperty(JsonSchemaType? type, IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             // check whether nullable is true for upcasting purposes
-            var isNullable = (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null))  ||
+            var isNullable = (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null)) ||
                                 Extensions is not null &&
                                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) && 
-                                nullExtRawValue is OpenApiAny { Node: JsonNode jsonNode} &&
+                                nullExtRawValue is OpenApiAny { Node: JsonNode jsonNode } &&
                                 jsonNode.GetValueKind() is JsonValueKind.True;
             if (type is null)
             {
@@ -656,14 +656,14 @@ namespace Microsoft.OpenApi.Models
                         break;
                     case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value == JsonSchemaType.Null:
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.ToIdentifier());
+                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.ToFirstIdentifier());
                         break;
                     case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value != JsonSchemaType.Null:
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
+                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToFirstIdentifier());
                         break;
                     default:
-                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToIdentifier());
+                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToFirstIdentifier());
                         break;
                 }
             }
@@ -679,7 +679,13 @@ namespace Microsoft.OpenApi.Models
                     var list = (from JsonSchemaType flag in jsonSchemaTypeValues
                                 where type.Value.HasFlag(flag)
                                 select flag).ToList();
-                    writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s.ToIdentifier()));
+                    writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) =>
+                    {
+                        foreach(var item in s.ToIdentifiers())
+                        {
+                            w.WriteValue(item);
+                        }
+                    });
                 }
             } 
         }
@@ -702,7 +708,7 @@ namespace Microsoft.OpenApi.Models
             var temporaryType = type | JsonSchemaType.Null;
             var list = (from JsonSchemaType flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
                         where temporaryType.HasFlag(flag)
-                        select flag.ToIdentifier()).ToList();
+                        select flag.ToFirstIdentifier()).ToList();
             if (list.Count > 1)
             {
                 writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
@@ -739,7 +745,7 @@ namespace Microsoft.OpenApi.Models
                     if (schemaType.HasFlag(flag) && flag != JsonSchemaType.Null)
                     {
                         // Write the non-null flag value to the writer
-                        writer.WriteProperty(OpenApiConstants.Type, flag.ToIdentifier());
+                        writer.WriteProperty(OpenApiConstants.Type, flag.ToFirstIdentifier());
                     }
                 }
                 writer.WriteProperty(nullableProp, true);
@@ -752,7 +758,7 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
-                    writer.WriteProperty(OpenApiConstants.Type, schemaType.ToIdentifier());
+                    writer.WriteProperty(OpenApiConstants.Type, schemaType.ToFirstIdentifier());
                 }
             }
         }
