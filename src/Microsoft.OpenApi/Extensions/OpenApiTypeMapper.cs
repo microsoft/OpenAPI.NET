@@ -38,15 +38,18 @@ namespace Microsoft.OpenApi.Extensions
         {
             return schemaType.ToIdentifiersInternal().ToArray();
         }
-        private static readonly Dictionary<JsonSchemaType, string> allSchemaTypes = [
-            { JsonSchemaType.Boolean, "boolean"},
+
+        private static readonly Dictionary<JsonSchemaType, string> allSchemaTypes = new()
+        {
+            { JsonSchemaType.Boolean, "boolean" },
             { JsonSchemaType.Integer, "integer" },
             { JsonSchemaType.Number, "number" },
             { JsonSchemaType.String, "string" },
             { JsonSchemaType.Object, "object" },
             { JsonSchemaType.Array, "array" },
-            { JsonSchemaType.Null, "null" },
-        ];
+            { JsonSchemaType.Null, "null" }
+        };
+
         private static IEnumerable<string> ToIdentifiersInternal(this JsonSchemaType schemaType)
         {
             return allSchemaTypes.Where(kvp => schemaType.HasFlag(kvp.Key)).Select(static kvp => kvp.Value);
