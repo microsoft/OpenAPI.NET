@@ -2,11 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
@@ -213,13 +211,14 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write hashSet value.
+        /// Writes an enumerable collection as an array
         /// </summary>
-        /// <param name="value">The HashSet value.</param>
-        public virtual void WriteHashSet(IEnumerable<object> value)
+        /// <param name="collection">The enumerable collection to write.</param>
+        /// <typeparam name="T">The type of elements in the collection.</typeparam>
+        public virtual void WriteEnumerable<T>(IEnumerable<T> collection)
         {
             WriteStartArray();
-            foreach (var item in value)
+            foreach (var item in collection)
             {
                 WriteValue(item);
             }
@@ -280,9 +279,9 @@ namespace Microsoft.OpenApi.Writers
             {
                 WriteValue((DateTimeOffset)value);
             }
-            else if (value is IEnumerable<object> hashSet && value.GetType().GetGenericTypeDefinition() == typeof(HashSet<>))
+            else if (value is IEnumerable<object> enumerable)
             {
-                WriteHashSet(hashSet);
+                WriteEnumerable(enumerable);
             }
             else
             {
