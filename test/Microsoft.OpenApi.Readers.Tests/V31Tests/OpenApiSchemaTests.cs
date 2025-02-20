@@ -520,5 +520,41 @@ description: Schema for a person object
             Assert.Equal(2, schema.UnrecognizedKeywords.Count);
         }
 
+        [Fact]
+        public void ParseSchemaExampleWithPrimitivesWorks()
+        {
+            var expected1 = @"{
+  ""type"": ""string"",
+  ""example"": ""2024-01-02""
+}";
+
+            var expected2 = @"{
+  ""type"": ""string"",
+  ""example"": ""3.14""
+}";
+            var schema = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.String,
+                Example = JsonValue.Create("2024-01-02")
+            };
+
+            var schema2 = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.String,
+                Example = JsonValue.Create("3.14")
+            };
+
+            var textWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(textWriter);
+            schema.SerializeAsV31(writer);
+            var actual1 = textWriter.ToString();
+            Assert.Equal(expected1.MakeLineBreaksEnvironmentNeutral(), actual1.MakeLineBreaksEnvironmentNeutral());
+
+            textWriter = new StringWriter();
+            writer = new OpenApiJsonWriter(textWriter);
+            schema2.SerializeAsV31(writer);
+            var actual2 = textWriter.ToString();
+            Assert.Equal(expected2.MakeLineBreaksEnvironmentNeutral(), actual2.MakeLineBreaksEnvironmentNeutral());
+        }
     }
 }

@@ -68,13 +68,13 @@ namespace Microsoft.OpenApi.Writers
                     writer.WriteObject(node as JsonObject);
                     break;
                 case JsonValueKind.String: // Primitive
-                    writer.WritePrimitive(node);
+                    writer.WriteValue(node.GetValue<string>());
                     break;
                 case JsonValueKind.Number: // Primitive
-                    writer.WritePrimitive(node);
+                    writer.WriteNumber(node);
                     break;
                 case JsonValueKind.True or JsonValueKind.False: // Primitive
-                    writer.WritePrimitive(node);
+                    writer.WriteValue(node.GetValue<bool>());
                     break;
                 case JsonValueKind.Null: // null
                     writer.WriteNull();
@@ -109,43 +109,10 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-        private static void WritePrimitive(this IOpenApiWriter writer, JsonNode primitive)
+        private static void WriteNumber(this IOpenApiWriter writer, JsonNode number)
         {
-            Utils.CheckArgumentNull(writer);
-
-            var valueKind = primitive.GetValueKind();
-
-            if (valueKind == JsonValueKind.String && primitive is JsonValue jsonStrValue)
+            if (number is JsonValue jsonValue)
             {
-                if (jsonStrValue.TryGetValue<DateTimeOffset>(out var dto))
-                {
-                    writer.WriteValue(dto);
-                }
-                else if (jsonStrValue.TryGetValue<DateTime>(out var dt))
-                {
-                    writer.WriteValue(dt);
-                }
-                else if (jsonStrValue.TryGetValue<string>(out var strValue))
-                {
-                    // check whether string is actual string or date time object
-                    if (DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTimeOffset))
-                    {
-                        writer.WriteValue(dateTimeOffset);
-                    }
-                    else if (DateTime.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime))
-                    { // order matters, DTO needs to be checked first!!!
-                        writer.WriteValue(dateTime);
-                    }
-                    else
-                    {
-                        writer.WriteValue(strValue);
-                    }
-                }
-            }
-
-            else if (valueKind == JsonValueKind.Number && primitive is JsonValue jsonValue)
-            {
-
                 if (jsonValue.TryGetValue<decimal>(out var decimalValue))
                 {
                     writer.WriteValue(decimalValue);
@@ -166,14 +133,6 @@ namespace Microsoft.OpenApi.Writers
                 {
                     writer.WriteValue(intValue);
                 }
-            }
-            else if (valueKind is JsonValueKind.False)
-            {
-                writer.WriteValue(false);
-            }
-            else if (valueKind is JsonValueKind.True)
-            {
-                writer.WriteValue(true);
             }
         }
     }
