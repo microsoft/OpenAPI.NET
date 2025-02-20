@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        internal static string FirstIdentifier(this JsonSchemaType schemaType)
+        internal static string ToFirstIdentifier(this JsonSchemaType schemaType)
         {
             var identifier = schemaType.ToIdentifier();
             return identifier[0];
