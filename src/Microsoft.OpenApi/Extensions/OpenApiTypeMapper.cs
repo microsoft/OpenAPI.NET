@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Extensions
             {
                 throw new OpenApiException($"Schema type {schemaType} must have exactly one identifier.");
             }
-            return schemaType.ToFirstIdentifier();
+            return schemaType.ToIdentifiersInternal().Single();
         }
 
 #nullable restore
