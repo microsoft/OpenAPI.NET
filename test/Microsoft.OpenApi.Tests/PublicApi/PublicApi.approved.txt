@@ -420,6 +420,7 @@ namespace Microsoft.OpenApi.Models.Interfaces
         string Const { get; }
         System.Text.Json.Nodes.JsonNode Default { get; }
         System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> Definitions { get; }
+        System.Collections.Generic.IDictionary<string, System.Collections.Generic.ISet<string>> DependentRequired { get; }
         bool Deprecated { get; }
         Microsoft.OpenApi.Models.OpenApiDiscriminator Discriminator { get; }
         string DynamicAnchor { get; }
@@ -561,6 +562,7 @@ namespace Microsoft.OpenApi.Models
         public const string Definitions = "definitions";
         public const string Defs = "$defs";
         public const string Delete = "delete";
+        public const string DependentRequired = "dependentRequired";
         public const string Deprecated = "deprecated";
         public const string Description = "description";
         public const string Discriminator = "discriminator";
@@ -1021,6 +1023,7 @@ namespace Microsoft.OpenApi.Models
         public string Const { get; set; }
         public System.Text.Json.Nodes.JsonNode Default { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> Definitions { get; set; }
+        public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ISet<string>> DependentRequired { get; set; }
         public bool Deprecated { get; set; }
         public string Description { get; set; }
         public Microsoft.OpenApi.Models.OpenApiDiscriminator Discriminator { get; set; }
@@ -1373,6 +1376,7 @@ namespace Microsoft.OpenApi.Models.References
         public string Const { get; }
         public System.Text.Json.Nodes.JsonNode Default { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema> Definitions { get; }
+        public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ISet<string>> DependentRequired { get; }
         public bool Deprecated { get; }
         public string Description { get; set; }
         public Microsoft.OpenApi.Models.OpenApiDiscriminator Discriminator { get; }
@@ -1969,6 +1973,7 @@ namespace Microsoft.OpenApi.Writers
         protected void VerifyCanWritePropertyName(string name) { }
         public abstract void WriteEndArray();
         public abstract void WriteEndObject();
+        public virtual void WriteEnumerable<T>(System.Collections.Generic.IEnumerable<T> collection) { }
         public virtual void WriteIndentation() { }
         public abstract void WriteNull();
         public abstract void WritePropertyName(string name);
@@ -1993,6 +1998,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalCollection(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IEnumerable<string> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string> action) { }
         public static void WriteOptionalCollection<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IEnumerable<T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, T> action) { }
         public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, bool> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, bool> action) { }
+        public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, System.Collections.Generic.ISet<string>> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, System.Collections.Generic.ISet<string>> action) { }
         public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, string> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, string> action) { }
         public static void WriteOptionalMap(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, System.Text.Json.Nodes.JsonNode> action) { }
         public static void WriteOptionalMap<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IDictionary<string, T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, T> action)

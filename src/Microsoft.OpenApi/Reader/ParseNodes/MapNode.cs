@@ -103,6 +103,34 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
+        public override Dictionary<string, ISet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
+        {
+            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
+
+            var nodes = jsonMap.Select(n =>
+            {
+                var key = n.Key;
+                try
+                {
+                    Context.StartObject(key);
+                    JsonArray arrayNode = n.Value is JsonArray value
+                        ? value
+                        : throw new OpenApiReaderException($"Expected array while parsing {typeof(T).Name}", Context);
+
+                    ISet<T> values = new HashSet<T>(arrayNode.Select(item => map(new ValueNode(Context, item), openApiDocument)));
+
+                    return (key, values);
+
+                }
+                finally
+                {
+                    Context.EndObject();
+                }
+            });
+
+            return nodes.ToDictionary(kvp => kvp.key, kvp => kvp.values);
+        }
+
         public IEnumerator<PropertyNode> GetEnumerator()
         {
             return _nodes.GetEnumerator();

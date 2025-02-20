@@ -176,6 +176,9 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public IDictionary<string, object> Annotations { get; set; }
 
+        /// <inheritdoc />
+        public IDictionary<string, ISet<string>> DependentRequired { get; set; } = new Dictionary<string, ISet<string>>();
+
         /// <summary>
         /// Parameterless constructor
         /// </summary>
@@ -239,6 +242,7 @@ namespace Microsoft.OpenApi.Models
             Extensions = schema.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
             Annotations = schema.Annotations != null ? new Dictionary<string, object>(schema.Annotations) : null;
             UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
+            DependentRequired = schema.DependentRequired != null ? new Dictionary<string, ISet<string>>(schema.DependentRequired) : null;
         }
 
         /// <inheritdoc />
@@ -408,6 +412,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
+            writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
