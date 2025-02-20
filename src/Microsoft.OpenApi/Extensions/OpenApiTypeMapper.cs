@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string[] ToIdentifier(this JsonSchemaType schemaType)
+        public static string[] ToIdentifiers(this JsonSchemaType schemaType)
         {
             var types = new List<string>();
             
