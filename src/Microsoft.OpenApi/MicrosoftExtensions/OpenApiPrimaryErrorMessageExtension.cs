@@ -43,7 +43,7 @@ public class OpenApiPrimaryErrorMessageExtension : IOpenApiExtension
         if (source is not JsonNode rawObject) throw new ArgumentOutOfRangeException(nameof(source));
         return new()
         {
-            IsPrimaryErrorMessage = rawObject.GetValue<bool>()
+            IsPrimaryErrorMessage = rawObject.TryGetValue<bool>(out var value) && value
         };
     }
 }

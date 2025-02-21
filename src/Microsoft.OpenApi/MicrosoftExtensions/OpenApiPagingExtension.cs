@@ -75,19 +75,19 @@ public class OpenApiPagingExtension : IOpenApiExtension
     {
         if (source is not JsonObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
         var extension = new OpenApiPagingExtension();
-        if (rawObject.TryGetPropertyValue(nameof(NextLinkName).ToFirstCharacterLowerCase(), out var nextLinkName) && nextLinkName is JsonNode nextLinkNameStr)
+        if (rawObject.TryGetPropertyValue(nameof(NextLinkName).ToFirstCharacterLowerCase(), out var nextLinkName) && nextLinkName is JsonValue nextLinkNameValue && nextLinkNameValue.TryGetValue<string>(out var nextLinkNameStr))
         {
-            extension.NextLinkName = nextLinkNameStr.GetValue<string>();
+            extension.NextLinkName = nextLinkNameStr;
         }
 
-        if (rawObject.TryGetPropertyValue(nameof(OperationName).ToFirstCharacterLowerCase(), out var opName) && opName is JsonNode opNameStr)
+        if (rawObject.TryGetPropertyValue(nameof(OperationName).ToFirstCharacterLowerCase(), out var opName) && opName is JsonValue opNameValue && opNameValue.TryGetValue<string>(out var opNameStr))
         {
-            extension.OperationName = opNameStr.GetValue<string>();
+            extension.OperationName = opNameStr;
         }
 
-        if (rawObject.TryGetPropertyValue(nameof(ItemName).ToFirstCharacterLowerCase(), out var itemName) && itemName is JsonNode itemNameStr)
+        if (rawObject.TryGetPropertyValue(nameof(ItemName).ToFirstCharacterLowerCase(), out var itemName) && itemName is JsonValue itemNameValue && itemNameValue.TryGetValue<string>(out var itemNameStr))
         {
-            extension.ItemName = itemNameStr.GetValue<string>();
+            extension.ItemName = itemNameStr;
         }
 
         return extension;

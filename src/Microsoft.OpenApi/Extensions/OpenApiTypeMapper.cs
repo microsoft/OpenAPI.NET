@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 
@@ -19,13 +20,13 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string? ToIdentifier(this JsonSchemaType? schemaType)
+        public static string[]? ToIdentifiers(this JsonSchemaType? schemaType)
         {
             if (schemaType is null)
             {
                 return null;
             }
-            return schemaType.Value.ToIdentifier();
+            return schemaType.Value.ToIdentifiers();
         }
 
         /// <summary>
@@ -33,20 +34,47 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <param name="schemaType"></param>
         /// <returns></returns>
-        public static string? ToIdentifier(this JsonSchemaType schemaType)
+        public static string[] ToIdentifiers(this JsonSchemaType schemaType)
         {
-            return schemaType switch
-            {
-                JsonSchemaType.Null => "null",
-                JsonSchemaType.Boolean => "boolean",
-                JsonSchemaType.Integer => "integer",
-                JsonSchemaType.Number => "number",
-                JsonSchemaType.String => "string",
-                JsonSchemaType.Array => "array",
-                JsonSchemaType.Object => "object",
-                _ => null,
-            };
+            return schemaType.ToIdentifiersInternal().ToArray();
         }
+
+        private static readonly Dictionary<JsonSchemaType, string> allSchemaTypes = new()
+        {
+            { JsonSchemaType.Boolean, "boolean" },
+            { JsonSchemaType.Integer, "integer" },
+            { JsonSchemaType.Number, "number" },
+            { JsonSchemaType.String, "string" },
+            { JsonSchemaType.Object, "object" },
+            { JsonSchemaType.Array, "array" },
+            { JsonSchemaType.Null, "null" }
+        };
+
+        private static IEnumerable<string> ToIdentifiersInternal(this JsonSchemaType schemaType)
+        {
+            return allSchemaTypes.Where(kvp => schemaType.HasFlag(kvp.Key)).Select(static kvp => kvp.Value);
+        }
+
+        /// <summary>
+        /// Returns the first identifier from a string array.
+        /// </summary>
+        /// <param name="schemaType"></param>
+        /// <returns></returns>
+        internal static string ToFirstIdentifier(this JsonSchemaType schemaType)
+        {
+            return schemaType.ToIdentifiersInternal().First();
+        }
+
+        /// <summary>
+        /// Returns a single identifier from an array with only one item.
+        /// </summary>
+        /// <param name="schemaType"></param>
+        /// <returns></returns>
+        internal static string ToSingleIdentifier(this JsonSchemaType schemaType)
+        {
+            return schemaType.ToIdentifiersInternal().Single();
+        }
+
 #nullable restore
 
         /// <summary>
@@ -68,6 +96,26 @@ namespace Microsoft.OpenApi.Extensions
                 "file" => JsonSchemaType.String, // File is treated as string
                 _ => throw new OpenApiException(string.Format("Invalid schema type identifier: {0}", identifier))
             };
+        }
+
+        /// <summary>
+        /// Converts a schema type's identifier into the enum equivalent
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        public static JsonSchemaType? ToJsonSchemaType(this string[] identifier)
+        {
+            if (identifier == null)
+            {
+                return null;
+            }
+
+            JsonSchemaType type = 0;
+            foreach (var id in identifier)
+            {
+                type |= id.ToJsonSchemaType();
+            }
+            return type;
         }
 
         private static readonly Dictionary<Type, Func<OpenApiSchema>> _simpleTypeToOpenApiSchema = new()
@@ -141,7 +189,7 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// Maps an JsonSchema data type and format to a simple type.
+        /// Maps a JsonSchema data type and format to a simple type.
         /// </summary>
         /// <param name="schema">The OpenApi data type</param>
         /// <returns>The simple type</returns>
@@ -153,37 +201,36 @@ namespace Microsoft.OpenApi.Extensions
                 throw new ArgumentNullException(nameof(schema));
             }
 
-            var type = ((schema.Type & ~JsonSchemaType.Null).ToIdentifier(), schema.Format?.ToLowerInvariant(), schema.Type & JsonSchemaType.Null) switch
+            var type = (schema.Type, schema.Format?.ToLowerInvariant()) switch
             {
-                ("integer" or "number", "int32", JsonSchemaType.Null) => typeof(int?),
-                ("integer" or "number", "int64", JsonSchemaType.Null) => typeof(long?),
-                ("integer", null, JsonSchemaType.Null) => typeof(long?),
-                ("number", "float", JsonSchemaType.Null) => typeof(float?),
-                ("number", "double", JsonSchemaType.Null) => typeof(double?),
-                ("number", null, JsonSchemaType.Null) => typeof(double?),
-                ("number", "decimal", JsonSchemaType.Null) => typeof(decimal?),
-                ("string", "byte", JsonSchemaType.Null) => typeof(byte?),
-                ("string", "date-time", JsonSchemaType.Null) => typeof(DateTimeOffset?),
-                ("string", "uuid", JsonSchemaType.Null) => typeof(Guid?),
-                ("string", "char", JsonSchemaType.Null) => typeof(char?),
-                ("boolean", null, JsonSchemaType.Null) => typeof(bool?),
-                ("boolean", null, _) => typeof(bool),
+                (JsonSchemaType.Integer | JsonSchemaType.Null or JsonSchemaType.Number | JsonSchemaType.Null, "int32") => typeof(int?),
+                (JsonSchemaType.Integer | JsonSchemaType.Null or JsonSchemaType.Number | JsonSchemaType.Null, "int64") => typeof(long?),
+                (JsonSchemaType.Integer | JsonSchemaType.Null, null) => typeof(long?),
+                (JsonSchemaType.Number | JsonSchemaType.Null, "float") => typeof(float?),
+                (JsonSchemaType.Number | JsonSchemaType.Null, "double") => typeof(double?),
+                (JsonSchemaType.Number | JsonSchemaType.Null, null) => typeof(double?),
+                (JsonSchemaType.Number | JsonSchemaType.Null, "decimal") => typeof(decimal?),
+                (JsonSchemaType.String | JsonSchemaType.Null, "byte") => typeof(byte?),
+                (JsonSchemaType.String | JsonSchemaType.Null, "date-time") => typeof(DateTimeOffset?),
+                (JsonSchemaType.String | JsonSchemaType.Null, "uuid") => typeof(Guid?),
+                (JsonSchemaType.String | JsonSchemaType.Null, "char") => typeof(char?),
+                (JsonSchemaType.Boolean | JsonSchemaType.Null, null) => typeof(bool?),
+                (JsonSchemaType.Boolean, null) => typeof(bool),
                 // integer is technically not valid with format, but we must provide some compatibility
-                ("integer" or "number", "int32", _) => typeof(int),
-                ("integer" or "number", "int64", _) => typeof(long),
-                ("integer", null, _) => typeof(long),
-                ("number", "float", _) => typeof(float),
-                ("number", "double", _) => typeof(double),
-                ("number", "decimal", _) => typeof(decimal),
-                ("number", null, _) => typeof(double),
-                ("string", "byte", _) => typeof(byte),
-                ("string", "date-time", _) => typeof(DateTimeOffset),
-                ("string", "uuid", _) => typeof(Guid),
-                ("string", "duration", _) => typeof(TimeSpan),
-                ("string", "char", _) => typeof(char),
-                ("string", null, _) => typeof(string),
-                ("object", null, _) => typeof(object),
-                ("string", "uri", _) => typeof(Uri),
+                (JsonSchemaType.Integer or JsonSchemaType.Number, "int32") => typeof(int),
+                (JsonSchemaType.Integer or JsonSchemaType.Number, "int64") => typeof(long),
+                (JsonSchemaType.Integer, null) => typeof(long),
+                (JsonSchemaType.Number, "float") => typeof(float),
+                (JsonSchemaType.Number, "double") => typeof(double),
+                (JsonSchemaType.Number, "decimal") => typeof(decimal),
+                (JsonSchemaType.Number, null) => typeof(double),
+                (JsonSchemaType.String, "byte") => typeof(byte),
+                (JsonSchemaType.String, "date-time") => typeof(DateTimeOffset),
+                (JsonSchemaType.String, "uuid") => typeof(Guid),
+                (JsonSchemaType.String, "char") => typeof(char),
+                (JsonSchemaType.String, null) => typeof(string),
+                (JsonSchemaType.Object, null) => typeof(object),
+                (JsonSchemaType.String, "uri") => typeof(Uri),
                 _ => typeof(string),
             };
 

@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using System.Text.Json.Nodes;
+using System.Text.Json;
+using System.Globalization;
 
 namespace Microsoft.OpenApi.MicrosoftExtensions;
 
@@ -71,6 +73,35 @@ public class OpenApiDeprecationExtension : IOpenApiExtension
             writer.WriteEndObject();
         }
     }
+    private static readonly DateTimeStyles datesStyle = DateTimeStyles.AssumeUniversal | DateTimeStyles.RoundtripKind;
+    private static DateTimeOffset? GetDateTimeOffsetValue(string propertyName, JsonObject rawObject)
+    {
+        if (!rawObject.TryGetPropertyValue(propertyName.ToFirstCharacterLowerCase(), out var jsonNode) ||
+            jsonNode is not JsonValue jsonValue ||
+            jsonNode.GetValueKind() is not JsonValueKind.String)
+            return null;
+            
+        if (jsonValue.TryGetValue<string>(out var strValue) &&
+            DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, datesStyle, out var parsedValue))
+        {
+            return parsedValue;
+        }
+        if (jsonValue.TryGetValue<DateTimeOffset>(out var returnedDto))
+        {
+            return returnedDto;
+        }
+        if (jsonValue.TryGetValue<DateTime>(out var returnedDt))
+        {
+            return new DateTimeOffset(returnedDt, TimeSpan.FromHours(0));
+        }
+        #if NET6_0_OR_GREATER
+        if (jsonValue.TryGetValue<DateOnly>(out var returnedDo))
+        {
+            return new(returnedDo.Year, returnedDo.Month, returnedDo.Day, 0, 0, 0, TimeSpan.FromHours(0));
+        }
+        #endif
+        return null;
+    }
     /// <summary>
     /// Parses the <see cref="OpenApiAny"/> to <see cref="OpenApiDeprecationExtension"/>.
     /// </summary>
@@ -80,15 +111,15 @@ public class OpenApiDeprecationExtension : IOpenApiExtension
     public static OpenApiDeprecationExtension Parse(JsonNode source)
     {
         if (source is not JsonObject rawObject) throw new ArgumentOutOfRangeException(nameof(source));
-        var extension = new OpenApiDeprecationExtension();
-        if (rawObject.TryGetPropertyValue(nameof(RemovalDate).ToFirstCharacterLowerCase(), out var removalDate) && removalDate is JsonNode removalDateValue)
-            extension.RemovalDate = removalDateValue.GetValue<DateTimeOffset>();
-        if (rawObject.TryGetPropertyValue(nameof(Date).ToFirstCharacterLowerCase(), out var date) && date is JsonNode dateValue)
-            extension.Date = dateValue.GetValue<DateTimeOffset>();
-        if (rawObject.TryGetPropertyValue(nameof(Version).ToFirstCharacterLowerCase(), out var version) && version is JsonNode versionValue)
-            extension.Version = versionValue.GetValue<string>();
-        if (rawObject.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var description) && description is JsonNode descriptionValue)
-            extension.Description = descriptionValue.GetValue<string>();
+        var extension = new OpenApiDeprecationExtension
+        {
+            RemovalDate = GetDateTimeOffsetValue(nameof(RemovalDate), rawObject),
+            Date = GetDateTimeOffsetValue(nameof(Date), rawObject)
+        };
+        if (rawObject.TryGetPropertyValue(nameof(Version).ToFirstCharacterLowerCase(), out var version) && version is JsonValue versionValue && versionValue.TryGetValue<string>(out var versionStr))
+            extension.Version = versionStr;
+        if (rawObject.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var description) && description is JsonValue descriptionValue && descriptionValue.TryGetValue<string>(out var descriptionStr))
+            extension.Description = descriptionStr;
         return extension;
     }
 }

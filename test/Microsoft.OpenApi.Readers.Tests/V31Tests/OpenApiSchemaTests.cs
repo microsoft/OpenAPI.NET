@@ -9,11 +9,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using Microsoft.OpenApi.Exceptions;
+using System;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -31,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
         public OpenApiSchemaTests()
         {
-           OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
+            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
         }
 
         [Fact]
@@ -68,6 +71,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "veggieName",
                             "veggieLike"
                         },
+                        DependentRequired = new Dictionary<string, ISet<string>>
+                        {
+                            { "veggieType", new HashSet<string> { "veggieColor", "veggieSize" } }
+                        },
                         Properties = new Dictionary<string, IOpenApiSchema>
                         {
                             ["veggieName"] = new OpenApiSchema
@@ -79,6 +86,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Type = JsonSchemaType.Boolean,
                                 Description = "Do I like this vegetable?"
+                            },
+                            ["veggieType"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The type of vegetable (e.g., root, leafy, etc.)."
+                            },
+                            ["veggieColor"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The color of the vegetable."
+                            },
+                            ["veggieSize"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The size of the vegetable."
                             }
                         }
                     }
@@ -298,8 +320,8 @@ examples:
             clone.Default = 6;
 
             // Assert
-            Assert.Equivalent(new int[] {1, 2, 3, 4}, clone.Enum.Select(static x => x.GetValue<int>()).ToArray());
-            Assert.Equivalent(new int[] {2, 3, 4}, clone.Examples.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(new int[] { 1, 2, 3, 4 }, clone.Enum.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(new int[] { 2, 3, 4 }, clone.Examples.Select(static x => x.GetValue<int>()).ToArray());
             Assert.Equivalent(6, clone.Default.GetValue<int>());
         }
 
@@ -398,7 +420,7 @@ nullable: true";
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
             var schemaString = writer.ToString();
 
-            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral()); 
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Theory]
@@ -506,7 +528,7 @@ description: Schema for a person object
         }
 
         [Fact]
-        public void ParseSchemaWithUnrecognizedKeywordsWorks() 
+        public void ParseSchemaWithUnrecognizedKeywordsWorks()
         {
             var input = @"{
     ""type"": ""string"",
@@ -520,5 +542,46 @@ description: Schema for a person object
             Assert.Equal(2, schema.UnrecognizedKeywords.Count);
         }
 
+        [Theory]
+        [InlineData(JsonSchemaType.Integer | JsonSchemaType.String, new[] { "integer", "string" })]
+        [InlineData(JsonSchemaType.Integer | JsonSchemaType.Null, new[] { "integer", "null" })]
+        [InlineData(JsonSchemaType.Integer, new[] { "integer" })]
+        public void NormalizeFlaggableJsonSchemaTypeEnumWorks(JsonSchemaType type, string[] expected)
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = type
+            };
+
+            var actual = schema.Type.ToIdentifiers();
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(new[] { "integer", "string" }, JsonSchemaType.Integer | JsonSchemaType.String)]
+        [InlineData(new[] { "integer", "null" }, JsonSchemaType.Integer | JsonSchemaType.Null)]
+        [InlineData(new[] { "integer" }, JsonSchemaType.Integer)]
+        public void ArrayIdentifierToEnumConversionWorks(string[] type, JsonSchemaType expected)
+        {
+            var actual = type.ToJsonSchemaType();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void StringIdentifierToEnumConversionWorks()
+        {
+            var actual = "integer".ToJsonSchemaType();
+            Assert.Equal(JsonSchemaType.Integer, actual);
+        }
+
+        [Fact]
+        public void ReturnSingleIdentifierWorks()
+        {
+            var type = JsonSchemaType.Integer;
+            var types = JsonSchemaType.Integer | JsonSchemaType.Null;
+
+            Assert.Equal("integer", type.ToSingleIdentifier());
+            Assert.Throws<InvalidOperationException>(() => types.ToSingleIdentifier());
+        }
     }
 }

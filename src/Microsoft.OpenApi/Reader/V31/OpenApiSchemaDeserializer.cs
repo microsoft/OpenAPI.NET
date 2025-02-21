@@ -357,6 +357,13 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 }
             },
+            {
+                "dependentRequired",
+                (o, n, doc) =>
+                {
+                    o.DependentRequired = n.CreateArrayMap((n2, p) => n2.GetScalarValue(), doc);
+                }
+            },
         };
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new()

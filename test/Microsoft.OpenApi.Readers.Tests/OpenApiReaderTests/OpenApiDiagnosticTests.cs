@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Threading;
 using System.Threading.Tasks;
 using System;
 using Microsoft.OpenApi.Models;
@@ -64,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             return null;
         }
 
-        public Task<Stream> LoadAsync(Uri uri)
+        public Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
         {
             var path = new Uri(new("http://example.org/OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/"), uri).AbsolutePath;
             path = path[1..]; // remove leading slash

@@ -96,15 +96,15 @@ public class EnumDescription : IOpenApiElement
     public EnumDescription(JsonObject source)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
-        if (source.TryGetPropertyValue(nameof(Value).ToFirstCharacterLowerCase(), out var rawValue) && rawValue is JsonNode value)
-            if (value.GetValueKind() == JsonValueKind.Number)
-                Value = value.GetValue<decimal>().ToString(CultureInfo.InvariantCulture);
-            else
-                Value = value.GetValue<string>();
-        if (source.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var rawDescription) && rawDescription is JsonNode description)
-            Description = description.GetValue<string>();
-        if (source.TryGetPropertyValue(nameof(Name).ToFirstCharacterLowerCase(), out var rawName) && rawName is JsonNode name)
-            Name = name.GetValue<string>();
+        if (source.TryGetPropertyValue(nameof(Value).ToFirstCharacterLowerCase(), out var rawValue) && rawValue is JsonValue value)
+            if (value.GetValueKind() == JsonValueKind.Number && value.TryGetValue<decimal>(out var decimalValue))
+                Value = decimalValue.ToString(CultureInfo.InvariantCulture);
+            else if (value.TryGetValue<string>(out var stringValue))
+                Value = stringValue;
+        if (source.TryGetPropertyValue(nameof(Description).ToFirstCharacterLowerCase(), out var rawDescription) && rawDescription is JsonValue description && description.TryGetValue<string>(out var stringValueDescription))
+            Description = stringValueDescription;
+        if (source.TryGetPropertyValue(nameof(Name).ToFirstCharacterLowerCase(), out var rawName) && rawName is JsonValue name && name.TryGetValue<string>(out var stringValueName))
+            Name = stringValueName;
     }
     /// <summary>
     /// The description for the enum symbol

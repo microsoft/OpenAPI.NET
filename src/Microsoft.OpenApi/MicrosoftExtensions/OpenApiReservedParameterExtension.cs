@@ -45,7 +45,7 @@ public class OpenApiReservedParameterExtension : IOpenApiExtension
         if (source is not JsonNode rawBoolean) throw new ArgumentOutOfRangeException(nameof(source));
         return new()
         {
-            IsReserved = rawBoolean.GetValue<bool>()
+            IsReserved = rawBoolean.TryGetValue<bool>(out var value) && value
         };
     }
 }

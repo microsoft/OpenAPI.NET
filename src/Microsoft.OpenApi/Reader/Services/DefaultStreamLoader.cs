@@ -4,6 +4,8 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -27,28 +29,29 @@ namespace Microsoft.OpenApi.Reader.Services
             this.baseUrl = baseUrl;
         }
 
-        /// <summary>
-        /// Use Uri to locate data and convert into an input object.
-        /// </summary>
-        /// <param name="uri">Identifier of some source of an OpenAPI Description</param>
-        /// <returns>A data object that can be processed by a reader to generate an <see cref="OpenApiDocument"/></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public async Task<Stream> LoadAsync(Uri uri)
+        /// <inheritdoc/>
+        public async Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
         {
-            Uri absoluteUri;
-            absoluteUri = baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) ? new Uri(Directory.GetCurrentDirectory() + uri) 
-                : new Uri(baseUrl, uri);
-
-            switch (absoluteUri.Scheme)
+            var absoluteUri = (baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri), baseUrl.IsAbsoluteUri, uri.IsAbsoluteUri) switch
             {
-                case "file":
-                    return File.OpenRead(absoluteUri.AbsolutePath);
-                case "http":
-                case "https":
-                    return await _httpClient.GetStreamAsync(absoluteUri);
-                default:
-                    throw new ArgumentException("Unsupported scheme");
-            }
+                (true, _, _) => new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())),
+                // this overcomes a URI concatenation issue for local paths on linux OSes
+                (_, true, false) when baseUrl.Scheme.Equals("file", StringComparison.OrdinalIgnoreCase) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) =>
+                    new Uri(Path.Combine(baseUrl.AbsoluteUri, uri.ToString())),
+                (_, _, _) => new Uri(baseUrl, uri),
+            };
+
+            return absoluteUri.Scheme switch
+            {
+                "file" => File.OpenRead(absoluteUri.AbsolutePath),
+                "http" or "https" =>
+#if NET5_0_OR_GREATER
+                    await _httpClient.GetStreamAsync(absoluteUri, cancellationToken).ConfigureAwait(false),
+#else
+                    await _httpClient.GetStreamAsync(absoluteUri).ConfigureAwait(false),
+#endif
+                _ => throw new ArgumentException("Unsupported scheme"),
+            };
         }
     }
 }
