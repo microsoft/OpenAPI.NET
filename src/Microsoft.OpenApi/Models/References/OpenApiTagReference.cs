@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string? Name { get => Target?.Name; }
         /// <inheritdoc/>
-        public override IOpenApiTag? CopyReferenceAsTargetElementWithOverrides(IOpenApiTag? source)
+        public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
         {
             return source is OpenApiTag ? new OpenApiTag(this) : source;
         }

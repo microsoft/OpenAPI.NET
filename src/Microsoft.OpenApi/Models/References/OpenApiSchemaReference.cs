@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Models.References
 
         }
         /// <inheritdoc/>
-        public override IOpenApiSchema? CopyReferenceAsTargetElementWithOverrides(IOpenApiSchema? source)
+        public override IOpenApiSchema CopyReferenceAsTargetElementWithOverrides(IOpenApiSchema source)
         {
             return source is OpenApiSchema ? new OpenApiSchema(this) : source;
         }

@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models.References
         public SecuritySchemeType? Type { get => Target?.Type; }
 
         /// <inheritdoc/>
-        public override IOpenApiSecurityScheme? CopyReferenceAsTargetElementWithOverrides(IOpenApiSecurityScheme? source)
+        public override IOpenApiSecurityScheme CopyReferenceAsTargetElementWithOverrides(IOpenApiSecurityScheme source)
         {
             return source is OpenApiSecurityScheme ? new OpenApiSecurityScheme(this) : source;
         }

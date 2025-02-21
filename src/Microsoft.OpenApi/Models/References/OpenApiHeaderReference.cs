@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public override IOpenApiHeader? CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader? source)
+        public override IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader source)
         {
             return source is OpenApiHeader ? new OpenApiHeader(this) : source;
         }

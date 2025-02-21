@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public override IOpenApiPathItem? CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem? source)
+        public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)
         {
             return source is OpenApiPathItem ? new OpenApiPathItem(this) : source;
         }

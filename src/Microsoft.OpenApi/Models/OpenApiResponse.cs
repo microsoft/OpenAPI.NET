@@ -101,11 +101,7 @@ namespace Microsoft.OpenApi.Models
             // description
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
-            Dictionary<string, IOpenApiExtension>? extensionsClone = null;
-            if (Extensions is not null)
-            {
-                extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
-            }            
+            var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
 
             if (Content != null)
             {
@@ -139,7 +135,7 @@ namespace Microsoft.OpenApi.Models
                         writer.WriteStartObject();
 
                         foreach (var example in Content
-                            .Where(mediaTypePair => mediaTypePair.Value.Examples != null && mediaTypePair.Value.Examples.Any())
+                            .Where(mediaTypePair => mediaTypePair.Value.Examples is not null && mediaTypePair.Value.Examples.Any())
                             .SelectMany(mediaTypePair => mediaTypePair.Value.Examples!))
                         {
                             writer.WritePropertyName(example.Key);

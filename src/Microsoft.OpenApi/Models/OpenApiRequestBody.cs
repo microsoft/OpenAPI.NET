@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Models
                 Extensions = Extensions?.ToDictionary(static k => k.Key, static v => v.Value)
             };
             // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
-            if (bodyParameter.Extensions != null && bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyNameExtension))
+            if (bodyParameter.Extensions is not null && bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyNameExtension))
             {
                 var bodyName = bodyNameExtension as OpenApiAny;
                 bodyParameter.Name = string.IsNullOrEmpty(bodyName?.Node?.ToString()) ? "body" : bodyName?.Node?.ToString();
@@ -138,15 +138,14 @@ namespace Microsoft.OpenApi.Models
                                                   // we have a copy of a reference but don't want to mutate the source schema
                                                   // TODO might need recursive resolution of references here
                             OpenApiSchemaReference r when r.Target is not null => (OpenApiSchema)r.Target.CreateShallowCopy(),
-                            OpenApiSchemaReference r2 when r.Target is null => throw new InvalidOperationException("Unresolved reference target"),
+                            OpenApiSchemaReference r2 when r2.Target is null => throw new InvalidOperationException("Unresolved reference target"),
                             _ => throw new InvalidOperationException("Unexpected schema type")
                         };
-                        if (updatedSchema is not null)
-                        {
-                            updatedSchema.Type = "file".ToJsonSchemaType();
-                            updatedSchema.Format = null;
-                            paramSchema = updatedSchema;
-                        }                        
+                        
+                        updatedSchema.Type = "file".ToJsonSchemaType();
+                        updatedSchema.Format = null;
+                        paramSchema = updatedSchema;
+                        
                     }
                     yield return new OpenApiFormDataParameter()
                     {

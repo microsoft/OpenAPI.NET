@@ -25,7 +25,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, V> source)
     {
         Utils.CheckArgumentNull(source);
-        Reference = source.Reference != null ? new(source.Reference) : null;
+        Reference = new(source.Reference);
         //no need to copy summary and description as if they are not overridden, they will be fetched from the target
         //if they are, the reference copy will handle it
     }
@@ -57,9 +57,9 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public bool UnresolvedReference { get => Reference is null || Target is null; }
     /// <inheritdoc/>
-    public OpenApiReference? Reference { get; init; }
+    public OpenApiReference Reference { get; init; }
     /// <inheritdoc/>
-    public abstract V? CopyReferenceAsTargetElementWithOverrides(V? source);
+    public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
     /// <inheritdoc/>
     public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
@@ -82,7 +82,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         }
         else
         {
-            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element)?.SerializeAsV31(writer));
+            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV31(writer));
         }
     }
 
@@ -106,9 +106,12 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <param name="writer">The OpenApiWriter.</param>
     /// <param name="action">The action to serialize the target object.</param>
     private protected void SerializeInternal(IOpenApiWriter writer,
-        Action<IOpenApiWriter, V?> action)
+        Action<IOpenApiWriter, V> action)
     {
         Utils.CheckArgumentNull(writer);
-        action(writer, Target);
+        if (Target is not null)
+        {
+            action(writer, Target);
+        }
     }
 }

@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override IOpenApiLink? CopyReferenceAsTargetElementWithOverrides(IOpenApiLink? source)
+        public override IOpenApiLink CopyReferenceAsTargetElementWithOverrides(IOpenApiLink source)
         {
             return source is OpenApiLink ? new OpenApiLink(this) : source;
         }

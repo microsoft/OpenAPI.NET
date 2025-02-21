@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public override IOpenApiRequestBody? CopyReferenceAsTargetElementWithOverrides(IOpenApiRequestBody? source)
+        public override IOpenApiRequestBody CopyReferenceAsTargetElementWithOverrides(IOpenApiRequestBody source)
         {
             return source is OpenApiRequestBody ? new OpenApiRequestBody(this) : source;
         }

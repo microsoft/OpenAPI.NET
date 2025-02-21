@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Reader.V3
         /// <param name="type">The type of object referenced based on the context of the reference</param>
         /// <param name="summary"></param>
         /// <param name="description"></param>
-        public OpenApiReference ConvertToOpenApiReference(
+        public OpenApiReference? ConvertToOpenApiReference(
             string reference,
             ReferenceType? type,
             string? summary = null,
@@ -112,6 +112,7 @@ namespace Microsoft.OpenApi.Reader.V3
                         catch (OpenApiException ex)
                         {
                             Diagnostic.Errors.Add(new(ex));
+                            return null;
                         }
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier

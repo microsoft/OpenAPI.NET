@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Models.References
         public JsonNode? Value { get => Target?.Value; }
 
         /// <inheritdoc/>
-        public override IOpenApiExample? CopyReferenceAsTargetElementWithOverrides(IOpenApiExample? source)
+        public override IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)
         {
             return source is OpenApiExample ? new OpenApiExample(this) : source;
         }
