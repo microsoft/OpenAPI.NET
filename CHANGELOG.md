@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.0-preview9](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview8...v2.0.0-preview9) (2025-02-21)
+
+
+### Features
+
+* add support for dependentRequired ([75d7a66](https://github.com/microsoft/OpenAPI.NET/commit/75d7a662fc873566e50191127e4082b4ecf5ca7a))
+
+
+### Bug Fixes
+
+* an issue where deprecation extension parsing would fail ([5db8757](https://github.com/microsoft/OpenAPI.NET/commit/5db8757df642dbe651552ce4a7c740e94474eafc))
+* an issue where deprecation extension parsing would fail ([b59864c](https://github.com/microsoft/OpenAPI.NET/commit/b59864c2387c9410e71b0caa8d439e7f122ddc24))
+* refactor ToIdentifier() to normalize flaggable enums ([#2156](https://github.com/microsoft/OpenAPI.NET/issues/2156)) ([b80e934](https://github.com/microsoft/OpenAPI.NET/commit/b80e9342018cf136cc54b900bb95832a6867e982))
+
 ## [2.0.0-preview8](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview7...v2.0.0-preview8) (2025-02-17)
 
 
