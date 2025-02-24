@@ -20,14 +20,14 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        protected OpenApiExtensibleDictionary():this(null) { }
+        protected OpenApiExtensibleDictionary():this([]) { }
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiExtensibleDictionary{T}"/> class.
         /// </summary>
         /// <param name="dictionary">The generic dictionary.</param>
         /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
         protected OpenApiExtensibleDictionary(
-            Dictionary<string, T>? dictionary,
+            Dictionary<string, T> dictionary,
             IDictionary<string, IOpenApiExtension>? extensions = null) : base(dictionary is null ? [] : dictionary)
         {
             Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : [];

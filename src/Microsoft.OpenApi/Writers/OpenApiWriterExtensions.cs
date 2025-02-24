@@ -321,7 +321,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalMap(
             this IOpenApiWriter writer,
             string name,
-            IDictionary<string, ISet<string>> elements,
+            IDictionary<string, ISet<string>>? elements,
             Action<IOpenApiWriter, ISet<string>> action)
         {
             if (elements != null && elements.Any())

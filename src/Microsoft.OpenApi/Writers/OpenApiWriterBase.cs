@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
@@ -229,7 +230,7 @@ namespace Microsoft.OpenApi.Writers
         /// Write object value.
         /// </summary>
         /// <param name="value">The object value.</param>
-        public virtual void WriteValue(object value)
+        public virtual void WriteValue(object? value)
         {
             if (value == null)
             {

@@ -265,7 +265,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     if (n is ValueNode)
                     {
-                         var value = n.GetScalarValue();
+                        var value = n.GetScalarValue();
                         if (value is not null)
                         {
                             o.AdditionalPropertiesAllowed = bool.Parse(value);

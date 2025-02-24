@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, object>? Annotations { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, ISet<string>> DependentRequired { get; set; } = new Dictionary<string, ISet<string>>();
+        public IDictionary<string, ISet<string>>? DependentRequired { get; set; } = new Dictionary<string, ISet<string>>();
 
         /// <summary>
         /// Parameterless constructor
