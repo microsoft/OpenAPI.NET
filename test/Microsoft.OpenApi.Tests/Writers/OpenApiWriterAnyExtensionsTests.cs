@@ -164,7 +164,10 @@ namespace Microsoft.OpenApi.Tests.Writers
         [MemberData(nameof(StringifiedDateTimes))]
         public async Task WriteOpenApiDateTimeAsJsonWorksAsync(string inputString, bool produceTerseOutput)
         {
-            var json = await WriteAsJsonAsync(inputString, produceTerseOutput);
+            // Arrange
+            var dateTimeValue = JsonValue.Create(inputString);
+
+            var json = await WriteAsJsonAsync(dateTimeValue, produceTerseOutput);
             var expectedJson = "\"" + inputString + "\"";
 
             // Assert

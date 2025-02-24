@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
@@ -68,13 +66,13 @@ namespace Microsoft.OpenApi.Writers
                     writer.WriteObject(node as JsonObject);
                     break;
                 case JsonValueKind.String: // Primitive
-                    writer.WriteValue(node.GetValue<string>());
+                    writer.WritePrimitive(node.AsValue());
                     break;
                 case JsonValueKind.Number: // Primitive
-                    writer.WriteNumber(node);
+                    writer.WritePrimitive(node.AsValue());
                     break;
                 case JsonValueKind.True or JsonValueKind.False: // Primitive
-                    writer.WriteValue(node.GetValue<bool>());
+                    writer.WritePrimitive(node.AsValue());
                     break;
                 case JsonValueKind.Null: // null
                     writer.WriteNull();
@@ -109,31 +107,23 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-        private static void WriteNumber(this IOpenApiWriter writer, JsonNode number)
+        private static void WritePrimitive(this IOpenApiWriter writer, JsonValue jsonValue)
         {
-            if (number is JsonValue jsonValue)
-            {
-                if (jsonValue.TryGetValue<decimal>(out var decimalValue))
-                {
-                    writer.WriteValue(decimalValue);
-                }
-                else if (jsonValue.TryGetValue<double>(out var doubleValue))
-                {
-                    writer.WriteValue(doubleValue);
-                }
-                else if (jsonValue.TryGetValue<float>(out var floatValue))
-                {
-                    writer.WriteValue(floatValue);
-                }
-                else if (jsonValue.TryGetValue<long>(out var longValue))
-                {
-                    writer.WriteValue(longValue);
-                }
-                else if (jsonValue.TryGetValue<int>(out var intValue))
-                {
-                    writer.WriteValue(intValue);
-                }
-            }
+            if (jsonValue.TryGetValue(out string stringValue))
+                writer.WriteValue(stringValue);
+            else if (jsonValue.TryGetValue(out bool boolValue)) 
+                writer.WriteValue(boolValue);
+            // write number values
+            else if (jsonValue.TryGetValue(out decimal decimalValue))
+                writer.WriteValue(decimalValue);
+            else if (jsonValue.TryGetValue(out double doubleValue))
+                writer.WriteValue(doubleValue);
+            else if (jsonValue.TryGetValue(out float floatValue))
+                writer.WriteValue(floatValue);
+            else if (jsonValue.TryGetValue(out long longValue))
+                writer.WriteValue(longValue);
+            else if (jsonValue.TryGetValue(out int intValue))
+                writer.WriteValue(intValue);
         }
     }
 }
