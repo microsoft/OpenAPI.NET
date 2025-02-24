@@ -155,6 +155,9 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, object> Annotations { get => Target?.Annotations; }
 
         /// <inheritdoc/>
+        public IDictionary<string, ISet<string>> DependentRequired { get => Target?.DependentRequired; }
+
+        /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV3(w));
