@@ -40,12 +40,6 @@ namespace Microsoft.OpenApi.Hidi
 {
     internal static class OpenApiService
     {
-        static OpenApiService()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
-        }
-
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
@@ -394,6 +388,9 @@ namespace Microsoft.OpenApi.Hidi
                         new(openApiFile) :
                         new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 };
+                var yamlReader = new OpenApiYamlReader();
+                settings.Readers.Add(OpenApiConstants.Yaml, yamlReader);
+                settings.Readers.Add(OpenApiConstants.Yml, yamlReader);
 
                 result = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: cancellationToken).ConfigureAwait(false);
 

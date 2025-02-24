@@ -211,9 +211,6 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         internal async Task ParseDocumentAsync()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
-
             Stream stream = null;
             try
             {
@@ -238,6 +235,9 @@ namespace Microsoft.OpenApi.Workbench
                 {
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 };
+                var yamlReader = new OpenApiYamlReader();
+                settings.Readers.Add(OpenApiConstants.Yaml, yamlReader);
+                settings.Readers.Add(OpenApiConstants.Yml, yamlReader);
                 if (ResolveExternal && !string.IsNullOrWhiteSpace(_inputFile))
                 {
                     settings.BaseUrl = _inputFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? new(_inputFile) 

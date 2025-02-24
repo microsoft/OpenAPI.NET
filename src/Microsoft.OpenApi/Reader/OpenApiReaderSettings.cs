@@ -17,6 +17,10 @@ namespace Microsoft.OpenApi.Reader
     public class OpenApiReaderSettings
     {
         /// <summary>
+        /// Readers to use to parse the OpenAPI document
+        /// </summary>
+        public Dictionary<string, IOpenApiReader> Readers { get; init; } = new Dictionary<string, IOpenApiReader>(StringComparer.OrdinalIgnoreCase);
+        /// <summary>
         /// When external references are found, load them into a shared workspace
         /// </summary>
         public bool LoadExternalRefs { get; set; } = false;

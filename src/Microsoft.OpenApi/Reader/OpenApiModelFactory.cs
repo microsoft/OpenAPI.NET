@@ -23,11 +23,6 @@ namespace Microsoft.OpenApi.Reader
     {
         private static readonly HttpClient _httpClient = new();
 
-        static OpenApiModelFactory()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Json, new OpenApiJsonReader());
-        }
-
         /// <summary>
         /// Loads the input stream and parses it into an Open API document.
         /// </summary>
@@ -45,6 +40,7 @@ namespace Microsoft.OpenApi.Reader
             if (stream is null) throw new ArgumentNullException(nameof(stream));
 #endif
             settings ??= new OpenApiReaderSettings();
+            settings.Readers.TryAdd(OpenApiConstants.Json, new OpenApiJsonReader());
 
             // Get the format of the stream if not provided
             format ??= InspectStreamFormat(stream);
@@ -73,7 +69,7 @@ namespace Microsoft.OpenApi.Reader
         public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             format ??= InspectStreamFormat(input);
-            return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
+            return settings.Readers[format].ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
         }
 
         /// <summary>
@@ -122,6 +118,7 @@ namespace Microsoft.OpenApi.Reader
             if (input is null) throw new ArgumentNullException(nameof(input));
 #endif
             settings ??= new OpenApiReaderSettings();
+            settings.Readers.TryAdd(OpenApiConstants.Json, new OpenApiJsonReader());
 
             Stream preparedStream;
             if (format is null)
@@ -204,6 +201,7 @@ namespace Microsoft.OpenApi.Reader
 #endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
+            settings.Readers.TryAdd(OpenApiConstants.Json, new OpenApiJsonReader());
 
             // Copy string into MemoryStream
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
@@ -235,6 +233,7 @@ namespace Microsoft.OpenApi.Reader
 #endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
+            settings.Readers.TryAdd(OpenApiConstants.Json, new OpenApiJsonReader());
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
             return Load<T>(stream, version, format, openApiDocument, out diagnostic, settings);
         }
@@ -243,7 +242,7 @@ namespace Microsoft.OpenApi.Reader
 
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
-            var reader = OpenApiReaderRegistry.GetReader(format);
+            var reader = settings.Readers[format];
             var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
 
             if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
@@ -283,7 +282,7 @@ namespace Microsoft.OpenApi.Reader
                 throw new ArgumentException($"Cannot parse the stream: {nameof(input)} is empty or contains no elements.");
             }
 
-            var reader = OpenApiReaderRegistry.GetReader(format);
+            var reader = settings.Readers[format];
             var readResult = reader.Read(input, settings);
             return readResult;
         }
