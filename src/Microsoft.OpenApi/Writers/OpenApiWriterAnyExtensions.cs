@@ -117,6 +117,10 @@ namespace Microsoft.OpenApi.Writers
                 writer.WriteValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)); // ISO 8601 format
             else if (jsonValue.TryGetValue(out DateTimeOffset dateTimeOffsetValue))
                 writer.WriteValue(dateTimeOffsetValue.ToString("o", CultureInfo.InvariantCulture));
+#if NET6_0_OR_GREATER
+            else if (jsonValue.TryGetValue(out DateOnly dateOnlyValue))
+                writer.WriteValue(dateOnlyValue.ToString("o", CultureInfo.InvariantCulture));
+#endif
             else if (jsonValue.TryGetValue(out bool boolValue)) 
                 writer.WriteValue(boolValue);
             // write number values
