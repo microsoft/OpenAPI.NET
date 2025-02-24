@@ -165,10 +165,10 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiDateTimeAsJsonWorksAsync(string inputString, bool produceTerseOutput)
         {
             // Arrange
-            var dateTimeValue = JsonValue.Create(inputString);
+            var input = DateTimeOffset.Parse(inputString, CultureInfo.InvariantCulture);
 
-            var json = await WriteAsJsonAsync(dateTimeValue, produceTerseOutput);
-            var expectedJson = "\"" + inputString + "\"";
+            var json = await WriteAsJsonAsync(input, produceTerseOutput);
+            var expectedJson = "\"" + input.ToString("o") + "\"";
 
             // Assert
             Assert.Equal(expectedJson, json);
