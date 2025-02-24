@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
@@ -111,6 +113,10 @@ namespace Microsoft.OpenApi.Writers
         {
             if (jsonValue.TryGetValue(out string stringValue))
                 writer.WriteValue(stringValue);
+            else if (jsonValue.TryGetValue(out DateTime dateTimeValue))
+                writer.WriteValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)); // ISO 8601 format
+            else if (jsonValue.TryGetValue(out DateTimeOffset dateTimeOffsetValue))
+                writer.WriteValue(dateTimeOffsetValue.ToString("o", CultureInfo.InvariantCulture));
             else if (jsonValue.TryGetValue(out bool boolValue)) 
                 writer.WriteValue(boolValue);
             // write number values
