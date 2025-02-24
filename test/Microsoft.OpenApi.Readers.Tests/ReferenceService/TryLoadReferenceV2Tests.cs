@@ -16,12 +16,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
     public class TryLoadReferenceV2Tests
     {
         private const string SampleFolderPath = "ReferenceService/Samples/";
-
-        public TryLoadReferenceV2Tests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task LoadParameterReference()
         {

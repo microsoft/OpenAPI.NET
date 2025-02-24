@@ -32,11 +32,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             return new MemoryStream(fileBytes);
         }
 
-        public OpenApiSchemaTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task ParseBasicV31SchemaShouldSucceed()
         {

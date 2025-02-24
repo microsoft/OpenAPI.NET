@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.MicrosoftExtensions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.OpenApi.Reader
@@ -16,6 +17,13 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     public class OpenApiReaderSettings
     {
+        /// <summary>
+        /// Adds a reader for the specified format
+        /// </summary>
+        public void AddJsonReader()
+        {
+            Readers.Add(OpenApiConstants.Json, new OpenApiJsonReader());
+        }
         /// <summary>
         /// Readers to use to parse the OpenAPI document
         /// </summary>

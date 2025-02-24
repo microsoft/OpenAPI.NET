@@ -28,11 +28,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
         private const string codacyApi = "https://api.codacy.com/api/api-docs/swagger.yaml";
 
-        public OpenApiDocumentTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         private static async Task<T> CloneAsync<T>(T element) where T : class, IOpenApiSerializable
         {
             using var stream = new MemoryStream();

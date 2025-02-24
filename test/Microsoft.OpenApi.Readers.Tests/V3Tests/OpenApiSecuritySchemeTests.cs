@@ -14,11 +14,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiSecuritySchemeTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiSecurityScheme/";
-        public OpenApiSecuritySchemeTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task ParseHttpSecuritySchemeShouldSucceed()
         {

@@ -132,7 +132,6 @@ components:
 
         public OpenApiCallbackReferenceTests()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
             OpenApiDocument openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).Document;
             OpenApiDocument openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).Document;
             openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", openApiDoc_2.BaseUri);

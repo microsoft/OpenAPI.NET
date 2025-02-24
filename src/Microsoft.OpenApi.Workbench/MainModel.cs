@@ -235,9 +235,7 @@ namespace Microsoft.OpenApi.Workbench
                 {
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 };
-                var yamlReader = new OpenApiYamlReader();
-                settings.Readers.Add(OpenApiConstants.Yaml, yamlReader);
-                settings.Readers.Add(OpenApiConstants.Yml, yamlReader);
+                settings.AddYamlReader();
                 if (ResolveExternal && !string.IsNullOrWhiteSpace(_inputFile))
                 {
                     settings.BaseUrl = _inputFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? new(_inputFile) 

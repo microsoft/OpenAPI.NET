@@ -12,11 +12,6 @@ namespace Microsoft.OpenApi.Tests
 {
     public class ParseNodeTests
     {
-        public ParseNodeTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public void BrokenSimpleList()
         {

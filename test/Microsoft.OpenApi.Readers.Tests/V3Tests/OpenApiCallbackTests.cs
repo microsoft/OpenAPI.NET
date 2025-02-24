@@ -16,11 +16,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiCallbackTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiCallback/";
-        public OpenApiCallbackTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task ParseBasicCallbackShouldSucceed()
         {

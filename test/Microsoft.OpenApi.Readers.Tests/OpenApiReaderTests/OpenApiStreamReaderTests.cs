@@ -15,11 +15,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
 
-        public OpenApiStreamReaderTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task StreamShouldCloseIfLeaveStreamOpenSettingEqualsFalse()
         {

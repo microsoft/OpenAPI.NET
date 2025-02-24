@@ -15,11 +15,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
     [Collection("DefaultSettings")]
     public class OpenApiDiagnosticTests
     {
-        public OpenApiDiagnosticTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task DetectedSpecificationVersionShouldBeV2_0()
         {

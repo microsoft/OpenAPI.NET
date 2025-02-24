@@ -388,9 +388,7 @@ namespace Microsoft.OpenApi.Hidi
                         new(openApiFile) :
                         new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 };
-                var yamlReader = new OpenApiYamlReader();
-                settings.Readers.Add(OpenApiConstants.Yaml, yamlReader);
-                settings.Readers.Add(OpenApiConstants.Yml, yamlReader);
+                settings.AddYamlReader();
 
                 result = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: cancellationToken).ConfigureAwait(false);
 
