@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Models
         /// The element type referenced.
         /// </summary>
         /// <remarks>This must be present if <see cref="ExternalResource"/> is not present.</remarks>
-        public ReferenceType? Type { get; init; }
+        public ReferenceType Type { get; init; }
 
         /// <summary>
         /// The identifier of the reusable component of one particular ReferenceType.
@@ -83,11 +83,6 @@ namespace Microsoft.OpenApi.Models
                     return GetExternalReferenceV3();
                 }
 
-                if (!Type.HasValue)
-                {
-                    throw new ArgumentNullException(nameof(Type));
-                }
-
                 if (Type == ReferenceType.Tag)
                 {
                     return Id;
@@ -102,7 +97,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/components/" + Type.Value.GetDisplayName() + "/" + Id;
+                return "#/components/" + Type.GetDisplayName() + "/" + Id;
             }
         }
 
@@ -118,11 +113,6 @@ namespace Microsoft.OpenApi.Models
                     return GetExternalReferenceV2();
                 }
 
-                if (!Type.HasValue)
-                {
-                    throw new ArgumentNullException(nameof(Type));
-                }
-
                 if (Type == ReferenceType.Tag)
                 {
                     return Id;
@@ -133,7 +123,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/" + GetReferenceTypeNameAsV2(Type.Value) + "/" + Id;
+                return "#/" + GetReferenceTypeNameAsV2(Type) + "/" + Id;
             }
         }
 
@@ -246,10 +236,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                if (Type.HasValue)
-                {
-                    return ExternalResource + "#/components/" + Type.Value.GetDisplayName() + "/"+ Id; 
-                }
+                return ExternalResource + "#/components/" + Type.GetDisplayName() + "/"+ Id; 
             }
 
             return ExternalResource;
@@ -257,7 +244,7 @@ namespace Microsoft.OpenApi.Models
 
         private string? GetExternalReferenceV2()
         {
-            if (Id is not null && Type is not null)
+            if (Id is not null)
             {
                 return ExternalResource + "#/" + GetReferenceTypeNameAsV2((ReferenceType)Type) + "/" + Id;
             }

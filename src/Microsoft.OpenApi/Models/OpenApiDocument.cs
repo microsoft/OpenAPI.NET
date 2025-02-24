@@ -516,11 +516,6 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            if (!reference.Type.HasValue)
-            {
-                throw new ArgumentException(Properties.SRResource.LocalReferenceRequiresType);
-            }
-
             string uriLocation;
             var id = reference.Id;
             if (!string.IsNullOrEmpty(id) && id!.Contains("/")) // this means its a URL reference

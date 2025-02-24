@@ -12,16 +12,6 @@ namespace Microsoft.OpenApi.Interfaces
     internal interface IOpenApiVersionService
     {
         /// <summary>
-        /// Parse the string to a <see cref="OpenApiReference"/> object.
-        /// </summary>
-        /// <param name="reference">The reference string.</param>
-        /// <param name="type">The type of the reference.</param>
-        /// <param name="summary">The summary of the reference.</param>
-        /// <param name="description">A reference description</param>
-        /// <returns>The <see cref="OpenApiReference"/> object or null.</returns>
-        OpenApiReference? ConvertToOpenApiReference(string reference, ReferenceType? type, string? summary = null, string? description = null);
-
-        /// <summary>
         /// Loads an OpenAPI Element from a document fragment
         /// </summary>
         /// <typeparam name="T">Type of element to load</typeparam>
