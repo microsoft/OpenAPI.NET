@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseBasicCallbackShouldSucceed()
         {
             // Act
-            var callback = await OpenApiModelFactory.LoadAsync<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var callback = await OpenApiModelFactory.LoadAsync<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml"));
 
             // Act
-            var result = await OpenApiModelFactory.LoadAsync(stream, OpenApiConstants.Yaml);
+            var result = await OpenApiModelFactory.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             // Assert
             var path = result.Document.Paths.First().Value;
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMultipleCallbacksWithReferenceShouldSucceed()
         {
             // Act
-            var result = await OpenApiModelFactory.LoadAsync(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
+            var result = await OpenApiModelFactory.LoadAsync(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"), SettingsFixture.ReaderSettings);
 
             // Assert
             var path = result.Document.Paths.First().Value;

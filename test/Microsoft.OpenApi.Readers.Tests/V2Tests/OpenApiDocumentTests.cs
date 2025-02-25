@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         exclusiveMinimum: false
                 paths: {}
                 """,
-                "yaml");
+                "yaml", SettingsFixture.ReaderSettings);
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -308,6 +308,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 DefaultContentType = ["application/json"]
             };
+            settings.AddYamlReader();
 
             var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
             var mediaType = actual.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;

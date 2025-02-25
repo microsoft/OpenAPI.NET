@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public async Task LoadParameterReference()
         {
             // Arrange
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"), SettingsFixture.ReaderSettings);
             var reference = new OpenApiParameterReference("skipParam", result.Document);
 
             // Assert
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         [Fact]
         public async Task LoadSecuritySchemeReference()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"), SettingsFixture.ReaderSettings);
 
             var reference = new OpenApiSecuritySchemeReference("api_key_sample", result.Document);
 
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         [Fact]
         public async Task LoadResponseReference()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"), SettingsFixture.ReaderSettings);
 
             var reference = new OpenApiResponseReference("NotFound", result.Document);
 
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         [Fact]
         public async Task LoadResponseAndSchemaReference()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml"), SettingsFixture.ReaderSettings);
             var reference = new OpenApiResponseReference("GeneralError", result.Document);
 
             var expected = new OpenApiResponse

@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseAdvancedExampleShouldSucceed()
         {
-            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
             var expected = new OpenApiExample
             {
                 Value = new JsonObject
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseExampleForcedStringSucceed()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "explicitString.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "explicitString.yaml"), SettingsFixture.ReaderSettings);
             Assert.Empty(result.Diagnostic.Errors);
         }
     }

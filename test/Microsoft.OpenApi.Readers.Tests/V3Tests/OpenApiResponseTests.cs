@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ResponseWithReferencedHeaderShouldReferenceComponent()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"), SettingsFixture.ReaderSettings);
 
             var response = result.Document.Components.Responses["Test"];
             var expected = response.Headers.First().Value;
