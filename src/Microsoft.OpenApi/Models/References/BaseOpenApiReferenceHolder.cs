@@ -15,9 +15,10 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     {
         get
         {
-            return Reference?.HostDocument?.ResolveReferenceTo<T>(Reference);
+            return Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
         }
     }
+
     /// <summary>
     /// Copy constructor
     /// </summary>
@@ -40,7 +41,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// 1. a absolute/relative file path, for example:  ../commons/pet.json
     /// 2. a Url, for example: http://localhost/pet.json
     /// </param>
-    protected BaseOpenApiReferenceHolder(string? referenceId, OpenApiDocument? hostDocument, ReferenceType referenceType, string? externalResource)
+    protected BaseOpenApiReferenceHolder(string referenceId, OpenApiDocument? hostDocument, ReferenceType referenceType, string? externalResource)
     {
         Utils.CheckArgumentNullOrEmpty(referenceId);
         // we're not checking for null hostDocument as it's optional and can be set via additional methods by a walker
@@ -56,6 +57,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     }
     /// <inheritdoc/>
     public bool UnresolvedReference { get => Reference is null || Target is null; }
+
     /// <inheritdoc/>
     public OpenApiReference Reference { get; init; }
     /// <inheritdoc/>
@@ -63,7 +65,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
-        if (Reference is not null && !writer.GetSettings().ShouldInlineReference(Reference))
+        if (!writer.GetSettings().ShouldInlineReference(Reference))
         {
             Reference.SerializeAsV3(writer);
         }
@@ -76,7 +78,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public virtual void SerializeAsV31(IOpenApiWriter writer)
     {
-        if (Reference is not null && !writer.GetSettings().ShouldInlineReference(Reference))
+        if (!writer.GetSettings().ShouldInlineReference(Reference))
         {
             Reference.SerializeAsV31(writer);
         }
@@ -89,7 +91,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public virtual void SerializeAsV2(IOpenApiWriter writer)
     {
-        if (Reference is not null && !writer.GetSettings().ShouldInlineReference(Reference))
+        if (!writer.GetSettings().ShouldInlineReference(Reference))
         {
             Reference.SerializeAsV2(writer);
         }

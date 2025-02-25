@@ -40,14 +40,8 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference?.Description;
-            set
-            {
-                if (Reference is not null)
-                {
-                    Reference.Description = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
@@ -72,24 +66,17 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public IOpenApiParameter? ConvertToBodyParameter(IOpenApiWriter writer)
         {
-            if (Reference is not null && writer.GetSettings().ShouldInlineReference(Reference))
+            if (writer.GetSettings().ShouldInlineReference(Reference))
             {
                 return Target?.ConvertToBodyParameter(writer);
             }
-            else
-            {
-                var id = Reference?.Id;
-                if (id is not null)
-                {
-                    return new OpenApiParameterReference(id, Reference?.HostDocument);
-                }                
-            }
-            return null;
+
+            return Reference.Id is not null ? new OpenApiParameterReference(Reference.Id, Reference.HostDocument) : null;
         }
         /// <inheritdoc/>
         public IEnumerable<IOpenApiParameter>? ConvertToFormDataParameters(IOpenApiWriter writer)
         {
-            if (Reference is not null && writer.GetSettings().ShouldInlineReference(Reference))
+            if (writer.GetSettings().ShouldInlineReference(Reference))
             {
                 return Target?.ConvertToFormDataParameters(writer);
             }
@@ -97,7 +84,7 @@ namespace Microsoft.OpenApi.Models.References
             if (Content == null || !Content.Any())
                 return [];
 
-            return Content.First().Value.Schema?.Properties?.Select(x => new OpenApiParameterReference(x.Key, Reference?.HostDocument));
+            return Content.First().Value.Schema?.Properties?.Select(x => new OpenApiParameterReference(x.Key, Reference.HostDocument));
         }
 
         /// <inheritdoc/>

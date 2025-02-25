@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         {
             if (node is not JsonValue scalarNode)
             {
-                throw new OpenApiReaderException("Expected a value.", node);
+                throw new OpenApiReaderException($"Expected a value while parsing at {Context.GetLocation()}.");
             }
             _node = scalarNode;
         }
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         {
             var scalarValue = _node.GetValue<object>();
             return Convert.ToString(scalarValue, CultureInfo.InvariantCulture) 
-                ?? throw new OpenApiReaderException("Expected a value.", _node);
+                ?? throw new OpenApiReaderException($"Expected a value at {Context.GetLocation()}.");
         }
 
         /// <summary>

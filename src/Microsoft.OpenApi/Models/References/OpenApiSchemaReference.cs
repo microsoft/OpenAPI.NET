@@ -39,14 +39,8 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference?.Description;
-            set
-            {
-                if (Reference is not null && value is not null)
-                {
-                    Reference.Description = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
@@ -160,22 +154,22 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element)?.SerializeAsV3(w));
+            SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV3(w));
         }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeAsWithoutLoops(writer, (w, element) => element?.SerializeAsV3(w));
+            SerializeAsWithoutLoops(writer, (w, element) => element.SerializeAsV3(w));
         }
         /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
-            SerializeAsWithoutLoops(writer, (w, element) => element?.SerializeAsV2(w));
+            SerializeAsWithoutLoops(writer, (w, element) => element.SerializeAsV2(w));
         }
-        private void SerializeAsWithoutLoops(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable?> action)
+        private void SerializeAsWithoutLoops(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> action)
         {
-            if (Reference is not null && !writer.GetSettings().ShouldInlineReference(Reference))
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
                 action(writer, Reference);
             }

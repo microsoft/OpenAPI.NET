@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="version">OpenAPI version of the fragment</param>
         /// <param name="openApiDocument">The OpenApiDocument object to which the fragment belongs, used to lookup references.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        public T? ParseFragment<T>(JsonNode? jsonNode, OpenApiSpecVersion version, OpenApiDocument openApiDocument) where T : IOpenApiElement
+        public T? ParseFragment<T>(JsonNode jsonNode, OpenApiSpecVersion version, OpenApiDocument openApiDocument) where T : IOpenApiElement
         {
             var node = ParseNode.Create(this, jsonNode);
 
@@ -135,18 +135,18 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Gets the version of the Open API document.
         /// </summary>
-        private static string? GetVersion(RootNode rootNode)
+        private static string GetVersion(RootNode rootNode)
         {
             var versionNode = rootNode.Find(new("/openapi"));
 
-            if (versionNode != null)
+            if (versionNode is not null)
             {
-                return versionNode.GetScalarValue()?.Replace("\"", string.Empty);
+                return versionNode.GetScalarValue().Replace("\"", string.Empty);
             }
 
             versionNode = rootNode.Find(new("/swagger"));
 
-            return versionNode?.GetScalarValue()?.Replace("\"", string.Empty);
+            return versionNode?.GetScalarValue().Replace("\"", string.Empty) ?? throw new OpenApiException("Version node not found.");
         }
 
         /// <summary>

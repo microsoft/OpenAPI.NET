@@ -35,17 +35,6 @@ namespace Microsoft.OpenApi.Exceptions
         }
 
         /// <summary>
-        /// Initializes the <see cref="OpenApiReaderException"/> class with a message and line, column location of error.
-        /// </summary>
-        /// <param name="message">Plain text error message for this exception.</param>
-        /// <param name="node">Parsing node where error occured</param>
-        public OpenApiReaderException(string message, JsonNode? node) : base(message)
-        {
-            // This only includes line because using a char range causes tests to break due to CR/LF & LF differences
-            // See https://tools.ietf.org/html/rfc5147 for syntax
-        }
-
-        /// <summary>
         /// Initializes the <see cref="OpenApiReaderException"/> class with a custom message and inner exception.
         /// </summary>
         /// <param name="message">Plain text error message for this exception.</param>

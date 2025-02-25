@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Reader.V31
             return operation;
         }
 
-        private static OpenApiTagReference LoadTagByReference(string? tagName, OpenApiDocument? hostDocument)
+        private static OpenApiTagReference LoadTagByReference(string tagName, OpenApiDocument? hostDocument)
         {
             var tagObject = new OpenApiTagReference(tagName, hostDocument);
             return tagObject;

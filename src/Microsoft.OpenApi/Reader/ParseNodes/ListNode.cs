@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
             var list = _nodeList.Select(n => map(new MapNode(Context, n as JsonObject), hostDocument))
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
             return _nodeList.Select(n => map(new(Context, n), openApiDocument)).ToList();

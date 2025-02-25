@@ -12,13 +12,13 @@ namespace Microsoft.OpenApi.Any
     /// </summary>
     public class OpenApiAny : IOpenApiElement, IOpenApiExtension
     {
-        private readonly JsonNode? jsonNode;
+        private readonly JsonNode jsonNode;
 
         /// <summary>
         /// Initializes the <see cref="OpenApiAny"/> class.
         /// </summary>
         /// <param name="jsonNode"></param>
-        public OpenApiAny(JsonNode? jsonNode)
+        public OpenApiAny(JsonNode jsonNode)
         {
             this.jsonNode = jsonNode;
         }
@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Any
         /// <summary>
         /// Gets the underlying JsonNode.
         /// </summary>
-        public JsonNode? Node { get { return jsonNode; } }
+        public JsonNode Node { get { return jsonNode; } }
 
         /// <summary>
         /// Writes out the OpenApiAny type.

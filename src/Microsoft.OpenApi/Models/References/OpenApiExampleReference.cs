@@ -39,27 +39,15 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference?.Description;
-            set 
-            {
-                if (Reference is not null)
-                {
-                    Reference.Description = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
         public string? Summary
         {
-            get => string.IsNullOrEmpty(Reference?.Summary) ? Target?.Summary : Reference?.Summary;
-            set
-            {
-                if (Reference is not null)
-                {
-                    Reference.Summary = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Summary) ? Target?.Summary : Reference.Summary;
+            set => Reference.Summary = value;
         }
 
         /// <inheritdoc/>
@@ -81,7 +69,7 @@ namespace Microsoft.OpenApi.Models.References
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
             // examples components are not supported in OAS 2.0
-            Reference?.SerializeAsV2(writer);
+            Reference.SerializeAsV2(writer);
         }
 
         /// <inheritdoc/>

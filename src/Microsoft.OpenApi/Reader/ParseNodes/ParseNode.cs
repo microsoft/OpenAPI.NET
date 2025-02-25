@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot get raw value from this type of node.", Context);
         }
 
-        public virtual string? GetScalarValue()
+        public virtual string GetScalarValue()
         {
             throw new OpenApiReaderException("Cannot create a scalar value from this type of node.", Context);
         }

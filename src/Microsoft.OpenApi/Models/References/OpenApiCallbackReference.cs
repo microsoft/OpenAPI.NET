@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Models.References
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
             // examples components are not supported in OAS 2.0
-            Reference?.SerializeAsV2(writer);
+            Reference.SerializeAsV2(writer);
         }
 
         /// <inheritdoc/>

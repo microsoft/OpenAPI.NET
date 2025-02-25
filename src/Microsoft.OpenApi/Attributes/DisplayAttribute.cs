@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Attributes
         /// Initializes a new instance of the <see cref="DisplayAttribute"/> class.
         /// </summary>
         /// <param name="name">The display name.</param>
-        public DisplayAttribute(string? name)
+        public DisplayAttribute(string name)
         {
             Name = Utils.CheckArgumentNullOrEmpty(name);
         }
@@ -23,6 +23,6 @@ namespace Microsoft.OpenApi.Attributes
         /// <summary>
         /// The display Name.
         /// </summary>
-        public string? Name { get; }
+        public string Name { get; }
     }
 }

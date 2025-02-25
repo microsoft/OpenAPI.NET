@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                return Reference?.HostDocument?.Tags?.FirstOrDefault(t => StringComparer.Ordinal.Equals(t.Name, Reference.Id));
+                return Reference.HostDocument?.Tags?.FirstOrDefault(t => StringComparer.Ordinal.Equals(t.Name, Reference.Id));
             }
         }
 
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiTagReference(string? referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Tag, externalResource)
+        public OpenApiTagReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Tag, externalResource)
         {
         }
         /// <summary>
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference?.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
         }
 
         /// <inheritdoc/>

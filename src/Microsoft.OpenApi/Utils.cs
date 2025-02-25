@@ -36,11 +36,11 @@ namespace Microsoft.OpenApi
         /// <param name="value">The input string value.</param>
         /// <param name="parameterName">The input parameter name.</param>
         /// <returns>The input value.</returns>
-        internal static string? CheckArgumentNullOrEmpty(
+        internal static string CheckArgumentNullOrEmpty(
 #if NET5_0_OR_GREATER
-            [NotNull] string? value,
+            [NotNull] string value,
 #else
-            string? value,
+            string value,
 #endif
             [CallerArgumentExpression(nameof(value))] string parameterName = "")
         {

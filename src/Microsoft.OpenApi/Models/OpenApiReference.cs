@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Models
         {
             if (Id is not null)
             {
-                return ExternalResource + "#/" + GetReferenceTypeNameAsV2((ReferenceType)Type) + "/" + Id;
+                return ExternalResource + "#/" + GetReferenceTypeNameAsV2(Type) + "/" + Id;
             }
 
             return ExternalResource;

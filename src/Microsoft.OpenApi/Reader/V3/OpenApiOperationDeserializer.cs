@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Reader.V3
         }
 
         private static OpenApiTagReference LoadTagByReference(
-            string? tagName, OpenApiDocument? hostDocument)
+            string tagName, OpenApiDocument? hostDocument)
         {
             return new OpenApiTagReference(tagName, hostDocument);
         }
