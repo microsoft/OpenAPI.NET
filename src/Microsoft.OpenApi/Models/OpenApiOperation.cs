@@ -40,14 +40,9 @@ namespace Microsoft.OpenApi.Models
                 {
                     return;
                 }
-                if (value is HashSet<OpenApiTagReference> tags && tags.Comparer is OpenApiTagComparer)
-                {
-                    _tags = tags;
-                }
-                else
-                {
-                    _tags = new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance);
-                }
+                _tags = value is HashSet<OpenApiTagReference> tags && tags.Comparer is OpenApiTagComparer ?
+                        tags :
+                        new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance);
             }
         }
 

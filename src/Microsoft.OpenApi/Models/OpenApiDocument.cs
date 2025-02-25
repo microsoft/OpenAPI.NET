@@ -92,14 +92,9 @@ namespace Microsoft.OpenApi.Models
                 {
                     return;
                 }
-                if (value is HashSet<OpenApiTag> tags && tags.Comparer is OpenApiTagComparer)
-                {
-                    _tags = tags;
-                }
-                else
-                {
-                    _tags = new HashSet<OpenApiTag>(value, OpenApiTagComparer.Instance);
-                }
+                _tags = value is HashSet<OpenApiTag> tags && tags.Comparer is OpenApiTagComparer ?
+                        tags :
+                        new HashSet<OpenApiTag>(value, OpenApiTagComparer.Instance);
             }
         }
 
