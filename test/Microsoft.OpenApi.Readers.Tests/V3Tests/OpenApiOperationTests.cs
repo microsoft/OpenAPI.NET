@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             var openApiDocument = new OpenApiDocument
             {
-                Tags = { new OpenApiTag() { Name = "user" } }
+                Tags = new HashSet<OpenApiTag> { new() { Name = "user" } }
             };
             // Act
             var operation = await OpenApiModelFactory.LoadAsync<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, openApiDocument);
