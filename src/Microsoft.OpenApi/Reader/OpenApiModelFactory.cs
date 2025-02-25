@@ -68,6 +68,7 @@ namespace Microsoft.OpenApi.Reader
         public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             format ??= InspectStreamFormat(input);
+            settings ??= DefaultReaderSettings.Value;
             return settings.Readers[format].ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
         }
 
@@ -234,14 +235,15 @@ namespace Microsoft.OpenApi.Reader
             return Load<T>(stream, version, format, openApiDocument, out diagnostic, settings);
         }
 
-        private static readonly OpenApiReaderSettings DefaultReaderSettings = new();
+        private static readonly Lazy<OpenApiReaderSettings> DefaultReaderSettings = new(() => new OpenApiReaderSettings());
 
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
+            settings ??= DefaultReaderSettings.Value;
             var reader = settings.Readers[format];
             var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
 
-            if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
+            if (settings.LoadExternalRefs)
             {
                 var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.Document, settings, format, cancellationToken).ConfigureAwait(false);
                 // Merge diagnostics of external reference
@@ -269,7 +271,8 @@ namespace Microsoft.OpenApi.Reader
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
         {
-            if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
+            settings ??= DefaultReaderSettings.Value;
+            if (settings.LoadExternalRefs)
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
             }
