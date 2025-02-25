@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Reader.Properties {
+namespace Microsoft.OpenApi.YamlReader.Properties {
     using System;
     
     

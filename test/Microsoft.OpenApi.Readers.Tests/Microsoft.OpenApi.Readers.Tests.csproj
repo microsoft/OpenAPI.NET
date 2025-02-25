@@ -26,7 +26,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
-        <ProjectReference Include="..\..\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
+        <ProjectReference Include="..\..\src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj" />
         <ProjectReference Include="..\Microsoft.OpenApi.Tests\Microsoft.OpenApi.Tests.csproj" />
     </ItemGroup>
 
