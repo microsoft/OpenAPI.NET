@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {"servers", (o, n, _) => o.Servers = n.CreateList(LoadServer, o)},
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
-            {"tags", (o, n, _) => o.Tags = new HashSet<OpenApiTag>(n.CreateList(LoadTag, o), OpenApiTagComparer.Instance) },
+            {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
             {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)}
         };
