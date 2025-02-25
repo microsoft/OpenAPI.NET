@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -60,7 +61,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiTag> tags)
+        internal void Walk(ISet<OpenApiTag> tags)
         {
             if (tags == null)
             {
@@ -72,9 +73,10 @@ namespace Microsoft.OpenApi.Services
             // Visit tags
             if (tags != null)
             {
-                for (var i = 0; i < tags.Count; i++)
+                var tagsAsArray = tags.ToArray();
+                for (var i = 0; i < tagsAsArray.Length; i++)
                 {
-                    Walk(i.ToString(), () => Walk(tags[i]));
+                    Walk(i.ToString(), () => Walk(tagsAsArray[i]));
                 }
             }
         }
@@ -1213,7 +1215,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiServer e: Walk(e); break;
                 case OpenApiServerVariable e: Walk(e); break;
                 case OpenApiTag e: Walk(e); break;
-                case IList<OpenApiTag> e: Walk(e); break;
+                case ISet<OpenApiTag> e: Walk(e); break;
                 case IOpenApiExtensible e: Walk(e); break;
                 case IOpenApiExtension e: Walk(e); break;
             }

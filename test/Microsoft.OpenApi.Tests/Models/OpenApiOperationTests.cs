@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Tags = new List<OpenApiTagReference>
             {
-                new OpenApiTagReference("tagId1", new OpenApiDocument{ Tags = new List<OpenApiTag>() { new OpenApiTag{Name = "tagId1"}} })
+                new OpenApiTagReference("tagId1", new OpenApiDocument{ Tags = new HashSet<OpenApiTag>() { new OpenApiTag{Name = "tagId1"}} })
             },
             Summary = "summary1",
             Description = "operationDescription",

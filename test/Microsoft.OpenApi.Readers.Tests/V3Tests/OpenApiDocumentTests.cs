@@ -1000,7 +1000,7 @@ paths: {}
                     }
                 },
                 Components = components,
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                     {
                         new OpenApiTag
                         {

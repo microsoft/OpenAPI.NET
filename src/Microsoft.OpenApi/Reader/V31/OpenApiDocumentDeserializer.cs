@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -24,7 +25,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
             {"webhooks", (o, n, _) => o.Webhooks = n.CreateMap(LoadPathItem, o)},
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
-            {"tags", (o, n, _) => o.Tags = n.CreateList(LoadTag, o) },
+            {"tags", (o, n, _) => o.Tags = new HashSet<OpenApiTag>(n.CreateList(LoadTag, o), OpenApiTagComparer.Instance) },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
             {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)}
         };

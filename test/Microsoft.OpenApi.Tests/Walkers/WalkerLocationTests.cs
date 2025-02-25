@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     new(),
                     new()
                 },
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                 {
                     new()
                 }
@@ -305,7 +305,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(IList<OpenApiTag> openApiTags)
+        public override void Visit(ISet<OpenApiTag> openApiTags)
         {
             Locations.Add(this.PathString);
         }

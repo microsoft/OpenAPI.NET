@@ -629,7 +629,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                         }
                     }
                 },
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                 {
                     new()
                     {
