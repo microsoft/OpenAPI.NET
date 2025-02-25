@@ -1548,7 +1548,7 @@ namespace Microsoft.OpenApi.Reader.Services
 {
     public class DefaultStreamLoader : Microsoft.OpenApi.Interfaces.IStreamLoader
     {
-        public DefaultStreamLoader(System.Uri baseUrl) { }
+        public DefaultStreamLoader(System.Uri baseUrl, System.Net.Http.HttpClient httpClient) { }
         public System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri, System.Threading.CancellationToken cancellationToken = default) { }
     }
 }
