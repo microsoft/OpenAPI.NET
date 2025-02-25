@@ -1497,7 +1497,7 @@ namespace Microsoft.OpenApi.Reader
         public Microsoft.OpenApi.Interfaces.IStreamLoader CustomExternalLoader { get; set; }
         public System.Collections.Generic.List<string> DefaultContentType { get; set; }
         public System.Collections.Generic.Dictionary<string, System.Func<System.Text.Json.Nodes.JsonNode, Microsoft.OpenApi.OpenApiSpecVersion, Microsoft.OpenApi.Interfaces.IOpenApiExtension>> ExtensionParsers { get; set; }
-        public System.Net.Http.HttpClient HttpClient { get; init; }
+        public System.Net.Http.HttpClient HttpClient { init; }
         public bool LeaveStreamOpen { get; set; }
         public bool LoadExternalRefs { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiReader> Readers { get; init; }

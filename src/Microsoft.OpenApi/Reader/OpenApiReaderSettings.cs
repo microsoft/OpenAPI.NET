@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         public HttpClient HttpClient
         { 
-            get
+            internal get
             {
                 _httpClient ??= httpClient.Value;
                 return _httpClient;
