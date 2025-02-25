@@ -1682,7 +1682,7 @@ paths: { }";
 
         private static async Task<OpenApiDocument> ParseInputFileAsync(string filePath)
         {
-            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath)).Document;
+            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings)).Document;
             return openApiDoc;
         }
 
@@ -1985,7 +1985,7 @@ responses:
           items:
             type: object";
 
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml")).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml", SettingsFixture.ReaderSettings)).Document;
           
             var stringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true });
@@ -2039,7 +2039,7 @@ components:
         radius:
           type: number
 ";
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml")).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml", SettingsFixture.ReaderSettings)).Document;
             var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
