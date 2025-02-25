@@ -28,7 +28,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/info",
                 "#/servers",
                 "#/paths",
-                "#/tags"
             }, locator.Locations);
         }
 
@@ -109,7 +108,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths/~1test/get/responses/200/content/application~1json",
                 "#/paths/~1test/get/responses/200/content/application~1json/schema",
                 "#/paths/~1test/get/tags",
-                "#/tags",
 
             }, locator.Locations);
 
@@ -152,7 +150,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/components",
                 "#/components/schemas/loopy",
                 "#/components/schemas/loopy/properties/name",
-                "#/tags"
             }, locator.Locations);
         }
 
