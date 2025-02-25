@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Reader
             var openApiWorkSpace = new OpenApiWorkspace(baseUrl);
 
             // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
+            var streamLoader = new DefaultStreamLoader(settings.BaseUrl, settings.HttpClient);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, token).ConfigureAwait(false);
         }
