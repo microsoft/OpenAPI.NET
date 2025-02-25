@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="url">The path to the OpenAPI file</param>
         /// <param name="settings"> The OpenApi reader settings.</param>
-        /// <param name="token"></param>
+        /// <param name="token">The cancellation token</param>
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken token = default)
         {
