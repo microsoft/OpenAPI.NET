@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.MicrosoftExtensions;
@@ -17,6 +18,23 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     public class OpenApiReaderSettings
     {
+        private static readonly Lazy<HttpClient> httpClient = new(() => new HttpClient());
+        private HttpClient _httpClient;
+        /// <summary>
+        /// HttpClient to use for making requests and retrieve documents
+        /// </summary>
+        public HttpClient HttpClient
+        { 
+            get
+            {
+                _httpClient ??= httpClient.Value;
+                return _httpClient;
+            }
+            init
+            {
+                _httpClient = value;
+            }
+        }
         /// <summary>
         /// Adds a reader for the specified format
         /// </summary>
