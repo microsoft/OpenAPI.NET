@@ -1,7 +1,8 @@
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Readers;
 
-namespace Microsoft.OpenApi.Readers;
+namespace Microsoft.OpenApi.Reader;
 
 /// <summary>
 /// Extensions for <see cref="OpenApiReaderSettings"/>
@@ -15,7 +16,18 @@ public static class OpenApiReaderSettingsExtensions
     public static void AddYamlReader(this OpenApiReaderSettings settings)
     {
         var yamlReader = new OpenApiYamlReader();
-        settings.Readers.Add(OpenApiConstants.Yaml, yamlReader);
-        settings.Readers.Add(OpenApiConstants.Yml, yamlReader);
+        settings.AddReaderToSettings(OpenApiConstants.Yaml, yamlReader);
+        settings.AddReaderToSettings(OpenApiConstants.Yml, yamlReader);
+    }
+    private static void AddReaderToSettings(this OpenApiReaderSettings settings, string format, IOpenApiReader reader)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+        settings.Readers.Add(format, reader);
+#else
+        if (!settings.Readers.ContainsKey(format))
+        {
+            settings.Readers.Add(format, reader);
+        }
+#endif
     }
 }

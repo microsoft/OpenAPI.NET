@@ -40,7 +40,6 @@ namespace Microsoft.OpenApi.Reader
             if (stream is null) throw new ArgumentNullException(nameof(stream));
 #endif
             settings ??= new OpenApiReaderSettings();
-            settings.AddJsonReader();
 
             // Get the format of the stream if not provided
             format ??= InspectStreamFormat(stream);
@@ -118,7 +117,6 @@ namespace Microsoft.OpenApi.Reader
             if (input is null) throw new ArgumentNullException(nameof(input));
 #endif
             settings ??= new OpenApiReaderSettings();
-            settings.AddJsonReader();
 
             Stream preparedStream;
             if (format is null)
@@ -201,7 +199,6 @@ namespace Microsoft.OpenApi.Reader
 #endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
-            settings.AddJsonReader();
 
             // Copy string into MemoryStream
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
@@ -233,7 +230,6 @@ namespace Microsoft.OpenApi.Reader
 #endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
-            settings.AddJsonReader();
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
             return Load<T>(stream, version, format, openApiDocument, out diagnostic, settings);
         }

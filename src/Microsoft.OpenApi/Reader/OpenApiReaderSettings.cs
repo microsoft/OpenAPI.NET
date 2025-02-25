@@ -22,12 +22,22 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         public void AddJsonReader()
         {
-            Readers.Add(OpenApiConstants.Json, new OpenApiJsonReader());
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+            Readers.TryAdd(OpenApiConstants.Json, new OpenApiJsonReader());
+#else
+            if (!Readers.ContainsKey(OpenApiConstants.Json))
+            {
+                Readers.Add(OpenApiConstants.Json, new OpenApiJsonReader());
+            }
+#endif
         }
         /// <summary>
         /// Readers to use to parse the OpenAPI document
         /// </summary>
-        public Dictionary<string, IOpenApiReader> Readers { get; init; } = new Dictionary<string, IOpenApiReader>(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, IOpenApiReader> Readers { get; init; } = new Dictionary<string, IOpenApiReader>(StringComparer.OrdinalIgnoreCase)
+        {
+            { OpenApiConstants.Json, new OpenApiJsonReader() }
+        };
         /// <summary>
         /// When external references are found, load them into a shared workspace
         /// </summary>
