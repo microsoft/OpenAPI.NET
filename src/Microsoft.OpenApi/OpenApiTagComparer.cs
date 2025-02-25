@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi;
 
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi;
 /// This comparer is used to maintain a globally unique list of tags encountered
 /// in a particular OpenAPI document.
 /// </summary>
-internal sealed class OpenApiTagComparer : IEqualityComparer<OpenApiTag>
+internal sealed class OpenApiTagComparer : IEqualityComparer<IOpenApiTag>
 {
     private static readonly Lazy<OpenApiTagComparer> _lazyInstance = new(() => new OpenApiTagComparer());
     /// <summary>
@@ -18,7 +18,7 @@ internal sealed class OpenApiTagComparer : IEqualityComparer<OpenApiTag>
     internal static OpenApiTagComparer Instance { get => _lazyInstance.Value; }
 
     /// <inheritdoc/>
-    public bool Equals(OpenApiTag? x, OpenApiTag? y)
+    public bool Equals(IOpenApiTag? x, IOpenApiTag? y)
     {
         if (x is null && y is null)
         {
@@ -42,6 +42,6 @@ internal sealed class OpenApiTagComparer : IEqualityComparer<OpenApiTag>
     internal static readonly StringComparer StringComparer = StringComparer.Ordinal;
 
     /// <inheritdoc/>
-    public int GetHashCode(OpenApiTag obj) => obj?.Name is null ? 0 : StringComparer.GetHashCode(obj.Name);
+    public int GetHashCode(IOpenApiTag obj) => string.IsNullOrEmpty(obj?.Name) ? 0 : StringComparer.GetHashCode(obj!.Name);
 }
 #nullable restore

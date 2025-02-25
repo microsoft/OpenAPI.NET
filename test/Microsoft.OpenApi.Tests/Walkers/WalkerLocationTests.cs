@@ -107,7 +107,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths/~1test/get/responses/200/content",
                 "#/paths/~1test/get/responses/200/content/application~1json",
                 "#/paths/~1test/get/responses/200/content/application~1json/schema",
-                "#/paths/~1test/get/tags",
 
             }, locator.Locations);
 
@@ -316,7 +315,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add(this.PathString);
         }
-        public override void Visit(IList<OpenApiTagReference> openApiTags)
+        public override void Visit(ISet<OpenApiTagReference> openApiTags)
         {
             Locations.Add(this.PathString);
         }

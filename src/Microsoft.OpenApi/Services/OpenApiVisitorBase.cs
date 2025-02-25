@@ -316,7 +316,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiTagReference> openApiTags)
+        public virtual void Visit(ISet<OpenApiTagReference> openApiTags)
         {
         }
 

@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiTagReference> tags)
+        internal void Walk(ISet<OpenApiTagReference> tags)
         {
             if (tags == null)
             {
@@ -96,9 +96,10 @@ namespace Microsoft.OpenApi.Services
             // Visit tags
             if (tags != null)
             {
-                for (var i = 0; i < tags.Count; i++)
+                var referencesAsArray = tags.ToArray();
+                for (var i = 0; i < referencesAsArray.Length; i++)
                 {
-                    Walk(i.ToString(), () => Walk(tags[i]));
+                    Walk(i.ToString(), () => Walk(referencesAsArray[i]));
                 }
             }
         }
