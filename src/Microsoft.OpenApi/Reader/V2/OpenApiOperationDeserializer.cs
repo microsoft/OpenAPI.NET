@@ -230,7 +230,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 Extensions = bodyParameter.Extensions
             };
 
-            if (requestBody.Extensions is not null)
+            if (requestBody.Extensions is not null && bodyParameter.Name is not null)
             {
                 requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
             }            

@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON text in the stream into JsonNodes
             try
             {
-                jsonNode = JsonNode.Parse(input);
+                jsonNode = JsonNode.Parse(input) ?? throw new InvalidOperationException($"Cannot parse input stream, {nameof(input)}.");
             }
             catch (JsonException ex)
             {
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="jsonNode">The JsonNode input.</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
-        public ReadResult Read(JsonNode? jsonNode,
+        public ReadResult Read(JsonNode jsonNode,
                                OpenApiReaderSettings settings)
         {
             if (jsonNode is null) throw new ArgumentNullException(nameof(jsonNode));
@@ -131,7 +131,8 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON text in the stream into JsonNodes
             try
             {
-                jsonNode = await JsonNode.ParseAsync(input, cancellationToken: cancellationToken).ConfigureAwait(false);
+                jsonNode = await JsonNode.ParseAsync(input, cancellationToken: cancellationToken).ConfigureAwait(false) ??
+                    throw new InvalidOperationException($"failed to parse input stream, {nameof(input)}");
             }
             catch (JsonException ex)
             {
@@ -156,12 +157,12 @@ namespace Microsoft.OpenApi.Reader
             Utils.CheckArgumentNull(input);
             Utils.CheckArgumentNull(openApiDocument);
 
-            JsonNode? jsonNode;
+            JsonNode jsonNode;
 
             // Parse the JSON
             try
             {
-                jsonNode = JsonNode.Parse(input);
+                jsonNode = JsonNode.Parse(input) ?? throw new InvalidOperationException($"Failed to parse stream, {nameof(input)}");
             }
             catch (JsonException ex)
             {
@@ -174,11 +175,11 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(JsonNode? input,
-                 OpenApiSpecVersion version,
-                 OpenApiDocument openApiDocument,
-                 out OpenApiDiagnostic diagnostic,
-                 OpenApiReaderSettings? settings = null) where T : IOpenApiElement
+        public T? ReadFragment<T>(JsonNode input,
+         OpenApiSpecVersion version,
+         OpenApiDocument openApiDocument,
+         out OpenApiDiagnostic diagnostic,
+         OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             diagnostic = new();
             settings ??= new OpenApiReaderSettings();
@@ -211,7 +212,7 @@ namespace Microsoft.OpenApi.Reader
                 }
             }
 
-            return (T?)element!;
+            return (T?)element;
         }
     }
 }

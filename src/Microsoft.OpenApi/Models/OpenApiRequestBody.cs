@@ -108,10 +108,11 @@ namespace Microsoft.OpenApi.Models
                 Extensions = Extensions?.ToDictionary(static k => k.Key, static v => v.Value)
             };
             // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
-            if (bodyParameter.Extensions is not null && bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyNameExtension))
+            if (bodyParameter.Extensions is not null && 
+                bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyNameExtension) &&
+                bodyNameExtension is OpenApiAny bodyName)
             {
-                var bodyName = bodyNameExtension as OpenApiAny;
-                bodyParameter.Name = string.IsNullOrEmpty(bodyName?.Node?.ToString()) ? "body" : bodyName?.Node?.ToString();
+                bodyParameter.Name = string.IsNullOrEmpty(bodyName.Node.ToString()) ? "body" : bodyName.Node.ToString();
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
             }
             return bodyParameter;

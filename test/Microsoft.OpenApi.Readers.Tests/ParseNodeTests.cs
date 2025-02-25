@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Tests
             var result = OpenApiDocument.Parse(input, "yaml");
 
             Assert.Equivalent(new List<OpenApiError>() {
-                new OpenApiError(new OpenApiReaderException("Expected a value."))
+                new OpenApiError(new OpenApiReaderException("Expected a value while parsing at #/schemes."))
             }, result.Diagnostic.Errors);
         }
 
