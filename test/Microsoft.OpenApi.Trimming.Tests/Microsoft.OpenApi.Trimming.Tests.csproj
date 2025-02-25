@@ -16,7 +16,7 @@
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
     <TrimmerRootAssembly Include="Microsoft.OpenApi" />
     <ProjectReference Include="..\..\src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj" />
-    <TrimmerRootAssembly Include="Microsoft.OpenApi.Readers" />
+    <TrimmerRootAssembly Include="Microsoft.OpenApi.YamlReader" />
   </ItemGroup>
 
 </Project>
