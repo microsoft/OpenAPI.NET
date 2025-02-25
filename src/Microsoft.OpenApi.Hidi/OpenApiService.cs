@@ -386,7 +386,8 @@ namespace Microsoft.OpenApi.Hidi
                     LoadExternalRefs = inlineExternal,
                     BaseUrl = openApiFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ?
                         new(openApiFile) :
-                        new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
+                        new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar),
+                    HttpClient = httpClient.Value
                 };
                 settings.AddYamlReader();
 
