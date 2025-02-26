@@ -16,18 +16,7 @@ public static class OpenApiReaderSettingsExtensions
     public static void AddYamlReader(this OpenApiReaderSettings settings)
     {
         var yamlReader = new OpenApiYamlReader();
-        settings.AddReaderToSettings(OpenApiConstants.Yaml, yamlReader);
-        settings.AddReaderToSettings(OpenApiConstants.Yml, yamlReader);
-    }
-    private static void AddReaderToSettings(this OpenApiReaderSettings settings, string format, IOpenApiReader reader)
-    {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-        settings.Readers.TryAdd(format, reader);
-#else
-        if (!settings.Readers.ContainsKey(format))
-        {
-            settings.Readers.Add(format, reader);
-        }
-#endif
+        settings.TryAddReader(OpenApiConstants.Yaml, yamlReader);
+        settings.TryAddReader(OpenApiConstants.Yml, yamlReader);
     }
 }

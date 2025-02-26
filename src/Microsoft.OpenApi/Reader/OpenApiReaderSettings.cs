@@ -40,22 +40,65 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         public void AddJsonReader()
         {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-            Readers.TryAdd(OpenApiConstants.Json, new OpenApiJsonReader());
-#else
-            if (!Readers.ContainsKey(OpenApiConstants.Json))
-            {
-                Readers.Add(OpenApiConstants.Json, new OpenApiJsonReader());
-            }
-#endif
+            TryAddReader(OpenApiConstants.Json, new OpenApiJsonReader());
         }
         /// <summary>
-        /// Readers to use to parse the OpenAPI document
+        /// Gets the reader for the specified format
         /// </summary>
-        public Dictionary<string, IOpenApiReader> Readers { get; init; } = new Dictionary<string, IOpenApiReader>(StringComparer.OrdinalIgnoreCase)
+        /// <param name="format">Format to fetch the reader for</param>
+        /// <returns>The retrieved reader</returns>
+        /// <exception cref="NotSupportedException">When no reader is registered for that format</exception>
+        internal IOpenApiReader GetReader(string format)
+        {
+            Utils.CheckArgumentNullOrEmpty(format);
+            if (Readers.TryGetValue(format, out var reader))
+            {
+                return reader;
+            }
+
+            throw new NotSupportedException($"Format '{format}' is not supported.");
+        }
+        /// <summary>
+        /// Adds a reader for the specified format.
+        /// This method is a no-op if the reader already exists.
+        /// This method is equivalent to TryAdd, is provided for compatibility reasons and TryAdd should be used instead when available.
+        /// </summary>
+        /// <param name="format">Format to add a reader for</param>
+        /// <param name="reader">Reader to add</param>
+        /// <returns>True if the reader was added, false if it already existed</returns>
+        public bool TryAddReader(string format, IOpenApiReader reader)
+        {
+            Utils.CheckArgumentNullOrEmpty(format);
+            Utils.CheckArgumentNull(reader);
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+            return Readers.TryAdd(format, reader);
+#else
+            if (!Readers.ContainsKey(format))
+            {
+                Readers.Add(format, reader);
+                return true;
+            }
+            return false;
+#endif
+        }
+        private Dictionary<string, IOpenApiReader> _readers = new(StringComparer.OrdinalIgnoreCase)
         {
             { OpenApiConstants.Json, new OpenApiJsonReader() }
         };
+        /// <summary>
+        /// Readers to use to parse the OpenAPI document
+        /// </summary>
+        public Dictionary<string, IOpenApiReader> Readers
+        { 
+            get => _readers;
+            init
+            {
+                Utils.CheckArgumentNull(value);
+                _readers = value.Comparer == StringComparer.OrdinalIgnoreCase ?
+                    value :
+                    new Dictionary<string, IOpenApiReader>(value, StringComparer.OrdinalIgnoreCase);
+            }
+        }
         /// <summary>
         /// When external references are found, load them into a shared workspace
         /// </summary>
@@ -107,18 +150,21 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         public void AddMicrosoftExtensionParsers()
         {
-            if (!ExtensionParsers.ContainsKey(OpenApiPagingExtension.Name))
-                ExtensionParsers.Add(OpenApiPagingExtension.Name, static (i, _) => OpenApiPagingExtension.Parse(i));
-            if (!ExtensionParsers.ContainsKey(OpenApiEnumValuesDescriptionExtension.Name))
-                ExtensionParsers.Add(OpenApiEnumValuesDescriptionExtension.Name, static (i, _ ) => OpenApiEnumValuesDescriptionExtension.Parse(i));
-            if (!ExtensionParsers.ContainsKey(OpenApiPrimaryErrorMessageExtension.Name))
-                ExtensionParsers.Add(OpenApiPrimaryErrorMessageExtension.Name, static (i, _ ) => OpenApiPrimaryErrorMessageExtension.Parse(i));
-            if (!ExtensionParsers.ContainsKey(OpenApiDeprecationExtension.Name))
-                ExtensionParsers.Add(OpenApiDeprecationExtension.Name, static (i, _ ) => OpenApiDeprecationExtension.Parse(i));
-            if (!ExtensionParsers.ContainsKey(OpenApiReservedParameterExtension.Name))
-                ExtensionParsers.Add(OpenApiReservedParameterExtension.Name, static (i, _ ) => OpenApiReservedParameterExtension.Parse(i));
-            if (!ExtensionParsers.ContainsKey(OpenApiEnumFlagsExtension.Name))
-                ExtensionParsers.Add(OpenApiEnumFlagsExtension.Name, static (i, _ ) => OpenApiEnumFlagsExtension.Parse(i));
+            TryAddExtensionParser(OpenApiPagingExtension.Name, static (i, _) => OpenApiPagingExtension.Parse(i));
+            TryAddExtensionParser(OpenApiEnumValuesDescriptionExtension.Name, static (i, _ ) => OpenApiEnumValuesDescriptionExtension.Parse(i));
+            TryAddExtensionParser(OpenApiPrimaryErrorMessageExtension.Name, static (i, _ ) => OpenApiPrimaryErrorMessageExtension.Parse(i));
+            TryAddExtensionParser(OpenApiDeprecationExtension.Name, static (i, _ ) => OpenApiDeprecationExtension.Parse(i));
+            TryAddExtensionParser(OpenApiReservedParameterExtension.Name, static (i, _ ) => OpenApiReservedParameterExtension.Parse(i));
+            TryAddExtensionParser(OpenApiEnumFlagsExtension.Name, static (i, _ ) => OpenApiEnumFlagsExtension.Parse(i));
+        }
+        private void TryAddExtensionParser(string name, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension> parser)
+        {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+            ExtensionParsers.TryAdd(name, parser);
+#else
+            if (!ExtensionParsers.ContainsKey(name))
+                ExtensionParsers.Add(name, parser);
+#endif
         }
     }
 }

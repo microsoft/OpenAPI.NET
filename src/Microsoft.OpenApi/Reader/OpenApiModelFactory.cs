@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Reader
         {
             format ??= InspectStreamFormat(input);
             settings ??= DefaultReaderSettings.Value;
-            return settings.Readers[format].ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
+            return settings.GetReader(format).ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Reader
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
             settings ??= DefaultReaderSettings.Value;
-            var reader = settings.Readers[format];
+            var reader = settings.GetReader(format);
             var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
 
             if (settings.LoadExternalRefs)
@@ -280,7 +280,7 @@ namespace Microsoft.OpenApi.Reader
                 throw new ArgumentException($"Cannot parse the stream: {nameof(input)} is empty or contains no elements.");
             }
 
-            var reader = settings.Readers[format];
+            var reader = settings.GetReader(format);
             var readResult = reader.Read(input, settings);
             return readResult;
         }

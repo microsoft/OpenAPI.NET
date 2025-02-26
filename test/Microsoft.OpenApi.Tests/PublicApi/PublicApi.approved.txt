@@ -1504,6 +1504,7 @@ namespace Microsoft.OpenApi.Reader
         public Microsoft.OpenApi.Validations.ValidationRuleSet RuleSet { get; set; }
         public void AddJsonReader() { }
         public void AddMicrosoftExtensionParsers() { }
+        public bool TryAddReader(string format, Microsoft.OpenApi.Interfaces.IOpenApiReader reader) { }
     }
     public static class OpenApiVersionExtensionMethods
     {
