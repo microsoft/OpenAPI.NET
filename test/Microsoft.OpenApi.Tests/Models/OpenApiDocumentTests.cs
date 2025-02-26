@@ -1953,7 +1953,7 @@ webhooks:
                     Title = "JsonSchemaDialectTest",
                     Version = "1.0.0"
                 },
-                JsonSchemaDialect = "http://json-schema.org/draft-07/schema#"
+                JsonSchemaDialect = new Uri("http://json-schema.org/draft-07/schema#")
             };
 
             var expected = @"openapi: '3.1.1'
