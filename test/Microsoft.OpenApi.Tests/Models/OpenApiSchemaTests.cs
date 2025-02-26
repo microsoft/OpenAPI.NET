@@ -30,8 +30,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Title = "title1",
             MultipleOf = 3,
             Maximum = 42,
-            ExclusiveMinimum = true,
-            Minimum = 10,
+            ExclusiveMinimum = 10,
             Default = 15,
             Type = JsonSchemaType.Integer | JsonSchemaType.Null,
 
@@ -148,8 +147,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Title = "title1",
             MultipleOf = 3,
             Maximum = 42,
-            ExclusiveMinimum = true,
-            Minimum = 10,
+            ExclusiveMinimum = 10,
             Default = 15,
             Type = JsonSchemaType.Integer | JsonSchemaType.Null,
 

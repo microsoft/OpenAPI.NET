@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     ["six"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum true",
-                        V31ExclusiveMinimum = 10
+                        ExclusiveMinimum = 10
                     },
                     ["seven"] = new OpenApiSchema()
                     {
@@ -249,7 +249,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     ["eight"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum true",
-                        V31ExclusiveMaximum = 20
+                        ExclusiveMaximum = 20
                     },
                     ["nine"] = new OpenApiSchema()
                     {

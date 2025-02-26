@@ -429,8 +429,8 @@ namespace Microsoft.OpenApi.Models.Interfaces
         System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Enum { get; }
         System.Text.Json.Nodes.JsonNode Example { get; }
         System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Examples { get; }
-        bool? ExclusiveMaximum { get; }
-        bool? ExclusiveMinimum { get; }
+        decimal? ExclusiveMaximum { get; }
+        decimal? ExclusiveMinimum { get; }
         Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; }
         string Format { get; }
         string Id { get; }
@@ -458,8 +458,6 @@ namespace Microsoft.OpenApi.Models.Interfaces
         bool UnevaluatedProperties { get; }
         bool? UniqueItems { get; }
         System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> UnrecognizedKeywords { get; }
-        decimal? V31ExclusiveMaximum { get; }
-        decimal? V31ExclusiveMinimum { get; }
         System.Collections.Generic.IDictionary<string, bool> Vocabulary { get; }
         bool WriteOnly { get; }
         Microsoft.OpenApi.Models.OpenApiXml Xml { get; }
@@ -1033,8 +1031,8 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Enum { get; set; }
         public System.Text.Json.Nodes.JsonNode Example { get; set; }
         public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Examples { get; set; }
-        public bool? ExclusiveMaximum { get; set; }
-        public bool? ExclusiveMinimum { get; set; }
+        public decimal? ExclusiveMaximum { get; set; }
+        public decimal? ExclusiveMinimum { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; set; }
         public string Format { get; set; }
@@ -1063,8 +1061,6 @@ namespace Microsoft.OpenApi.Models
         public bool UnevaluatedProperties { get; set; }
         public bool? UniqueItems { get; set; }
         public System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> UnrecognizedKeywords { get; set; }
-        public decimal? V31ExclusiveMaximum { get; set; }
-        public decimal? V31ExclusiveMinimum { get; set; }
         public System.Collections.Generic.IDictionary<string, bool> Vocabulary { get; set; }
         public bool WriteOnly { get; set; }
         public Microsoft.OpenApi.Models.OpenApiXml Xml { get; set; }
@@ -1386,8 +1382,8 @@ namespace Microsoft.OpenApi.Models.References
         public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Enum { get; }
         public System.Text.Json.Nodes.JsonNode Example { get; }
         public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Examples { get; }
-        public bool? ExclusiveMaximum { get; }
-        public bool? ExclusiveMinimum { get; }
+        public decimal? ExclusiveMaximum { get; }
+        public decimal? ExclusiveMinimum { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; }
         public string Format { get; }
@@ -1416,8 +1412,6 @@ namespace Microsoft.OpenApi.Models.References
         public bool UnevaluatedProperties { get; }
         public bool? UniqueItems { get; }
         public System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> UnrecognizedKeywords { get; }
-        public decimal? V31ExclusiveMaximum { get; }
-        public decimal? V31ExclusiveMinimum { get; }
         public System.Collections.Generic.IDictionary<string, bool> Vocabulary { get; }
         public bool WriteOnly { get; }
         public Microsoft.OpenApi.Models.OpenApiXml Xml { get; }

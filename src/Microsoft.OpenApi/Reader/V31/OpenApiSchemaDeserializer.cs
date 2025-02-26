@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) => o.V31ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) => o.ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "minimum",
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) => o.V31ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) => o.ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "maxLength",

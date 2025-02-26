@@ -55,12 +55,12 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public decimal? V31ExclusiveMaximum { get; }
+    public decimal? ExclusiveMaximum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public decimal? V31ExclusiveMinimum { get; }
+    public decimal? ExclusiveMinimum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -93,17 +93,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public bool? ExclusiveMaximum { get; }
-
-    /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-    /// </summary>
     public decimal? Minimum { get; }
-
-    /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-    /// </summary>
-    public bool? ExclusiveMinimum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
