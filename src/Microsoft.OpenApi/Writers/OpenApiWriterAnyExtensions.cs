@@ -68,13 +68,13 @@ namespace Microsoft.OpenApi.Writers
                     writer.WriteObject(node as JsonObject);
                     break;
                 case JsonValueKind.String: // Primitive
-                    writer.WritePrimitive(node);
+                    writer.WritePrimitive(node.AsValue());
                     break;
                 case JsonValueKind.Number: // Primitive
-                    writer.WritePrimitive(node);
+                    writer.WritePrimitive(node.AsValue());
                     break;
                 case JsonValueKind.True or JsonValueKind.False: // Primitive
-                    writer.WritePrimitive(node);
+                    writer.WritePrimitive(node.AsValue());
                     break;
                 case JsonValueKind.Null: // null
                     writer.WriteNull();
@@ -109,72 +109,33 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-        private static void WritePrimitive(this IOpenApiWriter writer, JsonNode primitive)
+        private static void WritePrimitive(this IOpenApiWriter writer, JsonValue jsonValue)
         {
-            Utils.CheckArgumentNull(writer);
-
-            var valueKind = primitive.GetValueKind();
-
-            if (valueKind == JsonValueKind.String && primitive is JsonValue jsonStrValue)
-            {
-                if (jsonStrValue.TryGetValue<DateTimeOffset>(out var dto))
-                {
-                    writer.WriteValue(dto);
-                }
-                else if (jsonStrValue.TryGetValue<DateTime>(out var dt))
-                {
-                    writer.WriteValue(dt);
-                }
-                else if (jsonStrValue.TryGetValue<string>(out var strValue))
-                {
-                    // check whether string is actual string or date time object
-                    if (DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTimeOffset))
-                    {
-                        writer.WriteValue(dateTimeOffset);
-                    }
-                    else if (DateTime.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime))
-                    { // order matters, DTO needs to be checked first!!!
-                        writer.WriteValue(dateTime);
-                    }
-                    else
-                    {
-                        writer.WriteValue(strValue);
-                    }
-                }
-            }
-
-            else if (valueKind == JsonValueKind.Number && primitive is JsonValue jsonValue)
-            {
-
-                if (jsonValue.TryGetValue<decimal>(out var decimalValue))
-                {
-                    writer.WriteValue(decimalValue);
-                }
-                else if (jsonValue.TryGetValue<double>(out var doubleValue))
-                {
-                    writer.WriteValue(doubleValue);
-                }
-                else if (jsonValue.TryGetValue<float>(out var floatValue))
-                {
-                    writer.WriteValue(floatValue);
-                }
-                else if (jsonValue.TryGetValue<long>(out var longValue))
-                {
-                    writer.WriteValue(longValue);
-                }
-                else if (jsonValue.TryGetValue<int>(out var intValue))
-                {
-                    writer.WriteValue(intValue);
-                }
-            }
-            else if (valueKind is JsonValueKind.False)
-            {
-                writer.WriteValue(false);
-            }
-            else if (valueKind is JsonValueKind.True)
-            {
-                writer.WriteValue(true);
-            }
+            if (jsonValue.TryGetValue(out string stringValue))
+                writer.WriteValue(stringValue);
+            else if (jsonValue.TryGetValue(out DateTime dateTimeValue))
+                writer.WriteValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)); // ISO 8601 format
+            else if (jsonValue.TryGetValue(out DateTimeOffset dateTimeOffsetValue))
+                writer.WriteValue(dateTimeOffsetValue.ToString("o", CultureInfo.InvariantCulture));
+#if NET6_0_OR_GREATER
+            else if (jsonValue.TryGetValue(out DateOnly dateOnlyValue))
+                writer.WriteValue(dateOnlyValue.ToString("o", CultureInfo.InvariantCulture));
+            else if (jsonValue.TryGetValue(out TimeOnly timeOnlyValue))
+                writer.WriteValue(timeOnlyValue.ToString("o", CultureInfo.InvariantCulture));
+#endif
+            else if (jsonValue.TryGetValue(out bool boolValue)) 
+                writer.WriteValue(boolValue);
+            // write number values
+            else if (jsonValue.TryGetValue(out decimal decimalValue))
+                writer.WriteValue(decimalValue);
+            else if (jsonValue.TryGetValue(out double doubleValue))
+                writer.WriteValue(doubleValue);
+            else if (jsonValue.TryGetValue(out float floatValue))
+                writer.WriteValue(floatValue);
+            else if (jsonValue.TryGetValue(out long longValue))
+                writer.WriteValue(longValue);
+            else if (jsonValue.TryGetValue(out int intValue))
+                writer.WriteValue(intValue);
         }
     }
 }
