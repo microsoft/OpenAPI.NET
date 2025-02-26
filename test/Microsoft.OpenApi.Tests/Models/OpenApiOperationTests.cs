@@ -89,9 +89,9 @@ namespace Microsoft.OpenApi.Tests.Models
 
         private static OpenApiOperation _advancedOperationWithTagsAndSecurity => new()
         {
-            Tags = new List<OpenApiTagReference>
+            Tags = new HashSet<OpenApiTagReference>
             {
-                new OpenApiTagReference("tagId1", new OpenApiDocument{ Tags = new List<OpenApiTag>() { new OpenApiTag{Name = "tagId1"}} })
+                new OpenApiTagReference("tagId1", new OpenApiDocument{ Tags = new HashSet<OpenApiTag>() { new OpenApiTag{Name = "tagId1"}} })
             },
             Summary = "summary1",
             Description = "operationDescription",

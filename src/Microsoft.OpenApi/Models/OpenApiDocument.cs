@@ -76,10 +76,27 @@ namespace Microsoft.OpenApi.Models
         public IList<OpenApiSecurityRequirement>? SecurityRequirements { get; set; } =
             new List<OpenApiSecurityRequirement>();
 
+        private HashSet<OpenApiTag>? _tags;
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public IList<OpenApiTag>? Tags { get; set; } = new List<OpenApiTag>();
+        public ISet<OpenApiTag>? Tags 
+        { 
+            get
+            {
+                return _tags;
+            }
+            set
+            {
+                if (value is null)
+                {
+                    return;
+                }
+                _tags = value is HashSet<OpenApiTag> tags && tags.Comparer is OpenApiTagComparer ?
+                        tags :
+                        new HashSet<OpenApiTag>(value, OpenApiTagComparer.Instance);
+            }
+        }
 
         /// <summary>
         /// Additional external documentation.
@@ -123,7 +140,7 @@ namespace Microsoft.OpenApi.Models
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
-            Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
+            Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
             Annotations = document?.Annotations != null ? new Dictionary<string, object>(document.Annotations) : null;

@@ -724,7 +724,7 @@ paths: {}
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
-                                Tags = new List<OpenApiTagReference>
+                                Tags = new HashSet<OpenApiTagReference>
                                     {
                                         tagReference1,
                                         tagReference2
@@ -812,7 +812,7 @@ paths: {}
                             },
                             [OperationType.Post] = new OpenApiOperation
                             {
-                                Tags = new List<OpenApiTagReference>
+                                Tags = new HashSet<OpenApiTagReference>
                                     {
                                         tagReference1,
                                         tagReference2
@@ -1000,7 +1000,7 @@ paths: {}
                     }
                 },
                 Components = components,
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                     {
                         new OpenApiTag
                         {
@@ -1032,15 +1032,8 @@ paths: {}
 
             actual.Document.Should().BeEquivalentTo(expected, options => options
             .IgnoringCyclicReferences()
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference.HostDocument)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Target)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[0].Reference.HostDocument)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[0].Target)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[1].Reference.HostDocument)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[1].Target)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[1].Reference.HostDocument)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[1].Target)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags)
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
 
