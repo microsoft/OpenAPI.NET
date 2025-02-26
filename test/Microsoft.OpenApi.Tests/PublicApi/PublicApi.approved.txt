@@ -722,7 +722,7 @@ namespace Microsoft.OpenApi.Models
         public Microsoft.OpenApi.Models.OpenApiPaths Paths { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSecurityRequirement>? SecurityRequirements { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer>? Servers { get; set; }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiTag>? Tags { get; set; }
+        public System.Collections.Generic.ISet<Microsoft.OpenApi.Models.OpenApiTag>? Tags { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>? Webhooks { get; set; }
         public Microsoft.OpenApi.Services.OpenApiWorkspace? Workspace { get; set; }
         public bool AddComponent<T>(string id, T componentToRegister) { }
@@ -914,7 +914,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSecurityRequirement>? Security { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer>? Servers { get; set; }
         public string? Summary { get; set; }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.References.OpenApiTagReference>? Tags { get; set; }
+        public System.Collections.Generic.ISet<Microsoft.OpenApi.Models.References.OpenApiTagReference>? Tags { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1661,8 +1661,8 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter> parameters) { }
         public virtual void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSecurityRequirement> openApiSecurityRequirements) { }
         public virtual void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer> servers) { }
-        public virtual void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiTag> openApiTags) { }
-        public virtual void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.References.OpenApiTagReference> openApiTags) { }
+        public virtual void Visit(System.Collections.Generic.ISet<Microsoft.OpenApi.Models.OpenApiTag> openApiTags) { }
+        public virtual void Visit(System.Collections.Generic.ISet<Microsoft.OpenApi.Models.References.OpenApiTagReference> openApiTags) { }
         public virtual void Visit(System.Text.Json.Nodes.JsonNode node) { }
     }
     public class OpenApiWalker

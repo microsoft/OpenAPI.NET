@@ -2073,7 +2073,7 @@ components:
                     Version = "1.0.0"
                 },
                 Paths = new OpenApiPaths(),
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                 {
                     new OpenApiTag
                     {
@@ -2096,6 +2096,43 @@ components:
 
             var actual = await doc.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
+        [Fact]
+        public void DeduplicatesTags()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = new HashSet<OpenApiTag>
+                {
+                    new OpenApiTag
+                    {
+                        Name = "tag1",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag1"] = new OpenApiAny("tag1")
+                        }
+                    },
+                    new OpenApiTag
+                    {
+                        Name = "tag2",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag2"] = new OpenApiAny("tag2")
+                        }
+                    },
+                    new OpenApiTag
+                    {
+                        Name = "tag1",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag1"] = new OpenApiAny("tag1")
+                        }
+                    }
+                }
+            };
+            Assert.Equal(2, document.Tags.Count);
+            Assert.Contains(document.Tags, t => t.Name == "tag1");
+            Assert.Contains(document.Tags, t => t.Name == "tag2");
         }
     }
 }

@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             },
             {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)},
-            {"tags", (o, n, _) => o.Tags = n.CreateList(LoadTag, o)},
+            {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)}
         };
 
