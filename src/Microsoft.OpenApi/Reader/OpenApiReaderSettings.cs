@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Reader
             init
             {
                 Utils.CheckArgumentNull(value);
-                _readers = value.Comparer == StringComparer.OrdinalIgnoreCase ?
+                _readers = value.Comparer is StringComparer stringComparer && stringComparer == StringComparer.OrdinalIgnoreCase ?
                     value :
                     new Dictionary<string, IOpenApiReader>(value, StringComparer.OrdinalIgnoreCase);
             }
