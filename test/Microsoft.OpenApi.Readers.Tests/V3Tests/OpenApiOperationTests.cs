@@ -19,15 +19,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiOperation/";
 
-        public OpenApiOperationTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task OperationWithSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedOperation.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedOperation.yaml"), SettingsFixture.ReaderSettings);
 
             var securityScheme = result.Document.Paths["/"].Operations[OperationType.Get].Security[0].Keys.First();
             Assert.Equivalent(result.Document.Components.SecuritySchemes.First().Value, securityScheme);
@@ -41,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 Tags = new HashSet<OpenApiTag> { new() { Name = "user" } }
             };
             // Act
-            var operation = await OpenApiModelFactory.LoadAsync<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, openApiDocument);
+            var operation = await OpenApiModelFactory.LoadAsync<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, openApiDocument, SettingsFixture.ReaderSettings);
             var expectedOp = new OpenApiOperation
             {
                 Tags = new HashSet<OpenApiTagReference>()

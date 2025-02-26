@@ -7,11 +7,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
     public class OpenApiServerTests
     {
-        public OpenApiServerTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public void NoServer()
         {
@@ -24,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 paths: {}
                 """;
 
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
             Assert.Empty(result.Document.Servers);
         }
@@ -42,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
             Assert.Empty(result.Document.Servers);
         }
@@ -59,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: www.foo.com
                 paths: {}
                 """;
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
             var server = result.Document.Servers.First();
             Assert.Single(result.Document.Servers);
@@ -84,6 +79,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://www.foo.com/spec.yaml")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
             var server = result.Document.Servers.First();
@@ -103,7 +99,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 basePath: /baz
                 paths: {}
                 """;
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
             var server = result.Document.Servers.First();
             Assert.Single(result.Document.Servers);
@@ -127,6 +123,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://bing.com/foo")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
@@ -152,6 +149,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://bing.com")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
@@ -176,6 +174,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://bing.com")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
@@ -200,6 +199,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://bing.com")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
@@ -225,6 +225,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://dev.bing.com/api/description.yaml")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
             var server = result.Document.Servers.First();
@@ -251,6 +252,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://dev.bing.com/api")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
             var server = result.Document.Servers.First();
@@ -276,6 +278,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://bing.com")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
@@ -301,6 +304,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 BaseUrl = new("https://bing.com")
             };
+            settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
             Assert.Empty(result.Document.Servers);

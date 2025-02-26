@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Security;
 using System.Text;
 using System.Threading;
@@ -21,13 +20,6 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     public static class OpenApiModelFactory
     {
-        private static readonly HttpClient _httpClient = new();
-
-        static OpenApiModelFactory()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Json, new OpenApiJsonReader());
-        }
-
         /// <summary>
         /// Loads the input stream and parses it into an Open API document.
         /// </summary>
@@ -73,7 +65,8 @@ namespace Microsoft.OpenApi.Reader
         public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             format ??= InspectStreamFormat(input);
-            return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
+            settings ??= DefaultReaderSettings.Value;
+            return settings.GetReader(format).ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
         }
 
         /// <summary>
@@ -81,11 +74,12 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="url">The path to the OpenAPI file</param>
         /// <param name="settings"> The OpenApi reader settings.</param>
-        /// <param name="token"></param>
+        /// <param name="token">The cancellation token</param>
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken token = default)
         {
-            var (stream, format) = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
+            settings ??= DefaultReaderSettings.Value;
+            var (stream, format) = await RetrieveStreamAndFormatAsync(url, settings, token).ConfigureAwait(false);
             return await LoadAsync(stream, format, settings, token).ConfigureAwait(false);
         }
 
@@ -102,7 +96,8 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>The OpenAPI element.</returns>
         public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiDocument openApiDocument, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement
         {
-            var (stream, format) = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
+            settings ??= DefaultReaderSettings.Value;
+            var (stream, format) = await RetrieveStreamAndFormatAsync(url, settings, token).ConfigureAwait(false);
             return await LoadAsync<T>(stream, version, openApiDocument, format, settings, token);
         }
 
@@ -239,14 +234,15 @@ namespace Microsoft.OpenApi.Reader
             return Load<T>(stream, version, format, openApiDocument, out diagnostic, settings);
         }
 
-        private static readonly OpenApiReaderSettings DefaultReaderSettings = new();
+        private static readonly Lazy<OpenApiReaderSettings> DefaultReaderSettings = new(() => new OpenApiReaderSettings());
 
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
-            var reader = OpenApiReaderRegistry.GetReader(format);
+            settings ??= DefaultReaderSettings.Value;
+            var reader = settings.GetReader(format);
             var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
 
-            if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
+            if (settings.LoadExternalRefs)
             {
                 var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.Document, settings, format, cancellationToken).ConfigureAwait(false);
                 // Merge diagnostics of external reference
@@ -267,14 +263,15 @@ namespace Microsoft.OpenApi.Reader
             var openApiWorkSpace = new OpenApiWorkspace(baseUrl);
 
             // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
+            var streamLoader = new DefaultStreamLoader(settings.BaseUrl, settings.HttpClient);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, token).ConfigureAwait(false);
         }
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
         {
-            if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
+            settings ??= DefaultReaderSettings.Value;
+            if (settings.LoadExternalRefs)
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
             }
@@ -283,12 +280,12 @@ namespace Microsoft.OpenApi.Reader
                 throw new ArgumentException($"Cannot parse the stream: {nameof(input)} is empty or contains no elements.");
             }
 
-            var reader = OpenApiReaderRegistry.GetReader(format);
+            var reader = settings.GetReader(format);
             var readResult = reader.Read(input, settings);
             return readResult;
         }
 
-        private static async Task<(Stream, string)> RetrieveStreamAndFormatAsync(string url, CancellationToken token = default)
+        private static async Task<(Stream, string)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -298,7 +295,7 @@ namespace Microsoft.OpenApi.Reader
                 if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase)
                     || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 {
-                    var response = await _httpClient.GetAsync(url, token).ConfigureAwait(false);
+                    var response = await settings.HttpClient.GetAsync(url, token).ConfigureAwait(false);
                     var mediaType = response.Content.Headers.ContentType.MediaType;
                     var contentType = mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
                     format = contentType.Split('/').Last().Split('+').Last().Split('-').Last();

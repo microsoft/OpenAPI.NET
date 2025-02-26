@@ -28,11 +28,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
         private const string codacyApi = "https://api.codacy.com/api/api-docs/swagger.yaml";
 
-        public OpenApiDocumentTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         private static async Task<T> CloneAsync<T>(T element) where T : class, IOpenApiSerializable
         {
             using var stream = new MemoryStream();
@@ -60,7 +55,7 @@ info:
     title: Simple Document
     version: 0.9.1
 paths: {}",
-                OpenApiConstants.Yaml);
+                OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -91,7 +86,7 @@ info:
 paths: {}
 """;
 
-            var readResult = OpenApiDocument.Parse(stringOpenApiDoc);
+            var readResult = OpenApiDocument.Parse(stringOpenApiDoc, settings: SettingsFixture.ReaderSettings);
             Assert.Equal("Sample API", readResult.Document.Info.Title);
         }
 
@@ -99,7 +94,7 @@ paths: {}
         public async Task ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
             var path = Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
-            var result = await OpenApiDocument.LoadAsync(path);
+            var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
 
             Assert.Empty(result.Diagnostic.Errors);
             result.Document.Should().BeEquivalentTo(
@@ -135,7 +130,7 @@ paths: {}
             await stream.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
-            var result = await OpenApiDocument.LoadAsync(memoryStream);
+            var result = await OpenApiDocument.LoadAsync(memoryStream, settings: SettingsFixture.ReaderSettings);
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -161,7 +156,7 @@ paths: {}
         [Fact]
         public async Task ParseMinimalDocumentShouldSucceed()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "minimalDocument.yaml"), SettingsFixture.ReaderSettings);
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -185,7 +180,7 @@ paths: {}
         public async Task ParseStandardPetStoreDocumentShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
-            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
+            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             var components = new OpenApiComponents
             {
@@ -571,7 +566,7 @@ paths: {}
         public async Task ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml"));
-            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
+            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             var components = new OpenApiComponents
             {
@@ -1044,7 +1039,7 @@ paths: {}
         [Fact]
         public async Task ParsePetStoreExpandedShouldSucceed()
         {
-            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"));
+            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"), SettingsFixture.ReaderSettings);
 
             // TODO: Create the object in memory and compare with the one read from YAML file.
 
@@ -1055,7 +1050,7 @@ paths: {}
         [Fact]
         public async Task GlobalSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedApi.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedApi.yaml"), SettingsFixture.ReaderSettings);
 
             var securityRequirement = result.Document.SecurityRequirements[0];
 
@@ -1065,7 +1060,7 @@ paths: {}
         [Fact]
         public async Task HeaderParameterShouldAllowExample()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"), SettingsFixture.ReaderSettings);
 
             var exampleHeader = result.Document.Components?.Headers?["example-header"];
             Assert.NotNull(exampleHeader);
@@ -1127,7 +1122,7 @@ paths: {}
         public async Task ParseDocumentWithReferencedSecuritySchemeWorks()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), SettingsFixture.ReaderSettings);
             var securityScheme = result.Document.Components.SecuritySchemes["OAuth2"];
 
             // Assert
@@ -1141,7 +1136,7 @@ paths: {}
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
 
             // Act
-            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
+            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             var actualSchema = result.Document.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
@@ -1154,7 +1149,7 @@ paths: {}
         public async Task ValidateExampleShouldNotHaveDataTypeMismatch()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), SettingsFixture.ReaderSettings);
 
             // Assert
             var warnings = result.Diagnostic.Warnings;
@@ -1242,7 +1237,7 @@ components:
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
             // Act
-            var doc = (await OpenApiDocument.LoadAsync(stream)).Document;
+            var doc = (await OpenApiDocument.LoadAsync(stream, settings: SettingsFixture.ReaderSettings)).Document;
             var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var outputDoc = (await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0)).MakeLineBreaksEnvironmentNeutral();
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
@@ -1276,7 +1271,7 @@ components:
                                                                     default: v2
                                                                     enum: [v1, v2]
                                                             paths: {}
-                                                            """, "yaml");
+                                                            """, "yaml", SettingsFixture.ReaderSettings);
 
             var expected = new OpenApiDocument
             {
@@ -1324,7 +1319,7 @@ components:
                                                                   version:
                                                                     enum: [v1, v2]
                                                             paths: {}
-                                                            """, "yaml");
+                                                            """, "yaml", SettingsFixture.ReaderSettings);
 
             Assert.NotEmpty(result.Diagnostic.Errors);
         }
@@ -1332,7 +1327,7 @@ components:
         [Fact]
         public async Task ParseDocumentWithEmptyPathsSucceeds()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"), SettingsFixture.ReaderSettings);
             Assert.Empty(result.Diagnostic.Errors);
         }
 
@@ -1340,7 +1335,7 @@ components:
         public async Task ParseDocumentWithExampleReferencesPasses()
         {
             // Act & Assert: Ensure no NullReferenceException is thrown
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"), SettingsFixture.ReaderSettings);
             Assert.Empty(result.Diagnostic.Errors);
         }
 
@@ -1348,7 +1343,7 @@ components:
         public async Task ParseDocumentWithNonStandardMIMETypePasses()
         {
             // Act & Assert: Ensure NotSupportedException is not thrown for non-standard MIME type: text/x-yaml
-            var result = await OpenApiDocument.LoadAsync(codacyApi);
+            var result = await OpenApiDocument.LoadAsync(codacyApi, SettingsFixture.ReaderSettings);
             Assert.NotNull(result.Document); 
         }
     }

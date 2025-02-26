@@ -15,15 +15,10 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
     [Collection("DefaultSettings")]
     public class OpenApiDiagnosticTests
     {
-        public OpenApiDiagnosticTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task DetectedSpecificationVersionShouldBeV2_0()
         {
-            var actual = await OpenApiDocument.LoadAsync("V2Tests/Samples/basic.v2.yaml");
+            var actual = await OpenApiDocument.LoadAsync("V2Tests/Samples/basic.v2.yaml", SettingsFixture.ReaderSettings);
 
             Assert.NotNull(actual.Diagnostic);
             Assert.Equal(OpenApiSpecVersion.OpenApi2_0, actual.Diagnostic.SpecificationVersion);
@@ -32,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         [Fact]
         public async Task DetectedSpecificationVersionShouldBeV3_0()
         {
-            var actual = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml");
+            var actual = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml", SettingsFixture.ReaderSettings);
 
             Assert.NotNull(actual.Diagnostic);
             Assert.Equal(OpenApiSpecVersion.OpenApi3_0, actual.Diagnostic.SpecificationVersion);
@@ -48,6 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
                 CustomExternalLoader = new ResourceLoader(),
                 BaseUrl = new("fie://c:\\")
             };
+            settings.AddYamlReader();
 
             ReadResult result;
             result = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/TodoMain.yaml", settings);
