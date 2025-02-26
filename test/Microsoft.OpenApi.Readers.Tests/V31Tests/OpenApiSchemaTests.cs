@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedObject = new OpenApiSchema()
             {
                 Id = "https://example.com/arrays.schema.json",
-                Schema = "https://json-schema.org/draft/2020-12/schema",
+                Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object,
                 Properties = new Dictionary<string, IOpenApiSchema>
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expected = new OpenApiSchema()
             {
                 Id = "https://example.com/arrays.schema.json",
-                Schema = "https://json-schema.org/draft/2020-12/schema",
+                Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object | JsonSchemaType.Null
             };

@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$schema",
-                (o, n, _) => o.Schema = n.GetScalarValue()
+                (o, n, _) => { if (n.GetScalarValue() is string {} sSchema && Uri.TryCreate(sSchema, UriKind.Absolute, out var schema)) {o.Schema = schema;}}
             },
             {
                 "$id",

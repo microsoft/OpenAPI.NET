@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 
@@ -19,7 +20,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// $schema, a JSON Schema dialect identifier. Value must be a URI
     /// </summary>
-    public string Schema { get; }
+    public Uri Schema { get; }
 
     /// <summary>
     /// $id - Identifies a schema resource with its canonical URI.
