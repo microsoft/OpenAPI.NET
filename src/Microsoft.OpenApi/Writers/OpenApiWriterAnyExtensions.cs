@@ -120,6 +120,8 @@ namespace Microsoft.OpenApi.Writers
 #if NET6_0_OR_GREATER
             else if (jsonValue.TryGetValue(out DateOnly dateOnlyValue))
                 writer.WriteValue(dateOnlyValue.ToString("o", CultureInfo.InvariantCulture));
+            else if (jsonValue.TryGetValue(out TimeOnly timeOnlyValue))
+                writer.WriteValue(timeOnlyValue.ToString("o", CultureInfo.InvariantCulture));
 #endif
             else if (jsonValue.TryGetValue(out bool boolValue)) 
                 writer.WriteValue(boolValue);
