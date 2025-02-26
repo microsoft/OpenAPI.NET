@@ -22,7 +22,7 @@ public static class OpenApiReaderSettingsExtensions
     private static void AddReaderToSettings(this OpenApiReaderSettings settings, string format, IOpenApiReader reader)
     {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-        settings.Readers.Add(format, reader);
+        settings.Readers.TryAdd(format, reader);
 #else
         if (!settings.Readers.ContainsKey(format))
         {
