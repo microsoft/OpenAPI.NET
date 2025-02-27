@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
             Walk(OpenApiConstants.Webhooks, () => Walk(doc.Webhooks));
             Walk(OpenApiConstants.Components, () => Walk(doc.Components));
-            Walk(OpenApiConstants.Security, () => Walk(doc.SecurityRequirements));
+            Walk(OpenApiConstants.Security, () => Walk(doc.Security));
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
             Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);
