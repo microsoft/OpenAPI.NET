@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/> and child objects
         /// </summary>
-        internal void Walk(ISet<OpenApiTag> tags)
+        internal void Walk(ISet<OpenApiTag>? tags)
         {
             if (tags == null)
             {
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/> and child objects
         /// </summary>
-        internal void Walk(ISet<OpenApiTagReference> tags)
+        internal void Walk(ISet<OpenApiTagReference>? tags)
         {
             if (tags == null)
             {

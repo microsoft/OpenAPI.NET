@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Reader
     public class OpenApiReaderSettings
     {
         private static readonly Lazy<HttpClient> httpClient = new(() => new HttpClient());
-        private HttpClient _httpClient;
+        private HttpClient? _httpClient;
         /// <summary>
         /// HttpClient to use for making requests and retrieve documents
         /// </summary>
@@ -161,9 +161,9 @@ namespace Microsoft.OpenApi.Reader
         private void TryAddExtensionParser(string name, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension> parser)
         {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-            ExtensionParsers.TryAdd(name, parser);
+            ExtensionParsers?.TryAdd(name, parser);
 #else
-            if (!ExtensionParsers.ContainsKey(name))
+            if (ExtensionParsers is not null && !ExtensionParsers.ContainsKey(name))
                 ExtensionParsers.Add(name, parser);
 #endif
         }

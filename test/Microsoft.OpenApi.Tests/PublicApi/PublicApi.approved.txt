@@ -422,18 +422,18 @@ namespace Microsoft.OpenApi.Models.Interfaces
         System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? Definitions { get; }
         System.Collections.Generic.IDictionary<string, System.Collections.Generic.ISet<string>>? DependentRequired { get; }
         bool Deprecated { get; }
-        Microsoft.OpenApi.Models.OpenApiDiscriminator Discriminator { get; }
-        string DynamicAnchor { get; }
-        string DynamicRef { get; }
-        System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Enum { get; }
-        System.Text.Json.Nodes.JsonNode Example { get; }
-        System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Examples { get; }
+        Microsoft.OpenApi.Models.OpenApiDiscriminator? Discriminator { get; }
+        string? DynamicAnchor { get; }
+        string? DynamicRef { get; }
+        System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Enum { get; }
+        System.Text.Json.Nodes.JsonNode? Example { get; }
+        System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Examples { get; }
         decimal? ExclusiveMaximum { get; }
         decimal? ExclusiveMinimum { get; }
-        Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; }
-        string Format { get; }
-        string Id { get; }
-        Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Items { get; }
+        Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; }
+        string? Format { get; }
+        string? Id { get; }
+        Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Items { get; }
         int? MaxItems { get; }
         int? MaxLength { get; }
         int? MaxProperties { get; }
@@ -449,15 +449,15 @@ namespace Microsoft.OpenApi.Models.Interfaces
         System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? PatternProperties { get; }
         System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? Properties { get; }
         bool ReadOnly { get; }
-        System.Collections.Generic.ISet<string> Required { get; }
-        System.Uri Schema { get; }
-        string Title { get; }
+        System.Collections.Generic.ISet<string>? Required { get; }
+        System.Uri? Schema { get; }
+        string? Title { get; }
         Microsoft.OpenApi.Models.JsonSchemaType? Type { get; }
         bool UnEvaluatedProperties { get; }
         bool UnevaluatedProperties { get; }
         bool? UniqueItems { get; }
-        System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> UnrecognizedKeywords { get; }
-        System.Collections.Generic.IDictionary<string, bool> Vocabulary { get; }
+        System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode>? UnrecognizedKeywords { get; }
+        System.Collections.Generic.IDictionary<string, bool>? Vocabulary { get; }
         bool WriteOnly { get; }
         Microsoft.OpenApi.Models.OpenApiXml? Xml { get; }
     }
@@ -1023,20 +1023,20 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? Definitions { get; set; }
         public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ISet<string>>? DependentRequired { get; set; }
         public bool Deprecated { get; set; }
-        public string Description { get; set; }
-        public Microsoft.OpenApi.Models.OpenApiDiscriminator Discriminator { get; set; }
-        public string DynamicAnchor { get; set; }
-        public string DynamicRef { get; set; }
-        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Enum { get; set; }
-        public System.Text.Json.Nodes.JsonNode Example { get; set; }
-        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Examples { get; set; }
+        public string? Description { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiDiscriminator? Discriminator { get; set; }
+        public string? DynamicAnchor { get; set; }
+        public string? DynamicRef { get; set; }
+        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Enum { get; set; }
+        public System.Text.Json.Nodes.JsonNode? Example { get; set; }
+        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Examples { get; set; }
         public decimal? ExclusiveMaximum { get; set; }
         public decimal? ExclusiveMinimum { get; set; }
-        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
-        public Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; set; }
-        public string Format { get; set; }
-        public string Id { get; set; }
-        public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Items { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; set; }
+        public string? Format { get; set; }
+        public string? Id { get; set; }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Items { get; set; }
         public int? MaxItems { get; set; }
         public int? MaxLength { get; set; }
         public int? MaxProperties { get; set; }
@@ -1052,15 +1052,15 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? PatternProperties { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? Properties { get; set; }
         public bool ReadOnly { get; set; }
-        public System.Collections.Generic.ISet<string> Required { get; set; }
-        public System.Uri Schema { get; set; }
-        public string Title { get; set; }
+        public System.Collections.Generic.ISet<string>? Required { get; set; }
+        public System.Uri? Schema { get; set; }
+        public string? Title { get; set; }
         public Microsoft.OpenApi.Models.JsonSchemaType? Type { get; set; }
         public bool UnEvaluatedProperties { get; set; }
         public bool UnevaluatedProperties { get; set; }
         public bool? UniqueItems { get; set; }
-        public System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> UnrecognizedKeywords { get; set; }
-        public System.Collections.Generic.IDictionary<string, bool> Vocabulary { get; set; }
+        public System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode>? UnrecognizedKeywords { get; set; }
+        public System.Collections.Generic.IDictionary<string, bool>? Vocabulary { get; set; }
         public bool WriteOnly { get; set; }
         public Microsoft.OpenApi.Models.OpenApiXml? Xml { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema CreateShallowCopy() { }
@@ -1374,20 +1374,20 @@ namespace Microsoft.OpenApi.Models.References
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? Definitions { get; }
         public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ISet<string>>? DependentRequired { get; }
         public bool Deprecated { get; }
-        public string Description { get; set; }
-        public Microsoft.OpenApi.Models.OpenApiDiscriminator Discriminator { get; }
-        public string DynamicAnchor { get; }
-        public string DynamicRef { get; }
-        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Enum { get; }
-        public System.Text.Json.Nodes.JsonNode Example { get; }
-        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode> Examples { get; }
+        public string? Description { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiDiscriminator? Discriminator { get; }
+        public string? DynamicAnchor { get; }
+        public string? DynamicRef { get; }
+        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Enum { get; }
+        public System.Text.Json.Nodes.JsonNode? Example { get; }
+        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Examples { get; }
         public decimal? ExclusiveMaximum { get; }
         public decimal? ExclusiveMinimum { get; }
-        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; }
-        public Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; }
-        public string Format { get; }
-        public string Id { get; }
-        public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema Items { get; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; }
+        public string? Format { get; }
+        public string? Id { get; }
+        public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Items { get; }
         public int? MaxItems { get; }
         public int? MaxLength { get; }
         public int? MaxProperties { get; }
@@ -1403,15 +1403,15 @@ namespace Microsoft.OpenApi.Models.References
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? PatternProperties { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? Properties { get; }
         public bool ReadOnly { get; }
-        public System.Collections.Generic.ISet<string> Required { get; }
-        public System.Uri Schema { get; }
-        public string Title { get; }
+        public System.Collections.Generic.ISet<string>? Required { get; }
+        public System.Uri? Schema { get; }
+        public string? Title { get; }
         public Microsoft.OpenApi.Models.JsonSchemaType? Type { get; }
         public bool UnEvaluatedProperties { get; }
         public bool UnevaluatedProperties { get; }
         public bool? UniqueItems { get; }
-        public System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode> UnrecognizedKeywords { get; }
-        public System.Collections.Generic.IDictionary<string, bool> Vocabulary { get; }
+        public System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode>? UnrecognizedKeywords { get; }
+        public System.Collections.Generic.IDictionary<string, bool>? Vocabulary { get; }
         public bool WriteOnly { get; }
         public Microsoft.OpenApi.Models.OpenApiXml? Xml { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema source) { }
@@ -1486,10 +1486,10 @@ namespace Microsoft.OpenApi.Reader
     public class OpenApiReaderSettings
     {
         public OpenApiReaderSettings() { }
-        public System.Uri BaseUrl { get; set; }
-        public Microsoft.OpenApi.Interfaces.IStreamLoader CustomExternalLoader { get; set; }
-        public System.Collections.Generic.List<string> DefaultContentType { get; set; }
-        public System.Collections.Generic.Dictionary<string, System.Func<System.Text.Json.Nodes.JsonNode, Microsoft.OpenApi.OpenApiSpecVersion, Microsoft.OpenApi.Interfaces.IOpenApiExtension>> ExtensionParsers { get; set; }
+        public System.Uri? BaseUrl { get; set; }
+        public Microsoft.OpenApi.Interfaces.IStreamLoader? CustomExternalLoader { get; set; }
+        public System.Collections.Generic.List<string>? DefaultContentType { get; set; }
+        public System.Collections.Generic.Dictionary<string, System.Func<System.Text.Json.Nodes.JsonNode, Microsoft.OpenApi.OpenApiSpecVersion, Microsoft.OpenApi.Interfaces.IOpenApiExtension>>? ExtensionParsers { get; set; }
         public System.Net.Http.HttpClient HttpClient { init; }
         public bool LeaveStreamOpen { get; set; }
         public bool LoadExternalRefs { get; set; }

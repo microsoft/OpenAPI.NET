@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Models
             Components = document?.Components != null ? new(document?.Components) : null;
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
-            ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
+            ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
             Annotations = document?.Annotations != null ? new Dictionary<string, object>(document.Annotations) : null;
             BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());

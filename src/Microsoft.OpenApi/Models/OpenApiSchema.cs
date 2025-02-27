@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         public string? Title { get; set; }
 
         /// <inheritdoc />
-        public Uri Schema { get; set; }
+        public Uri? Schema { get; set; }
 
         /// <inheritdoc />
         public string? Id { get; set; }

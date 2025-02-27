@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Reader
             var openApiWorkSpace = new OpenApiWorkspace(baseUrl);
 
             // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings.BaseUrl, settings.HttpClient);
+            var streamLoader = new DefaultStreamLoader(baseUrl, settings.HttpClient);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, token).ConfigureAwait(false);
         }
@@ -285,7 +285,7 @@ namespace Microsoft.OpenApi.Reader
             return readResult;
         }
 
-      private static async Task<(Stream, string)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
+      private static async Task<(Stream, string?)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -296,9 +296,9 @@ namespace Microsoft.OpenApi.Reader
                     || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 {
                     var response = await settings.HttpClient.GetAsync(url, token).ConfigureAwait(false);
-                    var mediaType = response.Content.Headers.ContentType.MediaType;
-                    var contentType = mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
-                    format = contentType.Split('/').Last().Split('+').Last().Split('-').Last();
+                    var mediaType = response.Content.Headers.ContentType?.MediaType;
+                    var contentType = mediaType?.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
+                    format = contentType?.Split('/').Last().Split('+').Last().Split('-').Last();
                     
                   // for non-standard MIME types e.g. text/x-yaml used in older libs or apps
 #if NETSTANDARD2_0
