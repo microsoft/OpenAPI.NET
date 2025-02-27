@@ -49,14 +49,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) =>
-                {
-                    var exMax = n.GetScalarValue();
-                    if (exMax != null)
-                    {
-                        o.ExclusiveMaximum = bool.Parse(exMax);
-                    }
-                }
+                (o, n, _) => o.IsExclusiveMaximum = bool.Parse(n.GetScalarValue())
             },
             {
                 "minimum",
@@ -71,14 +64,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) =>
-                {
-                    var exMin = n.GetScalarValue();
-                    if (exMin != null)
-                    {
-                        o.ExclusiveMinimum = bool.Parse(exMin);
-                    }
-                }
+                (o, n, _) => o.IsExclusiveMinimum = bool.Parse(n.GetScalarValue())
             },
             {
                 "maxLength",

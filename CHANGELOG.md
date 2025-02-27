@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.0.0-preview10](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview9...v2.0.0-preview10) (2025-02-27)
+
+
+### Features
+
+* deduplicates tags at the document level ([93c468e](https://github.com/microsoft/OpenAPI.NET/commit/93c468ebd9ee30b0cb32a583821d8abe3d017b18))
+* tags references are now deduplicated as well ([763c0c1](https://github.com/microsoft/OpenAPI.NET/commit/763c0c1c5856a0ed56128b0ab8ce4b3a29ed193a))
+
+
+### Bug Fixes
+
+* add logic for serializing date time objects ([23395c5](https://github.com/microsoft/OpenAPI.NET/commit/23395c5776a781f64a7dc7bfd2867ca83eaa0bb7))
+* adds missing cancellation parameter to async method ([243a111](https://github.com/microsoft/OpenAPI.NET/commit/243a111c19f2939b0a5d27c21db302f8349049eb))
+* avoid creating new http clients to load additional documents of the workspace ([0f23798](https://github.com/microsoft/OpenAPI.NET/commit/0f23798f61ac964f9e71ef7402213392ebe91151))
+* deduplicates exclusive min/max properties in the object model ([08414a1](https://github.com/microsoft/OpenAPI.NET/commit/08414a16db5e0a627c953f107aa34501c18996bb))
+* deduplicates exclusive min/max properties in the object model ([0d5b471](https://github.com/microsoft/OpenAPI.NET/commit/0d5b4716d8cf0215257680d6cbaddaa84438eac5))
+* moves the http client for the reader to settings so it can be passed by client application ([9b910f3](https://github.com/microsoft/OpenAPI.NET/commit/9b910f3928ebcb24560ff004a58e5d397ed3d836))
+* OpenAPIDocument JsonSchemaDialect property is now a URI ([45977b5](https://github.com/microsoft/OpenAPI.NET/commit/45977b50188a0065fde02a3ac44a1fe718a85b30))
+* openapischema schema property is now a Uri ([452a6b9](https://github.com/microsoft/OpenAPI.NET/commit/452a6b9730a2fa310aee64d0b9d2a0c7ea6d131f))
+* primitive parsing for strings as DateTimes is too greedy ([4ee1d8b](https://github.com/microsoft/OpenAPI.NET/commit/4ee1d8bf44b5fcdf0fd22deca1d36ee4faf421d1))
+* removes static readers registry ([fe7a2fd](https://github.com/microsoft/OpenAPI.NET/commit/fe7a2fd654e93ce99dd0ebd628042f816c787104))
+* use a single http client in hidi ([9386fae](https://github.com/microsoft/OpenAPI.NET/commit/9386faec70655279ec3a031fd2afcd9cab09af40))
+
 ## [2.0.0-preview9](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview8...v2.0.0-preview9) (2025-02-21)
 
 

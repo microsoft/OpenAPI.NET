@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n, _) => o.Info = LoadInfo(n, o)},
-            {"jsonSchemaDialect", (o, n, _) => o.JsonSchemaDialect = n.GetScalarValue() },
+            {"jsonSchemaDialect", (o, n, _) => { if (n.GetScalarValue() is string {} sjsd && Uri.TryCreate(sjsd, UriKind.Absolute, out var jsd)) {o.JsonSchemaDialect = jsd;}} },
             {"servers", (o, n, _) => o.Servers = n.CreateList(LoadServer, o)},
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
             {"webhooks", (o, n, _) => o.Webhooks = n.CreateMap(LoadPathItem, o)},

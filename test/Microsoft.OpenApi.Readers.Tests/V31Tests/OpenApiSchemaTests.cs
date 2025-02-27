@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedObject = new OpenApiSchema()
             {
                 Id = "https://example.com/arrays.schema.json",
-                Schema = "https://json-schema.org/draft/2020-12/schema",
+                Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object,
                 Properties = new Dictionary<string, IOpenApiSchema>
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expected = new OpenApiSchema()
             {
                 Id = "https://example.com/arrays.schema.json",
-                Schema = "https://json-schema.org/draft/2020-12/schema",
+                Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object | JsonSchemaType.Null
             };
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     ["six"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum true",
-                        V31ExclusiveMinimum = 10
+                        ExclusiveMinimum = 10
                     },
                     ["seven"] = new OpenApiSchema()
                     {
@@ -249,7 +249,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     ["eight"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum true",
-                        V31ExclusiveMaximum = 20
+                        ExclusiveMaximum = 20
                     },
                     ["nine"] = new OpenApiSchema()
                     {
