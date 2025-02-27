@@ -40,7 +40,7 @@ jobs:
         run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
       - name: Push to registry - Nightly
         if: contains(github.ref, env.PREVIEW_BRANCH)
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v6.14.0
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.getversion.outputs.version }}-preview.${{ steps.date.outputs.date }}${{ steps.runnumber.outputs.runnumber }}
@@ -48,7 +48,7 @@ jobs:
             version_suffix=preview.${{ steps.date.outputs.date }}${{ steps.runnumber.outputs.runnumber }}
       - name: Push to registry - Release
         if: contains(github.ref, 'refs/tags/v')
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v6.14.0
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.getversion.outputs.version }}

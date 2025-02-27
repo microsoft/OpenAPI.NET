@@ -76,10 +76,27 @@ namespace Microsoft.OpenApi.Models
         public IList<OpenApiSecurityRequirement>? SecurityRequirements { get; set; } =
             new List<OpenApiSecurityRequirement>();
 
+        private HashSet<OpenApiTag>? _tags;
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public IList<OpenApiTag>? Tags { get; set; } = new List<OpenApiTag>();
+        public ISet<OpenApiTag>? Tags 
+        { 
+            get
+            {
+                return _tags;
+            }
+            set
+            {
+                if (value is null)
+                {
+                    return;
+                }
+                _tags = value is HashSet<OpenApiTag> tags && tags.Comparer is OpenApiTagComparer ?
+                        tags :
+                        new HashSet<OpenApiTag>(value, OpenApiTagComparer.Instance);
+            }
+        }
 
         /// <summary>
         /// Additional external documentation.
@@ -123,8 +140,8 @@ namespace Microsoft.OpenApi.Models
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
-            Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
-            ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
+            Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
+            ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
             Annotations = document?.Annotations != null ? new Dictionary<string, object>(document.Annotations) : null;
             BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
@@ -553,10 +570,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="url"> The path to the OpenAPI file.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
+        /// <param name="token">The cancellation token</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null)
+        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null, CancellationToken token = default)
         {
-            return await OpenApiModelFactory.LoadAsync(url, settings);
+            return await OpenApiModelFactory.LoadAsync(url, settings, token).ConfigureAwait(false);
         }
 
         /// <summary>

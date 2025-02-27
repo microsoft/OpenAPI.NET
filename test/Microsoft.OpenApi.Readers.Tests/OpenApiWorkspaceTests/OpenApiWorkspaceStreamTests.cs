@@ -11,13 +11,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 {
     public class OpenApiWorkspaceStreamTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiWorkspace/";
-        
-        public OpenApiWorkspaceStreamTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         // Use OpenApiWorkspace to load a document and a referenced document
 
         [Fact]
@@ -30,6 +23,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                 CustomExternalLoader = new MockLoader(),
                 BaseUrl = new("file://c:\\")
             };
+            settings.AddYamlReader();
 
             var stream = new MemoryStream();
             var doc = """
@@ -59,6 +53,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                 CustomExternalLoader = new ResourceLoader(),
                 BaseUrl = new("file://c:\\"),
             };
+            settings.AddYamlReader();
 
             ReadResult result;
             result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);

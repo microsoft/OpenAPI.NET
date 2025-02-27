@@ -36,8 +36,8 @@ namespace Microsoft.OpenApi.Readers.Tests
                         };
                 } } }
             };
+            settings.AddYamlReader();
 
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
             var diag = new OpenApiDiagnostic();
             var actual = OpenApiDocument.Parse(description, "yaml", settings: settings);
 

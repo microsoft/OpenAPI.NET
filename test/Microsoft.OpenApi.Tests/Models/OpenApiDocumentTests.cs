@@ -24,11 +24,6 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiDocumentTests
     {
-        public OpenApiDocumentTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         public static readonly OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
             Schemas =
@@ -1687,7 +1682,7 @@ paths: { }";
 
         private static async Task<OpenApiDocument> ParseInputFileAsync(string filePath)
         {
-            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath)).Document;
+            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings)).Document;
             return openApiDoc;
         }
 
@@ -1990,7 +1985,7 @@ responses:
           items:
             type: object";
 
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml")).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml", SettingsFixture.ReaderSettings)).Document;
           
             var stringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true });
@@ -2044,7 +2039,7 @@ components:
         radius:
           type: number
 ";
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml")).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml", SettingsFixture.ReaderSettings)).Document;
             var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
@@ -2078,7 +2073,7 @@ components:
                     Version = "1.0.0"
                 },
                 Paths = new OpenApiPaths(),
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                 {
                     new OpenApiTag
                     {
@@ -2101,6 +2096,43 @@ components:
 
             var actual = await doc.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
+        [Fact]
+        public void DeduplicatesTags()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = new HashSet<OpenApiTag>
+                {
+                    new OpenApiTag
+                    {
+                        Name = "tag1",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag1"] = new OpenApiAny("tag1")
+                        }
+                    },
+                    new OpenApiTag
+                    {
+                        Name = "tag2",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag2"] = new OpenApiAny("tag2")
+                        }
+                    },
+                    new OpenApiTag
+                    {
+                        Name = "tag1",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag1"] = new OpenApiAny("tag1")
+                        }
+                    }
+                }
+            };
+            Assert.Equal(2, document.Tags.Count);
+            Assert.Contains(document.Tags, t => t.Name == "tag1");
+            Assert.Contains(document.Tags, t => t.Name == "tag2");
         }
     }
 }

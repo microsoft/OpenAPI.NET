@@ -23,11 +23,28 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public const bool DeprecatedDefault = false;
 
+        private HashSet<OpenApiTagReference>? _tags;
         /// <summary>
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public IList<OpenApiTagReference>? Tags { get; set; } = [];
+        public ISet<OpenApiTagReference>? Tags 
+        { 
+            get
+            {
+                return _tags;
+            }
+            set
+            {
+                if (value is null)
+                {
+                    return;
+                }
+                _tags = value is HashSet<OpenApiTagReference> tags && tags.Comparer is OpenApiTagComparer ?
+                        tags :
+                        new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance);
+            }
+        }
 
         /// <summary>
         /// A short summary of what the operation does.
@@ -123,7 +140,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? new List<OpenApiTagReference>(operation.Tags) : null;
+            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;

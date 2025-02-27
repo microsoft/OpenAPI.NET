@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                return Reference.HostDocument?.Tags?.FirstOrDefault(t => StringComparer.Ordinal.Equals(t.Name, Reference.Id));
+                return Reference.HostDocument?.Tags?.FirstOrDefault(t => OpenApiTagComparer.StringComparer.Equals(t.Name, Reference.Id));
             }
         }
 

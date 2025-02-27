@@ -309,14 +309,14 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiTag> openApiTags)
+        public virtual void Visit(ISet<OpenApiTag> openApiTags)
         {
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiTagReference> openApiTags)
+        public virtual void Visit(ISet<OpenApiTagReference> openApiTags)
         {
         }
 

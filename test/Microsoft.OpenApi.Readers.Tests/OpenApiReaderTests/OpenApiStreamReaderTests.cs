@@ -15,16 +15,12 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
 
-        public OpenApiStreamReaderTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task StreamShouldCloseIfLeaveStreamOpenSettingEqualsFalse()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
             var settings = new OpenApiReaderSettings { LeaveStreamOpen = false };
+            settings.AddYamlReader();
             _ = await OpenApiDocument.LoadAsync(stream, settings: settings);
             Assert.False(stream.CanRead);
         }
@@ -34,6 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
             var settings = new OpenApiReaderSettings { LeaveStreamOpen = true };
+            settings.AddYamlReader();
             _ = await OpenApiDocument.LoadAsync(stream, settings: settings);
             Assert.True(stream.CanRead);
         }
@@ -48,7 +45,9 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             memoryStream.Position = 0;
             var stream = memoryStream;
 
-            _ = await OpenApiDocument.LoadAsync(stream, settings: new OpenApiReaderSettings { LeaveStreamOpen = true });
+            var settings = new OpenApiReaderSettings { LeaveStreamOpen = true };
+            settings.AddYamlReader();
+            _ = await OpenApiDocument.LoadAsync(stream, settings: settings);
             stream.Seek(0, SeekOrigin.Begin); // does not throw an object disposed exception
             Assert.True(stream.CanRead);
         }
@@ -64,7 +63,9 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             var stream = await httpClient.GetStreamAsync("20fe7a7b720a0e48e5842d002ac418b12a8201df/tests/v3.0/pass/petstore.yaml");
 
             // Read V3 as YAML
-            var result = await OpenApiDocument.LoadAsync(stream);
+            var settings = new OpenApiReaderSettings();
+            settings.AddYamlReader();
+            var result = await OpenApiDocument.LoadAsync(stream, settings: settings);
             Assert.NotNull(result.Document);
         }
     }
