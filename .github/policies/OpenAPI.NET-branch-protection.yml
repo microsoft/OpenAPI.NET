@@ -30,7 +30,7 @@ configuration:
       # Are commits required to be signed. boolean. TODO: all contributors must have commit signing on local machines.
       requiresCommitSignatures: false
       # Are conversations required to be resolved before merging? boolean
-      requiresConversationResolution: false
+      requiresConversationResolution: true
       # Are merge commits prohibited from being pushed to this branch. boolean
       requiresLinearHistory: false
       # Required status checks to pass before merging. Values can be any string, but if the value does not correspond to any existing status check, the status check will be stuck on pending for status since nothing exists to push an actual status
@@ -66,7 +66,7 @@ configuration:
       # Are commits required to be signed. boolean. TODO: all contributors must have commit signing on local machines.
       requiresCommitSignatures: false
       # Are conversations required to be resolved before merging? boolean
-      requiresConversationResolution: false
+      requiresConversationResolution: true
       # Are merge commits prohibited from being pushed to this branch. boolean
       requiresLinearHistory: false
       # Required status checks to pass before merging. Values can be any string, but if the value does not correspond to any existing status check, the status check will be stuck on pending for status since nothing exists to push an actual status
