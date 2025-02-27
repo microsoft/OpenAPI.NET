@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 
@@ -19,7 +20,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// $schema, a JSON Schema dialect identifier. Value must be a URI
     /// </summary>
-    public string? Schema { get; }
+    public Uri Schema { get; }
 
     /// <summary>
     /// $id - Identifies a schema resource with its canonical URI.
@@ -55,12 +56,12 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public decimal? V31ExclusiveMaximum { get; }
+    public decimal? ExclusiveMaximum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public decimal? V31ExclusiveMinimum { get; }
+    public decimal? ExclusiveMinimum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -93,17 +94,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public bool? ExclusiveMaximum { get; }
-
-    /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-    /// </summary>
     public decimal? Minimum { get; }
-
-    /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-    /// </summary>
-    public bool? ExclusiveMinimum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00

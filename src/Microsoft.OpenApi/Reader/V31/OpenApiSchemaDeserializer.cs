@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$schema",
-                (o, n, _) => o.Schema = n.GetScalarValue()
+                (o, n, _) => { if (n.GetScalarValue() is string {} sSchema && Uri.TryCreate(sSchema, UriKind.Absolute, out var schema)) {o.Schema = schema;}}
             },
             {
                 "$id",
@@ -73,14 +73,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) =>
-                {
-                    var exMax = n.GetScalarValue();
-                    if (exMax != null)
-                    {
-                        o.V31ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(exMax, decimal.MaxValue);
-                    }
-                }
+                (o, n, _) => o.ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "minimum",
@@ -95,14 +88,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) =>
-                {
-                    var exMin = n.GetScalarValue();
-                    if (exMin != null)
-                    {
-                        o.V31ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(exMin, decimal.MaxValue);
-                    }
-                }
+                (o, n, _) => o.ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "maxLength",
