@@ -63,8 +63,7 @@ tags:
 
         public OpenApiTagReferenceTest()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            var result = OpenApiDocument.Parse(OpenApi, "yaml");
+            var result = OpenApiDocument.Parse(OpenApi, "yaml", SettingsFixture.ReaderSettings);
             _openApiTagReference = new("user", result.Document);
         }
 

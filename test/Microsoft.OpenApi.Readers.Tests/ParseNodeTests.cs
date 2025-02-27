@@ -12,11 +12,6 @@ namespace Microsoft.OpenApi.Tests
 {
     public class ParseNodeTests
     {
-        public ParseNodeTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public void BrokenSimpleList()
         {
@@ -30,7 +25,7 @@ namespace Microsoft.OpenApi.Tests
                 paths: { }
                 """;
 
-            var result = OpenApiDocument.Parse(input, "yaml");
+            var result = OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
             Assert.Equivalent(new List<OpenApiError>() {
                 new OpenApiError(new OpenApiReaderException("Expected a value while parsing at #/schemes."))
@@ -56,7 +51,7 @@ namespace Microsoft.OpenApi.Tests
                                       schema: asdasd
                         """;
 
-            var res= OpenApiDocument.Parse(input, "yaml");
+            var res= OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
             Assert.Equivalent(new List<OpenApiError>
             {

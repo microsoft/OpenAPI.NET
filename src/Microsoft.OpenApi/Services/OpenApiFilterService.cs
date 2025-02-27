@@ -393,7 +393,7 @@ namespace Microsoft.OpenApi.Services
             if (tagsArray.Length == 1)
             {
                 var regex = new Regex(tagsArray[0]);
-                return (_, _, operation) => operation.Tags?.Any(tag => tag.Name != null && regex.IsMatch(tag.Name)) ?? false;
+                return (_, _, operation) => operation.Tags?.Any(tag => regex.IsMatch(tag.Name)) ?? false;
             }
             else
             {

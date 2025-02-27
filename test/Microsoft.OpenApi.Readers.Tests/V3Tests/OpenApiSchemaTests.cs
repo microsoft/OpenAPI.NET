@@ -24,11 +24,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiSchema/";
 
-        public OpenApiSchemaTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public void ParsePrimitiveSchemaShouldSucceed()
         {
@@ -67,7 +62,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 }";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -90,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -115,7 +110,7 @@ get:
 ";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, "yaml");
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, "yaml", SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -230,7 +225,7 @@ get:
         public async Task ParseBasicSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"), SettingsFixture.ReaderSettings);
 
             // Assert
             var components = result.Document.Components;
@@ -296,7 +291,7 @@ get:
         public async Task ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"), SettingsFixture.ReaderSettings);
 
             var expectedComponents = new OpenApiComponents
             {
@@ -393,7 +388,7 @@ get:
         public async Task ParseExternalReferenceSchemaShouldSucceed()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalReferencesSchema.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalReferencesSchema.yaml"), SettingsFixture.ReaderSettings);
 
             // Assert
             var components = result.Document.Components;
