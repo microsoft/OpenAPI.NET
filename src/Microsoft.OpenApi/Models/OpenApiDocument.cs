@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? SecurityRequirements { get; set; } =
+        public IList<OpenApiSecurityRequirement>? Security { get; set; } =
             new List<OpenApiSecurityRequirement>();
 
         private HashSet<OpenApiTag>? _tags;
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Models
             Paths = document?.Paths != null ? new(document?.Paths) : new OpenApiPaths();
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
-            SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
+            Security = document?.Security != null ? new List<OpenApiSecurityRequirement>(document.Security) : null;
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Models
             // security
             writer.WriteOptionalCollection(
                 OpenApiConstants.Security,
-                SecurityRequirements,
+                Security,
                 callback);
 
             // tags
@@ -361,7 +361,7 @@ namespace Microsoft.OpenApi.Models
                 // security
                 writer.WriteOptionalCollection(
                     OpenApiConstants.Security,
-                    SecurityRequirements,
+                    Security,
                     (w, s) => s.SerializeAsV2(w));
 
                 // tags

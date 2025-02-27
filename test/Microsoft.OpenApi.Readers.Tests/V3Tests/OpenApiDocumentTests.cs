@@ -1008,7 +1008,7 @@ paths: {}
                             Description = "tagDescription2"
                         }
                     },
-                SecurityRequirements = new List<OpenApiSecurityRequirement>
+                Security = new List<OpenApiSecurityRequirement>
                     {
                         new OpenApiSecurityRequirement
                         {
@@ -1052,7 +1052,7 @@ paths: {}
         {
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedApi.yaml"), SettingsFixture.ReaderSettings);
 
-            var securityRequirement = result.Document.SecurityRequirements[0];
+            var securityRequirement = result.Document.Security[0];
 
             Assert.Equivalent(result.Document.Components.SecuritySchemes.First().Value, securityRequirement.Keys.First());
         }

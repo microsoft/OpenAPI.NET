@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
             {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
-            {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)}
+            {"security", (o, n, _) => o.Security = n.CreateList(LoadSecurityRequirement, o)}
         };
 
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
