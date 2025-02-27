@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Services
                 },
 
                 Components = components,
-                SecurityRequirements = source?.Security,
+                Security = source?.Security,
                 Servers = source?.Servers
             };
 
