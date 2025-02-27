@@ -50,49 +50,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         exclusiveMaximum: true
                         exclusiveMinimum: false
                 paths: {}
-                """,
+            """,
                 "yaml", SettingsFixture.ReaderSettings);
 
-            result.Document.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new()
-                    {
-                        Title = "Simple Document",
-                        Version = "0.9.1",
-                        Extensions =
-                        {
-                            ["x-extension"] = new OpenApiAny(2.335)
-                        }
-                    },
-                    Components = new()
-                    {
-                        Schemas =
-                        {
-                            ["sampleSchema"] = new OpenApiSchema()
-                            {
-                                Type = JsonSchemaType.Object,
-                                Properties =
-                                {
-                                    ["sampleProperty"] = new OpenApiSchema()
-                                    {
-                                        Type = JsonSchemaType.Number,
-                                        Minimum = (decimal)100.54,
-                                        Maximum = (decimal)60000000.35,
-                                        ExclusiveMaximum = true,
-                                        ExclusiveMinimum = false
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    Paths = new()
-                }, options => options
-                .Excluding(x=> x.BaseUri)
-                .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Parent"))
-                .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Root")));
+            Assert.Equal("0.9.1", result.Document.Info.Version, StringComparer.OrdinalIgnoreCase);
+            var extension = Assert.IsType<OpenApiAny>(result.Document.Info.Extensions["x-extension"]);
+            Assert.Equal(2.335M, extension.Node.GetValue<decimal>());
+            var sampleSchema = Assert.IsType<OpenApiSchema>(result.Document.Components.Schemas["sampleSchema"]);
+            var samplePropertySchema = Assert.IsType<OpenApiSchema>(sampleSchema.Properties["sampleProperty"]);
+            var expectedPropertySchema = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Number,
+                Minimum = (decimal)100.54,
+                ExclusiveMaximum = (decimal)60000000.35,
+            };
+
+            Assert.Equivalent(expectedPropertySchema, samplePropertySchema);
         }
 
         [Fact]

@@ -66,9 +66,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiSchema> Definitions { get => Target?.Definitions; }
         /// <inheritdoc/>
-        public decimal? V31ExclusiveMaximum { get => Target?.V31ExclusiveMaximum; }
+        public decimal? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
         /// <inheritdoc/>
-        public decimal? V31ExclusiveMinimum { get => Target?.V31ExclusiveMinimum; }
+        public decimal? ExclusiveMinimum { get => Target?.ExclusiveMinimum; }
         /// <inheritdoc/>
         public bool UnEvaluatedProperties { get => Target?.UnEvaluatedProperties ?? false; }
         /// <inheritdoc/>
@@ -80,11 +80,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public decimal? Maximum { get => Target?.Maximum; }
         /// <inheritdoc/>
-        public bool? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
-        /// <inheritdoc/>
         public decimal? Minimum { get => Target?.Minimum; }
-        /// <inheritdoc/>
-        public bool? ExclusiveMinimum { get => Target?.ExclusiveMinimum; }
         /// <inheritdoc/>
         public int? MaxLength { get => Target?.MaxLength; }
         /// <inheritdoc/>
