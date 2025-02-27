@@ -405,7 +405,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Title = "Webhook Example",
                     Version = "1.0.0"
                 },
-                JsonSchemaDialect = "http://json-schema.org/draft-07/schema#",
+                JsonSchemaDialect = new Uri("http://json-schema.org/draft-07/schema#"),
                 Webhooks = new Dictionary<string, IOpenApiPathItem>
                 {
                     ["pets"] = components.PathItems["pets"]

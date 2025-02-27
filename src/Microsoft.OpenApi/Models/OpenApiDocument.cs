@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
         /// </summary>
-        public string? JsonSchemaDialect { get; set; }
+        public Uri? JsonSchemaDialect { get; set; }
 
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.1");
 
             // jsonSchemaDialect
-            writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
+            writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect?.ToString());
 
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w));
 

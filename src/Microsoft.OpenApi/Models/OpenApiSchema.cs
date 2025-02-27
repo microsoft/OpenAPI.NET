@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         public string Title { get; set; }
 
         /// <inheritdoc />
-        public string Schema { get; set; }
+        public Uri Schema { get; set; }
 
         /// <inheritdoc />
         public string Id { get; set; }
@@ -400,7 +400,7 @@ namespace Microsoft.OpenApi.Models
         internal void WriteJsonSchemaKeywords(IOpenApiWriter writer)
         {
             writer.WriteProperty(OpenApiConstants.Id, Id);
-            writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
+            writer.WriteProperty(OpenApiConstants.DollarSchema, Schema?.ToString());
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
             writer.WriteProperty(OpenApiConstants.Const, Const);
             writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));

@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string Title { get => Target?.Title; }
         /// <inheritdoc/>
-        public string Schema { get => Target?.Schema; }
+        public Uri Schema { get => Target?.Schema; }
         /// <inheritdoc/>
         public string Id { get => Target?.Id; }
         /// <inheritdoc/>
