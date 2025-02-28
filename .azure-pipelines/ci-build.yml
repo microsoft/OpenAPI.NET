@@ -70,29 +70,29 @@ steps:
   
   - bash: |
       echo "Building Docker image..."
-      # Using regular pipeline variables instead of output variables
+      # Using quotes around tags to prevent flag interpretation
       docker build \
-        --build-arg version_suffix=preview.${BUILDDATE}${RUNNUMBER} \
-        -t $(REGISTRY)/$(IMAGE_NAME):nightly \
-        -t $(REGISTRY)/$(IMAGE_NAME):${VERSION}-preview.${BUILDDATE}${RUNNUMBER} \
+        --build-arg "version_suffix=preview.${BUILDDATE}${RUNNUMBER}" \
+        -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
+        -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}-preview.${BUILDDATE}${RUNNUMBER}" \
         "$(Build.SourcesDirectory)"
       
       echo "Pushing Docker image with nightly tag..."
-      docker push $(REGISTRY)/$(IMAGE_NAME):nightly
-      docker push $(REGISTRY)/$(IMAGE_NAME):${VERSION}-preview.${BUILDDATE}${RUNNUMBER}
+      docker push "$(REGISTRY)/$(IMAGE_NAME):nightly"
+      docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}-preview.${BUILDDATE}${RUNNUMBER}"
     displayName: 'Build and Push Nightly Image'
     condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
   
   - bash: |
       echo "Building Docker image for release..."
       docker build \
-        -t $(REGISTRY)/$(IMAGE_NAME):latest \
-        -t $(REGISTRY)/$(IMAGE_NAME):${VERSION} \
+        -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
+        -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}" \
         "$(Build.SourcesDirectory)"
       
       echo "Pushing Docker image with latest and version tags..."
-      docker push $(REGISTRY)/$(IMAGE_NAME):latest
-      docker push $(REGISTRY)/$(IMAGE_NAME):${VERSION}
+      docker push "$(REGISTRY)/$(IMAGE_NAME):latest"
+      docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}"
     displayName: 'Build and Push Release Image'
     condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
 
