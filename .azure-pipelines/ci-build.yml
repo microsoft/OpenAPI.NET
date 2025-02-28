@@ -6,6 +6,7 @@ trigger:
   branches:
     include:
       - main
+      - task/migrate-acr-pipeline
   paths:
     include:
       - src/**
