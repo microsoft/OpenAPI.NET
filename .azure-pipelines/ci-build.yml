@@ -82,9 +82,23 @@ steps:
     displayName: 'Verify version variable'
   
   - bash: |
-      runnumber=$(echo $(Build.BuildNumber) | awk '{ print substr($0, length($0)-3, length($0)) }')
+      echo "Build Number: $(Build.BuildNumber)"
+      # Extract the last 3 characters for the run number
+      runnumber=$(echo "$(Build.BuildNumber)" | grep -o '[0-9]\+$')
+      echo "Extracted Run Number: $runnumber"
+      
+      # If extraction fails, set a default
+      if [ -z "$runnumber" ]; then
+        echo "Extraction failed, using default value"
+        runnumber=$(date +"%S%N" | cut -c1-3)
+        echo "Generated fallback run number: $runnumber"
+      fi
+      
+      # Set the variable for later steps
       echo "##vso[task.setvariable variable=RUNNUMBER]$runnumber"
+      echo "##vso[task.setvariable variable=RUNNUMBER;isOutput=true]$runnumber"
     displayName: 'Get truncated run number'
+    name: getrunnumber
     condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
   
   - bash: |
