@@ -42,7 +42,7 @@ steps:
         az acr login --name msgraphpperegistry
   
   - powershell: |
-      $content = [XML](Get-Content ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj)
+      $content = [XML](Get-Content ./Directory.Build.props)
       $version = $content.Project.PropertyGroup.Version
       Write-Host "Version found: $version" 
       Write-Host "##vso[task.setvariable variable=version;isoutput=true]$version"
