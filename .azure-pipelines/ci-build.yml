@@ -321,7 +321,7 @@ extends:
 
     - stage: Build_and_deploy_docker_images
       displayName: 'Build and deploy docker images'
-      condition: and(or(contains(variables['build.sourceBranch'], 'refs/tags/v'), eq(variables['build.sourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
+      condition: and(or(eq(variables['build.sourceBranch'], 'refs/tags/v'), eq(variables['build.sourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
       dependsOn: build
       jobs:
         - job: buildAndPush
