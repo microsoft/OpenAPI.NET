@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Hidi.Extensions
 {
@@ -14,9 +15,9 @@ namespace Microsoft.OpenApi.Hidi.Extensions
         /// <returns>A <see cref="string"/> value matching the provided extensionKey. Return null when extensionKey is not found. </returns>
         internal static string GetExtension(this IDictionary<string, IOpenApiExtension> extensions, string extensionKey)
         {
-            if (extensions.TryGetValue(extensionKey, out var value) && value is OpenApiAny castValue)
+            if (extensions.TryGetValue(extensionKey, out var value) && value is OpenApiAny { Node: JsonValue castValue } && castValue.TryGetValue<string>(out var stringValue))
             {
-                return castValue.Node.GetValue<string>();
+                return stringValue;
             }
             return string.Empty;
         }

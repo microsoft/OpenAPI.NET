@@ -1,0 +1,8 @@
+﻿{
+  "in": "query",
+  "name": "limit",
+  "description": "Number of results to return",
+  "type": "integer",
+  "maximum": 100,
+  "minimum": 1
+}

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
@@ -17,13 +18,6 @@ namespace Microsoft.OpenApi.Reader.V2
     {
         private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new()
         {
-            {
-                "$ref", (o, n, t) =>
-                {
-                    o.Reference = new() { ExternalResource = n.GetScalarValue() };
-                    o.UnresolvedReference =true;
-                }
-            },
             {"get", (o, n, t) => o.AddOperation(OperationType.Get, LoadOperation(n, t))},
             {"put", (o, n, t) => o.AddOperation(OperationType.Put, LoadOperation(n, t))},
             {"post", (o, n, t) => o.AddOperation(OperationType.Post, LoadOperation(n, t))},
@@ -40,7 +34,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
             new()
             {
-                {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))},
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))},
             };
 
         public static OpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument)

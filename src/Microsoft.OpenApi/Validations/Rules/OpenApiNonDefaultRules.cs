@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -16,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the data matches with the given data type.
         /// </summary>
-        public static ValidationRule<OpenApiHeader> HeaderMismatchedDataType =>
+        public static ValidationRule<IOpenApiHeader> HeaderMismatchedDataType =>
             new(nameof(HeaderMismatchedDataType),
                 (context, header) =>
                 {
@@ -46,7 +47,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the data matches with the given data type.
         /// </summary>
-        public static ValidationRule<OpenApiSchema> SchemaMismatchedDataType =>
+        public static ValidationRule<IOpenApiSchema> SchemaMismatchedDataType =>
             new(nameof(SchemaMismatchedDataType),
                 (context, schema) =>
                 {
@@ -89,8 +90,8 @@ namespace Microsoft.OpenApi.Validations.Rules
         private static void ValidateMismatchedDataType(IValidationContext context,
                                                       string ruleName,
                                                       JsonNode example,
-                                                      IDictionary<string, OpenApiExample> examples,
-                                                      OpenApiSchema schema)
+                                                      IDictionary<string, IOpenApiExample> examples,
+                                                      IOpenApiSchema schema)
         {
             // example
             context.Enter("example");

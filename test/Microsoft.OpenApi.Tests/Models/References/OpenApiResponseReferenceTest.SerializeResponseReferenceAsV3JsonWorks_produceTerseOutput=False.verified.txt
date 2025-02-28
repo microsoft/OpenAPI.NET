@@ -1,3 +1,0 @@
-﻿{
-  "$ref": "#/components/responses/OkResponse"
-}

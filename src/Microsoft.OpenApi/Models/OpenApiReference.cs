@@ -4,6 +4,7 @@
 using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -11,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// A simple object to allow referencing other components in the specification, internally and externally.
     /// </summary>
-    public class OpenApiReference : IOpenApiSerializable
+    public class OpenApiReference : IOpenApiSerializable, IOpenApiDescribedElement, IOpenApiSummarizedElement
     {
         /// <summary>
         /// A short summary which by default SHOULD override that of the referenced component.
@@ -32,13 +33,13 @@ namespace Microsoft.OpenApi.Models
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </summary>
-        public string ExternalResource { get; set; }
+        public string ExternalResource { get; init; }
 
         /// <summary>
         /// The element type referenced.
         /// </summary>
         /// <remarks>This must be present if <see cref="ExternalResource"/> is not present.</remarks>
-        public ReferenceType? Type { get; set; }
+        public ReferenceType? Type { get; init; }
 
         /// <summary>
         /// The identifier of the reusable component of one particular ReferenceType.
@@ -47,7 +48,7 @@ namespace Microsoft.OpenApi.Models
         /// If ExternalResource is not present, this is the name of the component without the reference type name.
         /// For example, if the reference is '#/components/schemas/componentName', the Id is 'componentName'.
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; init; }
 
         /// <summary>
         /// Gets a flag indicating whether this reference is an external reference.
@@ -62,12 +63,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets a flag indicating whether a file is a valid OpenAPI document or a fragment
         /// </summary>
-        public bool IsFragment = false;
+        public bool IsFragment { get; init; }
 
+        private OpenApiDocument hostDocument;        
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
-        public OpenApiDocument HostDocument { get; set; }
+        public OpenApiDocument HostDocument { get => hostDocument; init => hostDocument = value; }
 
         /// <summary>
         /// Gets the full reference string for v3.0.
@@ -95,7 +97,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     return Id;
                 }
-                if (Id.StartsWith("http"))
+                if (Id.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
                     return Id;
                 }
@@ -145,12 +147,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiReference(OpenApiReference reference)
         {
-            Summary = reference?.Summary;
-            Description = reference?.Description;
-            ExternalResource = reference?.ExternalResource;
-            Type = reference?.Type;
-            Id = reference?.Id;
-            HostDocument = new(reference?.HostDocument);
+            Utils.CheckArgumentNull(reference);
+            Summary = reference.Summary;
+            Description = reference.Description;
+            ExternalResource = reference.ExternalResource;
+            Type = reference.Type;
+            Id = reference.Id;
+            HostDocument = reference.HostDocument;
         }
 
         /// <summary>
@@ -158,11 +161,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            // summary and description are in 3.1 but not in 3.0
-            writer.WriteProperty(OpenApiConstants.Summary, Summary);
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            SerializeInternal(writer);
+            SerializeInternal(writer, w =>
+            {
+                // summary and description are in 3.1 but not in 3.0
+                w.WriteProperty(OpenApiConstants.Summary, Summary);
+                w.WriteProperty(OpenApiConstants.Description, Description);
+            });
         }
 
         /// <summary>
@@ -176,7 +180,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/>
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter> callback = null)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -188,6 +192,10 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
+            if (callback is not null)
+            {
+                callback(writer);
+            }
 
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
@@ -200,7 +208,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             if (Type == ReferenceType.Tag)
             {
@@ -233,7 +241,7 @@ namespace Microsoft.OpenApi.Models
                     return ExternalResource + "#" + Id;
                 }
 
-                if (Id.StartsWith("http"))
+                if (Id.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
                     return Id;
                 }
@@ -270,6 +278,17 @@ namespace Microsoft.OpenApi.Models
                 _ => null,// If the reference type is not supported in V2, simply return null
                           // to indicate that the reference is not pointing to any object.
             };
+        }
+
+        /// <summary>
+        /// Sets the host document after deserialization or before serialization.
+        /// This method is internal on purpose to avoid consumers mutating the host document.
+        /// </summary>
+        /// <param name="currentDocument">Host document to set if none is present</param>
+        internal void EnsureHostDocumentIsSet(OpenApiDocument currentDocument)
+        {
+            Utils.CheckArgumentNull(currentDocument);
+            hostDocument ??= currentDocument;
         }
     }
 }

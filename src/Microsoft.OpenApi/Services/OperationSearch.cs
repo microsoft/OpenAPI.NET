@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -30,11 +31,8 @@ namespace Microsoft.OpenApi.Services
             _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
         }
 
-        /// <summary>
-        /// Visits <see cref="OpenApiPathItem"/>
-        /// </summary>
-        /// <param name="pathItem"> The target <see cref="OpenApiPathItem"/>.</param>
-        public override void Visit(OpenApiPathItem pathItem)
+        /// <inheritdoc/>
+        public override void Visit(IOpenApiPathItem pathItem)
         {
             foreach (var item in pathItem.Operations)
             {
@@ -57,14 +55,14 @@ namespace Microsoft.OpenApi.Services
         /// Visits list of <see cref="OpenApiParameter"/>.
         /// </summary>
         /// <param name="parameters">The target list of <see cref="OpenApiParameter"/>.</param>
-        public override void Visit(IList<OpenApiParameter> parameters)
+        public override void Visit(IList<IOpenApiParameter> parameters)
         {
             /* The Parameter.Explode property should be true
              * if Parameter.Style == Form; but OData query params
              * as used in Microsoft Graph implement explode: false
              * ex: $select=id,displayName,givenName
              */
-            foreach (var parameter in parameters.Where(x => x.Style == ParameterStyle.Form))
+            foreach (var parameter in parameters.OfType<OpenApiParameter>().Where(static x => x.Style == ParameterStyle.Form))
             {
                 parameter.Explode = false;
             }

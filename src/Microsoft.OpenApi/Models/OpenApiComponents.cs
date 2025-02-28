@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
@@ -17,62 +18,62 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSchema>? Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
+        public IDictionary<string, IOpenApiSchema>? Schemas { get; set; } = new Dictionary<string, IOpenApiSchema>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiResponse"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiResponse>? Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public IDictionary<string, IOpenApiResponse>? Responses { get; set; } = new Dictionary<string, IOpenApiResponse>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiParameter"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiParameter"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiParameter>? Parameters { get; set; } =
-            new Dictionary<string, OpenApiParameter>();
+        public IDictionary<string, IOpenApiParameter>? Parameters { get; set; } =
+            new Dictionary<string, IOpenApiParameter>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiExample>? Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiRequestBody"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiRequestBody"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiRequestBody>? RequestBodies { get; set; } =
-            new Dictionary<string, OpenApiRequestBody>();
+        public IDictionary<string, IOpenApiRequestBody>? RequestBodies { get; set; } =
+            new Dictionary<string, IOpenApiRequestBody>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiHeader"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiHeader"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiHeader>? Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
+        public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiSecurityScheme"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiSecurityScheme>? SecuritySchemes { get; set; } =
-            new Dictionary<string, OpenApiSecurityScheme>();
+        public IDictionary<string, IOpenApiSecurityScheme>? SecuritySchemes { get; set; } =
+            new Dictionary<string, IOpenApiSecurityScheme>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiLink"/> Objects.
+        /// An object to hold reusable <see cref="IOpenApiLink"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiLink>? Links { get; set; } = new Dictionary<string, OpenApiLink>();
+        public IDictionary<string, IOpenApiLink>? Links { get; set; } = new Dictionary<string, IOpenApiLink>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public virtual IDictionary<string, OpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
 
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
+        /// An object to hold reusable <see cref="IOpenApiPathItem"/> Object.
         /// </summary>
-        public virtual IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+        public IDictionary<string, IOpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, IOpenApiPathItem>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -84,16 +85,16 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents? components)
         {
-            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
-            Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
-            Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
-            Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
-            RequestBodies = components?.RequestBodies != null ? new Dictionary<string, OpenApiRequestBody>(components.RequestBodies) : null;
-            Headers = components?.Headers != null ? new Dictionary<string, OpenApiHeader>(components.Headers) : null;
-            SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
-            Links = components?.Links != null ? new Dictionary<string, OpenApiLink>(components.Links) : null;
-            Callbacks = components?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(components.Callbacks) : null;
-            PathItems = components?.PathItems != null ? new Dictionary<string, OpenApiPathItem>(components.PathItems) : null;
+            Schemas = components?.Schemas != null ? new Dictionary<string, IOpenApiSchema>(components.Schemas) : null;
+            Responses = components?.Responses != null ? new Dictionary<string, IOpenApiResponse>(components.Responses) : null;
+            Parameters = components?.Parameters != null ? new Dictionary<string, IOpenApiParameter>(components.Parameters) : null;
+            Examples = components?.Examples != null ? new Dictionary<string, IOpenApiExample>(components.Examples) : null;
+            RequestBodies = components?.RequestBodies != null ? new Dictionary<string, IOpenApiRequestBody>(components.RequestBodies) : null;
+            Headers = components?.Headers != null ? new Dictionary<string, IOpenApiHeader>(components.Headers) : null;
+            SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, IOpenApiSecurityScheme>(components.SecuritySchemes) : null;
+            Links = components?.Links != null ? new Dictionary<string, IOpenApiLink>(components.Links) : null;
+            Callbacks = components?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(components.Callbacks) : null;
+            PathItems = components?.PathItems != null ? new Dictionary<string, IOpenApiPathItem>(components.PathItems) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 
@@ -160,7 +161,7 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiComponents"/>.
         /// </summary>
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
-            Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, IOpenApiReferenceable> action)
+            Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, IOpenApiReferenceHolder> action)
         {
             // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
             // If the reference exists but points to other objects, the object is serialized to just that reference.

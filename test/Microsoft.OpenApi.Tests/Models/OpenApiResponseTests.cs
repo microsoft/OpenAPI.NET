@@ -20,16 +20,16 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiResponseTests
     {
-        public static OpenApiResponse BasicResponse = new OpenApiResponse();
+        private static OpenApiResponse BasicResponse => new OpenApiResponse();
 
-        public static OpenApiResponse AdvancedV2Response = new OpenApiResponse
+        private static OpenApiResponse AdvancedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer
                     }
@@ -54,21 +54,21 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer
                     }
                 },
             }
         };
-        public static OpenApiResponse AdvancedV3Response = new OpenApiResponse
+        private static OpenApiResponse AdvancedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer
                     }
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer
                     }
@@ -101,15 +101,15 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiResponseReference V2OpenApiResponseReference = new OpenApiResponseReference("example1", ReferencedV2Response);
-        public static OpenApiResponse ReferencedV2Response = new OpenApiResponse
+        private static OpenApiResponseReference V2OpenApiResponseReference => new OpenApiResponseReference("example1");
+        private static OpenApiResponse ReferencedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer
                     }
@@ -129,23 +129,23 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer
                     }
                 },
             }
         };
-        public static OpenApiResponseReference V3OpenApiResponseReference = new OpenApiResponseReference("example1", ReferencedV3Response);
+        private static OpenApiResponseReference V3OpenApiResponseReference => new OpenApiResponseReference("example1");
 
-        public static OpenApiResponse ReferencedV3Response = new OpenApiResponse
+        private static OpenApiResponse ReferencedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
             Content =
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                     Schema = new()
+                     Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer
                     }
@@ -165,20 +165,13 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Integer
                     }
                 },
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiResponseTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]

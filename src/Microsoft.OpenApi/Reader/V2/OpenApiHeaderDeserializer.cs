@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -48,7 +49,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) => GetOrCreateSchema(o).ExclusiveMaximum = bool.Parse(n.GetScalarValue())
+                (o, n, _) => GetOrCreateSchema(o).IsExclusiveMaximum = bool.Parse(n.GetScalarValue())
             },
             {
                 "minimum",
@@ -56,7 +57,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) => GetOrCreateSchema(o).ExclusiveMinimum = bool.Parse(n.GetScalarValue())
+                (o, n, _) => GetOrCreateSchema(o).IsExclusiveMinimum = bool.Parse(n.GetScalarValue())
             },
             {
                 "maxLength",
@@ -94,15 +95,18 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         private static OpenApiSchema GetOrCreateSchema(OpenApiHeader p)
         {
-            return p.Schema ??= new();
+            return p.Schema switch {
+                OpenApiSchema schema => schema,
+                _ => (OpenApiSchema)(p.Schema = new OpenApiSchema()),
+            };
         }
 
-        public static OpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("header");
             var header = new OpenApiHeader();
@@ -112,7 +116,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
             }
 
-            var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
+            var schema = node.Context.GetFromTempStorage<IOpenApiSchema>("schema");
             if (schema != null)
             {
                 header.Schema = schema;

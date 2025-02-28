@@ -1,0 +1,1 @@
+﻿{"description":"OK","content":{"text/plain":{"schema":{"type":"object","properties":{"sound":{"type":"string"}}}}}}

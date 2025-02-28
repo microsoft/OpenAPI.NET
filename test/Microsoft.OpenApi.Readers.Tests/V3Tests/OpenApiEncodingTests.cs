@@ -14,16 +14,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiEncoding/";
 
-        public OpenApiEncodingTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task ParseBasicEncodingShouldSucceed()
         {
             // Act
-            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -39,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml"));
 
             // Act
-            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, new());
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -49,10 +44,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Headers =
                     {
                         ["X-Rate-Limit-Limit"] =
-                            new()
+                            new OpenApiHeader()
                             {
                                 Description = "The number of allowed requests in the current period",
-                                Schema = new()
+                                Schema = new OpenApiSchema()
                                 { 
                                     Type = JsonSchemaType.Integer
                                 }

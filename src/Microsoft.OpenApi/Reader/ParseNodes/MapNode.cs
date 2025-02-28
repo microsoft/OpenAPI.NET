@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
 
             _node = mapNode;
-            _nodes = _node.Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
+            _nodes = _node.Where(static p => p.Value is not null).Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
         }
 
         public PropertyNode this[string key]
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                           : default;
                     }
                     finally
-                    {    
+                    {
                         Context.EndObject();
                     }
                     return new
@@ -103,6 +103,34 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
+        public override Dictionary<string, ISet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
+        {
+            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
+
+            var nodes = jsonMap.Select(n =>
+            {
+                var key = n.Key;
+                try
+                {
+                    Context.StartObject(key);
+                    JsonArray arrayNode = n.Value is JsonArray value
+                        ? value
+                        : throw new OpenApiReaderException($"Expected array while parsing {typeof(T).Name}", Context);
+
+                    ISet<T> values = new HashSet<T>(arrayNode.Select(item => map(new ValueNode(Context, item), openApiDocument)));
+
+                    return (key, values);
+
+                }
+                finally
+                {
+                    Context.EndObject();
+                }
+            });
+
+            return nodes.ToDictionary(kvp => kvp.key, kvp => kvp.values);
+        }
+
         public IEnumerator<PropertyNode> GetEnumerator()
         {
             return _nodes.GetEnumerator();
@@ -120,11 +148,10 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         }
 
         public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId, string summary = null, string description = null)
-            where T : IOpenApiReferenceable, new()
+            where T : IOpenApiReferenceHolder, new()
         {
             return new()
             {
-                UnresolvedReference = true,
                 Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType, summary, description)
             };
         }

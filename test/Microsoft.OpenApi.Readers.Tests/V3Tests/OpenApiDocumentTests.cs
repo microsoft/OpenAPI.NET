@@ -11,6 +11,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
@@ -25,13 +26,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
+        private const string codacyApi = "https://api.codacy.com/api/api-docs/swagger.yaml";
 
-        public OpenApiDocumentTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
-        private static async Task<T> CloneAsync<T>(T element) where T : IOpenApiSerializable
+        private static async Task<T> CloneAsync<T>(T element) where T : class, IOpenApiSerializable
         {
             using var stream = new MemoryStream();
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
@@ -48,23 +45,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             return OpenApiModelFactory.Parse<T>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
         }
 
-        private static async Task<OpenApiSecurityScheme> CloneSecuritySchemeAsync(OpenApiSecurityScheme element)
-        {
-            using var stream = new MemoryStream();
-            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
-            {
-                InlineLocalReferences = true
-            });
-            element.SerializeAsV3(writer);
-            await writer.FlushAsync();
-            stream.Position = 0;
-
-            using var streamReader = new StreamReader(stream);
-            var result = await streamReader.ReadToEndAsync();
-            return OpenApiModelFactory.Parse<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, new(), out var _);
-        }
-
         [Fact]
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
@@ -75,7 +55,7 @@ info:
     title: Simple Document
     version: 0.9.1
 paths: {}",
-                OpenApiConstants.Yaml);
+                OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -106,7 +86,7 @@ info:
 paths: {}
 """;
 
-            var readResult = OpenApiDocument.Parse(stringOpenApiDoc);
+            var readResult = OpenApiDocument.Parse(stringOpenApiDoc, settings: SettingsFixture.ReaderSettings);
             Assert.Equal("Sample API", readResult.Document.Info.Title);
         }
 
@@ -114,7 +94,7 @@ paths: {}
         public async Task ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
             var path = Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
-            var result = await OpenApiDocument.LoadAsync(path);
+            var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
 
             Assert.Empty(result.Diagnostic.Errors);
             result.Document.Should().BeEquivalentTo(
@@ -150,7 +130,7 @@ paths: {}
             await stream.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
-            var result = await OpenApiDocument.LoadAsync(memoryStream);
+            var result = await OpenApiDocument.LoadAsync(memoryStream, settings: SettingsFixture.ReaderSettings);
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -176,7 +156,7 @@ paths: {}
         [Fact]
         public async Task ParseMinimalDocumentShouldSucceed()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "minimalDocument.yaml"), SettingsFixture.ReaderSettings);
 
             result.Document.Should().BeEquivalentTo(
                 new OpenApiDocument
@@ -200,13 +180,13 @@ paths: {}
         public async Task ParseStandardPetStoreDocumentShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
-            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
+            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, OpenApiSchema>
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["pet1"] = new()
+                    ["pet1"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -214,48 +194,48 @@ paths: {}
                                 "id",
                                 "name"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["newPet"] = new()
+                    ["newPet"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "name"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["errorModel"] = new()
+                    ["errorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -263,14 +243,14 @@ paths: {}
                                 "code",
                                 "message"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["code"] = new()
+                            ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int32"
                             },
-                            ["message"] = new()
+                            ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -322,18 +302,18 @@ paths: {}
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
-                                Parameters = new List<OpenApiParameter>
-                                {
+                                Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         Name = "tags",
                                         In = ParameterLocation.Query,
                                         Description = "tags to filter by",
                                         Required = false,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Array,
-                                            Items = new()
+                                            Items = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.String
                                             }
@@ -345,13 +325,13 @@ paths: {}
                                         In = ParameterLocation.Query,
                                         Description = "maximum number of results to return",
                                         Required = false,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Integer,
                                             Format = "int32"
                                         }
                                     }
-                                },
+                                ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -361,7 +341,7 @@ paths: {}
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
                                                     Items = petSchema
@@ -369,7 +349,7 @@ paths: {}
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
                                                     Items = petSchema
@@ -465,21 +445,21 @@ paths: {}
                                 Description =
                                     "Returns a user based on a single ID, if the user does not have access to the pet",
                                 OperationId = "findPetById",
-                                Parameters = new List<OpenApiParameter>
-                                {
+                                Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         Name = "id",
                                         In = ParameterLocation.Path,
                                         Description = "ID of pet to fetch",
                                         Required = true,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Integer,
                                             Format = "int64"
                                         }
                                     }
-                                },
+                                ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -525,21 +505,21 @@ paths: {}
                             {
                                 Description = "deletes a single pet based on the ID supplied",
                                 OperationId = "deletePet",
-                                Parameters = new List<OpenApiParameter>
-                                {
+                                Parameters =
+                                [
                                     new OpenApiParameter
                                     {
                                         Name = "id",
                                         In = ParameterLocation.Path,
                                         Description = "ID of pet to delete",
                                         Required = true,
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Integer,
                                             Format = "int64"
                                         }
                                     }
-                                },
+                                ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["204"] = new OpenApiResponse
@@ -586,13 +566,13 @@ paths: {}
         public async Task ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml"));
-            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml);
+            var actual = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, OpenApiSchema>
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["pet1"] = new()
+                    ["pet1"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -600,48 +580,48 @@ paths: {}
                                 "id",
                                 "name"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["newPet"] = new()
+                    ["newPet"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
                             {
                                 "name"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["id"] = new()
+                            ["id"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int64"
                             },
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["tag"] = new()
+                            ["tag"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
                         }
                     },
-                    ["errorModel"] = new()
+                    ["errorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -649,21 +629,21 @@ paths: {}
                                 "code",
                                 "message"
                             },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["code"] = new()
+                            ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Format = "int32"
                             },
-                            ["message"] = new()
+                            ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
                         }
                     },
                 },
-                SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+                SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                 {
                     ["securitySchemeName1"] = new OpenApiSecurityScheme
                     {
@@ -680,51 +660,28 @@ paths: {}
             };
 
             // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = await CloneAsync(components.Schemas["pet1"]);
-            petSchema.Reference = new()
-            {
-                Id = "pet1",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.Document
-            };
+            var petSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["pet1"]);
+            var petSchema = await CloneAsync(petSchemaSource);
+            Assert.IsType<OpenApiSchema>(petSchema);
+            var petSchemaReference = new OpenApiSchemaReference("pet1");
 
-            var newPetSchema = await CloneAsync(components.Schemas["newPet"]);
+            var newPetSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["newPet"]);
+            var newPetSchema = await CloneAsync(newPetSchemaSource);
+            Assert.IsType<OpenApiSchema>(newPetSchema);
+            var newPetSchemaReference = new OpenApiSchemaReference("newPet");
 
-            newPetSchema.Reference = new()
-            {
-                Id = "newPet",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.Document
-            };
+            var errorModelSchemaSource = Assert.IsType<OpenApiSchema>(components.Schemas["errorModel"]);
+            var errorModelSchema = await CloneAsync(errorModelSchemaSource);
+            Assert.IsType<OpenApiSchema>(errorModelSchema);
+            var errorModelSchemaReference = new OpenApiSchemaReference("errorModel");
 
-            var errorModelSchema = await CloneAsync(components.Schemas["errorModel"]);
+            var tagReference1 = new OpenApiTagReference("tagName1");
 
-            errorModelSchema.Reference = new()
-            {
-                Id = "errorModel",
-                Type = ReferenceType.Schema,
-                HostDocument = actual.Document
-            };
+            var tagReference2 = new OpenApiTagReference("tagName2");
 
-            var tagReference1 = new OpenApiTagReference("tagName1", null);
+            Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName1"]);
 
-            var tagReference2 = new OpenApiTagReference("tagName2", null);
-
-            var securityScheme1 = await CloneSecuritySchemeAsync(components.SecuritySchemes["securitySchemeName1"]);
-
-            securityScheme1.Reference = new OpenApiReference
-            {
-                Id = "securitySchemeName1",
-                Type = ReferenceType.SecurityScheme
-            };
-
-            var securityScheme2 = await CloneSecuritySchemeAsync(components.SecuritySchemes["securitySchemeName2"]);
-
-            securityScheme2.Reference = new OpenApiReference
-            {
-                Id = "securitySchemeName2",
-                Type = ReferenceType.SecurityScheme
-            };
+            Assert.IsType<OpenApiSecurityScheme>(components.SecuritySchemes["securitySchemeName2"]);
 
             var expected = new OpenApiDocument
             {
@@ -762,25 +719,25 @@ paths: {}
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
-                                Tags = new List<OpenApiTagReference>
+                                Tags = new HashSet<OpenApiTagReference>
                                     {
                                         tagReference1,
                                         tagReference2
                                     },
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
-                                Parameters = new List<OpenApiParameter>
-                                    {
+                                Parameters =
+                                    [
                                         new OpenApiParameter
                                         {
                                             Name = "tags",
                                             In = ParameterLocation.Query,
                                             Description = "tags to filter by",
                                             Required = false,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Array,
-                                                Items = new()
+                                                Items = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.String
                                                 }
@@ -792,13 +749,13 @@ paths: {}
                                             In = ParameterLocation.Query,
                                             Description = "maximum number of results to return",
                                             Required = false,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Integer,
                                                 Format = "int32"
                                             }
                                         }
-                                    },
+                                    ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -808,18 +765,18 @@ paths: {}
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
-                                                    Items = petSchema
+                                                    Items = petSchemaReference
                                                 }
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = new()
+                                                Schema = new OpenApiSchema()
                                                 {
                                                     Type = JsonSchemaType.Array,
-                                                    Items = petSchema
+                                                    Items = petSchemaReference
                                                 }
                                             }
                                         }
@@ -831,7 +788,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     },
@@ -842,7 +799,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     }
@@ -850,7 +807,7 @@ paths: {}
                             },
                             [OperationType.Post] = new OpenApiOperation
                             {
-                                Tags = new List<OpenApiTagReference>
+                                Tags = new HashSet<OpenApiTagReference>
                                     {
                                         tagReference1,
                                         tagReference2
@@ -865,7 +822,7 @@ paths: {}
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = newPetSchema
+                                            Schema = newPetSchemaReference
                                         }
                                     }
                                 },
@@ -878,7 +835,7 @@ paths: {}
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = petSchema
+                                                Schema = petSchemaReference
                                             },
                                         }
                                     },
@@ -889,7 +846,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     },
@@ -900,7 +857,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     }
@@ -909,8 +866,8 @@ paths: {}
                                     {
                                         new OpenApiSecurityRequirement
                                         {
-                                            [securityScheme1] = new List<string>(),
-                                            [securityScheme2] = new List<string>
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
                                             {
                                                 "scope1",
                                                 "scope2"
@@ -929,21 +886,21 @@ paths: {}
                                 Description =
                                     "Returns a user based on a single ID, if the user does not have access to the pet",
                                 OperationId = "findPetById",
-                                Parameters = new List<OpenApiParameter>
-                                    {
+                                Parameters =
+                                    [
                                         new OpenApiParameter
                                         {
                                             Name = "id",
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to fetch",
                                             Required = true,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Integer,
                                                 Format = "int64"
                                             }
                                         }
-                                    },
+                                    ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
@@ -953,11 +910,11 @@ paths: {}
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = petSchema
+                                                Schema = petSchemaReference
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
-                                                Schema = petSchema
+                                                Schema = petSchemaReference
                                             }
                                         }
                                     },
@@ -968,7 +925,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     },
@@ -979,7 +936,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     }
@@ -989,21 +946,21 @@ paths: {}
                             {
                                 Description = "deletes a single pet based on the ID supplied",
                                 OperationId = "deletePet",
-                                Parameters = new List<OpenApiParameter>
-                                    {
+                                Parameters =
+                                    [
                                         new OpenApiParameter
                                         {
                                             Name = "id",
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to delete",
                                             Required = true,
-                                            Schema = new()
+                                            Schema = new OpenApiSchema()
                                             {
                                                 Type = JsonSchemaType.Integer,
                                                 Format = "int64"
                                             }
                                         }
-                                    },
+                                    ],
                                 Responses = new OpenApiResponses
                                 {
                                     ["204"] = new OpenApiResponse
@@ -1017,7 +974,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     },
@@ -1028,7 +985,7 @@ paths: {}
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
-                                                Schema = errorModelSchema
+                                                Schema = errorModelSchemaReference
                                             }
                                         }
                                     }
@@ -1038,7 +995,7 @@ paths: {}
                     }
                 },
                 Components = components,
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                     {
                         new OpenApiTag
                         {
@@ -1051,12 +1008,12 @@ paths: {}
                             Description = "tagDescription2"
                         }
                     },
-                SecurityRequirements = new List<OpenApiSecurityRequirement>
+                Security = new List<OpenApiSecurityRequirement>
                     {
                         new OpenApiSecurityRequirement
                         {
-                            [securityScheme1] = new List<string>(),
-                            [securityScheme2] = new List<string>
+                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
+                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
                             {
                                 "scope1",
                                 "scope2",
@@ -1065,20 +1022,13 @@ paths: {}
                         }
                     }
             };
-
-            tagReference1.Reference.HostDocument = expected;
-            tagReference2.Reference.HostDocument = expected;
+            expected.RegisterComponents();
+            expected.SetReferenceHostDocument();
 
             actual.Document.Should().BeEquivalentTo(expected, options => options
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Reference.HostDocument)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[0].Target)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[0].Reference.HostDocument)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[0].Target)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[1].Reference.HostDocument)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags[1].Target)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[1].Reference.HostDocument)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags[1].Target)
+            .IgnoringCyclicReferences()
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags)
+            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags)
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
 
@@ -1089,7 +1039,7 @@ paths: {}
         [Fact]
         public async Task ParsePetStoreExpandedShouldSucceed()
         {
-            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"));
+            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml"), SettingsFixture.ReaderSettings);
 
             // TODO: Create the object in memory and compare with the one read from YAML file.
 
@@ -1100,18 +1050,17 @@ paths: {}
         [Fact]
         public async Task GlobalSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedApi.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedApi.yaml"), SettingsFixture.ReaderSettings);
 
-            var securityRequirement = result.Document.SecurityRequirements[0];
+            var securityRequirement = result.Document.Security[0];
 
-            securityRequirement.Keys.First().Should().BeEquivalentTo(result.Document.Components.SecuritySchemes.First().Value,
-                options => options.Excluding(x => x.Reference));
+            Assert.Equivalent(result.Document.Components.SecuritySchemes.First().Value, securityRequirement.Keys.First());
         }
 
         [Fact]
         public async Task HeaderParameterShouldAllowExample()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"), SettingsFixture.ReaderSettings);
 
             var exampleHeader = result.Document.Components?.Headers?["example-header"];
             Assert.NotNull(exampleHeader);
@@ -1126,14 +1075,13 @@ paths: {}
                     Style = ParameterStyle.Simple,
                     Explode = true,
                     Example = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721",
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String,
                         Format = "uuid"
                     },
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(e => e.Example.Parent)
-                .Excluding(x => x.Reference));
+                .Excluding(e => e.Example.Parent));
 
             var examplesHeader = result.Document.Components?.Headers?["examples-header"];
             Assert.NotNull(examplesHeader);
@@ -1147,7 +1095,7 @@ paths: {}
                     AllowReserved = true,
                     Style = ParameterStyle.Simple,
                     Explode = true,
-                    Examples = new Dictionary<string, OpenApiExample>()
+                    Examples =
                     {
                             { "uuid1", new OpenApiExample()
                                 {
@@ -1160,7 +1108,7 @@ paths: {}
                                 }
                             }
                     },
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String,
                         Format = "uuid"
@@ -1174,16 +1122,10 @@ paths: {}
         public async Task ParseDocumentWithReferencedSecuritySchemeWorks()
         {
             // Act
-            var settings = new OpenApiReaderSettings
-            {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
-            };
-
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), settings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"), SettingsFixture.ReaderSettings);
             var securityScheme = result.Document.Components.SecuritySchemes["OAuth2"];
 
             // Assert
-            Assert.False(securityScheme.UnresolvedReference);
             Assert.NotNull(securityScheme.Flows);
         }
 
@@ -1194,11 +1136,7 @@ paths: {}
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
 
             // Act
-            var settings = new OpenApiReaderSettings
-            {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
-            };
-            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, settings);
+            var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             var actualSchema = result.Document.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
@@ -1211,11 +1149,7 @@ paths: {}
         public async Task ValidateExampleShouldNotHaveDataTypeMismatch()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), new OpenApiReaderSettings
-            {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
-
-            });
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithDateExampleInSchema.yaml"), SettingsFixture.ReaderSettings);
 
             // Assert
             var warnings = result.Diagnostic.Warnings;
@@ -1225,6 +1159,19 @@ paths: {}
         [Fact]
         public async Task ParseDocWithRefsUsingProxyReferencesSucceeds()
         {
+            var parameter = new OpenApiParameter
+            {
+                Name = "limit",
+                In = ParameterLocation.Query,
+                Description = "Limit the number of pets returned",
+                Required = false,
+                Schema = new OpenApiSchema()
+                {
+                    Type = JsonSchemaType.Integer,
+                    Format = "int32",
+                    Default = 10
+                },
+            };
             // Arrange
             var expected = new OpenApiDocument
             {
@@ -1244,24 +1191,7 @@ paths: {}
                                 Summary = "Returns all pets",
                                 Parameters =
                                 [
-                                    new OpenApiParameter
-                                    {
-                                        Name = "limit",
-                                        In = ParameterLocation.Query,
-                                        Description = "Limit the number of pets returned",
-                                        Required = false,
-                                        Schema = new()
-                                        { 
-                                            Type = JsonSchemaType.Integer,
-                                            Format = "int32",
-                                            Default = 10
-                                        },
-                                        Reference = new OpenApiReference
-                                        {
-                                            Id = "LimitParameter",
-                                            Type = ReferenceType.Parameter
-                                        }
-                                    }
+                                    new OpenApiParameterReference("LimitParameter"),
                                 ],
                                 Responses = new OpenApiResponses()
                             }
@@ -1270,26 +1200,18 @@ paths: {}
                 },
                 Components = new OpenApiComponents
                 {
-                    Parameters = new Dictionary<string, OpenApiParameter>
+                    Parameters = new Dictionary<string, IOpenApiParameter>
                     {
-                        ["LimitParameter"] = new OpenApiParameter
-                        {
-                            Name = "limit",
-                            In = ParameterLocation.Query,
-                            Description = "Limit the number of pets returned",
-                            Required = false,
-                            Schema = new()
-                            {
-                                Type = JsonSchemaType.Integer,
-                                Format = "int32",
-                                Default = 10
-                            },
-                        }
+                        ["LimitParameter"] = parameter
                     }
                 }
             };
+            expected.RegisterComponents();
+            expected.SetReferenceHostDocument();
 
-            var expectedSerializedDoc = @"openapi: 3.0.4
+            var expectedSerializedDoc = 
+"""
+openapi: 3.0.4
 info:
   title: Pet Store with Referenceable Parameter
   version: 1.0.0
@@ -1309,19 +1231,24 @@ components:
       schema:
         type: integer
         format: int32
-        default: 10";
+        default: 10
+""";
 
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minifiedPetStore.yaml"));
 
             // Act
-            var doc = (await OpenApiDocument.LoadAsync(stream)).Document;
+            var doc = (await OpenApiDocument.LoadAsync(stream, settings: SettingsFixture.ReaderSettings)).Document;
             var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
             var outputDoc = (await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0)).MakeLineBreaksEnvironmentNeutral();
             var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
+            var expectedParamReference = Assert.IsType<OpenApiParameterReference>(expectedParam);
+
+            var actualParamReference = Assert.IsType<OpenApiParameterReference>(actualParam);
 
             // Assert
-            actualParam.Should().BeEquivalentTo(expectedParam, options => options
-                .Excluding(x => x.Reference.HostDocument)
+            actualParamReference.Should().BeEquivalentTo(expectedParamReference, options => options
+                .Excluding(x => x.Reference)
+                .Excluding(x => x.Target)
                 .Excluding(x => x.Schema.Default.Parent)
                 .Excluding(x => x.Schema.Default.Options)
                 .IgnoringCyclicReferences());
@@ -1344,7 +1271,7 @@ components:
                                                                     default: v2
                                                                     enum: [v1, v2]
                                                             paths: {}
-                                                            """, "yaml");
+                                                            """, "yaml", SettingsFixture.ReaderSettings);
 
             var expected = new OpenApiDocument
             {
@@ -1392,7 +1319,7 @@ components:
                                                                   version:
                                                                     enum: [v1, v2]
                                                             paths: {}
-                                                            """, "yaml");
+                                                            """, "yaml", SettingsFixture.ReaderSettings);
 
             Assert.NotEmpty(result.Diagnostic.Errors);
         }
@@ -1400,7 +1327,7 @@ components:
         [Fact]
         public async Task ParseDocumentWithEmptyPathsSucceeds()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyPaths.yaml"), SettingsFixture.ReaderSettings);
             Assert.Empty(result.Diagnostic.Errors);
         }
 
@@ -1408,12 +1335,16 @@ components:
         public async Task ParseDocumentWithExampleReferencesPasses()
         {
             // Act & Assert: Ensure no NullReferenceException is thrown
-            Func<Task> act = async () =>
-            {
-                await OpenApiDocument.LoadAsync(System.IO.Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"));
-            };
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExampleReferences.yaml"), SettingsFixture.ReaderSettings);
+            Assert.Empty(result.Diagnostic.Errors);
+        }
 
-            await act.Should().NotThrowAsync<NullReferenceException>();
+        [Fact]
+        public async Task ParseDocumentWithNonStandardMIMETypePasses()
+        {
+            // Act & Assert: Ensure NotSupportedException is not thrown for non-standard MIME type: text/x-yaml
+            var result = await OpenApiDocument.LoadAsync(codacyApi, SettingsFixture.ReaderSettings);
+            Assert.NotNull(result.Document); 
         }
     }
 }

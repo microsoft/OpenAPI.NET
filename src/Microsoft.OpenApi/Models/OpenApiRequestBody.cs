@@ -7,6 +7,8 @@ using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -14,39 +16,19 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiRequestBody
     {
-        /// <summary>
-        /// Indicates if object is populated with data or is just a reference to the data
-        /// </summary>
-        public bool UnresolvedReference { get; set; }
+        /// <inheritdoc />
+        public string Description { get; set; }
 
-        /// <summary>
-        /// Reference object.
-        /// </summary>
-        public OpenApiReference Reference { get; set; }
+        /// <inheritdoc />
+        public bool Required { get; set; }
 
-        /// <summary>
-        /// A brief description of the request body. This could contain examples of use.
-        /// CommonMark syntax MAY be used for rich text representation.
-        /// </summary>
-        public virtual string Description { get; set; }
+        /// <inheritdoc />
+        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
-        /// <summary>
-        /// Determines if the request body is required in the request. Defaults to false.
-        /// </summary>
-        public virtual bool Required { get; set; }
-
-        /// <summary>
-        /// REQUIRED. The content of the request body. The key is a media type or media type range and the value describes it.
-        /// For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
-        /// </summary>
-        public virtual IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
-
-        /// <summary>
-        /// This object MAY be extended with Specification Extensions.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        /// <inheritdoc />
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -54,22 +36,21 @@ namespace Microsoft.OpenApi.Models
         public OpenApiRequestBody() { }
 
         /// <summary>
-        /// Initializes a copy instance of an <see cref="OpenApiRequestBody"/> object
+        /// Initializes a copy instance of an <see cref="IOpenApiRequestBody"/> object
         /// </summary>
-        public OpenApiRequestBody(OpenApiRequestBody requestBody)
+        internal OpenApiRequestBody(IOpenApiRequestBody requestBody)
         {
-            UnresolvedReference = requestBody?.UnresolvedReference ?? UnresolvedReference;
-            Reference = requestBody?.Reference != null ? new(requestBody?.Reference) : null;
-            Description = requestBody?.Description ?? Description;
-            Required = requestBody?.Required ?? Required;
-            Content = requestBody?.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
-            Extensions = requestBody?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
+            Utils.CheckArgumentNull(requestBody);
+            Description = requestBody.Description ?? Description;
+            Required = requestBody.Required;
+            Content = requestBody.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
+            Extensions = requestBody.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.1
         /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -77,12 +58,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0
         /// </summary>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
         
-        internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -112,7 +93,8 @@ namespace Microsoft.OpenApi.Models
             // RequestBody object does not exist in V2.
         }
 
-        internal virtual OpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
+        /// <inheritdoc/>
+        public IOpenApiParameter ConvertToBodyParameter(IOpenApiWriter writer)
         {
             var bodyParameter = new OpenApiBodyParameter
             {
@@ -134,30 +116,45 @@ namespace Microsoft.OpenApi.Models
             return bodyParameter;
         }
 
-        internal IEnumerable<OpenApiFormDataParameter> ConvertToFormDataParameters()
+        /// <inheritdoc/>
+        public IEnumerable<IOpenApiParameter> ConvertToFormDataParameters(IOpenApiWriter writer)
         {
             if (Content == null || !Content.Any())
                 yield break;
 
             foreach (var property in Content.First().Value.Schema.Properties)
             {
-                var paramSchema = property.Value;
-                if ("string".Equals(paramSchema.Type.ToIdentifier(), StringComparison.OrdinalIgnoreCase)
+                var paramSchema = property.Value.CreateShallowCopy();
+                if ((paramSchema.Type & JsonSchemaType.String) == JsonSchemaType.String
                     && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
                     || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
                 {
-                    paramSchema.Type = "file".ToJsonSchemaType();
-                    paramSchema.Format = null;
+                    var updatedSchema = paramSchema switch {
+                        OpenApiSchema s => s, // we already have a copy
+                        // we have a copy of a reference but don't want to mutate the source schema
+                        // TODO might need recursive resolution of references here
+                        OpenApiSchemaReference r => (OpenApiSchema)r.Target.CreateShallowCopy(),
+                        _ => throw new InvalidOperationException("Unexpected schema type")
+                    };
+                    updatedSchema.Type = "file".ToJsonSchemaType();
+                    updatedSchema.Format = null;
+                    paramSchema = updatedSchema;
                 }
-                yield return new()
+                yield return new OpenApiFormDataParameter()
                 {
-                    Description = property.Value.Description,
+                    Description = paramSchema.Description,
                     Name = property.Key,
-                    Schema = property.Value,
+                    Schema = paramSchema,
                     Examples = Content.Values.FirstOrDefault()?.Examples,
                     Required = Content.First().Value.Schema.Required?.Contains(property.Key) ?? false
                 };
             }
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiRequestBody CreateShallowCopy()
+        {
+            return new OpenApiRequestBody(this);
         }
     }
 }

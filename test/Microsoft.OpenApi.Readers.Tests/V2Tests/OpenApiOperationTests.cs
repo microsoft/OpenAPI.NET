@@ -10,6 +10,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -30,20 +31,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Summary = "Updates a pet in the store",
             Description = "",
             OperationId = "updatePet",
-            Parameters = new List<OpenApiParameter>
-            {
+            Parameters =
+            [
                 new OpenApiParameter
                 {
                     Name = "petId",
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
                 }
-            },
+            ],
             Responses = new OpenApiResponses
             {
                 ["200"] = new OpenApiResponse
@@ -63,20 +64,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Summary = "Updates a pet in the store with request body",
             Description = "",
             OperationId = "updatePetWithBody",
-            Parameters = new List<OpenApiParameter>
-            {
+            Parameters =
+            [
                 new OpenApiParameter
                 {
                     Name = "petId",
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
                 },
-            },
+            ],
             RequestBody = new OpenApiRequestBody
             {
                 Description = "Pet to update with",
@@ -85,7 +86,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema = new()
+                        Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Object
                         }
@@ -215,10 +216,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 ["application/json"] = new OpenApiMediaType()
                                 {
-                                    Schema = new()
+                                    Schema = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Array,
-                                        Items = new()
+                                        Items = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Number,
                                             Format = "float"
@@ -233,10 +234,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {
-                                    Schema = new()
+                                    Schema = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Array,
-                                        Items = new()
+                                        Items = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Number,
                                             Format = "float"
@@ -601,6 +602,49 @@ responses: { }";
 }
 """;
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+        [Fact]
+        public void DeduplicatesTagReferences()
+        {
+
+            var openApiDocument = new OpenApiDocument
+            {
+                Tags = new HashSet<OpenApiTag> { new() { Name = "user" } }
+            };
+            // Act
+            var expectedOp = new OpenApiOperation
+            {
+                Tags = new HashSet<OpenApiTagReference>
+                {
+                    new OpenApiTagReference("user", openApiDocument),
+                    new OpenApiTagReference("user", openApiDocument),
+                },
+                Summary = "Logs user into the system",
+                Description = "",
+                OperationId = "loginUser",
+                Parameters =
+                {
+                    new OpenApiParameter
+                    {
+                        Name = "password",
+                        Description = "The password for login in clear text",
+                        In = ParameterLocation.Query,
+                        Required = true,
+                        Schema = new OpenApiSchema()
+                        {
+                            Type = JsonSchemaType.String
+                        }
+                    }
+                }
+            };
+            using var textWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(textWriter);
+            expectedOp.SerializeAsV2(writer);
+            var result = textWriter.ToString();
+            var parsedJson = JsonNode.Parse(result);
+            var operationObject = Assert.IsType<JsonObject>(parsedJson);
+            var tags = Assert.IsType<JsonArray>(operationObject["tags"]);
+            Assert.Single(tags);
         }
     }
 }

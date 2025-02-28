@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
@@ -113,7 +114,7 @@ namespace Microsoft.OpenApi.Reader.V31
         {
             var value = node.GetScalarValue();
 
-            if (value != null && value.StartsWith("$"))
+            if (value != null && value.StartsWith("$", StringComparison.OrdinalIgnoreCase))
             {
                 return new RuntimeExpressionAnyWrapper
                 {
@@ -160,11 +161,11 @@ namespace Microsoft.OpenApi.Reader.V31
             var refSegments = pointer.Split('/');
             string refId = !pointer.Contains('#') ? pointer : refSegments.Last();
 
-            var isExternalResource = !refSegments.First().StartsWith("#");
+            var isExternalResource = !refSegments.First().StartsWith("#", StringComparison.OrdinalIgnoreCase);
             string externalResource = null;
             if (isExternalResource && pointer.Contains('#'))
             {
-                externalResource = $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}";
+                externalResource = pointer.Split('#')[0].TrimEnd('#');
             }
 
             return (refId, externalResource);

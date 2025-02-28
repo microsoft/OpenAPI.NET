@@ -23,28 +23,30 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void ResponseMustHaveADescription()
         {
-            var openApiDocument = new OpenApiDocument();
-            openApiDocument.Info = new()
+            var openApiDocument = new OpenApiDocument
             {
-                Title = "foo",
-                Version = "1.2.2"
-            };
-            openApiDocument.Paths = new()
-            {
+                Info = new()
                 {
-                    "/test",
-                    new()
+                    Title = "foo",
+                    Version = "1.2.2"
+                },
+                Paths = new()
+                {
                     {
-                        Operations =
-                    {
-                        [OperationType.Get] = new()
+                        "/test",
+                        new OpenApiPathItem()
                         {
-                            Responses =
+                            Operations =
+                        {
+                            [OperationType.Get] = new()
                             {
-                                ["200"] = new()
+                                Responses =
+                                {
+                                    ["200"] = new OpenApiResponse()
+                                }
                             }
                         }
-                    }
+                        }
                     }
                 }
             };

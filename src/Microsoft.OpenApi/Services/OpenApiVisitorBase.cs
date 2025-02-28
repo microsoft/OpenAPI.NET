@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Services
@@ -105,14 +106,14 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits Webhooks>
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiPathItem> webhooks)
+        public virtual void Visit(IDictionary<string, IOpenApiPathItem> webhooks)
         {
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiPathItem"/>
         /// </summary>
-        public virtual void Visit(OpenApiPathItem pathItem)
+        public virtual void Visit(IOpenApiPathItem pathItem)
         {
         }
 
@@ -140,42 +141,42 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiParameter> parameters)
+        public virtual void Visit(IList<IOpenApiParameter> parameters)
         {
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiParameter"/>
         /// </summary>
-        public virtual void Visit(OpenApiParameter parameter)
+        public virtual void Visit(IOpenApiParameter parameter)
         {
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiRequestBody"/>
+        /// Visits <see cref="IOpenApiRequestBody"/>
         /// </summary>
-        public virtual void Visit(OpenApiRequestBody requestBody)
+        public virtual void Visit(IOpenApiRequestBody requestBody)
         {
         }
 
         /// <summary>
         /// Visits headers.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiHeader> headers)
+        public virtual void Visit(IDictionary<string, IOpenApiHeader> headers)
         {
         }
 
         /// <summary>
         /// Visits callbacks.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiCallback> callbacks)
+        public virtual void Visit(IDictionary<string, IOpenApiCallback> callbacks)
         {
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiResponse"/>
         /// </summary>
-        public virtual void Visit(OpenApiResponse response)
+        public virtual void Visit(IOpenApiResponse response)
         {
         }
 
@@ -210,7 +211,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the examples.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiExample> examples)
+        public virtual void Visit(IDictionary<string, IOpenApiExample> examples)
         {
         }
 
@@ -229,30 +230,30 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSchema"/>
+        /// Visits <see cref="IOpenApiSchema"/>
         /// </summary>
-        public virtual void Visit(OpenApiSchema schema)
+        public virtual void Visit(IOpenApiSchema schema)
         {
         }
 
         /// <summary>
         /// Visits the links.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiLink> links)
+        public virtual void Visit(IDictionary<string, IOpenApiLink> links)
         {
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiLink"/>
+        /// Visits <see cref="IOpenApiLink"/>
         /// </summary>
-        public virtual void Visit(OpenApiLink link)
+        public virtual void Visit(IOpenApiLink link)
         {
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiCallback"/>
+        /// Visits <see cref="IOpenApiCallback"/>
         /// </summary>
-        public virtual void Visit(OpenApiCallback callback)
+        public virtual void Visit(IOpenApiCallback callback)
         {
         }
 
@@ -273,7 +274,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiHeader"/>
         /// </summary>
-        public virtual void Visit(OpenApiHeader header)
+        public virtual void Visit(IOpenApiHeader header)
         {
         }
 
@@ -292,30 +293,30 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSecurityScheme"/>
+        /// Visits <see cref="IOpenApiSecurityScheme"/>
         /// </summary>
-        public virtual void Visit(OpenApiSecurityScheme securityScheme)
+        public virtual void Visit(IOpenApiSecurityScheme securityScheme)
         {
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiExample"/>
+        /// Visits <see cref="IOpenApiExample"/>
         /// </summary>
-        public virtual void Visit(OpenApiExample example)
+        public virtual void Visit(IOpenApiExample example)
         {
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiTag> openApiTags)
+        public virtual void Visit(ISet<OpenApiTag> openApiTags)
         {
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiTagReference> openApiTags)
+        public virtual void Visit(ISet<OpenApiTagReference> openApiTags)
         {
         }
 
@@ -341,9 +342,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits list of <see cref="OpenApiExample"/>
+        /// Visits list of <see cref="IOpenApiExample"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiExample> example)
+        public virtual void Visit(IList<IOpenApiExample> example)
         {
         }
 
@@ -365,8 +366,8 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits IOpenApiReferenceable instances that are references and not in components
         /// </summary>
-        /// <param name="referenceable">referenced object</param>
-        public virtual void Visit(IOpenApiReferenceable referenceable)
+        /// <param name="referenceHolder">Referencing object</param>
+        public virtual void Visit(IOpenApiReferenceHolder referenceHolder)
         {
         }
     }

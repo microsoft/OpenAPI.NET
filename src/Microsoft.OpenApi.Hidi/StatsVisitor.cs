@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Hidi
@@ -12,35 +13,35 @@ namespace Microsoft.OpenApi.Hidi
     {
         public int ParameterCount { get; set; }
 
-        public override void Visit(OpenApiParameter parameter)
+        public override void Visit(IOpenApiParameter parameter)
         {
             ParameterCount++;
         }
 
         public int SchemaCount { get; set; }
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
             SchemaCount++;
         }
 
         public int HeaderCount { get; set; }
 
-        public override void Visit(IDictionary<string, OpenApiHeader> headers)
+        public override void Visit(IDictionary<string, IOpenApiHeader> headers)
         {
             HeaderCount++;
         }
 
         public int PathItemCount { get; set; }
 
-        public override void Visit(OpenApiPathItem pathItem)
+        public override void Visit(IOpenApiPathItem pathItem)
         {
             PathItemCount++;
         }
 
         public int RequestBodyCount { get; set; }
 
-        public override void Visit(OpenApiRequestBody requestBody)
+        public override void Visit(IOpenApiRequestBody requestBody)
         {
             RequestBodyCount++;
         }
@@ -61,14 +62,14 @@ namespace Microsoft.OpenApi.Hidi
 
         public int LinkCount { get; set; }
 
-        public override void Visit(OpenApiLink link)
+        public override void Visit(IOpenApiLink link)
         {
             LinkCount++;
         }
 
         public int CallbackCount { get; set; }
 
-        public override void Visit(OpenApiCallback callback)
+        public override void Visit(IOpenApiCallback callback)
         {
             CallbackCount++;
         }

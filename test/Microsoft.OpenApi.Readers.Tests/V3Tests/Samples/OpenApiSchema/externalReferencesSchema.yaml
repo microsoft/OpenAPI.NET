@@ -1,0 +1,23 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
+openapi: 3.0.0
+info:
+  title: Simple Document
+  version: 0.9.1
+paths: { }
+components:
+  schemas:
+    RelativePathModel:
+      allOf:
+      - $ref: './FirstLevel/SecondLevel/ThridLevel/File.json#/components/schemas/ExternalRelativePathModel'
+    SimpleRelativePathModel:
+      allOf:
+      - $ref: 'File.json#/components/schemas/ExternalSimpleRelativePathModel'
+    AbsoluteWindowsPathModel:
+      allOf:
+      - $ref: 'A:\Dir\File.json#/components/schemas/ExternalAbsWindowsPathModel'
+    AbsoluteUnixPathModel:
+      allOf:
+      - $ref: '/Dir/File.json#/components/schemas/ExternalAbsUnixPathModel'
+    HttpsUrlModel:
+      allOf:
+      - $ref: 'https://host.lan:1234/path/to/file/resource.json#/components/schemas/ExternalHttpsModel'

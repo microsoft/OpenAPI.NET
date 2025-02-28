@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Validations;
 using Xunit;
 
@@ -21,17 +23,12 @@ namespace Microsoft.OpenApi.Tests.Validations
             var sharedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.String,
-                Reference = new()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = false
             };
 
             var document = new OpenApiDocument();
             document.Components = new()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>()
+                Schemas = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["test"] = sharedSchema
                 }
@@ -39,7 +36,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             document.Paths = new()
             {
-                ["/"] = new()
+                ["/"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
@@ -47,13 +44,13 @@ namespace Microsoft.OpenApi.Tests.Validations
                         {
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Content = new Dictionary<string, OpenApiMediaType>
                                     {
                                         ["application/json"] = new()
                                         {
-                                            Schema = sharedSchema
+                                            Schema = new OpenApiSchemaReference("test")
                                         }
                                     }
                                 }
@@ -66,8 +63,8 @@ namespace Microsoft.OpenApi.Tests.Validations
             // Act
             var rules = new Dictionary<Type, IList<ValidationRule>>()
             {
-                { typeof(OpenApiSchema),
-                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
+                { typeof(IOpenApiSchema),
+                    new List<ValidationRule>() { new AlwaysFailRule<IOpenApiSchema>() }
                 }
             };
 
@@ -75,7 +72,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
 
             // Assert
-            Assert.True(errors.Count() == 1);
+            Assert.Single(errors);
         }
 
         [Fact]
@@ -86,18 +83,14 @@ namespace Microsoft.OpenApi.Tests.Validations
             var sharedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.String,
-                Reference = new()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = true
             };
 
             var document = new OpenApiDocument();
+            document.AddComponent("test", sharedSchema);
 
             document.Paths = new()
             {
-                ["/"] = new()
+                ["/"] = new OpenApiPathItem()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
@@ -105,13 +98,13 @@ namespace Microsoft.OpenApi.Tests.Validations
                         {
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Content = new Dictionary<string, OpenApiMediaType>
                                     {
                                         ["application/json"] = new()
                                         {
-                                            Schema = sharedSchema
+                                            Schema = new OpenApiSchemaReference("test")
                                         }
                                     }
                                 }

@@ -3,7 +3,6 @@
         <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
         <LangVersion>Latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>2.0.0-preview5</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <SignAssembly>true</SignAssembly>
         <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net5.0'))">true</IsTrimmable>
@@ -49,7 +48,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.12.19">
+      <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.2">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>

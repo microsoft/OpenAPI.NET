@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Services
@@ -79,27 +80,27 @@ namespace Microsoft.OpenApi.Services
                 },
 
                 Components = components,
-                SecurityRequirements = source.SecurityRequirements,
+                Security = source.Security,
                 Servers = source.Servers
             };
 
             var results = FindOperations(source, predicate);
             foreach (var result in results)
             {
-                OpenApiPathItem pathItem;
+                IOpenApiPathItem pathItem;
                 var pathKey = result.CurrentKeys.Path;
 
                 if (subset.Paths == null)
                 {
                     subset.Paths = new();
-                    pathItem = new();
+                    pathItem = new OpenApiPathItem();
                     subset.Paths.Add(pathKey, pathItem);
                 }
                 else
                 {
                     if (!subset.Paths.TryGetValue(pathKey, out pathItem))
                     {
-                        pathItem = new();
+                        pathItem = new OpenApiPathItem();
                         subset.Paths.Add(pathKey, pathItem);
                     }
                 }
@@ -362,11 +363,11 @@ namespace Microsoft.OpenApi.Services
             if (tagsArray.Length == 1)
             {
                 var regex = new Regex(tagsArray[0]);
-                return (_, _, operation) => operation.Tags.Any(tag => regex.IsMatch(tag.Name));
+                return (_, _, operation) => operation.Tags?.Any(tag => regex.IsMatch(tag.Name)) ?? false;
             }
             else
             {
-                return (_, _, operation) => operation.Tags.Any(tag => tagsArray.Contains(tag.Name));
+                return (_, _, operation) => operation.Tags?.Any(tag => tagsArray.Contains(tag.Name)) ?? false;
             }
         }
 

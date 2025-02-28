@@ -211,15 +211,12 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         internal async Task ParseDocumentAsync()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
-
             Stream stream = null;
             try
             {
                 if (!string.IsNullOrWhiteSpace(_inputFile))
                 {
-                    stream = _inputFile.StartsWith("http") ? await _httpClient.GetStreamAsync(_inputFile) 
+                    stream = _inputFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? await _httpClient.GetStreamAsync(_inputFile) 
                         : new FileStream(_inputFile, FileMode.Open);
                 }
                 else
@@ -236,12 +233,12 @@ namespace Microsoft.OpenApi.Workbench
 
                 var settings = new OpenApiReaderSettings
                 {
-                    ReferenceResolution = ResolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 };
+                settings.AddYamlReader();
                 if (ResolveExternal && !string.IsNullOrWhiteSpace(_inputFile))
                 {
-                    settings.BaseUrl = _inputFile.StartsWith("http") ? new(_inputFile) 
+                    settings.BaseUrl = _inputFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? new(_inputFile) 
                         : new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                 }
 

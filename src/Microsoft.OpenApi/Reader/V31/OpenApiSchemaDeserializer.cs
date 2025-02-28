@@ -3,8 +3,10 @@
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$schema",
-                (o, n, _) => o.Schema = n.GetScalarValue()
+                (o, n, _) => { if (n.GetScalarValue() is string {} sSchema && Uri.TryCreate(sSchema, UriKind.Absolute, out var schema)) {o.Schema = schema;}}
             },
             {
                 "$id",
@@ -57,7 +59,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) => o.V31ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) => o.ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "minimum",
@@ -65,7 +67,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) => o.V31ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) => o.ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "maxLength",
@@ -232,14 +234,21 @@ namespace Microsoft.OpenApi.Reader.V31
                 "deprecated",
                 (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
             },
+            {
+                "dependentRequired",
+                (o, n, doc) =>
+                {
+                    o.DependentRequired = n.CreateArrayMap((n2, p) => n2.GetScalarValue(), doc);
+                }
+            },
         };
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new()
         {
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        public static OpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 

@@ -1,42 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Models.References
 {
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : OpenApiParameter, IOpenApiReferenceableWithTarget<OpenApiParameter>
+    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter>, IOpenApiParameter
     {
-        internal OpenApiParameter _target;
-        private readonly OpenApiReference _reference;
-        private string _description;
-        private bool? _explode;
-        private ParameterStyle? _style;
-
-        /// <summary>
-        /// Gets the target parameter.
-        /// </summary>
-        /// <remarks>
-        /// If the reference is not resolved, this will return null.
-        /// </remarks>
-        public OpenApiParameter Target
-        {
-            get
-            {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiParameter>(_reference);
-                OpenApiParameter resolved = new OpenApiParameter(_target);
-                if (!string.IsNullOrEmpty(_description)) resolved.Description = _description;
-                return resolved;
-            }
-        }
-
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -47,134 +23,80 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
+        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Parameter, externalResource)
         {
-            Utils.CheckArgumentNullOrEmpty(referenceId);
+        }
 
-            _reference = new OpenApiReference()
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="parameter">The parameter reference to copy</param>
+        private OpenApiParameterReference(OpenApiParameterReference parameter):base(parameter)
+        {
+        }
+
+        /// <inheritdoc/>
+        public string Name { get => Target?.Name; }
+
+        /// <inheritdoc/>
+        public string Description
+        {
+            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            set 
             {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.Parameter,
-                ExternalResource = externalResource
-            };
-
-            Reference = _reference;
-        }
-
-        internal OpenApiParameterReference(OpenApiParameter target, string referenceId)
-        {
-            _target = target;
-
-            _reference = new OpenApiReference()
-            {
-                Id = referenceId,
-                Type = ReferenceType.Parameter,
-            };
+                if (Reference is not null)
+                {
+                    Reference.Description = value;
+                }
+            }
         }
 
         /// <inheritdoc/>
-        public override string Name { get => Target.Name; set => Target.Name = value; }
+        public bool Required { get => Target?.Required ?? default; }
 
         /// <inheritdoc/>
-        public override string Description
-        {
-            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
-            set => _description = value;
-        }
+        public bool Deprecated { get => Target?.Deprecated ?? default; }
 
         /// <inheritdoc/>
-        public override bool Required { get => Target.Required; set => Target.Required = value; }
+        public bool AllowEmptyValue { get => Target?.AllowEmptyValue ?? default; }
 
         /// <inheritdoc/>
-        public override bool Deprecated { get => Target.Deprecated; set => Target.Deprecated = value; }
+        public bool AllowReserved { get => Target?.AllowReserved ?? default; }
 
         /// <inheritdoc/>
-        public override bool AllowEmptyValue { get => Target.AllowEmptyValue; set => Target.AllowEmptyValue = value; }
+        public IOpenApiSchema Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
-        public override bool AllowReserved { get => Target.AllowReserved; set => Target.AllowReserved = value; }
+        public IDictionary<string, IOpenApiExample> Examples { get => Target?.Examples; }
 
         /// <inheritdoc/>
-        public override OpenApiSchema Schema { get => Target.Schema; set => Target.Schema = value; }
+        public JsonNode Example { get => Target?.Example; }
 
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }
+        public ParameterLocation? In { get => Target?.In; }
 
         /// <inheritdoc/>
-        public override JsonNode Example { get => Target.Example; set => Target.Example = value; }
-
-        /// <inheritdoc/>
-        public override ParameterLocation? In { get => Target.In; set => Target.In = value; }
-
-        /// <inheritdoc/>
-        public override ParameterStyle? Style 
-        {
-            get => _style ?? GetDefaultStyleValue();
-            set => _style = value;
-        }
+        public ParameterStyle? Style { get => Target?.Style; }
         
         /// <inheritdoc/>
-        public override bool Explode 
-        {
-            get => _explode ?? Style == ParameterStyle.Form;
-            set => _explode = value;
-        }
+        public bool Explode { get => Target?.Explode ?? default; }
 
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }
+        public IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
+        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
         
         /// <inheritdoc/>
-        public override void SerializeAsV3(IOpenApiWriter writer)
+        public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter source)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
-            {
-                _reference.SerializeAsV3(writer);
-                return;
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
-            }
+            return source is OpenApiParameter ? new OpenApiParameter(this) : source;
         }
 
         /// <inheritdoc/>
-        public override void SerializeAsV31(IOpenApiWriter writer)
+        public IOpenApiParameter CreateShallowCopy()
         {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
-            {
-                _reference.SerializeAsV31(writer);
-                return;
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV2(IOpenApiWriter writer)
-        {
-            if (!writer.GetSettings().ShouldInlineReference(_reference))
-            {
-                _reference.SerializeAsV2(writer);
-                return;
-            }
-            else
-            {
-                SerializeInternal(writer, (writer, element) => element.SerializeAsV2(writer));
-            }
-        }
-
-        /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiReferenceable> action)
-        {
-            Utils.CheckArgumentNull(writer);
-            action(writer, Target);
+            return new OpenApiParameterReference(this);
         }
     }
 }

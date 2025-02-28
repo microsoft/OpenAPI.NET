@@ -3,6 +3,9 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
 using Moq;
@@ -76,7 +79,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new()
                 {
-                    {"/foo", new() {
+                    {"/foo", new OpenApiPathItem() {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             { OperationType.Get, new() },
@@ -113,26 +116,26 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new()
                 {
-                    ["/test/{id}"] = new()
+                    ["/test/{id}"] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             { OperationType.Get, new() },
                             { OperationType.Patch, new() }
                         },
-                        Parameters = new List<OpenApiParameter>
-                        {
-                            new()
+                        Parameters =
+                        [
+                            new OpenApiParameter()
                             {
                                 Name = "id",
                                 In = ParameterLocation.Path,
                                 Required = true,
-                                Schema = new()
+                                Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.String
                                 }
                             }
-                        }
+                        ]
                     }
 
 
@@ -230,7 +233,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Act
             using var stream = File.OpenRead(filePath);
-            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml")).Document;            
+            var settings = new OpenApiReaderSettings();
+            settings.AddYamlReader();
+            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml", settings)).Document;            
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
 
@@ -242,8 +247,10 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             // Assert
             Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
-            Assert.False(responseHeader?.UnresolvedReference);
-            Assert.False(mediaTypeExample?.UnresolvedReference);
+            var headerReference = Assert.IsType<OpenApiHeaderReference>(responseHeader);
+            Assert.False(headerReference.UnresolvedReference);
+            var exampleReference = Assert.IsType<OpenApiExampleReference>(mediaTypeExample);
+            Assert.False(exampleReference?.UnresolvedReference);
             Assert.NotNull(targetHeaders);
             Assert.Single(targetHeaders);
             Assert.NotNull(targetExamples);

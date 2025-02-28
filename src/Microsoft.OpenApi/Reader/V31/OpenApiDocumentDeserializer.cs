@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -18,20 +20,20 @@ namespace Microsoft.OpenApi.Reader.V31
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n, _) => o.Info = LoadInfo(n, o)},
-            {"jsonSchemaDialect", (o, n, _) => o.JsonSchemaDialect = n.GetScalarValue() },
+            {"jsonSchemaDialect", (o, n, _) => { if (n.GetScalarValue() is string {} sjsd && Uri.TryCreate(sjsd, UriKind.Absolute, out var jsd)) {o.JsonSchemaDialect = jsd;}} },
             {"servers", (o, n, _) => o.Servers = n.CreateList(LoadServer, o)},
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
             {"webhooks", (o, n, _) => o.Webhooks = n.CreateMap(LoadPathItem, o)},
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
-            {"tags", (o, n, _) => o.Tags = n.CreateList(LoadTag, o) },
+            {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
-            {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)}
+            {"security", (o, n, _) => o.Security = n.CreateList(LoadSecurityRequirement, o)}
         };
 
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new()
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith("x-"), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)

@@ -24,11 +24,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiSchema/";
 
-        public OpenApiSchemaTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public void ParsePrimitiveSchemaShouldSucceed()
         {
@@ -67,7 +62,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 }";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -90,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic);
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -115,7 +110,7 @@ get:
 ";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, "yaml");
+            var openApiAny = OpenApiModelFactory.Parse<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, "yaml", SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -165,7 +160,7 @@ get:
                 new OpenApiSchema
                 {
                     Type = JsonSchemaType.Object,
-                    AdditionalProperties = new()
+                    AdditionalProperties = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.String
                     }
@@ -199,12 +194,12 @@ get:
                 Type = JsonSchemaType.Object,
                 Properties =
                 {
-                        ["id"] = new()
+                        ["id"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Integer,
                             Format = "int64"
                         },
-                        ["name"] = new()
+                        ["name"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String
                         }
@@ -230,7 +225,7 @@ get:
         public async Task ParseBasicSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"), SettingsFixture.ReaderSettings);
 
             // Assert
             var components = result.Document.Components;
@@ -245,18 +240,18 @@ get:
             {
                 Schemas =
                 {
-                    ["ErrorModel"] = new()
+                    ["ErrorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Properties =
                         {
-                            ["code"] = new()
+                            ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
                                 Minimum = 100,
                                 Maximum = 600
                             },
-                            ["message"] = new()
+                            ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -267,7 +262,7 @@ get:
                             "code"
                         }
                     },
-                    ["ExtendedErrorModel"] = new()
+                    ["ExtendedErrorModel"] = new OpenApiSchema()
                     {
                         AllOf =
                         {
@@ -278,7 +273,7 @@ get:
                                 Required = {"rootCause"},
                                 Properties =
                                 {
-                                    ["rootCause"] = new()
+                                    ["rootCause"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.String
                                     }
@@ -296,13 +291,13 @@ get:
         public async Task ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"), SettingsFixture.ReaderSettings);
 
             var expectedComponents = new OpenApiComponents
             {
                 Schemas =
                 {
-                    ["Pet"] = new()
+                    ["Pet"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Discriminator = new()
@@ -311,11 +306,11 @@ get:
                         },
                         Properties =
                         {
-                            ["name"] = new()
+                            ["name"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             },
-                            ["petType"] = new()
+                            ["petType"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
@@ -326,7 +321,7 @@ get:
                             "petType"
                         }
                     },
-                    ["Cat"] = new()
+                    ["Cat"] = new OpenApiSchema()
                     {
                         Description = "A representation of a cat",
                         AllOf =
@@ -338,7 +333,7 @@ get:
                                 Required = {"huntingSkill"},
                                 Properties =
                                 {
-                                    ["huntingSkill"] = new()
+                                    ["huntingSkill"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.String,
                                         Description = "The measured skill for hunting",
@@ -354,7 +349,7 @@ get:
                             }
                         }
                     },
-                    ["Dog"] = new()
+                    ["Dog"] = new OpenApiSchema()
                     {
                         Description = "A representation of a dog",
                         AllOf =
@@ -366,7 +361,7 @@ get:
                                 Required = {"packSize"},
                                 Properties =
                                 {
-                                    ["packSize"] = new()
+                                    ["packSize"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Integer,
                                         Format = "int32",
@@ -387,6 +382,66 @@ get:
 
             // Assert
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task ParseExternalReferenceSchemaShouldSucceed()
+        {
+            // Act
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalReferencesSchema.yaml"), SettingsFixture.ReaderSettings);
+
+            // Assert
+            var components = result.Document.Components;
+
+            Assert.Equivalent(
+                new OpenApiDiagnostic()
+                {
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                }, result.Diagnostic);
+
+            var expectedComponents = new OpenApiComponents
+            {
+                Schemas =
+                {
+                    ["RelativePathModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalRelativePathModel", result.Document, "./FirstLevel/SecondLevel/ThridLevel/File.json")
+                        }
+                    },
+                    ["SimpleRelativePathModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalSimpleRelativePathModel", result.Document, "File.json")
+                        }
+                    },
+                    ["AbsoluteWindowsPathModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalAbsWindowsPathModel", result.Document, @"A:\Dir\File.json")
+                        }
+                    },
+                    ["AbsoluteUnixPathModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalAbsUnixPathModel", result.Document, "/Dir/File.json")
+                        }
+                    },
+                    ["HttpsUrlModel"] = new OpenApiSchema()
+                    {
+                        AllOf =
+                        {
+                            new OpenApiSchemaReference("ExternalHttpsModel", result.Document, "https://host.lan:1234/path/to/file/resource.json")
+                        }
+                    }
+                }
+            };
+
+            Assert.Equivalent(expectedComponents, components);
         }
     }
 }

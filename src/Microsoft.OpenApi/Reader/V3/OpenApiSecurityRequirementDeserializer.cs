@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             foreach (var property in mapNode)
             {
-                var scheme = LoadSecuritySchemeByReference(mapNode.Context, property.Name);
+                var scheme = LoadSecuritySchemeByReference(hostDocument, property.Name);
 
                 var scopes = property.Value.CreateSimpleList((value, p) => value.GetScalarValue(), hostDocument);
 
@@ -39,12 +40,11 @@ namespace Microsoft.OpenApi.Reader.V3
             return securityRequirement;
         }
 
-        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
-            ParsingContext context,
+        private static OpenApiSecuritySchemeReference LoadSecuritySchemeByReference(
+            OpenApiDocument openApiDocument,
             string schemeName)
         {
-            var securitySchemeObject = new OpenApiSecuritySchemeReference(schemeName, hostDocument: null);
-            return securitySchemeObject;
+            return new OpenApiSecuritySchemeReference(schemeName, openApiDocument);
         }
     }
 }

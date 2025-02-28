@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Validations
@@ -80,10 +81,10 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiComponents components) => Validate(components);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiHeader header) => Validate(header);
+        public override void Visit(IOpenApiHeader header) => Validate(header);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiResponse response) => Validate(response);
+        public override void Visit(IOpenApiResponse response) => Validate(response);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiMediaType mediaType) => Validate(mediaType);
@@ -104,10 +105,10 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiTag tag) => Validate(tag);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiParameter parameter) => Validate(parameter);
+        public override void Visit(IOpenApiParameter parameter) => Validate(parameter);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiSchema schema) => Validate(schema);
+        public override void Visit(IOpenApiSchema schema) => Validate(schema);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiServer server) => Validate(server);
@@ -116,7 +117,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiEncoding encoding) => Validate(encoding);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiCallback callback) => Validate(callback);
+        public override void Visit(IOpenApiCallback callback) => Validate(callback);
 
         /// <inheritdoc/>
         public override void Visit(IOpenApiExtensible openApiExtensible) => Validate(openApiExtensible);
@@ -125,46 +126,46 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IOpenApiExtension openApiExtension) => Validate(openApiExtension, openApiExtension.GetType());
 
         /// <inheritdoc/>
-        public override void Visit(IList<OpenApiExample> example) => Validate(example, example.GetType());
+        public override void Visit(IList<IOpenApiExample> example) => Validate(example, example.GetType());
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiPathItem pathItem) => Validate(pathItem);
+        public override void Visit(IOpenApiPathItem pathItem) => Validate(pathItem);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiServerVariable serverVariable) => Validate(serverVariable);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiSecurityScheme securityScheme) => Validate(securityScheme);
+        public override void Visit(IOpenApiSecurityScheme securityScheme) => Validate(securityScheme);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiSecurityRequirement securityRequirement) => Validate(securityRequirement);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiRequestBody requestBody) => Validate(requestBody);
+        public override void Visit(IOpenApiRequestBody requestBody) => Validate(requestBody);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiPaths paths) => Validate(paths);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiLink link) => Validate(link);
+        public override void Visit(IOpenApiLink link) => Validate(link);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiExample example) => Validate(example);
+        public override void Visit(IOpenApiExample example) => Validate(example);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiOperation operation) => Validate(operation);
         /// <inheritdoc/>
         public override void Visit(IDictionary<OperationType, OpenApiOperation> operations) => Validate(operations, operations.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiHeader> headers) => Validate(headers, headers.GetType());
+        public override void Visit(IDictionary<string, IOpenApiHeader> headers) => Validate(headers, headers.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
+        public override void Visit(IDictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiExample> examples) => Validate(examples, examples.GetType());
+        public override void Visit(IDictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiLink> links) => Validate(links, links.GetType());
+        public override void Visit(IDictionary<string, IOpenApiLink> links) => Validate(links, links.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, OpenApiServerVariable> serverVariables) => Validate(serverVariables, serverVariables.GetType());
         /// <inheritdoc/>
@@ -189,9 +190,9 @@ namespace Microsoft.OpenApi.Validations
             }
 
             // Validate unresolved references as references
-            if (item is IOpenApiReferenceable { UnresolvedReference: true })
+            if (item is IOpenApiReferenceHolder { UnresolvedReference: true })
             {
-                type = typeof(IOpenApiReferenceable);
+                type = typeof(IOpenApiReferenceHolder);
             }
 
             var rules = _ruleSet.FindRules(type);

@@ -16,25 +16,25 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiCallbackTests
     {
-        public static OpenApiCallback AdvancedCallback = new()
+        private static OpenApiCallback AdvancedCallback => new()
         {
             PathItems =
             {
                 [RuntimeExpression.Build("$request.body#/url")]
-                = new()
+                = new OpenApiPathItem()
                 {
                     Operations =
                     {
                         [OperationType.Post] =
                         new()
                         {
-                            RequestBody = new()
+                            RequestBody = new OpenApiRequestBody()
                             {
                                 Content =
                                 {
                                     ["application/json"] = new()
                                     {
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Object
                                         }
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             },
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Description = "Success"
                                 }
@@ -54,27 +54,27 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiCallbackReference CallbackProxy = new(ReferencedCallback, "simpleHook");
+        private static OpenApiCallbackReference CallbackProxy => new("simpleHook");
 
-        public static OpenApiCallback ReferencedCallback = new()
+        private static OpenApiCallback ReferencedCallback => new()
         {
             PathItems =
             {
                 [RuntimeExpression.Build("$request.body#/url")]
-                = new()
+                = new OpenApiPathItem()
                 {
                     Operations =
                     {
                         [OperationType.Post] =
                         new()
                         {
-                            RequestBody = new()
+                            RequestBody = new OpenApiRequestBody()
                             {
                                 Content =
                                 {
                                     ["application/json"] = new()
                                     {
-                                        Schema = new()
+                                        Schema = new OpenApiSchema()
                                         {
                                             Type = JsonSchemaType.Object
                                         }
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             },
                             Responses = new()
                             {
-                                ["200"] = new()
+                                ["200"] = new OpenApiResponse()
                                 {
                                     Description = "Success"
                                 }

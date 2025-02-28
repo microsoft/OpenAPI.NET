@@ -10,6 +10,7 @@ using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -19,11 +20,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V2Tests/Samples/";
-
-        public OpenApiDocumentTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
 
         [Theory]
         [InlineData("en-US")]
@@ -54,49 +50,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         exclusiveMaximum: true
                         exclusiveMinimum: false
                 paths: {}
-                """,
-                "yaml");
+            """,
+                "yaml", SettingsFixture.ReaderSettings);
 
-            result.Document.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new()
-                    {
-                        Title = "Simple Document",
-                        Version = "0.9.1",
-                        Extensions =
-                        {
-                            ["x-extension"] = new OpenApiAny(2.335)
-                        }
-                    },
-                    Components = new()
-                    {
-                        Schemas =
-                        {
-                            ["sampleSchema"] = new()
-                            {
-                                Type = JsonSchemaType.Object,
-                                Properties =
-                                {
-                                    ["sampleProperty"] = new()
-                                    {
-                                        Type = JsonSchemaType.Number,
-                                        Minimum = (decimal)100.54,
-                                        Maximum = (decimal)60000000.35,
-                                        ExclusiveMaximum = true,
-                                        ExclusiveMinimum = false
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    Paths = new()
-                }, options => options
-                .Excluding(x=> x.BaseUri)
-                .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Parent"))
-                .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Root")));
+            Assert.Equal("0.9.1", result.Document.Info.Version, StringComparer.OrdinalIgnoreCase);
+            var extension = Assert.IsType<OpenApiAny>(result.Document.Info.Extensions["x-extension"]);
+            Assert.Equal(2.335M, extension.Node.GetValue<decimal>());
+            var sampleSchema = Assert.IsType<OpenApiSchema>(result.Document.Components.Schemas["sampleSchema"]);
+            var samplePropertySchema = Assert.IsType<OpenApiSchema>(sampleSchema.Properties["sampleProperty"]);
+            var expectedPropertySchema = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Number,
+                Minimum = (decimal)100.54,
+                ExclusiveMaximum = (decimal)60000000.35,
+            };
+
+            Assert.Equivalent(expectedPropertySchema, samplePropertySchema);
         }
 
         [Fact]
@@ -106,7 +75,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okSchema = new OpenApiSchema
             {
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     { "id", new OpenApiSchema
                         {
@@ -119,7 +88,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var errorSchema = new OpenApiSchema
             {
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     { "code", new OpenApiSchema
                         {
@@ -142,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okMediaType = new OpenApiMediaType
             {
-                Schema = new()
+                Schema = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Array,
                     Items = new OpenApiSchemaReference("Item", result.Document)
@@ -170,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 },
                 Paths = new()
                 {
-                    ["/items"] = new()
+                    ["/items"] = new OpenApiPathItem()
                     {
                         Operations =
                         {
@@ -178,7 +147,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Responses =
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -187,7 +156,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["application/xml"] = okMediaType,
                                         }
                                     },
-                                    ["default"] = new()
+                                    ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
                                         Content =
@@ -202,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Responses =
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -210,7 +179,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["html/text"] = okMediaType
                                         }
                                     },
-                                    ["default"] = new()
+                                    ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
                                         Content =
@@ -224,7 +193,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 Responses =
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -233,7 +202,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["application/xml"] = okMediaType,
                                         }
                                     },
-                                    ["default"] = new()
+                                    ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
                                         Content =
@@ -276,7 +245,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var responses = result.Document.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)
             {
-                var targetSchema = response.Key == "200" ? successSchema : errorSchema;
+                var targetSchema = response.Key == "200" ? (IOpenApiSchema)successSchema : errorSchema;
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
@@ -294,9 +263,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Act
             var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "ComponentRootReference.json"))).Document;
             var schema1 = actual.Components.Schemas["AllPets"];
-            Assert.False(schema1.UnresolvedReference);
-            var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1.Reference);
-            if (schema2.UnresolvedReference && schema1.Reference.Id == schema2.Reference.Id)
+            var schema1Reference = Assert.IsType<OpenApiSchemaReference>(schema1);
+            Assert.False(schema1Reference.UnresolvedReference);
+            var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1Reference.Reference);
+            Assert.IsType<OpenApiSchema>(schema2);
+            if (string.IsNullOrEmpty(schema1Reference.Reference.Id) || schema1Reference.UnresolvedReference)
             {
                 // detected a cycle - this code gets triggered
                 Assert.Fail("A cycle should not be detected");
@@ -310,6 +281,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 DefaultContentType = ["application/json"]
             };
+            settings.AddYamlReader();
 
             var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
             var mediaType = actual.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;

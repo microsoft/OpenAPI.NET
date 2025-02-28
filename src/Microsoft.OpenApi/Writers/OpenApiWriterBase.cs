@@ -211,6 +211,21 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Writes an enumerable collection as an array
+        /// </summary>
+        /// <param name="collection">The enumerable collection to write.</param>
+        /// <typeparam name="T">The type of elements in the collection.</typeparam>
+        public virtual void WriteEnumerable<T>(IEnumerable<T> collection)
+        {
+            WriteStartArray();
+            foreach (var item in collection)
+            {
+                WriteValue(item);
+            }
+            WriteEndArray();
+        }
+
+        /// <summary>
         /// Write object value.
         /// </summary>
         /// <param name="value">The object value.</param>
@@ -263,6 +278,10 @@ namespace Microsoft.OpenApi.Writers
             else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
             {
                 WriteValue((DateTimeOffset)value);
+            }
+            else if (value is IEnumerable<object> enumerable)
+            {
+                WriteEnumerable(enumerable);
             }
             else
             {

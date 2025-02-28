@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 
@@ -17,7 +18,8 @@ namespace Microsoft.OpenApi.Interfaces
         /// Use Uri to locate data and convert into an input object.
         /// </summary>
         /// <param name="uri">Identifier of some source of an OpenAPI Description</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A data object that can be processed by a reader to generate an <see cref="OpenApiDocument"/></returns>
-        Task<Stream> LoadAsync(Uri uri);
+        Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default);
     }
 }

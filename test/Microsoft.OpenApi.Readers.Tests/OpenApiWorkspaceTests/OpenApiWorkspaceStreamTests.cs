@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -10,13 +11,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 {
     public class OpenApiWorkspaceStreamTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiWorkspace/";
-        
-        public OpenApiWorkspaceStreamTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         // Use OpenApiWorkspace to load a document and a referenced document
 
         [Fact]
@@ -29,8 +23,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                 CustomExternalLoader = new MockLoader(),
                 BaseUrl = new("file://c:\\")
             };
+            settings.AddYamlReader();
 
-            // Todo: this should be ReadAsync
             var stream = new MemoryStream();
             var doc = """
                       openapi: 3.0.0
@@ -59,6 +53,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                 CustomExternalLoader = new ResourceLoader(),
                 BaseUrl = new("file://c:\\"),
             };
+            settings.AddYamlReader();
 
             ReadResult result;
             result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);
@@ -81,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             return null;
         }
 
-        public Task<Stream> LoadAsync(Uri uri)
+        public Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<Stream>(null);
         }
@@ -94,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             return null;
         }
 
-        public Task<Stream> LoadAsync(Uri uri)
+        public Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
         {
             var path = new Uri(new("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
             path = path[1..]; // remove leading slash

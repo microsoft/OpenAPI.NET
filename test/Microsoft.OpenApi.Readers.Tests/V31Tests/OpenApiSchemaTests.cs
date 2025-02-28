@@ -9,10 +9,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using Microsoft.OpenApi.Exceptions;
+using System;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -28,21 +32,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             return new MemoryStream(fileBytes);
         }
 
-        public OpenApiSchemaTests()
-        {
-           OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task ParseBasicV31SchemaShouldSucceed()
         {
             var expectedObject = new OpenApiSchema()
             {
                 Id = "https://example.com/arrays.schema.json",
-                Schema = "https://json-schema.org/draft/2020-12/schema",
+                Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["fruits"] = new OpenApiSchema
                     {
@@ -57,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = JsonSchemaType.Array
                     }
                 },
-                Definitions = new Dictionary<string, OpenApiSchema>
+                Definitions = new Dictionary<string, IOpenApiSchema>
                 {
                     ["veggie"] = new OpenApiSchema
                     {
@@ -67,7 +66,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "veggieName",
                             "veggieLike"
                         },
-                        Properties = new Dictionary<string, OpenApiSchema>
+                        DependentRequired = new Dictionary<string, ISet<string>>
+                        {
+                            { "veggieType", new HashSet<string> { "veggieColor", "veggieSize" } }
+                        },
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
                             ["veggieName"] = new OpenApiSchema
                             {
@@ -78,6 +81,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Type = JsonSchemaType.Boolean,
                                 Description = "Do I like this vegetable?"
+                            },
+                            ["veggieType"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The type of vegetable (e.g., root, leafy, etc.)."
+                            },
+                            ["veggieColor"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The color of the vegetable."
+                            },
+                            ["veggieSize"] = new OpenApiSchema
+                            {
+                                Type = JsonSchemaType.String,
+                                Description = "The size of the vegetable."
                             }
                         }
                     }
@@ -86,7 +104,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(
-                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, new());
+                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(expectedObject, schema);
@@ -106,7 +124,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expected = new OpenApiSchema()
             {
                 Id = "https://example.com/arrays.schema.json",
-                Schema = "https://json-schema.org/draft/2020-12/schema",
+                Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object | JsonSchemaType.Null
             };
@@ -139,13 +157,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Act
-            var schemaWithArrayCopy = new OpenApiSchema(schemaWithTypeArray);
+            var schemaWithArrayCopy = schemaWithTypeArray.CreateShallowCopy() as OpenApiSchema;
             schemaWithArrayCopy.Type = JsonSchemaType.String;
 
-            var simpleSchemaCopy = new OpenApiSchema(simpleSchema)
-            {
-                Type = JsonSchemaType.String | JsonSchemaType.Null
-            };
+            var simpleSchemaCopy = simpleSchema.CreateShallowCopy() as OpenApiSchema;
+            simpleSchemaCopy.Type = JsonSchemaType.String | JsonSchemaType.Null;
 
             // Assert
             Assert.NotEqual(schemaWithTypeArray.Type, schemaWithArrayCopy.Type);
@@ -161,13 +177,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var path = Path.Combine(SampleFolderPath, "schema.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["one"] = new()
+                    ["one"] = new OpenApiSchema()
                     {
                         Description = "type array",
                         Type = JsonSchemaType.Integer | JsonSchemaType.String
@@ -184,34 +200,34 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange and Act
             var path = Path.Combine(SampleFolderPath, "advancedSchema.yaml");
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["one"] = new()
+                    ["one"] = new OpenApiSchema()
                     {
                         Description = "type array",
                         Type = JsonSchemaType.Integer | JsonSchemaType.String
                     },
-                    ["two"] = new()
+                    ["two"] = new OpenApiSchema()
                     {
                         Description = "type 'null'",
                         Type = JsonSchemaType.Null
                     },
-                    ["three"] = new()
+                    ["three"] = new OpenApiSchema()
                     {
                         Description = "type array including 'null'",
                         Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
-                    ["four"] = new()
+                    ["four"] = new OpenApiSchema()
                     {
                         Description = "array with no items",
                         Type = JsonSchemaType.Array
                     },
-                    ["five"] = new()
+                    ["five"] = new OpenApiSchema()
                     {
                         Description = "singular example",
                         Type = JsonSchemaType.String,
@@ -220,37 +236,37 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "exampleValue"
                         }
                     },
-                    ["six"] = new()
+                    ["six"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum true",
-                        V31ExclusiveMinimum = 10
+                        ExclusiveMinimum = 10
                     },
-                    ["seven"] = new()
+                    ["seven"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum false",
                         Minimum = 10
                     },
-                    ["eight"] = new()
+                    ["eight"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum true",
-                        V31ExclusiveMaximum = 20
+                        ExclusiveMaximum = 20
                     },
-                    ["nine"] = new()
+                    ["nine"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum false",
                         Maximum = 20
                     },
-                    ["ten"] = new()
+                    ["ten"] = new OpenApiSchema()
                     {
                         Description = "nullable string",
                         Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
-                    ["eleven"] = new()
+                    ["eleven"] = new OpenApiSchema()
                     {
                         Description = "x-nullable string",
                         Type = JsonSchemaType.String | JsonSchemaType.Null
                     },
-                    ["twelve"] = new()
+                    ["twelve"] = new OpenApiSchema()
                     {
                         Description = "file/binary"
                     }
@@ -275,7 +291,7 @@ examples:
  - ubuntu
 ";
             // Act
-            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml");
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml", SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equal(2, schema.Examples.Count);
@@ -293,14 +309,14 @@ examples:
                 Enum = [1, 2, 3]
             };
 
-            var clone = new OpenApiSchema(schema);
+            var clone = schema.CreateShallowCopy() as OpenApiSchema;
             clone.Examples.Add(4);
             clone.Enum.Add(4);
             clone.Default = 6;
 
             // Assert
-            Assert.Equivalent(new int[] {1, 2, 3, 4}, clone.Enum.Select(static x => x.GetValue<int>()).ToArray());
-            Assert.Equivalent(new int[] {2, 3, 4}, clone.Examples.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(new int[] { 1, 2, 3, 4 }, clone.Enum.Select(static x => x.GetValue<int>()).ToArray());
+            Assert.Equivalent(new int[] { 2, 3, 4 }, clone.Examples.Select(static x => x.GetValue<int>()).ToArray());
             Assert.Equivalent(6, clone.Default.GetValue<int>());
         }
 
@@ -314,7 +330,7 @@ nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             var writer = new StringWriter();
             schema.SerializeAsV3(new OpenApiYamlWriter(writer));
@@ -333,7 +349,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             var writer = new StringWriter();
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
@@ -353,7 +369,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
 
             var writer = new StringWriter();
             schema.SerializeAsV31(new OpenApiYamlWriter(writer));
@@ -374,7 +390,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new(), SettingsFixture.ReaderSettings);
 
             var writer = new StringWriter();
             schema.SerializeAsV31(new OpenApiYamlWriter(writer));
@@ -393,13 +409,13 @@ nullable: true";
 
             var expected = @"{ }";
 
-            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml");
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml", SettingsFixture.ReaderSettings);
 
             var writer = new StringWriter();
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
             var schemaString = writer.ToString();
 
-            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral()); 
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Theory]
@@ -411,7 +427,7 @@ nullable: true";
             var path = Path.Combine(SampleFolderPath, filePath);
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equal(JsonSchemaType.String | JsonSchemaType.Null, schema.Type);
@@ -451,7 +467,7 @@ description: Schema for a person object
             var path = Path.Combine(SampleFolderPath, "schemaWithJsonSchemaKeywords.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // serialization
             var writer = new StringWriter();
@@ -495,7 +511,7 @@ description: Schema for a person object
             var path = Path.Combine(SampleFolderPath, "schemaWithConst.json");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new());
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
             Assert.Equal("active", schema.Properties["status"].Const);
             Assert.Equal("admin", schema.Properties["user"].Properties["role"].Const);
 
@@ -507,7 +523,7 @@ description: Schema for a person object
         }
 
         [Fact]
-        public void ParseSchemaWithUnrecognizedKeywordsWorks() 
+        public void ParseSchemaWithUnrecognizedKeywordsWorks()
         {
             var input = @"{
     ""type"": ""string"",
@@ -521,5 +537,83 @@ description: Schema for a person object
             Assert.Equal(2, schema.UnrecognizedKeywords.Count);
         }
 
+        [Fact]
+        public void ParseSchemaExampleWithPrimitivesWorks()
+        {
+            var expected1 = @"{
+  ""type"": ""string"",
+  ""example"": ""2024-01-02""
+}";
+
+            var expected2 = @"{
+  ""type"": ""string"",
+  ""example"": ""3.14""
+}";
+            var schema = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.String,
+                Example = JsonValue.Create("2024-01-02")
+            };
+
+            var schema2 = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.String,
+                Example = JsonValue.Create("3.14")
+            };
+
+            var textWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(textWriter);
+            schema.SerializeAsV31(writer);
+            var actual1 = textWriter.ToString();
+            Assert.Equal(expected1.MakeLineBreaksEnvironmentNeutral(), actual1.MakeLineBreaksEnvironmentNeutral());
+
+            textWriter = new StringWriter();
+            writer = new OpenApiJsonWriter(textWriter);
+            schema2.SerializeAsV31(writer);
+            var actual2 = textWriter.ToString();
+            Assert.Equal(expected2.MakeLineBreaksEnvironmentNeutral(), actual2.MakeLineBreaksEnvironmentNeutral());
+        }
+      
+        [Theory]
+        [InlineData(JsonSchemaType.Integer | JsonSchemaType.String, new[] { "integer", "string" })]
+        [InlineData(JsonSchemaType.Integer | JsonSchemaType.Null, new[] { "integer", "null" })]
+        [InlineData(JsonSchemaType.Integer, new[] { "integer" })]
+        public void NormalizeFlaggableJsonSchemaTypeEnumWorks(JsonSchemaType type, string[] expected)
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = type
+            };
+
+            var actual = schema.Type.ToIdentifiers();
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(new[] { "integer", "string" }, JsonSchemaType.Integer | JsonSchemaType.String)]
+        [InlineData(new[] { "integer", "null" }, JsonSchemaType.Integer | JsonSchemaType.Null)]
+        [InlineData(new[] { "integer" }, JsonSchemaType.Integer)]
+        public void ArrayIdentifierToEnumConversionWorks(string[] type, JsonSchemaType expected)
+        {
+            var actual = type.ToJsonSchemaType();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void StringIdentifierToEnumConversionWorks()
+        {
+            var actual = "integer".ToJsonSchemaType();
+            Assert.Equal(JsonSchemaType.Integer, actual);
+        }
+
+        [Fact]
+        public void ReturnSingleIdentifierWorks()
+        {
+            var type = JsonSchemaType.Integer;
+            var types = JsonSchemaType.Integer | JsonSchemaType.Null;
+
+            Assert.Equal("integer", type.ToSingleIdentifier());
+            Assert.Throws<InvalidOperationException>(() => types.ToSingleIdentifier());
+        }
     }
 }

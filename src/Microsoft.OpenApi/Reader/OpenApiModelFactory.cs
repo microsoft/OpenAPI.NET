@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Security;
 using System.Text;
 using System.Threading;
@@ -21,13 +20,6 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     public static class OpenApiModelFactory
     {
-        private static readonly HttpClient _httpClient = new();
-
-        static OpenApiModelFactory()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Json, new OpenApiJsonReader());
-        }
-
         /// <summary>
         /// Loads the input stream and parses it into an Open API document.
         /// </summary>
@@ -39,7 +31,11 @@ namespace Microsoft.OpenApi.Reader
                                       string format = null,
                                       OpenApiReaderSettings settings = null)
         {
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(stream);
+#else
             if (stream is null) throw new ArgumentNullException(nameof(stream));
+#endif
             settings ??= new OpenApiReaderSettings();
 
             // Get the format of the stream if not provided
@@ -69,7 +65,8 @@ namespace Microsoft.OpenApi.Reader
         public static T Load<T>(MemoryStream input, OpenApiSpecVersion version, string format, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
             format ??= InspectStreamFormat(input);
-            return OpenApiReaderRegistry.GetReader(format).ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
+            settings ??= DefaultReaderSettings.Value;
+            return settings.GetReader(format).ReadFragment<T>(input, version, openApiDocument, out diagnostic, settings);
         }
 
         /// <summary>
@@ -77,11 +74,12 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         /// <param name="url">The path to the OpenAPI file</param>
         /// <param name="settings"> The OpenApi reader settings.</param>
-        /// <param name="token"></param>
+        /// <param name="token">The cancellation token</param>
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null, CancellationToken token = default)
         {
-            var (stream, format) = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
+            settings ??= DefaultReaderSettings.Value;
+            var (stream, format) = await RetrieveStreamAndFormatAsync(url, settings, token).ConfigureAwait(false);
             return await LoadAsync(stream, format, settings, token).ConfigureAwait(false);
         }
 
@@ -98,7 +96,8 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>The OpenAPI element.</returns>
         public static async Task<T> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiDocument openApiDocument, OpenApiReaderSettings settings = null, CancellationToken token = default) where T : IOpenApiElement
         {
-            var (stream, format) = await RetrieveStreamAndFormatAsync(url, token).ConfigureAwait(false);
+            settings ??= DefaultReaderSettings.Value;
+            var (stream, format) = await RetrieveStreamAndFormatAsync(url, settings, token).ConfigureAwait(false);
             return await LoadAsync<T>(stream, version, openApiDocument, format, settings, token);
         }
 
@@ -112,7 +111,11 @@ namespace Microsoft.OpenApi.Reader
         /// <returns></returns>
         public static async Task<ReadResult> LoadAsync(Stream input, string format = null, OpenApiReaderSettings settings = null, CancellationToken cancellationToken = default)
         {
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(input);
+#else
             if (input is null) throw new ArgumentNullException(nameof(input));
+#endif
             settings ??= new OpenApiReaderSettings();
 
             Stream preparedStream;
@@ -160,7 +163,11 @@ namespace Microsoft.OpenApi.Reader
                                                  CancellationToken token = default) where T : IOpenApiElement
         {
             Utils.CheckArgumentNull(openApiDocument);
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(input);
+#else
             if (input is null) throw new ArgumentNullException(nameof(input));
+#endif
             if (input is MemoryStream memoryStream)
             {
                 return Load<T>(memoryStream, version, format, openApiDocument, out var _, settings);
@@ -185,7 +192,11 @@ namespace Microsoft.OpenApi.Reader
                                        string format = null,
                                        OpenApiReaderSettings settings = null)
         {
-            if (input is null) throw new ArgumentNullException(nameof(input));
+#if NET6_0_OR_GREATER
+            ArgumentException.ThrowIfNullOrEmpty(input);
+#else
+            if (string.IsNullOrEmpty(input)) throw new ArgumentNullException(nameof(input));
+#endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
 
@@ -212,21 +223,26 @@ namespace Microsoft.OpenApi.Reader
                                  string format = null,
                                  OpenApiReaderSettings settings = null) where T : IOpenApiElement
         {
-            if (input is null) throw new ArgumentNullException(nameof(input));
+#if NET6_0_OR_GREATER
+            ArgumentException.ThrowIfNullOrEmpty(input);
+#else
+            if (string.IsNullOrEmpty(input)) throw new ArgumentNullException(nameof(input));
+#endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
             return Load<T>(stream, version, format, openApiDocument, out diagnostic, settings);
         }
 
-        private static readonly OpenApiReaderSettings DefaultReaderSettings = new();
+        private static readonly Lazy<OpenApiReaderSettings> DefaultReaderSettings = new(() => new OpenApiReaderSettings());
 
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
-            var reader = OpenApiReaderRegistry.GetReader(format);
+            settings ??= DefaultReaderSettings.Value;
+            var reader = settings.GetReader(format);
             var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
 
-            if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
+            if (settings.LoadExternalRefs)
             {
                 var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.Document, settings, format, cancellationToken).ConfigureAwait(false);
                 // Merge diagnostics of external reference
@@ -247,25 +263,29 @@ namespace Microsoft.OpenApi.Reader
             var openApiWorkSpace = new OpenApiWorkspace(baseUrl);
 
             // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings.BaseUrl);
+            var streamLoader = new DefaultStreamLoader(settings.BaseUrl, settings.HttpClient);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, token).ConfigureAwait(false);
         }
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
         {
-            if (settings?.LoadExternalRefs ?? DefaultReaderSettings.LoadExternalRefs)
+            settings ??= DefaultReaderSettings.Value;
+            if (settings.LoadExternalRefs)
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
             }
+            if (input.Length == 0 || input.Position == input.Length)
+            {
+                throw new ArgumentException($"Cannot parse the stream: {nameof(input)} is empty or contains no elements.");
+            }
 
-            var reader = OpenApiReaderRegistry.GetReader(format);
+            var reader = settings.GetReader(format);
             var readResult = reader.Read(input, settings);
-
             return readResult;
         }
 
-        private static async Task<(Stream, string)> RetrieveStreamAndFormatAsync(string url, CancellationToken token = default)
+        private static async Task<(Stream, string)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -275,14 +295,15 @@ namespace Microsoft.OpenApi.Reader
                 if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase)
                     || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 {
-                    var response = await _httpClient.GetAsync(url, token).ConfigureAwait(false);
+                    var response = await settings.HttpClient.GetAsync(url, token).ConfigureAwait(false);
                     var mediaType = response.Content.Headers.ContentType.MediaType;
                     var contentType = mediaType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
-                    format = contentType.Split('/').LastOrDefault();
+                    format = contentType.Split('/').Last().Split('+').Last().Split('-').Last();
+                    // for non-standard MIME types e.g. text/x-yaml used in older libs or apps
 #if NETSTANDARD2_0
                     stream = await response.Content.ReadAsStreamAsync();
 #else
-                    stream = await response.Content.ReadAsStreamAsync(token).ConfigureAwait(false);;
+                    stream = await response.Content.ReadAsStreamAsync(token).ConfigureAwait(false);
 #endif
                     return (stream, format);
                 }
@@ -321,8 +342,12 @@ namespace Microsoft.OpenApi.Reader
 
         private static string InspectStreamFormat(Stream stream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));            
-            
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(stream);
+#else
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+#endif
+
             long initialPosition = stream.Position;
             int firstByte = stream.ReadByte();
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -12,48 +13,22 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiExample
     {
-        /// <summary>
-        /// Short description for the example.
-        /// </summary>
-        public virtual string Summary { get; set; }
+        /// <inheritdoc/>
+        public string Summary { get; set; }
 
-        /// <summary>
-        /// Long description for the example.
-        /// CommonMark syntax MAY be used for rich text representation.
-        /// </summary>
-        public virtual string Description { get; set; }
+        /// <inheritdoc/>
+        public string Description { get; set; }
 
-        /// <summary>
-        /// Embedded literal example. The value field and externalValue field are mutually
-        /// exclusive. To represent examples of media types that cannot naturally represented
-        /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
-        /// </summary>
-        public virtual JsonNode Value { get; set; }
+        /// <inheritdoc/>
+        public string ExternalValue { get; set; }
 
-        /// <summary>
-        /// A URL that points to the literal example.
-        /// This provides the capability to reference examples that cannot easily be
-        /// included in JSON or YAML documents.
-        /// The value field and externalValue field are mutually exclusive.
-        /// </summary>
-        public virtual string ExternalValue { get; set; }
+        /// <inheritdoc/>
+        public JsonNode Value { get; set; }
 
-        /// <summary>
-        /// This object MAY be extended with Specification Extensions.
-        /// </summary>
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Reference object.
-        /// </summary>
-        public virtual OpenApiReference Reference { get; set; }
-
-        /// <summary>
-        /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
-        /// </summary>
-        public virtual bool UnresolvedReference { get; set; } = false;
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -63,41 +38,30 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiExample"/> object
         /// </summary>
-        public OpenApiExample(OpenApiExample example)
+        /// <param name="example">The <see cref="IOpenApiExample"/> object</param>
+        internal OpenApiExample(IOpenApiExample example)
         {
-            Summary = example?.Summary ?? Summary;
-            Description = example?.Description ?? Description;
-            Value = example?.Value != null ? JsonNodeCloneHelper.Clone(example.Value) : null;
-            ExternalValue = example?.ExternalValue ?? ExternalValue;
-            Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
-            Reference = example?.Reference != null ? new(example.Reference) : null;
-            UnresolvedReference = example?.UnresolvedReference ?? UnresolvedReference;
+            Utils.CheckArgumentNull(example);
+            Summary = example.Summary ?? Summary;
+            Description = example.Description ?? Description;
+            Value = example.Value != null ? JsonNodeCloneHelper.Clone(example.Value) : null;
+            ExternalValue = example.ExternalValue ?? ExternalValue;
+            Extensions = example.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiExample"/> to Open Api v3.1
-        /// </summary>
-        /// <param name="writer"></param>
-        public virtual void SerializeAsV31(IOpenApiWriter writer)
+        /// <inheritdoc/>
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
-        /// </summary>
-        /// <param name="writer"></param>
-        public virtual void SerializeAsV3(IOpenApiWriter writer)
+        /// <inheritdoc/>
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
         }
 
-        /// <summary>
-        /// Writes out existing examples in a mediatype object
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="version"></param>
-        public void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -121,14 +85,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiExample"/> to Open Api v2.0
-        /// </summary>
-        public virtual void SerializeAsV2(IOpenApiWriter writer)
+        /// <inheritdoc/>
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
-            // Example object of this form does not exist in V2.
-            // V2 Example object requires knowledge of media type and exists only
-            // in Response object, so it will be serialized as a part of the Response object.
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        /// <inheritdoc/>
+        public IOpenApiExample CreateShallowCopy()
+        {
+            return new OpenApiExample(this);
         }
     }
 }

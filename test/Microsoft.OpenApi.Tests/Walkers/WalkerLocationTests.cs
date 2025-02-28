@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -26,7 +28,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/info",
                 "#/servers",
                 "#/paths",
-                "#/tags"
             }, locator.Locations);
         }
 
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     new(),
                     new()
                 },
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                 {
                     new()
                 }
@@ -65,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         public void LocatePathOperationContentSchema()
         {
             var doc = new OpenApiDocument();
-            doc.Paths.Add("/test", new()
+            doc.Paths.Add("/test", new OpenApiPathItem()
             {
                 Operations = new Dictionary<OperationType, OpenApiOperation>
                 {
@@ -73,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     {
                         Responses = new()
                         {
-                            ["200"] = new()
+                            ["200"] = new OpenApiResponse()
                             {
                                 Content = new Dictionary<string, OpenApiMediaType>
                                 {
@@ -106,8 +107,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths/~1test/get/responses/200/content",
                 "#/paths/~1test/get/responses/200/content/application~1json",
                 "#/paths/~1test/get/responses/200/content/application~1json/schema",
-                "#/paths/~1test/get/tags",
-                "#/tags",
 
             }, locator.Locations);
 
@@ -120,9 +119,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var loopySchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, OpenApiSchema>
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
-                    ["name"] = new() { Type = JsonSchemaType.String }
+                    ["name"] = new OpenApiSchema() { Type = JsonSchemaType.String }
                 }
             };
 
@@ -132,7 +131,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             {
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>
+                    Schemas = new Dictionary<string, IOpenApiSchema>
                     {
                         ["loopy"] = loopySchema
                     }
@@ -150,7 +149,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/components",
                 "#/components/schemas/loopy",
                 "#/components/schemas/loopy/properties/name",
-                "#/tags"
             }, locator.Locations);
         }
 
@@ -160,34 +158,24 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateReferences()
         {
-            var baseSchema = new OpenApiSchemaReference("base", null);
+            var baseSchema = new OpenApiSchema();
 
             var derivedSchema = new OpenApiSchema
             {
-                AnyOf = new List<OpenApiSchema> { baseSchema },
-                Reference = new()
-                {
-                    Id = "derived",
-                    Type = ReferenceType.Schema
-                },
-                UnresolvedReference = false
+                AnyOf = new List<IOpenApiSchema> { new OpenApiSchemaReference("base") },
             };
+
             var testHeader = new OpenApiHeader()
             {
-                Schema = derivedSchema,
-                Reference = new()
-                {
-                    Id = "test-header",
-                    Type = ReferenceType.Header
-                },
-                UnresolvedReference = false
+                Schema = new OpenApiSchemaReference("derived"),
             };
+            var testHeaderReference = new OpenApiHeaderReference("test-header");
 
             var doc = new OpenApiDocument
             {
                 Paths = new()
                 {
-                    ["/"] = new()
+                    ["/"] = new OpenApiPathItem()
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -195,18 +183,18 @@ namespace Microsoft.OpenApi.Tests.Walkers
                             {
                                 Responses = new()
                                 {
-                                    ["200"] = new()
+                                    ["200"] = new OpenApiResponse()
                                     {
                                         Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = new()
                                             {
-                                                Schema = derivedSchema
+                                                Schema = new OpenApiSchemaReference("derived")
                                             }
                                         },
-                                        Headers = new Dictionary<string, OpenApiHeader>
+                                        Headers =
                                         {
-                                            ["test-header"] = testHeader
+                                            ["test-header"] = testHeaderReference
                                         }
                                     }
                                 }
@@ -216,18 +204,18 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>
+                    Schemas = new Dictionary<string, IOpenApiSchema>
                     {
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
                     },
-                    Headers = new Dictionary<string, OpenApiHeader>
+                    Headers =
                     {
                         ["test-header"] = testHeader
                     },
-                    SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+                    SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                     {
-                        ["test-secScheme"] = new OpenApiSecuritySchemeReference("reference-to-scheme", null, null)
+                        ["test-secScheme"] = new OpenApiSecuritySchemeReference("reference-to-scheme")
                     }
                 }
             };
@@ -238,11 +226,11 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             Assert.Equivalent(new List<string> {
                 "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
-                "referenceAt: #/paths/~1/get/responses/200/headers/test-header/schema",
+                "referenceAt: #/paths/~1/get/responses/200/headers/test-header",
                 "referenceAt: #/components/schemas/derived/anyOf/0",
                 "referenceAt: #/components/securitySchemes/test-secScheme",
                 "referenceAt: #/components/headers/test-header/schema"
-            }, locator.Locations.Where(l => l.StartsWith("referenceAt:")));
+            }, locator.Locations.Where(l => l.StartsWith("referenceAt:", StringComparison.OrdinalIgnoreCase)));
         }
     }
 
@@ -271,7 +259,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(OpenApiPathItem pathItem)
+        public override void Visit(IOpenApiPathItem pathItem)
         {
             Keys.Add(CurrentKeys.Path);
             Locations.Add(this.PathString);
@@ -287,13 +275,13 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Keys.Add(CurrentKeys.Operation.ToString());
             Locations.Add(this.PathString);
         }
-        public override void Visit(OpenApiResponse response)
+        public override void Visit(IOpenApiResponse response)
         {
             Keys.Add(CurrentKeys.Response);
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(IOpenApiReferenceable referenceable)
+        public override void Visit(IOpenApiReferenceHolder referenceable)
         {
             Locations.Add("referenceAt: " + this.PathString);
         }
@@ -308,12 +296,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(IList<OpenApiTag> openApiTags)
+        public override void Visit(ISet<OpenApiTag> openApiTags)
         {
             Locations.Add(this.PathString);
         }
@@ -327,7 +315,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add(this.PathString);
         }
-        public override void Visit(IList<OpenApiTagReference> openApiTags)
+        public override void Visit(ISet<OpenApiTagReference> openApiTags)
         {
             Locations.Add(this.PathString);
         }

@@ -7,6 +7,7 @@ using System.IO;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -165,16 +166,16 @@ namespace Microsoft.OpenApi.Services
 
             var location = componentToRegister switch
             {
-                OpenApiSchema => baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiParameter => baseUri + ReferenceType.Parameter.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiResponse => baseUri + ReferenceType.Response.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiRequestBody => baseUri + ReferenceType.RequestBody.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiLink => baseUri + ReferenceType.Link.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiCallback => baseUri + ReferenceType.Callback.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiPathItem => baseUri + ReferenceType.PathItem.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiExample => baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiHeader => baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + id,
-                OpenApiSecurityScheme => baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiSchema => baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiParameter => baseUri + ReferenceType.Parameter.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiResponse => baseUri + ReferenceType.Response.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiRequestBody => baseUri + ReferenceType.RequestBody.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiLink => baseUri + ReferenceType.Link.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiCallback => baseUri + ReferenceType.Callback.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiPathItem => baseUri + ReferenceType.PathItem.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiExample => baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiHeader => baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiSecurityScheme => baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + id,
                 _ => throw new ArgumentException($"Invalid component type {componentToRegister.GetType().Name}"),
             };
 

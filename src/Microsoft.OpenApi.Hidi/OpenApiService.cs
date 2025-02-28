@@ -40,12 +40,6 @@ namespace Microsoft.OpenApi.Hidi
 {
     internal static class OpenApiService
     {
-        static OpenApiService()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
-        }
-
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
@@ -254,7 +248,7 @@ namespace Microsoft.OpenApi.Hidi
             else if (!string.IsNullOrEmpty(options.OpenApi))
             {
                 stream = await GetStreamAsync(options.OpenApi, logger, cancellationToken).ConfigureAwait(false);
-                var result = await ParseOpenApiAsync(options.OpenApi, format, options.InlineExternal, logger, stream, cancellationToken).ConfigureAwait(false);
+                var result = await ParseOpenApiAsync(options.OpenApi, options.InlineExternal, logger, stream, cancellationToken).ConfigureAwait(false);
                 document = result.Document;
             }
             else throw new InvalidOperationException("No input file path or URL provided");
@@ -351,8 +345,7 @@ namespace Microsoft.OpenApi.Hidi
             try
             {
                 using var stream = await GetStreamAsync(openApi, logger, cancellationToken).ConfigureAwait(false);
-                var openApiFormat = !string.IsNullOrEmpty(openApi) ? GetOpenApiFormat(openApi, logger) : OpenApiFormat.Yaml;
-                result = await ParseOpenApiAsync(openApi, openApiFormat.GetDisplayName(),false, logger, stream, cancellationToken).ConfigureAwait(false);
+                result = await ParseOpenApiAsync(openApi, false, logger, stream, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Calculating statistics"))
                 {
@@ -380,7 +373,7 @@ namespace Microsoft.OpenApi.Hidi
             return result.Diagnostic.Errors.Count == 0;
         }
 
-        private static async Task<ReadResult> ParseOpenApiAsync(string openApiFile, string format, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
+        private static async Task<ReadResult> ParseOpenApiAsync(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
         {
             ReadResult result;
             var stopwatch = Stopwatch.StartNew();
@@ -393,10 +386,12 @@ namespace Microsoft.OpenApi.Hidi
                     LoadExternalRefs = inlineExternal,
                     BaseUrl = openApiFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ?
                         new(openApiFile) :
-                        new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
+                        new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar),
+                    HttpClient = httpClient.Value
                 };
+                settings.AddYamlReader();
 
-                result = await OpenApiDocument.LoadAsync(stream, format, settings, cancellationToken).ConfigureAwait(false);
+                result = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 logger.LogTrace("{Timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
 
@@ -498,6 +493,11 @@ namespace Microsoft.OpenApi.Hidi
             return paths;
         }
 
+        private static readonly Lazy<HttpClient> httpClient = new(() => new HttpClient()
+        {
+            DefaultRequestVersion = HttpVersion.Version20
+        });
+
         /// <summary>
         /// Reads stream from file system or makes HTTP request depending on the input string
         /// </summary>
@@ -513,11 +513,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     try
                     {
-                        using var httpClient = new HttpClient
-                        {
-                            DefaultRequestVersion = HttpVersion.Version20
-                        };
-                        stream = await httpClient.GetStreamAsync(new Uri(input), cancellationToken).ConfigureAwait(false);
+                        stream = await httpClient.Value.GetStreamAsync(new Uri(input), cancellationToken).ConfigureAwait(false);
                     }
                     catch (HttpRequestException ex)
                     {
