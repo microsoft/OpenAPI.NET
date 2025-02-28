@@ -39,7 +39,7 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
-        az acr login --name msgraphpperegistry
+        az acr login --name msgraphprodregistry
   
   - powershell: |
       $content = [XML](Get-Content ./Directory.Build.props)
