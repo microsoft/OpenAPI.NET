@@ -5,136 +5,432 @@ name: $(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   branches:
     include:
-      - main
-      - task/migrate-acr-pipeline
-  paths:
-    include:
-      - src/**
-      - .azure-pipelines/**
+    - main
+    - support/v1
+    - task/migrate-acr-pipeline
   tags:
     include:
-      - v*
-
+    - 'v*'
 pr:
   branches:
     include:
-      - main
-      - task/migrate-acr-pipeline
+    - main
+    - support/v1
 
 variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   REGISTRY: 'msgraphprodregistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
   PREVIEW_BRANCH: 'refs/heads/task/migrate-acr-pipeline'
+  
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: Azure-Pipelines-1ESPT-ExDShared
+      image: windows-2022
+      os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: build
+      jobs:
+      - job: build
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact: Nugets'
+            artifactName: Nugets
+            targetPath: '$(Build.ArtifactStagingDirectory)/Nugets'
+        steps:
+        - task: UseDotNet@2
+          displayName: 'Use .NET 6'
+          inputs:
+            version: 6.x
 
-pool:
-  vmImage: 'ubuntu-latest'
+        - task: UseDotNet@2
+          displayName: 'Use .NET 8'
+          inputs:
+            version: 8.x
+        
+        # Install the nuget tool.
+        - task: NuGetToolInstaller@1
+          displayName: 'Use NuGet >=6.11.0'
+          inputs:
+            versionSpec: '>=6.11.0'
+            checkLatest: true
 
-steps:
-  - checkout: self
-  
-  - task: AzureCLI@2
-    displayName: 'Login to Azure Container Registry'
-    inputs:
-      azureSubscription: 'ACR Images Push Service Connection'
-      scriptType: bash
-      scriptLocation: inlineScript
-      inlineScript: |
-        az acr login --name msgraphprodregistry
-  
-  - powershell: |
-      $content = [XML](Get-Content ./Directory.Build.props)
-      Write-Host "XML loaded, finding version..."
+        # Build the Product project
+        - task: DotNetCoreCLI@2
+          displayName: 'build'
+          inputs:
+            projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.sln'
+            arguments: '--configuration $(BuildConfiguration) --no-incremental'
+
+        # Run the Unit test
+        - task: DotNetCoreCLI@2
+          displayName: 'test'
+          inputs:
+            command: test
+            projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.sln'
+            arguments: '--configuration $(BuildConfiguration) --no-build'
+
+        - task: EsrpCodeSigning@5
+          displayName: 'ESRP CodeSigning binaries'
+          inputs:
+            ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
+            AppRegistrationClientId: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+            AppRegistrationTenantId: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
+            AuthAKVName: 'akv-prod-eastus'
+            AuthCertName: 'ReferenceLibraryPrivateCert'
+            AuthSignCertName: 'ReferencePackagePublisherCertificate'
+            FolderPath: '$(Build.SourcesDirectory)\src'
+            signConfigType: 'inlineSignParams'
+            inlineOperation: |
+              [
+                  {
+                      "keyCode": "CP-230012",
+                      "operationSetCode": "SigntoolSign",
+                      "parameters": [
+                      {
+                          "parameterName": "OpusName",
+                          "parameterValue": "Microsoft"
+                      },
+                      {
+                          "parameterName": "OpusInfo",
+                          "parameterValue": "http://www.microsoft.com"
+                      },
+                      {
+                          "parameterName": "FileDigest",
+                          "parameterValue": "/fd \"SHA256\""
+                      },
+                      {
+                          "parameterName": "PageHash",
+                          "parameterValue": "/NPH"
+                      },
+                      {
+                          "parameterName": "TimeStamp",
+                          "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      }
+                      ],
+                      "toolName": "sign",
+                      "toolVersion": "1.0"
+                  },
+                  {
+                      "keyCode": "CP-230012",
+                      "operationSetCode": "SigntoolVerify",
+                      "parameters": [ ],
+                      "toolName": "sign",
+                      "toolVersion": "1.0"
+                  }
+              ]
+            SessionTimeout: '20'
+            MaxConcurrency: '50'
+            MaxRetryAttempts: '5'
+            PendingAnalysisWaitTimeoutMinutes: '5'
+
+        # Pack core lib
+        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi/Microsoft.OpenApi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+          displayName: 'pack OpenAPI'
+
+        # Pack readers
+        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+          displayName: 'pack Readers'
+
+        # Pack hidi
+        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+          displayName: 'pack Hidi'
+
+        - task: EsrpCodeSigning@5
+          displayName: 'ESRP CodeSigning Nuget Packages'
+          inputs:
+            ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
+            AppRegistrationClientId: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+            AppRegistrationTenantId: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
+            AuthAKVName: 'akv-prod-eastus'
+            AuthCertName: 'ReferenceLibraryPrivateCert'
+            AuthSignCertName: 'ReferencePackagePublisherCertificate'
+            FolderPath: '$(Build.ArtifactStagingDirectory)'
+            Pattern: '*.nupkg'
+            signConfigType: 'inlineSignParams'
+            inlineOperation: |
+              [
+                                  {
+                                      "keyCode": "CP-401405",
+                                      "operationSetCode": "NuGetSign",
+                                      "parameters": [ ],
+                                      "toolName": "sign",
+                                      "toolVersion": "1.0"
+                                  },
+                                  {
+                                      "keyCode": "CP-401405",
+                                      "operationSetCode": "NuGetVerify",
+                                      "parameters": [ ],
+                                      "toolName": "sign",
+                                      "toolVersion": "1.0"
+                                  }
+                              ]
+            SessionTimeout: '60'
+            MaxConcurrency: '50'
+            MaxRetryAttempts: '5'
+            PendingAnalysisWaitTimeoutMinutes: '5'
       
-      # Handle PropertyGroup as either a single element or array
-      $version = $null
-      if ($content.Project.PropertyGroup -is [array]) {
-        Write-Host "PropertyGroup is an array, checking each entry..."
-        foreach ($pg in $content.Project.PropertyGroup) {
-          if ($pg.Version) {
-            $version = $pg.Version.ToString().Trim()
-            Write-Host "Found version in PropertyGroup array: $version"
-            break
-          }
-        }
-      } else {
-        # Single PropertyGroup
-        $version = $content.Project.PropertyGroup.Version
-        if ($version) {
-          $version = $version.ToString().Trim()
-          Write-Host "Found version in PropertyGroup: $version"
-        }
-      }
-      
-      if (-not $version) {
-        Write-Host "##vso[task.logissue type=error]Version not found in Directory.Build.props"
-        exit 1
-      }
-      
-      Write-Host "Version found: $version" 
-      Write-Host "##vso[task.setvariable variable=version;isoutput=true]$version"
-      Write-Host "##vso[task.setvariable variable=VERSION]$version"
-    displayName: 'Get version from csproj'
-    name: getversion
-  
-  - bash: |
-      # Debug output to verify version variable
-      echo "Version from previous step: $VERSION"
-    displayName: 'Verify version variable'
-  
-  - bash: |
-      echo "Build Number: $(Build.BuildNumber)"
-      # Extract the last 3 characters for the run number
-      runnumber=$(echo "$(Build.BuildNumber)" | grep -o '[0-9]\+$')
-      echo "Extracted Run Number: $runnumber"
-      
-      # If extraction fails, set a default
-      if [ -z "$runnumber" ]; then
-        echo "Extraction failed, using default value"
-        runnumber=$(date +"%S%N" | cut -c1-3)
-        echo "Generated fallback run number: $runnumber"
-      fi
-      
-      # Set the variable for later steps
-      echo "##vso[task.setvariable variable=RUNNUMBER]$runnumber"
-      echo "##vso[task.setvariable variable=RUNNUMBER;isOutput=true]$runnumber"
-    displayName: 'Get truncated run number'
-    name: getrunnumber
-    condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-  
-  - bash: |
-      date=$(date +'%Y%m%d')
-      echo "Date value: $date"
-      echo "##vso[task.setvariable variable=BUILDDATE;isOutput=true]$date"
-      echo "##vso[task.setvariable variable=BUILDDATE]$date"
-    displayName: 'Get current date'
-    name: setdate
-    condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-  
-  - bash: |
-      echo "Building Docker image..."
-      echo "Using build date: ${BUILDDATE}"
-      # Using quotes around tags to prevent flag interpretation
-      docker build \
-        -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
-        -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-        "$(Build.SourcesDirectory)"
-      
-      echo "Pushing Docker image with nightly tag..."
-      docker push "$(REGISTRY)/$(IMAGE_NAME):nightly"
-      docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}"
-    displayName: 'Build and Push Nightly Image'
-    condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-  
-  - bash: |
-      echo "Building Docker image for release..."
-      docker build \
-        -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
-        -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-        "$(Build.SourcesDirectory)"
-      
-      echo "Pushing Docker image with latest and version tags..."
-      docker push "$(REGISTRY)/$(IMAGE_NAME):latest"
-      docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}"
-    displayName: 'Build and Push Release Image'
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+        # publish hidi as an .exe
+        - task: DotNetCoreCLI@2
+          displayName: publish Hidi as executable
+          inputs:
+            command: 'publish'
+            arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
+            projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
+            publishWebProjects: False
+            zipAfterPublish: false
+            
+        - task: CopyFiles@2
+          displayName: Prepare staging folder for upload
+          inputs:
+            targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
+            sourceFolder: $(Build.ArtifactStagingDirectory)
+            content: '*.nupkg'
+            
+    - stage: deploy
+      condition: and(contains(variables['build.sourceBranch'], 'refs/tags/v'), succeeded())
+      dependsOn: build
+      jobs:
+      - deployment: deploy_hidi
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: []
+        environment: nuget-org
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - task: 1ES.PublishNuget@1
+                displayName: 'NuGet push'
+                inputs:
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)'
+                  nuGetFeedType: external
+                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+
+      - deployment: deploy_lib
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: []
+        environment: nuget-org
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - powershell: |
+                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Readers.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
+                  foreach($fileName in $fileNames) {
+                    if(Test-Path $fileName) {
+                      rm $fileName -Verbose
+                    }
+                  }
+                displayName: remove other nupkgs to avoid duplication
+              - task: 1ES.PublishNuget@1
+                displayName: 'NuGet push'
+                inputs:
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)'
+                  nuGetFeedType: external
+                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+
+      - deployment: deploy_readers
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: deploy_lib
+        environment: nuget-org
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - task: 1ES.PublishNuget@1
+                displayName: 'NuGet push'
+                inputs:
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Readers.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)'
+                  nuGetFeedType: external
+                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+
+      - deployment: create_github_release
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: []
+        environment: kiota-github-releases
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - pwsh: |
+                  $artifactName = Get-ChildItem -Path $(Pipeline.Workspace) -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
+                  $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
+                  #Set Variable $artifactName and $artifactVersion
+                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false;]$artifactVersion"
+                  echo "$artifactVersion"
+                displayName: 'Fetch Artifact Name'
+              - task: GitHubRelease@1
+                displayName: 'GitHub release (edit)'
+                condition: succeededOrFailed()
+                inputs:
+                  gitHubConnection: 'Github-MaggieKimani1'
+                  action: edit
+                  tagSource: userSpecifiedTag
+                  tag: 'v$(artifactVersion)'
+                  releaseNotesSource: inline
+                  assets: '$(Pipeline.Workspace)\**\*.exe'
+                  addChangeLog: false
+
+    - stage: Build and deploy docker images
+      condition: and(or(contains(variables['build.sourceBranch'], 'refs/tags/v'), eq(variables['build.sourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
+      dependsOn: build
+      jobs:
+        - buildAndPush:
+            pool:
+              vmImage: 'ubuntu-latest'
+            steps:
+              - task: AzureCLI@2
+                displayName: 'Login to Azure Container Registry'
+                inputs:
+                  azureSubscription: 'ACR Images Push Service Connection'
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  inlineScript: |
+                    az acr login --name msgraphprodregistry
+              
+              - powershell: |
+                  $content = [XML](Get-Content ./Directory.Build.props)
+                  Write-Host "XML loaded, finding version..."
+                  
+                  # Handle PropertyGroup as either a single element or array
+                  $version = $null
+                  if ($content.Project.PropertyGroup -is [array]) {
+                    Write-Host "PropertyGroup is an array, checking each entry..."
+                    foreach ($pg in $content.Project.PropertyGroup) {
+                      if ($pg.Version) {
+                        $version = $pg.Version.ToString().Trim()
+                        Write-Host "Found version in PropertyGroup array: $version"
+                        break
+                      }
+                    }
+                  } else {
+                    # Single PropertyGroup
+                    $version = $content.Project.PropertyGroup.Version
+                    if ($version) {
+                      $version = $version.ToString().Trim()
+                      Write-Host "Found version in PropertyGroup: $version"
+                    }
+                  }
+                  
+                  if (-not $version) {
+                    Write-Host "##vso[task.logissue type=error]Version not found in Directory.Build.props"
+                    exit 1
+                  }
+                  
+                  Write-Host "Version found: $version" 
+                  Write-Host "##vso[task.setvariable variable=version;isoutput=true]$version"
+                  Write-Host "##vso[task.setvariable variable=VERSION]$version"
+                displayName: 'Get version from csproj'
+                name: getversion
+              
+              - bash: |
+                  # Debug output to verify version variable
+                  echo "Version from previous step: $VERSION"
+                displayName: 'Verify version variable'
+              
+              - bash: |
+                  echo "Build Number: $(Build.BuildNumber)"
+                  # Extract the last 3 characters for the run number
+                  runnumber=$(echo "$(Build.BuildNumber)" | grep -o '[0-9]\+$')
+                  echo "Extracted Run Number: $runnumber"
+                  
+                  # If extraction fails, set a default
+                  if [ -z "$runnumber" ]; then
+                    echo "Extraction failed, using default value"
+                    runnumber=$(date +"%S%N" | cut -c1-3)
+                    echo "Generated fallback run number: $runnumber"
+                  fi
+                  
+                  # Set the variable for later steps
+                  echo "##vso[task.setvariable variable=RUNNUMBER]$runnumber"
+                  echo "##vso[task.setvariable variable=RUNNUMBER;isOutput=true]$runnumber"
+                displayName: 'Get truncated run number'
+                name: getrunnumber
+                condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+              
+              - bash: |
+                  date=$(date +'%Y%m%d')
+                  echo "Date value: $date"
+                  echo "##vso[task.setvariable variable=BUILDDATE;isOutput=true]$date"
+                  echo "##vso[task.setvariable variable=BUILDDATE]$date"
+                displayName: 'Get current date'
+                name: setdate
+                condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+              
+              - bash: |
+                  echo "Building Docker image..."
+                  echo "Using build date: ${BUILDDATE}"
+                  # Using quotes around tags to prevent flag interpretation
+                  docker build \
+                    -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
+                    -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
+                    "$(Build.SourcesDirectory)"
+                  
+                  echo "Pushing Docker image with nightly tag..."
+                  docker push "$(REGISTRY)/$(IMAGE_NAME):nightly"
+                  docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}"
+                displayName: 'Build and Push Nightly Image'
+                condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+              
+              - bash: |
+                  echo "Building Docker image for release..."
+                  docker build \
+                    -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
+                    -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
+                    "$(Build.SourcesDirectory)"
+                  
+                  echo "Pushing Docker image with latest and version tags..."
+                  docker push "$(REGISTRY)/$(IMAGE_NAME):latest"
+                  docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}"
+                displayName: 'Build and Push Release Image'
+                condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+
 
