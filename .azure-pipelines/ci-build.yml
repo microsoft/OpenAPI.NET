@@ -74,12 +74,12 @@ steps:
       docker build \
         --build-arg "version_suffix=preview.${BUILDDATE}${RUNNUMBER}" \
         -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
-        -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}-preview.${BUILDDATE}${RUNNUMBER}" \
+        -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}" \
         "$(Build.SourcesDirectory)"
       
       echo "Pushing Docker image with nightly tag..."
       docker push "$(REGISTRY)/$(IMAGE_NAME):nightly"
-      docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}-preview.${BUILDDATE}${RUNNUMBER}"
+      docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}"
     displayName: 'Build and Push Nightly Image'
     condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
   
