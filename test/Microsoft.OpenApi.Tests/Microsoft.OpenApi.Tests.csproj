@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj" />
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
   </ItemGroup>
 
