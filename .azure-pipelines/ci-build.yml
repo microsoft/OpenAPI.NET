@@ -43,9 +43,34 @@ steps:
   
   - powershell: |
       $content = [XML](Get-Content ./Directory.Build.props)
-      $version = $content.Project.PropertyGroup.Version
+      Write-Host "XML loaded, finding version..."
+      
+      # Handle PropertyGroup as either a single element or array
+      $version = $null
+      if ($content.Project.PropertyGroup -is [array]) {
+        Write-Host "PropertyGroup is an array, checking each entry..."
+        foreach ($pg in $content.Project.PropertyGroup) {
+          if ($pg.Version) {
+            $version = $pg.Version.ToString().Trim()
+            Write-Host "Found version in PropertyGroup array: $version"
+            break
+          }
+        }
+      } else {
+        # Single PropertyGroup
+        $version = $content.Project.PropertyGroup.Version
+        if ($version) {
+          $version = $version.ToString().Trim()
+          Write-Host "Found version in PropertyGroup: $version"
+        }
+      }
+      
+      if (-not $version) {
+        Write-Host "##vso[task.logissue type=error]Version not found in Directory.Build.props"
+        exit 1
+      }
+      
       Write-Host "Version found: $version" 
-      # Set as both an output variable and a regular variable
       Write-Host "##vso[task.setvariable variable=version;isoutput=true]$version"
       Write-Host "##vso[task.setvariable variable=VERSION]$version"
     displayName: 'Get version from csproj'
