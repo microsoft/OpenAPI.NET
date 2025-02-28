@@ -6,20 +6,24 @@ trigger:
   branches:
     include:
       - main
-      - dev
-      - support/v1
-      - task/migrate-acr-pipeline
   paths:
     include:
-      - src/Microsoft.OpenApi.Hidi/**
+      - src/**
       - .azure-pipelines/**
+  tags:
+    include:
+      - v*
+
+pr:
+  branches:
+    include:
+      - main
+      - task/migrate-acr-pipeline
 
 variables:
   REGISTRY: 'msgraphpperegistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
-  DEV_BRANCH: 'refs/heads/dev'
-  MAIN_BRANCH: 'refs/heads/task/migrate-acr-pipeline'
-  SUPPORT_BRANCH: 'refs/heads/support/v1'
+  PREVIEW_BRANCH: 'refs/heads/task/migrate-acr-pipeline'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -30,11 +34,11 @@ steps:
   - task: AzureCLI@2
     displayName: 'Login to Azure Container Registry'
     inputs:
-      azureSubscription: 'ACR Push Test'
+      azureSubscription: 'ACR Push Test' # Use your service connection name here
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
-        az acr login --name $(REGISTRY)
+        az acr login --name $(REGISTRY:$(REGISTRY).azurecr.io)
   
   - powershell: |
       $content = [XML](Get-Content ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj)
@@ -42,23 +46,44 @@ steps:
       Write-Host "Version found: $version" 
       Write-Host "##vso[task.setvariable variable=version]$version"
     displayName: 'Get version from csproj'
+    name: getversion
+  
+  - bash: |
+      runnumber=$(echo $(Build.BuildNumber) | awk '{ print substr($0, length($0)-3, length($0)) }')
+      echo "##vso[task.setvariable variable=runnumber]$runnumber"
+    displayName: 'Get truncated run number'
+    condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+  
+  - bash: |
+      date=$(date +'%Y%m%d')
+      echo "##vso[task.setvariable variable=date]$date"
+    displayName: 'Get current date'
+    condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
   
   - bash: |
       echo "Building Docker image..."
-      docker build -t $(REGISTRY)/$(IMAGE_NAME):nightly "$(Build.SourcesDirectory)"
+      docker build \
+        --build-arg version_suffix=preview.$(date)$(runnumber) \
+        -t $(REGISTRY)/$(IMAGE_NAME):nightly \
+        -t $(REGISTRY)/$(IMAGE_NAME):$(version)-preview.$(date)$(runnumber) \
+        "$(Build.SourcesDirectory)"
       
       echo "Pushing Docker image with nightly tag..."
       docker push $(REGISTRY)/$(IMAGE_NAME):nightly
+      docker push $(REGISTRY)/$(IMAGE_NAME):$(version)-preview.$(date)$(runnumber)
     displayName: 'Build and Push Nightly Image'
-    condition: eq(variables['Build.SourceBranch'], variables['DEV_BRANCH'])
+    condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
   
   - bash: |
-      echo "Building Docker image..."
-      docker build -t $(REGISTRY)/$(IMAGE_NAME):latest -t $(REGISTRY)/$(IMAGE_NAME):$(version) "$(Build.SourcesDirectory)"
+      echo "Building Docker image for release..."
+      docker build \
+        -t $(REGISTRY)/$(IMAGE_NAME):latest \
+        -t $(REGISTRY)/$(IMAGE_NAME):$(version) \
+        "$(Build.SourcesDirectory)"
       
       echo "Pushing Docker image with latest and version tags..."
       docker push $(REGISTRY)/$(IMAGE_NAME):latest
       docker push $(REGISTRY)/$(IMAGE_NAME):$(version)
     displayName: 'Build and Push Release Image'
-    condition: or(eq(variables['Build.SourceBranch'], variables['MAIN_BRANCH']), eq(variables['Build.SourceBranch'], variables['SUPPORT_BRANCH']))
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
 
