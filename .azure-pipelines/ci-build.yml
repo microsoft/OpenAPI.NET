@@ -7,6 +7,7 @@ trigger:
     include:
     - main
     - support/v1
+    - task/migrate-acr-pipeline
   tags:
     include:
     - 'v*'
@@ -22,7 +23,7 @@ variables:
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   REGISTRY: 'msgraphprodregistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
-  PREVIEW_BRANCH: 'refs/heads/main'
+  PREVIEW_BRANCH: 'refs/heads/task/migrate-acr-pipeline'
   
 resources:
   repositories:
