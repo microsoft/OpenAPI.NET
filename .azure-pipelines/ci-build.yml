@@ -71,12 +71,12 @@ steps:
       docker build \
         --build-arg version_suffix=preview.$(date)$(runnumber) \
         -t $(REGISTRY)/$(IMAGE_NAME):nightly \
-        -t $(REGISTRY)/$(IMAGE_NAME):$(version)-preview.$(date)$(runnumber) \
+        -t $(REGISTRY)/$(IMAGE_NAME):$(getversion.version)-preview.$(date)$(runnumber) \
         "$(Build.SourcesDirectory)"
       
       echo "Pushing Docker image with nightly tag..."
       docker push $(REGISTRY)/$(IMAGE_NAME):nightly
-      docker push $(REGISTRY)/$(IMAGE_NAME):$(version)-preview.$(date)$(runnumber)
+      docker push $(REGISTRY)/$(IMAGE_NAME):$(getversion.version)-preview.$(date)$(runnumber)
     displayName: 'Build and Push Nightly Image'
     condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
   
@@ -84,12 +84,12 @@ steps:
       echo "Building Docker image for release..."
       docker build \
         -t $(REGISTRY)/$(IMAGE_NAME):latest \
-        -t $(REGISTRY)/$(IMAGE_NAME):$(version) \
+        -t $(REGISTRY)/$(IMAGE_NAME):$(getversion.version) \
         "$(Build.SourcesDirectory)"
       
       echo "Pushing Docker image with latest and version tags..."
       docker push $(REGISTRY)/$(IMAGE_NAME):latest
-      docker push $(REGISTRY)/$(IMAGE_NAME):$(version)
+      docker push $(REGISTRY)/$(IMAGE_NAME):$(getversion.version)
     displayName: 'Build and Push Release Image'
     condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
 
