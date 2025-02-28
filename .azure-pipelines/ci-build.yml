@@ -22,7 +22,7 @@ pr:
       - task/migrate-acr-pipeline
 
 variables:
-  REGISTRY: 'msgraphpperegistry.azurecr.io'
+  REGISTRY: 'msgraphprodregistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
   PREVIEW_BRANCH: 'refs/heads/task/migrate-acr-pipeline'
 
@@ -35,7 +35,7 @@ steps:
   - task: AzureCLI@2
     displayName: 'Login to Azure Container Registry'
     inputs:
-      azureSubscription: 'ACR Push Test'
+      azureSubscription: 'ACR Images Push Service Connection'
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
