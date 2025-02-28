@@ -46,28 +46,32 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <param name="schema">The parent schema.</param>
         /// <param name="discriminatorName">Adds support for polymorphism. The discriminator is an object name that is used to differentiate
         /// between other schemas which may satisfy the payload description.</param>
-        public static bool ValidateChildSchemaAgainstDiscriminator(IOpenApiSchema schema, string discriminatorName)
+        public static bool ValidateChildSchemaAgainstDiscriminator(IOpenApiSchema schema, string? discriminatorName)
         {
-            if (!schema.Required?.Contains(discriminatorName) ?? false)
+            if (discriminatorName is not null)
             {
-                // recursively check nested schema.OneOf, schema.AnyOf or schema.AllOf and their required fields for the discriminator
-                if (schema.OneOf.Count != 0)
+                if (!schema.Required?.Contains(discriminatorName) ?? false)
                 {
-                    return TraverseSchemaElements(discriminatorName, schema.OneOf);
+                    // recursively check nested schema.OneOf, schema.AnyOf or schema.AllOf and their required fields for the discriminator
+                    if (schema.OneOf?.Count != 0)
+                    {
+                        return TraverseSchemaElements(discriminatorName, schema.OneOf);
+                    }
+                    if (schema.AnyOf?.Count != 0)
+                    {
+                        return TraverseSchemaElements(discriminatorName, schema.AnyOf);
+                    }
+                    if (schema.AllOf?.Count != 0)
+                    {
+                        return TraverseSchemaElements(discriminatorName, schema.AllOf);
+                    }
                 }
-                if (schema.AnyOf.Count != 0)
+                else
                 {
-                    return TraverseSchemaElements(discriminatorName, schema.AnyOf);
+                    return true;
                 }
-                if (schema.AllOf.Count != 0)
-                {
-                    return TraverseSchemaElements(discriminatorName, schema.AllOf);
-                }
-            }
-            else
-            {
-                return true;
-            }
+                return false;
+            }           
 
             return false;
         }
@@ -79,20 +83,24 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// between other schemas which may satisfy the payload description.</param>
         /// <param name="childSchema">The child schema.</param>
         /// <returns></returns>
-        public static bool TraverseSchemaElements(string discriminatorName, IList<IOpenApiSchema> childSchema)
+        public static bool TraverseSchemaElements(string discriminatorName, IList<IOpenApiSchema>? childSchema)
         {
-            foreach (var childItem in childSchema)
+            if (childSchema is not null)
             {
-                if ((!childItem.Properties?.ContainsKey(discriminatorName) ?? false) &&
-                                    (!childItem.Required?.Contains(discriminatorName) ?? false))
+                foreach (var childItem in childSchema)
                 {
-                    return ValidateChildSchemaAgainstDiscriminator(childItem, discriminatorName);
+                    if ((!childItem.Properties?.ContainsKey(discriminatorName) ?? false) &&
+                                        (!childItem.Required?.Contains(discriminatorName) ?? false))
+                    {
+                        return ValidateChildSchemaAgainstDiscriminator(childItem, discriminatorName);
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
-                else
-                {
-                    return true;
-                }
-            }
+                return false;
+            }            
 
             return false;
         }

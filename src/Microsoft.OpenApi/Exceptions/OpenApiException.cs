@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Exceptions
         /// </summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <param name="innerException">The inner exception that is the cause of this exception to be thrown.</param>
-        public OpenApiException(string message, Exception innerException)
+        public OpenApiException(string message, Exception? innerException)
             : base(message, innerException)
         {
         }
@@ -46,6 +46,6 @@ namespace Microsoft.OpenApi.Exceptions
         /// a text/plain pointer as defined in https://tools.ietf.org/html/rfc5147
         /// Currently only line= is provided because using char= causes tests to break due to CR/LF and LF differences
         /// </summary>
-        public string Pointer { get; set; }
+        public string? Pointer { get; set; }
     }
 }

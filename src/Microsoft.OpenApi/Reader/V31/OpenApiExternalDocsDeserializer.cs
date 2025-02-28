@@ -22,9 +22,14 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "url", (o, n, _) =>
+                    "url",
+                    (o, n, t) =>
                     {
-                        o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                        var url = n.GetScalarValue();
+                        if (url != null)
+                        {
+                            o.Url = new(url, UriKind.RelativeOrAbsolute);
+                        }
                     }
                 },
             };
@@ -36,7 +41,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
                     };
 
-        public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("externalDocs");
 

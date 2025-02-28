@@ -31,6 +31,6 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the name string.
         /// </summary>
-        public string Name { get => Value; }
+        public string? Name { get => Value; }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Models;
@@ -11,16 +11,6 @@ namespace Microsoft.OpenApi.Interfaces
     /// </summary>
     internal interface IOpenApiVersionService
     {
-        /// <summary>
-        /// Parse the string to a <see cref="OpenApiReference"/> object.
-        /// </summary>
-        /// <param name="reference">The reference string.</param>
-        /// <param name="type">The type of the reference.</param>
-        /// <param name="summary">The summary of the reference.</param>
-        /// <param name="description">A reference description</param>
-        /// <returns>The <see cref="OpenApiReference"/> object or null.</returns>
-        OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type, string summary = null, string description = null);
-
         /// <summary>
         /// Loads an OpenAPI Element from a document fragment
         /// </summary>
@@ -43,6 +33,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <param name="mapNode">A YamlMappingNode.</param>
         /// <param name="scalarValue">The scalar value we're parsing.</param>
         /// <returns>The resulting node value.</returns>
-        string GetReferenceScalarValues(MapNode mapNode, string scalarValue);
+        string? GetReferenceScalarValues(MapNode mapNode, string scalarValue);
     }
 }

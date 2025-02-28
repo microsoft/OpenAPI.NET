@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             walker.Walk(openApiDocument);
 
             // Assert
-            Assert.Equal(expectedOperationId, openApiDocument.Paths[path].Operations[operationType].OperationId);
+            Assert.Equal(expectedOperationId, openApiDocument.Paths[path].Operations?[operationType].OperationId);
         }
 
         [Fact]
@@ -61,20 +61,20 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             Assert.NotNull(openApiDocument.Components);
             Assert.NotNull(openApiDocument.Components.Schemas);
             var testSchema = openApiDocument.Components.Schemas["TestSchema"];
-            var averageAudioDegradationProperty = testSchema.Properties["averageAudioDegradation"];
-            var defaultPriceProperty = testSchema.Properties["defaultPrice"];
+            var averageAudioDegradationProperty = testSchema.Properties?["averageAudioDegradation"];
+            var defaultPriceProperty = testSchema.Properties?["defaultPrice"];
 
             // Assert
             Assert.NotNull(openApiDocument.Components);
             Assert.NotNull(openApiDocument.Components.Schemas);
             Assert.NotNull(testSchema);
-            Assert.Null(averageAudioDegradationProperty.AnyOf);
-            Assert.Equal(JsonSchemaType.Number | JsonSchemaType.Null, averageAudioDegradationProperty.Type);
-            Assert.Equal("float", averageAudioDegradationProperty.Format);
-            Assert.Equal(JsonSchemaType.Null, averageAudioDegradationProperty.Type & JsonSchemaType.Null);
-            Assert.Null(defaultPriceProperty.OneOf);
-            Assert.Equal(JsonSchemaType.Number, defaultPriceProperty.Type);
-            Assert.Equal("double", defaultPriceProperty.Format);
+            Assert.Null(averageAudioDegradationProperty?.AnyOf);
+            Assert.Equal(JsonSchemaType.Number | JsonSchemaType.Null, averageAudioDegradationProperty?.Type);
+            Assert.Equal("float", averageAudioDegradationProperty?.Format);
+            Assert.Equal(JsonSchemaType.Null, averageAudioDegradationProperty?.Type & JsonSchemaType.Null);
+            Assert.Null(defaultPriceProperty?.OneOf);
+            Assert.Equal(JsonSchemaType.Number, defaultPriceProperty?.Type);
+            Assert.Equal("double", defaultPriceProperty?.Format);
             Assert.NotNull(testSchema.AdditionalProperties);
         }
 
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var idsParameter = openApiDocument.Paths["/foo"].Operations[OperationType.Get].Parameters?.Where(static p => p.Name == "ids").FirstOrDefault();
+            var idsParameter = openApiDocument.Paths["/foo"].Operations?[OperationType.Get].Parameters?.Where(static p => p.Name == "ids").FirstOrDefault();
 
             // Assert
             Assert.Null(idsParameter?.Content);

@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Gets the parent pointer.
         /// </summary>
-        public JsonPointer ParentPointer
+        public JsonPointer? ParentPointer
         {
             get
             {

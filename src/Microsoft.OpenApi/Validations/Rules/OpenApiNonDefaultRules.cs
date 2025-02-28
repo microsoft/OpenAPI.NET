@@ -89,9 +89,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
         private static void ValidateMismatchedDataType(IValidationContext context,
                                                       string ruleName,
-                                                      JsonNode example,
-                                                      IDictionary<string, IOpenApiExample> examples,
-                                                      IOpenApiSchema schema)
+                                                      JsonNode? example,
+                                                      IDictionary<string, IOpenApiExample>? examples,
+                                                      IOpenApiSchema? schema)
         {
             // example
             context.Enter("example");

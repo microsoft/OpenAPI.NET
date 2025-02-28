@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Services
                 _loopStacks.Add(typeof(T), stack);
             }
 
-            if (!stack.Contains(key))
+            if (key is not null && !stack.Contains(key))
             {
                 stack.Push(key);
                 return true;
@@ -48,7 +48,10 @@ namespace Microsoft.OpenApi.Services
             {
                 Loops[typeof(T)] = new();
             }
-            Loops[typeof(T)].Add(loop);
+            if (loop is not null)
+            {
+                Loops[typeof(T)].Add(loop);
+            }
         }
 
         /// <summary>

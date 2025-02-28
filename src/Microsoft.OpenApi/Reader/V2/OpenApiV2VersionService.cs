@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Reader.V2
             Diagnostic = diagnostic;
         }
 
-        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new()
+        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new()
         {
             [typeof(OpenApiAny)] = OpenApiV2Deserializer.LoadAny,
             [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
@@ -125,88 +125,8 @@ namespace Microsoft.OpenApi.Reader.V2
                     return ReferenceType.SecurityScheme;
 
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException(nameof(referenceType));
             }
-        }
-
-        /// <summary>
-        /// Parse the string to a <see cref="OpenApiReference"/> object.
-        /// </summary>
-        public OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type, string summary = null, string description = null)
-        {
-            if (!string.IsNullOrWhiteSpace(reference))
-            {
-                var segments = reference.Split('#');
-                if (segments.Length == 1)
-                {
-                    // Either this is an external reference as an entire file
-                    // or a simple string-style reference for tag and security scheme.
-                    if (type == null)
-                    {
-                        // "$ref": "Pet.json"
-                        return new()
-                        {
-                            ExternalResource = segments[0]
-                        };
-                    }
-
-                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
-                    {
-                        return new()
-                        {
-                            Type = type,
-                            Id = reference
-                        };
-                    }
-                }
-                else if (segments.Length == 2)
-                {
-                    if (reference.StartsWith("#", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // "$ref": "#/definitions/Pet"
-                        try
-                        {
-                            return ParseLocalReference(segments[1]);
-                        }
-                        catch (OpenApiException ex)
-                        {
-                            Diagnostic.Errors.Add(new(ex));
-                            return null;
-                        }
-                    }
-
-                    // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
-                    var id = segments[1];
-                    // $ref: externalSource.yaml#/Pet
-                    if (id.StartsWith("/definitions/", StringComparison.Ordinal))
-                    {
-                        var localSegments = id.Split('/');
-                        var referencedType = GetReferenceTypeV2FromName(localSegments[1]);
-                        if (type == null)
-                        {
-                            type = referencedType;
-                        }
-                        else
-                        {
-                            if (type != referencedType)
-                            {
-                                throw new OpenApiException("Referenced type mismatch");
-                            }
-                        }
-                        id = localSegments[2];
-                    }
-
-                    // $ref: externalSource.yaml#/Pet
-                    return new()
-                    {
-                        ExternalResource = segments[0],
-                        Type = type,
-                        Id = id
-                    };
-                }
-            }
-
-            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
 
         public OpenApiDocument LoadDocument(RootNode rootNode)
@@ -216,7 +136,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
         {
-            return (T)_loaders[typeof(T)](node, doc);
+            return (T)_loaders[typeof(T)](node, doc)!;
         }
 
         /// <inheritdoc />

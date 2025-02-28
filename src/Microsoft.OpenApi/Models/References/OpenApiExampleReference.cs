@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Example, externalResource)
+        public OpenApiExampleReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Example, externalResource)
         {
         }
         /// <summary>
@@ -37,39 +37,27 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
-            set 
-            {
-                if (Reference is not null)
-                {
-                    Reference.Description = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public string Summary
+        public string? Summary
         {
-            get => string.IsNullOrEmpty(Reference?.Summary) ? Target?.Summary : Reference.Summary;
-            set
-            {
-                if (Reference is not null)
-                {
-                    Reference.Summary = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Summary) ? Target?.Summary : Reference.Summary;
+            set => Reference.Summary = value;
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public string ExternalValue { get => Target?.ExternalValue; }
+        public string? ExternalValue { get => Target?.ExternalValue; }
 
         /// <inheritdoc/>
-        public JsonNode Value { get => Target?.Value; }
+        public JsonNode? Value { get => Target?.Value; }
 
         /// <inheritdoc/>
         public override IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)

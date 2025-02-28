@@ -31,7 +31,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "required", (o, n, _) =>
                     {
-                        o.Required = bool.Parse(n.GetScalarValue());
+                        var required = n.GetScalarValue();
+                        if (required != null)
+                        {
+                            o.Required = bool.Parse(required);
+                        }
                     }
                 },
             };
@@ -42,7 +46,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static IOpenApiRequestBody LoadRequestBody(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiRequestBody LoadRequestBody(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("requestBody");
 
