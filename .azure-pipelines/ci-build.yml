@@ -34,19 +34,24 @@ steps:
   - task: AzureCLI@2
     displayName: 'Login to Azure Container Registry'
     inputs:
-      azureSubscription: 'ACR Push Test' # Use your service connection name here
+      azureSubscription: 'ACR Push Test'
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
-        az acr login --name $(REGISTRY:$(REGISTRY).azurecr.io)
+        az acr login --name msgraphpperegistry
   
   - powershell: |
       $content = [XML](Get-Content ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj)
       $version = $content.Project.PropertyGroup.Version
       Write-Host "Version found: $version" 
-      Write-Host "##vso[task.setvariable variable=version]$version"
+      Write-Host "##vso[task.setvariable variable=version;isoutput=true]$version"
     displayName: 'Get version from csproj'
     name: getversion
+  
+  - bash: |
+      # Debug output to verify version variable
+      echo "Version from previous step: $(getversion.version)"
+    displayName: 'Verify version variable'
   
   - bash: |
       runnumber=$(echo $(Build.BuildNumber) | awk '{ print substr($0, length($0)-3, length($0)) }')
