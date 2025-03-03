@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-preview11](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview10...v2.0.0-preview11) (2025-03-03)
+
+
+### Bug Fixes
+
+* rename `OpenApiDocument.SecurityRequirements` as `Security` ([d8553d6](https://github.com/microsoft/OpenAPI.NET/commit/d8553d6e007c1fa38bb982c9eb757678e789111b))
+
 ## [2.0.0-preview10](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview9...v2.0.0-preview10) (2025-02-27)
 
 
