@@ -135,8 +135,9 @@ namespace Microsoft.OpenApi.Models
                         writer.WriteStartObject();
 
                         foreach (var example in Content
-                            .Where(mediaTypePair => mediaTypePair.Value.Examples is not null && mediaTypePair.Value.Examples.Any())
-                            .SelectMany(mediaTypePair => mediaTypePair.Value.Examples!))
+                            .Select(static x => x.Value.Examples)
+                            .OfType<IDictionary<string, IOpenApiExample>>()
+                            .SelectMany(static x => x))
                         {
                             writer.WritePropertyName(example.Key);
                             example.Value.SerializeAsV2(writer);
