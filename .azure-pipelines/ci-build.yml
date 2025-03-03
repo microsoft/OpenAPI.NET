@@ -323,10 +323,12 @@ extends:
       displayName: 'Build and deploy docker images'
       condition: or(eq(variables['build.sourceBranch'], 'refs/tags/v'), eq(variables['build.sourceBranch'], variables['PREVIEW_BRANCH']))
       dependsOn: build
+      pool:
+        name: Azure-Pipelines-1ESPT-ExDShared
+        image: windows-2022
+        os: windows
       jobs:
         - job: buildAndPush
-          pool:
-            vmImage: 'ubuntu-latest'
           steps:
             - task: AzureCLI@2
               displayName: 'Login to Azure Container Registry'
