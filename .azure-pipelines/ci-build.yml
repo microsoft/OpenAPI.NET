@@ -7,6 +7,7 @@ trigger:
     include:
     - main
     - support/v1
+    - task/migrate-acr-pipeline
   tags:
     include:
     - 'v*'
@@ -20,9 +21,9 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
-  REGISTRY: 'msgraphprodregistry.azurecr.io'
+  REGISTRY: 'msgraphpperegistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
-  PREVIEW_BRANCH: 'refs/heads/main'
+  PREVIEW_BRANCH: 'refs/heads/task/migrate-acr-pipeline'
   
 resources:
   repositories:
@@ -324,19 +325,19 @@ extends:
       dependsOn: build
       pool:
         name: Azure-Pipelines-1ESPT-ExDShared
-        image: windows-2022
-        os: windows
+        image: ubuntu-latest
+        os: linux
       jobs:
         - job: buildAndPush
           steps:
             - task: AzureCLI@2
               displayName: 'Login to Azure Container Registry'
               inputs:
-                azureSubscription: 'ACR Images Push Service Connection'
+                azureSubscription: 'ACR Push Test'
                 scriptType: bash
                 scriptLocation: inlineScript
                 inlineScript: |
-                  az acr login --name msgraphprodregistry
+                  az acr login --name msgraphpperegistry
             
             - powershell: |
                 $content = [XML](Get-Content ./Directory.Build.props)
