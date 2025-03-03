@@ -3,28 +3,27 @@
 
 using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Reader
+namespace Microsoft.OpenApi.Reader;
+/// <summary>
+/// Container object used for returning the result of reading an OpenAPI description.
+/// </summary>
+public class ReadResult
 {
     /// <summary>
-    /// Container object used for returning the result of reading an OpenAPI description.
+    /// The parsed OpenApiDocument.  Null will be returned if the document could not be parsed.
     /// </summary>
-    public class ReadResult
+    public OpenApiDocument? Document { get; set; }
+    /// <summary>
+    /// OpenApiDiagnostic contains the Errors reported while parsing
+    /// </summary>
+    public OpenApiDiagnostic? Diagnostic { get; set; }
+    /// <summary>
+    /// Deconstructs the result for easier assignment on the client application.
+    /// </summary>
+    public void Deconstruct(out OpenApiDocument? document, out OpenApiDiagnostic? diagnostic)
     {
-        /// <summary>
-        /// The parsed OpenApiDocument.  Null will be returned if the document could not be parsed.
-        /// </summary>
-        public OpenApiDocument? Document { get; set; }
-        /// <summary>
-        /// OpenApiDiagnostic contains the Errors reported while parsing
-        /// </summary>
-        public OpenApiDiagnostic? Diagnostic { get; set; }
-        /// <summary>
-        /// Deconstructs the result for easier assignment on the client application.
-        /// </summary>
-        public void Deconstruct(out OpenApiDocument? document, out OpenApiDiagnostic? diagnostic)
-        {
-            document = Document;
-            diagnostic = Diagnostic;
-        }
+        document = Document;
+        diagnostic = Diagnostic;
     }
 }
+
