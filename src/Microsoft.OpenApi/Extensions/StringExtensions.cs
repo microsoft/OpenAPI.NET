@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Extensions
     {
         private static readonly ConcurrentDictionary<Type, ReadOnlyDictionary<string, object>> EnumDisplayCache = new();
 
-        internal static bool TryGetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string? displayName, ParsingContext parsingContext, out T result) where T : Enum
+        internal static bool TryGetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string? displayName, ParsingContext parsingContext, out T? result) where T : Enum
         {
             if (TryGetEnumFromDisplayName(displayName, out result))
             {

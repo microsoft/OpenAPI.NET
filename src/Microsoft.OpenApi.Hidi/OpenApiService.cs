@@ -210,7 +210,10 @@ namespace Microsoft.OpenApi.Hidi
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
-                await document.SerializeAsync(writer, openApiVersion, cancellationToken).ConfigureAwait(false);
+                if (document is not null)
+                {
+                    await document.SerializeAsync(writer, openApiVersion, cancellationToken).ConfigureAwait(false);
+                }
                 stopwatch.Stop();
 
                 logger.LogTrace("Finished serializing in {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
