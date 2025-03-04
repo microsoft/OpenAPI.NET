@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Extensions
             JsonPointer pointer)
         {
             if (OpenApiConstants.Examples.Equals(propertyName, StringComparison.Ordinal) &&
-                mapKey is not null &&
+                !string.IsNullOrEmpty(mapKey) && mapKey is not null &&
                 headerElement?.Examples != null &&
                 headerElement.Examples.TryGetValue(mapKey, out var exampleElement) &&
                 exampleElement is IOpenApiReferenceable referenceable)
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Extensions
             JsonPointer pointer)
         {
             if (OpenApiConstants.Examples.Equals(propertyName, StringComparison.Ordinal) &&
-                mapKey is not null &&
+                !string.IsNullOrEmpty(mapKey) && mapKey is not null &&
                 parameterElement?.Examples != null &&
                 parameterElement.Examples.TryGetValue(mapKey, out var exampleElement) &&
                 exampleElement is IOpenApiReferenceable referenceable)
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Extensions
             string? mapKey,
             JsonPointer pointer)
         {
-            if (mapKey is not null)
+            if (!string.IsNullOrEmpty(mapKey) && mapKey is not null)
             {
                 if (OpenApiConstants.Headers.Equals(propertyName, StringComparison.Ordinal) &&
                     responseElement?.Headers != null &&
