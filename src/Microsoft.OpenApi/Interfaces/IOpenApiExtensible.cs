@@ -13,6 +13,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Specification extensions.
         /// </summary>
-        IDictionary<string, IOpenApiExtension> Extensions { get; set; }
+        IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
     }
 }

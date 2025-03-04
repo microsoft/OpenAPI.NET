@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Interfaces;
+﻿using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Models.Interfaces;
 
@@ -11,7 +11,7 @@ public interface IOpenApiDescribedElement : IOpenApiElement
     /// Long description for the example.
     /// CommonMark syntax MAY be used for rich text representation.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 }
 
 /// <summary>
@@ -23,5 +23,5 @@ public interface IOpenApiReadOnlyDescribedElement : IOpenApiElement
     /// Long description for the example.
     /// CommonMark syntax MAY be used for rich text representation.
     /// </summary>
-    public string Description { get; }
+    public string? Description { get; }
 }

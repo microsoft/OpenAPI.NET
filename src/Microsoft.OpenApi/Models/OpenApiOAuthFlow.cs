@@ -17,28 +17,28 @@ namespace Microsoft.OpenApi.Models
         /// REQUIRED. The authorization URL to be used for this flow.
         /// Applies to implicit and authorizationCode OAuthFlow.
         /// </summary>
-        public Uri AuthorizationUrl { get; set; }
+        public Uri? AuthorizationUrl { get; set; }
 
         /// <summary>
         /// REQUIRED. The token URL to be used for this flow.
         /// Applies to password, clientCredentials, and authorizationCode OAuthFlow.
         /// </summary>
-        public Uri TokenUrl { get; set; }
+        public Uri? TokenUrl { get; set; }
 
         /// <summary>
         /// The URL to be used for obtaining refresh tokens.
         /// </summary>
-        public Uri RefreshUrl { get; set; }
+        public Uri? RefreshUrl { get; set; }
 
         /// <summary>
         /// REQUIRED. A map between the scope name and a short description for it.
         /// </summary>
-        public IDictionary<string, string> Scopes { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, string>? Scopes { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

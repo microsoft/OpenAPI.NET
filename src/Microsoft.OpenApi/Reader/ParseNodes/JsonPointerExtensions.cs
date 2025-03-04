@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// <summary>
         /// Finds the JSON node that corresponds to this JSON pointer based on the base Json node.
         /// </summary>
-        public static JsonNode Find(this JsonPointer currentPointer, JsonNode baseJsonNode)
+        public static JsonNode? Find(this JsonPointer currentPointer, JsonNode baseJsonNode)
         {
             if (currentPointer.Tokens.Length == 0)
             {

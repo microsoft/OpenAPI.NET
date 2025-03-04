@@ -16,17 +16,17 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A short description of the target documentation.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// REQUIRED. The URL for the target documentation. Value MUST be in the format of a URL.
         /// </summary>
-        public Uri Url { get; set; }
+        public Uri? Url { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

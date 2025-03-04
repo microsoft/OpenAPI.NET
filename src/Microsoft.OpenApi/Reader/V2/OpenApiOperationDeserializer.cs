@@ -49,6 +49,9 @@ namespace Microsoft.OpenApi.Reader.V2
                 {
                     "parameters",
                     (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)
+                        .Where(p => p != null)
+                        .Cast<IOpenApiParameter>()
+                        .ToList()
                 },
                 {
                     "consumes", (_, n, doc) => {
@@ -72,7 +75,14 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "deprecated",
-                    (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                    (o, n, _) =>
+                    {
+                        var deprecated = n.GetScalarValue();
+                        if (deprecated != null)
+                        {
+                            o.Deprecated = bool.Parse(deprecated);
+                        }
+                    }
                 },
                 {
                     "security",
@@ -95,7 +105,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument)
+        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument? hostDocument)
         {
             // Reset these temp storage parameters for each operation.
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
@@ -124,10 +134,14 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             }
 
-            foreach (var response in operation.Responses.Values.OfType<OpenApiResponse>())
+            var responses = operation.Responses;
+            if (responses is not null)
             {
-                ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
-            }
+                foreach (var response in responses.Values.OfType<OpenApiResponse>())
+                {
+                    ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
+                }
+            }            
 
             // Reset so that it's not picked up later
             node.Context.SetTempStorage(TempStorageKeys.OperationProduces, null);
@@ -135,7 +149,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return operation;
         }
 
-        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("Responses");
 
@@ -152,11 +166,13 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 Schema = new OpenApiSchema()
                 {
-                    Properties = formParameters.ToDictionary(
-                        k => k.Name,
-                        v => 
+                    Properties = formParameters
+                    .Where(p => p.Name != null)
+                    .ToDictionary(
+                        k => k.Name!,
+                        v =>
                         {
-                            var schema = v.Schema.CreateShallowCopy();
+                            var schema = v.Schema!.CreateShallowCopy();
                             schema.Description = v.Description;
                             if (schema is OpenApiSchema openApiSchema)
                             {
@@ -164,7 +180,7 @@ namespace Microsoft.OpenApi.Reader.V2
                             }
                             return schema;
                         }),
-                    Required = new HashSet<string>(formParameters.Where(static p => p.Required).Select(static p => p.Name), StringComparer.Ordinal)
+                    Required = new HashSet<string>(formParameters.Where(static p => p.Required).Select(static p => p.Name!).Where(static name => name != null), StringComparer.Ordinal)
                 }
             };
 
@@ -179,8 +195,14 @@ namespace Microsoft.OpenApi.Reader.V2
                     _ => mediaType)
             };
 
-            foreach (var value in formBody.Content.Values.Where(static x => x.Schema is not null && x.Schema.Properties.Any() && x.Schema.Type == null).Select(static x => x.Schema).OfType<OpenApiSchema>())
+            foreach (var value in formBody.Content.Values
+                .Where(static x => x.Schema is not null
+                                   && x.Schema.Properties is not null
+                                   && x.Schema.Properties.Any()
+                                   && x.Schema.Type == null).Select(static x => x.Schema).OfType<OpenApiSchema>())
+            {
                 value.Type = JsonSchemaType.Object;
+            }
 
             return formBody;
         }
@@ -207,12 +229,15 @@ namespace Microsoft.OpenApi.Reader.V2
                 Extensions = bodyParameter.Extensions
             };
 
-            requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
+            if (requestBody.Extensions is not null && bodyParameter.Name is not null)
+            {
+                requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
+            }            
             return requestBody;
         }
 
         private static OpenApiTagReference LoadTagByReference(
-            string tagName, OpenApiDocument hostDocument)
+            string tagName, OpenApiDocument? hostDocument)
         {
             return new OpenApiTagReference(tagName, hostDocument);
         }

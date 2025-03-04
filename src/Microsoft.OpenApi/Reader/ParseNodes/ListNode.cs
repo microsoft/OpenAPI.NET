@@ -21,16 +21,17 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             _nodeList = jsonArray;
         }
 
-        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
+        public override List<T> CreateList<T>(Func<MapNode, OpenApiDocument?, T> map, OpenApiDocument? hostDocument)
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
-            return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject), hostDocument))
+            var list = _nodeList.Select(n => map(new MapNode(Context, n as JsonObject), hostDocument))
                 .Where(i => i != null)
                 .ToList();
+            return list;
         }
 
         public override List<JsonNode> CreateListOfAny()
@@ -43,11 +44,11 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return list;
         }
 
-        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
+        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
             return _nodeList.Select(n => map(new(Context, n), openApiDocument)).ToList();

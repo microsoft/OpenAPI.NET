@@ -22,7 +22,14 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "url",
-                (o, n, t) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                (o, n, t) =>
+                {
+                    var url = n.GetScalarValue();
+                    if (url != null)
+                    {
+                        o.Url = new(url, UriKind.RelativeOrAbsolute); 
+                    }
+                }
             },
             {
                 "email",
@@ -35,7 +42,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        public static OpenApiContact LoadContact(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiContact LoadContact(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node as MapNode;
             var contact = new OpenApiContact();
