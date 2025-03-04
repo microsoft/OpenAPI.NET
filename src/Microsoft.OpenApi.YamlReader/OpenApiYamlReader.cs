@@ -14,7 +14,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.YamlReader
 {
     /// <summary>
     /// Reader for parsing YAML files into an OpenAPI document.

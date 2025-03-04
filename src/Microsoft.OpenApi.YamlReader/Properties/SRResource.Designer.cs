@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Reader.Properties {
+namespace Microsoft.OpenApi.YamlReader.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Reader.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OpenApi.Readers.Properties.SRResource", typeof(SRResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OpenApi.YamlReader.Properties.SRResource", typeof(SRResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
