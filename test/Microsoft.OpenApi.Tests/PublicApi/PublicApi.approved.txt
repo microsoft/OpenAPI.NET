@@ -1784,8 +1784,8 @@ namespace Microsoft.OpenApi.Validations
         public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule>? FindRules(System.Type type) { }
         public System.Collections.Generic.IEnumerator<Microsoft.OpenApi.Validations.ValidationRule> GetEnumerator() { }
         public bool Remove(Microsoft.OpenApi.Validations.ValidationRule rule) { }
-        public void Remove(string ruleName) { }
         public bool Remove(System.Type key) { }
+        public void Remove(string ruleName) { }
         public bool Remove(System.Type key, Microsoft.OpenApi.Validations.ValidationRule rule) { }
         public bool TryGetValue(System.Type key, out System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule>? rules) { }
         public bool Update(System.Type key, Microsoft.OpenApi.Validations.ValidationRule newRule, Microsoft.OpenApi.Validations.ValidationRule oldRule) { }
@@ -1973,10 +1973,13 @@ namespace Microsoft.OpenApi.Writers
         public abstract void WriteStartArray();
         public abstract void WriteStartObject();
         public virtual void WriteValue(bool value) { }
+        public void WriteV2Examples(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.Models.OpenApiExample example, Microsoft.OpenApi.OpenApiSpecVersion version) { }
         public virtual void WriteValue(System.DateTime value) { }
         public virtual void WriteValue(System.DateTimeOffset value) { }
+        public virtual void WriteValue(bool value) { }
         public virtual void WriteValue(decimal value) { }
         public virtual void WriteValue(double value) { }
+        public virtual void WriteValue(float value) { }
         public virtual void WriteValue(int value) { }
         public virtual void WriteValue(long value) { }
         public virtual void WriteValue(float value) { }
@@ -2001,9 +2004,9 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteProperty(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, string? value) { }
         public static void WriteProperty(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, bool value, bool defaultValue = false) { }
         public static void WriteProperty(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, bool? value, bool defaultValue = false) { }
-        public static void WriteProperty<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, T? value)
-            where T :  struct { }
         public static void WriteProperty<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, T value)
+            where T :  struct { }
+        public static void WriteProperty<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, T? value)
             where T :  struct { }
         public static void WriteRequiredCollection<T>(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, string name, System.Collections.Generic.IEnumerable<T> elements, System.Action<Microsoft.OpenApi.Writers.IOpenApiWriter, T> action)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
