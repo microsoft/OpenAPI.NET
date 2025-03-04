@@ -715,7 +715,7 @@ namespace Microsoft.OpenApi.Models
             // readOnly
             // In V2 schema if a property is part of required properties of parent schema,
             // it cannot be marked as readonly.
-            if (propertyName is not null && !parentRequiredProperties.Contains(propertyName))
+            if (!string.IsNullOrEmpty(propertyName) && propertyName is not null && !parentRequiredProperties.Contains(propertyName))
             {
                 writer.WriteProperty(name: OpenApiConstants.ReadOnly, value: ReadOnly, defaultValue: false);
             }
