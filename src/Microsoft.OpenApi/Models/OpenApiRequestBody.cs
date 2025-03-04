@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Models
                                                   // we have a copy of a reference but don't want to mutate the source schema
                                                   // TODO might need recursive resolution of references here
                             OpenApiSchemaReference r when r.Target is not null => (OpenApiSchema)r.Target.CreateShallowCopy(),
-                            OpenApiSchemaReference r2 when r2.Target is null => throw new InvalidOperationException("Unresolved reference target"),
+                            OpenApiSchemaReference => throw new InvalidOperationException("Unresolved reference target"),
                             _ => throw new InvalidOperationException("Unexpected schema type")
                         };
                         
