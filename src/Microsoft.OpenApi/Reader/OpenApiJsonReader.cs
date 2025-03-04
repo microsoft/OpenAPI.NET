@@ -88,9 +88,9 @@ namespace Microsoft.OpenApi.Reader
             }
 
             // Validate the document
-            if (settings.RuleSet != null && settings.RuleSet.Rules.Any())
+            if (document is not null && settings.RuleSet is not null && settings.RuleSet.Rules.Any())
             {
-                var openApiErrors = document?.Validate(settings.RuleSet);
+                var openApiErrors = document.Validate(settings.RuleSet);
                 if(openApiErrors is not null)
                 {
                     foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
@@ -200,9 +200,9 @@ namespace Microsoft.OpenApi.Reader
             }
 
             // Validate the element
-            if (settings.RuleSet != null && settings.RuleSet.Rules.Any())
+            if (element is not null && settings.RuleSet is not null && settings.RuleSet.Rules.Any())
             {
-                var errors = element?.Validate(settings.RuleSet);
+                var errors = element.Validate(settings.RuleSet);
                 if (errors is not null)
                 {
                     foreach (var item in errors)

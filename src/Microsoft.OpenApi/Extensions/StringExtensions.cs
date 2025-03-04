@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Extensions
             return false;
 
         }
-        internal static bool TryGetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string? displayName, out T result) where T : Enum
+        internal static bool TryGetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string? displayName, out T? result) where T : Enum
         {
             var type = typeof(T);
 
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Extensions
                 return true;
             }
 
-            result = default!;
+            result = default;
             return false;
         }
         private static ReadOnlyDictionary<string, object> GetEnumValues<T>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] Type enumType) where T : Enum
