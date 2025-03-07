@@ -7,6 +7,8 @@ servers:
 paths:
   /items:
     get:
+      tags:
+        - list.items
       operationId: getItems
       summary: Get a list of items
       responses:
