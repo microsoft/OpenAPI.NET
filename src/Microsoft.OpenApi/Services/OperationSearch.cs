@@ -34,21 +34,24 @@ namespace Microsoft.OpenApi.Services
         /// <inheritdoc/>
         public override void Visit(IOpenApiPathItem pathItem)
         {
-            foreach (var item in pathItem.Operations)
+            if (pathItem.Operations is not null)
             {
-                var operation = item.Value;
-                var operationType = item.Key;
-
-                if (_predicate(CurrentKeys.Path, operationType, operation))
+                foreach (var item in pathItem.Operations)
                 {
-                    _searchResults.Add(new()
+                    var operation = item.Value;
+                    var operationType = item.Key;
+
+                    if (CurrentKeys.Path is not null && _predicate(CurrentKeys.Path, operationType, operation))
                     {
-                        Operation = operation,
-                        Parameters = pathItem.Parameters,
-                        CurrentKeys = CopyCurrentKeys(CurrentKeys, operationType)
-                    });
+                        _searchResults.Add(new()
+                        {
+                            Operation = operation,
+                            Parameters = pathItem.Parameters,
+                            CurrentKeys = CopyCurrentKeys(CurrentKeys, operationType)
+                        });
+                    }
                 }
-            }
+            }            
         }
 
         /// <summary>

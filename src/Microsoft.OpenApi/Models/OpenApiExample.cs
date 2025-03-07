@@ -16,19 +16,19 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiExample
     {
         /// <inheritdoc/>
-        public string Summary { get; set; }
+        public string? Summary { get; set; }
 
         /// <inheritdoc/>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public string ExternalValue { get; set; }
+        public string? ExternalValue { get; set; }
 
         /// <inheritdoc/>
-        public JsonNode Value { get; set; }
+        public JsonNode? Value { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor

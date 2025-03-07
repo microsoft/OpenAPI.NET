@@ -16,42 +16,42 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The title of the application.
         /// </summary>
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// A short summary of the API.
         /// </summary>
-        public string Summary { get; set; }
+        public string? Summary { get; set; }
 
         /// <summary>
         /// A short description of the application.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// REQUIRED. The version of the OpenAPI document.
         /// </summary>
-        public string Version { get; set; }
+        public string? Version { get; set; }
 
         /// <summary>
         /// A URL to the Terms of Service for the API. MUST be in the format of a URL.
         /// </summary>
-        public Uri TermsOfService { get; set; }
+        public Uri? TermsOfService { get; set; }
 
         /// <summary>
         /// The contact information for the exposed API.
         /// </summary>
-        public OpenApiContact Contact { get; set; }
+        public OpenApiContact? Contact { get; set; }
 
         /// <summary>
         /// The license information for the exposed API.
         /// </summary>
-        public OpenApiLicense License { get; set; }
+        public OpenApiLicense? License { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -68,8 +68,8 @@ namespace Microsoft.OpenApi.Models
             Description = info?.Description ?? Description;
             Version = info?.Version ?? Version;
             TermsOfService = info?.TermsOfService ?? TermsOfService;
-            Contact = info?.Contact != null ? new(info?.Contact) : null;
-            License = info?.License != null ? new(info?.License) : null;
+            Contact = info?.Contact != null ? new(info.Contact) : null;
+            License = info?.License != null ? new(info.License) : null;
             Extensions = info?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(info.Extensions) : null;
         }
 
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
             writer.WriteStartObject();
 
             // title
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

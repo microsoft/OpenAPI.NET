@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiLinkReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Link, externalResource)
+        public OpenApiLinkReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Link, externalResource)
         {
         }
         /// <summary>
@@ -36,35 +36,29 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
-            set 
-            {
-                if (Reference is not null)
-                {
-                    Reference.Description = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public string OperationRef { get => Target?.OperationRef; }
+        public string? OperationRef { get => Target?.OperationRef; }
 
         /// <inheritdoc/>
-        public string OperationId { get => Target?.OperationId; }
+        public string? OperationId { get => Target?.OperationId; }
 
         /// <inheritdoc/>
-        public OpenApiServer Server { get => Target?.Server; }
+        public OpenApiServer? Server { get => Target?.Server; }
 
         /// <inheritdoc/>
-        public IDictionary<string, RuntimeExpressionAnyWrapper> Parameters { get => Target?.Parameters; }
+        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
-        public RuntimeExpressionAnyWrapper RequestBody { get => Target?.RequestBody; }
+        public RuntimeExpressionAnyWrapper? RequestBody { get => Target?.RequestBody; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)

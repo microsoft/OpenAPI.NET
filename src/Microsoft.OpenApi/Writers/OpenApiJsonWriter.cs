@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">Settings for controlling how the OpenAPI document will be written out.</param>
         /// <param name="terseOutput"> Setting for allowing the JSON emitted to be in terse format.</param>
-        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings settings, bool terseOutput = false) : base(textWriter, settings)
+        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings? settings, bool terseOutput = false) : base(textWriter, settings)
         {
             _produceTerseOutput = terseOutput;
         }
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Object);
 
-            if (previousScope is {Type: ScopeType.Array})
+            if (previousScope is { Type: ScopeType.Array })
             {
                 currentScope.IsInArray = true;
 
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Array);
 
-            if (previousScope is {Type: ScopeType.Array})
+            if (previousScope is { Type: ScopeType.Array })
             {
                 currentScope.IsInArray = true;
 
@@ -153,23 +153,23 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="name">The property name.</param>
         /// public override void WritePropertyName(string name)
-        public override void WritePropertyName(string name)
+        public override void WritePropertyName(string? name)
         {
             VerifyCanWritePropertyName(name);
 
             var currentScope = CurrentScope();
-            if (currentScope.ObjectCount != 0)
+            if (currentScope?.ObjectCount != 0)
             {
                 Writer.Write(WriterConstants.ObjectMemberSeparator);
             }
 
             WriteLine();
 
-            currentScope.ObjectCount++;
+            currentScope!.ObjectCount++;
 
             WriteIndentation();
 
-            name = name.GetJsonCompatibleString();
+            name = name?.GetJsonCompatibleString();
 
             Writer.Write(name);
 
@@ -185,11 +185,11 @@ namespace Microsoft.OpenApi.Writers
         /// Write string value.
         /// </summary>
         /// <param name="value">The string value.</param>
-        public override void WriteValue(string value)
+        public override void WriteValue(string? value)
         {
             WriteValueSeparator();
 
-            value = value.GetJsonCompatibleString();
+            value = value?.GetJsonCompatibleString();
 
             Writer.Write(value);
         }

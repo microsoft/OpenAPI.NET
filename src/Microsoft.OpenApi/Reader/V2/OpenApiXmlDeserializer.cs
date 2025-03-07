@@ -24,9 +24,10 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 "namespace", (o, n, _) =>
                 {
-                    if (Uri.IsWellFormedUriString(n.GetScalarValue(), UriKind.Absolute))
+                    var scalarValue = n.GetScalarValue();
+                    if (Uri.IsWellFormedUriString(scalarValue, UriKind.Absolute) && scalarValue is not null)
                     {
-                        o.Namespace = new(n.GetScalarValue(), UriKind.Absolute);
+                        o.Namespace = new(scalarValue, UriKind.Absolute);
                     }
                     else
                     {
@@ -40,11 +41,25 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "attribute",
-                (o, n, _) => o.Attribute = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var attribute = n.GetScalarValue();
+                    if (attribute is not null)
+                    {
+                        o.Attribute = bool.Parse(attribute);
+                    }
+                }
             },
             {
                 "wrapped",
-                (o, n, _) => o.Wrapped = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var wrapped = n.GetScalarValue();
+                    if (wrapped is not null)
+                    {
+                        o.Wrapped = bool.Parse(wrapped);
+                    }
+                }
             },
         };
 
@@ -54,7 +69,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiXml LoadXml(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiXml LoadXml(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("xml");
 

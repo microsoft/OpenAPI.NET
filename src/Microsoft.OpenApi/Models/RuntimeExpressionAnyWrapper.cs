@@ -14,8 +14,8 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class RuntimeExpressionAnyWrapper : IOpenApiElement
     {
-        private JsonNode _any;
-        private RuntimeExpression _expression;
+        private JsonNode? _any;
+        private RuntimeExpression? _expression;
 
         /// <summary>
         /// Parameterless constructor
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets/Sets the <see cref="JsonNode"/>
         /// </summary>
-        public JsonNode Any
+        public JsonNode? Any
         {
             get
             {
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets/Set the <see cref="RuntimeExpression"/>
         /// </summary>
-        public RuntimeExpression Expression
+        public RuntimeExpression? Expression
         {
             get
             {

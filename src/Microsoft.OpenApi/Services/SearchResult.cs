@@ -15,16 +15,16 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// An object containing contextual information based on where the walker is currently referencing in an OpenApiDocument.
         /// </summary>
-        public CurrentKeys CurrentKeys { get; set; }
+        public CurrentKeys? CurrentKeys { get; set; }
 
         /// <summary>
         /// An Operation object.
         /// </summary>
-        public OpenApiOperation Operation { get; set; }
+        public OpenApiOperation? Operation { get; set; }
 
         /// <summary>
         /// Parameters object
         /// </summary>
-        public IList<IOpenApiParameter> Parameters { get; set; }
+        public IList<IOpenApiParameter>? Parameters { get; set; }
     }
 }

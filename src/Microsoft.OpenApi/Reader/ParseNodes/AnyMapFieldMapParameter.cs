@@ -15,10 +15,10 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// Constructor
         /// </summary>
         public AnyMapFieldMapParameter(
-            Func<T, IDictionary<string, U>> propertyMapGetter,
-            Func<U, JsonNode> propertyGetter,
+            Func<T, IDictionary<string, U>?> propertyMapGetter,
+            Func<U, JsonNode?> propertyGetter,
             Action<U, JsonNode> propertySetter,
-            Func<T, IOpenApiSchema> schemaGetter)
+            Func<T, IOpenApiSchema?> schemaGetter)
         {
             this.PropertyMapGetter = propertyMapGetter;
             this.PropertyGetter = propertyGetter;
@@ -29,12 +29,12 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// <summary>
         /// Function to retrieve the property that is a map from string to an inner element containing IOpenApiAny.
         /// </summary>
-        public Func<T, IDictionary<string, U>> PropertyMapGetter { get; }
+        public Func<T, IDictionary<string, U>?> PropertyMapGetter { get; }
 
         /// <summary>
         /// Function to retrieve the value of the property from an inner element.
         /// </summary>
-        public Func<U, JsonNode> PropertyGetter { get; }
+        public Func<U, JsonNode?> PropertyGetter { get; }
 
         /// <summary>
         /// Function to set the value of the property.
@@ -44,6 +44,6 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// <summary>
         /// Function to get the schema to apply to the property.
         /// </summary>
-        public Func<T, IOpenApiSchema> SchemaGetter { get; }
+        public Func<T, IOpenApiSchema?> SchemaGetter { get; }
     }
 }

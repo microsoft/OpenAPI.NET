@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Models.Interfaces;
@@ -14,7 +14,7 @@ public interface IOpenApiExample : IOpenApiDescribedElement, IOpenApiSummarizedE
     /// exclusive. To represent examples of media types that cannot naturally represented
     /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
     /// </summary>
-    public JsonNode Value { get; }
+    public JsonNode? Value { get; }
 
     /// <summary>
     /// A URL that points to the literal example.
@@ -22,5 +22,5 @@ public interface IOpenApiExample : IOpenApiDescribedElement, IOpenApiSummarizedE
     /// included in JSON or YAML documents.
     /// The value field and externalValue field are mutually exclusive.
     /// </summary>
-    public string ExternalValue { get; }
+    public string? ExternalValue { get; }
 }
