@@ -62,10 +62,12 @@ tags:
 
         readonly OpenApiTagReference _openApiTagReference;
         readonly OpenApiTagReference _openApiTagReference2;
+        readonly OpenApiDocument _openApiDocument;
 
         public OpenApiTagReferenceTest()
         {
             var result = OpenApiDocument.Parse(OpenApi, "yaml", SettingsFixture.ReaderSettings);
+            _openApiDocument = result.Document;
             _openApiTagReference = new("user", result.Document);
             _openApiTagReference2 = new("users.user", result.Document);
         }
@@ -77,6 +79,8 @@ tags:
             Assert.Equal("user", _openApiTagReference.Name);
             Assert.Equal("Operations about users.", _openApiTagReference.Description);
             Assert.True(_openApiTagReference2.UnresolvedReference);// the target is null
+            var operationTags = _openApiDocument.Paths["/users/{userId}"].Operations[OperationType.Get].Tags;
+            Assert.Null(operationTags); // the operation tags are not loaded due to the invalid syntax at the operation level(should be a list of strings)
         }
 
         [Theory]
