@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview.12](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.11...v2.0.0-preview.12) (2025-03-07)
+
+
+### Bug Fixes
+
+* fixes serialization of openApidocs with operation tags with settings to inline references ([8eecae6](https://github.com/microsoft/OpenAPI.NET/commit/8eecae6183f594c5508fc2c74d395c6030ce8727))
+* fixes serialization of openApidocs with operation tags with settings to inline references. ([f67fe64](https://github.com/microsoft/OpenAPI.NET/commit/f67fe64e669a3f8518d89b007150c3e1bdb69fd1))
+
 ## [2.0.0-preview.11](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview10...v2.0.0-preview.11) (2025-03-03)
 
 
