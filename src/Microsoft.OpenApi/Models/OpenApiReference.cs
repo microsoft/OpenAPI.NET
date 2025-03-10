@@ -97,7 +97,8 @@ namespace Microsoft.OpenApi.Models
                 {
                     return Id;
                 }
-                if (Id.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (Id.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                    Id.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
                     return Id;
                 }
@@ -241,7 +242,8 @@ namespace Microsoft.OpenApi.Models
                     return ExternalResource + "#" + Id;
                 }
 
-                if (Id.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (Id.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                    Id.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
                     return Id;
                 }
