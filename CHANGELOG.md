@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-preview.13](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.12...v2.0.0-preview.13) (2025-03-10)
+
+
+### Bug Fixes
+
+* handling for reference IDs with http prefix ([3385a0e](https://github.com/microsoft/OpenAPI.NET/commit/3385a0e0088c44fb926affcb20f166a02391427c))
+
 ## [2.0.0-preview.12](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.11...v2.0.0-preview.12) (2025-03-07)
 
 
