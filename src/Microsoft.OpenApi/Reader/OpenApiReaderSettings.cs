@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Reader
     public class OpenApiReaderSettings
     {
         private static readonly Lazy<HttpClient> httpClient = new(() => new HttpClient());
-        private HttpClient _httpClient;
+        private HttpClient? _httpClient;
         /// <summary>
         /// HttpClient to use for making requests and retrieve documents
         /// </summary>
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Dictionary of parsers for converting extensions into strongly typed classes
         /// </summary>
-        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new();
+        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>? ExtensionParsers { get; set; } = new();
 
         /// <summary>
         /// Rules to use for validating OpenAPI specification.  If none are provided a default set of rules are applied.
@@ -117,12 +117,12 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// URL where relative references should be resolved from if the description does not contain Server definitions
         /// </summary>
-        public Uri BaseUrl { get; set; }
+        public Uri? BaseUrl { get; set; }
 
         /// <summary>
         /// Allows clients to define a custom DefaultContentType if produces array is empty
         /// </summary>
-        public List<string> DefaultContentType { get; set; }
+        public List<string>? DefaultContentType { get; set; }
 
         /// <summary>
         /// Function used to provide an alternative loader for accessing external references.
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Reader
         /// <remarks>
         /// Default loader will attempt to dereference http(s) urls and file urls.
         /// </remarks>
-        public IStreamLoader CustomExternalLoader { get; set; }
+        public IStreamLoader? CustomExternalLoader { get; set; }
 
         /// <summary>
         /// Whether to leave the <see cref="Stream"/> object open after reading
@@ -157,12 +157,13 @@ namespace Microsoft.OpenApi.Reader
             TryAddExtensionParser(OpenApiReservedParameterExtension.Name, static (i, _ ) => OpenApiReservedParameterExtension.Parse(i));
             TryAddExtensionParser(OpenApiEnumFlagsExtension.Name, static (i, _ ) => OpenApiEnumFlagsExtension.Parse(i));
         }
+      
         private void TryAddExtensionParser(string name, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension> parser)
         {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-            ExtensionParsers.TryAdd(name, parser);
+            ExtensionParsers?.TryAdd(name, parser);
 #else
-            if (!ExtensionParsers.ContainsKey(name))
+            if (ExtensionParsers is not null && !ExtensionParsers.ContainsKey(name))
                 ExtensionParsers.Add(name, parser);
 #endif
         }

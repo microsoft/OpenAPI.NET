@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Globalization;
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Extensions
             Stream stream,
             OpenApiSpecVersion specVersion,
             OpenApiFormat format,
-            OpenApiWriterSettings settings,
+            OpenApiWriterSettings? settings = null,
             CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Interfaces;
 
@@ -10,6 +10,6 @@ public interface IOpenApiReadOnlyExtensible
     /// <summary>
     /// Specification extensions.
     /// </summary>
-    IDictionary<string, IOpenApiExtension> Extensions { get; }
+    IDictionary<string, IOpenApiExtension>? Extensions { get; }
 
 }

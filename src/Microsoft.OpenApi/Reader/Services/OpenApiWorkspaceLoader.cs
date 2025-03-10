@@ -21,16 +21,19 @@ namespace Microsoft.OpenApi.Reader.Services
         }
 
         internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference,
-                                                         OpenApiDocument document,
-                                                         string format = null,
-                                                         OpenApiDiagnostic diagnostic = null,
+                                                         OpenApiDocument? document,
+                                                         string? format = null,
+                                                         OpenApiDiagnostic? diagnostic = null,
                                                          CancellationToken cancellationToken = default)
         {
-            _workspace.AddDocumentId(reference.ExternalResource, document.BaseUri);
+            _workspace.AddDocumentId(reference.ExternalResource, document?.BaseUri);
             var version = diagnostic?.SpecificationVersion ?? OpenApiSpecVersion.OpenApi3_0;
-            _workspace.RegisterComponents(document);
-            document.Workspace = _workspace;
-
+            if (document is not null)
+            {
+                _workspace.RegisterComponents(document);
+                document.Workspace = _workspace;
+            }
+            
             // Collect remote references by walking document
             var referenceCollector = new OpenApiRemoteReferenceCollector();
             var collectorWalker = new OpenApiWalker(referenceCollector);
@@ -43,7 +46,7 @@ namespace Microsoft.OpenApi.Reader.Services
             {
 
                 // If not already in workspace, load it and process references
-                if (!_workspace.Contains(item.ExternalResource))
+                if (item.ExternalResource is not null && !_workspace.Contains(item.ExternalResource))
                 {
                     var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
                     var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken).ConfigureAwait(false);

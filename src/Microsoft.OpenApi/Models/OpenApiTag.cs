@@ -15,16 +15,16 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiTag : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiTag, IOpenApiDescribedElement
     {
         /// <inheritdoc/>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <inheritdoc/>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public OpenApiExternalDocs ExternalDocs { get; set; }
+        public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor

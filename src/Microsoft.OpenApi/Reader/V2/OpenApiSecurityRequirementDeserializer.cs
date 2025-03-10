@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Reader.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("security");
 
@@ -26,7 +27,10 @@ namespace Microsoft.OpenApi.Reader.V2
                     hostDocument,
                     property.Name);
 
-                var scopes = property.Value.CreateSimpleList((n2, p)  => n2.GetScalarValue(), hostDocument);
+                var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument)
+                    .Where(scope => scope != null)
+                    .Cast<string>()
+                    .ToList();
 
                 if (scheme != null)
                 {
@@ -44,7 +48,7 @@ namespace Microsoft.OpenApi.Reader.V2
         }
 
         private static OpenApiSecuritySchemeReference LoadSecuritySchemeByReference(
-            OpenApiDocument openApiDocument,
+            OpenApiDocument? openApiDocument,
             string schemeName)
         {
             return new OpenApiSecuritySchemeReference(schemeName, openApiDocument);

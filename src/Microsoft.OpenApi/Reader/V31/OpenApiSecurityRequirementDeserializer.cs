@@ -1,6 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Reader.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("security");
 
@@ -24,8 +25,10 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 var scheme = LoadSecuritySchemeByReference(property.Name, hostDocument);
 
-                var scopes = property.Value.CreateSimpleList((value, p) => value.GetScalarValue(), hostDocument);
-
+                var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument)
+                                    .Where(scope => scope != null)
+                                    .Cast<string>()
+                                    .ToList();
                 if (scheme != null)
                 {
                     securityRequirement.Add(scheme, scopes);
@@ -40,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V31
             return securityRequirement;
         }
 
-        private static OpenApiSecuritySchemeReference LoadSecuritySchemeByReference(string schemeName, OpenApiDocument hostDocument)
+        private static OpenApiSecuritySchemeReference LoadSecuritySchemeByReference(string schemeName, OpenApiDocument? hostDocument)
         {
             return new OpenApiSecuritySchemeReference(schemeName, hostDocument);
         }

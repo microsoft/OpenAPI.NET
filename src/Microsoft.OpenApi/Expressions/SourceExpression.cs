@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Expressions
         /// Initializes a new instance of the <see cref="QueryExpression"/> class.
         /// </summary>
         /// <param name="value">The value string.</param>
-        protected SourceExpression(string value)
+        protected SourceExpression(string? value)
         {
             Value = value;
         }
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the expression string.
         /// </summary>
-        protected string Value { get; }
+        protected string? Value { get; }
 
         /// <summary>
         /// Build the source expression from input string.

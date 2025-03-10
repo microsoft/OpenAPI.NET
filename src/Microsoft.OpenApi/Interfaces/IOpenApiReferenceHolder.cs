@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Gets the resolved target object.
         /// </summary>
-        T Target { get; }
+        T? Target { get; }
         /// <summary>
         /// Copy the reference as a target element with overrides.
         /// </summary>

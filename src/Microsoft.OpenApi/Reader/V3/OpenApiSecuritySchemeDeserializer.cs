@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -59,7 +59,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "openIdConnectUrl",
-                    (o, n, _) => o.OpenIdConnectUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (o, n, _) =>
+                    {
+                        var connectUrl = n.GetScalarValue();
+                        if (connectUrl != null)
+                        {
+                            o.OpenIdConnectUrl = new(connectUrl, UriKind.RelativeOrAbsolute);
+                        }
+                    }
                 },
                 {
                     "flows",
@@ -73,7 +80,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static IOpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("securityScheme");
             var pointer = mapNode.GetReferencePointer();

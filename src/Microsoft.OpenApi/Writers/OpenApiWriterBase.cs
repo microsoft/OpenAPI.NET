@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
@@ -52,7 +53,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter"></param>
         /// <param name="settings"></param>
-        protected OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings)
+        protected OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings? settings)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
@@ -99,7 +100,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the start property.
         /// </summary>
-        public abstract void WritePropertyName(string name);
+        public abstract void WritePropertyName(string? name);
 
         /// <summary>
         /// Writes a separator of a value if it's needed for the next value to be written.
@@ -130,7 +131,7 @@ namespace Microsoft.OpenApi.Writers
         /// Write string value.
         /// </summary>
         /// <param name="value">The string value.</param>
-        public abstract void WriteValue(string value);
+        public abstract void WriteValue(string? value);
 
         /// <summary>
         /// Write float value.
@@ -229,7 +230,7 @@ namespace Microsoft.OpenApi.Writers
         /// Write object value.
         /// </summary>
         /// <param name="value">The object value.</param>
-        public virtual void WriteValue(object value)
+        public virtual void WriteValue(object? value)
         {
             if (value == null)
             {
@@ -332,7 +333,7 @@ namespace Microsoft.OpenApi.Writers
         /// Get current scope.
         /// </summary>
         /// <returns></returns>
-        protected Scope CurrentScope()
+        protected Scope? CurrentScope()
         {
             return Scopes.Count == 0 ? null : Scopes.Peek();
         }
@@ -419,7 +420,7 @@ namespace Microsoft.OpenApi.Writers
         /// the property name is a valid string and whether the current scope is an object scope.
         /// </summary>
         /// <param name="name">property name</param>
-        protected void VerifyCanWritePropertyName(string name)
+        protected void VerifyCanWritePropertyName(string? name)
         {
             Utils.CheckArgumentNull(name);
 
@@ -437,7 +438,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <inheritdoc/>
-        public void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version)
+        public static void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version)
         {
             writer.WriteStartObject();
 

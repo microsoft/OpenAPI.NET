@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "enum",
-                    (o, n, doc) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc)
+                    (o, n, doc) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc).Where(e => e != null).Cast<string>().ToList()
                 },
                 {
                     "default",
@@ -37,7 +38,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        public static OpenApiServerVariable LoadServerVariable(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiServerVariable LoadServerVariable(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("serverVariable");
 

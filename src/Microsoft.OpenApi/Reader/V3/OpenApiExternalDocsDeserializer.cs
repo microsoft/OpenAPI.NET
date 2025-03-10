@@ -24,8 +24,15 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "url",
-                    (o, n, _) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
-                },
+                    (o, n, _) =>
+                    {
+                        var url = n.GetScalarValue();
+                        if (url != null)
+                        {
+                            o.Url = new(url, UriKind.RelativeOrAbsolute);
+                        }
+                    }
+                }
             };
 
     private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
@@ -34,7 +41,7 @@ namespace Microsoft.OpenApi.Reader.V3
                     {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
                     };
 
-        public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("externalDocs");
 

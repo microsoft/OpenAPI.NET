@@ -19,16 +19,16 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiRequestBody
     {
         /// <inheritdoc />
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc />
         public bool Required { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -102,15 +102,17 @@ namespace Microsoft.OpenApi.Models
                 // V2 spec actually allows the body to have custom name.
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
-                Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
-                Examples = Content.Values.FirstOrDefault()?.Examples,
+                Schema = Content?.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
+                Examples = Content?.Values.FirstOrDefault()?.Examples,
                 Required = Required,
-                Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
+                Extensions = Extensions?.ToDictionary(static k => k.Key, static v => v.Value)
             };
-            if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
+            // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
+            if (bodyParameter.Extensions is not null && 
+                bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyNameExtension) &&
+                bodyNameExtension is OpenApiAny bodyName)
             {
-                var bodyName = bodyParameter.Extensions[OpenApiConstants.BodyName] as OpenApiAny;
-                bodyParameter.Name = string.IsNullOrEmpty(bodyName?.Node.ToString()) ? "body" : bodyName?.Node.ToString();
+                bodyParameter.Name = string.IsNullOrEmpty(bodyName.Node.ToString()) ? "body" : bodyName.Node.ToString();
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
             }
             return bodyParameter;
@@ -121,34 +123,41 @@ namespace Microsoft.OpenApi.Models
         {
             if (Content == null || !Content.Any())
                 yield break;
-
-            foreach (var property in Content.First().Value.Schema.Properties)
+            var properties = Content.First().Value.Schema?.Properties;
+            if(properties != null)
             {
-                var paramSchema = property.Value.CreateShallowCopy();
-                if ((paramSchema.Type & JsonSchemaType.String) == JsonSchemaType.String
-                    && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
-                    || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
+                foreach (var property in properties)
                 {
-                    var updatedSchema = paramSchema switch {
-                        OpenApiSchema s => s, // we already have a copy
-                        // we have a copy of a reference but don't want to mutate the source schema
-                        // TODO might need recursive resolution of references here
-                        OpenApiSchemaReference r => (OpenApiSchema)r.Target.CreateShallowCopy(),
-                        _ => throw new InvalidOperationException("Unexpected schema type")
+                    var paramSchema = property.Value.CreateShallowCopy();
+                    if ((paramSchema.Type & JsonSchemaType.String) == JsonSchemaType.String
+                        && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
+                        || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var updatedSchema = paramSchema switch
+                        {
+                            OpenApiSchema s => s, // we already have a copy
+                                                  // we have a copy of a reference but don't want to mutate the source schema
+                                                  // TODO might need recursive resolution of references here
+                            OpenApiSchemaReference r when r.Target is not null => (OpenApiSchema)r.Target.CreateShallowCopy(),
+                            OpenApiSchemaReference => throw new InvalidOperationException("Unresolved reference target"),
+                            _ => throw new InvalidOperationException("Unexpected schema type")
+                        };
+                        
+                        updatedSchema.Type = "file".ToJsonSchemaType();
+                        updatedSchema.Format = null;
+                        paramSchema = updatedSchema;
+                        
+                    }
+                    yield return new OpenApiFormDataParameter()
+                    {
+                        Description = paramSchema.Description,
+                        Name = property.Key,
+                        Schema = paramSchema,
+                        Examples = Content.Values.FirstOrDefault()?.Examples,
+                        Required = Content.First().Value.Schema?.Required?.Contains(property.Key) ?? false
                     };
-                    updatedSchema.Type = "file".ToJsonSchemaType();
-                    updatedSchema.Format = null;
-                    paramSchema = updatedSchema;
                 }
-                yield return new OpenApiFormDataParameter()
-                {
-                    Description = paramSchema.Description,
-                    Name = property.Key,
-                    Schema = paramSchema,
-                    Examples = Content.Values.FirstOrDefault()?.Examples,
-                    Required = Content.First().Value.Schema.Required?.Contains(property.Key) ?? false
-                };
-            }
+            }            
         }
 
         /// <inheritdoc/>
