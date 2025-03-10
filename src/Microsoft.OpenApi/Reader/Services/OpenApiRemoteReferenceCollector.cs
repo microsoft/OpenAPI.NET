@@ -37,8 +37,7 @@ namespace Microsoft.OpenApi.Reader.Services
         /// </summary>
         private void AddExternalReferences(OpenApiReference? reference)
         {
-            var externalResource = reference?.ExternalResource;
-            if (reference is {IsExternal: true} && externalResource is not null &&
+            if (reference is {IsExternal: true} && reference.ExternalResource is {} externalResource&&
                 !_references.ContainsKey(externalResource))
             {
                 _references.Add(externalResource, reference);
