@@ -257,7 +257,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+                var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+                result.Reference.SetSummaryAndDescriptionFromMapNode(mapNode);
+                return result;
             }
 
             var schema = new OpenApiSchema();

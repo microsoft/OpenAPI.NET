@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the link object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiLink : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiLink>
+public interface IOpenApiLink : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiLink>, IOpenApiReferenceable
 {
     /// <summary>
     /// A relative or absolute reference to an OAS operation.
