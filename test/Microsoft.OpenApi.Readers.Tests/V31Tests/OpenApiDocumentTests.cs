@@ -527,7 +527,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var responseSchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             // Assert
-            result.Document.Workspace.Contains("./externalResource.yaml");
+            var externalResourceUri = new Uri(
+                "file://" + 
+                Path.Combine(Path.GetFullPath(SampleFolderPath), 
+                "externalResource.yaml#/components/schemas/todo")).AbsoluteUri;
+
+            Assert.True(result.Document.Workspace.Contains(externalResourceUri));
             Assert.Equal(2, responseSchema.Properties.Count); // reference has been resolved
         }
 

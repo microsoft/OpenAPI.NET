@@ -170,9 +170,9 @@ namespace Microsoft.OpenApi.Reader.V3
             throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
 
-        public OpenApiDocument LoadDocument(RootNode rootNode)
+        public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
-            return OpenApiV3Deserializer.LoadOpenApi(rootNode);
+            return OpenApiV3Deserializer.LoadOpenApi(rootNode, location);
         }
 
         public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement

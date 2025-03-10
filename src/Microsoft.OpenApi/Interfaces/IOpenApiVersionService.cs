@@ -1,6 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -34,8 +35,9 @@ namespace Microsoft.OpenApi.Interfaces
         /// Converts a generic RootNode instance into a strongly typed OpenApiDocument
         /// </summary>
         /// <param name="rootNode">RootNode containing the information to be converted into an OpenAPI Document</param>
+        /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <returns>Instance of OpenApiDocument populated with data from rootNode</returns>
-        OpenApiDocument LoadDocument(RootNode rootNode);
+        OpenApiDocument LoadDocument(RootNode rootNode, Uri location);
 
         /// <summary>
         /// Gets the description and summary scalar values in a reference object for V3.1 support

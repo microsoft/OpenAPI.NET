@@ -38,9 +38,12 @@ namespace Microsoft.OpenApi.Reader.V3
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        public static OpenApiDocument LoadOpenApi(RootNode rootNode)
+        public static OpenApiDocument LoadOpenApi(RootNode rootNode, Uri location)
         {
-            var openApiDoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument
+            {
+                BaseUri = location
+            };
             var openApiNode = rootNode.GetMap();
 
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, openApiDoc);

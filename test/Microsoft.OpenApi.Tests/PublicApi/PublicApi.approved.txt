@@ -218,8 +218,8 @@ namespace Microsoft.OpenApi.Interfaces
     }
     public interface IOpenApiReader
     {
-        Microsoft.OpenApi.Reader.ReadResult Read(System.IO.MemoryStream input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings);
-        System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.Stream input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings, System.Threading.CancellationToken cancellationToken = default);
+        Microsoft.OpenApi.Reader.ReadResult Read(System.IO.MemoryStream input, System.Uri location, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings);
+        System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.Stream input, System.Uri location, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings, System.Threading.CancellationToken cancellationToken = default);
         T ReadFragment<T>(System.IO.MemoryStream input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Models.OpenApiDocument openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement;
     }
@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Interfaces
     }
     public interface IStreamLoader
     {
-        System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri baseUrl, System.Uri uri, System.Threading.CancellationToken cancellationToken = default);
     }
 }
 namespace Microsoft.OpenApi
@@ -1461,9 +1461,9 @@ namespace Microsoft.OpenApi.Reader
     public class OpenApiJsonReader : Microsoft.OpenApi.Interfaces.IOpenApiReader
     {
         public OpenApiJsonReader() { }
-        public Microsoft.OpenApi.Reader.ReadResult Read(System.IO.MemoryStream input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings) { }
-        public Microsoft.OpenApi.Reader.ReadResult Read(System.Text.Json.Nodes.JsonNode jsonNode, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings) { }
-        public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.Stream input, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings, System.Threading.CancellationToken cancellationToken = default) { }
+        public Microsoft.OpenApi.Reader.ReadResult Read(System.IO.MemoryStream input, System.Uri location, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings) { }
+        public Microsoft.OpenApi.Reader.ReadResult Read(System.Text.Json.Nodes.JsonNode jsonNode, System.Uri location, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings) { }
+        public System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> ReadAsync(System.IO.Stream input, System.Uri location, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings, System.Threading.CancellationToken cancellationToken = default) { }
         public T ReadFragment<T>(System.IO.MemoryStream input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Models.OpenApiDocument openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
         public T ReadFragment<T>(System.Text.Json.Nodes.JsonNode input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Models.OpenApiDocument openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings settings = null)
@@ -1516,7 +1516,7 @@ namespace Microsoft.OpenApi.Reader
         public void EndObject() { }
         public T GetFromTempStorage<T>(string key, object scope = null) { }
         public string GetLocation() { }
-        public Microsoft.OpenApi.Models.OpenApiDocument Parse(System.Text.Json.Nodes.JsonNode jsonNode) { }
+        public Microsoft.OpenApi.Models.OpenApiDocument Parse(System.Text.Json.Nodes.JsonNode jsonNode, System.Uri location) { }
         public T ParseFragment<T>(System.Text.Json.Nodes.JsonNode jsonNode, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Models.OpenApiDocument openApiDocument)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiElement { }
         public void PopLoop(string loopid) { }
@@ -1543,8 +1543,8 @@ namespace Microsoft.OpenApi.Reader.Services
 {
     public class DefaultStreamLoader : Microsoft.OpenApi.Interfaces.IStreamLoader
     {
-        public DefaultStreamLoader(System.Uri baseUrl, System.Net.Http.HttpClient httpClient) { }
-        public System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri uri, System.Threading.CancellationToken cancellationToken = default) { }
+        public DefaultStreamLoader(System.Net.Http.HttpClient httpClient) { }
+        public System.Threading.Tasks.Task<System.IO.Stream> LoadAsync(System.Uri baseUrl, System.Uri uri, System.Threading.CancellationToken cancellationToken = default) { }
     }
 }
 namespace Microsoft.OpenApi.Services
@@ -1674,7 +1674,7 @@ namespace Microsoft.OpenApi.Services
         public void AddDocumentId(string key, System.Uri value) { }
         public int ComponentsCount() { }
         public bool Contains(string location) { }
-        public System.Uri GetDocumentId(string key) { }
+        public System.Uri? GetDocumentId(string key) { }
         public bool RegisterComponentForDocument<T>(Microsoft.OpenApi.Models.OpenApiDocument openApiDocument, T componentToRegister, string id) { }
         public void RegisterComponents(Microsoft.OpenApi.Models.OpenApiDocument document) { }
         public T? ResolveReference<T>(string location) { }

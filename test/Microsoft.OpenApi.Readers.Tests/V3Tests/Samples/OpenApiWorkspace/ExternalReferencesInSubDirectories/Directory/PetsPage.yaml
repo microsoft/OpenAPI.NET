@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: AllPets Schema
+paths: {}
+components:
+  schemas:
+    PetsPage:
+      type: object
+      properties:
+        pageNumber: 
+          type: integer
+          minimum: 0
+          maximum: 100
+        pets:
+          "$ref": "./Pets.yaml#/components/schemas/Pets"

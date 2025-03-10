@@ -153,9 +153,9 @@ namespace Microsoft.OpenApi.Reader.V31
             throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
 
-        public OpenApiDocument LoadDocument(RootNode rootNode)
+        public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
-            return OpenApiV31Deserializer.LoadOpenApi(rootNode);
+            return OpenApiV31Deserializer.LoadOpenApi(rootNode, location);
         }
 
         public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement

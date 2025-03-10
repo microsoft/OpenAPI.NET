@@ -17,22 +17,19 @@ namespace Microsoft.OpenApi.Reader.Services
     /// </summary>
     public class DefaultStreamLoader : IStreamLoader
     {
-        private readonly Uri baseUrl;
         private readonly HttpClient _httpClient;
 
         /// <summary>
         /// The default stream loader
         /// </summary>
-        /// <param name="baseUrl"></param>
         /// <param name="httpClient">The HttpClient to use to retrieve documents when needed</param>
-        public DefaultStreamLoader(Uri baseUrl, HttpClient httpClient)
+        public DefaultStreamLoader(HttpClient httpClient)
         {
-            this.baseUrl = baseUrl;
             _httpClient = Utils.CheckArgumentNull(httpClient);
         }
 
         /// <inheritdoc/>
-        public async Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
+        public async Task<Stream> LoadAsync(Uri baseUrl, Uri uri, CancellationToken cancellationToken = default)
         {
             var absoluteUri = (baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri), baseUrl.IsAbsoluteUri, uri.IsAbsoluteUri) switch
             {

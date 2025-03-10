@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,18 +19,20 @@ namespace Microsoft.OpenApi.Interfaces
         /// Async method to reads the stream and parse it into an Open API document.
         /// </summary>
         /// <param name="input">The stream input.</param>
+        /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates notification that an operation should be cancelled.</param>
         /// <returns></returns>
-        Task<ReadResult> ReadAsync(Stream input, OpenApiReaderSettings settings, CancellationToken cancellationToken = default);
+        Task<ReadResult> ReadAsync(Stream input, Uri location, OpenApiReaderSettings settings, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Provides a synchronous method to read the input memory stream and parse it into an Open API document.
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        ReadResult Read(MemoryStream input, OpenApiReaderSettings settings);
+        ReadResult Read(MemoryStream input, Uri location, OpenApiReaderSettings settings);
 
         /// <summary>
         /// Reads the MemoryStream and parses the fragment of an OpenAPI description into an Open API Element.
