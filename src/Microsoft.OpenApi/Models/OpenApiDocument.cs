@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://spec.openapis.org
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
     {
         /// <summary>
         /// Register components in the document to the workspace
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Annotations { get; set; }
+        public IDictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Implements IBaseDocument
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Models
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
-            Annotations = document?.Annotations != null ? new Dictionary<string, object>(document.Annotations) : null;
+            Metadata = document?.Metadata != null ? new Dictionary<string, object>(document.Metadata) : null;
             BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
         }
 
