@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Models
 
             // schema
             var targetSchema = Schema switch {
-                OpenApiSchemaReference schemaReference => schemaReference.Target,
+                OpenApiSchemaReference schemaReference => schemaReference.RecursiveTarget,
                 OpenApiSchema schema => schema,
                 _ => null,
             };

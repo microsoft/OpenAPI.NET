@@ -85,7 +85,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         base.Visit(referenceHolder);
     }
 
-    private void AddSchemaToComponents(OpenApiSchema schema, string referenceId = null)
+    private void AddSchemaToComponents(IOpenApiSchema schema, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureSchemasExist();
@@ -95,7 +95,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         }
     }
 
-    private void AddParameterToComponents(OpenApiParameter parameter, string referenceId = null)
+    private void AddParameterToComponents(IOpenApiParameter parameter, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureParametersExist();
@@ -105,7 +105,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         }
     }
 
-    private void AddResponseToComponents(OpenApiResponse response, string referenceId = null)
+    private void AddResponseToComponents(IOpenApiResponse response, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureResponsesExist();
@@ -114,7 +114,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
             Components.Responses.Add(referenceId, response);
         }
     }
-    private void AddRequestBodyToComponents(OpenApiRequestBody requestBody, string referenceId = null)
+    private void AddRequestBodyToComponents(IOpenApiRequestBody requestBody, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureRequestBodiesExist();
@@ -123,7 +123,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
             Components.RequestBodies.Add(referenceId, requestBody);
         }
     }
-    private void AddLinkToComponents(OpenApiLink link, string referenceId = null)
+    private void AddLinkToComponents(IOpenApiLink link, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureLinksExist();
@@ -132,7 +132,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
             Components.Links.Add(referenceId, link);
         }
     }
-    private void AddCallbackToComponents(OpenApiCallback callback, string referenceId = null)
+    private void AddCallbackToComponents(IOpenApiCallback callback, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureCallbacksExist();
@@ -141,7 +141,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
             Components.Callbacks.Add(referenceId, callback);
         }
     }
-    private void AddHeaderToComponents(OpenApiHeader header, string referenceId = null)
+    private void AddHeaderToComponents(IOpenApiHeader header, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureHeadersExist();
@@ -150,7 +150,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
             Components.Headers.Add(referenceId, header);
         }
     }
-    private void AddExampleToComponents(OpenApiExample example, string referenceId = null)
+    private void AddExampleToComponents(IOpenApiExample example, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureExamplesExist();
@@ -159,7 +159,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
             Components.Examples.Add(referenceId, example);
         }
     }
-    private void AddPathItemToComponents(OpenApiPathItem pathItem, string referenceId = null)
+    private void AddPathItemToComponents(IOpenApiPathItem pathItem, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsurePathItemsExist();
@@ -168,7 +168,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
             Components.PathItems.Add(referenceId, pathItem);
         }
     }
-    private void AddSecuritySchemeToComponents(OpenApiSecurityScheme securityScheme, string referenceId = null)
+    private void AddSecuritySchemeToComponents(IOpenApiSecurityScheme securityScheme, string referenceId = null)
     {
         EnsureComponentsExist();
         EnsureSecuritySchemesExist();
