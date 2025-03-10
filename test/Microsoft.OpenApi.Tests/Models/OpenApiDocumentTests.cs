@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelReferencingComponents
         };
 
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponentsWithOtherProperties
         };
 
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponents
         };
 
@@ -489,7 +489,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponentsWithReference
         };
 
@@ -865,7 +865,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1024,7 +1024,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1324,7 +1324,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1830,7 +1830,7 @@ paths:
         {
             var baseDocument = new OpenApiDocument
             {
-                Annotations = new Dictionary<string, object>
+                Metadata = new Dictionary<string, object>
                 {
                     ["key1"] = "value1",
                     ["key2"] = 2
@@ -1839,11 +1839,11 @@ paths:
 
             var actualDocument = new OpenApiDocument(baseDocument);
 
-            Assert.Equal(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
+            Assert.Equal(baseDocument.Metadata["key1"], actualDocument.Metadata["key1"]);
 
-            baseDocument.Annotations["key1"] = "value2";
+            baseDocument.Metadata["key1"] = "value2";
 
-            Assert.NotEqual(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
+            Assert.NotEqual(baseDocument.Metadata["key1"], actualDocument.Metadata["key1"]);
         }
 
         [Fact]
