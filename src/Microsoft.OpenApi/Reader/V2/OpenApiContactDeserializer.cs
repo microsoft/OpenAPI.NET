@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V2
             var mapNode = node as MapNode;
             var contact = new OpenApiContact();
 
-            ParseMap(mapNode, contact, _contactFixedFields, _contactPatternFields);
+            ParseMap(mapNode, contact, _contactFixedFields, _contactPatternFields, doc: hostDocument);
 
             return contact;
         }

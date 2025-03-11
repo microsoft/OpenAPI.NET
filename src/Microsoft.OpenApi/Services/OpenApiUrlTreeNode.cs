@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="doc">The OpenAPI document.</param>
         /// <param name="label">Name tag for labelling the <see cref="OpenApiUrlTreeNode"/> nodes in the directory structure.</param>
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
-        public static OpenApiUrlTreeNode Create(OpenApiDocument? doc, string label)
+        public static OpenApiUrlTreeNode Create(OpenApiDocument doc, string label)
         {
             Utils.CheckArgumentNull(doc);
             Utils.CheckArgumentNullOrEmpty(label);

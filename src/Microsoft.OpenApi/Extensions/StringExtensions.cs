@@ -50,15 +50,14 @@ namespace Microsoft.OpenApi.Extensions
             var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             foreach (var field in enumType.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
-                if (field.GetCustomAttribute<DisplayAttribute>() is {} displayAttribute)
+                if (field.GetCustomAttribute<DisplayAttribute>() is { } displayAttribute
+                    && field.GetValue(null) is T enumValue
+                    && displayAttribute.Name is not null)
                 {
-                    var value = field.GetValue(null);
-                    if (value is T enumValue && displayAttribute.Name is not null)
-                    {
-                        result.Add(displayAttribute.Name, enumValue);
-                    }                    
+                    result.Add(displayAttribute.Name, enumValue);
                 }
             }
+
             return new ReadOnlyDictionary<string, object>(result);
         }
         internal static string ToFirstCharacterLowerCase(this string input)

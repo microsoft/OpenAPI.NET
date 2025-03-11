@@ -286,7 +286,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             // Walk all unresolved parameter references
             // if id matches with request body Id, change type
-            if (doc.Components?.RequestBodies != null && doc.Components?.RequestBodies is { Count: > 0 })
+            if (doc.Components?.RequestBodies is { Count: > 0 })
             {
                 var fixer = new RequestBodyReferenceFixer(doc.Components.RequestBodies);
                 var walker = new OpenApiWalker(fixer);
@@ -323,7 +323,7 @@ namespace Microsoft.OpenApi.Reader.V2
                      && p.Reference?.Id != null
                      && _requestBodies.ContainsKey(p.Reference.Id));
             var id = body?.Reference?.Id;
-            if (body != null && id is not null)
+            if (body != null && !string.IsNullOrEmpty(id) && id is not null)
             {
                 operation.Parameters?.Remove(body);
                 operation.RequestBody = new OpenApiRequestBodyReference(id, body.Reference?.HostDocument);

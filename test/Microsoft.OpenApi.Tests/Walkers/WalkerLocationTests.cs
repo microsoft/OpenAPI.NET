@@ -57,8 +57,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/servers/0",
                 "#/servers/1",
                 "#/paths",
-                "#/tags",
-                "#/tags/0"
+                "#/tags"
             }, locator.Locations);
         }
 

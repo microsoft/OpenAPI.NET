@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var externalDocs = new OpenApiExternalDocs();
 
-            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields);
+            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, doc: hostDocument);
 
             return externalDocs;
         }

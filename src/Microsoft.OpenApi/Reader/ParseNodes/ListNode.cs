@@ -28,7 +28,9 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
-            var list = _nodeList.Select(n => map(new MapNode(Context, n as JsonObject), hostDocument))
+            var list = _nodeList
+                .OfType<JsonObject>()
+                .Select(n => map(new MapNode(Context, n), hostDocument))
                 .Where(i => i != null)
                 .ToList();
             return list;
@@ -37,7 +39,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         public override List<JsonNode> CreateListOfAny()
         {
 
-            var list = _nodeList.Select(n => Create(Context, n).CreateAny())
+            var list = _nodeList.OfType<JsonNode>().Select(n => Create(Context, n).CreateAny())
                 .Where(i => i != null)
                 .ToList();
 
@@ -51,12 +53,12 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
-            return _nodeList.Select(n => map(new(Context, n), openApiDocument)).ToList();
+            return _nodeList.OfType<JsonNode>().Select(n => map(new(Context, n), openApiDocument)).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()
         {
-            return _nodeList.Select(n => Create(Context, n)).ToList().GetEnumerator();
+            return _nodeList.OfType<JsonNode>().Select(n => Create(Context, n)).ToList().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

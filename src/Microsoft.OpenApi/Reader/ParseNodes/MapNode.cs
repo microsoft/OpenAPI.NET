@@ -11,7 +11,6 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
@@ -24,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         private readonly JsonObject _node;
         private readonly List<PropertyNode> _nodes;
 
-        public MapNode(ParsingContext context, JsonNode? node) : base(
+        public MapNode(ParsingContext context, JsonNode node) : base(
             context, node)
         {
             if (node is not JsonObject mapNode)
@@ -33,14 +32,14 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
 
             _node = mapNode;
-            _nodes = _node.Where(static p => p.Value is not null).Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
+            _nodes = _node.Where(p => p.Value is not null).OfType<KeyValuePair<string, JsonNode>>().Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
         }
 
         public PropertyNode? this[string key]
         {
             get
             {
-                if (_node.TryGetPropertyValue(key, out var node))
+                if (_node.TryGetPropertyValue(key, out var node) && node is not null)
                 {
                     return new(Context, key, node);
                 }
@@ -117,7 +116,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                         ? value
                         : throw new OpenApiReaderException($"Expected array while parsing {typeof(T).Name}", Context);
 
-                    ISet<T> values = new HashSet<T>(arrayNode.Select(item => map(new ValueNode(Context, item), openApiDocument)));
+                    ISet<T> values = new HashSet<T>(arrayNode.OfType<JsonNode>().Select(item => map(new ValueNode(Context, item), openApiDocument)));
 
                     return (key, values);
 

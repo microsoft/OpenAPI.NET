@@ -1578,7 +1578,7 @@ namespace Microsoft.OpenApi.Services
     }
     public static class OpenApiFilterService
     {
-        public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument? source, System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
+        public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument source, System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
         public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode CreateOpenApiUrlTreeNode(System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiDocument> sources) { }
         public static System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string? operationIds = null, string? tags = null, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>? requestUrls = null, Microsoft.OpenApi.Models.OpenApiDocument? source = null) { }
     }
@@ -1603,7 +1603,7 @@ namespace Microsoft.OpenApi.Services
         public bool HasOperations(string label) { }
         public void WriteMermaid(System.IO.TextWriter writer) { }
         public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create() { }
-        public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create(Microsoft.OpenApi.Models.OpenApiDocument? doc, string label) { }
+        public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create(Microsoft.OpenApi.Models.OpenApiDocument doc, string label) { }
     }
     public abstract class OpenApiVisitorBase
     {
@@ -1629,7 +1629,7 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiContact contact) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiEncoding encoding) { }
-        public virtual void Visit(Microsoft.OpenApi.Models.OpenApiExternalDocs? externalDocs) { }
+        public virtual void Visit(Microsoft.OpenApi.Models.OpenApiExternalDocs externalDocs) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiInfo info) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiLicense license) { }
         public virtual void Visit(Microsoft.OpenApi.Models.OpenApiMediaType mediaType) { }
@@ -1697,7 +1697,6 @@ namespace Microsoft.OpenApi.Validations
 {
     public interface IValidationContext
     {
-        Microsoft.OpenApi.Models.OpenApiDocument? HostDocument { get; }
         string PathString { get; }
         void AddError(Microsoft.OpenApi.Validations.OpenApiValidatorError error);
         void AddWarning(Microsoft.OpenApi.Validations.OpenApiValidatorWarning warning);
@@ -1706,7 +1705,7 @@ namespace Microsoft.OpenApi.Validations
     }
     public class OpenApiValidator : Microsoft.OpenApi.Services.OpenApiVisitorBase, Microsoft.OpenApi.Validations.IValidationContext
     {
-        public OpenApiValidator(Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null) { }
+        public OpenApiValidator(Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.OpenApiValidatorError> Errors { get; }
         public Microsoft.OpenApi.Models.OpenApiDocument? HostDocument { get; set; }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.OpenApiValidatorWarning> Warnings { get; }

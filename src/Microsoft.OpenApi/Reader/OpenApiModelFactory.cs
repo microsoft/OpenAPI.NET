@@ -287,7 +287,11 @@ namespace Microsoft.OpenApi.Reader
 
       private static async Task<(Stream, string?)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
         {
-            if (!string.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url))
+            {
+                throw new ArgumentException($"Parameter {nameof(url)} is null or empty. Please provide the correct path or URL to the file.");
+            }
+            else
             {
                 Stream stream;
                 string? format;
@@ -333,7 +337,6 @@ namespace Microsoft.OpenApi.Reader
                     return (stream, format);
                 }
             }
-            throw new ArgumentException($"Parameter {nameof(url)} is null or empty. Please provide the correct path or URL to the file.");
         }
 
         private static string InspectInputFormat(string input)

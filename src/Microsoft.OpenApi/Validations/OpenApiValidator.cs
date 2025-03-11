@@ -24,11 +24,9 @@ namespace Microsoft.OpenApi.Validations
         /// Create a visitor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
-        /// <param name="hostDocument"></param>
-        public OpenApiValidator(ValidationRuleSet ruleSet, OpenApiDocument? hostDocument = null)
+        public OpenApiValidator(ValidationRuleSet ruleSet)
         {
             _ruleSet = ruleSet;
-            HostDocument = hostDocument;
         }
 
         /// <summary>

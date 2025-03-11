@@ -449,7 +449,10 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(tag);
-            _visitor.Visit(tag.ExternalDocs);
+            if (tag.ExternalDocs != null)
+            {
+                _visitor.Visit(tag.ExternalDocs);
+            }
             _visitor.Visit(tag as IOpenApiExtensible);
         }
 

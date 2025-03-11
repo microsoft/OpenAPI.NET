@@ -235,7 +235,12 @@ namespace Microsoft.OpenApi.Hidi.Tests
             using var stream = File.OpenRead(filePath);
             var settings = new OpenApiReaderSettings();
             settings.AddYamlReader();
-            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml", settings)).Document;            
+            var readResult = await OpenApiDocument.LoadAsync(stream, "yaml", settings);
+            var doc = readResult.Document;
+            if (doc == null)
+            {
+                throw new InvalidOperationException("Failed to load OpenApiDocument.");
+            }
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
 
@@ -246,7 +251,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var targetExamples = subsetOpenApiDocument.Components?.Examples;
 
             // Assert
-            Assert.Same(doc?.Servers, subsetOpenApiDocument.Servers);
+            Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
             var headerReference = Assert.IsType<OpenApiHeaderReference>(responseHeader);
             Assert.False(headerReference.UnresolvedReference);
             var exampleReference = Assert.IsType<OpenApiExampleReference>(mediaTypeExample);

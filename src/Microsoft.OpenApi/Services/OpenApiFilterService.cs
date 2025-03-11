@@ -59,10 +59,10 @@ namespace Microsoft.OpenApi.Services
         /// <param name="source">The target <see cref="OpenApiDocument"/>.</param>
         /// <param name="predicate">A predicate function.</param>
         /// <returns>A partial OpenAPI document.</returns>
-        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument? source, Func<string, OperationType?, OpenApiOperation, bool> predicate)
+        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, Func<string, OperationType?, OpenApiOperation, bool> predicate)
         {
             // Fetch and copy title, graphVersion and server info from OpenApiDoc
-            var components = source?.Components is null 
+            var components = source.Components is null 
                 ? null 
                 : new OpenApiComponents() { SecuritySchemes = source.Components.SecuritySchemes };
 
@@ -70,13 +70,13 @@ namespace Microsoft.OpenApi.Services
             {
                 Info = new()
                 {
-                    Title = source?.Info.Title + " - Subset",
-                    Description = source?.Info.Description,
-                    TermsOfService = source?.Info.TermsOfService,
-                    Contact = source?.Info.Contact,
-                    License = source?.Info.License,
-                    Version = source?.Info.Version,
-                    Extensions = source?.Info.Extensions
+                    Title = source.Info.Title + " - Subset",
+                    Description = source.Info.Description,
+                    TermsOfService = source.Info.TermsOfService,
+                    Contact = source.Info.Contact,
+                    License = source.Info.License,
+                    Version = source.Info.Version,
+                    Extensions = source.Info.Extensions
                 },
 
                 Components = components,

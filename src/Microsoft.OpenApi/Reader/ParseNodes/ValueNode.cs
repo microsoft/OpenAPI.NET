@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
     {
         private readonly JsonValue _node;
 
-        public ValueNode(ParsingContext context, JsonNode? node) : base(
+        public ValueNode(ParsingContext context, JsonNode node) : base(
             context, node)
         {
             if (node is not JsonValue scalarNode)
