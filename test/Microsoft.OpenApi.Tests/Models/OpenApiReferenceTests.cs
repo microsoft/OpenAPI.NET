@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Threading.Tasks;
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData("Pet.yaml#/components/schemas/Pet", "Pet.yaml", "Pet", ReferenceType.Schema)]
         [InlineData("abc#/components/schemas/Pet", "abc", "Pet", ReferenceType.Schema)]
         [InlineData("abc#/components/schemas/HttpsValidationProblem", "abc", "HttpsValidationProblem", ReferenceType.Schema)]
-        public void SettingExternalReferenceV3ShouldSucceed(string expected, string externalResource, string id, ReferenceType? type)
+        public void SettingExternalReferenceV3ShouldSucceed(string expected, string externalResource, string id, ReferenceType type)
         {
             // Arrange & Act
             var reference = new OpenApiReference

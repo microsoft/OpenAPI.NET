@@ -200,7 +200,7 @@ namespace Microsoft.OpenApi.Interfaces
     public interface IDiagnostic { }
     public interface IMetadataContainer
     {
-        System.Collections.Generic.IDictionary<string, object> Metadata { get; set; }
+        System.Collections.Generic.IDictionary<string, object>? Metadata { get; set; }
     }
     public interface IOpenApiElement { }
     public interface IOpenApiExtensible : Microsoft.OpenApi.Interfaces.IOpenApiElement

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -92,8 +92,8 @@ namespace Microsoft.OpenApi.Models
                 {
                     return Id;
                 }
-                if (Id.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                    Id.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(Id) && Id is not null && Id.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                    !string.IsNullOrEmpty(Id) && Id is not null && Id.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
                     return Id;
                 }
