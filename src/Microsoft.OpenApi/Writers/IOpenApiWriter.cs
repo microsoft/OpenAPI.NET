@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the property name.
         /// </summary>
-        void WritePropertyName(string? name);
+        void WritePropertyName(string name);
 
         /// <summary>
         /// Write the string value.

@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Reader.V2
             };
         }
 
-        private static void ProcessIn(OpenApiParameter o, ParseNode n, OpenApiDocument? hostDocument)
+        private static void ProcessIn(OpenApiParameter o, ParseNode n, OpenApiDocument hostDocument)
         {
             var value = n.GetScalarValue();
             switch (value)
@@ -257,12 +257,12 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        public static IOpenApiParameter? LoadParameter(ParseNode node, OpenApiDocument? hostDocument)
+        public static IOpenApiParameter? LoadParameter(ParseNode node, OpenApiDocument hostDocument)
         {
             return LoadParameter(node, false, hostDocument);
         }
 
-        public static IOpenApiParameter? LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument? hostDocument)
+        public static IOpenApiParameter? LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
         {
             // Reset the local variables every time this method is called.
             node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);

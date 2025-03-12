@@ -330,7 +330,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="IOpenApiExtensible"/>
         /// </summary>
-        public virtual void Visit(IOpenApiExtensible? openApiExtensible)
+        public virtual void Visit(IOpenApiExtensible openApiExtensible)
         {
         }
 

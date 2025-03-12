@@ -24,8 +24,8 @@ namespace Microsoft.OpenApi.Reader.V2
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap,
-            List<string>? requiredFields = null, 
-            OpenApiDocument? doc = null)
+            OpenApiDocument doc,
+            List<string>? requiredFields = null)
         {
             if (mapNode == null)
             {

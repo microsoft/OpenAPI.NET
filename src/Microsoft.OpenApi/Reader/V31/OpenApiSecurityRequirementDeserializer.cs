@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Reader.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument? hostDocument)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("security");
 

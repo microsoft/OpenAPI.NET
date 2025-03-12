@@ -40,11 +40,6 @@ namespace Microsoft.OpenApi.Validations
         public IEnumerable<OpenApiValidatorWarning> Warnings { get => _warnings; }
 
         /// <summary>
-        /// The host document used for validation.
-        /// </summary>
-        public OpenApiDocument? HostDocument { get; set; }
-
-        /// <summary>
         /// Register an error with the validation context.
         /// </summary>
         /// <param name="error">Error to register.</param>
@@ -91,7 +86,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiResponses response) => Validate(response);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiExternalDocs? externalDocs) => Validate(externalDocs);
+        public override void Visit(OpenApiExternalDocs externalDocs) => Validate(externalDocs);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiLicense license) => Validate(license);
@@ -118,7 +113,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IOpenApiCallback callback) => Validate(callback);
 
         /// <inheritdoc/>
-        public override void Visit(IOpenApiExtensible? openApiExtensible) => Validate(openApiExtensible);
+        public override void Visit(IOpenApiExtensible openApiExtensible) => Validate(openApiExtensible);
 
         /// <inheritdoc/>
         public override void Visit(IOpenApiExtension openApiExtension) => Validate(openApiExtension, openApiExtension.GetType());

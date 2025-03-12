@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument? hostDocument)
+        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument)
         {
             // Reset these temp storage parameters for each operation.
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
@@ -149,13 +149,13 @@ namespace Microsoft.OpenApi.Reader.V2
             return operation;
         }
 
-        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument? hostDocument)
+        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("Responses");
 
             var domainObject = new OpenApiResponses();
 
-            ParseMap(mapNode, domainObject, _responsesFixedFields, _responsesPatternFields, doc:hostDocument);
+            ParseMap(mapNode, domainObject, _responsesFixedFields, _responsesPatternFields, doc: hostDocument);
 
             return domainObject;
         }

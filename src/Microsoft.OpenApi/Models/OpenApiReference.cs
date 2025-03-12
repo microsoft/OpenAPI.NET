@@ -210,7 +210,7 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            if (Type == ReferenceType.SecurityScheme)
+            if (Type == ReferenceType.SecurityScheme && !string.IsNullOrEmpty(ReferenceV2) && ReferenceV2 is not null)
             {
                 // Write the string as property name
                 writer.WritePropertyName(ReferenceV2);

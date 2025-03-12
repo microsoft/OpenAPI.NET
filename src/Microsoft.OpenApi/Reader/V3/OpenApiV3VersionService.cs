@@ -88,36 +88,6 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             return null;
-        }
-
-        private OpenApiReference ParseLocalReference(string localReference)
-        {
-            if (string.IsNullOrWhiteSpace(localReference))
-            {
-                throw new ArgumentException(string.Format(SRResource.ArgumentNullOrWhiteSpace, nameof(localReference)));
-            }
-
-            var segments = localReference.Split('/');
-
-            if (segments.Length == 4 && segments[1] == "components") // /components/{type}/pet
-            {
-                segments[2].TryGetEnumFromDisplayName<ReferenceType>(out var referenceType);
-                var refId = segments[3];
-                if (segments[2] == "pathItems")
-                {
-                    refId = "/" + segments[3];
-                }
-
-                var parsedReference = new OpenApiReference
-                {
-                    Type = referenceType,
-                    Id = refId
-                };
-
-                return parsedReference;
-            }
-
-            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, localReference));
-        }
+        }        
     }
 }

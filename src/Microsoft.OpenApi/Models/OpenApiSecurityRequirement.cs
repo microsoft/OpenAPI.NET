@@ -37,7 +37,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (w, s) => w.WritePropertyName(s.Reference?.ReferenceV3));
+            SerializeInternal(writer, (w, s) =>
+            {
+                if(!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                {
+                    w.WritePropertyName(s.Reference.ReferenceV3);
+                }
+            });
         }
 
         /// <summary>
@@ -45,7 +51,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (w, s) => w.WritePropertyName(s.Reference?.ReferenceV3));
+            SerializeInternal(writer, (w, s) =>
+            {
+                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                {
+                    w.WritePropertyName(s.Reference.ReferenceV3);
+                }
+            });
         }
 
         /// <summary>

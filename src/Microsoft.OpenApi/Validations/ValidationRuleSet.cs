@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations
 
         private static ValidationRuleSet? _defaultRuleSet;
 
-        private readonly List<ValidationRule>? _emptyRules = new();
+        private readonly List<ValidationRule> _emptyRules = new();
 
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         /// <param name="type">The type that is to be validated</param>
         /// <returns>Either the rules related to the type, or an empty list.</returns>
-        public IList<ValidationRule>? FindRules(Type type)
+        public IList<ValidationRule> FindRules(Type type)
         {
             _rulesDictionary.TryGetValue(type, out var results);
             return results ?? _emptyRules;
@@ -62,10 +62,7 @@ namespace Microsoft.OpenApi.Validations
         public static ValidationRuleSet GetDefaultRuleSet()
         {
             // Reflection can be an expensive operation, so we cache the default rule set that has already been built.
-            if (_defaultRuleSet == null)
-            {
-                _defaultRuleSet = BuildDefaultRuleSet();
-            }
+            _defaultRuleSet ??= BuildDefaultRuleSet();
 
             // We create a new instance of ValidationRuleSet per call as a safeguard
             // against unintentional modification of the private _defaultRuleSet.

@@ -54,13 +54,13 @@ namespace Microsoft.OpenApi.Reader.V2
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        public static OpenApiInfo LoadInfo(ParseNode node, OpenApiDocument? hostDocument)
+        public static OpenApiInfo LoadInfo(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode("Info");
 
             var info = new OpenApiInfo();
 
-            ParseMap(mapNode, info, _infoFixedFields, _infoPatternFields);
+            ParseMap(mapNode, info, _infoFixedFields, _infoPatternFields, doc: hostDocument);
 
             return info;
         }

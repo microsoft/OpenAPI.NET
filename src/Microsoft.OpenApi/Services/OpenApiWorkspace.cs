@@ -248,7 +248,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="value"></param>
         public void AddDocumentId(string? key, Uri? value)
         {
-            if (key is not null && value is not null && !_documentsIdRegistry.ContainsKey(key))
+            if (!string.IsNullOrEmpty(key) && key is not null && value is not null && !_documentsIdRegistry.ContainsKey(key))
             {
                 _documentsIdRegistry[key] = value;
             }

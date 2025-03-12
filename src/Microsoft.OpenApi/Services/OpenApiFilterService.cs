@@ -80,8 +80,8 @@ namespace Microsoft.OpenApi.Services
                 },
 
                 Components = components,
-                Security = source?.Security,
-                Servers = source?.Servers
+                Security = source.Security,
+                Servers = source.Servers
             };
 
             var results = FindOperations(source, predicate);

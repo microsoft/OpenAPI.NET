@@ -22,9 +22,9 @@ namespace Microsoft.OpenApi.Reader.V31
         private static void ParseMap<T>(
             MapNode? mapNode,
             T domainObject,
-            FixedFieldMap<T> fixedFieldMap,
+            FixedFieldMap<T> fixedFieldMap,            
             PatternFieldMap<T> patternFieldMap, 
-            OpenApiDocument? doc = null)
+            OpenApiDocument doc)
         {
             if (mapNode == null)
             {

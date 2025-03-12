@@ -556,8 +556,11 @@ namespace Microsoft.OpenApi.Services
                 Walk(OpenApiConstants.Parameters, () => Walk(pathItem.Parameters));
                 Walk(pathItem.Operations);
             }
-            _visitor.Visit(pathItem as IOpenApiExtensible);
 
+            if (pathItem is IOpenApiExtensible extensiblePathItem)
+            {
+                _visitor.Visit(extensiblePathItem);
+            }
             _pathItemLoop.Pop();
          }
 

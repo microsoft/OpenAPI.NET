@@ -1614,7 +1614,7 @@ namespace Microsoft.OpenApi.Services
         public string PathString { get; }
         public virtual void Enter(string segment) { }
         public virtual void Exit() { }
-        public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible? openApiExtensible) { }
+        public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible openApiExtensible) { }
         public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension openApiExtension) { }
         public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiReferenceHolder referenceHolder) { }
         public virtual void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback callback) { }
@@ -1709,11 +1709,10 @@ namespace Microsoft.OpenApi.Validations
     {
         public OpenApiValidator(Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.OpenApiValidatorError> Errors { get; }
-        public Microsoft.OpenApi.Models.OpenApiDocument? HostDocument { get; set; }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.OpenApiValidatorWarning> Warnings { get; }
         public void AddError(Microsoft.OpenApi.Validations.OpenApiValidatorError error) { }
         public void AddWarning(Microsoft.OpenApi.Validations.OpenApiValidatorWarning warning) { }
-        public override void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible? openApiExtensible) { }
+        public override void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible openApiExtensible) { }
         public override void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension openApiExtension) { }
         public override void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback callback) { }
         public override void Visit(Microsoft.OpenApi.Models.Interfaces.IOpenApiExample example) { }
@@ -1729,7 +1728,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(Microsoft.OpenApi.Models.OpenApiContact contact) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiEncoding encoding) { }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiExternalDocs? externalDocs) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiExternalDocs externalDocs) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiInfo info) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiLicense license) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiMediaType mediaType) { }
@@ -1782,7 +1781,7 @@ namespace Microsoft.OpenApi.Validations
         public void Clear() { }
         public bool Contains(System.Type key, Microsoft.OpenApi.Validations.ValidationRule rule) { }
         public bool ContainsKey(System.Type key) { }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule>? FindRules(System.Type type) { }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> FindRules(System.Type type) { }
         public System.Collections.Generic.IEnumerator<Microsoft.OpenApi.Validations.ValidationRule> GetEnumerator() { }
         public bool Remove(Microsoft.OpenApi.Validations.ValidationRule rule) { }
         public bool Remove(System.Type key) { }
@@ -1908,7 +1907,7 @@ namespace Microsoft.OpenApi.Writers
         void WriteEndArray();
         void WriteEndObject();
         void WriteNull();
-        void WritePropertyName(string? name);
+        void WritePropertyName(string name);
         void WriteRaw(string value);
         void WriteStartArray();
         void WriteStartObject();

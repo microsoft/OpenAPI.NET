@@ -233,7 +233,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var openApiNode = rootNode.GetMap();
 
-            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields);
+            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, doc: openApiDoc);
 
             if (openApiDoc.Paths != null)
             {
