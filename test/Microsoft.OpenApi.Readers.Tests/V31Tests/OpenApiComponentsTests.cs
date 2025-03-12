@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
-    public class OpenApiCompoentsTests
+    public class OpenApiComponentsTests
     {
         [Theory]
         [InlineData("./FirstLevel/SecondLevel/ThridLevel/File.json#/components/schemas/ExternalRelativePathModel", "ExternalRelativePathModel", "./FirstLevel/SecondLevel/ThridLevel/File.json")]
