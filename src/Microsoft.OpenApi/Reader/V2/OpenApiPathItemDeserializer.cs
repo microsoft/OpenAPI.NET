@@ -25,7 +25,11 @@ namespace Microsoft.OpenApi.Reader.V2
             {"delete", (o, n, t) => o.AddOperation(HttpMethod.Delete, LoadOperation(n, t))},
             {"options", (o, n, t) => o.AddOperation(HttpMethod.Options, LoadOperation(n, t))},
             {"head", (o, n, t) => o.AddOperation(HttpMethod.Head, LoadOperation(n, t))},
+#if NETSTANDARD2_1_OR_GREATER
+            {"patch", (o, n, t) => o.AddOperation(HttpMethod.Patch, LoadOperation(n, t))},
+#else
             {"patch", (o, n, t) => o.AddOperation(new HttpMethod("PATCH"), LoadOperation(n, t))},
+#endif
             {
                 "parameters",
                 LoadPathParameters
@@ -63,7 +67,13 @@ namespace Microsoft.OpenApi.Reader.V2
                 var requestBody = CreateRequestBody(node.Context, bodyParameter);
                 foreach (var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
                 {
-                    if (opPair.Key == HttpMethod.Post || opPair.Key == HttpMethod.Put || opPair.Key == new HttpMethod("PATCH"))
+                    if (opPair.Key == HttpMethod.Post || opPair.Key == HttpMethod.Put
+#if NETSTANDARD2_1_OR_GREATER
+            || opPair.Key == HttpMethod.Patch
+#else
+                        || opPair.Key == new HttpMethod("PATCH")
+#endif
+                       )
                     {
                         opPair.Value.RequestBody = requestBody;
                     }
@@ -77,13 +87,20 @@ namespace Microsoft.OpenApi.Reader.V2
                     var requestBody = CreateFormBody(node.Context, formParameters);
                     foreach (var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
                     {
-                        if (opPair.Key == HttpMethod.Post || opPair.Key == HttpMethod.Put || opPair.Key == new HttpMethod("PATCH"))
+                        if (opPair.Key == HttpMethod.Post || opPair.Key == HttpMethod.Put
+#if NETSTANDARD2_1_OR_GREATER
+                || opPair.Key == HttpMethod.Patch
+#else
+                            || opPair.Key == new HttpMethod("PATCH")
+#endif
+                           )
                         {
                             opPair.Value.RequestBody = requestBody;
                         }
                     }
                 }
             }
+
         }
     }
 }

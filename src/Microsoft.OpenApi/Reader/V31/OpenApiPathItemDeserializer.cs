@@ -35,7 +35,11 @@ namespace Microsoft.OpenApi.Reader.V31
             {"delete", (o, n, t) => o.AddOperation(HttpMethod.Delete, LoadOperation(n, t))},
             {"options", (o, n, t) => o.AddOperation(HttpMethod.Options, LoadOperation(n, t))},
             {"head", (o, n, t) => o.AddOperation(HttpMethod.Head, LoadOperation(n, t))},
+#if NETSTANDARD2_1_OR_GREATER
+            {"patch", (o, n, t) => o.AddOperation(HttpMethod.Patch, LoadOperation(n, t))},
+#else
             {"patch", (o, n, t) => o.AddOperation(new HttpMethod("PATCH"), LoadOperation(n, t))},
+#endif
             {"trace", (o, n, t) => o.AddOperation(HttpMethod.Trace, LoadOperation(n, t))},
             {"servers", (o, n, t) => o.Servers = n.CreateList(LoadServer, t)},
             {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)}
