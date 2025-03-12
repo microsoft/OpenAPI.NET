@@ -55,9 +55,13 @@ namespace Microsoft.OpenApi.Reader.V2
             return OpenApiV2Deserializer.LoadOpenApi(rootNode);
         }
 
-        public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
+        public T? LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
         {
-            return (T)_loaders[typeof(T)](node, doc)!;
+            if (_loaders.TryGetValue(typeof(T), out var loader) && loader(node, doc) is T result)
+            {
+                return result;
+            }
+            return default;
         }
 
         /// <inheritdoc />

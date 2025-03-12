@@ -201,10 +201,10 @@ namespace Microsoft.OpenApi.Reader.V2
 #if NETSTANDARD2_1_OR_GREATER
             if (!String.IsNullOrEmpty(host) && host.Contains(':', StringComparison.OrdinalIgnoreCase))
 #else
-            if (!String.IsNullOrEmpty(host) && host.Contains(':'))
+            if (!string.IsNullOrEmpty(host) && host is not null && host.Contains(':'))
 #endif
             {
-                var pieces = host?.Split(':');
+                var pieces = host.Split(':');
                 if (pieces is not null)
                 {
                     host = pieces[0];

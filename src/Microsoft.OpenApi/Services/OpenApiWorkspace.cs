@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Services
                 IOpenApiExample => baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + id,
                 IOpenApiHeader => baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + id,
                 IOpenApiSecurityScheme => baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + id,
-                _ => throw new ArgumentException($"Invalid component type {componentToRegister?.GetType().Name}"),
+                _ => throw new ArgumentException($"Invalid component type {componentToRegister!.GetType().Name}"),
             };
 
             return RegisterComponent(location, componentToRegister);

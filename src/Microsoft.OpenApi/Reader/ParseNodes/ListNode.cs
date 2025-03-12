@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return list;
         }
 
-        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
+        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument openApiDocument)
         {
             if (_nodeList == null)
             {

@@ -298,9 +298,9 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var isBodyOrFormData = false;
             var paramData = node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
-            if (paramData is not null)
+            if (paramData is bool boolValue)
             {
-                isBodyOrFormData = (bool)paramData;
+                isBodyOrFormData = boolValue;
             }
 
             if (isBodyOrFormData && !loadRequestBody)

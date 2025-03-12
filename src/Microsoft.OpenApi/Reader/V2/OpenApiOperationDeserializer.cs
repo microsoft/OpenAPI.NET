@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Reader.V2
                             }
                             return schema;
                         }),
-                    Required = new HashSet<string>(formParameters.Where(static p => p.Required).Select(static p => p.Name!).Where(static name => name != null), StringComparer.Ordinal)
+                    Required = new HashSet<string>(formParameters.Where(static p => p.Required && p.Name is not null).Select(static p => p.Name!), StringComparer.Ordinal)
                 }
             };
 
