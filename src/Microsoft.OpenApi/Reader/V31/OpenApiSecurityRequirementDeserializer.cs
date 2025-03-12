@@ -26,8 +26,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 var scheme = LoadSecuritySchemeByReference(property.Name, hostDocument);
 
                 var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument)
-                                    .Where(scope => scope != null)
-                                    .Cast<string>()
+                                    .OfType<string>()
                                     .ToList();
                 if (scheme != null)
                 {
