@@ -55,8 +55,7 @@ namespace Microsoft.OpenApi.Reader.V2
             node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);
 
             pathItem.Parameters = node.CreateList(LoadParameter, hostDocument)
-                                     .Where(p => p != null)
-                                     .Cast<IOpenApiParameter>()
+                                     .OfType<IOpenApiParameter>()
                                      .ToList();
 
             // Build request body based on information determined while parsing OpenApiOperation
