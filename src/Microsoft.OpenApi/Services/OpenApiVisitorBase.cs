@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -127,7 +128,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the operations.
         /// </summary>
-        public virtual void Visit(IDictionary<OperationType, OpenApiOperation> operations)
+        public virtual void Visit(IDictionary<HttpMethod, OpenApiOperation> operations)
         {
         }
 

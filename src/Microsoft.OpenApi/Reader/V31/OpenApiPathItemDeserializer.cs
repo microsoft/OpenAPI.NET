@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -28,14 +29,14 @@ namespace Microsoft.OpenApi.Reader.V31
                     o.Description = n.GetScalarValue();
                 }
             },
-            {"get", (o, n, t) => o.AddOperation(OperationType.Get, LoadOperation(n, t))},
-            {"put", (o, n, t) => o.AddOperation(OperationType.Put, LoadOperation(n, t))},
-            {"post", (o, n, t) => o.AddOperation(OperationType.Post, LoadOperation(n, t))},
-            {"delete", (o, n, t) => o.AddOperation(OperationType.Delete, LoadOperation(n, t))},
-            {"options", (o, n, t) => o.AddOperation(OperationType.Options, LoadOperation(n, t))},
-            {"head", (o, n, t) => o.AddOperation(OperationType.Head, LoadOperation(n, t))},
-            {"patch", (o, n, t) => o.AddOperation(OperationType.Patch, LoadOperation(n, t))},
-            {"trace", (o, n, t) => o.AddOperation(OperationType.Trace, LoadOperation(n, t))},
+            {"get", (o, n, t) => o.AddOperation(HttpMethod.Get, LoadOperation(n, t))},
+            {"put", (o, n, t) => o.AddOperation(HttpMethod.Put, LoadOperation(n, t))},
+            {"post", (o, n, t) => o.AddOperation(HttpMethod.Post, LoadOperation(n, t))},
+            {"delete", (o, n, t) => o.AddOperation(HttpMethod.Delete, LoadOperation(n, t))},
+            {"options", (o, n, t) => o.AddOperation(HttpMethod.Options, LoadOperation(n, t))},
+            {"head", (o, n, t) => o.AddOperation(HttpMethod.Head, LoadOperation(n, t))},
+            {"patch", (o, n, t) => o.AddOperation(new HttpMethod("PATCH"), LoadOperation(n, t))},
+            {"trace", (o, n, t) => o.AddOperation(HttpMethod.Trace, LoadOperation(n, t))},
             {"servers", (o, n, t) => o.Servers = n.CreateList(LoadServer, t)},
             {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)}
         };

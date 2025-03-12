@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -25,13 +26,13 @@ namespace Microsoft.OpenApi.Services
         /// <param name="requestUrls">A dictionary of requests from a postman collection.</param>
         /// <param name="source">The input OpenAPI document.</param>
         /// <returns>A predicate.</returns>
-        public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(
+        public static Func<string, HttpMethod, OpenApiOperation, bool> CreatePredicate(
                 string operationIds = null,
                 string tags = null,
                 Dictionary<string, List<string>> requestUrls = null,
                 OpenApiDocument source = null)
         {
-            Func<string, OperationType?, OpenApiOperation, bool> predicate;
+            Func<string, HttpMethod, OpenApiOperation, bool> predicate;
             ValidateFilters(requestUrls, operationIds, tags);
             if (operationIds != null)
             {
@@ -59,7 +60,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="source">The target <see cref="OpenApiDocument"/>.</param>
         /// <param name="predicate">A predicate function.</param>
         /// <returns>A partial OpenAPI document.</returns>
-        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, Func<string, OperationType?, OpenApiOperation, bool> predicate)
+        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, Func<string, HttpMethod, OpenApiOperation, bool> predicate)
         {
             // Fetch and copy title, graphVersion and server info from OpenApiDoc
             var components = source.Components is null 
@@ -107,7 +108,7 @@ namespace Microsoft.OpenApi.Services
 
                 if (result.CurrentKeys.Operation != null)
                 {
-                    pathItem.Operations.Add((OperationType)result.CurrentKeys.Operation, result.Operation);
+                    pathItem.Operations.Add((HttpMethod)result.CurrentKeys.Operation, result.Operation);
 
                     if (result.Parameters?.Any() ?? false)
                     {
@@ -147,7 +148,7 @@ namespace Microsoft.OpenApi.Services
             return rootNode;
         }
 
-        private static IDictionary<OperationType, OpenApiOperation> GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
+        private static IDictionary<HttpMethod, OpenApiOperation> GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
         {
             if (relativeUrl.Equals("/", StringComparison.Ordinal) && rootNode.HasOperations(label))
             {
@@ -156,7 +157,7 @@ namespace Microsoft.OpenApi.Services
 
             var urlSegments = relativeUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            IDictionary<OperationType, OpenApiOperation> operations = null;
+            IDictionary<HttpMethod, OpenApiOperation> operations = null;
 
             var targetChild = rootNode;
 
@@ -224,7 +225,7 @@ namespace Microsoft.OpenApi.Services
             return operations;
         }
 
-        private static IList<SearchResult> FindOperations(OpenApiDocument sourceDocument, Func<string, OperationType?, OpenApiOperation, bool> predicate)
+        private static IList<SearchResult> FindOperations(OpenApiDocument sourceDocument, Func<string, HttpMethod, OpenApiOperation, bool> predicate)
         {
             var search = new OperationSearch(predicate);
             var walker = new OpenApiWalker(search);
@@ -344,7 +345,7 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
-        private static Func<string, OperationType?, OpenApiOperation, bool> GetOperationIdsPredicate(string operationIds)
+        private static Func<string, HttpMethod, OpenApiOperation, bool> GetOperationIdsPredicate(string operationIds)
         {
             if (operationIds == "*")
             {
@@ -357,7 +358,7 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
-        private static Func<string, OperationType?, OpenApiOperation, bool> GetTagsPredicate(string tags)
+        private static Func<string, HttpMethod, OpenApiOperation, bool> GetTagsPredicate(string tags)
         {
             var tagsArray = tags.Split(',');
             if (tagsArray.Length == 1)
@@ -371,7 +372,7 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
-        private static Func<string, OperationType?, OpenApiOperation, bool> GetRequestUrlsPredicate(Dictionary<string, List<string>> requestUrls, OpenApiDocument source)
+        private static Func<string, HttpMethod, OpenApiOperation, bool> GetRequestUrlsPredicate(Dictionary<string, List<string>> requestUrls, OpenApiDocument source)
         {
             var operationTypes = new List<string>();
             if (source != null)
@@ -404,7 +405,7 @@ namespace Microsoft.OpenApi.Services
             return (path, operationType, _) => operationTypes.Contains(operationType + path);
         }
 
-        private static List<string> GetOperationTypes(IDictionary<OperationType, OpenApiOperation> openApiOperations, List<string> url, string path)
+        private static List<string> GetOperationTypes(IDictionary<HttpMethod, OpenApiOperation> openApiOperations, List<string> url, string path)
         {
             // Add the available ops if they are in the postman collection. See path.Value
             return openApiOperations.Where(ops => url.Contains(ops.Key.ToString().ToUpper()))

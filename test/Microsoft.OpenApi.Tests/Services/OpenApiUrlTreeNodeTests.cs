@@ -1,9 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -20,24 +21,24 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 ["/"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new(),
+                        [HttpMethod.Get] = new(),
                     }
                 },
                 ["/houses"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new(),
-                        [OperationType.Post] = new()
+                        [HttpMethod.Get] = new(),
+                        [HttpMethod.Post] = new()
                     }
                 },
                 ["/cars"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Post] = new()
+                        [HttpMethod.Post] = new()
                     }
                 }
             }
@@ -148,10 +149,10 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var pathItem1 = new OpenApiPathItem
             {
-                Operations = new Dictionary<OperationType, OpenApiOperation>
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
                     {
-                        OperationType.Get, new OpenApiOperation
+                        HttpMethod.Get, new OpenApiOperation
                         {
                             OperationId = "motorcycles.ListMotorcycle",
                             Responses = new()
@@ -173,10 +174,10 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var pathItem2 = new OpenApiPathItem
             {
-                Operations = new Dictionary<OperationType, OpenApiOperation>
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
                     {
-                        OperationType.Get, new OpenApiOperation
+                        HttpMethod.Get, new OpenApiOperation
                         {
                             OperationId = "computers.ListComputer",
                             Responses = new()
@@ -240,10 +241,10 @@ namespace Microsoft.OpenApi.Tests.Services
                     ["/houses"] = new OpenApiPathItem(),
                     ["/cars/{car-id}"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "cars.GetCar",
                                     Responses = new()
@@ -268,10 +269,10 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     ["/cars/{car-id}"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "cars.GetCar",
                                     Responses = new()
@@ -286,7 +287,7 @@ namespace Microsoft.OpenApi.Tests.Services
                                 }
                             },
                             {
-                                OperationType.Put, new OpenApiOperation
+                                HttpMethod.Put, new OpenApiOperation
                                 {
                                     OperationId = "cars.UpdateCar",
                                     Responses = new()

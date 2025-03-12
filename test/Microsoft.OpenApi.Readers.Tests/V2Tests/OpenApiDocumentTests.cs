@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -143,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Operations =
                         {
-                            [OperationType.Get] = new()
+                            [HttpMethod.Get] = new()
                             {
                                 Responses =
                                 {
@@ -167,7 +168,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     }
                                 }
                             },
-                            [OperationType.Post] = new()
+                            [HttpMethod.Post] = new()
                             {
                                 Responses =
                                 {
@@ -189,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     }
                                 }
                             },
-                            [OperationType.Patch] = new()
+                            [HttpMethod.Patch] = new()
                             {
                                 Responses =
                                 {
@@ -242,7 +243,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             };
             var errorSchema = new OpenApiSchemaReference("Error", result.Document);
 
-            var responses = result.Document.Paths["/items"].Operations[OperationType.Get].Responses;
+            var responses = result.Document.Paths["/items"].Operations[HttpMethod.Get].Responses;
             foreach (var response in responses)
             {
                 var targetSchema = response.Key == "200" ? (IOpenApiSchema)successSchema : errorSchema;
@@ -284,7 +285,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             settings.AddYamlReader();
 
             var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
-            var mediaType = actual.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
+            var mediaType = actual.Document.Paths["/example"].Operations[HttpMethod.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
         }
 

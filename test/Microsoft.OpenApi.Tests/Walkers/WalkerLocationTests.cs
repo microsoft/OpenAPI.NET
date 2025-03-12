@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -68,9 +69,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var doc = new OpenApiDocument();
             doc.Paths.Add("/test", new OpenApiPathItem()
             {
-                Operations = new Dictionary<OperationType, OpenApiOperation>
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
-                    [OperationType.Get] = new()
+                    [HttpMethod.Get] = new()
                     {
                         Responses = new()
                         {
@@ -110,7 +111,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             }, locator.Locations);
 
-            Assert.Equivalent(new List<string> { "/test", "Get", "200", "application/json" }, locator.Keys);
+            Assert.Equivalent(new List<string> { "/test", "GET", "200", "application/json" }, locator.Keys);
         }
 
         [Fact]
@@ -177,9 +178,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new()
+                            [HttpMethod.Get] = new()
                             {
                                 Responses = new()
                                 {
