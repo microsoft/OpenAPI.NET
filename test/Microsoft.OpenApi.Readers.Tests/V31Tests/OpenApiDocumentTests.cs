@@ -574,5 +574,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             Assert.Throws<ArgumentException>(() => OpenApiDocument.Load(new MemoryStream()));
         }
+
+        [Fact]
+        public async Task ValidateReferencedExampleInSchemaWorks()
+        {
+            // Arrange && Act
+            var path = Path.Combine(SampleFolderPath, "docWithReferencedExampleInSchemaWorks.yaml");
+            var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
+            var actualSchemaExample = result.Document.Components.Schemas["DiffCreatedEvent"].Properties["updatedAt"].Example;
+            var targetSchemaExample = result.Document.Components.Schemas["Timestamp"].Example;
+
+            // Assert
+            Assert.Equal(targetSchemaExample, actualSchemaExample);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Empty(result.Diagnostic.Warnings);            
+        }
     }
 }
