@@ -28,8 +28,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     property.Name);
 
                 var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument)
-                    .Where(scope => scope != null)
-                    .Cast<string>()
+                    .OfType<string>()
                     .ToList();
 
                 if (scheme != null)
