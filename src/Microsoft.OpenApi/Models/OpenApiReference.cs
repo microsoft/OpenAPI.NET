@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -291,6 +293,26 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(currentDocument);
             hostDocument ??= currentDocument;
+        }
+        #nullable enable
+        private static string? GetPropertyValueFromNode(JsonObject jsonObject, string key) =>
+        jsonObject.TryGetPropertyValue(key, out var valueNode) && valueNode is JsonValue valueCast && valueCast.TryGetValue<string>(out var strValue) ? strValue : null;
+        #nullable restore
+        internal void SetSummaryAndDescriptionFromMapNode(MapNode mapNode)
+        {
+            var (description, summary) = mapNode.JsonNode switch {
+                JsonObject jsonObject => (GetPropertyValueFromNode(jsonObject, OpenApiConstants.Description),
+                                            GetPropertyValueFromNode(jsonObject, OpenApiConstants.Summary)),
+                _ => (null, null)
+            };
+            if (!string.IsNullOrEmpty(description))
+            {
+                Description = description;
+            }
+            if (!string.IsNullOrEmpty(summary))
+            {
+                Summary = summary;
+            }
         }
     }
 }

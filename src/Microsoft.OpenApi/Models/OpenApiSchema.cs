@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiSchema
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema
     {
         /// <inheritdoc />
         public string Title { get; set; }
