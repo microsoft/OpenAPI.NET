@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Gets the recursively resolved target object.
         /// </summary>
-        T RecursiveTarget { get; }
+        T? RecursiveTarget { get; }
         
         /// <summary>
         /// Copy the reference as a target element with overrides.

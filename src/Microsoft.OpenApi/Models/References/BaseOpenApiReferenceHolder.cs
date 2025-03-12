@@ -20,7 +20,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         }
     }
     /// <inheritdoc/>
-    public T RecursiveTarget
+    public T? RecursiveTarget
     {
         get
         {

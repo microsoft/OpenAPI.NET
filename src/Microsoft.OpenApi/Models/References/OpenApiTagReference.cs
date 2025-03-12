@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <summary>
         /// Resolved target of the reference.
         /// </summary>
-        public override IOpenApiTag Target
+        public override IOpenApiTag? Target
         {
             get
             {
