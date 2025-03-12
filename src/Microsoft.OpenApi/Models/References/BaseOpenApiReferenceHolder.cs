@@ -70,7 +70,8 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <inheritdoc/>
     public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
-        if (!writer.GetSettings().ShouldInlineReference(Reference))
+        if (!writer.GetSettings().ShouldInlineReference(Reference) 
+            || Reference.Type == ReferenceType.Tag) // tags are held as references need to drop in.
         {
             Reference.SerializeAsV3(writer);
         }

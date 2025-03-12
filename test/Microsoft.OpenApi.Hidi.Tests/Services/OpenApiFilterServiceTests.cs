@@ -1,13 +1,16 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
+using Microsoft.OpenApi.Writers;
 using Moq;
 using Xunit;
 
@@ -235,12 +238,14 @@ namespace Microsoft.OpenApi.Hidi.Tests
             using var stream = File.OpenRead(filePath);
             var settings = new OpenApiReaderSettings();
             settings.AddYamlReader();
-            var readResult = await OpenApiDocument.LoadAsync(stream, "yaml", settings);
-            var doc = readResult.Document;
-            if (doc == null)
-            {
-                throw new InvalidOperationException("Failed to load OpenApiDocument.");
-            }
+            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml", settings)).Document;
+            
+            // validated the tags are read as references
+            var openApiOperationTags = doc.Paths["/items"].Operations[OperationType.Get].Tags?.ToArray();
+            Assert.NotNull(openApiOperationTags);
+            Assert.Single(openApiOperationTags);
+            Assert.True(openApiOperationTags[0].UnresolvedReference);
+            
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
 
@@ -260,6 +265,26 @@ namespace Microsoft.OpenApi.Hidi.Tests
             Assert.Single(targetHeaders);
             Assert.NotNull(targetExamples);
             Assert.Single(targetExamples);
+            // validated the tags of the trimmed document are read as references
+            var trimmedOpenApiOperationTags = subsetOpenApiDocument.Paths["/items"].Operations[OperationType.Get].Tags?.ToArray();
+            Assert.NotNull(trimmedOpenApiOperationTags);
+            Assert.Single(trimmedOpenApiOperationTags);
+            Assert.True(trimmedOpenApiOperationTags[0].UnresolvedReference);
+            
+            // Finally try to write the trimmed document as v3 document
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter)
+            {
+                Settings = new OpenApiWriterSettings()
+                {
+                    InlineExternalReferences = true,
+                    InlineLocalReferences = true
+                }
+            };
+            subsetOpenApiDocument.SerializeAsV3(writer);
+            await writer.FlushAsync();
+            var result = outputStringWriter.ToString();
+            Assert.NotEmpty(result);
         }
 
         [Theory]

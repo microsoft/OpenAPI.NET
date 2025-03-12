@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Operation Object.
     /// </summary>
-    public class OpenApiOperation : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
+    public class OpenApiOperation : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
     {
         /// <summary>
         /// Default value for <see cref="Deprecated"/>.
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Annotations { get; set; }
+        public IDictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Models
             Security = operation.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
             Servers = operation.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;
             Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
-            Annotations = operation.Annotations != null ? new Dictionary<string, object>(operation.Annotations) : null;
+            Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
         }
 
         /// <summary>

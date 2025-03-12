@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Threading.Tasks;
@@ -15,6 +15,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData("#/components/schemas/Pet", ReferenceType.Schema, "Pet")]
         [InlineData("#/components/parameters/name", ReferenceType.Parameter, "name")]
         [InlineData("#/components/responses/200", ReferenceType.Response, "200")]
+        [InlineData("#/components/schemas/HttpValidationsProblem", ReferenceType.Schema, "HttpValidationsProblem")]
         public void SettingInternalReferenceForComponentsStyleReferenceShouldSucceed(
             string input,
             ReferenceType type,
@@ -43,7 +44,8 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData("Pet.json#/components/schemas/Pet", "Pet.json", "Pet", ReferenceType.Schema)]
         [InlineData("Pet.yaml#/components/schemas/Pet", "Pet.yaml", "Pet", ReferenceType.Schema)]
         [InlineData("abc#/components/schemas/Pet", "abc", "Pet", ReferenceType.Schema)]
-        public void SettingExternalReferenceV3ShouldSucceed(string expected, string externalResource, string id, ReferenceType type)
+        [InlineData("abc#/components/schemas/HttpsValidationProblem", "abc", "HttpsValidationProblem", ReferenceType.Schema)]
+        public void SettingExternalReferenceV3ShouldSucceed(string expected, string externalResource, string id, ReferenceType? type)
         {
             // Arrange & Act
             var reference = new OpenApiReference
@@ -98,6 +100,30 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("HttpValidationProblemDetails", "#/components/schemas/HttpValidationProblemDetails")]
+        [InlineData("http://example.com", "http://example.com")]
+        [InlineData("https://example.com", "https://example.com")]
+        public async Task SerializeHttpSchemaReferenceAsJsonV31Works(string id, string referenceV3)
+        {
+            // Arrange
+            var reference = new OpenApiReference { Type = ReferenceType.Schema, Id = id };
+            var expected =
+                $$"""
+                {
+                  "$ref": "{{referenceV3}}"
+                }
+                """;
+
+            // Act
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 

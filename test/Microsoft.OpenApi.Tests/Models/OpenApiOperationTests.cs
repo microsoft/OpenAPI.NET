@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "serverDescription"
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } },
+            Metadata = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } },
         };
 
         private static OpenApiOperation _advancedOperationWithTagsAndSecurity => new()
@@ -844,7 +844,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var baseOperation = new OpenApiOperation
             {
-                Annotations = new Dictionary<string, object>
+                Metadata = new Dictionary<string, object>
                 {
                     ["key1"] = "value1",
                     ["key2"] = 2
@@ -853,11 +853,11 @@ namespace Microsoft.OpenApi.Tests.Models
 
             var actualOperation = new OpenApiOperation(baseOperation);
 
-            Assert.Equal(baseOperation.Annotations["key1"], actualOperation.Annotations["key1"]);
+            Assert.Equal(baseOperation.Metadata["key1"], actualOperation.Metadata["key1"]);
 
-            baseOperation.Annotations["key1"] = "value2";
+            baseOperation.Metadata["key1"] = "value2";
 
-            Assert.NotEqual(baseOperation.Annotations["key1"], actualOperation.Annotations["key1"]);
+            Assert.NotEqual(baseOperation.Metadata["key1"], actualOperation.Metadata["key1"]);
         }
     }
 }
