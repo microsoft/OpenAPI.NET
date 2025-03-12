@@ -49,8 +49,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {
                     "parameters",
                     (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)
-                        .Where(p => p != null)
-                        .Cast<IOpenApiParameter>()
+                        .OfType<IOpenApiParameter>()
                         .ToList()
                 },
                 {
