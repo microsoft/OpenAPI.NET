@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiParameter
+    public class OpenApiParameter : IOpenApiExtensible, IOpenApiParameter
     {
         private bool? _explode;
         private ParameterStyle? _style;
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Models
                 // enum
                 // multipleOf
                 var targetSchema = Schema switch {
-                    OpenApiSchemaReference schemaReference => schemaReference.Target,
+                    OpenApiSchemaReference schemaReference => schemaReference.RecursiveTarget,
                     OpenApiSchema schema => schema,
                     _ => null,
                 };

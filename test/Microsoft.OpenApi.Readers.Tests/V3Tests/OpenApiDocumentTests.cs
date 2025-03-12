@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -1155,6 +1157,154 @@ paths: {}
             var warnings = result.Diagnostic.Warnings;
             Assert.False(warnings.Any());
         }
+        const string DoubleHopReferenceSerializedDoc =
+"""
+{
+  "components": {
+    "schemas": {
+      "Pet": {
+        "description": "A pet",
+        "properties": {
+          "id": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "PetReference": {
+        "$ref": "#/components/schemas/Pet",
+        "description": "A reference to a pet"
+      }
+    }
+  },
+  "info": {
+    "title": "Pet Store with double hop references",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.1",
+  "paths": {
+    "/pets": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetReference",
+                  "description": "A reference to a pet reference"
+                }
+              }
+            },
+            "description": "A list of pets"
+          }
+        },
+        "summary": "Returns all pets"
+      }
+    }
+  }
+}
+""";
+        [Fact]
+        public async Task ParsesDoubleHopReferences()
+        {
+            
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(DoubleHopReferenceSerializedDoc));
+            var (document, _) = await OpenApiDocument.LoadAsync(stream);
+            Assert.NotNull(document);
+
+            var petReferenceInResponse = Assert.IsType<OpenApiSchemaReference>(document.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema);
+            Assert.Equal("A reference to a pet reference", petReferenceInResponse.Description, StringComparer.OrdinalIgnoreCase);
+            var petReference = Assert.IsType<OpenApiSchemaReference>(petReferenceInResponse.Target);
+            Assert.Equal("A reference to a pet", petReference.Description, StringComparer.OrdinalIgnoreCase);
+            var petReferenceTarget = Assert.IsType<OpenApiSchema>(petReference.Target);
+            Assert.Equal("A pet", petReferenceTarget.Description, StringComparer.OrdinalIgnoreCase);
+            Assert.Equal(petReferenceTarget, petReferenceInResponse.RecursiveTarget);
+        }
+
+        [Fact]
+        public async Task SerializesDoubleHopeReferences()
+        {
+            var document = new OpenApiDocument()
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "Pet Store with double hop references",
+                    Version = "1.0.0"
+                }
+            };
+            var petSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Description = "A pet",
+                Properties =
+                {
+                    ["id"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Integer,
+                        Format = "int64"
+                    },
+                    ["name"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    },
+                    ["tag"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    }
+                }
+            };
+            document.AddComponent("Pet", petSchema);
+            var petSchemaReference = new OpenApiSchemaReference("Pet")
+            {
+                Description = "A reference to a pet"
+            };
+            document.AddComponent("PetReference", petSchemaReference);
+            document.Paths.Add("/pets", new OpenApiPathItem
+            {
+                Operations = new Dictionary<OperationType, OpenApiOperation>
+                {
+                    [OperationType.Get] = new OpenApiOperation
+                    {
+                        Summary = "Returns all pets",
+                        Responses =
+                        {
+                            ["200"] = new OpenApiResponse
+                            {
+                                Description = "A list of pets",
+                                Content =
+                                {
+                                    ["application/json"] = new OpenApiMediaType
+                                    {
+                                        Schema = new OpenApiSchemaReference("PetReference")
+                                        {
+                                            Description = "A reference to a pet reference"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            using var stringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(stringWriter);
+            document.SerializeAsV31(writer);
+            await writer.FlushAsync();
+
+            var serializedDoc = stringWriter.ToString();
+
+            Assert.True(JsonNode.DeepEquals(
+                JsonNode.Parse(serializedDoc),
+                JsonNode.Parse(DoubleHopReferenceSerializedDoc)));
+        }
 
         [Fact]
         public async Task ParseDocWithRefsUsingProxyReferencesSucceeds()
@@ -1249,6 +1399,7 @@ components:
             actualParamReference.Should().BeEquivalentTo(expectedParamReference, options => options
                 .Excluding(x => x.Reference)
                 .Excluding(x => x.Target)
+                .Excluding(x => x.RecursiveTarget)
                 .Excluding(x => x.Schema.Default.Parent)
                 .Excluding(x => x.Schema.Default.Options)
                 .IgnoringCyclicReferences());

@@ -8,14 +8,27 @@ namespace Microsoft.OpenApi.Models.References;
 /// </summary>
 /// <typeparam name="T">The concrete class implementation type for the model.</typeparam>
 /// <typeparam name="V">The interface type for the model.</typeparam>
-public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiSerializable
+public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiReferenceable, IOpenApiSerializable
 {
     /// <inheritdoc/>
-    public virtual T? Target
+    public virtual V? Target
     {
         get
         {
-            return Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
+            if (Reference.HostDocument is null) return default;
+            return Reference.HostDocument.ResolveReferenceTo<V>(Reference);
+        }
+    }
+    /// <inheritdoc/>
+    public T RecursiveTarget
+    {
+        get
+        {
+            return Target switch {
+                BaseOpenApiReferenceHolder<T, V> recursiveTarget => recursiveTarget.RecursiveTarget,
+                T concrete => concrete,
+                _ => null
+            };
         }
     }
 

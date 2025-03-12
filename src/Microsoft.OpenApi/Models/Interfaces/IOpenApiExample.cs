@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the example object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiExample : IOpenApiDescribedElement, IOpenApiSummarizedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiExample>
+public interface IOpenApiExample : IOpenApiDescribedElement, IOpenApiSummarizedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiExample>, IOpenApiReferenceable
 {
     /// <summary>
     /// Embedded literal example. The value field and externalValue field are mutually

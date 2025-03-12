@@ -475,16 +475,14 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
+        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : IOpenApiReferenceable
         {
-            if (reference.IsExternal)
+
+            if (ResolveReference(reference, reference.IsExternal) is T result)
             {
-                return ResolveReference(reference, true) as T;
+                return result;
             }
-            else
-            {
-                return ResolveReference(reference, false) as T;
-            }
+            return default;
         }
 
         /// <summary>
