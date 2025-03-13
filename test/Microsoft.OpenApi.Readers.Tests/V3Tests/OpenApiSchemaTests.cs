@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Reader.V3;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models.References;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -119,9 +120,9 @@ get:
                 new OpenApiPathItem
                 {
                     Summary = "externally referenced path item",
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation()
+                        [HttpMethod.Get] = new OpenApiOperation()
                         {
                             Responses = new OpenApiResponses
                             {

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OperationSearch : OpenApiVisitorBase
     {
-        private readonly Func<string, OperationType?, OpenApiOperation, bool> _predicate;
+        private readonly Func<string, HttpMethod, OpenApiOperation, bool> _predicate;
         private readonly List<SearchResult> _searchResults = new();
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace Microsoft.OpenApi.Services
         /// The OperationSearch constructor.
         /// </summary>
         /// <param name="predicate">A predicate function.</param>
-        public OperationSearch(Func<string, OperationType?, OpenApiOperation, bool> predicate)
+        public OperationSearch(Func<string, HttpMethod, OpenApiOperation, bool> predicate)
         {
             _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
         }
@@ -70,7 +71,7 @@ namespace Microsoft.OpenApi.Services
             base.Visit(parameters);
         }
 
-        private static CurrentKeys CopyCurrentKeys(CurrentKeys currentKeys, OperationType operationType)
+        private static CurrentKeys CopyCurrentKeys(CurrentKeys currentKeys, HttpMethod operationType)
         {
             return new()
             {

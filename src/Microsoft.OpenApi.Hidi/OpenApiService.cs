@@ -256,9 +256,9 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static Func<string, OperationType?, OpenApiOperation, bool>? FilterOpenApiDocument(string? filterByOperationIds, string? filterByTags, Dictionary<string, List<string>> requestUrls, OpenApiDocument document, ILogger logger)
+        private static Func<string, HttpMethod, OpenApiOperation, bool>? FilterOpenApiDocument(string? filterByOperationIds, string? filterByTags, Dictionary<string, List<string>> requestUrls, OpenApiDocument document, ILogger logger)
         {
-            Func<string, OperationType?, OpenApiOperation, bool>? predicate = null;
+            Func<string, HttpMethod, OpenApiOperation, bool>? predicate = null;
 
             using (logger.BeginScope("Create Filter"))
             {

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -24,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedOperation.yaml"), SettingsFixture.ReaderSettings);
 
-            var securityScheme = result.Document.Paths["/"].Operations[OperationType.Get].Security[0].Keys.First();
+            var securityScheme = result.Document.Paths["/"].Operations[HttpMethod.Get].Security[0].Keys.First();
             Assert.Equivalent(result.Document.Components.SecuritySchemes.First().Value, securityScheme);
         }
 
