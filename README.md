@@ -55,9 +55,9 @@ var document = new OpenApiDocument
     {
         ["/pets"] = new OpenApiPathItem
         {
-            Operations = new Dictionary<OperationType, OpenApiOperation>
+            Operations = new Dictionary<HttpMethod, OpenApiOperation>
             {
-                [OperationType.Get] = new OpenApiOperation
+                [HttpMethod.Get] = new OpenApiOperation
                 {
                     Description = "Returns all pets from the system that the user has access to",
                     Responses = new OpenApiResponses

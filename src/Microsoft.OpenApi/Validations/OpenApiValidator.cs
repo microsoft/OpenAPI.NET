@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -155,7 +156,7 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(OpenApiOperation operation) => Validate(operation);
         /// <inheritdoc/>
-        public override void Visit(IDictionary<OperationType, OpenApiOperation> operations) => Validate(operations, operations.GetType());
+        public override void Visit(IDictionary<HttpMethod, OpenApiOperation> operations) => Validate(operations, operations.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, IOpenApiHeader> headers) => Validate(headers, headers.GetType());
         /// <inheritdoc/>

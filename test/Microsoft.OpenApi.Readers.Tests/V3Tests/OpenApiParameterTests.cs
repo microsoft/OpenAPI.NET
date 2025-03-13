@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Reader.V3;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
+using System.Net.Http;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -330,9 +331,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",

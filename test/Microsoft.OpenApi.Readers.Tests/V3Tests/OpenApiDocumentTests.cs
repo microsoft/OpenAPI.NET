@@ -6,8 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -20,6 +24,8 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
+using Moq;
+using Moq.Protected;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -28,8 +34,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
-        private const string codacyApi = "https://api.codacy.com/api/api-docs/swagger.yaml";
-
         private static async Task<T> CloneAsync<T>(T element) where T : class, IOpenApiSerializable
         {
             using var stream = new MemoryStream();
@@ -298,9 +302,9 @@ paths: {}
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
@@ -383,7 +387,7 @@ paths: {}
                                     }
                                 }
                             },
-                            [OperationType.Post] = new OpenApiOperation
+                            [HttpMethod.Post] = new OpenApiOperation
                             {
                                 Description = "Creates a new pet in the store.  Duplicates are allowed",
                                 OperationId = "addPet",
@@ -440,9 +444,9 @@ paths: {}
                     },
                     ["/pets/{id}"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Description =
                                     "Returns a user based on a single ID, if the user does not have access to the pet",
@@ -503,7 +507,7 @@ paths: {}
                                     }
                                 }
                             },
-                            [OperationType.Delete] = new OpenApiOperation
+                            [HttpMethod.Delete] = new OpenApiOperation
                             {
                                 Description = "deletes a single pet based on the ID supplied",
                                 OperationId = "deletePet",
@@ -717,9 +721,9 @@ paths: {}
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Tags = new HashSet<OpenApiTagReference>
                                     {
@@ -807,7 +811,7 @@ paths: {}
                                     }
                                 }
                             },
-                            [OperationType.Post] = new OpenApiOperation
+                            [HttpMethod.Post] = new OpenApiOperation
                             {
                                 Tags = new HashSet<OpenApiTagReference>
                                     {
@@ -881,9 +885,9 @@ paths: {}
                     },
                     ["/pets/{id}"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Description =
                                     "Returns a user based on a single ID, if the user does not have access to the pet",
@@ -944,7 +948,7 @@ paths: {}
                                     }
                                 }
                             },
-                            [OperationType.Delete] = new OpenApiOperation
+                            [HttpMethod.Delete] = new OpenApiOperation
                             {
                                 Description = "deletes a single pet based on the ID supplied",
                                 OperationId = "deletePet",
@@ -1029,8 +1033,8 @@ paths: {}
 
             actual.Document.Should().BeEquivalentTo(expected, options => options
             .IgnoringCyclicReferences()
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Get].Tags)
-            .Excluding(x => x.Paths["/pets"].Operations[OperationType.Post].Tags)
+            .Excluding(ctx => ctx.Path.Contains("Paths[\"/pets\"].Operations[HttpMethod.Get].Tags"))
+            .Excluding(ctx => ctx.Path.Contains("Paths[\"/pets\"].Operations[HttpMethod.Post].Tags"))
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
 
@@ -1140,7 +1144,7 @@ paths: {}
             // Act
             var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
-            var actualSchema = result.Document.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var actualSchema = result.Document.Paths["/users/{userId}"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
 
             var expectedSchema = new OpenApiSchemaReference("User", result.Document);
             // Assert
@@ -1219,7 +1223,7 @@ paths: {}
             var (document, _) = await OpenApiDocument.LoadAsync(stream);
             Assert.NotNull(document);
 
-            var petReferenceInResponse = Assert.IsType<OpenApiSchemaReference>(document.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema);
+            var petReferenceInResponse = Assert.IsType<OpenApiSchemaReference>(document.Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema);
             Assert.Equal("A reference to a pet reference", petReferenceInResponse.Description, StringComparer.OrdinalIgnoreCase);
             var petReference = Assert.IsType<OpenApiSchemaReference>(petReferenceInResponse.Target);
             Assert.Equal("A reference to a pet", petReference.Description, StringComparer.OrdinalIgnoreCase);
@@ -1268,9 +1272,9 @@ paths: {}
             document.AddComponent("PetReference", petSchemaReference);
             document.Paths.Add("/pets", new OpenApiPathItem
             {
-                Operations = new Dictionary<OperationType, OpenApiOperation>
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
-                    [OperationType.Get] = new OpenApiOperation
+                    [HttpMethod.Get] = new OpenApiOperation
                     {
                         Summary = "Returns all pets",
                         Responses =
@@ -1334,9 +1338,9 @@ paths: {}
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Summary = "Returns all pets",
                                 Parameters =
@@ -1388,9 +1392,9 @@ components:
 
             // Act
             var doc = (await OpenApiDocument.LoadAsync(stream, settings: SettingsFixture.ReaderSettings)).Document;
-            var actualParam = doc.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
+            var actualParam = doc.Paths["/pets"].Operations[HttpMethod.Get].Parameters[0];
             var outputDoc = (await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0)).MakeLineBreaksEnvironmentNeutral();
-            var expectedParam = expected.Paths["/pets"].Operations[OperationType.Get].Parameters[0];
+            var expectedParam = expected.Paths["/pets"].Operations[HttpMethod.Get].Parameters[0];
             var expectedParamReference = Assert.IsType<OpenApiParameterReference>(expectedParam);
 
             var actualParamReference = Assert.IsType<OpenApiParameterReference>(actualParam);
@@ -1493,8 +1497,24 @@ components:
         [Fact]
         public async Task ParseDocumentWithNonStandardMIMETypePasses()
         {
+            var path = Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
+            using var stream = Resources.GetStream(path);
+            using var streamReader = new StreamReader(stream);
+            var contentAsString = await streamReader.ReadToEndAsync();
+            var mockMessageHandler = new Mock<HttpMessageHandler>();
+            mockMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(contentAsString, new MediaTypeHeaderValue("text/x-yaml"))
+                });
+            var settings = new OpenApiReaderSettings
+            {
+                HttpClient = new HttpClient(mockMessageHandler.Object)
+            };
+            settings.AddYamlReader();
             // Act & Assert: Ensure NotSupportedException is not thrown for non-standard MIME type: text/x-yaml
-            var result = await OpenApiDocument.LoadAsync(codacyApi, SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync("https://localhost/doesntmatter/foo.bar", settings);
             Assert.NotNull(result.Document); 
         }
     }
