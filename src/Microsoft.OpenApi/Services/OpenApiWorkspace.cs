@@ -295,13 +295,13 @@ namespace Microsoft.OpenApi.Services
             var uri = ToLocationUrl(location);
             if (uri is not null)
             {
-                if (_IOpenApiReferenceableRegistry.TryGetValue(uri, out var referenceableValue))
+                if (_IOpenApiReferenceableRegistry.TryGetValue(uri, out var referenceableValue) && referenceableValue is T referenceable)
                 {
-                    return (T)referenceableValue;
+                    return referenceable;
                 }
-                else if (_artifactsRegistry.TryGetValue(uri, out var artifact))
+                else if (_artifactsRegistry.TryGetValue(uri, out var artifact) && artifact is T artifactValue)
                 {
-                    return (T)(object)artifact;
+                    return artifactValue;
                 }
             }            
 
