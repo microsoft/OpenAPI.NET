@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -79,7 +80,7 @@ tags:
             Assert.Equal("user", _openApiTagReference.Name);
             Assert.Equal("Operations about users.", _openApiTagReference.Description);
             Assert.True(_openApiTagReference2.UnresolvedReference);// the target is null
-            var operationTags = _openApiDocument.Paths["/users/{userId}"].Operations[OperationType.Get].Tags;
+            var operationTags = _openApiDocument.Paths["/users/{userId}"].Operations[HttpMethod.Get].Tags;
             Assert.Null(operationTags); // the operation tags are not loaded due to the invalid syntax at the operation level(should be a list of strings)
         }
 

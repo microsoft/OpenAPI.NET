@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             ],
             Operations =
             {
-                [OperationType.Put] = new()
+                [HttpMethod.Put] = new()
                 {
                     Summary = "Puts a pet in the store with form data",
                     Description = "",
@@ -135,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                     }
                 },
-                [OperationType.Post] = new()
+                [HttpMethod.Post] = new()
                 {
                     Summary = "Posts a pet in the store with form data",
                     Description = "",
@@ -274,8 +275,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.
-            Assert.True(pathItem.Operations[OperationType.Put].RequestBody != null);
-            Assert.True(pathItem.Operations[OperationType.Post].RequestBody != null);
+            Assert.True(pathItem.Operations[HttpMethod.Put].RequestBody != null);
+            Assert.True(pathItem.Operations[HttpMethod.Post].RequestBody != null);
             Assert.Equal(2, pathItem.Operations.Count(o => o.Value.RequestBody != null));
         }
         [Fact]
@@ -293,8 +294,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.
-            Assert.True(pathItem.Operations[OperationType.Put].RequestBody != null);
-            Assert.True(pathItem.Operations[OperationType.Post].RequestBody != null);
+            Assert.True(pathItem.Operations[HttpMethod.Put].RequestBody != null);
+            Assert.True(pathItem.Operations[HttpMethod.Post].RequestBody != null);
             Assert.Equal(2, pathItem.Operations.Count(o => o.Value.RequestBody != null));
         }
     }

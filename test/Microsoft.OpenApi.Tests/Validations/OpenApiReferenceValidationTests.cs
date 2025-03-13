@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -38,9 +39,9 @@ namespace Microsoft.OpenApi.Tests.Validations
             {
                 ["/"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new()
+                        [HttpMethod.Get] = new()
                         {
                             Responses = new()
                             {
@@ -92,9 +93,9 @@ namespace Microsoft.OpenApi.Tests.Validations
             {
                 ["/"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new()
+                        [HttpMethod.Get] = new()
                         {
                             Responses = new()
                             {

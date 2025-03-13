@@ -4,6 +4,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -148,13 +149,13 @@ components:
             Assert.NotEmpty(_externalCallbackReference.PathItems);
             Assert.Single(_externalCallbackReference.PathItems);
             Assert.Equal("{$request.body#/callbackUrl}", _externalCallbackReference.PathItems.First().Key.Expression);
-            Assert.Equal(OperationType.Post, _externalCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);
+            Assert.Equal(HttpMethod.Post, _externalCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);;
 
             // Local reference resolution works
             Assert.NotEmpty(_localCallbackReference.PathItems);
             Assert.Single(_localCallbackReference.PathItems);
             Assert.Equal("{$request.body#/callbackUrl}", _localCallbackReference.PathItems.First().Key.Expression);
-            Assert.Equal(OperationType.Post, _localCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);
+            Assert.Equal(HttpMethod.Post, _localCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key); ;
         }
 
         [Theory]

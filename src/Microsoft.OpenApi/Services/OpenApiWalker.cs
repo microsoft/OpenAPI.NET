@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -567,7 +568,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiOperation"/>
         /// </summary>
-        internal void Walk(IDictionary<OperationType, OpenApiOperation>? operations)
+        internal void Walk(IDictionary<HttpMethod, OpenApiOperation>? operations)
         {
             if (operations == null)
             {
@@ -580,7 +581,7 @@ namespace Microsoft.OpenApi.Services
                 foreach (var operation in operations)
                 {
                     _visitor.CurrentKeys.Operation = operation.Key;
-                    Walk(operation.Key.GetDisplayName(), () => Walk(operation.Value));
+                    Walk(operation.Key.Method.ToLowerInvariant(), () => Walk(operation.Value));
                     _visitor.CurrentKeys.Operation = null;
                 }
             }
@@ -1268,7 +1269,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Current Operation Type
         /// </summary>
-        public OperationType? Operation { get; set; }
+        public HttpMethod Operation { get; set; }
 
         /// <summary>
         /// Current Response Status Code

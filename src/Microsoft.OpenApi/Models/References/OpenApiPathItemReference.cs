@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -52,7 +53,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public IDictionary<OperationType, OpenApiOperation>? Operations { get => Target?.Operations; }
+        public IDictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
 
         /// <inheritdoc/>
         public IList<OpenApiServer>? Servers { get => Target?.Servers; }

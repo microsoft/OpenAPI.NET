@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -27,9 +28,9 @@ namespace Microsoft.OpenApi.Tests
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>()
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>()
                         {
-                            [OperationType.Get] = new OpenApiOperation()
+                            [HttpMethod.Get] = new OpenApiOperation()
                             {
                                 Responses = new OpenApiResponses()
                                 {
@@ -156,7 +157,7 @@ namespace Microsoft.OpenApi.Tests
             return document;
         }
 
-        public static OpenApiPathItem CreateOperation(this OpenApiPathItem parent, OperationType opType, Action<OpenApiOperation> config)
+        public static OpenApiPathItem CreateOperation(this OpenApiPathItem parent, HttpMethod opType, Action<OpenApiOperation> config)
         {
             var child = new OpenApiOperation();
             config(child);

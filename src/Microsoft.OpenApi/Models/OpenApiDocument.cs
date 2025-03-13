@@ -148,6 +148,35 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/> to an Open API document using the specified version.
+        /// </summary>
+        /// <param name="version">The Open API specification version to serialize the document as.</param>
+        /// <param name="writer">The <see cref="IOpenApiWriter"/> to serialize the document to.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="version"/> is not a supported Open API specification version.
+        /// </exception>
+        public void SerializeAs(OpenApiSpecVersion version, IOpenApiWriter writer)
+        {
+            switch (version)
+            {
+                case OpenApiSpecVersion.OpenApi2_0:
+                    SerializeAsV2(writer);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi3_0:
+                    SerializeAsV3(writer);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi3_1:
+                    SerializeAsV31(writer);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(version), version, string.Format(Properties.SRResource.OpenApiSpecVersionNotSupported, version));
+            }
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to Open API v3.1 document.
         /// </summary>
         /// <param name="writer"></param>

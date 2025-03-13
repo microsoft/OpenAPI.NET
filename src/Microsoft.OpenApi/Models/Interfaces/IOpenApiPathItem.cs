@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Models.Interfaces;
@@ -13,7 +14,7 @@ public interface IOpenApiPathItem : IOpenApiDescribedElement, IOpenApiSummarized
     /// <summary>
     /// Gets the definition of operations on this path.
     /// </summary>
-    public IDictionary<OperationType, OpenApiOperation>? Operations { get; }
+    public IDictionary<HttpMethod, OpenApiOperation> Operations { get; }
 
     /// <summary>
     /// An alternative server array to service all operations in this path.

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -523,9 +524,9 @@ responses: { }";
             };
             openApiDocument.Paths.Add("/users", new OpenApiPathItem
             {
-                Operations = new Dictionary<OperationType, OpenApiOperation>
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
-                    [OperationType.Post] = operation
+                    [HttpMethod.Post] = operation
                 }
             });
             openApiDocument.AddComponent("UserRequest", new OpenApiRequestBody

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
@@ -38,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Services
                         {
                             Operations =
                         {
-                            [OperationType.Get] = new()
+                            [HttpMethod.Get] = new()
                             {
                                 Responses =
                                 {
