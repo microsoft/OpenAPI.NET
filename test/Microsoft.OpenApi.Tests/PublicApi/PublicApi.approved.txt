@@ -389,9 +389,9 @@ namespace Microsoft.OpenApi.Models.Interfaces
     }
     public interface IOpenApiPathItem : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
     {
-        System.Collections.Generic.IDictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation> Operations { get; }
-        System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter> Parameters { get; }
-        System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer> Servers { get; }
+        System.Collections.Generic.IDictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation>? Operations { get; }
+        System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>? Parameters { get; }
+        System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer>? Servers { get; }
     }
     public interface IOpenApiReadOnlyDescribedElement : Microsoft.OpenApi.Interfaces.IOpenApiElement
     {
@@ -943,12 +943,12 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiPathItem : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
     {
         public OpenApiPathItem() { }
-        public string Description { get; set; }
-        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
-        public System.Collections.Generic.IDictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation> Operations { get; set; }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter> Parameters { get; set; }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer> Servers { get; set; }
-        public string Summary { get; set; }
+        public string? Description { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public System.Collections.Generic.IDictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation>? Operations { get; set; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>? Parameters { get; set; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer>? Servers { get; set; }
+        public string? Summary { get; set; }
         public void AddOperation(System.Net.Http.HttpMethod operationType, Microsoft.OpenApi.Models.OpenApiOperation operation) { }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem CreateShallowCopy() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1309,13 +1309,13 @@ namespace Microsoft.OpenApi.Models.References
     }
     public class OpenApiPathItemReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem, Microsoft.OpenApi.Models.Interfaces.IOpenApiSummarizedElement
     {
-        public OpenApiPathItemReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument hostDocument = null, string externalResource = null) { }
-        public string Description { get; set; }
-        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; }
-        public System.Collections.Generic.IDictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation> Operations { get; }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter> Parameters { get; }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer> Servers { get; }
-        public string Summary { get; set; }
+        public OpenApiPathItemReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
+        public string? Description { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public System.Collections.Generic.IDictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation>? Operations { get; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>? Parameters { get; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiServer>? Servers { get; }
+        public string? Summary { get; set; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem source) { }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem CreateShallowCopy() { }
         public override void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1535,17 +1535,17 @@ namespace Microsoft.OpenApi.Services
     public class CurrentKeys
     {
         public CurrentKeys() { }
-        public string Callback { get; set; }
-        public string Content { get; set; }
-        public string Encoding { get; }
-        public string Example { get; }
-        public string Extension { get; }
-        public string Header { get; }
-        public string Link { get; set; }
-        public System.Net.Http.HttpMethod Operation { get; set; }
-        public string Path { get; set; }
-        public string Response { get; set; }
-        public string ServerVariable { get; }
+        public string? Callback { get; set; }
+        public string? Content { get; set; }
+        public string? Encoding { get; }
+        public string? Example { get; }
+        public string? Extension { get; }
+        public string? Header { get; }
+        public string? Link { get; set; }
+        public System.Net.Http.HttpMethod? Operation { get; set; }
+        public string? Path { get; set; }
+        public string? Response { get; set; }
+        public string? ServerVariable { get; }
     }
     public enum MermaidNodeShape
     {
@@ -1564,7 +1564,7 @@ namespace Microsoft.OpenApi.Services
     {
         public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument source, System.Func<string, System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
         public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode CreateOpenApiUrlTreeNode(System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiDocument> sources) { }
-        public static System.Func<string, System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> requestUrls = null, Microsoft.OpenApi.Models.OpenApiDocument source = null) { }
+        public static System.Func<string, System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string? operationIds = null, string? tags = null, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>? requestUrls = null, Microsoft.OpenApi.Models.OpenApiDocument? source = null) { }
     }
     public class OpenApiReferenceError : Microsoft.OpenApi.Models.OpenApiError
     {

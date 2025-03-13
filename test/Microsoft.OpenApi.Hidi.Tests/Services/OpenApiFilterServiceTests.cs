@@ -104,9 +104,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: openApiDocument);
 
             // Then
-            Assert.True(predicate("/foo", HttpMethod.Get, null));
-            Assert.True(predicate("/foo", HttpMethod.Post, null));
-            Assert.False(predicate("/foo", HttpMethod.Patch, null));
+            Assert.True(predicate("/foo", HttpMethod.Get, null!));
+            Assert.True(predicate("/foo", HttpMethod.Post, null!));
+            Assert.False(predicate("/foo", HttpMethod.Patch, null!));
         }
 
         [Fact]
@@ -239,45 +239,19 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var settings = new OpenApiReaderSettings();
             settings.AddYamlReader();
             var doc = (await OpenApiDocument.LoadAsync(stream, "yaml", settings)).Document;
-            
+
             // validated the tags are read as references
             var openApiOperationTags = doc?.Paths["/items"].Operations?[HttpMethod.Get].Tags?.ToArray();
             Assert.NotNull(openApiOperationTags);
             Assert.Single(openApiOperationTags);
             Assert.True(openApiOperationTags[0].UnresolvedReference);
-            
+
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
-            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
-
-            var response = subsetOpenApiDocument.Paths["/items"].Operations[HttpMethod.Get]?.Responses?["200"];
-            var responseHeader = response?.Headers["x-custom-header"];
-            var mediaTypeExample = response?.Content["application/json"]?.Examples?.First().Value;
-            var targetHeaders = subsetOpenApiDocument.Components?.Headers;
-            var targetExamples = subsetOpenApiDocument.Components?.Examples;
-
-            // Assert
-            Assert.Same(doc.Servers, subsetOpenApiDocument.Servers);
-            var headerReference = Assert.IsType<OpenApiHeaderReference>(responseHeader);
-            Assert.False(headerReference.UnresolvedReference);
-            var exampleReference = Assert.IsType<OpenApiExampleReference>(mediaTypeExample);
-            Assert.False(exampleReference?.UnresolvedReference);
-            Assert.NotNull(targetHeaders);
-            Assert.Single(targetHeaders);
-            Assert.NotNull(targetExamples);
-            Assert.Single(targetExamples);
-            // validated the tags of the trimmed document are read as references
-            var trimmedOpenApiOperationTags = subsetOpenApiDocument.Paths["/items"].Operations[HttpMethod.Get].Tags?.ToArray();
-            Assert.NotNull(trimmedOpenApiOperationTags);
-            Assert.Single(trimmedOpenApiOperationTags);
-            Assert.True(trimmedOpenApiOperationTags[0].UnresolvedReference);
-            
-            // Finally try to write the trimmed document as v3 document
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter)
+            if (doc is not null)
             {
                 var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(doc, predicate);
 
-                var response = subsetOpenApiDocument.Paths["/items"].Operations?[OperationType.Get]?.Responses?["200"];
+                var response = subsetOpenApiDocument.Paths?["/items"].Operations?[HttpMethod.Get]?.Responses?["200"];
                 var responseHeader = response?.Headers?["x-custom-header"];
                 var mediaTypeExample = response?.Content?["application/json"]?.Examples?.First().Value;
                 var targetHeaders = subsetOpenApiDocument.Components?.Headers;
@@ -294,7 +268,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 Assert.NotNull(targetExamples);
                 Assert.Single(targetExamples);
                 // validated the tags of the trimmed document are read as references
-                var trimmedOpenApiOperationTags = subsetOpenApiDocument.Paths["/items"].Operations?[OperationType.Get].Tags?.ToArray();
+                var trimmedOpenApiOperationTags = subsetOpenApiDocument.Paths?["/items"].Operations?[HttpMethod.Get].Tags?.ToArray();
                 Assert.NotNull(trimmedOpenApiOperationTags);
                 Assert.Single(trimmedOpenApiOperationTags);
                 Assert.True(trimmedOpenApiOperationTags[0].UnresolvedReference);

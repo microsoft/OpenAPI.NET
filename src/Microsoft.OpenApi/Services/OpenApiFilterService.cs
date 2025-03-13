@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Services
             {
                 predicate = GetTagsPredicate(tags);
             }
-            else if (requestUrls != null)
+            else if (requestUrls != null && source is not null)
             {
                 predicate = GetRequestUrlsPredicate(requestUrls, source);
             }
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Services
             return rootNode;
         }
 
-        private static IDictionary<HttpMethod, OpenApiOperation> GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
+        private static IDictionary<HttpMethod, OpenApiOperation>? GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
         {
             if (relativeUrl.Equals("/", StringComparison.Ordinal) && rootNode.HasOperations(label))
             {

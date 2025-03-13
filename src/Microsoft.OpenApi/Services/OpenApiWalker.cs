@@ -1269,7 +1269,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Current Operation Type
         /// </summary>
-        public HttpMethod Operation { get; set; }
+        public HttpMethod? Operation { get; set; }
 
         /// <summary>
         /// Current Response Status Code
