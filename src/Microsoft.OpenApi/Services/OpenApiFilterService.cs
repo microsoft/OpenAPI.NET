@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Services
 
                 if (result.CurrentKeys.Operation != null)
                 {
-                    pathItem.Operations.Add((HttpMethod)result.CurrentKeys.Operation, result.Operation);
+                    pathItem.Operations.Add(result.CurrentKeys.Operation, result.Operation);
 
                     if (result.Parameters?.Any() ?? false)
                     {
