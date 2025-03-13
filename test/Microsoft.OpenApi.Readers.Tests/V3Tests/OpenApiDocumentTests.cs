@@ -6,8 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -20,6 +24,8 @@ using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
+using Moq;
+using Moq.Protected;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -28,8 +34,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
-        private const string codacyApi = "https://api.codacy.com/api/api-docs/swagger.yaml";
-
         private static async Task<T> CloneAsync<T>(T element) where T : class, IOpenApiSerializable
         {
             using var stream = new MemoryStream();
@@ -1493,8 +1497,24 @@ components:
         [Fact]
         public async Task ParseDocumentWithNonStandardMIMETypePasses()
         {
+            var path = Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml");
+            using var stream = Resources.GetStream(path);
+            using var streamReader = new StreamReader(stream);
+            var contentAsString = await streamReader.ReadToEndAsync();
+            var mockMessageHandler = new Mock<HttpMessageHandler>();
+            mockMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(contentAsString, new MediaTypeHeaderValue("text/x-yaml"))
+                });
+            var settings = new OpenApiReaderSettings
+            {
+                HttpClient = new HttpClient(mockMessageHandler.Object)
+            };
+            settings.AddYamlReader();
             // Act & Assert: Ensure NotSupportedException is not thrown for non-standard MIME type: text/x-yaml
-            var result = await OpenApiDocument.LoadAsync(codacyApi, SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync("https://localhost/doesntmatter/foo.bar", settings);
             Assert.NotNull(result.Document); 
         }
     }
