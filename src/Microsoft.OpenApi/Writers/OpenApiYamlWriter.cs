@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the property name and the delimiter.
         /// </summary>
-        public override void WritePropertyName(string? name)
+        public override void WritePropertyName(string name)
         {
             VerifyCanWritePropertyName(name);
 
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Writers
                 WriteIndentation();
             }
 
-            name = name?.GetYamlCompatibleString();
+            name = name.GetYamlCompatibleString();
 
             Writer.Write(name);
             Writer.Write(":");
@@ -168,13 +168,13 @@ namespace Microsoft.OpenApi.Writers
         /// Write string value.
         /// </summary>
         /// <param name="value">The string value.</param>
-        public override void WriteValue(string? value)
+        public override void WriteValue(string value)
         {
             if (!UseLiteralStyle || value?.IndexOfAny(new[] { '\n', '\r' }) == -1)
             {
                 WriteValueSeparator();
 
-                value = value?.GetYamlCompatibleString();
+                value = value.GetYamlCompatibleString();
 
                 Writer.Write(value);
             }

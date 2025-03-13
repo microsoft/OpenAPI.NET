@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="name">The property name.</param>
         /// public override void WritePropertyName(string name)
-        public override void WritePropertyName(string? name)
+        public override void WritePropertyName(string name)
         {
             VerifyCanWritePropertyName(name);
 
@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Writers
 
             WriteIndentation();
 
-            name = name?.GetJsonCompatibleString();
+            name = name.GetJsonCompatibleString();
 
             Writer.Write(name);
 
@@ -185,11 +185,11 @@ namespace Microsoft.OpenApi.Writers
         /// Write string value.
         /// </summary>
         /// <param name="value">The string value.</param>
-        public override void WriteValue(string? value)
+        public override void WriteValue(string value)
         {
             WriteValueSeparator();
 
-            value = value?.GetJsonCompatibleString();
+            value = value.GetJsonCompatibleString();
 
             Writer.Write(value);
         }

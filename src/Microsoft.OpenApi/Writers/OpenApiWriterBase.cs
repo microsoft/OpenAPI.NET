@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the start property.
         /// </summary>
-        public abstract void WritePropertyName(string? name);
+        public abstract void WritePropertyName(string name);
 
         /// <summary>
         /// Writes a separator of a value if it's needed for the next value to be written.
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Writers
         /// Write string value.
         /// </summary>
         /// <param name="value">The string value.</param>
-        public abstract void WriteValue(string? value);
+        public abstract void WriteValue(string value);
 
         /// <summary>
         /// Write float value.
@@ -420,7 +420,7 @@ namespace Microsoft.OpenApi.Writers
         /// the property name is a valid string and whether the current scope is an object scope.
         /// </summary>
         /// <param name="name">property name</param>
-        protected void VerifyCanWritePropertyName(string? name)
+        protected void VerifyCanWritePropertyName(string name)
         {
             Utils.CheckArgumentNull(name);
 

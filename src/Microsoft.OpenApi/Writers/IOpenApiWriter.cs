@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the string value.
         /// </summary>
-        void WriteValue(string? value);
+        void WriteValue(string value);
 
         /// <summary>
         /// Write the decimal value.
