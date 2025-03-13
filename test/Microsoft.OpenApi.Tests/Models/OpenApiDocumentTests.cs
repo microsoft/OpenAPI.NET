@@ -2134,5 +2134,49 @@ components:
             Assert.Contains(document.Tags, t => t.Name == "tag1");
             Assert.Contains(document.Tags, t => t.Name == "tag2");
         }
+
+        public static TheoryData<OpenApiSpecVersion> OpenApiSpecVersions()
+        {
+            var values = new TheoryData<OpenApiSpecVersion>();
+
+            foreach (var value in Enum.GetValues<OpenApiSpecVersion>())
+            {
+                values.Add(value);
+            }
+
+            return values;
+        }
+
+        [Theory]
+        [MemberData(nameof(OpenApiSpecVersions))]
+        public async Task SerializeAdvancedDocumentAsVersionJsonWorksAsync(OpenApiSpecVersion version)
+        {
+            // Arrange
+            using var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+
+            // Act
+            AdvancedDocument.SerializeAs(version, writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(version);
+        }
+
+        [Fact]
+        public void SerializeAsThrowsIfVersionIsNotSupported()
+        {
+            // Arrange
+            using var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+            var version = (OpenApiSpecVersion)int.MaxValue;
+
+            // Act
+            var actual = Assert.Throws<ArgumentOutOfRangeException>(() => AdvancedDocument.SerializeAs(version, writer));
+
+            // Assert
+            Assert.Equal("version", actual.ParamName);
+            Assert.Equal(version, actual.ActualValue);
+        }
     }
 }
