@@ -727,6 +727,7 @@ namespace Microsoft.OpenApi.Models
         public bool AddComponent<T>(string id, T componentToRegister) { }
         public System.Threading.Tasks.Task<string> GetHashCodeAsync(System.Threading.CancellationToken cancellationToken = default) { }
         public void RegisterComponents() { }
+        public void SerializeAs(Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
