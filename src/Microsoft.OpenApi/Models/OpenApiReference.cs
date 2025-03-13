@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(writer);
 
-            if (Type == ReferenceType.Tag)
+            if (Type == ReferenceType.Tag && !string.IsNullOrEmpty(ReferenceV3) && ReferenceV3 is not null)
             {
                 // Write the string value only
                 writer.WriteValue(ReferenceV3);
@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(writer);
 
-            if (Type == ReferenceType.Tag)
+            if (Type == ReferenceType.Tag && !string.IsNullOrEmpty(ReferenceV2) && ReferenceV2 is not null)
             {
                 // Write the string value only
                 writer.WriteValue(ReferenceV2);

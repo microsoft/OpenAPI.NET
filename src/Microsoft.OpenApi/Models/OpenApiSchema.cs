@@ -424,7 +424,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
-            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => 
+            {
+                if (!string.IsNullOrEmpty(s) && s is not null)
+                {
+                    w.WriteValue(s);
+                }
+            });
 
             // enum
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
@@ -662,7 +668,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
-            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => 
+            {
+                if (!string.IsNullOrEmpty(s) && s is not null)
+                {
+                    w.WriteValue(s);
+                }
+            });
 
             // enum
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
@@ -815,7 +827,13 @@ namespace Microsoft.OpenApi.Models
                         select flag.ToFirstIdentifier()).ToList();
             if (list.Count > 1)
             {
-                writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => w.WriteValue(s));
+                writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => 
+                {
+                    if (!string.IsNullOrEmpty(s) && s is not null)
+                    {
+                        w.WriteValue(s);
+                    }
+                });
             }
             else
             {

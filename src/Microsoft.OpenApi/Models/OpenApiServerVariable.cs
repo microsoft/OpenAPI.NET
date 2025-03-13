@@ -84,7 +84,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // enums
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => 
+            {
+                if (!string.IsNullOrEmpty(s) && s is not null)
+                {
+                    w.WriteValue(s);
+                }
+            });
 
             // specification extensions
             writer.WriteExtensions(Extensions, version);
