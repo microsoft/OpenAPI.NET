@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -523,9 +524,9 @@ responses: { }";
             };
             openApiDocument.Paths.Add("/users", new OpenApiPathItem
             {
-                Operations = new Dictionary<OperationType, OpenApiOperation>
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
-                    [OperationType.Post] = operation
+                    [HttpMethod.Post] = operation
                 }
             });
             openApiDocument.AddComponent("UserRequest", new OpenApiRequestBody
@@ -602,6 +603,49 @@ responses: { }";
 }
 """;
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+        [Fact]
+        public void DeduplicatesTagReferences()
+        {
+
+            var openApiDocument = new OpenApiDocument
+            {
+                Tags = new HashSet<OpenApiTag> { new() { Name = "user" } }
+            };
+            // Act
+            var expectedOp = new OpenApiOperation
+            {
+                Tags = new HashSet<OpenApiTagReference>
+                {
+                    new OpenApiTagReference("user", openApiDocument),
+                    new OpenApiTagReference("user", openApiDocument),
+                },
+                Summary = "Logs user into the system",
+                Description = "",
+                OperationId = "loginUser",
+                Parameters =
+                {
+                    new OpenApiParameter
+                    {
+                        Name = "password",
+                        Description = "The password for login in clear text",
+                        In = ParameterLocation.Query,
+                        Required = true,
+                        Schema = new OpenApiSchema()
+                        {
+                            Type = JsonSchemaType.String
+                        }
+                    }
+                }
+            };
+            using var textWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(textWriter);
+            expectedOp.SerializeAsV2(writer);
+            var result = textWriter.ToString();
+            var parsedJson = JsonNode.Parse(result);
+            var operationObject = Assert.IsType<JsonObject>(parsedJson);
+            var tags = Assert.IsType<JsonArray>(operationObject["tags"]);
+            Assert.Single(tags);
         }
     }
 }

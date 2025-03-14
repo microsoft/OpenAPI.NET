@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -19,10 +20,12 @@ namespace Microsoft.OpenApi.Reader.V3
             new()
             {
                 {
-                    "tags", (o, n, doc) => o.Tags = n.CreateSimpleList(
-                        (valueNode, doc) =>
-                            LoadTagByReference(
-                                valueNode.GetScalarValue(), doc), doc)
+                    "tags", (o, n, doc) => { 
+                        if (n.CreateSimpleList((valueNode, doc) => LoadTagByReference(valueNode.GetScalarValue(), doc), doc) is {Count: > 0} tags)
+                        {
+                            o.Tags = new HashSet<OpenApiTagReference>(tags, OpenApiTagComparer.Instance);
+                        }
+                    }
                 },
                 {
                     "summary",

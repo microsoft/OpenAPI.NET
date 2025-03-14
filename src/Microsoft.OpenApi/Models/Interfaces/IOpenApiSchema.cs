@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 
@@ -8,7 +9,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the schema object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiSchema>
+public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiSchema>, IOpenApiReferenceable
 {
     
     /// <summary>
@@ -19,7 +20,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// $schema, a JSON Schema dialect identifier. Value must be a URI
     /// </summary>
-    public string Schema { get; }
+    public Uri Schema { get; }
 
     /// <summary>
     /// $id - Identifies a schema resource with its canonical URI.
@@ -55,12 +56,12 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public decimal? V31ExclusiveMaximum { get; }
+    public decimal? ExclusiveMaximum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public decimal? V31ExclusiveMinimum { get; }
+    public decimal? ExclusiveMinimum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -93,17 +94,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public bool? ExclusiveMaximum { get; }
-
-    /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-    /// </summary>
     public decimal? Minimum { get; }
-
-    /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-    /// </summary>
-    public bool? ExclusiveMinimum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00

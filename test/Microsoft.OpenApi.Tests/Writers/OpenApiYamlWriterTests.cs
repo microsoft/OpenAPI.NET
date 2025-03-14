@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -390,7 +391,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Act
             doc.SerializeAsV3(writer);
-            var mediaType = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
+            var mediaType = doc.Paths["/"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"];
             var actual = outputString.GetStringBuilder().ToString();
 
             // Assert
@@ -456,7 +457,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                     ["/"] = new OpenApiPathItem()
                     {
                         Operations = {
-                            [OperationType.Get] = new()
+                            [HttpMethod.Get] = new()
                             {
                                 Responses = {
                                     ["200"] = new OpenApiResponse()

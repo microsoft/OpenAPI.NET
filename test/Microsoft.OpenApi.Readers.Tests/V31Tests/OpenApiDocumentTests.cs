@@ -13,6 +13,7 @@ using Xunit;
 using VerifyXunit;
 using Microsoft.OpenApi.Models.Interfaces;
 using System;
+using System.Net.Http;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -20,16 +21,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     {
         private const string SampleFolderPath = "V31Tests/Samples/OpenApiDocument/";
 
-        public OpenApiDocumentTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task ParseDocumentWithWebhooksShouldSucceed()
         {
             // Arrange and Act
-            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
+            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"), SettingsFixture.ReaderSettings);
             var petSchema = new OpenApiSchemaReference("petSchema", actual.Document);
 
             var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.Document);
@@ -117,9 +113,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 {
                     ["pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",
@@ -180,7 +176,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     }
                                 }
                             },
-                            [OperationType.Post] = new OpenApiOperation
+                            [HttpMethod.Post] = new OpenApiOperation
                             {
                                 RequestBody = new OpenApiRequestBody
                                 {
@@ -224,7 +220,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentsWithReusablePathItemInWebhooksSucceeds()
         {
             // Arrange && Act
-            var actual = await OpenApiDocument.LoadAsync("V31Tests/Samples/OpenApiDocument/documentWithReusablePaths.yaml");
+            var actual = await OpenApiDocument.LoadAsync("V31Tests/Samples/OpenApiDocument/documentWithReusablePaths.yaml", SettingsFixture.ReaderSettings);
 
             var components = new OpenApiComponents
             {
@@ -307,9 +303,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             {
                 ["pets"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [HttpMethod.Get] = new OpenApiOperation
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
@@ -370,7 +366,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 }
                             }
                         },
-                        [OperationType.Post] = new OpenApiOperation
+                        [HttpMethod.Post] = new OpenApiOperation
                         {
                             RequestBody = new OpenApiRequestBody
                             {
@@ -410,7 +406,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Title = "Webhook Example",
                     Version = "1.0.0"
                 },
-                JsonSchemaDialect = "http://json-schema.org/draft-07/schema#",
+                JsonSchemaDialect = new Uri("http://json-schema.org/draft-07/schema#"),
                 Webhooks = new Dictionary<string, IOpenApiPathItem>
                 {
                     ["pets"] = components.PathItems["pets"]
@@ -434,7 +430,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
 
             // Act
-            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExample.yaml"));
+            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExample.yaml"), SettingsFixture.ReaderSettings);
             actual.Document.SerializeAsV31(writer);
 
             // Assert
@@ -445,8 +441,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWithPatternPropertiesInSchemaWorks()
         {
             // Arrange and Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"));
-            var actualSchema = result.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"), SettingsFixture.ReaderSettings);
+            var actualSchema = result.Document.Paths["/example"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
 
             var expectedSchema = new OpenApiSchema
             {
@@ -476,7 +472,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Serialization
-            var mediaType = result.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content["application/json"];
+            var mediaType = result.Document.Paths["/example"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"];
 
             var expectedMediaType = @"schema:
   patternProperties:
@@ -502,11 +498,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWithReferenceByIdGetsResolved()
         {
             // Arrange and Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithReferenceById.yaml"));
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithReferenceById.yaml"), SettingsFixture.ReaderSettings);
 
-            var responseSchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            var requestBodySchema = result.Document.Paths["/resource"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema;
-            var parameterSchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Parameters[0].Schema;
+            var responseSchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+            var requestBodySchema = result.Document.Paths["/resource"].Operations[HttpMethod.Post].RequestBody.Content["application/json"].Schema;
+            var parameterSchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Parameters[0].Schema;
 
             // Assert
             Assert.Equal(JsonSchemaType.Object, responseSchema.Type);
@@ -525,10 +521,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 LoadExternalRefs = true,
                 BaseUrl = new(path),
             };
+            settings.AddYamlReader();
 
             // Act
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefByJsonPointer.yaml"), settings);
-            var responseSchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var responseSchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
 
             // Assert
             result.Document.Workspace.Contains("./externalResource.yaml");
@@ -546,12 +543,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 LoadExternalRefs = true,
                 BaseUrl = new(path),
             };
+            settings.AddYamlReader();
 
             // Act
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefById.yaml"), settings);
-            var doc2 = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalResource.yaml"))).Document;
+            var doc2 = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalResource.yaml"), SettingsFixture.ReaderSettings)).Document;
 
-            var requestBodySchema = result.Document.Paths["/resource"].Operations[OperationType.Get].Parameters[0].Schema;
+            var requestBodySchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Parameters[0].Schema;
             result.Document.Workspace.RegisterComponents(doc2);
 
             // Assert
@@ -562,7 +560,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWith31PropertiesWorks()
         {
             var path = Path.Combine(SampleFolderPath, "documentWith31Properties.yaml");
-            var doc = (await OpenApiDocument.LoadAsync(path)).Document;
+            var doc = (await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings)).Document;
             var outputStringWriter = new StringWriter();
             doc.SerializeAsV31(new OpenApiYamlWriter(outputStringWriter));
             await outputStringWriter.FlushAsync();
@@ -576,6 +574,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public void ParseEmptyMemoryStreamThrowsAnArgumentException()
         {
             Assert.Throws<ArgumentException>(() => OpenApiDocument.Load(new MemoryStream()));
+        }
+
+        [Fact]
+        public async Task ValidateReferencedExampleInSchemaWorks()
+        {
+            // Arrange && Act
+            var path = Path.Combine(SampleFolderPath, "docWithReferencedExampleInSchemaWorks.yaml");
+            var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
+            var actualSchemaExample = result.Document.Components.Schemas["DiffCreatedEvent"].Properties["updatedAt"].Example;
+            var targetSchemaExample = result.Document.Components.Schemas["Timestamp"].Example;
+
+            // Assert
+            Assert.Equal(targetSchemaExample, actualSchemaExample);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Empty(result.Diagnostic.Warnings);            
         }
     }
 }

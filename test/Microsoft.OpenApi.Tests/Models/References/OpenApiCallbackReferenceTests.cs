@@ -4,6 +4,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -132,9 +133,8 @@ components:
 
         public OpenApiCallbackReferenceTests()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            OpenApiDocument openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).Document;
-            OpenApiDocument openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).Document;
+            OpenApiDocument openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings).Document;
+            OpenApiDocument openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings).Document;
             openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", openApiDoc_2.BaseUri);
             openApiDoc.Workspace.RegisterComponents(openApiDoc_2);
             _externalCallbackReference = new("callbackEvent", openApiDoc, "https://myserver.com/beta");
@@ -149,13 +149,13 @@ components:
             Assert.NotEmpty(_externalCallbackReference.PathItems);
             Assert.Single(_externalCallbackReference.PathItems);
             Assert.Equal("{$request.body#/callbackUrl}", _externalCallbackReference.PathItems.First().Key.Expression);
-            Assert.Equal(OperationType.Post, _externalCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);;
+            Assert.Equal(HttpMethod.Post, _externalCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key);;
 
             // Local reference resolution works
             Assert.NotEmpty(_localCallbackReference.PathItems);
             Assert.Single(_localCallbackReference.PathItems);
             Assert.Equal("{$request.body#/callbackUrl}", _localCallbackReference.PathItems.First().Key.Expression);
-            Assert.Equal(OperationType.Post, _localCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key); ;
+            Assert.Equal(HttpMethod.Post, _localCallbackReference.PathItems.FirstOrDefault().Value.Operations.FirstOrDefault().Key); ;
         }
 
         [Theory]

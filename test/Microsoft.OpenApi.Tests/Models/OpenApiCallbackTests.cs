@@ -3,6 +3,7 @@
 
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Operations =
                     {
-                        [OperationType.Post] =
+                        [HttpMethod.Post] =
                         new()
                         {
                             RequestBody = new OpenApiRequestBody()
@@ -65,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Operations =
                     {
-                        [OperationType.Post] =
+                        [HttpMethod.Post] =
                         new()
                         {
                             RequestBody = new OpenApiRequestBody()

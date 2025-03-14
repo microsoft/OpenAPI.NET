@@ -18,15 +18,17 @@ namespace Microsoft.OpenApi.Reader.Services
     public class DefaultStreamLoader : IStreamLoader
     {
         private readonly Uri baseUrl;
-        private readonly HttpClient _httpClient = new();
+        private readonly HttpClient _httpClient;
 
         /// <summary>
         /// The default stream loader
         /// </summary>
         /// <param name="baseUrl"></param>
-        public DefaultStreamLoader(Uri baseUrl)
+        /// <param name="httpClient">The HttpClient to use to retrieve documents when needed</param>
+        public DefaultStreamLoader(Uri baseUrl, HttpClient httpClient)
         {
             this.baseUrl = baseUrl;
+            _httpClient = Utils.CheckArgumentNull(httpClient);
         }
 
         /// <inheritdoc/>

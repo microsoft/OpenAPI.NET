@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : IOpenApiHeader, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiHeader : IOpenApiHeader, IOpenApiExtensible
     {
         /// <inheritdoc/>
         public string Description { get; set; }
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Models
 
             // schema
             var targetSchema = Schema switch {
-                OpenApiSchemaReference schemaReference => schemaReference.Target,
+                OpenApiSchemaReference schemaReference => schemaReference.RecursiveTarget,
                 OpenApiSchema schema => schema,
                 _ => null,
             };

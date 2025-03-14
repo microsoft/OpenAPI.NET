@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -26,9 +27,9 @@ namespace Microsoft.OpenApi.Reader.V3
             {"servers", (o, n, _) => o.Servers = n.CreateList(LoadServer, o)},
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
-            {"tags", (o, n, _) => o.Tags = n.CreateList(LoadTag, o) },
+            {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
-            {"security", (o, n, _) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement, o)}
+            {"security", (o, n, _) => o.Security = n.CreateList(LoadSecurityRequirement, o)}
         };
 
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>

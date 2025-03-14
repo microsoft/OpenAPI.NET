@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -20,11 +21,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V2Tests/Samples/";
-
-        public OpenApiDocumentTests()
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
 
         [Theory]
         [InlineData("en-US")]
@@ -55,49 +51,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         exclusiveMaximum: true
                         exclusiveMinimum: false
                 paths: {}
-                """,
-                "yaml");
+            """,
+                "yaml", SettingsFixture.ReaderSettings);
 
-            result.Document.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new()
-                    {
-                        Title = "Simple Document",
-                        Version = "0.9.1",
-                        Extensions =
-                        {
-                            ["x-extension"] = new OpenApiAny(2.335)
-                        }
-                    },
-                    Components = new()
-                    {
-                        Schemas =
-                        {
-                            ["sampleSchema"] = new OpenApiSchema()
-                            {
-                                Type = JsonSchemaType.Object,
-                                Properties =
-                                {
-                                    ["sampleProperty"] = new OpenApiSchema()
-                                    {
-                                        Type = JsonSchemaType.Number,
-                                        Minimum = (decimal)100.54,
-                                        Maximum = (decimal)60000000.35,
-                                        ExclusiveMaximum = true,
-                                        ExclusiveMinimum = false
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    Paths = new()
-                }, options => options
-                .Excluding(x=> x.BaseUri)
-                .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Parent"))
-                .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Root")));
+            Assert.Equal("0.9.1", result.Document.Info.Version, StringComparer.OrdinalIgnoreCase);
+            var extension = Assert.IsType<OpenApiAny>(result.Document.Info.Extensions["x-extension"]);
+            Assert.Equal(2.335M, extension.Node.GetValue<decimal>());
+            var sampleSchema = Assert.IsType<OpenApiSchema>(result.Document.Components.Schemas["sampleSchema"]);
+            var samplePropertySchema = Assert.IsType<OpenApiSchema>(sampleSchema.Properties["sampleProperty"]);
+            var expectedPropertySchema = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Number,
+                Minimum = (decimal)100.54,
+                ExclusiveMaximum = (decimal)60000000.35,
+            };
+
+            Assert.Equivalent(expectedPropertySchema, samplePropertySchema);
         }
 
         [Fact]
@@ -175,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Operations =
                         {
-                            [OperationType.Get] = new()
+                            [HttpMethod.Get] = new()
                             {
                                 Responses =
                                 {
@@ -199,7 +168,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     }
                                 }
                             },
-                            [OperationType.Post] = new()
+                            [HttpMethod.Post] = new()
                             {
                                 Responses =
                                 {
@@ -221,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     }
                                 }
                             },
-                            [OperationType.Patch] = new()
+                            [HttpMethod.Patch] = new()
                             {
                                 Responses =
                                 {
@@ -274,7 +243,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             };
             var errorSchema = new OpenApiSchemaReference("Error", result.Document);
 
-            var responses = result.Document.Paths["/items"].Operations[OperationType.Get].Responses;
+            var responses = result.Document.Paths["/items"].Operations[HttpMethod.Get].Responses;
             foreach (var response in responses)
             {
                 var targetSchema = response.Key == "200" ? (IOpenApiSchema)successSchema : errorSchema;
@@ -313,9 +282,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 DefaultContentType = ["application/json"]
             };
+            settings.AddYamlReader();
 
             var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings);
-            var mediaType = actual.Document.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
+            var mediaType = actual.Document.Paths["/example"].Operations[HttpMethod.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
         }
 

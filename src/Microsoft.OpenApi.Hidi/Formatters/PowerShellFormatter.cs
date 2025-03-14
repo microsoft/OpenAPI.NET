@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using Humanizer;
@@ -53,11 +54,11 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         public override void Visit(IOpenApiPathItem pathItem)
         {
-            if (pathItem.Operations.TryGetValue(OperationType.Put, out var value) &&
+            if (pathItem.Operations.TryGetValue(HttpMethod.Put, out var value) &&
                 value.OperationId != null)
             {
                 var operationId = value.OperationId;
-                pathItem.Operations[OperationType.Put].OperationId = ResolvePutOperationId(operationId);
+                pathItem.Operations[HttpMethod.Put].OperationId = ResolvePutOperationId(operationId);
             }
 
             base.Visit(pathItem);

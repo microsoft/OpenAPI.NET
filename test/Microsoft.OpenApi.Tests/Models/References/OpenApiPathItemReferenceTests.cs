@@ -4,6 +4,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -78,9 +79,8 @@ components:
 
         public OpenApiPathItemReferenceTests()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            _openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml).Document;
-            _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml).Document;
+            _openApiDoc = OpenApiDocument.Parse(OpenApi, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings).Document;
+            _openApiDoc_2 = OpenApiDocument.Parse(OpenApi_2, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings).Document;
             _openApiDoc.Workspace.AddDocumentId("https://myserver.com/beta", _openApiDoc_2.BaseUri);
             _openApiDoc.Workspace.RegisterComponents(_openApiDoc_2);
             _openApiDoc_2.Workspace.RegisterComponents(_openApiDoc_2);
@@ -102,13 +102,13 @@ components:
         public void PathItemReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal([OperationType.Get, OperationType.Post, OperationType.Delete],
+            Assert.Equal([HttpMethod.Get, HttpMethod.Post, HttpMethod.Delete],
                 _localPathItemReference.Operations.Select(o => o.Key));
             Assert.Equal(3, _localPathItemReference.Operations.Count);
             Assert.Equal("Local reference: User path item description", _localPathItemReference.Description);
             Assert.Equal("Local reference: User path item summary", _localPathItemReference.Summary);
 
-            Assert.Equal([OperationType.Get, OperationType.Post, OperationType.Delete],
+            Assert.Equal([HttpMethod.Get, HttpMethod.Post, HttpMethod.Delete],
                 _externalPathItemReference.Operations.Select(o => o.Key));
             Assert.Equal("External reference: User path item description", _externalPathItemReference.Description);
             Assert.Equal("External reference: User path item summary", _externalPathItemReference.Summary);

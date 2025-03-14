@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
@@ -16,16 +17,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiCallbackTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiCallback/";
-        public OpenApiCallbackTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task ParseBasicCallbackShouldSucceed()
         {
             // Act
-            var callback = await OpenApiModelFactory.LoadAsync<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var callback = await OpenApiModelFactory.LoadAsync<OpenApiCallback>(Path.Combine(SampleFolderPath, "basicCallback.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -38,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             {
                                 Operations =
                                 {
-                                    [OperationType.Post] =
+                                    [HttpMethod.Post] =
                                     new OpenApiOperation
                                     {
                                         RequestBody = new OpenApiRequestBody
@@ -68,11 +64,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml"));
 
             // Act
-            var result = await OpenApiModelFactory.LoadAsync(stream, OpenApiConstants.Yaml);
+            var result = await OpenApiModelFactory.LoadAsync(stream, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
             // Assert
             var path = result.Document.Paths.First().Value;
-            var subscribeOperation = path.Operations[OperationType.Post];
+            var subscribeOperation = path.Operations[HttpMethod.Post];
 
             var callback = subscribeOperation.Callbacks["simpleHook"];
 
@@ -86,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                             Operations = {
-                                [OperationType.Post] = new OpenApiOperation()
+                                [HttpMethod.Post] = new OpenApiOperation()
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
@@ -118,11 +114,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMultipleCallbacksWithReferenceShouldSucceed()
         {
             // Act
-            var result = await OpenApiModelFactory.LoadAsync(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
+            var result = await OpenApiModelFactory.LoadAsync(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"), SettingsFixture.ReaderSettings);
 
             // Assert
             var path = result.Document.Paths.First().Value;
-            var subscribeOperation = path.Operations[OperationType.Post];
+            var subscribeOperation = path.Operations[HttpMethod.Post];
 
             Assert.Equivalent(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, result.Diagnostic);
@@ -136,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                             Operations = {
-                                [OperationType.Post] = new OpenApiOperation()
+                                [HttpMethod.Post] = new OpenApiOperation()
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
@@ -171,7 +167,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         [RuntimeExpression.Build("/simplePath")]= new OpenApiPathItem {
                             Operations = {
-                                [OperationType.Post] = new OpenApiOperation()
+                                [HttpMethod.Post] = new OpenApiOperation()
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
@@ -207,7 +203,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new OpenApiPathItem {
                             Operations = {
-                                [OperationType.Post] = new OpenApiOperation()
+                                [HttpMethod.Post] = new OpenApiOperation()
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {

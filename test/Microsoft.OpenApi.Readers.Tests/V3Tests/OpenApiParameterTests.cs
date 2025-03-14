@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Reader.V3;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
+using System.Net.Http;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -19,11 +20,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiParameter/";
 
-        public OpenApiParameterTests() 
-        {
-            OpenApiReaderRegistry.RegisterReader("yaml", new OpenApiYamlReader());
-        }
-
         [Fact]
         public async Task ParsePathParameterShouldSucceed()
         {
@@ -31,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml"));
 
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -52,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseQueryParameterShouldSucceed()
         {
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -79,7 +75,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseQueryParameterWithObjectTypeShouldSucceed()
         {
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -106,7 +102,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml"));
 
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -147,7 +143,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseHeaderParameterShouldSucceed()
         {
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "headerParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "headerParameter.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -175,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseParameterWithNullLocationShouldSucceed()
         {
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -199,7 +195,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml"));
 
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -223,7 +219,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml"));
 
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(stream, OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -244,7 +240,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseParameterWithExampleShouldSucceed()
         {
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -267,7 +263,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseParameterWithExamplesShouldSucceed()
         {
             // Act
-            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, new());
+            var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Combine(SampleFolderPath, "parameterWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -335,9 +331,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Description = "Returns all pets from the system that the user has access to",
                                 OperationId = "findPets",

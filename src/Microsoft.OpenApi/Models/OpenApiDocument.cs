@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://spec.openapis.org
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
     {
         /// <summary>
         /// Register components in the document to the workspace
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
         /// </summary>
-        public string? JsonSchemaDialect { get; set; }
+        public Uri? JsonSchemaDialect { get; set; }
 
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
@@ -73,13 +73,30 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? SecurityRequirements { get; set; } =
+        public IList<OpenApiSecurityRequirement>? Security { get; set; } =
             new List<OpenApiSecurityRequirement>();
 
+        private HashSet<OpenApiTag>? _tags;
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public IList<OpenApiTag>? Tags { get; set; } = new List<OpenApiTag>();
+        public ISet<OpenApiTag>? Tags 
+        { 
+            get
+            {
+                return _tags;
+            }
+            set
+            {
+                if (value is null)
+                {
+                    return;
+                }
+                _tags = value is HashSet<OpenApiTag> tags && tags.Comparer is OpenApiTagComparer ?
+                        tags :
+                        new HashSet<OpenApiTag>(value, OpenApiTagComparer.Instance);
+            }
+        }
 
         /// <summary>
         /// Additional external documentation.
@@ -92,7 +109,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Annotations { get; set; }
+        public IDictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Implements IBaseDocument
@@ -122,12 +139,41 @@ namespace Microsoft.OpenApi.Models
             Paths = document?.Paths != null ? new(document?.Paths) : new OpenApiPaths();
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
-            SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
-            Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
+            Security = document?.Security != null ? new List<OpenApiSecurityRequirement>(document.Security) : null;
+            Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
-            Annotations = document?.Annotations != null ? new Dictionary<string, object>(document.Annotations) : null;
+            Metadata = document?.Metadata != null ? new Dictionary<string, object>(document.Metadata) : null;
             BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/> to an Open API document using the specified version.
+        /// </summary>
+        /// <param name="version">The Open API specification version to serialize the document as.</param>
+        /// <param name="writer">The <see cref="IOpenApiWriter"/> to serialize the document to.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="version"/> is not a supported Open API specification version.
+        /// </exception>
+        public void SerializeAs(OpenApiSpecVersion version, IOpenApiWriter writer)
+        {
+            switch (version)
+            {
+                case OpenApiSpecVersion.OpenApi2_0:
+                    SerializeAsV2(writer);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi3_0:
+                    SerializeAsV3(writer);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi3_1:
+                    SerializeAsV31(writer);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(version), version, string.Format(Properties.SRResource.OpenApiSpecVersionNotSupported, version));
+            }
         }
 
         /// <summary>
@@ -144,7 +190,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.1");
 
             // jsonSchemaDialect
-            writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
+            writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect?.ToString());
 
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w));
 
@@ -206,7 +252,7 @@ namespace Microsoft.OpenApi.Models
             // security
             writer.WriteOptionalCollection(
                 OpenApiConstants.Security,
-                SecurityRequirements,
+                Security,
                 callback);
 
             // tags
@@ -344,7 +390,7 @@ namespace Microsoft.OpenApi.Models
                 // security
                 writer.WriteOptionalCollection(
                     OpenApiConstants.Security,
-                    SecurityRequirements,
+                    Security,
                     (w, s) => s.SerializeAsV2(w));
 
                 // tags
@@ -446,16 +492,14 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
+        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : IOpenApiReferenceable
         {
-            if (reference.IsExternal)
+
+            if (ResolveReference(reference, reference.IsExternal) is T result)
             {
-                return ResolveReference(reference, true) as T;
+                return result;
             }
-            else
-            {
-                return ResolveReference(reference, false) as T;
-            }
+            return default;
         }
 
         /// <summary>
@@ -545,10 +589,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="url"> The path to the OpenAPI file.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
+        /// <param name="token">The cancellation token</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null)
+        public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null, CancellationToken token = default)
         {
-            return await OpenApiModelFactory.LoadAsync(url, settings);
+            return await OpenApiModelFactory.LoadAsync(url, settings, token).ConfigureAwait(false);
         }
 
         /// <summary>

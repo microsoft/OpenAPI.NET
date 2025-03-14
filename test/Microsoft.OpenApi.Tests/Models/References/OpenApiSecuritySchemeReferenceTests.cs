@@ -43,8 +43,7 @@ components:
 
         public OpenApiSecuritySchemeReferenceTests()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            var result = OpenApiDocument.Parse(OpenApi, "yaml");
+            var result = OpenApiDocument.Parse(OpenApi, "yaml", SettingsFixture.ReaderSettings);
             _openApiSecuritySchemeReference = new("mySecurityScheme", result.Document);
         }
 

@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Models.References
         /// <summary>
         /// Resolved target of the reference.
         /// </summary>
-        public override OpenApiTag Target
+        public override IOpenApiTag Target
         {
             get
             {
-                return Reference.HostDocument?.Tags.FirstOrDefault(t => StringComparer.Ordinal.Equals(t.Name, Reference.Id));
+                return Reference.HostDocument?.Tags?.FirstOrDefault(t => OpenApiTagComparer.StringComparer.Equals(t.Name, Reference.Id));
             }
         }
 

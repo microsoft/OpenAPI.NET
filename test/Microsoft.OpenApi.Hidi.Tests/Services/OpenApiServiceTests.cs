@@ -26,8 +26,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public OpenApiServiceTests()
         {
             _logger = new Logger<OpenApiServiceTests>(_loggerFactory);
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yml, new OpenApiYamlReader());
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
         }
 
         [Fact]
@@ -47,9 +45,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 {
                     ["/test"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation()
+                            [HttpMethod.Get] = new OpenApiOperation()
                         }
                     }
                 }

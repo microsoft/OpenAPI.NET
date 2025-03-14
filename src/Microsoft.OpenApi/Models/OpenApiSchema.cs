@@ -18,13 +18,13 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiSchema
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema
     {
         /// <inheritdoc />
         public string Title { get; set; }
 
         /// <inheritdoc />
-        public string Schema { get; set; }
+        public Uri Schema { get; set; }
 
         /// <inheritdoc />
         public string Id { get; set; }
@@ -44,11 +44,63 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public IDictionary<string, IOpenApiSchema> Definitions { get; set; }
 
+        private decimal? _exclusiveMaximum;
         /// <inheritdoc />
-        public decimal? V31ExclusiveMaximum { get; set; }
+        public decimal? ExclusiveMaximum
+        {
+            get
+            {
+                if (_exclusiveMaximum.HasValue)
+                {
+                    return _exclusiveMaximum;
+                }
+                if (IsExclusiveMaximum == true && _maximum.HasValue)
+                {
+                    return _maximum;
+                }
+                return null;
+            }
+            set
+            {
+                _exclusiveMaximum = value;
+                IsExclusiveMaximum = value != null;
+            }
+        }
 
+        /// <summary>
+        /// Compatibility property for OpenAPI 3.0 or earlier serialization of the exclusive maximum value.
+        /// </summary>
+        /// DO NOT CHANGE THE VISIBILITY OF THIS PROPERTY TO PUBLIC
+        internal bool? IsExclusiveMaximum { get; set; }
+
+        private decimal? _exclusiveMinimum;
         /// <inheritdoc />
-        public decimal? V31ExclusiveMinimum { get; set; }
+        public decimal? ExclusiveMinimum
+        {
+            get
+            {
+                if (_exclusiveMinimum.HasValue)
+                {
+                    return _exclusiveMinimum;
+                }
+                if (IsExclusiveMinimum == true && _minimum.HasValue)
+                {
+                    return _minimum;
+                }
+                return null;
+            }
+            set
+            {
+                _exclusiveMinimum = value;
+                IsExclusiveMinimum = value != null;
+            }
+        }
+
+        /// <summary>
+        /// Compatibility property for OpenAPI 3.0 or earlier serialization of the exclusive minimum value.
+        /// </summary>
+        /// DO NOT CHANGE THE VISIBILITY OF THIS PROPERTY TO PUBLIC
+        internal bool? IsExclusiveMinimum { get; set; }
 
         /// <inheritdoc />
         public bool UnEvaluatedProperties { get; set; }     
@@ -65,17 +117,42 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public string Description { get; set; }
 
+        private decimal? _maximum;
         /// <inheritdoc />
-        public decimal? Maximum { get; set; }
+        public decimal? Maximum
+        {
+            get
+            {
+                if (IsExclusiveMaximum == true)
+                {
+                    return null;
+                }
+                return _maximum;
+            }
+            set
+            {
+                _maximum = value;
+            }
+        }
+
+        private decimal? _minimum;
 
         /// <inheritdoc />
-        public bool? ExclusiveMaximum { get; set; }
-
-        /// <inheritdoc />
-        public decimal? Minimum { get; set; }
-
-        /// <inheritdoc />
-        public bool? ExclusiveMinimum { get; set; }
+        public decimal? Minimum
+        {
+            get
+            {
+                if (IsExclusiveMinimum == true)
+                {
+                    return null;
+                }
+                return _minimum;
+            }
+            set
+            {
+                _minimum = value;
+            }
+        }
 
         /// <inheritdoc />
         public int? MaxLength { get; set; }
@@ -201,15 +278,18 @@ namespace Microsoft.OpenApi.Models
             DynamicRef = schema.DynamicRef ?? DynamicRef;
             Definitions = schema.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
             UnevaluatedProperties = schema.UnevaluatedProperties;
-            V31ExclusiveMaximum = schema.V31ExclusiveMaximum ?? V31ExclusiveMaximum;
-            V31ExclusiveMinimum = schema.V31ExclusiveMinimum ?? V31ExclusiveMinimum;
+            ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
+            ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
+            if (schema is OpenApiSchema eMSchema)
+            {
+                IsExclusiveMaximum = eMSchema.IsExclusiveMaximum;
+                IsExclusiveMinimum = eMSchema.IsExclusiveMinimum;
+            }
             Type = schema.Type ?? Type;
             Format = schema.Format ?? Format;
             Description = schema.Description ?? Description;
             Maximum = schema.Maximum ?? Maximum;
-            ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
             Minimum = schema.Minimum ?? Minimum;
-            ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
             MaxLength = schema.MaxLength ?? MaxLength;
             MinLength = schema.MinLength ?? MinLength;
             Pattern = schema.Pattern ?? Pattern;
@@ -257,6 +337,44 @@ namespace Microsoft.OpenApi.Models
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
+        private static void SerializeBounds(IOpenApiWriter writer, OpenApiSpecVersion version, string propertyName, string exclusivePropertyName, string isExclusivePropertyName, decimal? value, decimal? exclusiveValue, bool? isExclusiveValue)
+        {
+            if (version >= OpenApiSpecVersion.OpenApi3_1)
+            {
+                if (exclusiveValue.HasValue)
+                {
+                    // was explicitly set in the document or object model
+                    writer.WriteProperty(exclusivePropertyName, exclusiveValue.Value);
+                }
+                else if (isExclusiveValue == true && value.HasValue)
+                {
+                    // came from parsing an old document
+                    writer.WriteProperty(exclusivePropertyName, value);
+                }
+                else if (value.HasValue)
+                {
+                    // was explicitly set in the document or object model
+                    writer.WriteProperty(propertyName, value);
+                }
+            }
+            else
+            {
+                if (exclusiveValue.HasValue)
+                {
+                    // was explicitly set in a new document being downcast or object model
+                    writer.WriteProperty(propertyName, exclusiveValue.Value);
+                    writer.WriteProperty(isExclusivePropertyName, true);
+                }
+                else if (value.HasValue)
+                {
+                    // came from parsing an old document, we're just mirroring the information
+                    writer.WriteProperty(propertyName, value);
+                    if (isExclusiveValue.HasValue)
+                        writer.WriteProperty(isExclusivePropertyName, isExclusiveValue.Value);
+                }
+            }
+        }
+
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
@@ -274,16 +392,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // maximum
-            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
-
             // exclusiveMaximum
-            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+            SerializeBounds(writer, version, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, Maximum, ExclusiveMaximum, IsExclusiveMaximum);
 
             // minimum
-            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
-
             // exclusiveMinimum
-            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+            SerializeBounds(writer, version, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, Minimum, ExclusiveMinimum, IsExclusiveMinimum);
 
             // maxLength
             writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
@@ -400,15 +514,13 @@ namespace Microsoft.OpenApi.Models
         internal void WriteJsonSchemaKeywords(IOpenApiWriter writer)
         {
             writer.WriteProperty(OpenApiConstants.Id, Id);
-            writer.WriteProperty(OpenApiConstants.DollarSchema, Schema);
+            writer.WriteProperty(OpenApiConstants.DollarSchema, Schema?.ToString());
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
             writer.WriteProperty(OpenApiConstants.Const, Const);
             writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
             writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV31(w));
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
             writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
-            writer.WriteProperty(OpenApiConstants.V31ExclusiveMaximum, V31ExclusiveMaximum);
-            writer.WriteProperty(OpenApiConstants.V31ExclusiveMinimum, V31ExclusiveMinimum);            
             writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
@@ -438,16 +550,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // maximum
-            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
-
             // exclusiveMaximum
-            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, Maximum, ExclusiveMaximum, IsExclusiveMaximum);
 
             // minimum
-            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
-
             // exclusiveMinimum
-            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, Minimum, ExclusiveMinimum, IsExclusiveMinimum);
 
             // maxLength
             writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
@@ -522,16 +630,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // maximum
-            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
-
             // exclusiveMaximum
-            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, Maximum, ExclusiveMaximum, IsExclusiveMaximum);
 
             // minimum
-            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
-
             // exclusiveMinimum
-            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, Minimum, ExclusiveMinimum, IsExclusiveMinimum);
 
             // maxLength
             writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);

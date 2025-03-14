@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -51,7 +53,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
             Walk(OpenApiConstants.Webhooks, () => Walk(doc.Webhooks));
             Walk(OpenApiConstants.Components, () => Walk(doc.Components));
-            Walk(OpenApiConstants.Security, () => Walk(doc.SecurityRequirements));
+            Walk(OpenApiConstants.Security, () => Walk(doc.Security));
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
             Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);
@@ -60,7 +62,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiTag> tags)
+        internal void Walk(ISet<OpenApiTag> tags)
         {
             if (tags == null)
             {
@@ -72,9 +74,10 @@ namespace Microsoft.OpenApi.Services
             // Visit tags
             if (tags != null)
             {
-                for (var i = 0; i < tags.Count; i++)
+                var tagsAsArray = tags.ToArray();
+                for (var i = 0; i < tagsAsArray.Length; i++)
                 {
-                    Walk(i.ToString(), () => Walk(tags[i]));
+                    Walk(i.ToString(), () => Walk(tagsAsArray[i]));
                 }
             }
         }
@@ -82,7 +85,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiTagReference> tags)
+        internal void Walk(ISet<OpenApiTagReference> tags)
         {
             if (tags == null)
             {
@@ -94,9 +97,10 @@ namespace Microsoft.OpenApi.Services
             // Visit tags
             if (tags != null)
             {
-                for (var i = 0; i < tags.Count; i++)
+                var referencesAsArray = tags.ToArray();
+                for (var i = 0; i < referencesAsArray.Length; i++)
                 {
-                    Walk(i.ToString(), () => Walk(tags[i]));
+                    Walk(i.ToString(), () => Walk(referencesAsArray[i]));
                 }
             }
         }
@@ -558,7 +562,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiOperation"/>
         /// </summary>
-        internal void Walk(IDictionary<OperationType, OpenApiOperation> operations)
+        internal void Walk(IDictionary<HttpMethod, OpenApiOperation> operations)
         {
             if (operations == null)
             {
@@ -571,7 +575,7 @@ namespace Microsoft.OpenApi.Services
                 foreach (var operation in operations)
                 {
                     _visitor.CurrentKeys.Operation = operation.Key;
-                    Walk(operation.Key.GetDisplayName(), () => Walk(operation.Value));
+                    Walk(operation.Key.Method.ToLowerInvariant(), () => Walk(operation.Value));
                     _visitor.CurrentKeys.Operation = null;
                 }
             }
@@ -1213,7 +1217,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiServer e: Walk(e); break;
                 case OpenApiServerVariable e: Walk(e); break;
                 case OpenApiTag e: Walk(e); break;
-                case IList<OpenApiTag> e: Walk(e); break;
+                case ISet<OpenApiTag> e: Walk(e); break;
                 case IOpenApiExtensible e: Walk(e); break;
                 case IOpenApiExtension e: Walk(e); break;
             }
@@ -1259,7 +1263,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Current Operation Type
         /// </summary>
-        public OperationType? Operation { get; set; }
+        public HttpMethod Operation { get; set; }
 
         /// <summary>
         /// Current Response Status Code

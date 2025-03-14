@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -22,8 +23,8 @@ namespace Microsoft.OpenApi.Models
         public string Description { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
-            = new Dictionary<OperationType, OpenApiOperation>();
+        public IDictionary<HttpMethod, OpenApiOperation> Operations { get; set; }
+            = new Dictionary<HttpMethod, OpenApiOperation>();
 
         /// <inheritdoc/>
         public IList<OpenApiServer> Servers { get; set; } = [];
@@ -39,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="operationType">The operation type kind.</param>
         /// <param name="operation">The operation item.</param>
-        public void AddOperation(OperationType operationType, OpenApiOperation operation)
+        public void AddOperation(HttpMethod operationType, OpenApiOperation operation)
         {
             Operations[operationType] = operation;
         }
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(pathItem);
             Summary = pathItem.Summary ?? Summary;
             Description = pathItem.Description ?? Description;
-            Operations = pathItem.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
+            Operations = pathItem.Operations != null ? new Dictionary<HttpMethod, OpenApiOperation>(pathItem.Operations) : null;
             Servers = pathItem.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
             Parameters = pathItem.Parameters != null ? new List<IOpenApiParameter>(pathItem.Parameters) : null;
             Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
@@ -92,10 +93,10 @@ namespace Microsoft.OpenApi.Models
             // operations except "trace"
             foreach (var operation in Operations)
             {
-                if (operation.Key != OperationType.Trace)
+                if (operation.Key != HttpMethod.Trace)
                 {
                     writer.WriteOptionalObject(
-                        operation.Key.GetDisplayName(),
+                        operation.Key.Method.ToLowerInvariant(),
                         operation.Value,
                         (w, o) => o.SerializeAsV2(w));
                 }
@@ -135,7 +136,7 @@ namespace Microsoft.OpenApi.Models
             foreach (var operation in Operations)
             {
                 writer.WriteOptionalObject(
-                    operation.Key.GetDisplayName(),
+                    operation.Key.Method.ToLowerInvariant(),
                     operation.Value,
                     callback);
             }

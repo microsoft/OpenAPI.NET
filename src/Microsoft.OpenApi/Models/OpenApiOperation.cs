@@ -16,18 +16,35 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Operation Object.
     /// </summary>
-    public class OpenApiOperation : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable
+    public class OpenApiOperation : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
     {
         /// <summary>
         /// Default value for <see cref="Deprecated"/>.
         /// </summary>
         public const bool DeprecatedDefault = false;
 
+        private HashSet<OpenApiTagReference>? _tags;
         /// <summary>
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public IList<OpenApiTagReference>? Tags { get; set; } = [];
+        public ISet<OpenApiTagReference>? Tags 
+        { 
+            get
+            {
+                return _tags;
+            }
+            set
+            {
+                if (value is null)
+                {
+                    return;
+                }
+                _tags = value is HashSet<OpenApiTagReference> tags && tags.Comparer is OpenApiTagComparer ?
+                        tags :
+                        new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance);
+            }
+        }
 
         /// <summary>
         /// A short summary of what the operation does.
@@ -110,7 +127,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Annotations { get; set; }
+        public IDictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -123,7 +140,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? new List<OpenApiTagReference>(operation.Tags) : null;
+            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;
@@ -136,7 +153,7 @@ namespace Microsoft.OpenApi.Models
             Security = operation.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
             Servers = operation.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;
             Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
-            Annotations = operation.Annotations != null ? new Dictionary<string, object>(operation.Annotations) : null;
+            Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
         }
 
         /// <summary>

@@ -1,0 +1,101 @@
+id:
+name: GitOps.PullRequestIssueManagement
+description: GitOps.PullRequestIssueManagement primitive
+owner:
+resource: repository
+disabled: false
+where:
+configuration:
+  resourceManagementConfiguration:
+    scheduledSearches:
+    - description:
+      frequencies:
+      - hourly:
+          hour: 6
+      filters:
+      - isIssue
+      - isOpen
+      - hasLabel:
+          label: 'status:waiting-for-author-feedback'
+      - hasLabel:
+          label: 'status:no-recent-activity'
+      - noActivitySince:
+          days: 3
+      actions:
+      - closeIssue
+    - description:
+      frequencies:
+      - hourly:
+          hour: 6
+      filters:
+      - isIssue
+      - isOpen
+      - hasLabel:
+          label: 'status:waiting-for-author-feedback'
+      - noActivitySince:
+          days: 4
+      - isNotLabeledWith:
+          label: 'status:no-recent-activity'
+      actions:
+      - addLabel:
+          label: 'status:no-recent-activity'
+      - addReply:
+          reply: This issue has been automatically marked as stale because it has been marked as requiring author feedback but has not had any activity for **4 days**. It will be closed if no further activity occurs **within 3 days of this comment**.
+    - description:
+      frequencies:
+      - hourly:
+          hour: 6
+      filters:
+      - isIssue
+      - isOpen
+      - hasLabel:
+          label: 'status:duplicate'
+      - noActivitySince:
+          days: 1
+      actions:
+      - addReply:
+          reply: This issue has been marked as duplicate and has not had any activity for **1 day**. It will be closed for housekeeping purposes.
+      - closeIssue
+    eventResponderTasks:
+    - if:
+      - payloadType: Issue_Comment
+      - isAction:
+          action: Created
+      - isActivitySender:
+          issueAuthor: True
+      - hasLabel:
+          label: 'status:waiting-for-author-feedback'
+      - isOpen
+      then:
+      - addLabel:
+          label: 'Needs: Attention :wave:'
+      - removeLabel:
+          label: 'status:waiting-for-author-feedback'
+      description:
+    - if:
+      - payloadType: Issues
+      - not:
+          isAction:
+            action: Closed
+      - hasLabel:
+          label: 'status:no-recent-activity'
+      then:
+      - removeLabel:
+          label: 'status:no-recent-activity'
+      description:
+    - if:
+      - payloadType: Issue_Comment
+      - hasLabel:
+          label: 'status:no-recent-activity'
+      then:
+      - removeLabel:
+          label: 'status:no-recent-activity'
+      description:
+    - if:
+      - payloadType: Pull_Request
+      then:
+      - inPrLabel:
+          label: WIP
+      description:
+onFailure:
+onSuccess:

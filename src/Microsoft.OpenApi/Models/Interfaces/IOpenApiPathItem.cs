@@ -1,5 +1,6 @@
-
+﻿
 using System.Collections.Generic;
+using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Models.Interfaces;
@@ -8,12 +9,12 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the path item object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiPathItem : IOpenApiDescribedElement, IOpenApiSummarizedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiPathItem>
+public interface IOpenApiPathItem : IOpenApiDescribedElement, IOpenApiSummarizedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiPathItem>, IOpenApiReferenceable
 {
     /// <summary>
     /// Gets the definition of operations on this path.
     /// </summary>
-    public IDictionary<OperationType, OpenApiOperation> Operations { get; }
+    public IDictionary<HttpMethod, OpenApiOperation> Operations { get; }
 
     /// <summary>
     /// An alternative server array to service all operations in this path.

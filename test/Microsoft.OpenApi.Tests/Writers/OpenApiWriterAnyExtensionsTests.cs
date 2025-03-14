@@ -166,9 +166,8 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             // Arrange
             var input = DateTimeOffset.Parse(inputString, CultureInfo.InvariantCulture);
-            var dateTimeValue = input;
 
-            var json = await WriteAsJsonAsync(dateTimeValue, produceTerseOutput);
+            var json = await WriteAsJsonAsync(input, produceTerseOutput);
             var expectedJson = "\"" + input.ToString("o") + "\"";
 
             // Assert

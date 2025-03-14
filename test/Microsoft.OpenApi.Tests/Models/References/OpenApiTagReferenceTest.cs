@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -45,6 +46,7 @@ paths:
           description: The user was not found.
       tags:
         - $ref: '#/tags/user'
+        - users.user
 components:
   schemas:
     User:
@@ -60,12 +62,15 @@ tags:
 ";
 
         readonly OpenApiTagReference _openApiTagReference;
+        readonly OpenApiTagReference _openApiTagReference2;
+        readonly OpenApiDocument _openApiDocument;
 
         public OpenApiTagReferenceTest()
         {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-            var result = OpenApiDocument.Parse(OpenApi, "yaml");
+            var result = OpenApiDocument.Parse(OpenApi, "yaml", SettingsFixture.ReaderSettings);
+            _openApiDocument = result.Document;
             _openApiTagReference = new("user", result.Document);
+            _openApiTagReference2 = new("users.user", result.Document);
         }
 
         [Fact]
@@ -74,6 +79,9 @@ tags:
             // Assert
             Assert.Equal("user", _openApiTagReference.Name);
             Assert.Equal("Operations about users.", _openApiTagReference.Description);
+            Assert.True(_openApiTagReference2.UnresolvedReference);// the target is null
+            var operationTags = _openApiDocument.Paths["/users/{userId}"].Operations[HttpMethod.Get].Tags;
+            Assert.Null(operationTags); // the operation tags are not loaded due to the invalid syntax at the operation level(should be a list of strings)
         }
 
         [Theory]
@@ -108,6 +116,40 @@ tags:
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+        
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeTagAsV3JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _openApiTagReference2.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            // Assert 
+            Assert.Equal("\"users.user\"", outputStringWriter.ToString());
+        }
+        
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeTagAsV31JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _openApiTagReference2.SerializeAsV31(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            Assert.Equal("\"users.user\"", outputStringWriter.ToString());
         }
     }
 }

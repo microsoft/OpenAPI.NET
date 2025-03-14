@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -28,7 +29,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/info",
                 "#/servers",
                 "#/paths",
-                "#/tags"
             }, locator.Locations);
         }
 
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     new(),
                     new()
                 },
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                 {
                     new()
                 }
@@ -69,9 +69,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var doc = new OpenApiDocument();
             doc.Paths.Add("/test", new OpenApiPathItem()
             {
-                Operations = new Dictionary<OperationType, OpenApiOperation>
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
-                    [OperationType.Get] = new()
+                    [HttpMethod.Get] = new()
                     {
                         Responses = new()
                         {
@@ -108,12 +108,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths/~1test/get/responses/200/content",
                 "#/paths/~1test/get/responses/200/content/application~1json",
                 "#/paths/~1test/get/responses/200/content/application~1json/schema",
-                "#/paths/~1test/get/tags",
-                "#/tags",
 
             }, locator.Locations);
 
-            Assert.Equivalent(new List<string> { "/test", "Get", "200", "application/json" }, locator.Keys);
+            Assert.Equivalent(new List<string> { "/test", "GET", "200", "application/json" }, locator.Keys);
         }
 
         [Fact]
@@ -152,7 +150,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/components",
                 "#/components/schemas/loopy",
                 "#/components/schemas/loopy/properties/name",
-                "#/tags"
             }, locator.Locations);
         }
 
@@ -181,9 +178,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new()
+                            [HttpMethod.Get] = new()
                             {
                                 Responses = new()
                                 {
@@ -305,7 +302,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(IList<OpenApiTag> openApiTags)
+        public override void Visit(ISet<OpenApiTag> openApiTags)
         {
             Locations.Add(this.PathString);
         }
@@ -319,7 +316,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add(this.PathString);
         }
-        public override void Visit(IList<OpenApiTagReference> openApiTags)
+        public override void Visit(ISet<OpenApiTagReference> openApiTags)
         {
             Locations.Add(this.PathString);
         }

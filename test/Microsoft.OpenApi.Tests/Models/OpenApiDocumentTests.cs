@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -24,11 +25,6 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiDocumentTests
     {
-        public OpenApiDocumentTests()
-        {
-            OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-        }
-
         public static readonly OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
             Schemas =
@@ -97,7 +93,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelReferencingComponents
         };
 
@@ -107,7 +103,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponentsWithOtherProperties
         };
 
@@ -117,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponents
         };
 
@@ -237,9 +233,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/pets"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [HttpMethod.Get] = new OpenApiOperation
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
@@ -322,7 +318,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         },
-                        [OperationType.Post] = new OpenApiOperation
+                        [HttpMethod.Post] = new OpenApiOperation
                         {
                             Description = "Creates a new pet in the store.  Duplicates are allowed",
                             OperationId = "addPet",
@@ -379,9 +375,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["/pets/{id}"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [HttpMethod.Get] = new OpenApiOperation
                         {
                             Description =
                                 "Returns a user based on a single ID, if the user does not have access to the pet",
@@ -442,7 +438,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         },
-                        [OperationType.Delete] = new OpenApiOperation
+                        [HttpMethod.Delete] = new OpenApiOperation
                         {
                             Description = "deletes a single pet based on the ID supplied",
                             OperationId = "deletePet",
@@ -494,7 +490,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponentsWithReference
         };
 
@@ -613,9 +609,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/pets"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [HttpMethod.Get] = new OpenApiOperation
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
@@ -698,7 +694,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         },
-                        [OperationType.Post] = new OpenApiOperation
+                        [HttpMethod.Post] = new OpenApiOperation
                         {
                             Description = "Creates a new pet in the store.  Duplicates are allowed",
                             OperationId = "addPet",
@@ -755,9 +751,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["/pets/{id}"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [HttpMethod.Get] = new OpenApiOperation
                         {
                             Description =
                                 "Returns a user based on a single ID, if the user does not have access to the pet",
@@ -818,7 +814,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         },
-                        [OperationType.Delete] = new OpenApiOperation
+                        [HttpMethod.Delete] = new OpenApiOperation
                         {
                             Description = "deletes a single pet based on the ID supplied",
                             OperationId = "deletePet",
@@ -870,7 +866,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -885,9 +881,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["newPet"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Post] = new OpenApiOperation
+                        [HttpMethod.Post] = new OpenApiOperation
                         {
                             RequestBody = new OpenApiRequestBody
                             {
@@ -961,9 +957,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/add/{operand1}/{operand2}"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [HttpMethod.Get] = new OpenApiOperation
                         {
                             OperationId = "addByOperand1AndByOperand2",
                             Parameters = new List<IOpenApiParameter>
@@ -1029,7 +1025,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1072,9 +1068,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/pets"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new()
+                        [HttpMethod.Get] = new()
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
@@ -1157,7 +1153,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         },
-                        [OperationType.Post] = new()
+                        [HttpMethod.Post] = new()
                         {
                             Description = "Creates a new pet in the store.  Duplicates are allowed",
                             OperationId = "addPet",
@@ -1214,9 +1210,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["/pets/{id}"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
-                        [OperationType.Get] = new()
+                        [HttpMethod.Get] = new()
                         {
                             Description =
                                 "Returns a user based on a single ID, if the user does not have access to the pet",
@@ -1277,7 +1273,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         },
-                        [OperationType.Delete] = new()
+                        [HttpMethod.Delete] = new()
                         {
                             Description = "deletes a single pet based on the ID supplied",
                             OperationId = "deletePet",
@@ -1329,7 +1325,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new Dictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1539,9 +1535,9 @@ definitions:
                 {
                     ["/"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Responses = new OpenApiResponses
                                 {
@@ -1560,7 +1556,7 @@ definitions:
                     }
                 }
             };
-            document.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema = new OpenApiSchemaReference("test", document);
+            document.Paths["/"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema = new OpenApiSchemaReference("test", document);
 
             // Act
             var actual = await document.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
@@ -1687,7 +1683,7 @@ paths: { }";
 
         private static async Task<OpenApiDocument> ParseInputFileAsync(string filePath)
         {
-            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath)).Document;
+            var openApiDoc = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings)).Document;
             return openApiDoc;
         }
 
@@ -1712,9 +1708,9 @@ paths:
                 {
                     ["/foo"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Parameters =
                                 [
@@ -1779,9 +1775,9 @@ paths:
                 {
                     ["/foo"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [HttpMethod.Get] = new OpenApiOperation
                             {
                                 Parameters =
                                 [
@@ -1835,7 +1831,7 @@ paths:
         {
             var baseDocument = new OpenApiDocument
             {
-                Annotations = new Dictionary<string, object>
+                Metadata = new Dictionary<string, object>
                 {
                     ["key1"] = "value1",
                     ["key2"] = 2
@@ -1844,11 +1840,11 @@ paths:
 
             var actualDocument = new OpenApiDocument(baseDocument);
 
-            Assert.Equal(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
+            Assert.Equal(baseDocument.Metadata["key1"], actualDocument.Metadata["key1"]);
 
-            baseDocument.Annotations["key1"] = "value2";
+            baseDocument.Metadata["key1"] = "value2";
 
-            Assert.NotEqual(baseDocument.Annotations["key1"], actualDocument.Annotations["key1"]);
+            Assert.NotEqual(baseDocument.Metadata["key1"], actualDocument.Metadata["key1"]);
         }
 
         [Fact]
@@ -1860,9 +1856,9 @@ paths:
                 {
                     ["test"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>()
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>()
                         {
-                            [OperationType.Post] = new OpenApiOperation
+                            [HttpMethod.Post] = new OpenApiOperation
                             {
                                 RequestBody = new OpenApiRequestBody()
                                 {
@@ -1958,7 +1954,7 @@ webhooks:
                     Title = "JsonSchemaDialectTest",
                     Version = "1.0.0"
                 },
-                JsonSchemaDialect = "http://json-schema.org/draft-07/schema#"
+                JsonSchemaDialect = new Uri("http://json-schema.org/draft-07/schema#")
             };
 
             var expected = @"openapi: '3.1.1'
@@ -1990,13 +1986,13 @@ responses:
           items:
             type: object";
 
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml")).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml", SettingsFixture.ReaderSettings)).Document;
           
             var stringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true });
             var webhooks = doc.Webhooks["pets"].Operations;
 
-            webhooks[OperationType.Get].SerializeAsV31(writer);
+            webhooks[HttpMethod.Get].SerializeAsV31(writer);
             var actual = stringWriter.ToString();
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
@@ -2044,7 +2040,7 @@ components:
         radius:
           type: number
 ";
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml")).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml", SettingsFixture.ReaderSettings)).Document;
             var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
@@ -2078,7 +2074,7 @@ components:
                     Version = "1.0.0"
                 },
                 Paths = new OpenApiPaths(),
-                Tags = new List<OpenApiTag>
+                Tags = new HashSet<OpenApiTag>
                 {
                     new OpenApiTag
                     {
@@ -2101,6 +2097,87 @@ components:
 
             var actual = await doc.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
+        [Fact]
+        public void DeduplicatesTags()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = new HashSet<OpenApiTag>
+                {
+                    new OpenApiTag
+                    {
+                        Name = "tag1",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag1"] = new OpenApiAny("tag1")
+                        }
+                    },
+                    new OpenApiTag
+                    {
+                        Name = "tag2",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag2"] = new OpenApiAny("tag2")
+                        }
+                    },
+                    new OpenApiTag
+                    {
+                        Name = "tag1",
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-tag1"] = new OpenApiAny("tag1")
+                        }
+                    }
+                }
+            };
+            Assert.Equal(2, document.Tags.Count);
+            Assert.Contains(document.Tags, t => t.Name == "tag1");
+            Assert.Contains(document.Tags, t => t.Name == "tag2");
+        }
+
+        public static TheoryData<OpenApiSpecVersion> OpenApiSpecVersions()
+        {
+            var values = new TheoryData<OpenApiSpecVersion>();
+
+            foreach (var value in Enum.GetValues<OpenApiSpecVersion>())
+            {
+                values.Add(value);
+            }
+
+            return values;
+        }
+
+        [Theory]
+        [MemberData(nameof(OpenApiSpecVersions))]
+        public async Task SerializeAdvancedDocumentAsVersionJsonWorksAsync(OpenApiSpecVersion version)
+        {
+            // Arrange
+            using var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+
+            // Act
+            AdvancedDocument.SerializeAs(version, writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(version);
+        }
+
+        [Fact]
+        public void SerializeAsThrowsIfVersionIsNotSupported()
+        {
+            // Arrange
+            using var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+            var version = (OpenApiSpecVersion)int.MaxValue;
+
+            // Act
+            var actual = Assert.Throws<ArgumentOutOfRangeException>(() => AdvancedDocument.SerializeAs(version, writer));
+
+            // Assert
+            Assert.Equal("version", actual.ParamName);
+            Assert.Equal(version, actual.ActualValue);
         }
     }
 }

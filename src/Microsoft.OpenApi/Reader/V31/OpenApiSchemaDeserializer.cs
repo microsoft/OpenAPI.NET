@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$schema",
-                (o, n, _) => o.Schema = n.GetScalarValue()
+                (o, n, _) => { if (n.GetScalarValue() is string {} sSchema && Uri.TryCreate(sSchema, UriKind.Absolute, out var schema)) {o.Schema = schema;}}
             },
             {
                 "$id",
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) => o.V31ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) => o.ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "minimum",
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) => o.V31ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) => o.ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
             },
             {
                 "maxLength",
@@ -257,7 +257,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+                var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+                result.Reference.SetSummaryAndDescriptionFromMapNode(mapNode);
+                return result;
             }
 
             var schema = new OpenApiSchema();

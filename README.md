@@ -1,4 +1,5 @@
-![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
+<!-- using the raw image URL so it displays correctly on nuget.org -->
+![Category overview screenshot](https://raw.githubusercontent.com/microsoft/OpenAPI.NET/main/docs/images/oainet.png "Microsoft + OpenAPI = Love")
 
 # OpenAPI.NET 
 
@@ -54,9 +55,9 @@ var document = new OpenApiDocument
     {
         ["/pets"] = new OpenApiPathItem
         {
-            Operations = new Dictionary<OperationType, OpenApiOperation>
+            Operations = new Dictionary<HttpMethod, OpenApiOperation>
             {
-                [OperationType.Get] = new OpenApiOperation
+                [HttpMethod.Get] = new OpenApiOperation
                 {
                     Description = "Returns all pets from the system that the user has access to",
                     Responses = new OpenApiResponses
@@ -109,7 +110,7 @@ In order to test the validity of an OpenApi document, we avail the following too
     4. Run the project and you'll see a GUI pop up resembling the one below:
     
     
-    <img src="https://user-images.githubusercontent.com/36787645/235884441-f45d2ef7-c27b-4e1a-a890-d6f7fbef87c3.png" width="700" height="500">
+    ![workbench preview](https://raw.githubusercontent.com/microsoft/OpenAPI.NET/main/docs/images/workbench.png "a screenshot of the workbench application")
     
     5. Copy and paste your OpenAPI descriptions in the **Input Content** window or paste the path to the descriptions file in the **Input File** textbox and click on `Convert` to render the results.
 
