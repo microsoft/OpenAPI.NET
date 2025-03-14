@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -19,17 +20,38 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "authorizationUrl",
-                    (o, n, _) => o.AuthorizationUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (o, n, _) =>
+                    {
+                        var url = n.GetScalarValue();
+                        if (url != null)
+                        {
+                            o.AuthorizationUrl = new(url, UriKind.RelativeOrAbsolute);
+                        }
+                    }
                 },
                 {
                     "tokenUrl",
-                    (o, n, _) => o.TokenUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (o, n, _) =>
+                    {
+                        var url = n.GetScalarValue();
+                        if (url != null)
+                        {
+                            o.TokenUrl = new(url, UriKind.RelativeOrAbsolute);
+                        }
+                    }
                 },
                 {
                     "refreshUrl",
-                    (o, n, _) => o.RefreshUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (o, n, _) =>
+                    {
+                        var url = n.GetScalarValue();
+                        if (url != null)
+                        {
+                            o.RefreshUrl = new(url, UriKind.RelativeOrAbsolute);
+                        }
+                    }
                 },
-                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString)}
+                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =

@@ -18,9 +18,9 @@ namespace Microsoft.OpenApi.Validations
     {
         private Dictionary<Type, IList<ValidationRule>> _rulesDictionary = new();
 
-        private static ValidationRuleSet _defaultRuleSet;
+        private static ValidationRuleSet? _defaultRuleSet;
 
-        private List<ValidationRule> _emptyRules = new();
+        private readonly List<ValidationRule> _emptyRules = new();
 
 
         /// <summary>
@@ -62,10 +62,7 @@ namespace Microsoft.OpenApi.Validations
         public static ValidationRuleSet GetDefaultRuleSet()
         {
             // Reflection can be an expensive operation, so we cache the default rule set that has already been built.
-            if (_defaultRuleSet == null)
-            {
-                _defaultRuleSet = BuildDefaultRuleSet();
-            }
+            _defaultRuleSet ??= BuildDefaultRuleSet();
 
             // We create a new instance of ValidationRuleSet per call as a safeguard
             // against unintentional modification of the private _defaultRuleSet.
@@ -219,7 +216,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true if the rule is successfully removed; otherwise, false.</returns>
         public bool Remove(Type key, ValidationRule rule)
         {
-            if (_rulesDictionary.TryGetValue(key, out IList<ValidationRule> validationRules))
+            if (_rulesDictionary.TryGetValue(key, out IList<ValidationRule>? validationRules))
             {
                 return validationRules.Remove(rule);
             }
@@ -263,7 +260,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns></returns>
         public bool Contains(Type key, ValidationRule rule)
         {
-            return _rulesDictionary.TryGetValue(key, out IList<ValidationRule> validationRules) && validationRules.Contains(rule);
+            return _rulesDictionary.TryGetValue(key, out IList<ValidationRule>? validationRules) && validationRules.Contains(rule);
         }
 
         /// <summary>
@@ -274,7 +271,7 @@ namespace Microsoft.OpenApi.Validations
         ///  key is found; otherwise, an empty <see cref="IList{ValidationRule}"/> object.
         ///  This parameter is passed uninitialized.</param>
         /// <returns>true if the specified key has rules.</returns>
-        public bool TryGetValue(Type key, out IList<ValidationRule> rules)
+        public bool TryGetValue(Type key, out IList<ValidationRule>? rules)
         {
             return _rulesDictionary.TryGetValue(key, out rules);
         }

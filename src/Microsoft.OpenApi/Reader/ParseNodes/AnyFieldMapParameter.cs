@@ -14,9 +14,9 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// Constructor.
         /// </summary>
         public AnyFieldMapParameter(
-            Func<T, JsonNode> propertyGetter,
-            Action<T, JsonNode> propertySetter,
-            Func<T, IOpenApiSchema> SchemaGetter = null)
+            Func<T, JsonNode?> propertyGetter,
+            Action<T, JsonNode?> propertySetter,
+            Func<T, IOpenApiSchema?>? SchemaGetter = null)
         {
             this.PropertyGetter = propertyGetter;
             this.PropertySetter = propertySetter;
@@ -26,16 +26,16 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// <summary>
         /// Function to retrieve the value of the property.
         /// </summary>
-        public Func<T, JsonNode> PropertyGetter { get; }
+        public Func<T, JsonNode?> PropertyGetter { get; }
 
         /// <summary>
         /// Function to set the value of the property.
         /// </summary>
-        public Action<T, JsonNode> PropertySetter { get; }
+        public Action<T, JsonNode?> PropertySetter { get; }
 
         /// <summary>
         /// Function to get the schema to apply to the property.
         /// </summary>
-        public Func<T, IOpenApiSchema> SchemaGetter { get; }
+        public Func<T, IOpenApiSchema?>? SchemaGetter { get; }
     }
 }

@@ -15,13 +15,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An optional description for the server variable. CommonMark syntax MAY be used for rich text representation.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// REQUIRED. The default value to use for substitution, and to send, if an alternate value is not supplied.
         /// Unlike the Schema Object's default, this value MUST be provided by the consumer.
         /// </summary>
-        public string Default { get; set; }
+        public string? Default { get; set; }
 
         /// <summary>
         /// An enumeration of string values to be used if the substitution options are from a limited set.
@@ -29,12 +29,12 @@ namespace Microsoft.OpenApi.Models
         /// <remarks>
         /// If the server variable in the OpenAPI document has no <code>enum</code> member, this property will be null.
         /// </remarks>
-        public List<string> Enum { get; set; }
+        public List<string>? Enum { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -48,8 +48,8 @@ namespace Microsoft.OpenApi.Models
         {
             Description = serverVariable?.Description;
             Default = serverVariable?.Default;
-            Enum = serverVariable?.Enum != null ? new(serverVariable?.Enum) : serverVariable?.Enum;
-            Extensions = serverVariable?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(serverVariable?.Extensions) : serverVariable?.Extensions;
+            Enum = serverVariable?.Enum != null ? new(serverVariable.Enum) : serverVariable?.Enum;
+            Extensions = serverVariable?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(serverVariable.Extensions) : serverVariable?.Extensions;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -84,7 +84,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // enums
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => 
+            {
+                if (!string.IsNullOrEmpty(s) && s is not null)
+                {
+                    w.WriteValue(s);
+                }
+            });
 
             // specification extensions
             writer.WriteExtensions(Extensions, version);

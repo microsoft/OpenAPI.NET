@@ -26,7 +26,14 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "termsOfService",
-                (o, n, _) => o.TermsOfService = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                (o, n, _) =>
+                {
+                    var terms = n.GetScalarValue();
+                    if (terms != null)
+                    {
+                        o.TermsOfService = new(terms, UriKind.RelativeOrAbsolute);
+                    }
+                }
             },
             {
                 "contact",
@@ -53,7 +60,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var info = new OpenApiInfo();
 
-            ParseMap(mapNode, info, _infoFixedFields, _infoPatternFields);
+            ParseMap(mapNode, info, _infoFixedFields, _infoPatternFields, doc: hostDocument);
 
             return info;
         }

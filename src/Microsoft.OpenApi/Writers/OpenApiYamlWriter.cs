@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings"></param>
-        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
+        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings? settings) : base(textWriter, settings)
         {
 
         }
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Object);
 
-            if (previousScope is {Type: ScopeType.Array})
+            if (previousScope is { Type: ScopeType.Array })
             {
                 currentScope.IsInArray = true;
 
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Writers
             if (previousScope.ObjectCount == 0)
             {
                 // If we are in an object, write a white space preceding the braces.
-                if (currentScope is {Type: ScopeType.Object})
+                if (currentScope is { Type: ScopeType.Object })
                 {
                     Writer.Write(" ");
                 }
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Array);
 
-            if (previousScope is {Type: ScopeType.Array})
+            if (previousScope is { Type: ScopeType.Array })
             {
                 currentScope.IsInArray = true;
 
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Writers
             if (previousScope.ObjectCount == 0)
             {
                 // If we are in an object, write a white space preceding the braces.
-                if (currentScope is {Type: ScopeType.Object})
+                if (currentScope is { Type: ScopeType.Object })
                 {
                     Writer.Write(" ");
                 }
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Writers
             var currentScope = CurrentScope();
 
             // If this is NOT the first property in the object, always start a new line and add indentation.
-            if (currentScope.ObjectCount != 0)
+            if (currentScope?.ObjectCount != 0)
             {
                 Writer.WriteLine();
                 WriteIndentation();
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Writers
             Writer.Write(name);
             Writer.Write(":");
 
-            currentScope.ObjectCount++;
+            currentScope!.ObjectCount++;
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The string value.</param>
         public override void WriteValue(string value)
         {
-            if (!UseLiteralStyle || value.IndexOfAny(new[] { '\n', '\r' }) == -1)
+            if (!UseLiteralStyle || value?.IndexOfAny(new[] { '\n', '\r' }) == -1)
             {
                 WriteValueSeparator();
 
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Writers
                 WriteChompingIndicator(value);
 
                 // Write indentation indicator when it starts with spaces
-                if (value.StartsWith(" ", StringComparison.OrdinalIgnoreCase))
+                if (value is not null && value.StartsWith(" ", StringComparison.OrdinalIgnoreCase))
                 {
                     Writer.Write(IndentationString.Length);
                 }
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Writers
 
                 IncreaseIndentation();
 
-                using (var reader = new StringReader(value))
+                using (var reader = new StringReader(value!))
                 {
                     var firstLine = true;
                     while (reader.ReadLine() is var line && line != null)
@@ -223,10 +223,10 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        private void WriteChompingIndicator(string value)
+        private void WriteChompingIndicator(string? value)
         {
             var trailingNewlines = 0;
-            var end = value.Length - 1;
+            var end = value!.Length - 1;
             // We only need to know whether there are 0, 1, or more trailing newlines
             while (end >= 0 && trailingNewlines < 2)
             {
@@ -288,8 +288,9 @@ namespace Microsoft.OpenApi.Writers
         {
             if (IsArrayScope())
             {
+                var objectCount = CurrentScope()!.ObjectCount;
                 // If array is the outermost scope and this is the first item, there is no need to insert a newline.
-                if (!IsTopLevelScope() || CurrentScope().ObjectCount != 0)
+                if (!IsTopLevelScope() || objectCount != 0)
                 {
                     Writer.WriteLine();
                 }
@@ -297,7 +298,7 @@ namespace Microsoft.OpenApi.Writers
                 WriteIndentation();
                 Writer.Write(WriterConstants.PrefixOfArrayItem);
 
-                CurrentScope().ObjectCount++;
+                CurrentScope()!.ObjectCount++;
             }
             else
             {

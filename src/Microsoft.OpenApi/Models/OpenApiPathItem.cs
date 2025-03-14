@@ -17,23 +17,23 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiPathItem
     {
         /// <inheritdoc/>
-        public string Summary { get; set; }
+        public string? Summary { get; set; }
 
         /// <inheritdoc/>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<HttpMethod, OpenApiOperation> Operations { get; set; }
+        public IDictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
             = new Dictionary<HttpMethod, OpenApiOperation>();
 
         /// <inheritdoc/>
-        public IList<OpenApiServer> Servers { get; set; } = [];
+        public IList<OpenApiServer>? Servers { get; set; } = [];
 
         /// <inheritdoc/>
-        public IList<IOpenApiParameter> Parameters { get; set; } = [];
+        public IList<IOpenApiParameter>? Parameters { get; set; } = [];
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Add one operation into this path item.
@@ -42,7 +42,10 @@ namespace Microsoft.OpenApi.Models
         /// <param name="operation">The operation item.</param>
         public void AddOperation(HttpMethod operationType, OpenApiOperation operation)
         {
-            Operations[operationType] = operation;
+            if (Operations is not null)
+            {
+                Operations[operationType] = operation;
+            }
         }
 
         /// <summary>
@@ -91,14 +94,17 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // operations except "trace"
-            foreach (var operation in Operations)
+            if (Operations != null)
             {
-                if (operation.Key != HttpMethod.Trace)
+                foreach (var operation in Operations)
                 {
-                    writer.WriteOptionalObject(
-                        operation.Key.Method.ToLowerInvariant(),
-                        operation.Value,
-                        (w, o) => o.SerializeAsV2(w));
+                  if (operation.Key != HttpMethod.Trace)
+                  {
+                      writer.WriteOptionalObject(
+                          operation.Key.Method.ToLowerInvariant(),
+                          operation.Value,
+                          (w, o) => o.SerializeAsV2(w));
+                  }
                 }
             }
 
@@ -133,12 +139,15 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // operations
-            foreach (var operation in Operations)
+            if (Operations != null)
             {
-                writer.WriteOptionalObject(
+                foreach (var operation in Operations)
+                {
+                    writer.WriteOptionalObject(
                     operation.Key.Method.ToLowerInvariant(),
                     operation.Value,
                     callback);
+                }
             }
 
             // servers

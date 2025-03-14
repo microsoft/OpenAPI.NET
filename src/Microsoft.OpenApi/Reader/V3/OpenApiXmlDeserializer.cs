@@ -22,7 +22,14 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "namespace",
-                (o, n, _) => o.Namespace = new(n.GetScalarValue(), UriKind.Absolute)
+                (o, n, _) =>
+                {
+                    var value = n.GetScalarValue();
+                    if (value != null)
+                    {
+                        o.Namespace = new(value, UriKind.Absolute);
+                    }
+                }
             },
             {
                 "prefix",
@@ -30,11 +37,25 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "attribute",
-                (o, n, _) => o.Attribute = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var attribute = n.GetScalarValue();
+                    if (attribute is not null)
+                    {
+                        o.Attribute = bool.Parse(attribute);
+                    }
+                }
             },
             {
                 "wrapped",
-                (o, n, _) => o.Wrapped = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var wrapped = n.GetScalarValue();
+                    if (wrapped is not null)
+                    {
+                        o.Wrapped = bool.Parse(wrapped);
+                    }
+                }
             },
         };
 

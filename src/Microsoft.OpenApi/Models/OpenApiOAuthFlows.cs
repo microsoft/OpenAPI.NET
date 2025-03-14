@@ -16,27 +16,27 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Configuration for the OAuth Implicit flow
         /// </summary>
-        public OpenApiOAuthFlow Implicit { get; set; }
+        public OpenApiOAuthFlow? Implicit { get; set; }
 
         /// <summary>
         /// Configuration for the OAuth Resource Owner Password flow.
         /// </summary>
-        public OpenApiOAuthFlow Password { get; set; }
+        public OpenApiOAuthFlow? Password { get; set; }
 
         /// <summary>
         /// Configuration for the OAuth Client Credentials flow.
         /// </summary>
-        public OpenApiOAuthFlow ClientCredentials { get; set; }
+        public OpenApiOAuthFlow? ClientCredentials { get; set; }
 
         /// <summary>
         /// Configuration for the OAuth Authorization Code flow.
         /// </summary>
-        public OpenApiOAuthFlow AuthorizationCode { get; set; }
+        public OpenApiOAuthFlow? AuthorizationCode { get; set; }
 
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -49,10 +49,10 @@ namespace Microsoft.OpenApi.Models
         /// <param name="oAuthFlows"></param>
         public OpenApiOAuthFlows(OpenApiOAuthFlows oAuthFlows)
         {
-            Implicit = oAuthFlows?.Implicit != null ? new(oAuthFlows?.Implicit) : null;
-            Password = oAuthFlows?.Password != null ? new(oAuthFlows?.Password) : null;
-            ClientCredentials = oAuthFlows?.ClientCredentials != null ? new(oAuthFlows?.ClientCredentials) : null;
-            AuthorizationCode = oAuthFlows?.AuthorizationCode != null ? new(oAuthFlows?.AuthorizationCode) : null;
+            Implicit = oAuthFlows?.Implicit != null ? new(oAuthFlows.Implicit) : null;
+            Password = oAuthFlows?.Password != null ? new(oAuthFlows.Password) : null;
+            ClientCredentials = oAuthFlows?.ClientCredentials != null ? new(oAuthFlows.ClientCredentials) : null;
+            AuthorizationCode = oAuthFlows?.AuthorizationCode != null ? new(oAuthFlows.AuthorizationCode) : null;
             Extensions = oAuthFlows?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlows.Extensions) : null;
         }
 
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

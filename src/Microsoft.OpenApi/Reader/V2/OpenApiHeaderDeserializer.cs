@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -25,7 +25,14 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "type",
-                (o, n, _) => GetOrCreateSchema(o).Type = n.GetScalarValue().ToJsonSchemaType()
+                (o, n, _) =>
+                {
+                    var type = n.GetScalarValue();
+                    if (type != null)
+                    {
+                        GetOrCreateSchema(o).Type = type.ToJsonSchemaType();
+                    }
+                }
             },
             {
                 "format",
@@ -37,7 +44,14 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "collectionFormat",
-                (o, n, _) => LoadStyle(o, n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var collectionFormat = n.GetScalarValue();
+                    if (collectionFormat != null)
+                    {
+                        LoadStyle(o, collectionFormat);
+                    }
+                }
             },
             {
                 "default",
@@ -45,7 +59,14 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "maximum",
-                (o, n, _) => GetOrCreateSchema(o).Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) =>
+                {
+                    var max = n.GetScalarValue();
+                    if (max != null)
+                    {
+                        GetOrCreateSchema(o).Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(max, decimal.MaxValue);
+                    }
+                }
             },
             {
                 "exclusiveMaximum",
@@ -53,7 +74,14 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "minimum",
-                (o, n, _) => GetOrCreateSchema(o).Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
+                (o, n, _) =>
+                {
+                    var min = n.GetScalarValue();
+                    if (min != null)
+                    {
+                        GetOrCreateSchema(o).Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(min, decimal.MinValue); 
+                    } 
+                }
             },
             {
                 "exclusiveMinimum",
@@ -61,11 +89,25 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "maxLength",
-                (o, n, _) => GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var maxLength = n.GetScalarValue();
+                    if (maxLength != null)
+                    {
+                        GetOrCreateSchema(o).MaxLength = int.Parse(maxLength, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "minLength",
-                (o, n, _) => GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var minLength = n.GetScalarValue();
+                    if (minLength != null)
+                    {
+                        GetOrCreateSchema(o).MinLength = int.Parse(minLength, CultureInfo.InvariantCulture); 
+                    }
+                }
             },
             {
                 "pattern",
@@ -73,19 +115,47 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "maxItems",
-                (o, n, _) => GetOrCreateSchema(o).MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var maxItems = n.GetScalarValue();
+                    if (maxItems != null)
+                    {
+                        GetOrCreateSchema(o).MaxItems = int.Parse(maxItems, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "minItems",
-                (o, n, _) => GetOrCreateSchema(o).MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var minItems = n.GetScalarValue();
+                    if (minItems != null)
+                    {
+                        GetOrCreateSchema(o).MinItems = int.Parse(minItems, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "uniqueItems",
-                (o, n, _) => GetOrCreateSchema(o).UniqueItems = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var uniqueItems = n.GetScalarValue();
+                    if (uniqueItems != null)
+                    {
+                        GetOrCreateSchema(o).UniqueItems = bool.Parse(uniqueItems);
+                    }
+                }
             },
             {
                 "multipleOf",
-                (o, n, _) => GetOrCreateSchema(o).MultipleOf = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var multipleOf = n.GetScalarValue();
+                    if (multipleOf != null)
+                    {
+                        GetOrCreateSchema(o).MultipleOf = decimal.Parse(multipleOf, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "enum",

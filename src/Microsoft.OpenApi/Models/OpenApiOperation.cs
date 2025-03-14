@@ -262,17 +262,18 @@ namespace Microsoft.OpenApi.Models
                 if (consumes.Count > 0)
                 {
                     // This is form data. We need to split the request body into multiple parameters.
-                    if (consumes.Contains("application/x-www-form-urlencoded") ||
-                        consumes.Contains("multipart/form-data"))
+                    if ((consumes.Contains("application/x-www-form-urlencoded") || 
+                        consumes.Contains("multipart/form-data")) &&
+                        RequestBody.ConvertToFormDataParameters(writer) is { } formDataParameters)
                     {
-                        parameters.AddRange(RequestBody.ConvertToFormDataParameters(writer));
+                        parameters.AddRange(formDataParameters);
                     }
-                    else
+                    else if (RequestBody.ConvertToBodyParameter(writer) is { } bodyParameter)
                     {
-                        parameters.Add(RequestBody.ConvertToBodyParameter(writer));
+                        parameters.Add(bodyParameter);
                     }
                 }
-                else if (RequestBody is OpenApiRequestBodyReference requestBodyReference)
+                else if (RequestBody is OpenApiRequestBodyReference requestBodyReference && requestBodyReference.Reference.Id is not null)
                 {
                     parameters.Add(
                         new OpenApiParameterReference(requestBodyReference.Reference.Id, requestBodyReference.Reference.HostDocument));
@@ -336,7 +337,13 @@ namespace Microsoft.OpenApi.Models
                     .Distinct()
                     .ToList();
 
-                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => 
+                {
+                    if (!string.IsNullOrEmpty(s) && s is not null)
+                    {
+                        w.WriteValue(s);
+                    }
+                });
             }
 
             // deprecated

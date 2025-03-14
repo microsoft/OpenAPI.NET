@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -23,7 +24,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "mapping", (o, n, _) =>
                     {
-                        o.Mapping = n.CreateSimpleMap(LoadString);
+                        o.Mapping = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!);
                     }
                 }
             };

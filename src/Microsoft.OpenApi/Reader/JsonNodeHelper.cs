@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Reader
 {
     internal static class JsonNodeHelper
     {
-        public static string GetScalarValue(this JsonNode node)
+        public static string? GetScalarValue(this JsonNode node)
         {
 
             var scalarNode = node is JsonValue value ? value : throw new OpenApiException($"Expected scalar value.");

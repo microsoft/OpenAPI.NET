@@ -16,14 +16,14 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiCallback
     {
         /// <inheritdoc/>
-        public Dictionary<RuntimeExpression, IOpenApiPathItem> PathItems { get; set; }
+        public Dictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get; set; }
             = [];
 
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
         internal OpenApiCallback(IOpenApiCallback callback)
         {
             Utils.CheckArgumentNull(callback);
-            PathItems = callback?.PathItems != null ? new(callback?.PathItems) : null;
+            PathItems = callback?.PathItems != null ? new(callback.PathItems) : null;
             Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
         }
 
@@ -81,9 +81,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // path items
-            foreach (var item in PathItems)
+            if (PathItems != null)
             {
-                writer.WriteRequiredObject(item.Key.Expression, item.Value, callback);
+                foreach (var item in PathItems)
+                {
+                    writer.WriteRequiredObject(item.Key.Expression, item.Value, callback);
+                }
             }
 
             // extensions

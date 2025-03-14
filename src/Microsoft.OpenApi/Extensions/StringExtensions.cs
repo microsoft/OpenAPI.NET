@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Extensions
     {
         private static readonly ConcurrentDictionary<Type, ReadOnlyDictionary<string, object>> EnumDisplayCache = new();
 
-        internal static bool TryGetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string displayName, ParsingContext parsingContext, out T result) where T : Enum
+        internal static bool TryGetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string? displayName, ParsingContext parsingContext, out T? result) where T : Enum
         {
             if (TryGetEnumFromDisplayName(displayName, out result))
             {
@@ -30,13 +30,13 @@ namespace Microsoft.OpenApi.Extensions
             return false;
 
         }
-        internal static bool TryGetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string displayName, out T result) where T : Enum
+        internal static bool TryGetEnumFromDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this string? displayName, out T? result) where T : Enum
         {
             var type = typeof(T);
 
-            var displayMap = EnumDisplayCache.GetOrAdd(type, _=> GetEnumValues<T>(type));
+            var displayMap = EnumDisplayCache.GetOrAdd(type, _ => GetEnumValues<T>(type));
 
-            if (displayMap.TryGetValue(displayName, out var cachedValue))
+            if (displayName is not null && displayMap.TryGetValue(displayName, out var cachedValue))
             {
                 result = (T)cachedValue;
                 return true;
@@ -50,12 +50,14 @@ namespace Microsoft.OpenApi.Extensions
             var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             foreach (var field in enumType.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
-                if (field.GetCustomAttribute<DisplayAttribute>() is {} displayAttribute)
+                if (field.GetCustomAttribute<DisplayAttribute>() is { } displayAttribute
+                    && field.GetValue(null) is T enumValue
+                    && displayAttribute.Name is not null)
                 {
-                    var enumValue = (T)field.GetValue(null);
                     result.Add(displayAttribute.Name, enumValue);
                 }
             }
+
             return new ReadOnlyDictionary<string, object>(result);
         }
         internal static string ToFirstCharacterLowerCase(this string input)

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "mapping",
-                    (o, n, _) => o.Mapping = n.CreateSimpleMap(LoadString)
+                    (o, n, _) => o.Mapping = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)
                 }
             };
 

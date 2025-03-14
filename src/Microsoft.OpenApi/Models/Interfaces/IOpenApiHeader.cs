@@ -1,4 +1,4 @@
-
+﻿
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
@@ -45,21 +45,21 @@ public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// The schema defining the type used for the request body.
     /// </summary>
-    public IOpenApiSchema Schema { get; }
+    public IOpenApiSchema? Schema { get; }
 
     /// <summary>
     /// Example of the media type.
     /// </summary>
-    public JsonNode Example { get; }
+    public JsonNode? Example { get; }
 
     /// <summary>
     /// Examples of the media type.
     /// </summary>
-    public IDictionary<string, IOpenApiExample> Examples { get; }
+    public IDictionary<string, IOpenApiExample>? Examples { get; }
 
     /// <summary>
     /// A map containing the representations for the header.
     /// </summary>
-    public IDictionary<string, OpenApiMediaType> Content { get; }
+    public IDictionary<string, OpenApiMediaType>? Content { get; }
 
 }

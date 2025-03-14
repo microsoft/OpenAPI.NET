@@ -16,17 +16,17 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Replaces the name of the element/attribute used for the described schema property.
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// The URI of the namespace definition. Value MUST be in the form of an absolute URI.
         /// </summary>
-        public Uri Namespace { get; set; }
+        public Uri? Namespace { get; set; }
 
         /// <summary>
         /// The prefix to be used for the name
         /// </summary>
-        public string Prefix { get; set; }
+        public string? Prefix { get; set; }
 
         /// <summary>
         /// Declares whether the property definition translates to an attribute instead of an element.
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Models
 
         private void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            Utils.CheckArgumentNull(writer);;
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
