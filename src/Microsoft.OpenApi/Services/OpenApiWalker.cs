@@ -484,7 +484,7 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(server);
-            Walk(OpenApiConstants.Variables, () => Walk(server?.Variables));
+            Walk(OpenApiConstants.Variables, () => Walk(server.Variables));
             _visitor.Visit(server as IOpenApiExtensible);
         }
 
