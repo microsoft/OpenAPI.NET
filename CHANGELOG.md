@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0-preview.13](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.12...v2.0.0-preview.13) (2025-03-14)
+
+
+### Features
+
+* adds OpenApiDocument.SerializeAs() so simplify serialization scenarios ([371a574](https://github.com/microsoft/OpenAPI.NET/commit/371a57405b013bdc257a51cc831f7487d1749823))
+* enable null reference type support ([#2146](https://github.com/microsoft/OpenAPI.NET/issues/2146)) ([96574ec](https://github.com/microsoft/OpenAPI.NET/commit/96574ecc46dca647a708b6673c7e5309824eda2f))
+* enables references as components ([eeffba9](https://github.com/microsoft/OpenAPI.NET/commit/eeffba9d50a53a3be1630d01edd8d0b57a966dee))
+* use http method object instead of enum ([8baff28](https://github.com/microsoft/OpenAPI.NET/commit/8baff287aa9450ad3bd467816de321e30157bcb3))
+
+
+### Bug Fixes
+
+* a bug where references would not serialize summary or descriptions in 3.1 ([ca7ccdd](https://github.com/microsoft/OpenAPI.NET/commit/ca7ccdd933b57c2775d0295e22e541c2904b5fb7))
+* handling for reference IDs with http prefix ([3385a0e](https://github.com/microsoft/OpenAPI.NET/commit/3385a0e0088c44fb926affcb20f166a02391427c))
+
 ## [2.0.0-preview.12](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.11...v2.0.0-preview.12) (2025-03-07)
 
 
