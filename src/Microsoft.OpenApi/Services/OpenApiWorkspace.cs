@@ -18,7 +18,30 @@ namespace Microsoft.OpenApi.Services
     {
         private readonly Dictionary<string, Uri> _documentsIdRegistry = new();
         private readonly Dictionary<Uri, Stream> _artifactsRegistry = new();        
-        private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new();
+        private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new(new UriWithFragmentEquailityComparer());
+
+        private class UriWithFragmentEquailityComparer : IEqualityComparer<Uri>
+        {
+            public bool Equals(Uri x, Uri y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+
+                if (x is null || y is null)
+                {
+                    return false;
+                }
+
+                return x.AbsoluteUri == y.AbsoluteUri;
+            }
+
+            public int GetHashCode(Uri obj)
+            {
+                return obj.AbsoluteUri.GetHashCode();
+            }
+        }
 
         /// <summary>
         /// The base location from where all relative references are resolved
@@ -142,7 +165,7 @@ namespace Microsoft.OpenApi.Services
 
         private string getBaseUri(OpenApiDocument openApiDocument)
         {
-            return openApiDocument.BaseUri + OpenApiConstants.ComponentsSegment;
+            return openApiDocument.BaseUri + "#" + OpenApiConstants.ComponentsSegment;
         }
 
         /// <summary>
@@ -224,12 +247,13 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+#nullable enable
         /// <summary>
         /// Retrieves the document id given a key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns>The document id of the given key.</returns>
-        public Uri GetDocumentId(string key)
+        public Uri? GetDocumentId(string key)
         {
             if (_documentsIdRegistry.TryGetValue(key, out var id))
             {
@@ -249,7 +273,6 @@ namespace Microsoft.OpenApi.Services
             return _IOpenApiReferenceableRegistry.ContainsKey(key) || _artifactsRegistry.ContainsKey(key);
         }
 
-#nullable enable
         /// <summary>
         /// Resolves a reference given a key.
         /// </summary>
@@ -260,7 +283,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (string.IsNullOrEmpty(location)) return default;
 
-            var uri = ToLocationUrl(location);            
+            var uri = ToLocationUrl(location);
             if (_IOpenApiReferenceableRegistry.TryGetValue(uri, out var referenceableValue))
             {
                 return (T)referenceableValue;

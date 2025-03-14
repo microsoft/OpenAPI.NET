@@ -62,8 +62,9 @@ namespace Microsoft.OpenApi.Reader
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
         /// <param name="jsonNode">Set of Json nodes to parse.</param>
+        /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        public OpenApiDocument Parse(JsonNode jsonNode)
+        public OpenApiDocument Parse(JsonNode jsonNode, Uri location)
         {
             RootNode = new RootNode(this, jsonNode);
 
@@ -75,20 +76,20 @@ namespace Microsoft.OpenApi.Reader
             {
                 case string version when version.is2_0():
                     VersionService = new OpenApiV2VersionService(Diagnostic);
-                    doc = VersionService.LoadDocument(RootNode);
+                    doc = VersionService.LoadDocument(RootNode, location);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     ValidateRequiredFields(doc, version);
                     break;
 
                 case string version when version.is3_0():
                     VersionService = new OpenApiV3VersionService(Diagnostic);
-                    doc = VersionService.LoadDocument(RootNode);
+                    doc = VersionService.LoadDocument(RootNode, location);
                     this.Diagnostic.SpecificationVersion = version.is3_1() ? OpenApiSpecVersion.OpenApi3_1 : OpenApiSpecVersion.OpenApi3_0;
                     ValidateRequiredFields(doc, version);
                     break;
                 case string version when version.is3_1():
                     VersionService = new OpenApiV31VersionService(Diagnostic);
-                    doc = VersionService.LoadDocument(RootNode);
+                    doc = VersionService.LoadDocument(RootNode, location);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_1;
                     ValidateRequiredFields(doc, version);
                     break;

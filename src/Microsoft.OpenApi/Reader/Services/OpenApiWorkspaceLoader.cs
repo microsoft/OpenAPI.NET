@@ -45,7 +45,8 @@ namespace Microsoft.OpenApi.Reader.Services
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
-                    var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
+                    var uri = new Uri(item.ExternalResource, UriKind.RelativeOrAbsolute);
+                    var input = await _loader.LoadAsync(item.HostDocument.BaseUri, uri, cancellationToken).ConfigureAwait(false);
                     var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken).ConfigureAwait(false);
                     // Merge diagnostics
                     if (result.Diagnostic != null)

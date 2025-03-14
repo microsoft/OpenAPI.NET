@@ -240,7 +240,13 @@ namespace Microsoft.OpenApi.Reader
         {
             settings ??= DefaultReaderSettings.Value;
             var reader = settings.GetReader(format);
-            var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
+            var location = new Uri(OpenApiConstants.BaseRegistryUri);
+            if (input is FileStream fileStream)
+            {
+                location = new Uri(fileStream.Name);
+            }
+
+            var readResult = await reader.ReadAsync(input, location, settings, cancellationToken).ConfigureAwait(false);
 
             if (settings.LoadExternalRefs)
             {
@@ -259,11 +265,11 @@ namespace Microsoft.OpenApi.Reader
         private static async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, OpenApiReaderSettings settings, string format = null, CancellationToken token = default)
         {
             // Create workspace for all documents to live in.
-            var baseUrl = settings.BaseUrl ?? new Uri(OpenApiConstants.BaseRegistryUri);
-            var openApiWorkSpace = new OpenApiWorkspace(baseUrl);
+            var baseUrl = document.BaseUri;
+            var openApiWorkSpace = document.Workspace;
 
             // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings.BaseUrl, settings.HttpClient);
+            var streamLoader = new DefaultStreamLoader(settings.HttpClient);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, token).ConfigureAwait(false);
         }
@@ -280,8 +286,9 @@ namespace Microsoft.OpenApi.Reader
                 throw new ArgumentException($"Cannot parse the stream: {nameof(input)} is empty or contains no elements.");
             }
 
+            var location = new Uri(OpenApiConstants.BaseRegistryUri);
             var reader = settings.GetReader(format);
-            var readResult = reader.Read(input, settings);
+            var readResult = reader.Read(input, location, settings);
             return readResult;
         }
 
