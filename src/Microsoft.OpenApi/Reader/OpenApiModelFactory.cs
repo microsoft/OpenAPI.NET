@@ -264,13 +264,9 @@ namespace Microsoft.OpenApi.Reader
 
         private static async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument document, OpenApiReaderSettings settings, string format = null, CancellationToken token = default)
         {
-            // Create workspace for all documents to live in.
-            var baseUrl = document.BaseUri;
-            var openApiWorkSpace = document.Workspace;
-
-            // Load this root document into the workspace
+            // Load this document into the workspace
             var streamLoader = new DefaultStreamLoader(settings.HttpClient);
-            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
+            var workspaceLoader = new OpenApiWorkspaceLoader(document.Workspace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, token).ConfigureAwait(false);
         }
 
