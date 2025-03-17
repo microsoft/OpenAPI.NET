@@ -145,9 +145,9 @@ extends:
           displayName: 'pack Readers'
 
         # Pack hidi
-        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
-          displayName: 'pack Hidi'
-
+        # - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+        #   displayName: 'pack Hidi'
+         
         - task: EsrpCodeSigning@5
           displayName: 'ESRP CodeSigning Nuget Packages'
           inputs:
