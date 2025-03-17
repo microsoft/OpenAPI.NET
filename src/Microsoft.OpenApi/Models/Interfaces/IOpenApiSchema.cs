@@ -65,11 +65,6 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-    /// </summary>
-    public bool UnEvaluatedProperties { get; }     
-
-    /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// Value MUST be a string in V2 and V3.
     /// </summary>
     public JsonSchemaType? Type { get; }
