@@ -20,12 +20,12 @@ namespace Microsoft.OpenApi.Models
         /// The value can be a specific media type (e.g. application/json),
         /// a wildcard media type (e.g. image/*), or a comma-separated list of the two types.
         /// </summary>
-        public string ContentType { get; set; }
+        public string? ContentType { get; set; }
 
         /// <summary>
         /// A map allowing additional information to be provided as headers.
         /// </summary>
-        public IDictionary<string, IOpenApiHeader> Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
+        public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
 
         /// <summary>
         /// Describes how a specific property value will be serialized depending on its type.
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor

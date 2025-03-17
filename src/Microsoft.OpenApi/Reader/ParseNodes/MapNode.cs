@@ -11,7 +11,6 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
@@ -33,14 +32,14 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
 
             _node = mapNode;
-            _nodes = _node.Where(static p => p.Value is not null).Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
+            _nodes = _node.Where(p => p.Value is not null).OfType<KeyValuePair<string, JsonNode>>().Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
         }
 
-        public PropertyNode this[string key]
+        public PropertyNode? this[string key]
         {
             get
             {
-                if (_node.TryGetPropertyValue(key, out var node))
+                if (_node.TryGetPropertyValue(key, out var node) && node is not null)
                 {
                     return new(Context, key, node);
                 }
@@ -63,7 +62,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                         Context.StartObject(key);
                         value = n.Value is JsonObject jsonObject
                           ? map(new MapNode(Context, jsonObject), hostDocument)
-                          : default;
+                          : default!;
                     }
                     finally
                     {
@@ -103,7 +102,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, ISet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
+        public override Dictionary<string, ISet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
 
@@ -117,7 +116,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                         ? value
                         : throw new OpenApiReaderException($"Expected array while parsing {typeof(T).Name}", Context);
 
-                    ISet<T> values = new HashSet<T>(arrayNode.Select(item => map(new ValueNode(Context, item), openApiDocument)));
+                    ISet<T> values = new HashSet<T>(arrayNode.OfType<JsonNode>().Select(item => map(new ValueNode(Context, item), openApiDocument)));
 
                     return (key, values);
 
@@ -147,52 +146,48 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return x;
         }
 
-        public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId, string summary = null, string description = null)
-            where T : IOpenApiReferenceHolder, new()
+        public string? GetReferencePointer()
         {
-            return new()
-            {
-                Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType, summary, description)
-            };
-        }
-
-        public string GetReferencePointer()
-        {
-            if (!_node.TryGetPropertyValue("$ref", out JsonNode refNode))
+            if (!_node.TryGetPropertyValue("$ref", out JsonNode? refNode))
             {
                 return null;
             }
 
-            return refNode.GetScalarValue();
+            return refNode?.GetScalarValue();
         }
 
-        public string GetSummaryValue()
+        public string? GetSummaryValue()
         {
-            if (!_node.TryGetPropertyValue("summary", out JsonNode summaryNode))
+            if (!_node.TryGetPropertyValue("summary", out JsonNode? summaryNode))
             {
                 return null;
             }
 
-            return summaryNode.GetScalarValue();
+            return summaryNode?.GetScalarValue();
         }
 
-        public string GetDescriptionValue()
+        public string? GetDescriptionValue()
         {
-            if (!_node.TryGetPropertyValue("description", out JsonNode descriptionNode))
+            if (!_node.TryGetPropertyValue("description", out JsonNode? descriptionNode))
             {
                 return null;
             }
 
-            return descriptionNode.GetScalarValue();
+            return descriptionNode?.GetScalarValue();
         }
 
-        public string GetScalarValue(ValueNode key)
+        public string? GetScalarValue(ValueNode key)
         {
-            var scalarNode = _node[key.GetScalarValue()] is JsonValue jsonValue
-                ? jsonValue
-                : throw new OpenApiReaderException($"Expected scalar while parsing {key.GetScalarValue()}", Context);
+            var keyValue = key.GetScalarValue();
+            if (keyValue is not null)
+            {
+                var scalarNode = _node[keyValue] is JsonValue jsonValue
+                        ? jsonValue
+                        : throw new OpenApiReaderException($"Expected scalar while parsing {key.GetScalarValue()}", Context);
 
-            return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
+                return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
+            }
+            return null;
         }
 
         /// <summary>

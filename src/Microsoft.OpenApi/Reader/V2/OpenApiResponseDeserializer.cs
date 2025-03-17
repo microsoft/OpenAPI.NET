@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Reader.V2
             context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
         }
 
-        private static void LoadResponseExamplesExtension(OpenApiResponse response, ParseNode node, OpenApiDocument hostDocument)
+        private static void LoadResponseExamplesExtension(OpenApiResponse response, ParseNode node, OpenApiDocument? hostDocument)
         {
             var examples = LoadExamplesExtension(node);
             node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Reader.V2
             return examples;
         }
 
-        private static void LoadExamples(OpenApiResponse response, ParseNode node, OpenApiDocument hostDocument)
+        private static void LoadExamples(OpenApiResponse response, ParseNode node, OpenApiDocument? hostDocument)
         {
             var mapNode = node.CheckMapNode("examples");
 
@@ -196,12 +196,14 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 property.ParseField(response, _responseFixedFields, _responsePatternFields, hostDocument);
             }
-
-            foreach (var mediaType in response.Content.Values)
+            if (response.Content?.Values is not null)
             {
-                if (mediaType.Schema != null)
+                foreach (var mediaType in response.Content.Values)
                 {
-                    ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                    if (mediaType.Schema != null)
+                    {
+                        ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                    }
                 }
             }
 

@@ -29,7 +29,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "required",
-                    (o, n, _) => o.Required = bool.Parse(n.GetScalarValue())
+                    (o, n, _) =>
+                    {
+                        var required = n.GetScalarValue();
+                        if (required != null)
+                        {
+                            o.Required = bool.Parse(required);
+                        }
+                    }
                 },
             };
 

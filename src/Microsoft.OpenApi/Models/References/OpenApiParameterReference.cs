@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Parameter, externalResource)
+        public OpenApiParameterReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Parameter, externalResource)
         {
         }
 
@@ -36,19 +36,13 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Name { get => Target?.Name; }
+        public string? Name { get => Target?.Name; }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
-            set 
-            {
-                if (Reference is not null)
-                {
-                    Reference.Description = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
@@ -64,13 +58,13 @@ namespace Microsoft.OpenApi.Models.References
         public bool AllowReserved { get => Target?.AllowReserved ?? default; }
 
         /// <inheritdoc/>
-        public IOpenApiSchema Schema { get => Target?.Schema; }
+        public IOpenApiSchema? Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample> Examples { get => Target?.Examples; }
+        public IDictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
 
         /// <inheritdoc/>
-        public JsonNode Example { get => Target?.Example; }
+        public JsonNode? Example { get => Target?.Example; }
 
         /// <inheritdoc/>
         public ParameterLocation? In { get => Target?.In; }
@@ -82,13 +76,13 @@ namespace Microsoft.OpenApi.Models.References
         public bool Explode { get => Target?.Explode ?? default; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
         
         /// <inheritdoc/>
-        public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter source)
+        public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter  source)
         {
             return source is OpenApiParameter ? new OpenApiParameter(this) : source;
         }

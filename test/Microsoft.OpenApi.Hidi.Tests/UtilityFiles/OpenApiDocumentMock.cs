@@ -678,23 +678,23 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     }
                 }
             };
-            document.Paths[getTeamsActivityByPeriodPath].Operations[HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("reports.Functions", document)};
-            document.Paths[getTeamsActivityByDatePath].Operations[HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("reports.Functions", document)};
-            document.Paths[usersPath].Operations[HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
-            document.Paths[usersByIdPath].Operations[HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
-            document.Paths[usersByIdPath].Operations[HttpMethod.Patch].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
-            document.Paths[messagesByIdPath].Operations[HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.message", document)};
-            document.Paths[administrativeUnitRestorePath].Operations[HttpMethod.Post].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("administrativeUnits.Actions", document)};
-            document.Paths[logoPath].Operations[HttpMethod.Put].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.application", document)};
-            document.Paths[securityProfilesPath].Operations[HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("security.hostSecurityProfile", document)};
-            document.Paths[communicationsCallsKeepAlivePath].Operations[HttpMethod.Post].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("communications.Actions", document)};
-            document.Paths[eventsDeltaPath].Operations[HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("groups.Functions", document)};
-            document.Paths[refPath].Operations[HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.directoryObject", document)};
-            ((OpenApiSchema)document.Paths[usersPath].Operations[HttpMethod.Get].Responses!["200"].Content[applicationJsonMediaType].Schema!.Properties["value"]).Items = new OpenApiSchemaReference("microsoft.graph.user", document);
-            document.Paths[usersByIdPath].Operations[HttpMethod.Get].Responses!["200"].Content[applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.user", document);
-            document.Paths[messagesByIdPath].Operations[HttpMethod.Get].Responses!["200"].Content[applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.message", document);
-            ((OpenApiSchema)document.Paths[securityProfilesPath].Operations[HttpMethod.Get].Responses!["200"].Content[applicationJsonMediaType].Schema!.Properties["value"]).Items = new OpenApiSchemaReference("microsoft.graph.networkInterface", document);
-            ((OpenApiSchema)document.Paths[eventsDeltaPath].Operations[HttpMethod.Get].Responses!["200"].Content[applicationJsonMediaType].Schema!.Properties["value"]).Items = new OpenApiSchemaReference("microsoft.graph.event", document);
+            document.Paths[getTeamsActivityByPeriodPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("reports.Functions", document)};
+            document.Paths[getTeamsActivityByDatePath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("reports.Functions", document)};
+            document.Paths[usersPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
+            document.Paths[usersByIdPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
+            document.Paths[usersByIdPath].Operations![HttpMethod.Patch].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
+            document.Paths[messagesByIdPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.message", document)};
+            document.Paths[administrativeUnitRestorePath].Operations![HttpMethod.Post].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("administrativeUnits.Actions", document)};
+            document.Paths[logoPath].Operations![HttpMethod.Put].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.application", document)};
+            document.Paths[securityProfilesPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("security.hostSecurityProfile", document)};
+            document.Paths[communicationsCallsKeepAlivePath].Operations![HttpMethod.Post].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("communications.Actions", document)};
+            document.Paths[eventsDeltaPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("groups.Functions", document)};
+            document.Paths[refPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.directoryObject", document)};
+            ((OpenApiSchema)document.Paths[usersPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.user", document);
+            document.Paths[usersByIdPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.user", document);
+            document.Paths[messagesByIdPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.message", document);
+            ((OpenApiSchema)document.Paths[securityProfilesPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.networkInterface", document);
+            ((OpenApiSchema)document.Paths[eventsDeltaPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.event", document);
             return document;
         }
     }

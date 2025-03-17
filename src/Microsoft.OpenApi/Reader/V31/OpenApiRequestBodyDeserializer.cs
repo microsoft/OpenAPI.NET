@@ -31,7 +31,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "required", (o, n, _) =>
                     {
-                        o.Required = bool.Parse(n.GetScalarValue());
+                        var required = n.GetScalarValue();
+                        if (required != null)
+                        {
+                            o.Required = bool.Parse(required);
+                        }
                     }
                 },
             };

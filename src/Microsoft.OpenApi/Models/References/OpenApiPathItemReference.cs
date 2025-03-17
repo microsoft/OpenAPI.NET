@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiPathItemReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null): base(referenceId, hostDocument, ReferenceType.PathItem, externalResource)
+        public OpenApiPathItemReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null): base(referenceId, hostDocument, ReferenceType.PathItem, externalResource)
         {
         }
 
@@ -39,42 +39,30 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Summary
+        public string? Summary
         {
-            get => string.IsNullOrEmpty(Reference?.Summary) ? Target?.Summary : Reference.Summary;
-            set
-            {
-                if (Reference is not null)
-                {
-                    Reference.Summary = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Summary) ? Target?.Summary : Reference.Summary;
+            set => Reference.Summary = value;
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
-            set
-            {
-                if (Reference is not null)
-                {
-                    Reference.Description = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public IDictionary<HttpMethod, OpenApiOperation> Operations { get => Target?.Operations; }
+        public IDictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
 
         /// <inheritdoc/>
-        public IList<OpenApiServer> Servers { get => Target?.Servers; }
+        public IList<OpenApiServer>? Servers { get => Target?.Servers; }
 
         /// <inheritdoc/>
-        public IList<IOpenApiParameter> Parameters { get => Target?.Parameters; }
+        public IList<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)

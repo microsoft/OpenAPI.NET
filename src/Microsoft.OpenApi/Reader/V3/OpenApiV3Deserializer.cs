@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Reader.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static void ParseMap<T>(
-            MapNode mapNode,
+            MapNode? mapNode,
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap, 
@@ -72,38 +72,6 @@ namespace Microsoft.OpenApi.Reader.V3
             }
         }
 
-        private static void ProcessAnyListFields<T>(
-            MapNode mapNode,
-            T domainObject,
-            AnyListFieldMap<T> anyListFieldMap)
-        {
-            foreach (var anyListFieldName in anyListFieldMap.Keys.ToList())
-            {
-                try
-                {
-                    var newProperty = new List<JsonNode>();
-
-                    mapNode.Context.StartObject(anyListFieldName);
-
-                    foreach (var propertyElement in anyListFieldMap[anyListFieldName].PropertyGetter(domainObject))
-                    {
-                        newProperty.Add(propertyElement);
-                    }
-
-                    anyListFieldMap[anyListFieldName].PropertySetter(domainObject, newProperty);
-                }
-                catch (OpenApiException exception)
-                {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
-                }
-                finally
-                {
-                    mapNode.Context.EndObject();
-                }
-            }
-        }
-
         private static void ProcessAnyMapFields<T, U>(
             MapNode mapNode,
             T domainObject,
@@ -114,18 +82,23 @@ namespace Microsoft.OpenApi.Reader.V3
                 try
                 {
                     mapNode.Context.StartObject(anyMapFieldName);
-
-                    foreach (var propertyMapElement in anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject))
+                    var mapElements = anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject);
+                    if (mapElements is not null)
                     {
-                        mapNode.Context.StartObject(propertyMapElement.Key);
-
-                        if (propertyMapElement.Value != null)
+                        foreach (var propertyMapElement in mapElements)
                         {
-                            var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
+                            mapNode.Context.StartObject(propertyMapElement.Key);
 
-                            anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
+                            if (propertyMapElement.Value != null)
+                            {
+                                var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
+                                if (any is not null)
+                                {
+                                    anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
+                                }
+                            }
                         }
-                    }
+                    }                    
                 }
                 catch (OpenApiException exception)
                 {
@@ -137,12 +110,6 @@ namespace Microsoft.OpenApi.Reader.V3
                     mapNode.Context.EndObject();
                 }
             }
-        }
-
-        private static RuntimeExpression LoadRuntimeExpression(ParseNode node)
-        {
-            var value = node.GetScalarValue();
-            return RuntimeExpression.Build(value);
         }
 
         private static RuntimeExpressionAnyWrapper LoadRuntimeExpressionAnyWrapper(ParseNode node)
@@ -171,7 +138,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
-            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser) && parser(
+            if (node.Context.ExtensionParsers is not null && node.Context.ExtensionParsers.TryGetValue(name, out var parser) && parser(
                 node.CreateAny(), OpenApiSpecVersion.OpenApi3_0) is { } result)
             {
                 return result;
@@ -182,23 +149,22 @@ namespace Microsoft.OpenApi.Reader.V3
             }
         }
 
-        private static string LoadString(ParseNode node)
+        private static string? LoadString(ParseNode node)
         {
             return node.GetScalarValue();
         }
 
-        private static (string, string) GetReferenceIdAndExternalResource(string pointer)
+        private static (string, string?) GetReferenceIdAndExternalResource(string pointer)
         {
             var refSegments = pointer.Split('/');
-            var refId = refSegments.Last();
-            var isExternalResource = !refSegments.First().StartsWith("#", StringComparison.OrdinalIgnoreCase);
-
-            string externalResource = null;
+            var refId = refSegments[refSegments.Count() -1];
+            var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
+          
+            string? externalResource = null;
             if (isExternalResource)
             {
                 externalResource = pointer.Split('#')[0].TrimEnd('#');
             }
-
             return (refId, externalResource);
         }
     }

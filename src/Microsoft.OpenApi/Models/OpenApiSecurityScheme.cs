@@ -19,28 +19,28 @@ namespace Microsoft.OpenApi.Models
         public SecuritySchemeType? Type { get; set; }
 
         /// <inheritdoc/>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <inheritdoc/>
         public ParameterLocation? In { get; set; }
 
         /// <inheritdoc/>
-        public string Scheme { get; set; }
+        public string? Scheme { get; set; }
 
         /// <inheritdoc/>
-        public string BearerFormat { get; set; }
+        public string? BearerFormat { get; set; }
 
         /// <inheritdoc/>
-        public OpenApiOAuthFlows Flows { get; set; }
+        public OpenApiOAuthFlows? Flows { get; set; }
 
         /// <inheritdoc/>
-        public Uri OpenIdConnectUrl { get; set; }
+        public Uri? OpenIdConnectUrl { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // type
-            writer.WriteProperty(OpenApiConstants.Type, Type.GetDisplayName());
+            writer.WriteProperty(OpenApiConstants.Type, Type?.GetDisplayName());
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Models
                     // name
                     // in
                     writer.WriteProperty(OpenApiConstants.Name, Name);
-                    writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
+                    writer.WriteProperty(OpenApiConstants.In, In?.GetDisplayName());
                     break;
                 case SecuritySchemeType.Http:
                     // These properties apply to http type only.
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Models
                     // in
                     writer.WriteProperty(OpenApiConstants.Type, Type.GetDisplayName());
                     writer.WriteProperty(OpenApiConstants.Name, Name);
-                    writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
+                    writer.WriteProperty(OpenApiConstants.In, In?.GetDisplayName());
                     break;
             }
 
@@ -192,7 +192,7 @@ namespace Microsoft.OpenApi.Models
         /// Arbitrarily chooses one <see cref="OpenApiOAuthFlow"/> object from the <see cref="OpenApiOAuthFlows"/>
         /// to populate in V2 security scheme.
         /// </summary>
-        private static void WriteOAuthFlowForV2(IOpenApiWriter writer, OpenApiOAuthFlows flows)
+        private static void WriteOAuthFlowForV2(IOpenApiWriter writer, OpenApiOAuthFlows? flows)
         {
             if (flows != null)
             {

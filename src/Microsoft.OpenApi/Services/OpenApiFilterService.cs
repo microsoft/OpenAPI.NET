@@ -27,10 +27,10 @@ namespace Microsoft.OpenApi.Services
         /// <param name="source">The input OpenAPI document.</param>
         /// <returns>A predicate.</returns>
         public static Func<string, HttpMethod, OpenApiOperation, bool> CreatePredicate(
-                string operationIds = null,
-                string tags = null,
-                Dictionary<string, List<string>> requestUrls = null,
-                OpenApiDocument source = null)
+                string? operationIds = null,
+                string? tags = null,
+                Dictionary<string, List<string>>? requestUrls = null,
+                OpenApiDocument? source = null)
         {
             Func<string, HttpMethod, OpenApiOperation, bool> predicate;
             ValidateFilters(requestUrls, operationIds, tags);
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Services
             {
                 predicate = GetTagsPredicate(tags);
             }
-            else if (requestUrls != null)
+            else if (requestUrls != null && source is not null)
             {
                 predicate = GetRequestUrlsPredicate(requestUrls, source);
             }
@@ -88,36 +88,39 @@ namespace Microsoft.OpenApi.Services
             var results = FindOperations(source, predicate);
             foreach (var result in results)
             {
-                IOpenApiPathItem pathItem;
-                var pathKey = result.CurrentKeys.Path;
+                IOpenApiPathItem? pathItem = null;
+                var pathKey = result.CurrentKeys?.Path;
 
                 if (subset.Paths == null)
                 {
                     subset.Paths = new();
                     pathItem = new OpenApiPathItem();
-                    subset.Paths.Add(pathKey, pathItem);
+                    if (pathKey is not null)
+                    {
+                        subset.Paths.Add(pathKey, pathItem);
+                    }
                 }
                 else
                 {
-                    if (!subset.Paths.TryGetValue(pathKey, out pathItem))
+                    if (pathKey is not null && !subset.Paths.TryGetValue(pathKey, out pathItem))
                     {
                         pathItem = new OpenApiPathItem();
                         subset.Paths.Add(pathKey, pathItem);
                     }
                 }
 
-                if (result.CurrentKeys.Operation != null)
+                if (result.CurrentKeys?.Operation != null && result.Operation != null)
                 {
-                    pathItem.Operations.Add(result.CurrentKeys.Operation, result.Operation);
+                    pathItem?.Operations?.Add(result.CurrentKeys.Operation, result.Operation);
 
                     if (result.Parameters?.Any() ?? false)
                     {
                         foreach (var parameter in result.Parameters)
                         {
-                            if (!pathItem.Parameters.Contains(parameter))
+                            if (pathItem?.Parameters is not null && !pathItem.Parameters.Contains(parameter))
                             {
                                 pathItem.Parameters.Add(parameter);
-                            }                          
+                            }
                         }
                     }
                 }
@@ -148,7 +151,7 @@ namespace Microsoft.OpenApi.Services
             return rootNode;
         }
 
-        private static IDictionary<HttpMethod, OpenApiOperation> GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
+        private static IDictionary<HttpMethod, OpenApiOperation>? GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
         {
             if (relativeUrl.Equals("/", StringComparison.Ordinal) && rootNode.HasOperations(label))
             {
@@ -157,7 +160,7 @@ namespace Microsoft.OpenApi.Services
 
             var urlSegments = relativeUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            IDictionary<HttpMethod, OpenApiOperation> operations = null;
+            IDictionary<HttpMethod, OpenApiOperation>? operations = null;
 
             var targetChild = rootNode;
 
@@ -247,93 +250,120 @@ namespace Microsoft.OpenApi.Services
             } while (morestuff);
         }
 
-        private static bool AddReferences(OpenApiComponents newComponents, OpenApiComponents target)
+        private static bool AddReferences(OpenApiComponents newComponents, OpenApiComponents? target)
         {
             var moreStuff = false;
-            foreach (var item in newComponents.Schemas)
+            if (newComponents.Schemas is not null)
             {
-                if (!target.Schemas.ContainsKey(item.Key))
+                foreach (var item in newComponents.Schemas)
                 {
-                    moreStuff = true;
-                    target.Schemas.Add(item);
+                    if (target?.Schemas is not null && !target.Schemas.ContainsKey(item.Key))
+                    {
+                        moreStuff = true;
+                        target.Schemas.Add(item);
+                    }
                 }
             }
 
-            foreach (var item in newComponents.Parameters)
+            if (newComponents.Parameters is not null)
             {
-                if (!target.Parameters.ContainsKey(item.Key))
+                foreach (var item in newComponents.Parameters)
                 {
-                    moreStuff = true;
-                    target.Parameters.Add(item);
+                    if (target?.Parameters is not null && !target.Parameters.ContainsKey(item.Key))
+                    {
+                        moreStuff = true;
+                        target.Parameters.Add(item);
+                    }
                 }
             }
 
-            foreach (var item in newComponents.Responses)
+            if (newComponents.Responses is not null)
             {
-                if (!target.Responses.ContainsKey(item.Key))
+                foreach (var item in newComponents.Responses)
                 {
-                    moreStuff = true;
-                    target.Responses.Add(item);
+                    if (target?.Responses is not null && !target.Responses.ContainsKey(item.Key))
+                    {
+                        moreStuff = true;
+                        target.Responses.Add(item);
+                    }
                 }
             }
 
-            foreach (var item in newComponents.RequestBodies
-                                        .Where(item => !target.RequestBodies.ContainsKey(item.Key)))
+            if (newComponents.RequestBodies is not null)
             {
-                moreStuff = true;
-                target.RequestBodies.Add(item);
+                foreach (var item in newComponents.RequestBodies
+                                            .Where(item => target?.RequestBodies is not null && !target.RequestBodies.ContainsKey(item.Key)))
+                {
+                    moreStuff = true;
+                    target?.RequestBodies?.Add(item);
+                }
             }
 
-            foreach (var item in newComponents.Headers
-                                        .Where(item => !target.Headers.ContainsKey(item.Key)))
+            if (newComponents.Headers is not null)
             {
-                moreStuff = true;
-                target.Headers.Add(item);
+                foreach (var item in newComponents.Headers
+                                            .Where(item => target?.Headers is not null && !target.Headers.ContainsKey(item.Key)))
+                {
+                    moreStuff = true;
+                    target?.Headers?.Add(item);
+                }
             }
 
-            foreach (var item in newComponents.Links
-                                        .Where(item => !target.Links.ContainsKey(item.Key)))
+            if (newComponents.Links is not null)
             {
-                moreStuff = true;
-                target.Links.Add(item);
+                foreach (var item in newComponents.Links
+                                            .Where(item => target?.Links is not null && !target.Links.ContainsKey(item.Key)))
+                {
+                    moreStuff = true;
+                    target?.Links?.Add(item);
+                }
             }
 
-            foreach (var item in newComponents.Callbacks
-                                        .Where(item => !target.Callbacks.ContainsKey(item.Key)))
+            if (newComponents.Callbacks is not null)
             {
-                moreStuff = true;
-                target.Callbacks.Add(item);
+                foreach (var item in newComponents.Callbacks
+                                            .Where(item => target?.Callbacks is not null && !target.Callbacks.ContainsKey(item.Key)))
+                {
+                    moreStuff = true;
+                    target?.Callbacks?.Add(item);
+                }
             }
 
-            foreach (var item in newComponents.Examples
-                                        .Where(item => !target.Examples.ContainsKey(item.Key)))
+            if (newComponents.Examples is not null)
             {
-                moreStuff = true;
-                target.Examples.Add(item);
+                foreach (var item in newComponents.Examples
+                                            .Where(item => target?.Examples is not null && !target.Examples.ContainsKey(item.Key)))
+                {
+                    moreStuff = true;
+                    target?.Examples?.Add(item);
+                }
             }
 
-            foreach (var item in newComponents.SecuritySchemes
-                                        .Where(item => !target.SecuritySchemes.ContainsKey(item.Key)))
+            if (newComponents.SecuritySchemes is not null)
             {
-                moreStuff = true;
-                target.SecuritySchemes.Add(item);
+                foreach (var item in newComponents.SecuritySchemes
+                                            .Where(item => target?.SecuritySchemes is not null && !target.SecuritySchemes.ContainsKey(item.Key)))
+                {
+                    moreStuff = true;
+                    target?.SecuritySchemes?.Add(item);
+                }
             }
 
             return moreStuff;
         }
 
-        private static string ExtractPath(string url, IList<OpenApiServer> serverList)
+        private static string ExtractPath(string url, IList<OpenApiServer>? serverList)
         {
             // if OpenAPI has servers, then see if the url matches one of them
-            var baseUrl = serverList.Select(s => s.Url.TrimEnd('/'))
-                                    .FirstOrDefault(c => url.Contains(c));
+            var baseUrl = serverList?.Select(s => s.Url?.TrimEnd('/'))
+                        .FirstOrDefault(c => c != null && url.Contains(c));
 
             return baseUrl == null ?
                     new Uri(new(SRResource.DefaultBaseUri), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped)
                     : url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
         }
 
-        private static void ValidateFilters(IDictionary<string, List<string>> requestUrls, string operationIds, string tags)
+        private static void ValidateFilters(IDictionary<string, List<string>>? requestUrls, string? operationIds, string? tags)
         {
             if (requestUrls != null && (operationIds != null || tags != null))
             {
@@ -364,7 +394,7 @@ namespace Microsoft.OpenApi.Services
             if (tagsArray.Length == 1)
             {
                 var regex = new Regex(tagsArray[0]);
-                return (_, _, operation) => operation.Tags?.Any(tag => regex.IsMatch(tag.Name)) ?? false;
+                return (_, _, operation) => operation.Tags?.Any(tag => tag.Name is not null && regex.IsMatch(tag.Name)) ?? false;
             }
             else
             {
@@ -378,22 +408,25 @@ namespace Microsoft.OpenApi.Services
             if (source != null)
             {
                 var apiVersion = source.Info.Version;
-                var sources = new Dictionary<string, OpenApiDocument> { { apiVersion, source } };
-                var rootNode = CreateOpenApiUrlTreeNode(sources);
-
-                // Iterate through urls dictionary and fetch operations for each url
-                foreach (var url in requestUrls)
+                if (apiVersion is not null)
                 {
-                    var serverList = source.Servers;
-                    var path = ExtractPath(url.Key, serverList);
-                    var openApiOperations = GetOpenApiOperations(rootNode, path, apiVersion);
-                    if (openApiOperations == null)
+                    var sources = new Dictionary<string, OpenApiDocument> { { apiVersion, source } };
+                    var rootNode = CreateOpenApiUrlTreeNode(sources);
+
+                    // Iterate through urls dictionary and fetch operations for each url
+                    foreach (var url in requestUrls)
                     {
-                        Debug.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
-                        continue;
+                        var serverList = source.Servers;
+                        var path = ExtractPath(url.Key, serverList);
+                        var openApiOperations = GetOpenApiOperations(rootNode, path, apiVersion);
+                        if (openApiOperations == null)
+                        {
+                            Debug.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
+                            continue;
+                        }
+                        operationTypes.AddRange(GetOperationTypes(openApiOperations, url.Value, path));
                     }
-                    operationTypes.AddRange(GetOperationTypes(openApiOperations, url.Value, path));
-                }
+                }                
             }
 
             if (!operationTypes.Any())

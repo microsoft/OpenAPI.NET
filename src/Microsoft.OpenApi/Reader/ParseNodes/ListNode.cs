@@ -25,37 +25,40 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
-            return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject), hostDocument))
+            var list = _nodeList
+                .OfType<JsonObject>()
+                .Select(n => map(new MapNode(Context, n), hostDocument))
                 .Where(i => i != null)
                 .ToList();
+            return list;
         }
 
         public override List<JsonNode> CreateListOfAny()
         {
 
-            var list = _nodeList.Select(n => Create(Context, n).CreateAny())
+            var list = _nodeList.OfType<JsonNode>().Select(n => Create(Context, n).CreateAny())
                 .Where(i => i != null)
                 .ToList();
 
             return list;
         }
 
-        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument, T> map, OpenApiDocument openApiDocument)
+        public override List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument openApiDocument)
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
-            return _nodeList.Select(n => map(new(Context, n), openApiDocument)).ToList();
+            return _nodeList.OfType<JsonNode>().Select(n => map(new(Context, n), openApiDocument)).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()
         {
-            return _nodeList.Select(n => Create(Context, n)).ToList().GetEnumerator();
+            return _nodeList.OfType<JsonNode>().Select(n => Create(Context, n)).ToList().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

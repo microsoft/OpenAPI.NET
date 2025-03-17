@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Interfaces;
+﻿using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Models.Interfaces;
 
@@ -11,10 +11,10 @@ public interface IOpenApiTag : IOpenApiReadOnlyExtensible, IOpenApiReadOnlyDescr
     /// <summary>
     /// The name of the tag.
     /// </summary>
-    public string Name { get; }
+    public string? Name { get; }
 
     /// <summary>
     /// Additional external documentation for this tag.
     /// </summary>
-    public OpenApiExternalDocs ExternalDocs { get; }
+    public OpenApiExternalDocs? ExternalDocs { get; }
 }

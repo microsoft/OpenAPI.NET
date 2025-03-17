@@ -1,7 +1,8 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -15,9 +16,9 @@ namespace Microsoft.OpenApi.Reader.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static string _flowValue;
+        private static string? _flowValue;
 
-        private static OpenApiOAuthFlow _flow;
+        private static OpenApiOAuthFlow? _flow;
 
         private static readonly FixedFieldMap<OpenApiSecurityScheme> _securitySchemeFixedFields =
             new()
@@ -50,7 +51,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {"description", (o, n, _) => o.Description = n.GetScalarValue()},
                 {"name", (o, n, _) => o.Name = n.GetScalarValue()},
-                {"in", (o, n, _) => 
+                {"in", (o, n, _) =>
                     {
                         if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
                         {
@@ -64,14 +65,36 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "authorizationUrl",
-                    (_, n, _) => _flow.AuthorizationUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (_, n, _) =>
+                    {
+                        var scalarValue = n.GetScalarValue();
+                        if (_flow is not null && scalarValue is not null)
+                        {
+                            _flow.AuthorizationUrl = new(scalarValue, UriKind.RelativeOrAbsolute);
+                        }                        
+                    }
                 },
                 {
                     "tokenUrl",
-                    (_, n, _) => _flow.TokenUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (_, n, _) =>
+                    {
+                        var scalarValue = n.GetScalarValue();
+                        if (_flow is not null && scalarValue is not null)
+                        {
+                             _flow.TokenUrl = new(scalarValue, UriKind.RelativeOrAbsolute);
+                        }
+                    }
                 },
                 {
-                    "scopes", (_, n, _) => _flow.Scopes = n.CreateSimpleMap(LoadString)
+                    "scopes", (_, n, _) =>
+                    {
+                        if (_flow is not null)
+                        {
+                            _flow.Scopes = n.CreateSimpleMap(LoadString)
+                                .Where(kv => kv.Value != null)
+                                .ToDictionary(kv => kv.Key, kv => kv.Value!);
+                        } 
+                    }
                 }
             };
 

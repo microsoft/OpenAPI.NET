@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V2
@@ -58,11 +59,13 @@ namespace Microsoft.OpenApi.Reader.V2
             node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
             node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);
 
-            pathItem.Parameters = node.CreateList(LoadParameter, hostDocument);
+            pathItem.Parameters = node.CreateList(LoadParameter, hostDocument)
+                                     .OfType<IOpenApiParameter>()
+                                     .ToList();
 
             // Build request body based on information determined while parsing OpenApiOperation
             var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);
-            if (bodyParameter != null)
+            if (bodyParameter is not null && pathItem.Operations is not null)
             {
                 var requestBody = CreateRequestBody(node.Context, bodyParameter);
                 foreach (var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
@@ -82,7 +85,7 @@ namespace Microsoft.OpenApi.Reader.V2
             else
             {
                 var formParameters = node.Context.GetFromTempStorage<List<OpenApiParameter>>(TempStorageKeys.FormParameters);
-                if (formParameters != null)
+                if (formParameters is not null && pathItem.Operations is not null)
                 {
                     var requestBody = CreateFormBody(node.Context, formParameters);
                     foreach (var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))

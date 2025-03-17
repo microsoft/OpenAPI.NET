@@ -38,14 +38,14 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData("Pet.json", "Pet.json", null, null)]
-        [InlineData("Pet.yaml", "Pet.yaml", null, null)]
-        [InlineData("abc", "abc", null, null)]
+        [InlineData("Pet.json", "Pet.json", null, ReferenceType.Schema)]
+        [InlineData("Pet.yaml", "Pet.yaml", null, ReferenceType.Schema)]
+        [InlineData("abc", "abc", null, ReferenceType.Schema)]
         [InlineData("Pet.json#/components/schemas/Pet", "Pet.json", "Pet", ReferenceType.Schema)]
         [InlineData("Pet.yaml#/components/schemas/Pet", "Pet.yaml", "Pet", ReferenceType.Schema)]
         [InlineData("abc#/components/schemas/Pet", "abc", "Pet", ReferenceType.Schema)]
         [InlineData("abc#/components/schemas/HttpsValidationProblem", "abc", "HttpsValidationProblem", ReferenceType.Schema)]
-        public void SettingExternalReferenceV3ShouldSucceed(string expected, string externalResource, string id, ReferenceType? type)
+        public void SettingExternalReferenceV3ShouldSucceed(string expected, string externalResource, string id, ReferenceType type)
         {
             // Arrange & Act
             var reference = new OpenApiReference
@@ -63,13 +63,13 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData("Pet.json", "Pet.json", null, null)]
-        [InlineData("Pet.yaml", "Pet.yaml", null, null)]
-        [InlineData("abc", "abc", null, null)]
+        [InlineData("Pet.json", "Pet.json", null, ReferenceType.Schema)]
+        [InlineData("Pet.yaml", "Pet.yaml", null, ReferenceType.Schema)]
+        [InlineData("abc", "abc", null, ReferenceType.Schema)]
         [InlineData("Pet.json#/definitions/Pet", "Pet.json", "Pet", ReferenceType.Schema)]
         [InlineData("Pet.yaml#/definitions/Pet", "Pet.yaml", "Pet", ReferenceType.Schema)]
         [InlineData("abc#/definitions/Pet", "abc", "Pet", ReferenceType.Schema)]
-        public void SettingExternalReferenceV2ShouldSucceed(string expected, string externalResource, string id, ReferenceType? type)
+        public void SettingExternalReferenceV2ShouldSucceed(string expected, string externalResource, string id, ReferenceType type)
         {
             // Arrange & Act
             var reference = new OpenApiReference

@@ -38,9 +38,14 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
             },
             {
-                "termsOfService", (o, n, _) =>
+                "termsOfService",
+                (o, n, _) =>
                 {
-                    o.TermsOfService = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                    var terms = n.GetScalarValue();
+                    if (terms != null)
+                    {
+                        o.TermsOfService = new(terms, UriKind.RelativeOrAbsolute);
+                    }
                 }
             },
             {

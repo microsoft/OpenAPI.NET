@@ -19,11 +19,25 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     OpenApiConstants.Description,
-                    (o, n, _) => o.Description = n.GetScalarValue()
+                    (o, n, _) =>
+                    {
+                        var description = n.GetScalarValue();
+                        if (description != null)
+                        {
+                            o.Description = n.GetScalarValue(); 
+                        } 
+                    }
                 },
                 {
                     OpenApiConstants.Url,
-                    (o, n, _) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                    (o, n, _) =>
+                    {
+                        var url = n.GetScalarValue();
+                        if (url != null)
+                        {
+                            o.Url = new(url, UriKind.RelativeOrAbsolute); 
+                        } 
+                    }
                 },
             };
 
@@ -39,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var externalDocs = new OpenApiExternalDocs();
 
-            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields);
+            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, doc: hostDocument);
 
             return externalDocs;
         }

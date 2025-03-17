@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "enum",
-                    (o, n, doc) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc)
+                    (o, n, doc) => o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc).OfType<string>().ToList()
                 },
                 {
                     "default",

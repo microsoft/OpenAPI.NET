@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. an absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Callback, externalResource)
+        public OpenApiCallbackReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Callback, externalResource)
         {
         }
         /// <summary>
@@ -38,10 +38,10 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public Dictionary<RuntimeExpression, IOpenApiPathItem> PathItems { get => Target?.PathItems; }
+        public Dictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get => Target?.PathItems; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiCallback CopyReferenceAsTargetElementWithOverrides(IOpenApiCallback source)

@@ -28,21 +28,21 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Extension parsers
         /// </summary>
-        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = 
+        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>? ExtensionParsers { get; set; } = 
             new();
 
-        internal RootNode RootNode { get; set; }
+        internal RootNode? RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new();
 
         /// <summary>
         /// The base url for the document
         /// </summary>
-        public Uri BaseUrl { get; set; }
+        public Uri? BaseUrl { get; set; }
 
         /// <summary>
         /// Default content type for a response object
         /// </summary>
-        public List<string> DefaultContentType { get; set; }
+        public List<string>? DefaultContentType { get; set; }
 
         /// <summary>
         /// Diagnostic object that returns metadata about the parsing process.
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="version">OpenAPI version of the fragment</param>
         /// <param name="openApiDocument">The OpenApiDocument object to which the fragment belongs, used to lookup references.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        public T ParseFragment<T>(JsonNode jsonNode, OpenApiSpecVersion version, OpenApiDocument openApiDocument) where T : IOpenApiElement
+        public T? ParseFragment<T>(JsonNode jsonNode, OpenApiSpecVersion version, OpenApiDocument openApiDocument) where T : IOpenApiElement
         {
             var node = ParseNode.Create(this, jsonNode);
 
@@ -139,20 +139,20 @@ namespace Microsoft.OpenApi.Reader
         {
             var versionNode = rootNode.Find(new("/openapi"));
 
-            if (versionNode != null)
+            if (versionNode is not null)
             {
                 return versionNode.GetScalarValue().Replace("\"", string.Empty);
             }
 
             versionNode = rootNode.Find(new("/swagger"));
 
-            return versionNode?.GetScalarValue().Replace("\"", string.Empty);
+            return versionNode?.GetScalarValue().Replace("\"", string.Empty) ?? throw new OpenApiException("Version node not found.");
         }
 
         /// <summary>
         /// Service providing all Version specific conversion functions
         /// </summary>
-        internal IOpenApiVersionService VersionService { get; set; }
+        internal IOpenApiVersionService? VersionService { get; set; }
 
         /// <summary>
         /// End the current object.
@@ -173,9 +173,9 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Gets the value from the temporary storage matching the given key.
         /// </summary>
-        public T GetFromTempStorage<T>(string key, object scope = null)
+        public T? GetFromTempStorage<T>(string key, object? scope = null)
         {
-            Dictionary<string, object> storage;
+            Dictionary<string, object>? storage;
 
             if (scope == null)
             {
@@ -192,9 +192,9 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Sets the temporary storage for this key and value.
         /// </summary>
-        public void SetTempStorage(string key, object value, object scope = null)
+        public void SetTempStorage(string key, object? value, object? scope = null)
         {
-            Dictionary<string, object> storage;
+            Dictionary<string, object>? storage;
 
             if (scope == null)
             {
@@ -271,7 +271,7 @@ namespace Microsoft.OpenApi.Reader
 
         private void ValidateRequiredFields(OpenApiDocument doc, string version)
         {
-            if ((version.is2_0() || version.is3_0()) && (doc.Paths == null))
+            if ((version.is2_0() || version.is3_0()) && (doc.Paths == null) && RootNode is not null)
             {
                 // paths is a required field in OpenAPI 2.0 and 3.0 but optional in 3.1
                 RootNode.Context.Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {RootNode.Context.GetLocation()}"));

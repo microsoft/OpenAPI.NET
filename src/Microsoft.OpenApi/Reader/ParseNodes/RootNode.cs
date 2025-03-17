@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             _jsonNode = jsonNode;
         }
 
-        public ParseNode Find(JsonPointer referencePointer)
+        public ParseNode? Find(JsonPointer referencePointer)
         {
             if (referencePointer.Find(_jsonNode) is not JsonNode jsonNode)
             {

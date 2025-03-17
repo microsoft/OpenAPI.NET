@@ -1,4 +1,4 @@
-
+﻿
 using System.Collections.Generic;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
@@ -14,5 +14,5 @@ public interface IOpenApiCallback : IOpenApiReadOnlyExtensible, IShallowCopyable
     /// <summary>
     /// A Path Item Object used to define a callback request and expected responses.
     /// </summary>
-    public Dictionary<RuntimeExpression, IOpenApiPathItem> PathItems { get; }
+    public Dictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get; }
 }
