@@ -183,14 +183,14 @@ extends:
             PendingAnalysisWaitTimeoutMinutes: '5'
       
         # publish hidi as an .exe
-        - task: DotNetCoreCLI@2
-          displayName: publish Hidi as executable
-          inputs:
-            command: 'publish'
-            arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
-            projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
-            publishWebProjects: False
-            zipAfterPublish: false
+        # - task: DotNetCoreCLI@2
+        #   displayName: publish Hidi as executable
+        #   inputs:
+        #     command: 'publish'
+        #     arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
+        #     projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
+        #     publishWebProjects: False
+        #     zipAfterPublish: false
             
         - task: CopyFiles@2
           displayName: Prepare staging folder for upload
