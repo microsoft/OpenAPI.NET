@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.YamlReader;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -15,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = yamlStream.Documents[0].RootNode;
 
             var context = new ParsingContext(new OpenApiDiagnostic());
             var asJsonNode = yamlNode.ToJsonNode();
