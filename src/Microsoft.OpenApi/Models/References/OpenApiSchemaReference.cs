@@ -64,8 +64,6 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public decimal? ExclusiveMinimum { get => Target?.ExclusiveMinimum; }
         /// <inheritdoc/>
-        public bool UnEvaluatedProperties { get => Target?.UnEvaluatedProperties ?? false; }
-        /// <inheritdoc/>
         public JsonSchemaType? Type { get => Target?.Type; }
         /// <inheritdoc/>
         public string? Const { get => Target?.Const; }

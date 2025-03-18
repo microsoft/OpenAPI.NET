@@ -454,7 +454,6 @@ namespace Microsoft.OpenApi.Models.Interfaces
         System.Uri? Schema { get; }
         string? Title { get; }
         Microsoft.OpenApi.Models.JsonSchemaType? Type { get; }
-        bool UnEvaluatedProperties { get; }
         bool UnevaluatedProperties { get; }
         bool? UniqueItems { get; }
         System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode>? UnrecognizedKeywords { get; }
@@ -1391,7 +1390,6 @@ namespace Microsoft.OpenApi.Models.References
         public System.Uri? Schema { get; }
         public string? Title { get; }
         public Microsoft.OpenApi.Models.JsonSchemaType? Type { get; }
-        public bool UnEvaluatedProperties { get; }
         public bool UnevaluatedProperties { get; }
         public bool? UniqueItems { get; }
         public System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode>? UnrecognizedKeywords { get; }
