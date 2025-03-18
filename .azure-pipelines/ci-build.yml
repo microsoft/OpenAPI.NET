@@ -141,13 +141,13 @@ extends:
           displayName: 'pack OpenAPI'
 
         # Pack readers
-        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.YamlReader/Microsoft.OpenApi.YamlReader.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
           displayName: 'pack Readers'
 
         # Pack hidi
-        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
-          displayName: 'pack Hidi'
-
+        # - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+        #   displayName: 'pack Hidi'
+         
         - task: EsrpCodeSigning@5
           displayName: 'ESRP CodeSigning Nuget Packages'
           inputs:
@@ -183,14 +183,14 @@ extends:
             PendingAnalysisWaitTimeoutMinutes: '5'
       
         # publish hidi as an .exe
-        - task: DotNetCoreCLI@2
-          displayName: publish Hidi as executable
-          inputs:
-            command: 'publish'
-            arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
-            projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
-            publishWebProjects: False
-            zipAfterPublish: false
+        # - task: DotNetCoreCLI@2
+        #   displayName: publish Hidi as executable
+        #   inputs:
+        #     command: 'publish'
+        #     arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
+        #     projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
+        #     publishWebProjects: False
+        #     zipAfterPublish: false
             
         - task: CopyFiles@2
           displayName: Prepare staging folder for upload
@@ -244,7 +244,7 @@ extends:
                 vmImage: ubuntu-latest
               steps:
               - powershell: |
-                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Readers.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
+                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
                   foreach($fileName in $fileNames) {
                     if(Test-Path $fileName) {
                       rm $fileName -Verbose
@@ -278,7 +278,7 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Readers.*.nupkg'
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg'
                   packageParentPath: '$(Pipeline.Workspace)'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'

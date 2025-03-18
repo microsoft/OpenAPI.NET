@@ -4,7 +4,7 @@
         <!-- net6.0 target is present because of the conditional build in OpenApiYamlReader.Read -->
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
+        <Description>OpenAPI.NET Reader for YAML documents</Description>
         <SignAssembly>true</SignAssembly>
         <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net5.0'))">true</IsTrimmable>
         <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net8.0'))">true</IsAotCompatible>

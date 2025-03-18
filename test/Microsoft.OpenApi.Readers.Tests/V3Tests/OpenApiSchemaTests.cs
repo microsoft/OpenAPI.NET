@@ -17,6 +17,7 @@ using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Models.References;
 using System.Threading.Tasks;
 using System.Net.Http;
+using Microsoft.OpenApi.YamlReader;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {

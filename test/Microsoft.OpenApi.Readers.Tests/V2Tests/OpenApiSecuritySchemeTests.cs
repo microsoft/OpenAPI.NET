@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
+using Microsoft.OpenApi.YamlReader;
 using SharpYaml.Serialization;
 using Xunit;
 
