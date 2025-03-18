@@ -103,9 +103,6 @@ namespace Microsoft.OpenApi.Models
         internal bool? IsExclusiveMinimum { get; set; }
 
         /// <inheritdoc />
-        public bool UnEvaluatedProperties { get; set; }     
-
-        /// <inheritdoc />
         public JsonSchemaType? Type { get; set; }
 
         /// <inheritdoc />
