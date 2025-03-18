@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-preview.14](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.13...v2.0.0-preview.14) (2025-03-18)
+
+
+### Bug Fixes
+
+* exclude hidi from release due to package source mapping conflict ([72daa54](https://github.com/microsoft/OpenAPI.NET/commit/72daa544f2bfe8d51ed69d7ba82d31cbc36580f2))
+
 ## [2.0.0-preview.13](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.12...v2.0.0-preview.13) (2025-03-14)
 
 
