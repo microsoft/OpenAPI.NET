@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.0-preview.15](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.14...v2.0.0-preview.15) (2025-03-18)
+
+
+### Bug Fixes
+
+* Include hidi in solution ([7f4bec8](https://github.com/microsoft/OpenAPI.NET/commit/7f4bec8304771b498e8b0e33c706869ff79fd155))
+* remove duplicate unused property ([f62e039](https://github.com/microsoft/OpenAPI.NET/commit/f62e039a2efde04d0c3988b359ca09ab3349a40b))
+* revert change to exclude hidi in solution ([c3afe4e](https://github.com/microsoft/OpenAPI.NET/commit/c3afe4e8af2526e957940503a31079ed5f027c0a))
+
 ## [2.0.0-preview.14](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.13...v2.0.0-preview.14) (2025-03-18)
 
 
