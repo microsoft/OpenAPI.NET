@@ -329,6 +329,8 @@ extends:
                 image: ubuntu-latest
                 os: linux
               steps:
+                - checkout: self
+                
                 - task: AzureCLI@2
                   displayName: 'Login to Azure Container Registry'
                   inputs:
