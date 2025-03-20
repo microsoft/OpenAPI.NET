@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -110,7 +111,7 @@ namespace Microsoft.OpenApi.Models
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                RenderComponents(writer, (writer, element) => element.SerializeAsV31(writer));
+                RenderComponents(writer, (writer, element) => element.SerializeAsV31(writer), OpenApiSpecVersion.OpenApi3_1);                
                 return;
             }
 
@@ -148,7 +149,7 @@ namespace Microsoft.OpenApi.Models
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                RenderComponents(writer, (writer, element) => element.SerializeAsV3(writer));
+                RenderComponents(writer, (writer, element) => element.SerializeAsV3(writer), OpenApiSpecVersion.OpenApi3_0);
                 return;
             }
 
@@ -315,13 +316,26 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private void RenderComponents(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        private void RenderComponents(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback, OpenApiSpecVersion version)
         {
             var loops = writer.GetSettings().LoopDetector.Loops;
             writer.WriteStartObject();
             if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
             {
                 writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, callback);
+            }
+            // always render security schemes as inlining of security requirement objects is not allowed in the spec
+            if (SecuritySchemes is not null && SecuritySchemes.Any())
+            {
+                writer.WriteOptionalMap(
+                OpenApiConstants.SecuritySchemes,
+                SecuritySchemes,
+                (w, key, component) =>
+                {
+                    if (version is OpenApiSpecVersion.OpenApi3_1)
+                        component.SerializeAsV31(writer);
+                    component.SerializeAsV3(writer);
+                });
             }
             writer.WriteEndObject();
         }
