@@ -320,6 +320,7 @@ extends:
                   addChangeLog: false
 
       - deployment: deploy_docker_image
+        environment: kiota-github-releases
         strategy:
           runOnce:
             deploy:
