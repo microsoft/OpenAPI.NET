@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
@@ -22,7 +24,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "mapping",
-                    (o, n, _) => o.Mapping = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)
+                    (o, n, doc) => o.Mapping = n.CreateMap(LoadMapping, doc)
                 }
             };
 
@@ -39,6 +41,14 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             return discriminator;
+        }
+        public static OpenApiSchemaReference LoadMapping(ParseNode node, OpenApiDocument hostDocument)
+        {
+            var mapNode = node.CheckMapNode("mapping");
+
+            var pointer = mapNode.GetReferencePointer();
+            var reference = GetReferenceIdAndExternalResource(pointer!);
+            return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
         }
     }
 }

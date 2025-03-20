@@ -75,8 +75,10 @@ components: # Reusable components for the API
       discriminator: # The discriminator for resolving the concrete schema type
         propertyName: petType
         mapping:
-          cat: '#/components/schemas/Cat'
-          dog: '#/components/schemas/Dog'
+          cat:
+            $ref: '#/components/schemas/Cat'
+          dog:
+            $ref: '#/components/schemas/Dog'
     Cat: # A schema for a cat object
       allOf:
         - $ref: '#/components/schemas/Pet'
