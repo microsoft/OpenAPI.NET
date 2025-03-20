@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -20,7 +22,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
-        public IDictionary<string, string>? Mapping { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, OpenApiSchemaReference>? Mapping { get; set; } = new Dictionary<string, OpenApiSchemaReference>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -38,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDiscriminator(OpenApiDiscriminator discriminator)
         {
             PropertyName = discriminator?.PropertyName ?? PropertyName;
-            Mapping = discriminator?.Mapping != null ? new Dictionary<string, string>(discriminator.Mapping) : null;
+            Mapping = discriminator?.Mapping != null ? new Dictionary<string, OpenApiSchemaReference>(discriminator.Mapping) : null;
             Extensions = discriminator?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(discriminator.Extensions) : null;
         }
 
@@ -48,7 +50,8 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer);
+            SerializeInternal(writer,
+               (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_1);
@@ -61,7 +64,8 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer);
+            SerializeInternal(writer,
+                (writer, referenceElement) => referenceElement.SerializeAsV3(writer));
 
             writer.WriteEndObject();
         }
@@ -69,8 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
         /// </summary>
-        /// <param name="writer"></param>
-        private void SerializeInternal(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiReferenceHolder> action)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -80,7 +83,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, key, reference) => action(w, reference));
         }
 
         /// <summary>

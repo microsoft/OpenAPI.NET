@@ -699,7 +699,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDiscriminator() { }
         public OpenApiDiscriminator(Microsoft.OpenApi.Models.OpenApiDiscriminator discriminator) { }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
-        public System.Collections.Generic.IDictionary<string, string>? Mapping { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.References.OpenApiSchemaReference>? Mapping { get; set; }
         public string? PropertyName { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
