@@ -409,11 +409,23 @@ extends:
                   name: setdate
                   condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
                 
+                - script: |
+                    docker run --rm tonistiigi/binfmt --install all
+                  displayName: "Enable multi-platform builds"
+
+                - script: |
+                    docker buildx create --use --name mybuilder
+                  displayName: "Set up Docker BuildX"
+
+                - script: |
+                    docker buildx inspect --bootstrap
+                  displayName: "Ensure BuildX is working"
+                
                 - bash: |
                     echo "Building Docker image..."
                     echo "Using build date: ${BUILDDATE}"
                     # Using quotes around tags to prevent flag interpretation
-                    docker build \
+                    docker buildx \
                       --platform linux/arm64/v8 \
                       -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
@@ -427,7 +439,7 @@ extends:
                 
                 - bash: |
                     echo "Building Docker image for release..."
-                    docker build \
+                    docker buildx \
                       --platform linux/arm64/v8 \
                       -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
