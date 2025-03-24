@@ -172,20 +172,64 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public bool WriteOnly { get; set; }
 
+        private IList<IOpenApiSchema>? _allOf;
         /// <inheritdoc />
-        public IList<IOpenApiSchema>? AllOf { get; set; } = [];
+        public IList<IOpenApiSchema>? AllOf
+        {
+            get => _allOf ??= [];
+            set => _allOf = value;
+        }
+
+        private IList<IOpenApiSchema>? _oneOf;
+        private bool _isExplicitlyNull;
 
         /// <inheritdoc />
-        public IList<IOpenApiSchema>? OneOf { get; set; } = [];
+        public IList<IOpenApiSchema>? OneOf
+        {
+            get
+            {
+                if (_isExplicitlyNull)
+                {
+                    return null;
+                }
+                return _oneOf ??= [];
+            }
+            set
+            {
+                _oneOf = value;
+                _isExplicitlyNull = value is null;
+            }
+        }
 
+        private IList<IOpenApiSchema>? _anyOf;
         /// <inheritdoc />
-        public IList<IOpenApiSchema>? AnyOf { get; set; } = [];
+        public IList<IOpenApiSchema>? AnyOf
+        {
+            get
+            {
+                if (_isExplicitlyNull)
+                {
+                    return null;
+                }
+                return _anyOf ??= [];
+            }
+            set
+            {
+                _anyOf = value;
+                _isExplicitlyNull = value is null;
+            }
+        }
 
         /// <inheritdoc />
         public IOpenApiSchema? Not { get; set; }
 
+        private ISet<string>? _required;
         /// <inheritdoc />
-        public ISet<string>? Required { get; set; } = new HashSet<string>();
+        public ISet<string>? Required
+        {
+            get => _required ??= new HashSet<string>();
+            set => _required = value;
+        }
 
         /// <inheritdoc />
         public IOpenApiSchema? Items { get; set; }
@@ -199,11 +243,21 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public bool? UniqueItems { get; set; }
 
+        private IDictionary<string, IOpenApiSchema>? _properties;
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiSchema>? Properties { get; set; } = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
+        public IDictionary<string, IOpenApiSchema>? Properties 
+        { 
+            get => _properties ??= new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal); 
+            set => _properties = value; 
+        }
 
+        private IDictionary<string, IOpenApiSchema>? _patternProperties;
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiSchema>? PatternProperties { get; set; } = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
+        public IDictionary<string, IOpenApiSchema>? PatternProperties
+        {
+            get => _patternProperties ??= new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
+            set => _patternProperties = value;
+        }
 
         /// <inheritdoc />
         public int? MaxProperties { get; set; }
@@ -226,8 +280,13 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public IList<JsonNode>? Examples { get; set; }
 
+        private IList<JsonNode>? _enum;
         /// <inheritdoc />
-        public IList<JsonNode>? Enum { get; set; } = new List<JsonNode>();
+        public IList<JsonNode>? Enum
+        {
+            get => _enum ??= new List<JsonNode>();
+            set => _enum = value;
+        }
 
         /// <inheritdoc />
         public bool UnevaluatedProperties { get; set;}
@@ -241,17 +300,32 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public OpenApiXml? Xml { get; set; }
 
+        private IDictionary<string, IOpenApiExtension>? _extensions;
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions ??= new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal);
+            set => _extensions = value;
+        }
 
+        private IDictionary<string, JsonNode>? _unrecognizedKeywords;
         /// <inheritdoc />
-        public IDictionary<string, JsonNode>? UnrecognizedKeywords { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, JsonNode>? UnrecognizedKeywords
+        {
+            get => _unrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+            set => _unrecognizedKeywords = value;
+        }
 
         /// <inheritdoc />
         public IDictionary<string, object>? Annotations { get; set; }
 
+        private IDictionary<string, ISet<string>>? _dependentRequired;
         /// <inheritdoc />
-        public IDictionary<string, ISet<string>>? DependentRequired { get; set; } = new Dictionary<string, ISet<string>>();
+        public IDictionary<string, ISet<string>>? DependentRequired
+        {
+            get => _dependentRequired ??= new Dictionary<string, ISet<string>>(StringComparer.Ordinal);
+            set => _dependentRequired = value;
+        }
 
         /// <summary>
         /// Parameterless constructor
