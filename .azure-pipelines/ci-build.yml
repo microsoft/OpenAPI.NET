@@ -34,16 +34,16 @@ resources:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
-    pool:
-      name: Azure-Pipelines-1ESPT-ExDShared
-      image: windows-2022
-      os: windows
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
     - stage: build
       jobs:
       - job: build
+        pool:
+          name: Azure-Pipelines-1ESPT-ExDShared
+          image: windows-2022
+          os: windows
         templateContext:
           outputs:
           - output: pipelineArtifact
