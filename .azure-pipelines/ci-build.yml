@@ -203,6 +203,9 @@ extends:
     - stage: deploy
       condition: and(or(startsWith(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])), not(contains(variables['Build.SourceBranch'], '-preview')))
       dependsOn: build
+      pool:
+        name: Azure-Pipelines-1ESPT-ExDShared
+        image: ubuntu-latest
       jobs:
       # - deployment: deploy_hidi
       #   templateContext:
