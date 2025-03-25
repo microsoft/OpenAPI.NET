@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiLink
+    public class OpenApiLink : IOpenApiExtensible, IOpenApiLink
     {
         /// <inheritdoc/>
         public string? OperationRef { get; set; }
@@ -20,8 +20,13 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc/>
         public string? OperationId { get; set; }
 
+        private Lazy<IDictionary<string, RuntimeExpressionAnyWrapper>>? _parameters = new(() => new Dictionary<string, RuntimeExpressionAnyWrapper>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; } = new Dictionary<string, RuntimeExpressionAnyWrapper>();
+        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters
+        {
+            get => _parameters?.Value;
+            set => _parameters = value is null ? null : new(() => value);
+        }
 
         /// <inheritdoc/>
         public RuntimeExpressionAnyWrapper? RequestBody { get; set; }
@@ -32,8 +37,13 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc/>
         public OpenApiServer? Server { get; set; }
 
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Parameterless constructor

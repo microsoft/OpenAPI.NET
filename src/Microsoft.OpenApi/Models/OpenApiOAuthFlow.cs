@@ -30,15 +30,25 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public Uri? RefreshUrl { get; set; }
 
+        private Lazy<IDictionary<string, string>>? _scopes = new(() => new Dictionary<string, string>(StringComparer.Ordinal));
         /// <summary>
         /// REQUIRED. A map between the scope name and a short description for it.
         /// </summary>
-        public IDictionary<string, string>? Scopes { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, string>? Scopes
+        {
+            get => _scopes?.Value;
+            set => _scopes = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <summary>
-        /// Specification Extensions.
+        /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Parameterless constructor

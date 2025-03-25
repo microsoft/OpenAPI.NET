@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiTag, IOpenApiDescribedElement
+    public class OpenApiTag : IOpenApiExtensible, IOpenApiTag, IOpenApiDescribedElement
     {
         /// <inheritdoc/>
         public string? Name { get; set; }
@@ -23,8 +23,13 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc/>
         public OpenApiExternalDocs? ExternalDocs { get; set; }
 
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Parameterless constructor

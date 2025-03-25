@@ -22,10 +22,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public string? ContentType { get; set; }
 
+        private Lazy<IDictionary<string, IOpenApiHeader>>? _headers = new(() => new Dictionary<string, IOpenApiHeader>());
         /// <summary>
         /// A map allowing additional information to be provided as headers.
         /// </summary>
-        public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
+        public IDictionary<string, IOpenApiHeader>? Headers
+        {
+            get => _headers?.Value;
+            set => _headers = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Describes how a specific property value will be serialized depending on its type.
@@ -49,10 +54,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public bool? AllowReserved { get; set; }
 
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Parameter-less constructor
