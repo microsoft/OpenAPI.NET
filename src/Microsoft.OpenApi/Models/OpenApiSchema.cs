@@ -172,63 +172,39 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public bool WriteOnly { get; set; }
 
-        private IList<IOpenApiSchema>? _allOf;
+        private Lazy<IList<IOpenApiSchema>>? _allOf = new(() => []);
         /// <inheritdoc />
         public IList<IOpenApiSchema>? AllOf
         {
-            get => _allOf ??= [];
-            set => _allOf = value;
+            get => _allOf?.Value;
+            set => _allOf = value is null ? null : new(() => value);
         }
 
-        private IList<IOpenApiSchema>? _oneOf;
-        private bool _isExplicitlyNull;
-
+        private Lazy<IList<IOpenApiSchema>>? _oneOf = new(() => []);
         /// <inheritdoc />
         public IList<IOpenApiSchema>? OneOf
         {
-            get
-            {
-                if (_isExplicitlyNull)
-                {
-                    return null;
-                }
-                return _oneOf ??= [];
-            }
-            set
-            {
-                _oneOf = value;
-                _isExplicitlyNull = value is null;
-            }
+            get => _oneOf?.Value;
+            set => _oneOf = value is null ? null : new(() => value);
         }
 
-        private IList<IOpenApiSchema>? _anyOf;
+        private Lazy<IList<IOpenApiSchema>>? _anyOf = new(() => []);
         /// <inheritdoc />
         public IList<IOpenApiSchema>? AnyOf
         {
-            get
-            {
-                if (_isExplicitlyNull)
-                {
-                    return null;
-                }
-                return _anyOf ??= [];
-            }
-            set
-            {
-                _anyOf = value;
-                _isExplicitlyNull = value is null;
-            }
+            get => _anyOf?.Value; 
+            set => _anyOf = value is null ? null : new(() => value);
         }
 
         /// <inheritdoc />
         public IOpenApiSchema? Not { get; set; }
 
-        private ISet<string>? _required;
+        private Lazy<ISet<string>>? _required = new(() => new HashSet<string>());
         /// <inheritdoc />
         public ISet<string>? Required
         {
-            get => _required ??= new HashSet<string>();
-            set => _required = value;
+            get => _required?.Value;
+            set => _required = value is null ? null : new(() => value);
         }
 
         /// <inheritdoc />
@@ -243,20 +219,20 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public bool? UniqueItems { get; set; }
 
-        private IDictionary<string, IOpenApiSchema>? _properties;
+        private Lazy<IDictionary<string, IOpenApiSchema>>? _properties = new(() => new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal));
         /// <inheritdoc />
         public IDictionary<string, IOpenApiSchema>? Properties 
-        { 
-            get => _properties ??= new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal); 
-            set => _properties = value; 
+        {
+            get => _properties?.Value;
+            set => _properties = value is null ? null : new(() => value); 
         }
 
-        private IDictionary<string, IOpenApiSchema>? _patternProperties;
+        private Lazy<IDictionary<string, IOpenApiSchema>>? _patternProperties = new(() => new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal));
         /// <inheritdoc />
         public IDictionary<string, IOpenApiSchema>? PatternProperties
         {
-            get => _patternProperties ??= new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
-            set => _patternProperties = value;
+            get => _patternProperties?.Value;
+            set => _patternProperties = value is null ? null : new(() => value);
         }
 
         /// <inheritdoc />
@@ -280,12 +256,12 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public IList<JsonNode>? Examples { get; set; }
 
-        private IList<JsonNode>? _enum;
+        private Lazy<IList<JsonNode>>? _enum = new(() => []);
         /// <inheritdoc />
         public IList<JsonNode>? Enum
         {
-            get => _enum ??= new List<JsonNode>();
-            set => _enum = value;
+            get => _enum?.Value;
+            set => _enum = value is null ? null : new(() => value);
         }
 
         /// <inheritdoc />
@@ -300,31 +276,31 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public OpenApiXml? Xml { get; set; }
 
-        private IDictionary<string, IOpenApiExtension>? _extensions;
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <inheritdoc />
         public IDictionary<string, IOpenApiExtension>? Extensions
         {
-            get => _extensions ??= new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal);
-            set => _extensions = value;
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
         }
 
-        private IDictionary<string, JsonNode>? _unrecognizedKeywords;
+        private Lazy<IDictionary<string, JsonNode>>? _unrecognizedKeywords = new(() => new Dictionary<string, JsonNode>());
         /// <inheritdoc />
         public IDictionary<string, JsonNode>? UnrecognizedKeywords
         {
-            get => _unrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
-            set => _unrecognizedKeywords = value;
+            get => _unrecognizedKeywords?.Value;
+            set => _unrecognizedKeywords = value is null ? null : new(() => value);
         }
 
         /// <inheritdoc />
         public IDictionary<string, object>? Annotations { get; set; }
 
-        private IDictionary<string, ISet<string>>? _dependentRequired;
+        private Lazy<IDictionary<string, ISet<string>>>? _dependentRequired = new(() => new Dictionary<string, ISet<string>>(StringComparer.Ordinal));
         /// <inheritdoc />
         public IDictionary<string, ISet<string>>? DependentRequired
         {
-            get => _dependentRequired ??= new Dictionary<string, ISet<string>>(StringComparer.Ordinal);
-            set => _dependentRequired = value;
+            get => _dependentRequired?.Value;
+            set => _dependentRequired = value is null ? null : new(() => value);
         }
 
         /// <summary>
