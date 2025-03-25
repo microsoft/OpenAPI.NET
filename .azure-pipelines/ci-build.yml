@@ -428,7 +428,7 @@ extends:
                     echo "Using build date: ${BUILDDATE}"
                     # Using quotes around tags to prevent flag interpretation
                     docker buildx build \
-                      --platform linux/amd64,linux/arm64/v8,linux/arm/v7 \
+                      --platform linux/amd64,linux/arm64/v8 \
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
@@ -440,7 +440,7 @@ extends:
                 - bash: |
                     echo "Building Docker image for release..."
                     docker buildx build\
-                      --platform linux/amd64,linux/arm64/v8,linux/arm/v7 \
+                      --platform linux/amd64,linux/arm64/v8 \
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
