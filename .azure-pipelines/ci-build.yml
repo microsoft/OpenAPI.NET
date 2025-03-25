@@ -34,16 +34,16 @@ resources:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
+    pool:
+      name: Azure-Pipelines-1ESPT-ExDShared
+      image: windows-2022
+      os: windows
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
     - stage: build
       jobs:
       - job: build
-        pool:
-          name: Azure-Pipelines-1ESPT-ExDShared
-          image: windows-2022
-          os: windows
         templateContext:
           outputs:
           - output: pipelineArtifact
@@ -325,9 +325,7 @@ extends:
           runOnce:
             deploy:
               pool:
-                name: Azure-Pipelines-1ESPT-ExDShared
-                image: ubuntu-latest
-                os: linux
+                vmImage: 'ubuntu-latest'
               steps:
                 - checkout: self
 
@@ -410,7 +408,7 @@ extends:
                   condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
                 
                 - script: |
-                    docker run --rm tonistiigi/binfmt --install all
+                    docker run --privileged --rm tonistiigi/binfmt --install all
                   displayName: "Enable multi-platform builds"
 
                 - script: |
