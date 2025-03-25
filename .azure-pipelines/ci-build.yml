@@ -205,6 +205,7 @@ extends:
       dependsOn: build
       pool:
         name: Azure-Pipelines-1ESPT-ExDShared
+        os: linux
         image: ubuntu-latest
       jobs:
       # - deployment: deploy_hidi
