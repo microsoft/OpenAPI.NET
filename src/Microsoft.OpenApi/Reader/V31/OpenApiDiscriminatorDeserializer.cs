@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -26,7 +25,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "mapping", (o, n, doc) =>
                     {
-                        o.Mapping = n.CreateMap(LoadMapping, doc);
+                        o.Mapping = n.CreateSimpleMap((node) => LoadMapping(node, doc));
                     }
                 }
             };
@@ -52,10 +51,8 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static OpenApiSchemaReference LoadMapping(ParseNode node, OpenApiDocument hostDocument)
         {
-            var mapNode = node.CheckMapNode("mapping");
-
-            var pointer = mapNode.GetReferencePointer();
-            var reference = GetReferenceIdAndExternalResource(pointer!);
+            var pointer = node.GetScalarValue() ?? throw new InvalidOperationException("Could not get a pointer reference");
+            var reference = GetReferenceIdAndExternalResource(pointer);
             return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
         }
     }

@@ -1,6 +1,4 @@
 ﻿propertyName: pet_type
 mapping:
-    puppy: 
-      $ref: '#/components/schemas/Dog'
-    kitten: 
-      $ref: '#/components/schemas/Cat'
+    puppy: '#/components/schemas/Dog'
+    monster: https://gigantic-server.com/schemas/Monster/schema.json

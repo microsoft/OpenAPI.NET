@@ -2,14 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -41,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                    Mapping =
                     {
                             ["puppy"] = new OpenApiSchemaReference("Dog", openApiDocument),
-                            ["kitten"] = new OpenApiSchemaReference("Cat", openApiDocument)
+                            ["monster"] = new OpenApiSchemaReference("schema.json" , openApiDocument, "https://gigantic-server.com/schemas/Monster/schema.json")
                     }
                }, discriminator);
         }

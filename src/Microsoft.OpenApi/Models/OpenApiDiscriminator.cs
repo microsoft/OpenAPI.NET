@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -50,8 +49,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer,
-               (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
+            SerializeInternal(writer);
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_1);
@@ -64,8 +62,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer,
-                (writer, referenceElement) => referenceElement.SerializeAsV3(writer));
+            SerializeInternal(writer);
 
             writer.WriteEndObject();
         }
@@ -73,7 +70,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiReferenceHolder> action)
+        /// <param name="writer"></param>
+        private void SerializeInternal(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -83,7 +81,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, key, reference) => action(w, reference));
+            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) =>
+            {
+                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                {
+                    w.WriteValue(s.Reference.ReferenceV3);
+                }
+            });
         }
 
         /// <summary>
