@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Helpers;
@@ -13,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiExample
+    public class OpenApiExample : IOpenApiExtensible, IOpenApiExample
     {
         /// <inheritdoc/>
         public string? Summary { get; set; }
@@ -27,8 +28,13 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc/>
         public JsonNode? Value { get; set; }
 
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Parameter-less constructor

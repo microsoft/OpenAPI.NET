@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -14,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiPathItem
+    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiPathItem
     {
         /// <inheritdoc/>
         public string? Summary { get; set; }
@@ -22,18 +21,37 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc/>
         public string? Description { get; set; }
 
+        private Lazy<IDictionary<HttpMethod, OpenApiOperation>>? _operations = new(() => new Dictionary<HttpMethod, OpenApiOperation>());
         /// <inheritdoc/>
-        public IDictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
-            = new Dictionary<HttpMethod, OpenApiOperation>();
+        public IDictionary<HttpMethod, OpenApiOperation>? Operations
+        {
+            get => _operations?.Value;
+            set => _operations = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IList<OpenApiServer>>? _servers = new(() => []);
         /// <inheritdoc/>
-        public IList<OpenApiServer>? Servers { get; set; } = [];
+        public IList<OpenApiServer>? Servers
+        {
+            get => _servers?.Value;
+            set => _servers = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IList<IOpenApiParameter>>? _parameters = new(() => []);
         /// <inheritdoc/>
-        public IList<IOpenApiParameter>? Parameters { get; set; } = [];
+        public IList<IOpenApiParameter>? Parameters
+        {
+            get => _parameters?.Value;
+            set => _parameters = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Add one operation into this path item.

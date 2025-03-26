@@ -18,63 +18,115 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     {
+        private Lazy<IDictionary<string, IOpenApiSchema>>? _schemas = new(() => new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiSchema>? Schemas { get; set; } = new Dictionary<string, IOpenApiSchema>();
+        public IDictionary<string, IOpenApiSchema>? Schemas
+        {
+            get => _schemas?.Value;
+            set => _schemas = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiResponse>>? _responses = new(() => new Dictionary<string, IOpenApiResponse>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiResponse"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiResponse>? Responses { get; set; } = new Dictionary<string, IOpenApiResponse>();
+        public IDictionary<string, IOpenApiResponse>? Responses
+        {
+            get => _responses?.Value;
+            set => _responses = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiParameter>>? _parameters = new(() => new Dictionary<string, IOpenApiParameter>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiParameter"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiParameter>? Parameters { get; set; } =
-            new Dictionary<string, IOpenApiParameter>();
+        public IDictionary<string, IOpenApiParameter>? Parameters
+        {
+            get => _parameters?.Value;
+            set => _parameters = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiExample>>? _examples = new(() => new Dictionary<string, IOpenApiExample>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
+        public IDictionary<string, IOpenApiExample>? Examples
+        {
+            get => _examples?.Value;
+            set => _examples = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiRequestBody>>? _requestBodies = new(() => new Dictionary<string, IOpenApiRequestBody>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiRequestBody"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiRequestBody>? RequestBodies { get; set; } =
-            new Dictionary<string, IOpenApiRequestBody>();
+        public IDictionary<string, IOpenApiRequestBody>? RequestBodies
+        {
+            get => _requestBodies?.Value;
+            set => _requestBodies = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiHeader>>? _headers = new(() => new Dictionary<string, IOpenApiHeader>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiHeader"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
+        public IDictionary<string, IOpenApiHeader>? Headers
+        {
+            get => _headers?.Value;
+            set => _headers = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiSecurityScheme>>? _securitySchemes = new(() => new Dictionary<string, IOpenApiSecurityScheme>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiSecurityScheme>? SecuritySchemes { get; set; } =
-            new Dictionary<string, IOpenApiSecurityScheme>();
+        public IDictionary<string, IOpenApiSecurityScheme>? SecuritySchemes
+        {
+            get => _securitySchemes?.Value;
+            set => _securitySchemes = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiLink>>? _links = new(() => new Dictionary<string, IOpenApiLink>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiLink"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiLink>? Links { get; set; } = new Dictionary<string, IOpenApiLink>();
+        public IDictionary<string, IOpenApiLink>? Links
+        {
+            get => _links?.Value;
+            set => _links = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiCallback>>? _callbacks = new(() => new Dictionary<string, IOpenApiCallback>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
+        public IDictionary<string, IOpenApiCallback>? Callbacks
+        {
+            get => _callbacks?.Value;
+            set => _callbacks = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiPathItem>>? _pathItems = new(() => new Dictionary<string, IOpenApiPathItem>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiPathItem"/> Object.
         /// </summary>
-        public IDictionary<string, IOpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, IOpenApiPathItem>();
+        public IDictionary<string, IOpenApiPathItem>? PathItems
+        {
+            get => _pathItems?.Value;
+            set => _pathItems = value is null ? null : new(() => value);
+        }
 
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Parameter-less constructor

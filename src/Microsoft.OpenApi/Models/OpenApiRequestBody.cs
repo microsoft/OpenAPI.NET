@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiRequestBody
+    public class OpenApiRequestBody : IOpenApiExtensible, IOpenApiRequestBody
     {
         /// <inheritdoc />
         public string? Description { get; set; }
@@ -24,11 +24,23 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public bool Required { get; set; }
 
+        private Lazy<IDictionary<string, OpenApiMediaType>>? _content = new(() => new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal));
         /// <inheritdoc />
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType>? Content
+        {
+            get => _content?.Value;
+            set => _content = value is null ? null : new(() => value);
+        }
 
-        /// <inheritdoc />
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
+        /// </summary>
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => _extensions?.Value;
+            set => _extensions = value is null ? null : new(() => value);
+        }
 
         /// <summary>
         /// Parameter-less constructor
