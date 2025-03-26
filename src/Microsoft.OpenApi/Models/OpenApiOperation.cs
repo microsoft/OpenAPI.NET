@@ -69,18 +69,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public string? OperationId { get; set; }
 
-        private Lazy<IList<IOpenApiParameter>>? _parameters = new(() => []);
         /// <summary>
         /// A list of parameters that are applicable for this operation.
         /// If a parameter is already defined at the Path Item, the new definition will override it but can never remove it.
         /// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
         /// The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
         /// </summary>
-        public IList<IOpenApiParameter>? Parameters
-        {
-            get => _parameters?.Value;
-            set => _parameters = value is null ? null : new(() => value);
-        }
+        public IList<IOpenApiParameter>? Parameters { get; set; } = [];
 
         /// <summary>
         /// The request body applicable for this operation.
@@ -90,17 +85,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IOpenApiRequestBody? RequestBody { get; set; }
 
-        private Lazy<OpenApiResponses>? _responses = new(() => []);
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
         /// </summary>
-        public OpenApiResponses? Responses
-        {
-            get => _responses?.Value;
-            set => _responses = value is null ? null : new(() => value);
-        }
+        public OpenApiResponses? Responses { get; set; } = new();
 
-        private Lazy<IDictionary<string, IOpenApiCallback>>? _callbacks = new(() => new Dictionary<string, IOpenApiCallback>(StringComparer.Ordinal));
         /// <summary>
         /// A map of possible out-of band callbacks related to the parent operation.
         /// The key is a unique identifier for the Callback Object.
@@ -109,18 +98,13 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, IOpenApiCallback>? Callbacks
-        {
-            get => _callbacks?.Value;
-            set => _callbacks = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
         /// </summary>
         public bool Deprecated { get; set; } = DeprecatedDefault;
 
-        private Lazy<IList<OpenApiSecurityRequirement>>? _security = new(() => []);
         /// <summary>
         /// A declaration of which security mechanisms can be used for this operation.
         /// The list of values includes alternative security requirement objects that can be used.
@@ -128,33 +112,19 @@ namespace Microsoft.OpenApi.Models
         /// This definition overrides any declared top-level security.
         /// To remove a top-level security declaration, an empty array can be used.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? Security
-        {
-            get => _security?.Value;
-            set => _security = value is null ? null : new(() => value);
-        }
+        public IList<OpenApiSecurityRequirement>? Security { get; set; } = new List<OpenApiSecurityRequirement>();
 
-        private Lazy<IList<OpenApiServer>>? _servers = new(() => []);
         /// <summary>
         /// An alternative server array to service this operation.
         /// If an alternative server object is specified at the Path Item Object or Root level,
         /// it will be overridden by this value.
         /// </summary>
-        public IList<OpenApiServer>? Servers
-        {
-            get => _servers?.Value;
-            set => _servers = value is null ? null : new(() => value);
-        }
+        public IList<OpenApiServer>? Servers { get; set; } = new List<OpenApiServer>();
 
-        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions
-        {
-            get => _extensions?.Value;
-            set => _extensions = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <inheritdoc />
         public IDictionary<string, object>? Metadata { get; set; }

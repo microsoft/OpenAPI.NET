@@ -25,25 +25,16 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public string? Url { get; set; }
 
-        private Lazy<IDictionary<string, OpenApiServerVariable>>? _variables = new(() => new Dictionary<string, OpenApiServerVariable>());
         /// <summary>
         /// A map between a variable name and its value. The value is used for substitution in the server's URL template.
         /// </summary>
-        public IDictionary<string, OpenApiServerVariable>? Variables
-        {
-            get => _variables?.Value;
-            set => _variables = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, OpenApiServerVariable>? Variables { get; set; } =
+            new Dictionary<string, OpenApiServerVariable>();
 
-        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions
-        {
-            get => _extensions?.Value;
-            set => _extensions = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor

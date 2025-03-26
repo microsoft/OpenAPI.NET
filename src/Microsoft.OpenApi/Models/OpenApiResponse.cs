@@ -13,42 +13,22 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IOpenApiExtensible, IOpenApiResponse
+    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiResponse
     {
         /// <inheritdoc/>
         public string? Description { get; set; }
 
-        private Lazy<IDictionary<string, IOpenApiHeader>>? _headers = new(() => new Dictionary<string, IOpenApiHeader>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiHeader>? Headers
-        {
-            get => _headers?.Value;
-            set => _headers = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
 
-        private Lazy<IDictionary<string, OpenApiMediaType>>? _content = new(() => new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content
-        {
-            get => _content?.Value;
-            set => _content = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
-        private Lazy<IDictionary<string, IOpenApiLink>>? _links = new(() => new Dictionary<string, IOpenApiLink>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiLink>? Links
-        {
-            get => _links?.Value;
-            set => _links = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiLink>? Links { get; set; } = new Dictionary<string, IOpenApiLink>();
 
-        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions
-        {
-            get => _extensions?.Value;
-            set => _extensions = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor

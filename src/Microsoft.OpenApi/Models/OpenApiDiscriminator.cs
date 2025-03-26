@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -18,25 +17,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public string? PropertyName { get; set; }
 
-        private Lazy<IDictionary<string, string>>? _mapping = new(() => new Dictionary<string, string>(StringComparer.Ordinal));
         /// <summary>
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
-        public IDictionary<string, string>? Mapping
-        {   
-            get => _mapping?.Value;
-            set => _mapping = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, string>? Mapping { get; set; } = new Dictionary<string, string>();
 
-        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions
-        {
-            get => _extensions?.Value;
-            set => _extensions = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor

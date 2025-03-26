@@ -48,47 +48,33 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public Uri? JsonSchemaDialect { get; set; }
 
-        private Lazy<IList<OpenApiServer>>? _servers = new(() => []);
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer>? Servers
-        {
-            get => _servers?.Value;
-            set => _servers = value is null ? null : new(() => value);
-        }
+        public IList<OpenApiServer>? Servers { get; set; } = new List<OpenApiServer>();
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
         public OpenApiPaths Paths { get; set; }
 
-        private Lazy<IDictionary<string, IOpenApiPathItem>>? _webhooks = new(() => new Dictionary<string, IOpenApiPathItem>(StringComparer.Ordinal));
         /// <summary>
         /// The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement.
         /// A map of requests initiated other than by an API call, for example by an out of band registration. 
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
-        public IDictionary<string, IOpenApiPathItem>? Webhooks
-        {
-            get => _webhooks?.Value;
-            set => _webhooks = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, IOpenApiPathItem>();
 
         /// <summary>
         /// An element to hold various schemas for the specification.
         /// </summary>
         public OpenApiComponents? Components { get; set; }
 
-        private Lazy<IList<OpenApiSecurityRequirement>>? _security = new(() => []);
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? Security
-        {
-            get => _security?.Value;
-            set => _security = value is null ? null : new(() => value);
-        }
+        public IList<OpenApiSecurityRequirement>? Security { get; set; } =
+            new List<OpenApiSecurityRequirement>();
 
         private HashSet<OpenApiTag>? _tags;
         /// <summary>
@@ -117,15 +103,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiExternalDocs? ExternalDocs { get; set; }
 
-        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions
-        {
-            get => _extensions?.Value;
-            set => _extensions = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <inheritdoc />
         public IDictionary<string, object>? Metadata { get; set; }

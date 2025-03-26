@@ -60,32 +60,17 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc/>
         public IOpenApiSchema? Schema { get; set; }
 
-        private Lazy<IDictionary<string, IOpenApiExample>>? _examples = new(() => new Dictionary<string, IOpenApiExample>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample>? Examples
-        {
-            get => _examples?.Value;
-            set => _examples = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
         /// <inheritdoc/>
         public JsonNode? Example { get; set; }
 
-        private Lazy<IDictionary<string, OpenApiMediaType>>? _content = new(() => new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content
-        {
-            get => _content?.Value;
-            set => _content = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
-        private Lazy<IDictionary<string, IOpenApiExtension>>? _extensions = new(() => new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal));
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions
-        {
-            get => _extensions?.Value;
-            set => _extensions = value is null ? null : new(() => value);
-        }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// A parameterless constructor
