@@ -21,7 +21,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
-  REGISTRY: 'msgraphprodregistry.azurecr.io'
+  REGISTRY: 'msgraphpperegistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
   PREVIEW_BRANCH: 'refs/heads/task/move-to-deploy-stage'
   
