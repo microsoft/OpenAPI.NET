@@ -7,7 +7,6 @@ trigger:
     include:
     - main
     - support/v1
-    - task/move-to-deploy-stage
   tags:
     include:
     - 'v*'
@@ -23,7 +22,7 @@ variables:
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   REGISTRY: 'msgraphprodregistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
-  PREVIEW_BRANCH: 'refs/heads/task/move-to-deploy-stage'
+  PREVIEW_BRANCH: 'refs/heads/main'
   
 resources:
   repositories:
@@ -199,7 +198,7 @@ extends:
             targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
             sourceFolder: $(Build.ArtifactStagingDirectory)
             content: '*.nupkg'
-            
+
     - stage: deploy
       condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])))
       dependsOn: build
