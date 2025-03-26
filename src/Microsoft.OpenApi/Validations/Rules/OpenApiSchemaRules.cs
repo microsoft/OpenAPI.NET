@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         {
             if (discriminatorName is not null)
             {
-                if (!schema.Required?.Contains(discriminatorName) ?? false)
+                if (schema.Required is null || !schema.Required.Contains(discriminatorName))
                 {
                     // recursively check nested schema.OneOf, schema.AnyOf or schema.AllOf and their required fields for the discriminator
                     if (schema.OneOf?.Count != 0)
