@@ -202,7 +202,7 @@ extends:
             content: '*.nupkg'
 
     - stage: deploy
-      condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
+      condition: and(or(contains(variables['Build.sourceBranch'], 'refs/tags/v'), eq(variables['Build.sourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
       dependsOn: build
       pool:
         name: Azure-Pipelines-1ESPT-ExDShared
@@ -404,7 +404,7 @@ extends:
                     echo "##vso[task.setvariable variable=RUNNUMBER;isOutput=true]$runnumber"
                   displayName: 'Get truncated run number'
                   name: getrunnumber
-                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+                  condition: eq(variables['Build.sourceBranch'], variables['PREVIEW_BRANCH'])
                   
                 - bash: |
                     date=$(date +'%Y%m%d')
@@ -413,7 +413,7 @@ extends:
                     echo "##vso[task.setvariable variable=BUILDDATE]$date"
                   displayName: 'Get current date'
                   name: setdate
-                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+                  condition: eq(variables['Build.sourceBranch'], variables['PREVIEW_BRANCH'])
                 
                 - script: |
                     docker run --privileged --rm tonistiigi/binfmt --install all
@@ -439,7 +439,7 @@ extends:
                       "$(Build.SourcesDirectory)"
 
                   displayName: 'Build and Push Nightly Image'
-                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+                  condition: eq(variables['Build.sourceBranch'], variables['PREVIEW_BRANCH'])
                 
                 - bash: |
                     echo "Building Docker image for release..."
@@ -450,4 +450,4 @@ extends:
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
                       "$(Build.SourcesDirectory)"
                   displayName: 'Build and Push Release Image'
-                  condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
+                  condition: contains(variables['Build.sourceBranch'], 'refs/tags/v')
