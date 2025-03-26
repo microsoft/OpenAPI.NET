@@ -200,7 +200,7 @@ extends:
             content: '*.nupkg'
 
     - stage: deploy
-      condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])))
+      condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
       dependsOn: build
       pool:
         name: Azure-Pipelines-1ESPT-ExDShared
