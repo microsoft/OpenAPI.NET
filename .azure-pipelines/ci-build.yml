@@ -21,7 +21,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
-  REGISTRY: 'msgraphpperegistry.azurecr.io'
+  REGISTRY: 'msgraphprodregistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
   PREVIEW_BRANCH: 'refs/heads/task/move-to-deploy-stage'
   
@@ -201,127 +201,130 @@ extends:
             content: '*.nupkg'
             
     - stage: deploy
-      condition: and(or(startsWith(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])), not(contains(variables['Build.SourceBranch'], '-preview')))
+      condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])))
       dependsOn: build
       pool:
         name: Azure-Pipelines-1ESPT-ExDShared
         os: linux
         image: ubuntu-latest
       jobs:
-      # - deployment: deploy_hidi
-      #   templateContext:
-      #     type: releaseJob
-      #     isProduction: true
-      #     inputs:
-      #     - input: pipelineArtifact
-      #       artifactName: Nugets
-      #       targetPath: '$(Pipeline.Workspace)'
-      #   dependsOn: []
-      #   environment: nuget-org
-      #   strategy:
-      #     runOnce:
-      #       deploy:
-      #         pool:
-      #           vmImage: ubuntu-latest
-      #         steps:
-      #         - task: 1ES.PublishNuget@1
-      #           displayName: 'NuGet push'
-      #           inputs:
-      #             packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg'
-      #             packageParentPath: '$(Pipeline.Workspace)'
-      #             nuGetFeedType: external
-      #             publishFeedCredentials: 'OpenAPI Nuget Connection'
+      - deployment: deploy_hidi
+        condition: and(contains(variables['build.sourceBranch'], 'refs/tags/v'), succeeded())
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: []
+        environment: nuget-org
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - task: 1ES.PublishNuget@1
+                displayName: 'NuGet push'
+                inputs:
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)'
+                  nuGetFeedType: external
+                  publishFeedCredentials: 'OpenAPI Nuget Connection'
 
-      # - deployment: deploy_lib
-      #   templateContext:
-      #     type: releaseJob
-      #     isProduction: true
-      #     inputs:
-      #     - input: pipelineArtifact
-      #       artifactName: Nugets
-      #       targetPath: '$(Pipeline.Workspace)'
-      #   dependsOn: []
-      #   environment: nuget-org
-      #   strategy:
-      #     runOnce:
-      #       deploy:
-      #         pool:
-      #           vmImage: ubuntu-latest
-      #         steps:
-      #         - powershell: |
-      #             $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
-      #             foreach($fileName in $fileNames) {
-      #               if(Test-Path $fileName) {
-      #                 rm $fileName -Verbose
-      #               }
-      #             }
-      #           displayName: remove other nupkgs to avoid duplication
-      #         - task: 1ES.PublishNuget@1
-      #           displayName: 'NuGet push'
-      #           inputs:
-      #             packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.*.nupkg'
-      #             packageParentPath: '$(Pipeline.Workspace)'
-      #             nuGetFeedType: external
-      #             publishFeedCredentials: 'OpenAPI Nuget Connection'
+      - deployment: deploy_lib
+        condition: and(contains(variables['build.sourceBranch'], 'refs/tags/v'), succeeded())
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: []
+        environment: nuget-org
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - powershell: |
+                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
+                  foreach($fileName in $fileNames) {
+                    if(Test-Path $fileName) {
+                      rm $fileName -Verbose
+                    }
+                  }
+                displayName: remove other nupkgs to avoid duplication
+              - task: 1ES.PublishNuget@1
+                displayName: 'NuGet push'
+                inputs:
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)'
+                  nuGetFeedType: external
+                  publishFeedCredentials: 'OpenAPI Nuget Connection'
 
-      # - deployment: deploy_yaml_reader
-      #   templateContext:
-      #     type: releaseJob
-      #     isProduction: true
-      #     inputs:
-      #     - input: pipelineArtifact
-      #       artifactName: Nugets
-      #       targetPath: '$(Pipeline.Workspace)'
-      #   dependsOn: deploy_lib
-      #   environment: nuget-org
-      #   strategy:
-      #     runOnce:
-      #       deploy:
-      #         pool:
-      #           vmImage: ubuntu-latest
-      #         steps:
-      #         - task: 1ES.PublishNuget@1
-      #           displayName: 'NuGet push'
-      #           inputs:
-      #             packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg'
-      #             packageParentPath: '$(Pipeline.Workspace)'
-      #             nuGetFeedType: external
-      #             publishFeedCredentials: 'OpenAPI Nuget Connection'
+      - deployment: deploy_yaml_reader
+        condition: and(contains(variables['build.sourceBranch'], 'refs/tags/v'), succeeded())
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: deploy_lib
+        environment: nuget-org
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - task: 1ES.PublishNuget@1
+                displayName: 'NuGet push'
+                inputs:
+                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)'
+                  nuGetFeedType: external
+                  publishFeedCredentials: 'OpenAPI Nuget Connection'
 
-      # - deployment: create_github_release
-      #   templateContext:
-      #     type: releaseJob
-      #     isProduction: true
-      #     inputs:
-      #     - input: pipelineArtifact
-      #       artifactName: Nugets
-      #       targetPath: '$(Pipeline.Workspace)'
-      #   dependsOn: []
-      #   environment: kiota-github-releases
-      #   strategy:
-      #     runOnce:
-      #       deploy:
-      #         pool:
-      #           vmImage: ubuntu-latest
-      #         steps:
-      #         - pwsh: |
-      #             $artifactName = Get-ChildItem -Path $(Pipeline.Workspace) -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
-      #             $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
-      #             #Set Variable $artifactName and $artifactVersion
-      #             Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false;]$artifactVersion"
-      #             echo "$artifactVersion"
-      #           displayName: 'Fetch Artifact Name'
-      #         - task: GitHubRelease@1
-      #           displayName: 'GitHub release (edit)'
-      #           condition: succeededOrFailed()
-      #           inputs:
-      #             gitHubConnection: 'Github-MaggieKimani1'
-      #             action: edit
-      #             tagSource: userSpecifiedTag
-      #             tag: 'v$(artifactVersion)'
-      #             releaseNotesSource: inline
-      #             assets: '$(Pipeline.Workspace)\**\*.exe'
-      #             addChangeLog: false
+      - deployment: create_github_release
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: []
+        environment: kiota-github-releases
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - pwsh: |
+                  $artifactName = Get-ChildItem -Path $(Pipeline.Workspace) -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
+                  $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
+                  #Set Variable $artifactName and $artifactVersion
+                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false;]$artifactVersion"
+                  echo "$artifactVersion"
+                displayName: 'Fetch Artifact Name'
+              - task: GitHubRelease@1
+                displayName: 'GitHub release (edit)'
+                condition: succeededOrFailed()
+                inputs:
+                  gitHubConnection: 'Github-MaggieKimani1'
+                  action: edit
+                  tagSource: userSpecifiedTag
+                  tag: 'v$(artifactVersion)'
+                  releaseNotesSource: inline
+                  assets: '$(Pipeline.Workspace)\**\*.exe'
+                  addChangeLog: false
 
       - deployment: deploy_docker_image
         environment: kiota-github-releases
@@ -336,11 +339,11 @@ extends:
                 - task: AzureCLI@2
                   displayName: 'Login to Azure Container Registry'
                   inputs:
-                    azureSubscription: 'ACR Push Test'
+                    azureSubscription: 'ACR Images Push Service Connection'
                     scriptType: bash
                     scriptLocation: inlineScript
                     inlineScript: |
-                      az acr login --name msgraphpperegistry
+                      az acr login --name msgraphprodregistry
               
                 - powershell: |
                     $content = [XML](Get-Content ./Directory.Build.props)
