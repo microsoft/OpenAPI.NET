@@ -73,8 +73,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema()
             {
-                Enum = 
-                {
+                Enum =
+                [
                     new OpenApiAny("1").Node,
                     new OpenApiAny(new JsonObject()
                     {
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         ["x"] = 4,
                         ["y"] = 40,
                     }).Node
-                },
+                ],
                 Type = JsonSchemaType.Object,
                 AdditionalProperties = new OpenApiSchema()
                 {
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var schema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties =
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["property1"] = new OpenApiSchema()
                     {
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                             {
                                 new OpenApiSchema()
                                 {
-                                    Properties =
+                                    Properties = new Dictionary<string, IOpenApiSchema>
                                     {
                                         {
                                             "type",

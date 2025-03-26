@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -74,10 +75,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 Items = new OpenApiSchema()
                 {
                     Enum =
-                    {
+                    [
                         new OpenApiAny("value1").Node,
                         new OpenApiAny("value2").Node
-                    }
+                    ]
                 }
             }
         };

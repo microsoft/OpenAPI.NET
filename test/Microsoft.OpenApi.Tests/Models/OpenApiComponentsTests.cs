@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
                         ["property1"] = new OpenApiSchema()
                         {

@@ -228,7 +228,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new OpenApiSchema()
                             {
-                                Properties =
+                                Properties = new Dictionary<string, IOpenApiSchema>
                                 {
                                     ["name"] = new OpenApiSchema()
                                     {
@@ -251,7 +251,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new OpenApiSchema()
                             {
-                                Properties =
+                                Properties = new Dictionary<string, IOpenApiSchema>
                                 {
                                     ["name"] = new OpenApiSchema()
                                     {

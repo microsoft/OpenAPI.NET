@@ -117,12 +117,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                            Schema = new OpenApiSchema()
                            {
                                 Type = JsonSchemaType.Object,
-                                Required =
+                                Required = new HashSet<string>
                                 {
                                     "lat",
                                     "long"
                                 },
-                                Properties =
+                                Properties = new Dictionary<string, IOpenApiSchema>
                                 {
                                     ["lat"] = new OpenApiSchema()
                                     {

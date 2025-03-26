@@ -13,9 +13,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.YamlReader;
 using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
@@ -33,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -52,7 +50,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -65,7 +63,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new Dictionary<string, IOpenApiSchema>
                     {
                         ["property1"] = new OpenApiSchema()
                         {

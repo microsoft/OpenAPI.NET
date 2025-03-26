@@ -1247,7 +1247,7 @@ paths: {}
             {
                 Type = JsonSchemaType.Object,
                 Description = "A pet",
-                Properties =
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["id"] = new OpenApiSchema
                     {

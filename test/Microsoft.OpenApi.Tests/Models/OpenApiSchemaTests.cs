@@ -536,7 +536,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var schema = new OpenApiSchema
             {
-                Extensions =
+                Extensions = new Dictionary<string, IOpenApiExtension>
                 {
                     { "x-myextension", new OpenApiAny(42) }
                 }
