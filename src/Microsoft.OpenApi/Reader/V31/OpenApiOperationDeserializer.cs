@@ -17,7 +17,6 @@ namespace Microsoft.OpenApi.Reader.V31
         /// <summary>
         /// Have a default empty tag we can use to filter out empty tags.
         /// </summary>
-        private static OpenApiTagReference emptyTagReference = new("empty");
         private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
             new()
             {
@@ -28,12 +27,12 @@ namespace Microsoft.OpenApi.Reader.V31
                             {
                                 var val = valueNode.GetScalarValue();
                                 if (string.IsNullOrEmpty(val))
-                                    return emptyTagReference;   // Avoid exception on empty tag, we'll remove these from the list further on
+                                    return null;   // Avoid exception on empty tag, we'll remove these from the list further on
                                 return LoadTagByReference(val , doc);
                                 },
                             doc)
                         // Filter out empty tags instead of excepting on them
-                        .Where(n => !object.ReferenceEquals(emptyTagReference, n)).ToList() is {Count: > 0} tags)
+                        .OfType<OpenApiTagReference>().ToList() is {Count: > 0} tags)
                         {
                             o.Tags = new HashSet<OpenApiTagReference>(tags, OpenApiTagComparer.Instance);
                         }
