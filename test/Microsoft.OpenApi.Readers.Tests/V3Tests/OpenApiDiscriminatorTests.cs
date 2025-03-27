@@ -38,6 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                    Mapping =
                     {
                             ["puppy"] = new OpenApiSchemaReference("Dog", openApiDocument),
+                            ["kitten"] = new OpenApiSchemaReference("Cat" , openApiDocument, "Cat"),
                             ["monster"] = new OpenApiSchemaReference("schema.json" , openApiDocument, "https://gigantic-server.com/schemas/Monster/schema.json")
                     }
                }, discriminator);
