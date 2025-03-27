@@ -14,9 +14,6 @@ namespace Microsoft.OpenApi.Reader.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        /// <summary>
-        /// Have a default empty tag we can use to filter out empty tags.
-        /// </summary>
         private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
             new()
             {
