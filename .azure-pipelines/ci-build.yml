@@ -332,6 +332,7 @@ extends:
           isProduction: true
           inputs:
           - input: pipelineArtifact
+            artifactName: Nugets
             targetPath: '$(Pipeline.Workspace)'
         strategy:
           runOnce:
