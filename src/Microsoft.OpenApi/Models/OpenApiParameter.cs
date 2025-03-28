@@ -102,13 +102,31 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc/>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer), (writer, element) => element?.SerializeAsV31(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer), (writer, element) => 
+            {
+              if(element is null)
+              {
+                writer.WriteStartObject();
+                writer.WriteEndObject();
+              }
+              else
+                element.SerializeAsV31(writer);
+            });
         }
 
         /// <inheritdoc/>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer), (writer, element) => element?.SerializeAsV3(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer), (writer, element) => 
+            {
+              if(element is null)
+              {
+                writer.WriteStartObject();
+                writer.WriteEndObject();
+              }
+              else
+                element.SerializeAsV3(writer);
+            });
         }
 
         internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
