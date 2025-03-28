@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Hidi.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Trimming.Tests", "test\Microsoft.OpenApi.Trimming.Tests\Microsoft.OpenApi.Trimming.Tests.csproj", "{1D2E0C6E-B103-4CB6-912E-D56FA1501296}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTests", "performance\PerformanceTests.csproj", "{537E49E3-325E-40EE-A90E-7556D4D333AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{1D2E0C6E-B103-4CB6-912E-D56FA1501296}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D2E0C6E-B103-4CB6-912E-D56FA1501296}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D2E0C6E-B103-4CB6-912E-D56FA1501296}.Release|Any CPU.Build.0 = Release|Any CPU
+		{537E49E3-325E-40EE-A90E-7556D4D333AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{537E49E3-325E-40EE-A90E-7556D4D333AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{537E49E3-325E-40EE-A90E-7556D4D333AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537E49E3-325E-40EE-A90E-7556D4D333AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
