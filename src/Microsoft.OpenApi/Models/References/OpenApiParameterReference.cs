@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Models.References
         public bool Explode { get => Target?.Explode ?? default; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType?>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }

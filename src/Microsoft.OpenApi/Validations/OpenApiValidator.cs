@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
+        public override void Visit(IDictionary<string, OpenApiMediaType?> content) => Validate(content, content.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
         /// <inheritdoc/>

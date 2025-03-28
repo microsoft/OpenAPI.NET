@@ -62,7 +62,37 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                         Context.StartObject(key);
                         value = n.Value is JsonObject jsonObject
                           ? map(new MapNode(Context, jsonObject), hostDocument)
-                          : default!;
+                          : throw new OpenApiReaderException($"Expected map entry while parsing {typeof(T).Name}", Context);
+                    }
+                    finally
+                    {
+                        Context.EndObject();
+                    }
+                    return new
+                    {
+                        key,
+                        value
+                    };
+                });
+
+            return nodes.ToDictionary(k => k.key, v => v.value);
+        }
+
+        public override Dictionary<string, T?> CreateMapOfOptionals<T>(Func<MapNode, OpenApiDocument, T?> map, OpenApiDocument hostDocument) where T : class
+        {
+            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
+            var nodes = jsonMap.Select(
+                n =>
+                {
+
+                    var key = n.Key;
+                    T? value;
+                    try
+                    {
+                        Context.StartObject(key);
+                        value = n.Value is JsonObject jsonObject
+                          ? map(new MapNode(Context, jsonObject), hostDocument)
+                          : default;
                     }
                     finally
                     {

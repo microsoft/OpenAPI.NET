@@ -18,7 +18,7 @@ public interface IOpenApiResponse : IOpenApiDescribedElement, IOpenApiReadOnlyEx
     /// A map containing descriptions of potential response payloads.
     /// The key is a media type or media type range and the value describes it.
     /// </summary>
-    public IDictionary<string, OpenApiMediaType>? Content { get; }
+    public IDictionary<string, OpenApiMediaType?>? Content { get; }
 
     /// <summary>
     /// A map of operations links that can be followed from the response.

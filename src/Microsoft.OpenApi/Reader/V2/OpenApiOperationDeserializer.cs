@@ -201,10 +201,11 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 Content = consumes.ToDictionary(
                     k => k,
-                    _ => mediaType)
+                    _ => (OpenApiMediaType?)mediaType)
             };
 
             foreach (var value in formBody.Content.Values
+                .OfType<OpenApiMediaType>()
                 .Where(static x => x.Schema is not null
                                    && x.Schema.Properties is not null
                                    && x.Schema.Properties.Any()
@@ -230,7 +231,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 Required = bodyParameter.Required,
                 Content = consumes.ToDictionary(
                     k => k,
-                    _ => new OpenApiMediaType
+                    _ => (OpenApiMediaType?)new OpenApiMediaType
                     {
                         Schema = bodyParameter.Schema,
                         Examples = bodyParameter.Examples

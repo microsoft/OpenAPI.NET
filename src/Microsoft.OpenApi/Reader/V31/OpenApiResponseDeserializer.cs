@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 "content", (o, n, t) =>
                 {
-                    o.Content = n.CreateMap(LoadMediaType, t);
+                    o.Content = n.CreateMapOfOptionals(LoadMediaType, t);
                 }
             },
             {

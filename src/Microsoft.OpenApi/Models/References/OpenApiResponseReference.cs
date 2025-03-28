@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType?>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiHeader>? Headers { get => Target?.Headers; }

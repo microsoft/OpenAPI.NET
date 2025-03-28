@@ -46,15 +46,15 @@ namespace Microsoft.OpenApi.Reader.V2
                     (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
+        private static readonly AnyFieldMap<OpenApiMediaType?> _mediaTypeAnyFields =
             new()
             {
                 {
                     OpenApiConstants.Example,
                     new(
-                        m => m.Example,
-                        (m, v) => m.Example = v,
-                        m => m.Schema)
+                        m => m?.Example,
+                        (m, v) => {if (m is not null) { m.Example = v; }},
+                        m => m?.Schema)
                 }
             };
 
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             if (response.Content == null)
             {
-                response.Content = new Dictionary<string, OpenApiMediaType>();
+                response.Content = new Dictionary<string, OpenApiMediaType?>();
             }
             else if (context.GetFromTempStorage<bool>(TempStorageKeys.ResponseProducesSet, response))
             {
@@ -80,13 +80,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
             foreach (var produce in produces)
             {
-                if (response.Content.TryGetValue(produce, out var produceValue))
+                if (response.Content.TryGetValue(produce, out var produceValue) && schema is not null && produceValue is not null)
                 {
-                    if (schema != null)
-                    {
-                        produceValue.Schema = schema;
-                        ProcessAnyFields(mapNode, produceValue, _mediaTypeAnyFields);
-                    }
+                    produceValue.Schema = schema;
+                    ProcessAnyFields(mapNode, produceValue, _mediaTypeAnyFields);
                 }
                 else
                 {
@@ -160,9 +157,9 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             var exampleNode = node.CreateAny();
 
-            response.Content ??= new Dictionary<string, OpenApiMediaType>();
+            response.Content ??= new Dictionary<string, OpenApiMediaType?>();
 
-            OpenApiMediaType mediaTypeObject;
+            OpenApiMediaType? mediaTypeObject;
             if (response.Content.TryGetValue(mediaType, out var value))
             {
                 mediaTypeObject = value;
@@ -176,7 +173,8 @@ namespace Microsoft.OpenApi.Reader.V2
                 response.Content.Add(mediaType, mediaTypeObject);
             }
 
-            mediaTypeObject.Example = exampleNode;
+            if (mediaTypeObject is not null)
+                mediaTypeObject.Example = exampleNode;
         }
 
         public static IOpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)
@@ -200,7 +198,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 foreach (var mediaType in response.Content.Values)
                 {
-                    if (mediaType.Schema != null)
+                    if (mediaType?.Schema != null)
                     {
                         ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
                     }

@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "content",
-                    (o, n, t) => o.Content = n.CreateMap(LoadMediaType, t)
+                    (o, n, t) => o.Content = n.CreateMapOfOptionals(LoadMediaType, t)
                 },
                 {
                     "examples",

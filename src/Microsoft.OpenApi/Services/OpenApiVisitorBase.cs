@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits media type content.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiMediaType> content)
+        public virtual void Visit(IDictionary<string, OpenApiMediaType?> content)
         {
         }
 

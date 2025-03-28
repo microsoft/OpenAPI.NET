@@ -358,6 +358,27 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer">The Open API writer.</param>
         /// <param name="name">The property name.</param>
         /// <param name="elements">The map values.</param>
+        /// <param name="action">The map element writer action with writer and value as input.</param>
+        public static void WriteOptionalMapOfOptionals<T>(
+            this IOpenApiWriter writer,
+            string name,
+            IDictionary<string, T?>? elements,
+            Action<IOpenApiWriter, T?> action)
+            where T : IOpenApiElement
+        {
+            if (elements != null && elements.Any())
+            {
+                writer.WriteMapOfOptionalsInternal(name, elements, action);
+            }
+        }
+
+        /// <summary>
+        /// Write the optional Open API element map.
+        /// </summary>
+        /// <typeparam name="T">The Open API element type. <see cref="IOpenApiElement"/></typeparam>
+        /// <param name="writer">The Open API writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="elements">The map values.</param>
         /// <param name="action">The map element writer action with writer, key, and value as input.</param>
         public static void WriteOptionalMap<T>(
             this IOpenApiWriter writer,
@@ -427,6 +448,15 @@ namespace Microsoft.OpenApi.Writers
             WriteMapInternal(writer, name, elements, (w, _, s) => action(w, s));
         }
 
+        private static void WriteMapOfOptionalsInternal<T>(
+            this IOpenApiWriter writer,
+            string name,
+            IDictionary<string, T?>? elements,
+            Action<IOpenApiWriter, T?> action)
+        {
+            WriteMapOfOptionalsInternal(writer, name, elements, (w, _, s) => action(w, s));
+        }
+
         private static void WriteMapInternal<T>(
             this IOpenApiWriter writer,
             string name,
@@ -451,6 +481,29 @@ namespace Microsoft.OpenApi.Writers
                     {
                         writer.WriteNull();
                     }
+                }
+            }
+
+            writer.WriteEndObject();
+        }
+
+        private static void WriteMapOfOptionalsInternal<T>(
+            this IOpenApiWriter writer,
+            string name,
+            IDictionary<string, T?>? elements,
+            Action<IOpenApiWriter, string, T?> action)
+        {
+            Utils.CheckArgumentNull(action);
+
+            writer.WritePropertyName(name);
+            writer.WriteStartObject();
+
+            if (elements != null)
+            {
+                foreach (var item in elements)
+                {
+                    writer.WritePropertyName(item.Key);
+                    action(writer, item.Key, item.Value);
                 }
             }
 

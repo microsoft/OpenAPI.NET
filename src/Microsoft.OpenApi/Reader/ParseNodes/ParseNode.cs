@@ -56,6 +56,11 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
         }
 
+        public virtual Dictionary<string, T?> CreateMapOfOptionals<T>(Func<MapNode, OpenApiDocument, T?> map, OpenApiDocument hostDocument) where T : class
+        {
+            throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
+        }
+
         public virtual List<T> CreateSimpleList<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument openApiDocument)
         {
             throw new OpenApiReaderException("Cannot create simple list from this type of node.", Context);

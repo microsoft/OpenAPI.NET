@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType?>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
         public bool Required { get => Target?.Required ?? false; }
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Models.References
             if (Content == null || !Content.Any())
                 return [];
 
-            return Content.First().Value.Schema?.Properties?.Select(x => new OpenApiParameterReference(x.Key, Reference.HostDocument));
+            return Content.First().Value?.Schema?.Properties?.Select(x => new OpenApiParameterReference(x.Key, Reference.HostDocument));
         }
 
         /// <inheritdoc/>

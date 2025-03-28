@@ -794,7 +794,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiMediaType"/>
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiMediaType>? content)
+        internal void Walk(IDictionary<string, OpenApiMediaType?>? content)
         {
             if (content == null)
             {
@@ -816,7 +816,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiMediaType"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiMediaType mediaType)
+        internal void Walk(OpenApiMediaType? mediaType)
         {
             if (mediaType == null)
             {

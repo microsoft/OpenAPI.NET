@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models
         public bool Required { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType?>? Content { get; set; } = new Dictionary<string, OpenApiMediaType?>();
 
         /// <inheritdoc />
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(requestBody);
             Description = requestBody.Description ?? Description;
             Required = requestBody.Required;
-            Content = requestBody.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
+            Content = requestBody.Content != null ? new Dictionary<string, OpenApiMediaType?>(requestBody.Content) : null;
             Extensions = requestBody.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
         }
 
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element?.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -60,11 +60,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element?.SerializeAsV3(writer));
         }
         
         internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
-            Action<IOpenApiWriter, IOpenApiSerializable> callback)
+            Action<IOpenApiWriter, IOpenApiSerializable?> callbackForOptionals)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // content
-            writer.WriteRequiredMap(OpenApiConstants.Content, Content, callback);
+            writer.WriteOptionalMapOfOptionals(OpenApiConstants.Content, Content, callbackForOptionals);
 
             // required
             writer.WriteProperty(OpenApiConstants.Required, Required, false);
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Models
         {
             if (Content == null || !Content.Any())
                 yield break;
-            var properties = Content.First().Value.Schema?.Properties;
+            var properties = Content.First().Value?.Schema?.Properties;
             if(properties != null)
             {
                 foreach (var property in properties)
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Models
                         Name = property.Key,
                         Schema = paramSchema,
                         Examples = Content.Values.FirstOrDefault()?.Examples,
-                        Required = Content.First().Value.Schema?.Required?.Contains(property.Key) ?? false
+                        Required = Content.First().Value?.Schema?.Required?.Contains(property.Key) ?? false
                     };
                 }
             }            

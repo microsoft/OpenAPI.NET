@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType?>? Content { get; set; } = new Dictionary<string, OpenApiMediaType?>();
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Models
             Schema = header.Schema?.CreateShallowCopy();
             Example = header.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
             Examples = header.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
-            Content = header.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
+            Content = header.Content != null ? new Dictionary<string, OpenApiMediaType?>(header.Content) : null;
             Extensions = header.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV31(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV31(writer), (writer, element) => element?.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -93,11 +93,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer), (writer, element) => element?.SerializeAsV3(writer));
         }
 
         internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
-            Action<IOpenApiWriter, IOpenApiSerializable> callback)
+            Action<IOpenApiWriter, IOpenApiSerializable> callback,
+            Action<IOpenApiWriter, IOpenApiSerializable?> callbackForOptionals)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -134,7 +135,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
 
             // content
-            writer.WriteOptionalMap(OpenApiConstants.Content, Content, callback);
+            writer.WriteOptionalMapOfOptionals(OpenApiConstants.Content, Content, callbackForOptionals);
 
             // extensions
             writer.WriteExtensions(Extensions, version);

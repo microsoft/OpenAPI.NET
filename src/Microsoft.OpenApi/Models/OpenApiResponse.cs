@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType?>? Content { get; set; } = new Dictionary<string, OpenApiMediaType?>();
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiLink>? Links { get; set; } = new Dictionary<string, IOpenApiLink>();
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(response);
             Description = response.Description ?? Description;
             Headers = response.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
-            Content = response.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
+            Content = response.Content != null ? new Dictionary<string, OpenApiMediaType?>(response.Content) : null;
             Links = response.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
             Extensions = response.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
         }
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer), (writer, element) => element?.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -61,11 +61,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer), (writer, element) => element?.SerializeAsV3(writer));
         }
 
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
-            Action<IOpenApiWriter, IOpenApiSerializable> callback)
+            Action<IOpenApiWriter, IOpenApiSerializable> callback,
+            Action<IOpenApiWriter, IOpenApiSerializable?> callbackForOptionals)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -78,7 +79,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, callback);
 
             // content
-            writer.WriteOptionalMap(OpenApiConstants.Content, Content, callback);
+            writer.WriteOptionalMapOfOptionals(OpenApiConstants.Content, Content, callbackForOptionals);
 
             // links
             writer.WriteOptionalMap(OpenApiConstants.Links, Links, callback);
@@ -112,14 +113,14 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalObject(OpenApiConstants.Schema, mediatype.Value.Schema, (w, s) => s.SerializeAsV2(w));
 
                     // examples
-                    if (Content.Values.Any(m => m.Example != null))
+                    if (Content.Values.Any(m => m?.Example != null))
                     {
                         writer.WritePropertyName(OpenApiConstants.Examples);
                         writer.WriteStartObject();
 
                         foreach (var mediaTypePair in Content)
                         {
-                            if (mediaTypePair.Value.Example != null)
+                            if (mediaTypePair.Value?.Example != null)
                             {
                                 writer.WritePropertyName(mediaTypePair.Key);
                                 writer.WriteAny(mediaTypePair.Value.Example);
@@ -129,13 +130,13 @@ namespace Microsoft.OpenApi.Models
                         writer.WriteEndObject();
                     }
 
-                    if (Content.Values.Any(m => m.Examples != null && m.Examples.Any()))
+                    if (Content.Values.Any(m => m?.Examples != null && m.Examples.Any()))
                     {
                         writer.WritePropertyName(OpenApiConstants.ExamplesExtension);
                         writer.WriteStartObject();
 
                         foreach (var example in Content
-                            .Select(static x => x.Value.Examples)
+                            .Select(static x => x.Value?.Examples)
                             .OfType<IDictionary<string, IOpenApiExample>>()
                             .SelectMany(static x => x))
                         {
