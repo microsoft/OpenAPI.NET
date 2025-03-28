@@ -1,15 +1,18 @@
 ﻿using System;
 using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
+using Microsoft.OpenApi.Models;
 
 namespace performance
 {
+    [MemoryDiagnoser]
+    [JsonExporter]
     public class Benchmarks
     {
         [Benchmark]
-        public void Scenario1()
+        public void EmptyDocument()
         {
-            // Implement your benchmark here
+            var document = new OpenApiDocument();
         }
 
         [Benchmark]

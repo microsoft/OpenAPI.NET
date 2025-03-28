@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Hidi", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Hidi.Tests", "test\Microsoft.OpenApi.Hidi.Tests\Microsoft.OpenApi.Hidi.Tests.csproj", "{6ADC5D41-EDD2-4206-B815-5DFF739C6832}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTests", "performance\PerformanceTests.csproj", "{537E49E3-325E-40EE-A90E-7556D4D333AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTests", "performance\benchmark\PerformanceTests.csproj", "{537E49E3-325E-40EE-A90E-7556D4D333AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
