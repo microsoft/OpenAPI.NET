@@ -10,7 +10,7 @@
             "group": "build",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj",
+                "${workspaceFolder}/Microsoft.OpenApi.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

@@ -10,9 +10,9 @@ namespace performance
     public class Benchmarks
     {
         [Benchmark]
-        public void EmptyDocument()
+        public OpenApiDocument EmptyDocument()
         {
-            var document = new OpenApiDocument();
+            return new OpenApiDocument();
         }
 
         [Benchmark]
