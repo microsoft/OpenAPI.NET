@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -93,6 +94,32 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedRequestBody.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeRequestBodyWithNoMediaType(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
+            var requestBody = new OpenApiRequestBody()
+            {
+                Description = "description",
+                Required = true,
+                Content = new Dictionary<string, OpenApiMediaType>()
+                {
+                    {"application/octet-stream", null},
+                }
+            };
+
+            // Act
+            requestBody.SerializeAsV3(writer);
             await writer.FlushAsync();
 
             // Assert
