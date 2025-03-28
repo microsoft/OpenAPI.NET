@@ -571,6 +571,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         }
 
         [Fact]
+        public async Task ParseDocumentWithEmptyTagsWorks()
+        {
+            var path = Path.Combine(SampleFolderPath, "documentWithEmptyTags.json");
+            var doc = (await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings)).Document;
+
+            doc.Paths["/groups"].Operations[HttpMethod.Get].Tags.Should().BeNull("Empty tags are ignored, so we should not have any tags");
+        }
+
+        [Fact]
         public void ParseEmptyMemoryStreamThrowsAnArgumentException()
         {
             Assert.Throws<ArgumentException>(() => OpenApiDocument.Load(new MemoryStream()));
