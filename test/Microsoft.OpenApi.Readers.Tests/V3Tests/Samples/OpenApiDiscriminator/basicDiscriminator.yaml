@@ -1,5 +1,5 @@
 ﻿propertyName: pet_type
 mapping:
     puppy: '#/components/schemas/Dog'
-    kitten: https://gigantic-server.com/schemas/animals.json
+    kitten: https://gigantic-server.com/schemas/animals.json#/components/schemas/Cat
     monster: https://gigantic-server.com/schemas/Monster/schema.json
