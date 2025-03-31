@@ -51,7 +51,7 @@ public class Program
         }
         return hasErrors ? 1 : 0;
     }
-    private const string ExistingReportPath = "../benchmark/BenchmarkDotNet.Artifacts/results/performance.Benchmarks-report.json";
+    private const string ExistingReportPath = "../benchmark/BenchmarkDotNet.Artifacts/results/performance.EmptyModels-report.json";
 
     private static async Task<Dictionary<string, BenchmarkResult>?> GetBenchmarksAllocatedBytes(string targetPath, CancellationToken cancellationToken = default)
     {
