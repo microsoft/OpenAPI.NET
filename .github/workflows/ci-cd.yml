@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 8.x
 
       - name: Checkout repository
         id: checkout_repo
@@ -36,3 +36,44 @@ jobs:
         shell: pwsh
         run: |
           dotnet test Microsoft.OpenApi.sln -c Release -v n
+
+  validate-trimming:
+    name: Validate Project for Trimming
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Validate Trimming warnings
+        run: dotnet publish -c Release -r win-x64 /p:TreatWarningsAsErrors=true /warnaserror -f net8.0
+        working-directory: ./test/Microsoft.OpenApi.Trimming.Tests
+
+  validate-performance:
+    name: Validate performance of the library
+    runs-on: ubuntu-latest
+    needs: [ci]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Copy committed results
+        run: |
+          mkdir -p ./performanceResults
+          cp -r ./performance/benchmark/BenchmarkDotNet.Artifacts/results/* ./performanceResults
+      
+      - name: Run performance tests
+        run: |
+          dotnet run -c Release ./performance/benchmark/PerformanceTests.csproj
+
+      - name: Run comparison tool
+        run: |
+          dotnet run -c Release ./performance/resultsComparer/resultsComparer.csproj -- ./performanceResults/ComparisonResults/performance.EmptyModels-report.json
