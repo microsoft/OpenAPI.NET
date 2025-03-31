@@ -66,12 +66,11 @@ namespace Microsoft.OpenApi.Validations
                 return;
             }
 
-            if (item is not T)
+            if (item is not T typedItem)
             {
                 throw new ArgumentException(string.Format(SRResource.InputItemShouldBeType, typeof(T).FullName));
             }
 
-            var typedItem = (T)item;
             this._validate(context, typedItem);
         }
     }
