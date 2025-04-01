@@ -201,6 +201,25 @@ extends:
             sourceFolder: $(Build.ArtifactStagingDirectory)
             content: '*.nupkg'
 
+        # Copy repository files to be used in the deploy stage
+        - task: CopyFiles@2
+          displayName: 'Copy repository files for deploy stage'
+          inputs:
+            SourceFolder: '$(Build.SourcesDirectory)'
+            Contents: |
+              **/*
+              !**/bin/**
+              !**/obj/**
+              !**/.git/**
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/RepoFiles'
+            
+        # Publish repository files as an artifact
+        - task: PublishPipelineArtifact@1
+          displayName: 'Publish Repository Files'
+          inputs:
+            targetPath: '$(Build.ArtifactStagingDirectory)/RepoFiles'
+            artifact: 'RepoFiles'
+
     - stage: deploy
       condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
       dependsOn: build
@@ -334,8 +353,8 @@ extends:
           isProduction: true
           inputs:
           - input: pipelineArtifact
-            artifactName: Nugets
-            targetPath: '$(Pipeline.Workspace)'
+            artifactName: RepoFiles
+            targetPath: '$(Pipeline.Workspace)/RepoFiles'
         strategy:
           runOnce:
             deploy:
@@ -354,7 +373,7 @@ extends:
                       az acr login --name msgraphpperegistry
               
                 - powershell: |
-                    $content = [XML](Get-Content ./Directory.Build.props)
+                    $content = [XML](Get-Content $(Pipeline.Workspace)/RepoFiles/Directory.Build.props)
                     Write-Host "XML loaded, finding version..."
                     
                     # Handle PropertyGroup as either a single element or array
@@ -443,7 +462,7 @@ extends:
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-                      "$(Build.SourcesDirectory)"
+                      "$(Pipeline.Workspace)/RepoFiles"
 
                   displayName: 'Build and Push Nightly Image'
                   condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
@@ -455,6 +474,6 @@ extends:
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-                      "$(Build.SourcesDirectory)"
+                      "$(Pipeline.Workspace)/RepoFiles"
                   displayName: 'Build and Push Release Image'
                   condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
