@@ -370,7 +370,7 @@ extends:
                       az acr login --name msgraphpperegistry
               
                 - powershell: |
-                    $content = [XML](Get-Content $(Pipeline.Workspace)/RepoFiles/Directory.Build.props)
+                    $content = [XML](Get-Content $(Pipeline.Workspace)/Directory.Build.props)
                     Write-Host "XML loaded, finding version..."
                     
                     # Handle PropertyGroup as either a single element or array
@@ -459,7 +459,7 @@ extends:
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-                      "$(Pipeline.Workspace)/RepoFiles"
+                      "$(Pipeline.Workspace)"
 
                   displayName: 'Build and Push Nightly Image'
                   condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
@@ -471,6 +471,6 @@ extends:
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-                      "$(Pipeline.Workspace)/RepoFiles"
+                      "$(Pipeline.Workspace)"
                   displayName: 'Build and Push Release Image'
                   condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
