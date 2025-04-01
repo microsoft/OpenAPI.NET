@@ -212,13 +212,6 @@ extends:
               !**/obj/**
               !**/.git/**
             TargetFolder: '$(Build.ArtifactStagingDirectory)/RepoFiles'
-            
-        # Publish repository files as an artifact
-        - task: PublishPipelineArtifact@1
-          displayName: 'Publish Repository Files'
-          inputs:
-            targetPath: '$(Build.ArtifactStagingDirectory)/RepoFiles'
-            artifact: 'RepoFiles'
 
     - stage: deploy
       condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
