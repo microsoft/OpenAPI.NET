@@ -9,8 +9,6 @@ using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
-#nullable enable
-
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>

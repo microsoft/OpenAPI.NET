@@ -281,7 +281,6 @@ namespace Microsoft.OpenApi.Services
             return _IOpenApiReferenceableRegistry.ContainsKey(key) || _artifactsRegistry.ContainsKey(key);
         }
 
-#nullable enable
         /// <summary>
         /// Resolves a reference given a key.
         /// </summary>
@@ -307,7 +306,6 @@ namespace Microsoft.OpenApi.Services
 
             return default;
         }
-#nullable restore
 
         private Uri? ToLocationUrl(string location)
         {
