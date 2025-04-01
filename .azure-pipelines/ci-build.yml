@@ -51,6 +51,10 @@ extends:
             displayName: 'Publish Artifact: Nugets'
             artifactName: Nugets
             targetPath: '$(Build.ArtifactStagingDirectory)/Nugets'
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact: RepoFiles'
+            artifactName: RepoFiles
+            targetPath: '$(Build.ArtifactStagingDirectory)/RepoFiles'
         steps:
         - task: UseDotNet@2
           displayName: 'Use .NET 6'
@@ -347,7 +351,7 @@ extends:
           inputs:
           - input: pipelineArtifact
             artifactName: RepoFiles
-            targetPath: '$(Pipeline.Workspace)/RepoFiles'
+            targetPath: '$(Pipeline.Workspace)'
         strategy:
           runOnce:
             deploy:
