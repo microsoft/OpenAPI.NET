@@ -132,17 +132,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Version = "1.0.0"
                 },
                 Servers =
-                {
+                [
                     new OpenApiServer
                     {
                         Url = "https://"
                     }
-                },
+                ],
                 Paths = new()
                 {
                     ["/items"] = new OpenApiPathItem()
                     {
-                        Operations =
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             [HttpMethod.Get] = new()
                             {
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = okMediaType,
                                             ["application/xml"] = okMediaType,
@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = errorMediaType,
                                             ["application/xml"] = errorMediaType
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["html/text"] = okMediaType
                                         }
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["html/text"] = errorMediaType
                                         }
@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = okMediaType,
                                             ["application/xml"] = okMediaType,
@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = errorMediaType,
                                             ["application/xml"] = errorMediaType
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 },
                 Components = new()
                 {
-                    Schemas =
+                    Schemas = new Dictionary<string, IOpenApiSchema>
                     {
                         ["Item"] = okSchema,
                         ["Error"] = errorSchema

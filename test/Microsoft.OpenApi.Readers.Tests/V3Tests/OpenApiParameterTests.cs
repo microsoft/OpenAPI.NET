@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "coordinates",
-                    Content =
+                    Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new()
                         {
@@ -273,7 +273,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Examples =
+                    Examples = new Dictionary<string, IOpenApiExample>
                     {
                         ["example1"] = new OpenApiExample()
                         {

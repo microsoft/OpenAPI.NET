@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -55,7 +56,8 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new OpenApiComponents()
                 {
-                    Schemas = {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
                         ["test"] = testSchema
                     }
                 }
@@ -108,7 +110,7 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
             var responseFragment = new OpenApiResponse
             {
-                Headers =
+                Headers = new Dictionary<string, IOpenApiHeader>
                 {
                     { "header1", new OpenApiHeader() }
                 }
@@ -130,7 +132,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new()
                 {
-                    Schemas = 
+                    Schemas = new Dictionary<string, IOpenApiSchema>
                     {
                         ["test"] = new OpenApiSchema()
                         {

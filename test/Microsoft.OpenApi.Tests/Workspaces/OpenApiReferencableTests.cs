@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiHeader _headerFragment = new()
         {
             Schema = new OpenApiSchema(),
-            Examples =
+            Examples = new Dictionary<string, IOpenApiExample>
             {
                 { "example1", new OpenApiExample() }
             }
@@ -28,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiParameter _parameterFragment = new()
         {
             Schema = new OpenApiSchema(),
-            Examples =
+            Examples = new Dictionary<string, IOpenApiExample>
             {
                 { "example1", new OpenApiExample() }
             }
@@ -36,11 +37,11 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiRequestBody _requestBodyFragment = new();
         private static readonly OpenApiResponse _responseFragment = new()
         {
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 { "header1", new OpenApiHeader() }
             },
-            Links =
+            Links = new Dictionary<string, IOpenApiLink>
             {
                 { "link1", new OpenApiLink() }
             }

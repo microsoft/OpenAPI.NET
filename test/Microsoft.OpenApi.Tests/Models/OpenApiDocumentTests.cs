@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static readonly OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
-            Schemas =
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
                 ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new OpenApiSchema()
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static readonly OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
         {
-            Schemas =
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
                 ["schema1"] = new OpenApiSchema()
                 {
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static readonly OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
         {
-            Schemas =
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
                 ["schema1"] = new OpenApiSchema()
                 {
@@ -1860,7 +1860,7 @@ paths:
                             {
                                 RequestBody = new OpenApiRequestBody()
                                 {
-                                    Content =
+                                    Content = new Dictionary<string, OpenApiMediaType>
                                     {
                                         ["application/json"] = new OpenApiMediaType()
                                         {

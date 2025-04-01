@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var expected = new OpenApiResponse
                 {
                     Description = "General Error",
-                    Content =
+                    Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new()
                         {

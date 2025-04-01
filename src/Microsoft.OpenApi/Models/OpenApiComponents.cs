@@ -19,60 +19,57 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiSchema>? Schemas { get; set; } = new Dictionary<string, IOpenApiSchema>();
+        public IDictionary<string, IOpenApiSchema>? Schemas { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiResponse"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiResponse>? Responses { get; set; } = new Dictionary<string, IOpenApiResponse>();
+        public IDictionary<string, IOpenApiResponse>? Responses { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiParameter"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiParameter>? Parameters { get; set; } =
-            new Dictionary<string, IOpenApiParameter>();
+        public IDictionary<string, IOpenApiParameter>? Parameters { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
+        public IDictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiRequestBody"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiRequestBody>? RequestBodies { get; set; } =
-            new Dictionary<string, IOpenApiRequestBody>();
+        public IDictionary<string, IOpenApiRequestBody>? RequestBodies { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiHeader"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
+        public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiSecurityScheme>? SecuritySchemes { get; set; } =
-            new Dictionary<string, IOpenApiSecurityScheme>();
+        public IDictionary<string, IOpenApiSecurityScheme>? SecuritySchemes { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiLink"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiLink>? Links { get; set; } = new Dictionary<string, IOpenApiLink>();
+        public IDictionary<string, IOpenApiLink>? Links { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
+        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiPathItem"/> Object.
         /// </summary>
-        public IDictionary<string, IOpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, IOpenApiPathItem>();
+        public IDictionary<string, IOpenApiPathItem>? PathItems { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

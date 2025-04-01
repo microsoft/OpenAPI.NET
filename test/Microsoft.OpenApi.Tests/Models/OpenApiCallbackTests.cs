@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -19,19 +21,19 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         private static OpenApiCallback AdvancedCallback => new()
         {
-            PathItems =
+            PathItems = new Dictionary<RuntimeExpression, IOpenApiPathItem>
             {
                 [RuntimeExpression.Build("$request.body#/url")]
                 = new OpenApiPathItem()
                 {
-                    Operations =
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
                         [HttpMethod.Post] =
                         new()
                         {
                             RequestBody = new OpenApiRequestBody()
                             {
-                                Content =
+                                Content = new Dictionary<string, OpenApiMediaType>
                                 {
                                     ["application/json"] = new()
                                     {
@@ -59,19 +61,19 @@ namespace Microsoft.OpenApi.Tests.Models
 
         private static OpenApiCallback ReferencedCallback => new()
         {
-            PathItems =
+            PathItems = new Dictionary<RuntimeExpression, IOpenApiPathItem>
             {
                 [RuntimeExpression.Build("$request.body#/url")]
                 = new OpenApiPathItem()
                 {
-                    Operations =
+                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
                     {
                         [HttpMethod.Post] =
                         new()
                         {
                             RequestBody = new OpenApiRequestBody()
                             {
-                                Content =
+                                Content = new Dictionary<string, OpenApiMediaType>
                                 {
                                     ["application/json"] = new()
                                     {

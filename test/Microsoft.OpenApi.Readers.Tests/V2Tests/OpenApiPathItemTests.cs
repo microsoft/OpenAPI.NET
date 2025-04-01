@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Style = ParameterStyle.Simple
                 }
             ],
-            Operations =
+            Operations = new Dictionary<HttpMethod, OpenApiOperation>
             {
                 [HttpMethod.Put] = new()
                 {
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     ],
                     RequestBody = new OpenApiRequestBody()
                     {
-                        Content =
+                        Content = new Dictionary<string, OpenApiMediaType>
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     ],
                     RequestBody = new OpenApiRequestBody()
                     {
-                        Content =
+                        Content = new Dictionary<string, OpenApiMediaType>
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {

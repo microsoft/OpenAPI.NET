@@ -241,7 +241,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
                     ["ErrorModel"] = new OpenApiSchema()
                     {
@@ -298,7 +298,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
                     ["Pet"] = new OpenApiSchema()
                     {
@@ -404,7 +404,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
                     ["RelativePathModel"] = new OpenApiSchema()
                     {

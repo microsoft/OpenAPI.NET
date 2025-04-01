@@ -21,12 +21,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
-        public IDictionary<string, OpenApiSchemaReference>? Mapping { get; set; } = new Dictionary<string, OpenApiSchemaReference>();
+        public IDictionary<string, OpenApiSchemaReference>? Mapping { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -81,13 +81,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) =>
-            {
-                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
-                {
-                    w.WriteValue(s.Reference.ReferenceV3);
-                }
-            });
+            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
         }
 
         /// <summary>

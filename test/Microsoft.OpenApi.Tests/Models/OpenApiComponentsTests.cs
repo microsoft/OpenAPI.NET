@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelReferencingComponents = new()
         {
-            Schemas =
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
                 ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new OpenApiSchema()
@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new()
         {
-            Schemas =
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
                 ["schema1"] = new OpenApiSchema()
                 {
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelSelfReferencingComponents = new()
         {
-            Schemas =
+            Schemas = new Dictionary<string, IOpenApiSchema>
             {
                 ["schema1"] = new OpenApiSchemaReference("schema1", null)
             }

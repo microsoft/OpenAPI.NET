@@ -187,7 +187,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             var components = new OpenApiComponents
             {
-                Schemas = {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
                     {
                         "schema1",
                         new OpenApiSchema
@@ -219,7 +220,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             var components = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
                     {
                         "Person",

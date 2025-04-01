@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var components = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
                     ["petSchema"] =  new OpenApiSchema()
                     {
@@ -310,35 +310,35 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
                             Parameters =
-                                [
-                                    new OpenApiParameter
+                            [
+                                new OpenApiParameter
+                                {
+                                    Name = "tags",
+                                    In = ParameterLocation.Query,
+                                    Description = "tags to filter by",
+                                    Required = false,
+                                    Schema = new OpenApiSchema()
                                     {
-                                        Name = "tags",
-                                        In = ParameterLocation.Query,
-                                        Description = "tags to filter by",
-                                        Required = false,
-                                        Schema = new OpenApiSchema()
+                                        Type = JsonSchemaType.Array,
+                                        Items = new OpenApiSchema()
                                         {
-                                            Type = JsonSchemaType.Array,
-                                            Items = new OpenApiSchema()
-                                            {
-                                                Type = JsonSchemaType.String
-                                            }
-                                        }
-                                    },
-                                    new OpenApiParameter
-                                    {
-                                        Name = "limit",
-                                        In = ParameterLocation.Query,
-                                        Description = "maximum number of results to return",
-                                        Required = false,
-                                        Schema = new OpenApiSchema()
-                                        {
-                                            Type = JsonSchemaType.Integer,
-                                            Format = "int32"
+                                            Type = JsonSchemaType.String
                                         }
                                     }
-                                ],
+                                },
+                                new OpenApiParameter
+                                {
+                                    Name = "limit",
+                                    In = ParameterLocation.Query,
+                                    Description = "maximum number of results to return",
+                                    Required = false,
+                                    Schema = new OpenApiSchema()
+                                    {
+                                        Type = JsonSchemaType.Integer,
+                                        Format = "int32"
+                                    }
+                                }
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["200"] = new OpenApiResponse

@@ -222,7 +222,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ],
                 RequestBody = new OpenApiRequestBody()
                 {
-                    Content =
+                    Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/x-www-form-urlencoded"] = new()
                         {

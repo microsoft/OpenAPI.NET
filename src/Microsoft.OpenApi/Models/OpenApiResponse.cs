@@ -13,22 +13,22 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiResponse
+    public class OpenApiResponse : IOpenApiExtensible, IOpenApiResponse
     {
         /// <inheritdoc/>
         public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiHeader>? Headers { get; set; } = new Dictionary<string, IOpenApiHeader>();
+        public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiLink>? Links { get; set; } = new Dictionary<string, IOpenApiLink>();
+        public IDictionary<string, IOpenApiLink>? Links { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse AdvancedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content =
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }, 
                 }
             },
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
@@ -64,7 +65,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse AdvancedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content =
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -80,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                 }
             },
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
@@ -105,7 +106,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse ReferencedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content =
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -116,7 +117,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
@@ -141,7 +142,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse ReferencedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content =
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -152,7 +153,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {

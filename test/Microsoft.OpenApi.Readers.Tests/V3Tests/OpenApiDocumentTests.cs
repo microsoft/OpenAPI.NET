@@ -112,7 +112,7 @@ paths: {}
                         Version = "0.9.1",
                     },
                     Servers =
-                    {
+                    [
                         new OpenApiServer
                         {
                             Url = new Uri("http://www.example.org/api").ToString(),
@@ -123,7 +123,7 @@ paths: {}
                             Url = new Uri("https://www.example.org/api").ToString(),
                             Description = "The https endpoint"
                         }
-                    },
+                    ],
                     Paths = new OpenApiPaths()
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
@@ -1101,7 +1101,7 @@ paths: {}
                     AllowReserved = true,
                     Style = ParameterStyle.Simple,
                     Explode = true,
-                    Examples =
+                    Examples = new Dictionary<string, IOpenApiExample>
                     {
                             { "uuid1", new OpenApiExample()
                                 {
@@ -1282,7 +1282,7 @@ paths: {}
                             ["200"] = new OpenApiResponse
                             {
                                 Description = "A list of pets",
-                                Content =
+                                Content = new Dictionary<string, OpenApiMediaType>
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -1436,17 +1436,17 @@ components:
                     Version = "0.9.1",
                 },
                 Servers =
+                [
+                    new OpenApiServer
                     {
-                        new OpenApiServer
+                        Url = "http://www.example.org/api/{version}",
+                        Description = "The http endpoint",
+                        Variables = new Dictionary<string, OpenApiServerVariable>
                         {
-                            Url = "http://www.example.org/api/{version}",
-                            Description = "The http endpoint",
-                            Variables = new Dictionary<string, OpenApiServerVariable>
-                            {
-                                {"version", new OpenApiServerVariable {Default = "v2", Enum = ["v1", "v2"]}}
-                            }
+                            {"version", new OpenApiServerVariable {Default = "v2", Enum = ["v1", "v2"]}}
                         }
-                    },
+                    }
+                ],
                 Paths = new()
             };
 

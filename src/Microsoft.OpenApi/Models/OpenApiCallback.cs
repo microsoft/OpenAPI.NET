@@ -13,17 +13,16 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiCallback
+    public class OpenApiCallback : IOpenApiExtensible, IOpenApiCallback
     {
         /// <inheritdoc/>
         public Dictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get; set; }
-            = [];
 
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

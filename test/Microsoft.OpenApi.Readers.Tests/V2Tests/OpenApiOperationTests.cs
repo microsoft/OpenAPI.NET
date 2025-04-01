@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -83,7 +84,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 Description = "Pet to update with",
                 Required = true,
-                Content =
+                Content = new Dictionary<string, OpenApiMediaType>
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
@@ -93,7 +94,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                     }
                 },
-                Extensions = {
+                Extensions = new Dictionary<string, IOpenApiExtension>
+                {
                     [OpenApiConstants.BodyName] = new OpenApiAny("petObject")
                 }
             },
@@ -213,7 +215,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         { "200", new OpenApiResponse()
                         {
                             Description = "An array of float response",
-                            Content =
+                            Content = new Dictionary<string, OpenApiMediaType>()
                             {
                                 ["application/json"] = new OpenApiMediaType()
                                 {
@@ -532,7 +534,7 @@ responses: { }";
             openApiDocument.AddComponent("UserRequest", new OpenApiRequestBody
             {
                 Description = "User creation request body",
-                Content =
+                Content = new Dictionary<string, OpenApiMediaType>
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
@@ -624,7 +626,7 @@ responses: { }";
                 Description = "",
                 OperationId = "loginUser",
                 Parameters =
-                {
+                [
                     new OpenApiParameter
                     {
                         Name = "password",
@@ -636,7 +638,7 @@ responses: { }";
                             Type = JsonSchemaType.String
                         }
                     }
-                }
+                ]
             };
             using var textWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(textWriter);
