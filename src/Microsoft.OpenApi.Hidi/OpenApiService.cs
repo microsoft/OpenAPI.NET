@@ -438,7 +438,10 @@ namespace Microsoft.OpenApi.Hidi
             var sb = new StringBuilder();
             document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
 
-            var doc = OpenApiDocument.Parse(sb.ToString(), format).Document;
+            var settings = new OpenApiReaderSettings();
+            settings.AddYamlReader();
+
+            var doc = OpenApiDocument.Parse(sb.ToString(), format, settings).Document;
 
             return doc;
         }
