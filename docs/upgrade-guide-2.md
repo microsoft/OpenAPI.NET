@@ -355,7 +355,8 @@ string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.
 ### Bug Fixes
 
 ## Serialization of References: 
-Fixed a bug where references would not serialize summary or descriptions in OpenAPI 3.1.**Example:**
+Fixed a bug where references would not serialize summary or descriptions in OpenAPI 3.1.
+**Example:**
 ```csharp
 OpenApiSchemaReference schemaRef = new OpenApiSchemaReference("MySchema")
 {
