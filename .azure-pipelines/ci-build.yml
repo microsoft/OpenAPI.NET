@@ -344,7 +344,7 @@ extends:
       #             addChangeLog: false
 
       - deployment: deploy_docker_image
-        environment: kiota-github-releases
+        environment: kiota-docker-images-releases
         templateContext:
           type: releaseJob
           isProduction: true
