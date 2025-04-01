@@ -14,7 +14,7 @@ OpenAPI.NET v2 is a major update to the OpenAPI.NET library. This release includ
 
 Since the release of the first version of the OpenAPI.NET library in 2018, there has not been a major version update to the library. With the addition of support for OpenAPI v3.1 it was necessary to make some breaking changes. With this opportunity, we have taken the time to make some other improvements to the library, based on the experience we have gained supporting a large community of users for the last six years .
 
-## Performance Improvements
+# Performance Improvements
 
 One of the key features of OpenAPI.NET is its performance. This version makes it possible to parse JSON based OpenAPI descriptions even faster. OpenAPI.NET v1 relied on the excellent YamlSharp library for parsing both JSON and YAML files. With OpenAPI.NET v2 we are relying on System.Text.Json for parsing JSON files. For YAML files, we continue to use YamlSharp to parse YAML but then convert to JsonNodes for processing. This allows us to take advantage of the performance improvements in System.Text.Json while still supporting YAML files.
 
@@ -24,7 +24,7 @@ In v1, instances of `$ref` were resolved in a second pass of the document to ens
 
 ## Reduced Dependencies
 
-In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library to be able to read OpenAPI descriptions in either YAML or JSON.  In OpenAPI.NET v2, the core Microsoft.OpenAPI library can both read and write JSON.  It is only necessary to use the readers library if you need YAML support. This allows teams who are only working in JSON to avoid the additional dependency and therefore eliminate all non-.NET library references.
+In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library to be able to read OpenAPI descriptions in either YAML or JSON.  In OpenAPI.NET v2, the core Microsoft.OpenAPI library can both read and write JSON.  It is only necessary to use the newly renamed [Microsoft.OpenApi.YamlReader](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) library if you need YAML support. This allows teams who are only working in JSON to avoid the additional dependency and therefore eliminate all non-.NET library references.
 
 ## API Enhancements
 
@@ -38,9 +38,9 @@ The same pattern can be used for `OpenApiStreamReader` and `OpenApiTextReader`. 
 
 ```csharp
     var reader = new OpenApiStreamReader();
-    var readResult = await reader.ReadAsync(streamOpenApiDoc);
+    var (document, diagnostics) = await reader.ReadAsync(streamOpenApiDoc);
 ```
-A `ReadResult` object acts as a tuple of `OpenApiDiagnostic` and `OpenApiDocument`.
+A `ReadResult` object acts as a tuple of `OpenApiDocument` and `OpenApiDiagnostic`.
 
 The challenge with this approach is that the reader classes are not very discoverable and the behaviour is not actually consistent with `*TextReader` pattern that allows incrementally reading the document. This library does not support incrementally reading the OpenAPI Document. It only reads a complete document and returns an `OpenApiDocument` instance.
 
@@ -57,7 +57,7 @@ public class OpenApiDocument {
 
 This API design allows a developer to use IDE autocomplete to present all the loading options by simply knowning the name of the `OpenApiDocument` class.  Each of these methods are layered ontop of the more primitive methods to ensure consistent behaviour.
 
-As the YAML format is only supported when including the `Microsoft.OpenApi.Readers` library it was decided not to use an enum for the `format` parameter.  We are considering implementing a more [strongly type solution](https://github.com/microsoft/OpenAPI.NET/issues/1952) similar to the way that `HttpMethod` is implemented so that we have a strongly typed experience that is also extensible.
+As the YAML format is only supported when including the `Microsoft.OpenApi.YamlReader` library it was decided not to use an enum for the `format` parameter.  We are considering implementing a more [strongly type solution](https://github.com/microsoft/OpenAPI.NET/issues/1952) similar to the way that `HttpMethod` is implemented so that we have a strongly typed experience that is also extensible.
 
 Where the loading methods are used without a format property, we will attempt to parse the document using the default JSON reader.  If that fails and the Yaml reader is registered, then we will attempt to read as YAML.  The goal is always to provide the fastest path with JSON but still maintain the convenience of not having to care whether a URL points to YAML or JSON if you need that flexibility.
 
@@ -138,22 +138,22 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
 
 ```csharp
         /// $schema, a JSON Schema dialect identifier. Value must be a URI
-        public virtual string Schema { get; set; }
+        public string Schema { get; set; }
         /// $id - Identifies a schema resource with its canonical URI.
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
         /// $comment - reserves a location for comments from schema authors to readers or maintainers of the schema.
-        public virtual string Comment { get; set; }
+        public string Comment { get; set; }
         /// $vocabulary- used in meta-schemas to identify the vocabularies available for use in schemas described by that meta-schema.
-        public virtual IDictionary<string, bool> Vocabulary { get; set; }
+        public IDictionary<string, bool> Vocabulary { get; set; }
         /// $dynamicRef - an applicator that allows for deferring the full resolution until runtime, at which point it is resolved each time it is encountered while evaluating an instance
-        public virtual string DynamicRef { get; set; }
+        public string DynamicRef { get; set; }
         /// $dynamicAnchor - used to create plain name fragments that are not tied to any particular structural location for referencing purposes, which are taken into consideration for dynamic referencing.
-        public virtual string DynamicAnchor { get; set; }
+        public string DynamicAnchor { get; set; }
         /// $defs - reserves a location for schema authors to inline re-usable JSON Schemas into a more general schema.
-        public virtual IDictionary<string, OpenApiSchema> Definitions { get; set; }
-        public virtual IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
-        public virtual bool UnevaluatedProperties { get; set;}
-        public virtual bool UnEvaluatedProperties { get; set; }  // Duplicate should be removed
+        public IDictionary<string, OpenApiSchema> Definitions { get; set; }
+        public IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
+        public bool UnevaluatedProperties { get; set;}
+        public bool UnEvaluatedProperties { get; set; }  // Duplicate should be removed
 
 ```
 #### Changes to existing keywords
@@ -162,9 +162,8 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
 
         public virtual decimal? ExclusiveMaximum { get; set; }  // New, but currently named v31ExclusiveMaximum
         public virtual decimal? ExclusiveMinimum { get; set; } // New, but Currently named v31ExclusiveMinimum)
-        public virtual bool? ExclusiveMaximum { get; set; }  // To be removed
-        public virtual bool? ExclusiveMinimum { get; set; }  // To be removed
-
+        public virtual decimal? ExclusiveMaximum { get; set; }  //type changed to reflect the new version of JSON schema
+        public virtual decimal? ExclusiveMinimum { get; set; } // type changed to reflect the new version of JSON schema
         public virtual JsonSchemaType? Type { get; set; }  // Was string, now flagged enum
         public virtual decimal? Maximum { get; set; }      // Double???
         public virtual decimal? Minimum { get; set; }       // Double???
@@ -172,32 +171,15 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
         public virtual JsonNode Default { get; set; }  // Type matching no longer enforced. Was IOpenApiAny
         public virtual bool ReadOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
         public virtual bool WriteOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
-        public virtual bool UnresolvedReference { get; set; }  // Can be removed
-        public virtual OpenApiReference Reference { get; set; } // Can be removed
 
         public virtual JsonNode Example { get; set; }  // No longer IOpenApiAny
         public virtual IList<JsonNode> Examples { get; set; }
         public virtual IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
-
-        public virtual bool Nullable { get; set; }  // To be removed
         public virtual OpenApiExternalDocs ExternalDocs { get; set; }  // OpenApi Vocab
         public virtual bool Deprecated { get; set; }  // OpenApi Vocab
         public virtual OpenApiXml Xml { get; set; }  // OpenApi Vocab
 
         public IDictionary<string, object> Annotations { get; set; }  // Custom keywords?
-```
-
-#### Potential Performance improvements
-
-```csharp
-        public virtual IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
-        public virtual IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
-        public virtual IList<OpenApiSchema> AllOf { get; set; } = new List<OpenApiSchema>();
-        public virtual IList<OpenApiSchema> OneOf { get; set; } = new List<OpenApiSchema>();
-        public virtual IList<OpenApiSchema> AnyOf { get; set; } = new List<OpenApiSchema>();
-        public virtual ISet<string> Required { get; set; } = new HashSet<string>();
-        public virtual IDictionary<string, OpenApiSchema> Properties { get; set; } = new Dictionary<string, OpenApiSchema>();
-        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 ```
 
 #### OpenApiSchema methods
@@ -306,7 +288,7 @@ OpenApiOperation operation = new OpenApiOperation
 // After (2.0)
 OpenApiOperation operation = new OpenApiOperation
 {
-    HttpMethod = new HttpMethod("GET")
+    HttpMethod = new HttpMethod("GET")// or HttpMethod.Get
 };
 ```
 
@@ -326,7 +308,7 @@ OpenApiDocument document = new OpenApiDocument
 {
     Components = new OpenApiComponents()
     {
-        Schemas = new Dictionary<string, OpenApiSchema?>()
+        Schemas = new Dictionary<string, IOpenApiSchema?>()
     }
 };
 
@@ -350,15 +332,11 @@ OpenApiSchema schema = new OpenApiSchema
 // After (2.0)
 OpenApiComponents components = new OpenApiComponents
 {
-    Schemas = new Dictionary<string, OpenApiSchema>
+    Schemas = new Dictionary<string, IOpenApiSchema>
     {
         ["MySchema"] = new OpenApiSchema
         {
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.Schema,
-                Id = "MySchema"
-            }
+            Reference = new OpenApiSchemaReference("MySchema")
         }
     }
 };
@@ -367,22 +345,24 @@ OpenApiComponents components = new OpenApiComponents
 ### OpenApiDocument.SerializeAs()
 The `SerializeAs()` method simplifies serialization scenarios, making it easier to convert OpenAPI documents to different formats.
 **Example:**
-```csharp
-OpenApiDocument document = new OpenApiDocument();string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json);
 
-### Bug Fixes#### Serialization of ReferencesFixed a bug where references would not serialize summary or descriptions in OpenAPI 3.1.**Example:**
-OpenApiSchema schema = new OpenApiSchema
+```csharp
+OpenApiDocument document = new OpenApiDocument();
+string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json);
+
+```
+
+### Bug Fixes
+
+## Serialization of References: 
+Fixed a bug where references would not serialize summary or descriptions in OpenAPI 3.1.**Example:**
+```csharp
+OpenApiSchemaReference schemaRef = new OpenApiSchemaReference("MySchema")
 {
-    Reference = new OpenApiReference
-    {
-        Type = ReferenceType.Schema,
-        Id = "MySchema"
-    },
     Summary = "This is a summary",
     Description = "This is a description"
 };
 ```
-
 
 ## Feedback  
  If you have any feedback please file a GitHub issue here: https://github.com/microsoft/OpenAPI.NET/issues  
