@@ -66,7 +66,7 @@ When the loading methods are used without a format parameter, we will attempt to
 In the OpenAPI specification, there are a few properties that are defined as type `any`. This includes:
 - the example property in the parameter, media type objects
 - the value property in the example object
-- the values in the link object's parameters dictionary and requestBody property
+- the values in the link object's parameters dictionary and `requestBody` property
 - all `x-` extension properties
 
 In the v1 library, there are set of classes that are derived from the OpenApiAny base class which an abstract model which reflects the JSON data model plus some additional primitive types such as decimal, float, datetime etc.
