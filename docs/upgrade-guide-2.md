@@ -243,7 +243,7 @@ public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenA
     public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
-        /// An SPDX license expression for the API. The identifier field is mutually exclusive of the url field.
+        /// An SPDX license expression for the API. The identifier field is mutually exclusive of the Url property.
         /// </summary>
         public string Identifier { get; set; }
     }
