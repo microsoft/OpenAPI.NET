@@ -42,7 +42,7 @@ The same pattern can be used for `OpenApiStreamReader` and `OpenApiTextReader`. 
 ```
 A `ReadResult` object acts as a tuple of `OpenApiDocument` and `OpenApiDiagnostic`.
 
-The challenge with this approach is that the reader classes are not very discoverable and the behaviour is not actually consistent with `*TextReader` pattern that allows incrementally reading the document. This library does not support incrementally reading the OpenAPI Document. It only reads a complete document and returns an `OpenApiDocument` instance.
+The challenge with this approach is that the reader classes are not very discoverable and the behaviour is not actually consistent with the `*TextReader` pattern that allows incrementally reading the document. This library does not support incrementally reading the OpenAPI Document. It only reads a complete document and returns an `OpenApiDocument` instance.
 
 In the v2 library we are moving to the pattern used by classes like `XDocument` where a set of static `Load` and `Parse` methods are used as factory methods.
 
