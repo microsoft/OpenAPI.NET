@@ -261,7 +261,6 @@ public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenA
         /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
         /// </summary>
         public virtual IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
-
     }
 ```
 
