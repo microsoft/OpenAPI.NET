@@ -237,7 +237,7 @@ public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenA
 ### License SPDX identifiers
 
 ```csharp
-/// <summary>
+    /// <summary>
     /// License Object.
     /// </summary>
     public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible
