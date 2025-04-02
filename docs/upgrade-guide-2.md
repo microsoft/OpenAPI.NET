@@ -28,7 +28,7 @@ In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library
 
 ## API Enhancements
 
-The v1 library attempted to mimic the pattern of `XmlTextReader` and `JsonTextReader` for the purpose of loading OpenAPI documents from strings, streams and textReaders.
+The v1 library attempted to mimic the pattern of `XmlTextReader` and `JsonTextReader` for the purpose of loading OpenAPI documents from strings, streams and text readers.
 
 ```csharp
     var reader = new OpenApiStringReader();
