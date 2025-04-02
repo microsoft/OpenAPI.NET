@@ -287,7 +287,7 @@ OpenApiOperation operation = new OpenApiOperation
 // After (2.0)
 OpenApiOperation operation = new OpenApiOperation
 {
-    HttpMethod = new HttpMethod("GET")// or HttpMethod.Get
+    HttpMethod = new HttpMethod("GET") // or HttpMethod.Get
 };
 ```
 
