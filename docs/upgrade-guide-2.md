@@ -69,7 +69,7 @@ In the OpenAPI specification, there are a few properties that are defined as typ
 - the values in the link object's parameters dictionary and `requestBody` property
 - all `x-` extension properties
 
-In the v1 library, there are set of classes that are derived from the OpenApiAny base class which an abstract model which reflects the JSON data model plus some additional primitive types such as decimal, float, datetime etc.
+In the v1 library, there are a set of classes that are derived from the `OpenApiAny` base class which is an abstract model which reflects the JSON data model plus some additional primitive types such as `decimal`, `float`, `datetime` etc.
 
 In v2 we are removing this abstraction and relying on the JsonNode model to represent these inner types. In v1 we were not able to reliably identify the additional primitive types and it caused a significant amount of false negatives in error reporting as well as incorrectly parsed data values.
 
