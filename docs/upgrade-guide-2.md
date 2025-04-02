@@ -55,7 +55,7 @@ public class OpenApiDocument {
 }
 ```
 
-This API design allows a developer to use IDE autocomplete to present all the loading options by simply knowning the name of the `OpenApiDocument` class.  Each of these methods are layered ontop of the more primitive methods to ensure consistent behaviour.
+This API design allows a developer to use IDE autocomplete to present all the loading options by simply knowing the name of the `OpenApiDocument` class.  Each of these methods are layered on top of the more primitive methods to ensure consistent behaviour.
 
 As the YAML format is only supported when including the `Microsoft.OpenApi.YamlReader` library it was decided not to use an enum for the `format` parameter.  We are considering implementing a more [strongly type solution](https://github.com/microsoft/OpenAPI.NET/issues/1952) similar to the way that `HttpMethod` is implemented so that we have a strongly typed experience that is also extensible.
 
