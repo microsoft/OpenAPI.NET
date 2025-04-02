@@ -51,7 +51,7 @@ public class OpenApiDocument {
     public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings settings = null) {}
     public static async Task<ReadResult> LoadAsync(Stream stream, string? format = null, OpenApiReaderSettings? settings = null) {}
     public static ReadResult Load(MemoryStream stream, string? format = null, OpenApiReaderSettings? settings = null) {}
-    public static ReadResult Parse(string input,string? format = null,OpenApiReaderSettings? settings = null) {}
+    public static ReadResult Parse(string input, string? format = null, OpenApiReaderSettings? settings = null) {}
 }
 ```
 
