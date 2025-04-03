@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.0-preview.17](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.16...v2.0.0-preview.17) (2025-04-03)
+
+
+### Features
+
+* discriminator mappings now use schema references ([b4877f6](https://github.com/microsoft/OpenAPI.NET/commit/b4877f674ad1a240a367390d40d122eebccc0b20))
+
+
+### Bug Fixes
+
+* Empty tag causes error generating Kiota client [#2283](https://github.com/microsoft/OpenAPI.NET/issues/2283) ([#2286](https://github.com/microsoft/OpenAPI.NET/issues/2286)) ([521d636](https://github.com/microsoft/OpenAPI.NET/commit/521d636e2c437c25e1758e9f6a22793d74adf2d7))
+* hidi fails to parse yaml files when fixing references ([a5c4d61](https://github.com/microsoft/OpenAPI.NET/commit/a5c4d6109c433b949cdb1665c00ad778b82b28b0))
+* hidi fails to parse yaml files when fixing references ([c5b69fe](https://github.com/microsoft/OpenAPI.NET/commit/c5b69fed9c413a6399c36e0f543e1019faac77e6))
+
 ## [2.0.0-preview.16](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.15...v2.0.0-preview.16) (2025-03-20)
 
 
