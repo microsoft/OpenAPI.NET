@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 Description = "",
                 OperationId = "loginUser",
                 Parameters =
-                {
+                [
                     new OpenApiParameter
                     {
                         Name = "username",
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Type = JsonSchemaType.String
                         }
                     }
-                }
+                ]
             };
 
             // Assert
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 Description = "",
                 OperationId = "loginUser",
                 Parameters =
-                {
+                [
                     new OpenApiParameter
                     {
                         Name = "password",
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Type = JsonSchemaType.String
                         }
                     }
-                }
+                ]
             };
             using var textWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(textWriter);

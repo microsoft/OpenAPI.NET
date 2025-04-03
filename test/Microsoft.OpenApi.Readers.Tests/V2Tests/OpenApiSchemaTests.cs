@@ -117,7 +117,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 }
             };
-            workingDocument.Components.Schemas.Add(referenceId, targetSchema);
+            workingDocument.Components.Schemas = new Dictionary<string, IOpenApiSchema>
+            {
+                [referenceId] = targetSchema
+            };
             workingDocument.Workspace.RegisterComponents(workingDocument);
             var referenceSchema = new OpenApiSchema()
             {

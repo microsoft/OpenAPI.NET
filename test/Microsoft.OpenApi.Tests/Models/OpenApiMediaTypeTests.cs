@@ -79,7 +79,8 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithObjectExamples = new()
         {
-            Examples = {
+            Examples = new Dictionary<string, IOpenApiExample>
+            {
                 ["object1"] = new OpenApiExample()
                 {
                     Value = new JsonObject

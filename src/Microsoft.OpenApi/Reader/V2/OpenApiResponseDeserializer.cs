@@ -75,8 +75,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
 
             var schema = context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response);
-            var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response)
-                ?? new Dictionary<string, IOpenApiExample>();
+            var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response);
 
             foreach (var produce in produces)
             {

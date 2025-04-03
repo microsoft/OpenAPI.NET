@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Models.Interfaces;
 using System;
+using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -238,8 +239,9 @@ namespace Microsoft.OpenApi.Reader.V2
                 Extensions = bodyParameter.Extensions
             };
 
-            if (requestBody.Extensions is not null && bodyParameter.Name is not null)
+            if (bodyParameter.Name is not null)
             {
+                requestBody.Extensions ??= new Dictionary<string, IOpenApiExtension>();
                 requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
             }            
             return requestBody;

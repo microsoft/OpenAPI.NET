@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Implicit = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl = new Uri("https://example.com/api/oauth/dialog"),
-                            Scopes =
+                            Scopes = new System.Collections.Generic.Dictionary<string, string>
                             {
                                     ["write:pets"] = "modify pets in your account",
                                     ["read:pets"] = "read your pets"

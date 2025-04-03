@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -382,8 +383,9 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
                 }
-                else if (schema.UnrecognizedKeywords is not null && propertyNode.JsonNode is not null)
+                else if (propertyNode.JsonNode is not null)
                 {
+                    schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                     schema.UnrecognizedKeywords[propertyNode.Name] = propertyNode.JsonNode;
                 }
             }

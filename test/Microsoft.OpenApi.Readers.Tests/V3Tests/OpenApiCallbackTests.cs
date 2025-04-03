@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -27,19 +29,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             Assert.Equivalent(
                 new OpenApiCallback
                 {
-                    PathItems =
+                    PathItems = new Dictionary<RuntimeExpression, IOpenApiPathItem>
                     {
                             [RuntimeExpression.Build("$request.body#/url")]
                             = new OpenApiPathItem
                             {
-                                Operations =
+                                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                                 {
                                     [HttpMethod.Post] =
                                     new OpenApiOperation
                                     {
                                         RequestBody = new OpenApiRequestBody
                                         {
-                                            Content =
+                                            Content = new Dictionary<string, OpenApiMediaType>
                                             {
                                                 ["application/json"] = null
                                             }
@@ -81,12 +83,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     PathItems =
                     {
                         [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
-                            Operations = {
+                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                            {
                                 [HttpMethod.Post] = new OpenApiOperation()
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -131,12 +134,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     PathItems =
                     {
                         [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
-                            Operations = {
+                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                            {
                                 [HttpMethod.Post] = new OpenApiOperation()
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -163,16 +167,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             Assert.Equivalent(
                 new OpenApiCallback
                 {
-                    PathItems =
+                    PathItems = new Dictionary<RuntimeExpression, IOpenApiPathItem>
                     {
                         [RuntimeExpression.Build("/simplePath")]= new OpenApiPathItem {
-                            Operations = {
+                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                            {
                                 [HttpMethod.Post] = new OpenApiOperation()
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
                                         Description = "Callback 2",
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -199,15 +204,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             Assert.Equivalent(
                 new OpenApiCallback
                 {
-                    PathItems =
+                    PathItems = new Dictionary<RuntimeExpression, IOpenApiPathItem>
                     {
                         [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new OpenApiPathItem {
-                            Operations = {
+                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                            {
                                 [HttpMethod.Post] = new OpenApiOperation()
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
-                                        Content =
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/xml"] = new OpenApiMediaType
                                             {

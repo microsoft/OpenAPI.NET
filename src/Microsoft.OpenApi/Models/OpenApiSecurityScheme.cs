@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
-    public class OpenApiSecurityScheme : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSecurityScheme
+    public class OpenApiSecurityScheme : IOpenApiExtensible, IOpenApiSecurityScheme
     {
         /// <inheritdoc/>
         public SecuritySchemeType? Type { get; set; }
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         public Uri? OpenIdConnectUrl { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

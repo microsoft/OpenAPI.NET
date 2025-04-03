@@ -192,7 +192,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                                 Schema = new OpenApiSchemaReference("derived")
                                             }
                                         },
-                                        Headers =
+                                        Headers = new Dictionary<string, IOpenApiHeader>
                                         {
                                             ["test-header"] = testHeaderReference
                                         }
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
                     },
-                    Headers =
+                    Headers = new Dictionary<string, IOpenApiHeader>
                     {
                         ["test-header"] = testHeader
                     },

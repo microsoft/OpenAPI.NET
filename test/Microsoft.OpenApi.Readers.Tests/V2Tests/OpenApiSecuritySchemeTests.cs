@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Implicit = new()
                         {
                             AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
-                            Scopes =
+                            Scopes = new Dictionary<string, string>
                             {
                                 ["write:pets"] = "modify pets in your account",
                                 ["read:pets"] = "read your pets"
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Password = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                            Scopes =
+                            Scopes = new Dictionary<string, string>
                             {
                                     ["write:pets"] = "modify pets in your account",
                                     ["read:pets"] = "read your pets"
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ClientCredentials = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                            Scopes =
+                            Scopes = new Dictionary<string, string>
                             {
                                     ["write:pets"] = "modify pets in your account",
                                     ["read:pets"] = "read your pets"
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                            Scopes =
+                            Scopes = new Dictionary<string, string>
                             {
                                     ["write:pets"] = "modify pets in your account",
                                     ["read:pets"] = "read your pets"
@@ -216,7 +216,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             using var reader = new StreamReader(input);
             var yamlStream = new YamlStream();
             yamlStream.Load(reader);
-            return yamlStream.Documents.First();
+            return yamlStream.Documents[0];
         }
     }
 }

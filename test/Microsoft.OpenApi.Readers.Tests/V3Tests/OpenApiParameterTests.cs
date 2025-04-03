@@ -110,19 +110,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "coordinates",
-                    Content =
+                    Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new()
                         {
                            Schema = new OpenApiSchema()
                            {
                                 Type = JsonSchemaType.Object,
-                                Required =
+                                Required = new HashSet<string>
                                 {
                                     "lat",
                                     "long"
                                 },
-                                Properties =
+                                Properties = new Dictionary<string, IOpenApiSchema>
                                 {
                                     ["lat"] = new OpenApiSchema()
                                     {
@@ -273,7 +273,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Examples =
+                    Examples = new Dictionary<string, IOpenApiExample>
                     {
                         ["example1"] = new OpenApiExample()
                         {

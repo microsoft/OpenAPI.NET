@@ -9,6 +9,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -456,14 +457,16 @@ namespace Microsoft.OpenApi.Tests.Writers
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = {
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        {
                             [HttpMethod.Get] = new()
                             {
                                 Responses = {
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "OK",
-                                        Content = {
+                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        {
                                             ["application/json"] = new()
                                             {
                                                 Schema = new OpenApiSchemaReference("thing")
@@ -477,8 +480,10 @@ namespace Microsoft.OpenApi.Tests.Writers
                 },
                 Components = new()
                 {
-                    Schemas = {
-                        ["thing"] = thingSchema}
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["thing"] = thingSchema
+                    }
                 }
             };
             doc.RegisterComponents();

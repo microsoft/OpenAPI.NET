@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiExample
+    public class OpenApiExample : IOpenApiExtensible, IOpenApiExample
     {
         /// <inheritdoc/>
         public string? Summary { get; set; }
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Models
         public JsonNode? Value { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

@@ -222,13 +222,13 @@ namespace Microsoft.OpenApi.Tests.Models
                 ],
                 RequestBody = new OpenApiRequestBody()
                 {
-                    Content =
+                    Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/x-www-form-urlencoded"] = new()
                         {
                             Schema = new OpenApiSchema()
                             {
-                                Properties =
+                                Properties = new Dictionary<string, IOpenApiSchema>
                                 {
                                     ["name"] = new OpenApiSchema()
                                     {
@@ -251,7 +251,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new OpenApiSchema()
                             {
-                                Properties =
+                                Properties = new Dictionary<string, IOpenApiSchema>
                                 {
                                     ["name"] = new OpenApiSchema()
                                     {

@@ -12,6 +12,8 @@ using Microsoft.OpenApi.YamlReader;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
+using System.Collections.Generic;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Tests.Models.References
 {
@@ -171,7 +173,7 @@ components:
             {
                 Components = new OpenApiComponents
                 {
-                    Headers =
+                    Headers = new Dictionary<string, IOpenApiHeader>
                     {
                         { "header1", new OpenApiHeader
                             {

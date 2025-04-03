@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -41,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiEncoding
                 {
                     ContentType = "image/png, image/jpeg",
-                    Headers =
+                    Headers = new Dictionary<string, IOpenApiHeader>
                     {
                         ["X-Rate-Limit-Limit"] =
                             new OpenApiHeader()
