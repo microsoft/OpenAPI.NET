@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var idsParameter = openApiDocument.Paths["/foo"].Operations?[HttpMethod.Get].Parameters?.Where(static p => p.Name == "ids").FirstOrDefault();
+            var idsParameter = openApiDocument.Paths["/foo"].Operations?[HttpMethod.Get].Parameters?.FirstOrDefault(static p => p.Name == "ids");
 
             // Assert
             Assert.Null(idsParameter?.Content);
