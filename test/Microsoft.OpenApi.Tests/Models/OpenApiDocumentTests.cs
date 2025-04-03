@@ -2179,5 +2179,48 @@ components:
             Assert.Equal("version", actual.ParamName);
             Assert.Equal(version, actual.ActualValue);
         }
+
+        [Fact]
+        public async Task SerializeDocWithSecuritySchemeWithInlineRefererencesWorks()
+        {
+            var expected = @"openapi: 3.0.4
+info:
+  title: Repair Service
+  version: 1.0.0
+servers:
+  - url: https://pluginrentu.azurewebsites.net/api
+paths:
+  /repairs:
+    get:
+      summary: List all repairs with oauth
+      description: Returns a list of repairs with their details and images
+      operationId: listRepairs
+      responses:
+        '200':
+          description: A list of repairs
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - oAuth2AuthCode: [ ]
+components:
+  securitySchemes:
+    oAuth2AuthCode:
+      type: oauth2
+      description: OAuth configuration for the repair service
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.microsoftonline.com/2f13b28c-bd4d-43e2-8ae6-48594aaba125/oauth2/v2.0/authorize
+          tokenUrl: https://login.microsoftonline.com/2f13b28c-bd4d-43e2-8ae6-48594aaba125/oauth2/v2.0/token
+          scopes:
+            api://a2a7226d-e8d1-4ded-8c53-dd4c136ff456/repairs_read: Read repair records";
+
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithSecurityScheme.yaml", SettingsFixture.ReaderSettings)).Document;
+            var stringWriter = new StringWriter();
+            doc.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
+            var actual = stringWriter.ToString();
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
     }
 }

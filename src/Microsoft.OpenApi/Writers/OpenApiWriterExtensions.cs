@@ -126,7 +126,6 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteValue(value);
         }
 
-#nullable enable
         /// <summary>
         /// Write the optional Open API object/element.
         /// </summary>
@@ -179,7 +178,6 @@ namespace Microsoft.OpenApi.Writers
                 writer.WriteEndObject();
             }
         }
-#nullable restore
 
         /// <summary>
         /// Write the optional of collection string.

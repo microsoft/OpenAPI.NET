@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview.16](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.15...v2.0.0-preview.16) (2025-03-20)
+
+
+### Bug Fixes
+
+* always serialize security schemes in components ([3aac661](https://github.com/microsoft/OpenAPI.NET/commit/3aac661ca2e8050136c423f2835fcdd3a9096482))
+* always serialize security schemes in components ([a765acf](https://github.com/microsoft/OpenAPI.NET/commit/a765acf380135694bbd4d1336bd4beddef6ef808))
+
 ## [2.0.0-preview.15](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.14...v2.0.0-preview.15) (2025-03-18)
 
 
