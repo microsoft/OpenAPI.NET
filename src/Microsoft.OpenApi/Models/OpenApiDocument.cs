@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer>? Servers { get; set; }
+        public IList<OpenApiServer>? Servers { get; set; } = [];
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.

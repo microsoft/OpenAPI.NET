@@ -109,17 +109,19 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
 
-                if (result.CurrentKeys?.Operation != null && result.Operation != null)
+                if (result.CurrentKeys?.Operation != null && result.Operation != null && pathItem is OpenApiPathItem openApiPathItem)
                 {
-                    pathItem?.Operations?.Add(result.CurrentKeys.Operation, result.Operation);
+                    openApiPathItem.Operations ??= new Dictionary<HttpMethod, OpenApiOperation>();
+                    openApiPathItem.Operations?.Add(result.CurrentKeys.Operation, result.Operation);
 
                     if (result.Parameters?.Any() ?? false)
                     {
+                        openApiPathItem.Parameters ??= [];
                         foreach (var parameter in result.Parameters)
                         {
-                            if (pathItem?.Parameters is not null && !pathItem.Parameters.Contains(parameter))
+                            if (openApiPathItem?.Parameters is not null && !openApiPathItem.Parameters.Contains(parameter))
                             {
-                                pathItem.Parameters.Add(parameter);
+                                openApiPathItem.Parameters.Add(parameter);
                             }
                         }
                     }

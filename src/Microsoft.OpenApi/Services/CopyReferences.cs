@@ -89,7 +89,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureSchemasExist();
-        if (Components.Schemas is not null && referenceId is not null && schema is not null && !Components.Schemas.ContainsKey(referenceId))
+        Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
+        if (referenceId is not null && schema is not null && !Components.Schemas.ContainsKey(referenceId))
         {
             Components.Schemas.Add(referenceId, schema);
         }
@@ -99,7 +100,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureParametersExist();
-        if (Components.Parameters is not null && parameter is not null && referenceId is not null && !Components.Parameters.ContainsKey(referenceId))
+        Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
+        if (parameter is not null && referenceId is not null && !Components.Parameters.ContainsKey(referenceId))
         {
             Components.Parameters.Add(referenceId, parameter);
         }
@@ -109,7 +111,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureResponsesExist();
-        if (Components.Responses is not null && referenceId is not null && response is not null && !Components.Responses.ContainsKey(referenceId))
+        Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
+        if (referenceId is not null && response is not null && !Components.Responses.ContainsKey(referenceId))
         {
             Components.Responses.Add(referenceId, response);
         }
@@ -118,7 +121,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureRequestBodiesExist();
-        if (Components.RequestBodies is not null && requestBody is not null && referenceId is not null && !Components.RequestBodies.ContainsKey(referenceId))
+        Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
+        if (requestBody is not null && referenceId is not null && !Components.RequestBodies.ContainsKey(referenceId))
         {
             Components.RequestBodies.Add(referenceId, requestBody);
         }
@@ -127,7 +131,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureLinksExist();
-        if (Components.Links is not null && link is not null && referenceId is not null && !Components.Links.ContainsKey(referenceId))
+        Components.Links ??= new Dictionary<string, IOpenApiLink>();
+        if (link is not null && referenceId is not null && !Components.Links.ContainsKey(referenceId))
         {
             Components.Links.Add(referenceId, link);
         }
@@ -136,7 +141,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureCallbacksExist();
-        if (Components.Callbacks is not null && callback is not null && referenceId is not null && !Components.Callbacks.ContainsKey(referenceId))
+        Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
+        if (callback is not null && referenceId is not null && !Components.Callbacks.ContainsKey(referenceId))
         {
             Components.Callbacks.Add(referenceId, callback);
         }
@@ -145,7 +151,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureHeadersExist();
-        if (Components.Headers is not null && header is not null && referenceId is not null && !Components.Headers.ContainsKey(referenceId))
+        Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
+        if (header is not null && referenceId is not null && !Components.Headers.ContainsKey(referenceId))
         {
             Components.Headers.Add(referenceId, header);
         }
@@ -154,7 +161,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureExamplesExist();
-        if (Components.Examples is not null && example is not null && referenceId is not null && !Components.Examples.ContainsKey(referenceId))
+        Components.Examples ??= new Dictionary<string, IOpenApiExample>();
+        if (example is not null && referenceId is not null && !Components.Examples.ContainsKey(referenceId))
         {
             Components.Examples.Add(referenceId, example);
         }
@@ -163,7 +171,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsurePathItemsExist();
-        if (Components.PathItems is not null && pathItem is not null && referenceId is not null && !Components.PathItems.ContainsKey(referenceId))
+        Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
+        if (pathItem is not null && referenceId is not null && !Components.PathItems.ContainsKey(referenceId))
         {
             Components.PathItems.Add(referenceId, pathItem);
         }
@@ -172,7 +181,8 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         EnsureComponentsExist();
         EnsureSecuritySchemesExist();
-        if (Components.SecuritySchemes is not null && securityScheme is not null && referenceId is not null && !Components.SecuritySchemes.ContainsKey(referenceId))
+        Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+        if (securityScheme is not null && referenceId is not null && !Components.SecuritySchemes.ContainsKey(referenceId))
         {
             Components.SecuritySchemes.Add(referenceId, securityScheme);
         }

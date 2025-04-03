@@ -81,7 +81,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) =>
+            {
+                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                {
+                    w.WriteValue(s.Reference.ReferenceV3);
+                }
+            });
         }
 
         /// <summary>
