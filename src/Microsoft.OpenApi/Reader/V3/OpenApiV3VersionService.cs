@@ -5,11 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
@@ -62,7 +60,8 @@ namespace Microsoft.OpenApi.Reader.V3
             [typeof(OpenApiServer)] = OpenApiV3Deserializer.LoadServer,
             [typeof(OpenApiServerVariable)] = OpenApiV3Deserializer.LoadServerVariable,
             [typeof(OpenApiTag)] = OpenApiV3Deserializer.LoadTag,
-            [typeof(OpenApiXml)] = OpenApiV3Deserializer.LoadXml
+            [typeof(OpenApiXml)] = OpenApiV3Deserializer.LoadXml,
+            [typeof(OpenApiSchemaReference)] = OpenApiV3Deserializer.LoadMapping
         };
 
         public OpenApiDocument LoadDocument(RootNode rootNode)

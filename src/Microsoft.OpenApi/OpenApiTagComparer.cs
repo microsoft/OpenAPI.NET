@@ -4,7 +4,6 @@ using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi;
 
-#nullable enable
 /// <summary>
 /// This comparer is used to maintain a globally unique list of tags encountered
 /// in a particular OpenAPI document.
@@ -44,4 +43,3 @@ internal sealed class OpenApiTagComparer : IEqualityComparer<IOpenApiTag>
     /// <inheritdoc/>
     public int GetHashCode(IOpenApiTag obj) => string.IsNullOrEmpty(obj?.Name) ? 0 : StringComparer.GetHashCode(obj!.Name);
 }
-#nullable restore

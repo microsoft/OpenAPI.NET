@@ -5,11 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
 
@@ -61,7 +59,8 @@ namespace Microsoft.OpenApi.Reader.V31
             [typeof(OpenApiServer)] = OpenApiV31Deserializer.LoadServer,
             [typeof(OpenApiServerVariable)] = OpenApiV31Deserializer.LoadServerVariable,
             [typeof(OpenApiTag)] = OpenApiV31Deserializer.LoadTag,
-            [typeof(OpenApiXml)] = OpenApiV31Deserializer.LoadXml
+            [typeof(OpenApiXml)] = OpenApiV31Deserializer.LoadXml,
+            [typeof(OpenApiSchemaReference)] = OpenApiV31Deserializer.LoadMapping
         };
 
         public OpenApiDocument LoadDocument(RootNode rootNode)

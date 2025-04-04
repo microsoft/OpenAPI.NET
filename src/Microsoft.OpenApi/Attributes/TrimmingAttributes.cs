@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#nullable enable
-
 // This collection of attribute definitions are helpers for accessing trim-related attributes in
 // projects targeting .NET 6 or lower. Since the trimmer queries for these attributes by name, having
 // these attributes source included is sufficient for the trimmer to recognize them. For more information

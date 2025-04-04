@@ -14,7 +14,6 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class OpenApiTypeMapper
     {
-#nullable enable
         /// <summary>
         /// Maps a JsonSchema data type to an identifier.
         /// </summary>
@@ -74,8 +73,6 @@ namespace Microsoft.OpenApi.Extensions
         {
             return schemaType.ToIdentifiersInternal().Single();
         }
-
-#nullable restore
 
         /// <summary>
         /// Converts a schema type's identifier into the enum equivalent

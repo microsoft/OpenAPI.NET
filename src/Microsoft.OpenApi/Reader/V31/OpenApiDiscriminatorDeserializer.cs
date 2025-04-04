@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V31
@@ -22,9 +23,9 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "mapping", (o, n, _) =>
+                    "mapping", (o, n, doc) =>
                     {
-                        o.Mapping = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!);
+                        o.Mapping = n.CreateSimpleMap((node) => LoadMapping(node, doc));
                     }
                 }
             };
@@ -46,6 +47,13 @@ namespace Microsoft.OpenApi.Reader.V31
             }
 
             return discriminator;
+        }
+
+        public static OpenApiSchemaReference LoadMapping(ParseNode node, OpenApiDocument hostDocument)
+        {
+            var pointer = node.GetScalarValue() ?? throw new InvalidOperationException("Could not get a pointer reference");
+            var reference = GetReferenceIdAndExternalResource(pointer);
+            return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
         }
     }
 }

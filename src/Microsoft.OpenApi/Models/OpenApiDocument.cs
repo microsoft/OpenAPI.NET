@@ -17,8 +17,6 @@ using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 
-#nullable enable
-
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>

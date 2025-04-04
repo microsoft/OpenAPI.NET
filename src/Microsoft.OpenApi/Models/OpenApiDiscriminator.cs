@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -20,7 +21,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
-        public IDictionary<string, string>? Mapping { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, OpenApiSchemaReference>? Mapping { get; set; } = new Dictionary<string, OpenApiSchemaReference>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -38,7 +39,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDiscriminator(OpenApiDiscriminator discriminator)
         {
             PropertyName = discriminator?.PropertyName ?? PropertyName;
-            Mapping = discriminator?.Mapping != null ? new Dictionary<string, string>(discriminator.Mapping) : null;
+            Mapping = discriminator?.Mapping != null ? new Dictionary<string, OpenApiSchemaReference>(discriminator.Mapping) : null;
             Extensions = discriminator?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(discriminator.Extensions) : null;
         }
 
@@ -80,7 +81,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) =>
+            {
+                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                {
+                    w.WriteValue(s.Reference.ReferenceV3);
+                }
+            });
         }
 
         /// <summary>
