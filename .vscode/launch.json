@@ -44,6 +44,7 @@
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/performance/resultsComparer/bin/Debug/net8.0/resultsComparer.dll",
             "cwd": "${workspaceFolder}/performance/resultsComparer",
+            "args": ["compare"],
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false,
