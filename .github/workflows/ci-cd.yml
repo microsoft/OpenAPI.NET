@@ -75,5 +75,8 @@ jobs:
           dotnet run -c Release --project ./performance/benchmark/PerformanceTests.csproj
 
       - name: Run comparison tool
-        run: |
-          dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare ./performanceResults/ComparisonResults/performance.EmptyModels-report.json ./performance/benchmark/BenchmarkDotNet.Artifacts/results/performance.EmptyModels-report.json
+        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT
+        shell: bash
+        env:
+          NEW_REPORT: "${{ github.workspace }}/performance/benchmark/BenchmarkDotNet.Artifacts/results/performance.EmptyModels-report.json"
+          OLD_REPORT: "${{ github.workspace }}/performanceResults/performance.EmptyModels-report.json"
