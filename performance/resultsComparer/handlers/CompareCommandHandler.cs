@@ -2,8 +2,10 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using resultsComparer.Models;
 
 namespace resultsComparer.Handlers;
 
@@ -23,7 +25,8 @@ internal class CompareCommandHandler : AsyncCommandHandler
         var logger = loggerFactory.CreateLogger<CompareCommandHandler>();
         return CompareResultsAsync(oldResultsPath, newResultsPath, logger, cancellationToken);
     }
-    private static async Task<int> CompareResultsAsync(string existingReportPath, string newReportPath, ILogger logger, CancellationToken cancellationToken = default) {
+    private static async Task<int> CompareResultsAsync(string existingReportPath, string newReportPath, ILogger logger, CancellationToken cancellationToken = default)
+    {
 
         var existingBenchmark = await GetBenchmarksAllocatedBytes(existingReportPath, cancellationToken);
         if (existingBenchmark is null)
@@ -41,7 +44,7 @@ internal class CompareCommandHandler : AsyncCommandHandler
             MemoryBenchmarkResultComparer.Instance
         ];
         var hasErrors = false;
-        foreach(var existingBenchmarkResult in existingBenchmark)
+        foreach (var existingBenchmarkResult in existingBenchmark)
         {
             if (!newBenchmark.TryGetValue(existingBenchmarkResult.Key, out var newBenchmarkResult))
             {
@@ -71,66 +74,46 @@ internal class CompareCommandHandler : AsyncCommandHandler
         return hasErrors ? 1 : 0;
     }
 
-    private static async Task<Dictionary<string, BenchmarkResult>?> GetBenchmarksAllocatedBytes(string targetPath, CancellationToken cancellationToken = default)
+    private static async Task<Dictionary<string, BenchmarkMemory>?> GetBenchmarksAllocatedBytes(string targetPath, CancellationToken cancellationToken = default)
     {
         if (!File.Exists(targetPath))
         {
             return null;
         }
         using var stream = new FileStream(targetPath, FileMode.Open, FileAccess.Read);
-        using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
-        var rootElement = document.RootElement;
-        if (rootElement.ValueKind is not JsonValueKind.Object ||
-            !rootElement.TryGetProperty("Benchmarks", out var benchmarksNode) ||
-            benchmarksNode.ValueKind is not JsonValueKind.Array)
-        {
-            return null;
-        }
-        return benchmarksNode.EnumerateArray().Select(benchmarkNode => {
-            if (benchmarkNode.ValueKind is not JsonValueKind.Object)
-            {
-                return default;
-            }
-            if (!benchmarkNode.TryGetProperty("Memory", out var memoryNode) ||
-                memoryNode.ValueKind is not JsonValueKind.Object ||
-                !memoryNode.TryGetProperty("BytesAllocatedPerOperation", out var allocatedBytesNode) ||
-                allocatedBytesNode.ValueKind is not JsonValueKind.Number ||
-                !allocatedBytesNode.TryGetInt64(out var allocatedBytes))
-            {
-                return default;
-            }
-            if (!benchmarkNode.TryGetProperty("Method", out var nameNode) ||
-                nameNode.ValueKind is not JsonValueKind.String ||
-                nameNode.GetString() is not string name)
-            {
-                return default;
-            }
-            return (name, new BenchmarkResult(allocatedBytes));
-        })
-        .Where(x => x.name is not null && x.Item2 is not null)
-        .ToDictionary(x => x.name!, x => x.Item2!, StringComparer.OrdinalIgnoreCase);
+        var report = (await JsonSerializer.DeserializeAsync(stream, serializationContext.BenchmarkReport, cancellationToken: cancellationToken))
+                        ?? throw new InvalidOperationException($"Failed to deserialize {targetPath}.");
+        return report.Benchmarks
+                .Where(x => x.Memory is not null && x.Method is not null)
+            .ToDictionary(x => x.Method!, x => x.Memory!, StringComparer.OrdinalIgnoreCase);
     }
-    private sealed record BenchmarkResult(long AllocatedBytes);
-    private interface IBenchmarkComparisonPolicy : IEqualityComparer<BenchmarkResult>
+    private static readonly BenchmarkSourceGenerationContext serializationContext = new();
+
+    private interface IBenchmarkComparisonPolicy : IEqualityComparer<BenchmarkMemory>
     {
-        string GetErrorMessage(BenchmarkResult? x, BenchmarkResult? y);
+        string GetErrorMessage(BenchmarkMemory? x, BenchmarkMemory? y);
     }
     private sealed class MemoryBenchmarkResultComparer : IBenchmarkComparisonPolicy
     {
         public static MemoryBenchmarkResultComparer Instance { get; } = new MemoryBenchmarkResultComparer();
-        public bool Equals(BenchmarkResult? x, BenchmarkResult? y)
+        public bool Equals(BenchmarkMemory? x, BenchmarkMemory? y)
         {
             return x?.AllocatedBytes == y?.AllocatedBytes;
         }
 
-        public string GetErrorMessage(BenchmarkResult? x, BenchmarkResult? y)
+        public string GetErrorMessage(BenchmarkMemory? x, BenchmarkMemory? y)
         {
             return $"Allocated bytes differ: {x?.AllocatedBytes} != {y?.AllocatedBytes}";
         }
 
-        public int GetHashCode(BenchmarkResult obj)
+        public int GetHashCode(BenchmarkMemory obj)
         {
             return obj.AllocatedBytes.GetHashCode();
         }
     }
+}
+
+[JsonSerializable(typeof(BenchmarkReport))]
+internal partial class BenchmarkSourceGenerationContext : JsonSerializerContext
+{
 }
