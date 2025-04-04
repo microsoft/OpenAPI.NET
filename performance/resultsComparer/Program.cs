@@ -2,6 +2,7 @@
 using System.CommandLine;
 using Microsoft.Extensions.Logging;
 using resultsComparer.Handlers;
+using resultsComparer.Policies;
 
 namespace resultsComparer;
 
@@ -26,11 +27,18 @@ public class Program
         compareCommand.AddArgument(newResultsPathArgument);
         var logLevelOption = new Option<LogLevel>(["--log-level", "-l"], () => LogLevel.Warning, "The log level to use.");
         compareCommand.AddOption(logLevelOption);
+        var allPolicyNames = IBenchmarkComparisonPolicy.GetAllPolicies().Select(static p => p.Name).Order(StringComparer.OrdinalIgnoreCase).ToArray();
+        var policiesOption = new Option<string[]>(["--policies", "-p"], () => ["all"], $"The policies to use for comparison: {string.Join(',', allPolicyNames)}.")
+        {
+            Arity = ArgumentArity.ZeroOrMore
+        };
+        compareCommand.AddOption(policiesOption);
         compareCommand.Handler = new CompareCommandHandler
         {
             OldResultsPath = oldResultsPathArgument,
             NewResultsPath = newResultsPathArgument,
-            LogLevel = logLevelOption
+            LogLevel = logLevelOption,
+            Policies = policiesOption,
         };
         rootCommand.Add(compareCommand);
         return rootCommand;

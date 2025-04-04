@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using resultsComparer.Models;
+using resultsComparer.Policies;
 
 namespace resultsComparer.Handlers;
 
@@ -14,18 +15,21 @@ internal class CompareCommandHandler : AsyncCommandHandler
     public required Argument<string> OldResultsPath { get; set; }
     public required Argument<string> NewResultsPath { get; set; }
     public required Option<LogLevel> LogLevel { get; set; }
+    public required Option<string[]> Policies { get; set; }
 
     public override Task<int> InvokeAsync(InvocationContext context)
     {
         var cancellationToken = context.BindingContext.GetRequiredService<CancellationToken>();
         var oldResultsPath = context.ParseResult.GetValueForArgument(OldResultsPath);
         var newResultsPath = context.ParseResult.GetValueForArgument(NewResultsPath);
+        var policyNames = context.ParseResult.GetValueForOption(Policies) ?? [];
+        var policies = IBenchmarkComparisonPolicy.GetSelectedPolicies(policyNames).ToArray();
         var logLevel = context.ParseResult.GetValueForOption(LogLevel);
         using var loggerFactory = Logger.ConfigureLogger(logLevel);
         var logger = loggerFactory.CreateLogger<CompareCommandHandler>();
-        return CompareResultsAsync(oldResultsPath, newResultsPath, logger, cancellationToken);
+        return CompareResultsAsync(oldResultsPath, newResultsPath, logger, policies, cancellationToken);
     }
-    private static async Task<int> CompareResultsAsync(string existingReportPath, string newReportPath, ILogger logger, CancellationToken cancellationToken = default)
+    private static async Task<int> CompareResultsAsync(string existingReportPath, string newReportPath, ILogger logger, IBenchmarkComparisonPolicy[] comparisonPolicies, CancellationToken cancellationToken = default)
     {
 
         var existingBenchmark = await GetBenchmarksAllocatedBytes(existingReportPath, cancellationToken);
@@ -40,9 +44,6 @@ internal class CompareCommandHandler : AsyncCommandHandler
             logger.LogError("No new benchmark data found.");
             return 1;
         }
-        IBenchmarkComparisonPolicy[] comparisonPolicies = [
-            MemoryBenchmarkResultComparer.Instance
-        ];
         var hasErrors = false;
         foreach (var existingBenchmarkResult in existingBenchmark)
         {
@@ -88,29 +89,6 @@ internal class CompareCommandHandler : AsyncCommandHandler
             .ToDictionary(x => x.Method!, x => x.Memory!, StringComparer.OrdinalIgnoreCase);
     }
     private static readonly BenchmarkSourceGenerationContext serializationContext = new();
-
-    private interface IBenchmarkComparisonPolicy : IEqualityComparer<BenchmarkMemory>
-    {
-        string GetErrorMessage(BenchmarkMemory? x, BenchmarkMemory? y);
-    }
-    private sealed class MemoryBenchmarkResultComparer : IBenchmarkComparisonPolicy
-    {
-        public static MemoryBenchmarkResultComparer Instance { get; } = new MemoryBenchmarkResultComparer();
-        public bool Equals(BenchmarkMemory? x, BenchmarkMemory? y)
-        {
-            return x?.AllocatedBytes == y?.AllocatedBytes;
-        }
-
-        public string GetErrorMessage(BenchmarkMemory? x, BenchmarkMemory? y)
-        {
-            return $"Allocated bytes differ: {x?.AllocatedBytes} != {y?.AllocatedBytes}";
-        }
-
-        public int GetHashCode(BenchmarkMemory obj)
-        {
-            return obj.AllocatedBytes.GetHashCode();
-        }
-    }
 }
 
 [JsonSerializable(typeof(BenchmarkReport))]
