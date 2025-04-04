@@ -72,8 +72,8 @@ jobs:
       
       - name: Run performance tests
         run: |
-          dotnet run -c Release ./performance/benchmark/PerformanceTests.csproj
+          dotnet run -c Release --project ./performance/benchmark/PerformanceTests.csproj
 
       - name: Run comparison tool
         run: |
-          dotnet run -c Release ./performance/resultsComparer/resultsComparer.csproj -- ./performanceResults/ComparisonResults/performance.EmptyModels-report.json
+          dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare ./performanceResults/ComparisonResults/performance.EmptyModels-report.json ./performance/benchmark/BenchmarkDotNet.Artifacts/results/performance.EmptyModels-report.json
