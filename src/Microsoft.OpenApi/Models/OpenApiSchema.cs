@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         public string? Comment { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, bool>? Vocabulary { get; set; }
+        public Dictionary<string, bool>? Vocabulary { get; set; }
 
         /// <inheritdoc />
         public string? DynamicRef { get; set; }
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Models
         public string? DynamicAnchor { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiSchema>? Definitions { get; set; }
+        public Dictionary<string, IOpenApiSchema>? Definitions { get; set; }
 
         private decimal? _exclusiveMaximum;
         /// <inheritdoc />
@@ -200,10 +200,10 @@ namespace Microsoft.OpenApi.Models
         public bool? UniqueItems { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiSchema>? Properties { get; set; }
+        public Dictionary<string, IOpenApiSchema>? Properties { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiSchema>? PatternProperties { get; set; }
+        public Dictionary<string, IOpenApiSchema>? PatternProperties { get; set; }
 
         /// <inheritdoc />
         public int? MaxProperties { get; set; }
@@ -242,16 +242,16 @@ namespace Microsoft.OpenApi.Models
         public OpenApiXml? Xml { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
+        public Dictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Annotations { get; set; }
+        public Dictionary<string, object>? Annotations { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, ISet<string>>? DependentRequired { get; set; }
+        public Dictionary<string, ISet<string>>? DependentRequired { get; set; }
 
         /// <summary>
         /// Parameterless constructor

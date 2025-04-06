@@ -52,13 +52,13 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string? Comment { get => Target?.Comment; }
         /// <inheritdoc/>
-        public IDictionary<string, bool>? Vocabulary { get => Target?.Vocabulary; }
+        public Dictionary<string, bool>? Vocabulary { get => Target?.Vocabulary; }
         /// <inheritdoc/>
         public string? DynamicRef { get => Target?.DynamicRef; }
         /// <inheritdoc/>
         public string? DynamicAnchor { get => Target?.DynamicAnchor; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema>? Definitions { get => Target?.Definitions; }
+        public Dictionary<string, IOpenApiSchema>? Definitions { get => Target?.Definitions; }
         /// <inheritdoc/>
         public decimal? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
         /// <inheritdoc/>
@@ -106,9 +106,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public bool? UniqueItems { get => Target?.UniqueItems; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
+        public Dictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema>? PatternProperties { get => Target?.PatternProperties; }
+        public Dictionary<string, IOpenApiSchema>? PatternProperties { get => Target?.PatternProperties; }
         /// <inheritdoc/>
         public int? MaxProperties { get => Target?.MaxProperties; }
         /// <inheritdoc/>
@@ -134,16 +134,16 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public OpenApiXml? Xml { get => Target?.Xml; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public IDictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
+        public Dictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
 
         /// <inheritdoc/>
-        public IDictionary<string, object>? Annotations { get => Target?.Annotations; }
+        public Dictionary<string, object>? Annotations { get => Target?.Annotations; }
 
         /// <inheritdoc/>
-        public IDictionary<string, ISet<string>>? DependentRequired { get => Target?.DependentRequired; }
+        public Dictionary<string, ISet<string>>? DependentRequired { get => Target?.DependentRequired; }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)

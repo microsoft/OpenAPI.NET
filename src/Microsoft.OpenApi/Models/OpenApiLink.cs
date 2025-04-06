@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models
         public string? OperationId { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; }
+        public Dictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; }
 
         /// <inheritdoc/>
         public RuntimeExpressionAnyWrapper? RequestBody { get; set; }
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiServer? Server { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

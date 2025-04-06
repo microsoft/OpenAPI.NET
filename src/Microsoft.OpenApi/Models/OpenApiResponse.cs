@@ -19,16 +19,16 @@ namespace Microsoft.OpenApi.Models
         public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
+        public Dictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
+        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiLink>? Links { get; set; }
+        public Dictionary<string, IOpenApiLink>? Links { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Models
 
                         foreach (var example in Content
                             .Select(static x => x.Value.Examples)
-                            .OfType<IDictionary<string, IOpenApiExample>>()
+                            .OfType<Dictionary<string, IOpenApiExample>>()
                             .SelectMany(static x => x))
                         {
                             writer.WritePropertyName(example.Key);

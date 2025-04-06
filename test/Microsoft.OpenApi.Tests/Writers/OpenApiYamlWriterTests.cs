@@ -277,7 +277,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 writer.WriteValue(value);
             }
             else if (value.GetType().IsGenericType &&
-                (typeof(IDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
+                (typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
                     typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
             {
                 writer.WriteStartObject();
@@ -304,7 +304,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [MemberData(nameof(WriteMapAsYamlShouldMatchExpectedTestCasesSimple))]
         [MemberData(nameof(WriteMapAsYamlShouldMatchExpectedTestCasesComplex))]
-        public void WriteMapAsYamlShouldMatchExpected(IDictionary<string, object> inputMap, string expectedYaml)
+        public void WriteMapAsYamlShouldMatchExpected(Dictionary<string, object> inputMap, string expectedYaml)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);

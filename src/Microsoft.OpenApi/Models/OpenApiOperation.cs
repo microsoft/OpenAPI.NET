@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; }
+        public Dictionary<string, IOpenApiCallback>? Callbacks { get; set; }
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -122,10 +122,10 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Metadata { get; set; }
+        public Dictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var produces = Responses
                     .Where(static r => r.Value.Content != null)
-                    .SelectMany(static r => r.Value.Content?.Keys ?? [])
+                    .SelectMany(static r => r.Value.Content?.Keys ?? Enumerable.Empty<string>())
                     .Where(static m => !string.IsNullOrEmpty(m))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray();

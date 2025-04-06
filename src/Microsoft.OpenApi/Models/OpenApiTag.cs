@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

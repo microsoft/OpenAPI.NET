@@ -285,7 +285,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add("referenceAt: " + this.PathString);
         }
-        public override void Visit(IDictionary<string, OpenApiMediaType> content)
+        public override void Visit(Dictionary<string, OpenApiMediaType> content)
         {
             Locations.Add(this.PathString);
         }

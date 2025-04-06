@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static void ResolveFunctionParameters(IList<IOpenApiParameter> parameters)
         {
-            foreach (var parameter in parameters.OfType<OpenApiParameter>().Where(static p => p.Content?.Any() ?? false))
+            foreach (var parameter in parameters.OfType<OpenApiParameter>().Where(static p => p.Content?.Count > 0))
             {
                 // Replace content with a schema object of type array
                 // for structured or collection-valued function parameters

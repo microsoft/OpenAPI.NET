@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public string? Name { get => Target?.Name; }

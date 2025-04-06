@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// A map of requests initiated other than by an API call, for example by an out of band registration. 
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
-        public IDictionary<string, IOpenApiPathItem>? Webhooks { get; set; }
+        public Dictionary<string, IOpenApiPathItem>? Webhooks { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -103,10 +103,10 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Metadata { get; set; }
+        public Dictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Implements IBaseDocument

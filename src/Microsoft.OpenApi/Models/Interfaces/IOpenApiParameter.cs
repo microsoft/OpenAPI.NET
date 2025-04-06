@@ -81,7 +81,7 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiReadOnlyE
     /// Furthermore, if referencing a schema which contains an example,
     /// the examples value SHALL override the example provided by the schema.
     /// </summary>
-    public IDictionary<string, IOpenApiExample>? Examples { get; }
+    public Dictionary<string, IOpenApiExample>? Examples { get; }
 
     /// <summary>
     /// Example of the media type. The example SHOULD match the specified schema and encoding properties
@@ -102,5 +102,5 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiReadOnlyE
     /// When example or examples are provided in conjunction with the schema object,
     /// the example MUST follow the prescribed serialization strategy for the parameter.
     /// </summary>
-    public IDictionary<string, OpenApiMediaType>? Content { get; }    
+    public Dictionary<string, OpenApiMediaType>? Content { get; }    
 }

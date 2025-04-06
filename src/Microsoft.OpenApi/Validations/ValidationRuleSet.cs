@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="ruleSet">The rule set to add validation rules to.</param>
         /// <param name="rules">The validation rules to be added to the rules set.</param>
         /// <exception cref="OpenApiException">Throws a null argument exception if the arguments are null.</exception>
-        public static void AddValidationRules(ValidationRuleSet ruleSet, IDictionary<Type, IList<ValidationRule>> rules)
+        public static void AddValidationRules(ValidationRuleSet ruleSet, Dictionary<Type, IList<ValidationRule>> rules)
         {
             if (ruleSet == null || rules == null)
             {
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Validations
         /// Initializes a new instance of the <see cref="ValidationRuleSet"/> class.
         /// </summary>
         /// <param name="rules">Rules to be contained in this ruleset.</param>
-        public ValidationRuleSet(IDictionary<Type, IList<ValidationRule>> rules)
+        public ValidationRuleSet(Dictionary<Type, IList<ValidationRule>> rules)
         {
             if (rules == null)
             {

@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesSimple()
         {
             return
-                from input in new IDictionary<string, object>[] {
+                from input in new Dictionary<string, object>[] {
                     // Simple map
                     new Dictionary<string, object>
                     {
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesComplex()
         {
             return
-                from input in new IDictionary<string, object>[] {
+                from input in new Dictionary<string, object>[] {
                     // Empty map and empty list
                     new Dictionary<string, object>
                     {
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 writer.WriteValue(value);
             }
             else if (value.GetType().IsGenericType &&
-                (typeof(IDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
+                (typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
                     typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
             {
                 writer.WriteStartObject();
@@ -221,7 +221,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [MemberData(nameof(WriteMapAsJsonShouldMatchExpectedTestCasesSimple))]
         [MemberData(nameof(WriteMapAsJsonShouldMatchExpectedTestCasesComplex))]
-        public void WriteMapAsJsonShouldMatchExpected(IDictionary<string, object> inputMap, bool produceTerseOutput)
+        public void WriteMapAsJsonShouldMatchExpected(Dictionary<string, object> inputMap, bool produceTerseOutput)
         {
             // Arrange
             using var outputString = new StringWriter(CultureInfo.InvariantCulture);

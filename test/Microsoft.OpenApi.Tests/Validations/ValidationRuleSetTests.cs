@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         private readonly ValidationRule _parameterValidationRule = new ValidationRule<OpenApiParameter>(nameof(_parameterValidationRule),
             (context, item) => { });
 
-        private readonly IDictionary<Type, IList<ValidationRule>> _rulesDictionary;
+        private readonly Dictionary<Type, IList<ValidationRule>> _rulesDictionary;
 
         public ValidationRuleSetTests()
         {

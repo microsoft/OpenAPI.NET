@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Models
         public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
+        public Dictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
 
         /// <inheritdoc/>
         public IList<OpenApiServer>? Servers { get; set; }
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         public IList<IOpenApiParameter>? Parameters { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Add one operation into this path item.
