@@ -76,14 +76,14 @@ jobs:
         working-directory: ./performance/benchmark
 
       - name: Run comparison tool for empty models
-        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT
+        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT -p IdenticalMemoryUsage
         shell: bash
         env:
           NEW_REPORT: "${{ github.workspace }}/performance/benchmark/BenchmarkDotNet.Artifacts/results/performance.EmptyModels-report.json"
           OLD_REPORT: "${{ github.workspace }}/performanceResults/performance.EmptyModels-report.json"
 
       - name: Run comparison tool for descriptions
-        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT
+        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT -p ZeroPointOnePercentDifferenceMemoryUsage
         shell: bash
         env:
           NEW_REPORT: "${{ github.workspace }}/performance/benchmark/BenchmarkDotNet.Artifacts/results/performance.Descriptions-report.json"
