@@ -72,8 +72,13 @@ namespace Microsoft.OpenApi.Reader.V2
                     {
                         var type = n.GetScalarValue();
                         if (type != null)
-                        {
-                            GetOrCreateSchema(o).Type = type.ToJsonSchemaType();
+                        {                            
+                            var schema = GetOrCreateSchema(o);
+                            schema.Type = type.ToJsonSchemaType();
+                            if ("file".Equals(type, StringComparison.OrdinalIgnoreCase))
+                            {
+                                schema.Format = "binary";
+                            }
                         }
                     }
                 },
