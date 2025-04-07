@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Reader.V2
                         {                            
                             var schema = GetOrCreateSchema(o);
                             schema.Type = type.ToJsonSchemaType();
-                            if (type.Equals("file"))
+                            if ("file".Equals(type, StringComparison.OrdinalIgnoreCase))
                             {
                                 schema.Format = "binary";
                             }
