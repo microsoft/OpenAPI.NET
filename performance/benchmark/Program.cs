@@ -1,17 +1,12 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-namespace performance
+namespace performance;
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var config = DefaultConfig.Instance;
-            var summary = BenchmarkRunner.Run<EmptyModels>(config, args);
-
-            // Use this to select benchmarks from the console:
-            // var summaries = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);
-        }
+        var config = DefaultConfig.Instance;
+        BenchmarkRunner.Run<EmptyModels>(config, args);
     }
 }
