@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="operation">The operation item.</param>
         public void AddOperation(HttpMethod operationType, OpenApiOperation operation)
         {
-            Operations ??= new Dictionary<HttpMethod, OpenApiOperation>();
+            Operations ??= [];
             Operations[operationType] = operation;
         }
 
