@@ -12,21 +12,28 @@ internal interface IBenchmarkComparisonPolicy : IEqualityComparer<BenchmarkMemor
         {
             yield break;
         }
+        var allPolicies = GetAllPolicies();
         if (names is ["all"])
         {
-            foreach (var policy in GetAllPolicies())
+            foreach (var policy in allPolicies)
             {
                 yield return policy;
             }
         }
         var indexedNames = names.ToHashSet(StringComparer.OrdinalIgnoreCase);
-        if (indexedNames.Contains(nameof(IdenticalMemoryUsagePolicy)))
+        foreach (var policy in allPolicies.Where(x => indexedNames.Contains(x.Name)))
         {
-            yield return IdenticalMemoryUsagePolicy.Instance;
+            yield return policy;
         }
     }
     public static IBenchmarkComparisonPolicy[] GetAllPolicies()
     {
-        return [IdenticalMemoryUsagePolicy.Instance];
+        return [
+            IdenticalMemoryUsagePolicy.Instance,
+            ZeroPointOnePercentDifferenceMemoryUsagePolicy.Instance,
+            OnePercentDifferenceMemoryUsagePolicy.Instance,
+            TwoPercentDifferenceMemoryUsagePolicy.Instance,
+            FivePercentDifferenceMemoryUsagePolicy.Instance,
+        ];
     }
 }
