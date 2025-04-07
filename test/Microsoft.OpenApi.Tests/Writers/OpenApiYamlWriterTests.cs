@@ -457,7 +457,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new()
                             {
@@ -465,7 +465,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "OK",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new()
                                             {
@@ -480,7 +480,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    Schemas = new()
                     {
                         ["thing"] = thingSchema
                     }

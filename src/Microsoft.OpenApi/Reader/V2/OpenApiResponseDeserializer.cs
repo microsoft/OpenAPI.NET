@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             if (response.Content == null)
             {
-                response.Content = new Dictionary<string, OpenApiMediaType>();
+                response.Content = [];
             }
             else if (context.GetFromTempStorage<bool>(TempStorageKeys.ResponseProducesSet, response))
             {

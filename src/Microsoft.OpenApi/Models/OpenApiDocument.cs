@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Models
             Info = document?.Info != null ? new(document.Info) : new OpenApiInfo();
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
-            Paths = document?.Paths != null ? new(document.Paths) : new OpenApiPaths();
+            Paths = document?.Paths != null ? new(document.Paths) : [];
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             Security = document?.Security != null ? new List<OpenApiSecurityRequirement>(document.Security) : null;
@@ -414,7 +414,7 @@ namespace Microsoft.OpenApi.Models
 
         private static string? ParseServerUrl(OpenApiServer server)
         {
-            return server.ReplaceServerUrlVariables(new Dictionary<string, string>(0));
+            return server.ReplaceServerUrlVariables([]);
         }
 
         private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer>? servers)
@@ -651,43 +651,43 @@ namespace Microsoft.OpenApi.Models
             switch (componentToRegister)
             {
                 case IOpenApiSchema openApiSchema:
-                    Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
+                    Components.Schemas ??= [];
                     Components.Schemas.Add(id, openApiSchema);
                     break;
                 case IOpenApiParameter openApiParameter:
-                    Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
+                    Components.Parameters ??= [];
                     Components.Parameters.Add(id, openApiParameter);
                     break;
                 case IOpenApiResponse openApiResponse:
-                    Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
+                    Components.Responses ??= [];
                     Components.Responses.Add(id, openApiResponse);
                     break;
                 case IOpenApiRequestBody openApiRequestBody:
-                    Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
+                    Components.RequestBodies ??= [];
                     Components.RequestBodies.Add(id, openApiRequestBody);
                     break;
                 case IOpenApiLink openApiLink:
-                    Components.Links ??= new Dictionary<string, IOpenApiLink>();
+                    Components.Links ??= [];
                     Components.Links.Add(id, openApiLink);
                     break;
                 case IOpenApiCallback openApiCallback:
-                    Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
+                    Components.Callbacks ??= [];
                     Components.Callbacks.Add(id, openApiCallback);
                     break;
                 case IOpenApiPathItem openApiPathItem:
-                    Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
+                    Components.PathItems ??= [];
                     Components.PathItems.Add(id, openApiPathItem);
                     break;
                 case IOpenApiExample openApiExample:
-                    Components.Examples ??= new Dictionary<string, IOpenApiExample>();
+                    Components.Examples ??= [];
                     Components.Examples.Add(id, openApiExample);
                     break;
                 case IOpenApiHeader openApiHeader:
-                    Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
+                    Components.Headers ??= [];
                     Components.Headers.Add(id, openApiHeader);
                     break;
                 case IOpenApiSecurityScheme openApiSecurityScheme:
-                    Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+                    Components.SecuritySchemes ??= [];
                     Components.SecuritySchemes.Add(id, openApiSecurityScheme);
                     break;
                 default:

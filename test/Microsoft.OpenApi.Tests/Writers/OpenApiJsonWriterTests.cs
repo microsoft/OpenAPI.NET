@@ -77,8 +77,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             return
                 from input in new Dictionary<string, object>[] {
                     // Simple map
-                    new Dictionary<string, object>
-                    {
+                    new() {
                         ["property1"] = "value1",
                         ["property2"] = "value2",
                         ["property3"] = "value3",
@@ -86,8 +85,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                     },
 
                     // Simple map with duplicate values
-                    new Dictionary<string, object>
-                    {
+                    new() {
                         ["property1"] = "value1",
                         ["property2"] = "value1",
                         ["property3"] = "value1",
@@ -103,8 +101,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             return
                 from input in new Dictionary<string, object>[] {
                     // Empty map and empty list
-                    new Dictionary<string, object>
-                    {
+                    new() {
                         ["property1"] = new Dictionary<string, object>(),
                         ["property2"] = new List<string>(),
                         ["property3"] = new List<object>
@@ -115,8 +112,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                     },
 
                     // Number, boolean, and null handling
-                    new Dictionary<string, object>
-                    {
+                    new() {
                         ["property1"] = "10.0",
                         ["property2"] = "10",
                         ["property3"] = "-5",
@@ -131,16 +127,14 @@ namespace Microsoft.OpenApi.Tests.Writers
                     },
 
                     // DateTime
-                    new Dictionary<string, object>
-                    {
+                    new() {
                         ["property1"] = new DateTime(1970, 01, 01),
                         ["property2"] = new DateTimeOffset(new(1970, 01, 01)),
                         ["property3"] = new DateTime(2018, 04, 03),
                     },
 
                     // Nested map
-                    new Dictionary<string, object>
-                    {
+                    new() {
                         ["property1"] = new Dictionary<string, object>
                         {
                             ["innerProperty1"] = "innerValue1"
@@ -154,8 +148,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                     },
 
                     // Nested map and list
-                    new Dictionary<string, object>
-                    {
+                    new() {
                         ["property1"] = new Dictionary<string, object>(),
                         ["property2"] = new List<string>(),
                         ["property3"] = new List<object>

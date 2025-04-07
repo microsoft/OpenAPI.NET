@@ -122,7 +122,7 @@ get:
                 new OpenApiPathItem
                 {
                     Summary = "externally referenced path item",
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation()
                         {
@@ -195,7 +195,7 @@ get:
             new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                         ["id"] = new OpenApiSchema()
                         {
@@ -241,12 +241,12 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new()
                 {
                     ["ErrorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["code"] = new OpenApiSchema()
                             {
@@ -274,7 +274,7 @@ get:
                             {
                                 Type = JsonSchemaType.Object,
                                 Required = new HashSet<string> {"rootCause"},
-                                Properties = new Dictionary<string, IOpenApiSchema>
+                                Properties = new()
                                 {
                                     ["rootCause"] = new OpenApiSchema()
                                     {
@@ -298,7 +298,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new()
                 {
                     ["Pet"] = new OpenApiSchema()
                     {
@@ -307,7 +307,7 @@ get:
                         {
                             PropertyName = "petType"
                         },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["name"] = new OpenApiSchema()
                             {
@@ -334,7 +334,7 @@ get:
                             {
                                 Type = JsonSchemaType.Object,
                                 Required = new HashSet<string>{"huntingSkill"},
-                                Properties = new Dictionary<string, IOpenApiSchema>
+                                Properties = new()
                                 {
                                     ["huntingSkill"] = new OpenApiSchema()
                                     {
@@ -362,7 +362,7 @@ get:
                             {
                                 Type = JsonSchemaType.Object,
                                 Required = new HashSet<string>{"packSize"},
-                                Properties = new Dictionary<string, IOpenApiSchema>
+                                Properties = new()
                                 {
                                     ["packSize"] = new OpenApiSchema()
                                     {
@@ -404,7 +404,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new()
                 {
                     ["RelativePathModel"] = new OpenApiSchema()
                     {

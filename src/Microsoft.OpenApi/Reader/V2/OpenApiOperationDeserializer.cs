@@ -241,7 +241,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             if (bodyParameter.Name is not null)
             {
-                requestBody.Extensions ??= new Dictionary<string, IOpenApiExtension>();
+                requestBody.Extensions ??= [];
                 requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
             }            
             return requestBody;

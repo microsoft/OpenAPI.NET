@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var link = new OpenApiLink()
             {
-                Extensions = new Dictionary<string, IOpenApiExtension>
+                Extensions = new()
                 {
                     { "x-display", new OpenApiAny("Abc") 
                 }

@@ -26,14 +26,14 @@ namespace Microsoft.OpenApi.Tests.Models
                 [RuntimeExpression.Build("$request.body#/url")]
                 = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Post] =
                         new()
                         {
                             RequestBody = new OpenApiRequestBody()
                             {
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new()
                                     {
@@ -66,14 +66,14 @@ namespace Microsoft.OpenApi.Tests.Models
                 [RuntimeExpression.Build("$request.body#/url")]
                 = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Post] =
                         new()
                         {
                             RequestBody = new OpenApiRequestBody()
                             {
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new()
                                     {

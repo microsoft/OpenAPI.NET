@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var doc = new OpenApiDocument();
             doc.Paths.Add("/test", new OpenApiPathItem()
             {
-                Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                Operations = new()
                 {
                     [HttpMethod.Get] = new()
                     {
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                         {
                             ["200"] = new OpenApiResponse()
                             {
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new()
                                     {
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var loopySchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["name"] = new OpenApiSchema() { Type = JsonSchemaType.String }
                 }
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             {
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    Schemas = new()
                     {
                         ["loopy"] = loopySchema
                     }
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new()
                             {
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new()
                                             {
@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    Schemas = new()
                     {
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,

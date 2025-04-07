@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 Paths = new()
                 {
                     {"/foo", new OpenApiPathItem() {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             { HttpMethod.Get, new() },
                             { HttpMethod.Patch, new() },
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 {
                     ["/test/{id}"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             { HttpMethod.Get, new() },
                             { HttpMethod.Patch, new() }

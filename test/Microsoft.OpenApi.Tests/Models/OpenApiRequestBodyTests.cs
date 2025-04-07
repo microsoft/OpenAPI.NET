@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description",
             Required = true,
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new()
             {
                 ["application/json"] = new()
                 {
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description",
             Required = true,
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new()
             {
                 ["application/json"] = new()
                 {

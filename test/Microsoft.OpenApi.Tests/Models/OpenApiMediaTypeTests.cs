@@ -437,7 +437,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Example = 42,
                 Examples = new Dictionary<string, IOpenApiExample>(),
                 Encoding = new Dictionary<string, OpenApiEncoding>(),
-                Extensions = new Dictionary<string, IOpenApiExtension>()
+                Extensions = new()
             };
 
             // Assert

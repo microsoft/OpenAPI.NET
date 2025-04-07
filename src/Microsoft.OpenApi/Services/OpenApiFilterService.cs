@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Services
 
                 if (result.CurrentKeys?.Operation != null && result.Operation != null && pathItem is OpenApiPathItem openApiPathItem)
                 {
-                    openApiPathItem.Operations ??= new Dictionary<HttpMethod, OpenApiOperation>();
+                    openApiPathItem.Operations ??= [];
                     openApiPathItem.Operations?.Add(result.CurrentKeys.Operation, result.Operation);
 
                     if (result.Parameters?.Any() ?? false)

@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = "Blabla",
-                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    Extensions = new()
                     {
                         ["myextension"] = new OpenApiAny("myextensionvalue"),
                     }, 
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = "Blabla",
-                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    Extensions = new()
                     {
                         ["myextension"] = new OpenApiAny("myextensionvalue"),
                     },

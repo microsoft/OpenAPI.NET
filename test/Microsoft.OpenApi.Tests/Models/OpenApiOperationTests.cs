@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Description = "description2",
                 Required = true,
-                Content = new Dictionary<string, OpenApiMediaType>
+                Content = new()
                 {
                     ["application/json"] = new()
                     {
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["200"] = new OpenApiResponseReference("response1"),
                 ["400"] = new OpenApiResponse()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>
+                    Content = new()
                     {
                         ["application/json"] = new()
                         {
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Description = "description2",
                 Required = true,
-                Content = new Dictionary<string, OpenApiMediaType>
+                Content = new()
                 {
                     ["application/json"] = new()
                     {
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["200"] = new OpenApiResponseReference("response1"),
                 ["400"] = new OpenApiResponse()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>
+                    Content = new()
                     {
                         ["application/json"] = new()
                         {
@@ -222,13 +222,13 @@ namespace Microsoft.OpenApi.Tests.Models
                 ],
                 RequestBody = new OpenApiRequestBody()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>
+                    Content = new()
                     {
                         ["application/x-www-form-urlencoded"] = new()
                         {
                             Schema = new OpenApiSchema()
                             {
-                                Properties = new Dictionary<string, IOpenApiSchema>
+                                Properties = new()
                                 {
                                     ["name"] = new OpenApiSchema()
                                     {
@@ -251,7 +251,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new OpenApiSchema()
                             {
-                                Properties = new Dictionary<string, IOpenApiSchema>
+                                Properties = new()
                                 {
                                     ["name"] = new OpenApiSchema()
                                     {

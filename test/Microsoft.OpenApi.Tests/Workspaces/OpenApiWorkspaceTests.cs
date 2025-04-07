@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>()
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation()
                             {
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Tests
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new OpenApiComponents()
                 {
-                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    Schemas = new()
                     {
                         ["test"] = testSchema
                     }
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    Schemas = new()
                     {
                         ["test"] = new OpenApiSchema()
                         {

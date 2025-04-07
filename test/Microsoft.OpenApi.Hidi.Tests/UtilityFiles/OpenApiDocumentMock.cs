@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                 {
                     ["/"] = new OpenApiPathItem() // root path
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [getTeamsActivityByPeriodPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [getTeamsActivityByDatePath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -200,7 +200,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [usersPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entities",
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                             {
                                                                 Title = "Collection of user",
                                                                 Type = JsonSchemaType.Object,
-                                                                Properties = new Dictionary<string, IOpenApiSchema>
+                                                                Properties = new()
                                                                 {
                                                                     {
                                                                         "value",
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [usersByIdPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -259,7 +259,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entity",
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [messagesByIdPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -322,7 +322,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved navigation property",
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -340,7 +340,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [administrativeUnitRestorePath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Post, new OpenApiOperation
@@ -369,7 +369,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -391,7 +391,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [logoPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Put, new OpenApiOperation
@@ -413,7 +413,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [securityProfilesPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -426,7 +426,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved navigation property",
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -436,7 +436,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                             {
                                                                 Title = "Collection of hostSecurityProfile",
                                                                 Type = JsonSchemaType.Object,
-                                                                Properties = new Dictionary<string, IOpenApiSchema>
+                                                                Properties = new()
                                                                 {
                                                                     {
                                                                         "value",
@@ -459,7 +459,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [communicationsCallsKeepAlivePath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Post, new OpenApiOperation
@@ -478,7 +478,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = JsonSchemaType.String
                                             },
-                                            Extensions = new Dictionary<string, IOpenApiExtension>
+                                            Extensions = new()
                                             {
                                                 {
                                                     "x-ms-docs-key-type", new OpenApiAny("call")
@@ -495,7 +495,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Extensions = new Dictionary<string, IOpenApiExtension>
+                                    Extensions = new()
                                     {
                                         {
                                             "x-ms-docs-operation-type", new OpenApiAny("action")
@@ -507,7 +507,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [eventsDeltaPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -526,7 +526,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = JsonSchemaType.String
                                             },
-                                            Extensions = new Dictionary<string, IOpenApiExtension>
+                                            Extensions = new()
                                             {
                                                 {
                                                     "x-ms-docs-key-type", new OpenApiAny("group")
@@ -543,7 +543,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = JsonSchemaType.String
                                             },
-                                            Extensions = new Dictionary<string, IOpenApiExtension>
+                                            Extensions = new()
                                             {
                                                 {
                                                     "x-ms-docs-key-type", new OpenApiAny("event")
@@ -557,7 +557,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -565,7 +565,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         {
                                                             Schema = new OpenApiSchema()
                                                             {
-                                                                Properties = new Dictionary<string, IOpenApiSchema>
+                                                                Properties = new()
                                                                 {
                                                                     {
                                                                         "value",
@@ -582,7 +582,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Extensions = new Dictionary<string, IOpenApiExtension>
+                                    Extensions = new()
                                     {
                                         {
                                             "x-ms-docs-operation-type", new OpenApiAny("function")
@@ -594,7 +594,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [refPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -608,14 +608,14 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    Schemas = new()
                     {
                         {
                             "microsoft.graph.networkInterface", new OpenApiSchema
                             {
                                 Title = "networkInterface",
                                 Type = JsonSchemaType.Object,
-                                Properties = new Dictionary<string, IOpenApiSchema>
+                                Properties = new()
                                 {
                                     {
                                         "description", new OpenApiSchema

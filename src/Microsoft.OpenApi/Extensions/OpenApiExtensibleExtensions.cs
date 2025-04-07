@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Extensions
                 throw new OpenApiException(string.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
             }
 
-            element.Extensions ??= new Dictionary<string, IOpenApiExtension>();
+            element.Extensions ??= [];
             element.Extensions[name] = Utils.CheckArgumentNull(any);
         }
     }

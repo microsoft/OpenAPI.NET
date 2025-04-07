@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var targetSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["prop1"] = new OpenApiSchema()
                     {
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 }
             };
-            workingDocument.Components.Schemas = new Dictionary<string, IOpenApiSchema>
+            workingDocument.Components.Schemas = new()
             {
                 [referenceId] = targetSchema
             };
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var referenceSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["propA"] = new OpenApiSchemaReference(referenceId, workingDocument),
                 }

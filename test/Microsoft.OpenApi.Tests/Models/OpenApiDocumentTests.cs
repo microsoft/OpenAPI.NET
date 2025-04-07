@@ -25,13 +25,13 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static readonly OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -45,12 +45,12 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static readonly OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static readonly OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static readonly OpenApiComponents AdvancedComponentsWithReference = new OpenApiComponents
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>
+            Schemas = new()
             {
                 ["pet"] = new OpenApiSchema()
                 {
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         "id",
                         "name"
                     },
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["id"] = new OpenApiSchema()
                         {
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         "name"
                     },
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["id"] = new OpenApiSchema()
                         {
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         "code",
                         "message"
                     },
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["code"] = new OpenApiSchema()
                         {
@@ -231,7 +231,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/pets"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation
                         {
@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -295,7 +295,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -306,7 +306,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -324,7 +324,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 Description = "Pet to add to the store",
                                 Required = true,
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -337,7 +337,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -348,7 +348,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -359,7 +359,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -373,7 +373,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["/pets/{id}"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation
                         {
@@ -400,7 +400,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -415,7 +415,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -426,7 +426,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -464,7 +464,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -475,7 +475,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -494,7 +494,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static readonly OpenApiComponents AdvancedComponents = new OpenApiComponents
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>
+            Schemas = new()
             {
                 ["pet"] = new OpenApiSchema()
                 {
@@ -504,7 +504,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         "id",
                         "name"
                     },
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["id"] = new OpenApiSchema()
                         {
@@ -528,7 +528,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         "name"
                     },
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["id"] = new OpenApiSchema()
                         {
@@ -553,7 +553,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         "code",
                         "message"
                     },
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["code"] = new OpenApiSchema()
                         {
@@ -607,7 +607,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/pets"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation
                         {
@@ -648,7 +648,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -671,7 +671,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -682,7 +682,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -700,7 +700,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 Description = "Pet to add to the store",
                                 Required = true,
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -713,7 +713,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -724,7 +724,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -735,7 +735,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -749,7 +749,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["/pets/{id}"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation
                         {
@@ -776,7 +776,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -791,7 +791,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -802,7 +802,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -840,7 +840,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -851,7 +851,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new OpenApiMediaType
                                         {
@@ -879,14 +879,14 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["newPet"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Post] = new OpenApiOperation
                         {
                             RequestBody = new OpenApiRequestBody
                             {
                                 Description = "Information about a new pet in the system",
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -907,7 +907,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new()
                 {
                     ["Pet"] = new OpenApiSchema()
                     {
@@ -915,7 +915,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                            "id", "name"
                         },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -955,7 +955,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/add/{operand1}/{operand2}"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation
                         {
@@ -971,12 +971,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Schema = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Integer,
-                                        Extensions = new Dictionary<string, IOpenApiExtension>
+                                        Extensions = new()
                                         {
                                             ["my-extension"] = new OpenApiAny(4)
                                         }
                                     },
-                                    Extensions = new Dictionary<string, IOpenApiExtension>
+                                    Extensions = new()
                                     {
                                         ["my-extension"] = new OpenApiAny(4),
                                     }
@@ -990,12 +990,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Schema = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.Integer,
-                                        Extensions = new Dictionary<string, IOpenApiExtension>
+                                        Extensions = new()
                                         {
                                             ["my-extension"] = new OpenApiAny(4)
                                         }
                                     },
-                                    Extensions = new Dictionary<string, IOpenApiExtension>
+                                    Extensions = new()
                                     {
                                         ["my-extension"] = new OpenApiAny(4),
                                     }
@@ -1006,7 +1006,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -1066,7 +1066,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/pets"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new()
                         {
@@ -1107,7 +1107,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse()
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new()
                                         {
@@ -1130,7 +1130,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new()
                                         {
@@ -1141,7 +1141,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new()
                                         {
@@ -1159,7 +1159,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 Description = "Pet to add to the store",
                                 Required = true,
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new()
                                     {
@@ -1172,7 +1172,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse()
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new()
                                         {
@@ -1183,7 +1183,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new()
                                         {
@@ -1194,7 +1194,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new()
                                         {
@@ -1208,7 +1208,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["/pets/{id}"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new()
                         {
@@ -1235,7 +1235,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["200"] = new OpenApiResponse()
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new()
                                         {
@@ -1250,7 +1250,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new()
                                         {
@@ -1261,7 +1261,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new()
                                         {
@@ -1299,7 +1299,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["4XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected client error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new()
                                         {
@@ -1310,7 +1310,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 ["5XX"] = new OpenApiResponse()
                                 {
                                     Description = "unexpected server error",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["text/html"] = new()
                                         {
@@ -1533,7 +1533,7 @@ definitions:
                 {
                     ["/"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -1541,7 +1541,7 @@ definitions:
                                 {
                                     ["200"] = new OpenApiResponse
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -1706,7 +1706,7 @@ paths:
                 {
                     ["/foo"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -1773,7 +1773,7 @@ paths:
                 {
                     ["/foo"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -1798,7 +1798,7 @@ paths:
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "foo",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/plain"] = new OpenApiMediaType
                                             {
@@ -1829,7 +1829,7 @@ paths:
         {
             var baseDocument = new OpenApiDocument
             {
-                Metadata = new Dictionary<string, object>
+                Metadata = new()
                 {
                     ["key1"] = "value1",
                     ["key2"] = 2
@@ -1854,13 +1854,13 @@ paths:
                 {
                     ["test"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>()
+                        Operations = new()
                         {
                             [HttpMethod.Post] = new OpenApiOperation
                             {
                                 RequestBody = new OpenApiRequestBody()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType()
                                         {
@@ -2077,7 +2077,7 @@ components:
                     new OpenApiTag
                     {
                         Name = "tag1",
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new()
                         {
                             ["x-tag1"] = new OpenApiAny("tag1")
                         }
@@ -2085,7 +2085,7 @@ components:
                     new OpenApiTag
                     {
                         Name = "tag2",
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new()
                         {
                             ["x-tag2"] = new OpenApiAny("tag2")
                         }
@@ -2106,7 +2106,7 @@ components:
                     new OpenApiTag
                     {
                         Name = "tag1",
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new()
                         {
                             ["x-tag1"] = new OpenApiAny("tag1")
                         }
@@ -2114,7 +2114,7 @@ components:
                     new OpenApiTag
                     {
                         Name = "tag2",
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new()
                         {
                             ["x-tag2"] = new OpenApiAny("tag2")
                         }
@@ -2122,7 +2122,7 @@ components:
                     new OpenApiTag
                     {
                         Name = "tag1",
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new()
                         {
                             ["x-tag1"] = new OpenApiAny("tag1")
                         }

@@ -44,11 +44,11 @@ namespace Microsoft.OpenApi.Tests.Models
         public static readonly OpenApiSchema AdvancedSchemaObject = new()
         {
             Title = "title1",
-            Properties = new Dictionary<string, IOpenApiSchema>
+            Properties = new()
             {
                 ["property1"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -63,11 +63,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["property4"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property5"] = new OpenApiSchema()
                         {
-                            Properties = new Dictionary<string, IOpenApiSchema>
+                            Properties = new()
                             {
                                 ["property6"] = new OpenApiSchema()
                                 {
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 new OpenApiSchema()
                 {
                     Title = "title2",
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -114,11 +114,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 new OpenApiSchema()
                 {
                     Title = "title3",
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property3"] = new OpenApiSchema()
                         {
-                            Properties = new Dictionary<string, IOpenApiSchema>
+                            Properties = new()
                             {
                                 ["property4"] = new OpenApiSchema()
                                 {
@@ -161,12 +161,12 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Title = "title1",
             Required = new HashSet<string> { "property1" },
-            Properties = new Dictionary<string, IOpenApiSchema>
+            Properties = new()
             {
                 ["property1"] = new OpenApiSchema()
                 {
                     Required = new HashSet<string> { "property3" },
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -183,11 +183,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["property4"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property5"] = new OpenApiSchema()
                         {
-                            Properties = new Dictionary<string, IOpenApiSchema>
+                            Properties = new()
                             {
                                 ["property6"] = new OpenApiSchema()
                                 {
@@ -536,7 +536,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var schema = new OpenApiSchema
             {
-                Extensions = new Dictionary<string, IOpenApiExtension>
+                Extensions = new()
                 {
                     { "x-myextension", new OpenApiAny(42) }
                 }
@@ -547,7 +547,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Single(schemaCopy.Extensions);
 
             // Act && Assert
-            schemaCopy.Extensions = new Dictionary<string, IOpenApiExtension>
+            schemaCopy.Extensions = new()
             {
                 { "x-myextension" , new OpenApiAny(40) }
             };

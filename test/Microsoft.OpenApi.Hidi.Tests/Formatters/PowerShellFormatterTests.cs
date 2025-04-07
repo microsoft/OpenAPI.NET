@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 Paths = new()
                 {
                     { path, new OpenApiPathItem() {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             { operationType, new() { OperationId = operationId } }
                           }
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 Paths = new() {
                     { "/foo", new OpenApiPathItem()
                         {
-                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                            Operations = new()
                             {
                                 {
                                     HttpMethod.Get, new()
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                             {
                                                 Name = "ids",
                                                 In = ParameterLocation.Query,
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         "application/json",
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                                 }
                                             }
                                         ],
-                                        Extensions = new Dictionary<string, IOpenApiExtension>
+                                        Extensions = new()
                                         {
                                             {
                                                 "x-ms-docs-operation-type", new OpenApiAny("function")
@@ -158,12 +158,12 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    Schemas = new()
                     {
                         { "TestSchema",  new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Properties = new Dictionary<string, IOpenApiSchema>
+                                Properties = new()
                                 {
                                     {
                                         "averageAudioDegradation", new OpenApiSchema
