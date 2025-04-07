@@ -49,14 +49,14 @@ internal class CompareCommandHandler : AsyncCommandHandler
         {
             if (!newBenchmark.TryGetValue(existingBenchmarkResult.Key, out var newBenchmarkResult))
             {
-                logger.LogError("No new benchmark result found for {existingBenchmarkResultKey}.", existingBenchmarkResult.Key);
+                logger.LogError("No new benchmark result found for {ExistingBenchmarkResultKey}.", existingBenchmarkResult.Key);
                 hasErrors = true;
             }
             foreach (var comparisonPolicy in comparisonPolicies)
             {
                 if (!comparisonPolicy.Equals(existingBenchmarkResult.Value, newBenchmarkResult))
                 {
-                    logger.LogError("Benchmark result for {existingBenchmarkResultKey} does not match the existing benchmark result. {errorMessage}", existingBenchmarkResult.Key, comparisonPolicy.GetErrorMessage(existingBenchmarkResult.Value, newBenchmarkResult));
+                    logger.LogError("Benchmark result for {ExistingBenchmarkResultKey} does not match the existing benchmark result. {ErrorMessage}", existingBenchmarkResult.Key, comparisonPolicy.GetErrorMessage(existingBenchmarkResult.Value, newBenchmarkResult));
                     hasErrors = true;
                 }
             }
@@ -67,11 +67,11 @@ internal class CompareCommandHandler : AsyncCommandHandler
             logger.LogError("New benchmark results found that do not exist in the existing benchmark results.");
             foreach (var missingKey in missingKeys)
             {
-                logger.LogError("New benchmark result found: {missingKey}.", missingKey);
+                logger.LogError("New benchmark result found: {MissingKey}.", missingKey);
             }
             hasErrors = true;
         }
-        logger.LogInformation("Benchmark comparison complete. {status}", hasErrors ? "Errors found" : "No errors found");
+        logger.LogInformation("Benchmark comparison complete. {Status}", hasErrors ? "Errors found" : "No errors found");
         return hasErrors ? 1 : 0;
     }
 
@@ -82,13 +82,12 @@ internal class CompareCommandHandler : AsyncCommandHandler
             return null;
         }
         using var stream = new FileStream(targetPath, FileMode.Open, FileAccess.Read);
-        var report = (await JsonSerializer.DeserializeAsync(stream, serializationContext.BenchmarkReport, cancellationToken: cancellationToken))
+        var report = (await JsonSerializer.DeserializeAsync(stream, BenchmarkSourceGenerationContext.Default.BenchmarkReport, cancellationToken: cancellationToken))
                         ?? throw new InvalidOperationException($"Failed to deserialize {targetPath}.");
         return report.Benchmarks
                 .Where(x => x.Memory is not null && x.Method is not null)
             .ToDictionary(x => x.Method!, x => x.Memory!, StringComparer.OrdinalIgnoreCase);
     }
-    private static readonly BenchmarkSourceGenerationContext serializationContext = new();
 }
 
 [JsonSerializable(typeof(BenchmarkReport))]
