@@ -7,6 +7,8 @@ namespace performance
 {
     [MemoryDiagnoser]
     [JsonExporter]
+    [ShortRunJob]
+    // [SimpleJob(launchCount: 1, warmupCount: 30, iterationCount: 50, invocationCount:1000)]
     public class EmptyModels
     {
         [Benchmark]
