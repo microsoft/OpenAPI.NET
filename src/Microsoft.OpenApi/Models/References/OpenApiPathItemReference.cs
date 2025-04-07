@@ -56,10 +56,10 @@ namespace Microsoft.OpenApi.Models.References
         public Dictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
 
         /// <inheritdoc/>
-        public IList<OpenApiServer>? Servers { get => Target?.Servers; }
+        public List<OpenApiServer>? Servers { get => Target?.Servers; }
 
         /// <inheritdoc/>
-        public IList<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
+        public List<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
         public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }

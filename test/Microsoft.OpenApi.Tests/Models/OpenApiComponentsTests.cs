@@ -134,8 +134,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema4"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,
-                    AllOf = new List<IOpenApiSchema>
-                    {
+                    AllOf =
+                    [
                         null,
                         null,
                         new OpenApiSchema()
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         null,
                         null
-                    }
+                    ]
                 }
             }
         };

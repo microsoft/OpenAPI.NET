@@ -220,13 +220,13 @@ namespace Microsoft.OpenApi.Tests.Models
                     Url = new Uri("http://opensource.org/licenses/MIT")
                 }
             },
-            Servers = new List<OpenApiServer>
-            {
+            Servers =
+            [
                 new OpenApiServer
                 {
                     Url = "http://petstore.swagger.io/api"
                 }
-            },
+            ],
             Paths = new OpenApiPaths
             {
                 ["/pets"] = new OpenApiPathItem
@@ -596,13 +596,13 @@ namespace Microsoft.OpenApi.Tests.Models
                     Url = new Uri("http://opensource.org/licenses/MIT")
                 }
             },
-            Servers = new List<OpenApiServer>
-            {
+            Servers =
+            [
                 new OpenApiServer
                 {
                     Url = "http://petstore.swagger.io/api"
                 }
-            },
+            ],
             Paths = new OpenApiPaths
             {
                 ["/pets"] = new OpenApiPathItem
@@ -613,8 +613,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
-                            Parameters = new List<IOpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter
                                 {
                                     Name = "tags",
@@ -642,7 +642,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int32"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["200"] = new OpenApiResponse
@@ -756,8 +756,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             Description =
                                 "Returns a user based on a single ID, if the user does not have access to the pet",
                             OperationId = "findPetById",
-                            Parameters = new List<IOpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter
                                 {
                                     Name = "id",
@@ -770,7 +770,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int64"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["200"] = new OpenApiResponse
@@ -816,8 +816,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "deletes a single pet based on the ID supplied",
                             OperationId = "deletePet",
-                            Parameters = new List<IOpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter
                                 {
                                     Name = "id",
@@ -830,7 +830,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int64"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["204"] = new OpenApiResponse
@@ -944,13 +944,13 @@ namespace Microsoft.OpenApi.Tests.Models
                 Title = "Swagger Petstore (Simple)",
                 Description = "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
             },
-            Servers = new List<OpenApiServer>
-            {
+            Servers =
+            [
                 new OpenApiServer
                 {
                     Url = "http://petstore.swagger.io/api"
                 }
-            },
+            ],
             Paths = new OpenApiPaths
             {
                 ["/add/{operand1}/{operand2}"] = new OpenApiPathItem
@@ -960,8 +960,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         [HttpMethod.Get] = new OpenApiOperation
                         {
                             OperationId = "addByOperand1AndByOperand2",
-                            Parameters = new List<IOpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter
                                 {
                                     Name = "operand1",
@@ -1000,7 +1000,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         ["my-extension"] = new OpenApiAny(4),
                                     }
                                 },
-                            },
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["200"] = new OpenApiResponse
@@ -1048,8 +1048,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     Url = new("http://opensource.org/licenses/MIT")
                 }
             },
-            Servers = new List<OpenApiServer>
-            {
+            Servers =
+            [
                 new()
                 {
                     Url = "https://{endpoint}/openai",
@@ -1061,7 +1061,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 }
-            },
+            ],
             Paths = new()
             {
                 ["/pets"] = new OpenApiPathItem()
@@ -1072,8 +1072,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
-                            Parameters = new List<IOpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter()
                                 {
                                     Name = "tags",
@@ -1101,7 +1101,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int32"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new()
                             {
                                 ["200"] = new OpenApiResponse()
@@ -1215,8 +1215,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             Description =
                                 "Returns a user based on a single ID, if the user does not have access to the pet",
                             OperationId = "findPetById",
-                            Parameters = new List<IOpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter()
                                 {
                                     Name = "id",
@@ -1229,7 +1229,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int64"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new()
                             {
                                 ["200"] = new OpenApiResponse()
@@ -1275,8 +1275,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Description = "deletes a single pet based on the ID supplied",
                             OperationId = "deletePet",
-                            Parameters = new List<IOpenApiParameter>
-                            {
+                            Parameters =
+                            [
                                 new OpenApiParameter()
                                 {
                                     Name = "id",
@@ -1289,7 +1289,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Format = "int64"
                                     }
                                 }
-                            },
+                            ],
                             Responses = new()
                             {
                                 ["204"] = new OpenApiResponse()
@@ -1576,12 +1576,12 @@ paths: { }";
             var doc = new OpenApiDocument()
             {
                 Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
+                Servers = [
                     new OpenApiServer()
                     {
                         Url = "/server1"
                     }
-                }
+                ]
             };
 
             // Act
@@ -1606,12 +1606,12 @@ paths: { }";
             var doc = new OpenApiDocument()
             {
                 Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
+                Servers = [
                     new OpenApiServer()
                     {
                         Url = "//example.org/server1"
                     }
-                }
+                ]
             };
 
             // Act
@@ -1635,12 +1635,12 @@ paths: { }";
             var doc = new OpenApiDocument()
             {
                 Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
+                Servers = [
                     new OpenApiServer()
                     {
                         Url = "//example.org/"
                     }
-                }
+                ]
             };
 
             // Act

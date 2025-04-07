@@ -93,8 +93,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public static readonly OpenApiSchema AdvancedSchemaWithAllOf = new()
         {
             Title = "title1",
-            AllOf = new List<IOpenApiSchema>
-            {
+            AllOf =
+            [
                 new OpenApiSchema()
                 {
                     Title = "title2",
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                     Type = JsonSchemaType.Object | JsonSchemaType.Null,
                 },
-            },
+            ],
             Type = JsonSchemaType.Object | JsonSchemaType.Null,
             ExternalDocs = new()
             {
@@ -417,15 +417,15 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var schema = new OpenApiSchema
             {
-                OneOf = new List<IOpenApiSchema>
-                {
+                OneOf =
+                [
                     new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Number,
                         Format = "decimal"
                     },
                     new OpenApiSchema() { Type = JsonSchemaType.String },
-                }
+                ]
             };
 
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -573,15 +573,15 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["/foo"] = new OpenApiPathItem()
                     {
-                        Parameters = new[]
-                        {
+                        Parameters =
+                        [
                             new OpenApiParameter()
                             {
                                 Name = "foo",
                                 In = ParameterLocation.Query,
                                 Schema = outerSchema,
                             }
-                        }
+                        ]
                     }
                 }
             };

@@ -231,8 +231,8 @@ namespace Microsoft.OpenApi.Validations.Tests
                             {
                                 PropertyName = "type"
                             },
-                            OneOf = new List<IOpenApiSchema>
-                            {
+                            OneOf =
+                            [
                                 new OpenApiSchema()
                                 {
                                     Properties = new Dictionary<string, IOpenApiSchema>
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                         }
                                     },
                                 }
-                            },
+                            ],
                         }
                     }
                 }

@@ -76,14 +76,14 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Servers = new List<OpenApiServer>
-            {
+            Servers =
+            [
                 new()
                 {
                     Url = "http://server.com",
                     Description = "serverDescription"
                 }
-            },
+            ],
             Metadata = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } },
         };
 
@@ -150,26 +150,26 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Security = new List<OpenApiSecurityRequirement>
-            {
+            Security =
+            [
                 new()
                 {
-                    [new OpenApiSecuritySchemeReference("securitySchemeId1", __advancedOperationWithTagsAndSecurity_supportingDocument)] = new List<string>(),
-                    [new OpenApiSecuritySchemeReference("securitySchemeId2", __advancedOperationWithTagsAndSecurity_supportingDocument)] = new List<string>
-                    {
+                    [new OpenApiSecuritySchemeReference("securitySchemeId1", __advancedOperationWithTagsAndSecurity_supportingDocument)] = [],
+                    [new OpenApiSecuritySchemeReference("securitySchemeId2", __advancedOperationWithTagsAndSecurity_supportingDocument)] =
+                    [
                         "scopeName1",
                         "scopeName2"
-                    }
+                    ]
                 }
-            },
-            Servers = new List<OpenApiServer>
-            {
+            ],
+            Servers =
+            [
                 new()
                 {
                     Url = "http://server.com",
                     Description = "serverDescription"
                 }
-            }
+            ]
         };
         private static OpenApiDocument __advancedOperationWithTagsAndSecurity_supportingDocument 
         {

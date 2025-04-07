@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
-                new List<string> { "application/x-www-form-urlencoded" };
+                ["application/x-www-form-urlencoded"];
 
             var formBody = new OpenApiRequestBody
             {
@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
-                new List<string> { "application/json" };
+                ["application/json"];
 
             var requestBody = new OpenApiRequestBody
             {

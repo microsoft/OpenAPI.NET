@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "veggieName",
                             "veggieLike"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "veggieType", new HashSet<string> { "veggieColor", "veggieSize" } }
                         },

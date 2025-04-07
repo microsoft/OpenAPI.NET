@@ -18,8 +18,8 @@ namespace Microsoft.OpenApi.Validations
     public class OpenApiValidator : OpenApiVisitorBase, IValidationContext
     {
         private readonly ValidationRuleSet _ruleSet;
-        private readonly IList<OpenApiValidatorError> _errors = new List<OpenApiValidatorError>();
-        private readonly IList<OpenApiValidatorWarning> _warnings = new List<OpenApiValidatorWarning>();
+        private readonly List<OpenApiValidatorError> _errors = [];
+        private readonly List<OpenApiValidatorWarning> _warnings = [];
 
         /// <summary>
         /// Create a visitor that will validate an OpenAPIDocument
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IOpenApiExtension openApiExtension) => Validate(openApiExtension, openApiExtension.GetType());
 
         /// <inheritdoc/>
-        public override void Visit(IList<IOpenApiExample> example) => Validate(example, example.GetType());
+        public override void Visit(List<IOpenApiExample> example) => Validate(example, example.GetType());
 
         /// <inheritdoc/>
         public override void Visit(IOpenApiPathItem pathItem) => Validate(pathItem);

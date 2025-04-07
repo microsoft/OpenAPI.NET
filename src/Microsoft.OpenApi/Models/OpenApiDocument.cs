@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer>? Servers { get; set; } = [];
+        public List<OpenApiServer>? Servers { get; set; } = [];
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
@@ -71,13 +71,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? Security { get; set; }
+        public List<OpenApiSecurityRequirement>? Security { get; set; }
 
         private HashSet<OpenApiTag>? _tags;
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public ISet<OpenApiTag>? Tags 
+        public HashSet<OpenApiTag>? Tags 
         { 
             get
             {
@@ -132,11 +132,11 @@ namespace Microsoft.OpenApi.Models
             Workspace = document?.Workspace != null ? new(document.Workspace) : null;
             Info = document?.Info != null ? new(document.Info) : new OpenApiInfo();
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
-            Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
+            Servers = document?.Servers != null ? [.. document.Servers] : null;
             Paths = document?.Paths != null ? new(document.Paths) : [];
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
-            Security = document?.Security != null ? new List<OpenApiSecurityRequirement>(document.Security) : null;
+            Security = document?.Security != null ? [.. document.Security] : null;
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
@@ -417,7 +417,7 @@ namespace Microsoft.OpenApi.Models
             return server.ReplaceServerUrlVariables([]);
         }
 
-        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer>? servers)
+        private static void WriteHostInfoV2(IOpenApiWriter writer, List<OpenApiServer>? servers)
         {
             if (servers == null || !servers.Any())
             {

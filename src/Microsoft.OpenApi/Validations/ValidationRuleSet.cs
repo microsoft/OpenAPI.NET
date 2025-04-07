@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations
     /// </summary>
     public sealed class ValidationRuleSet
     {
-        private Dictionary<Type, IList<ValidationRule>> _rulesDictionary = new();
+        private Dictionary<Type, List<ValidationRule>> _rulesDictionary = new();
 
         private static ValidationRuleSet? _defaultRuleSet;
 
@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the rules in this rule set.
         /// </summary>
-        public IList<ValidationRule> Rules => _rulesDictionary.Values.SelectMany(v => v).ToList();
+        public List<ValidationRule> Rules => _rulesDictionary.Values.SelectMany(v => v).ToList();
 
         /// <summary>
         /// Gets the number of elements contained in this rule set.
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         /// <param name="type">The type that is to be validated</param>
         /// <returns>Either the rules related to the type, or an empty list.</returns>
-        public IList<ValidationRule> FindRules(Type type)
+        public List<ValidationRule> FindRules(Type type)
         {
             _rulesDictionary.TryGetValue(type, out var results);
             return results ?? _emptyRules;
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="ruleSet">The rule set to add validation rules to.</param>
         /// <param name="rules">The validation rules to be added to the rules set.</param>
         /// <exception cref="OpenApiException">Throws a null argument exception if the arguments are null.</exception>
-        public static void AddValidationRules(ValidationRuleSet ruleSet, Dictionary<Type, IList<ValidationRule>> rules)
+        public static void AddValidationRules(ValidationRuleSet ruleSet, Dictionary<Type, List<ValidationRule>> rules)
         {
             if (ruleSet == null || rules == null)
             {
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Validations
         /// Initializes a new instance of the <see cref="ValidationRuleSet"/> class.
         /// </summary>
         /// <param name="rules">Rules to be contained in this ruleset.</param>
-        public ValidationRuleSet(Dictionary<Type, IList<ValidationRule>> rules)
+        public ValidationRuleSet(Dictionary<Type, List<ValidationRule>> rules)
         {
             if (rules == null)
             {
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         /// <param name="key">The key for the rule.</param>
         /// <param name="rules">The list of rules.</param>
-        public void Add(Type key, IList<ValidationRule> rules)
+        public void Add(Type key, List<ValidationRule> rules)
         {
             foreach (var rule in rules)
             {
@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Validations
         {
             if (!_rulesDictionary.ContainsKey(key))
             {
-                _rulesDictionary[key] = new List<ValidationRule>();
+                _rulesDictionary[key] = [];
             }
 
             if (_rulesDictionary[key].Contains(rule))
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="ruleName">Name of the rule.</param>
         public void Remove(string ruleName)
         {
-            foreach (KeyValuePair<Type, IList<ValidationRule>> rule in _rulesDictionary)
+            foreach (KeyValuePair<Type, List<ValidationRule>> rule in _rulesDictionary)
             {
                 _rulesDictionary[rule.Key] = rule.Value.Where(vr => !vr.Name.Equals(ruleName, StringComparison.Ordinal)).ToList();
             }
@@ -216,7 +216,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true if the rule is successfully removed; otherwise, false.</returns>
         public bool Remove(Type key, ValidationRule rule)
         {
-            if (_rulesDictionary.TryGetValue(key, out IList<ValidationRule>? validationRules))
+            if (_rulesDictionary.TryGetValue(key, out List<ValidationRule>? validationRules))
             {
                 return validationRules.Remove(rule);
             }
@@ -260,7 +260,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns></returns>
         public bool Contains(Type key, ValidationRule rule)
         {
-            return _rulesDictionary.TryGetValue(key, out IList<ValidationRule>? validationRules) && validationRules.Contains(rule);
+            return _rulesDictionary.TryGetValue(key, out List<ValidationRule>? validationRules) && validationRules.Contains(rule);
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace Microsoft.OpenApi.Validations
         ///  key is found; otherwise, an empty <see cref="IList{ValidationRule}"/> object.
         ///  This parameter is passed uninitialized.</param>
         /// <returns>true if the specified key has rules.</returns>
-        public bool TryGetValue(Type key, out IList<ValidationRule>? rules)
+        public bool TryGetValue(Type key, out List<ValidationRule>? rules)
         {
             return _rulesDictionary.TryGetValue(key, out rules);
         }

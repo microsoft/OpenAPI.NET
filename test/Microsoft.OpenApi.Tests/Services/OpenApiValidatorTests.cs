@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     Title = "foo",
                     Version = "1.2.2"
                 },
-                Servers = new List<OpenApiServer> {
+                Servers = [
                 new()
                 {
                     Url = "http://example.org"
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 new()
                 {
                 },
-            },
+            ],
                 Paths = new()
             };
 

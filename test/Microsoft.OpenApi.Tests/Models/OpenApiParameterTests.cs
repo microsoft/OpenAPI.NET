@@ -46,11 +46,11 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Title = "title2",
                 Description = "description2",
-                OneOf = new List<IOpenApiSchema>
-                {
+                OneOf =
+                [
                     new OpenApiSchema() { Type = JsonSchemaType.Number, Format = "double" },
                     new OpenApiSchema() { Type = JsonSchemaType.String }
-                }
+                ]
             },
             Examples = new Dictionary<string, IOpenApiExample>
             {

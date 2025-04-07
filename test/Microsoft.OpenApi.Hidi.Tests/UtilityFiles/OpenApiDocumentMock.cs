@@ -40,13 +40,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     Title = "People",
                     Version = "v1.0"
                 },
-                Servers = new List<OpenApiServer>
-                {
+                Servers =
+                [
                     new()
                     {
                         Url = "https://graph.microsoft.com/v1.0"
                     }
-                },
+                ],
                 Paths = new()
                 {
                     ["/"] = new OpenApiPathItem() // root path
@@ -79,21 +79,19 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     OperationId = "reports.getTeamsUserActivityCounts",
                                     Summary = "Invoke function getTeamsUserActivityUserCounts",
-                                    Parameters = new List<IOpenApiParameter>
-                                    {
+                                    Parameters =
+                                    [
+                                        new OpenApiParameter()
                                         {
-                                            new OpenApiParameter()
+                                            Name = "period",
+                                            In = ParameterLocation.Path,
+                                            Required = true,
+                                            Schema = new OpenApiSchema()
                                             {
-                                                Name = "period",
-                                                In = ParameterLocation.Path,
-                                                Required = true,
-                                                Schema = new OpenApiSchema()
-                                                {
-                                                    Type = JsonSchemaType.String
-                                                }
+                                                Type = JsonSchemaType.String
                                             }
                                         }
-                                    },
+                                    ],
                                     Responses = new()
                                     {
                                         {
@@ -119,73 +117,8 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 }
                             }
                         },
-                        Parameters = new List<IOpenApiParameter>
-                        {
-                            {
-                                new OpenApiParameter()
-                                {
-                                    Name = "period",
-                                    In = ParameterLocation.Path,
-                                    Required = true,
-                                    Schema = new OpenApiSchema()
-                                    {
-                                        Type = JsonSchemaType.String
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    [getTeamsActivityByDatePath] = new OpenApiPathItem()
-                    {
-                        Operations = new()
-                        {
-                            {
-                                HttpMethod.Get, new OpenApiOperation
-                                {
-                                    OperationId = "reports.getTeamsUserActivityUserDetail-a3f1",
-                                    Summary = "Invoke function getTeamsUserActivityUserDetail",
-                                    Parameters = new List<IOpenApiParameter>
-                                    {
-                                        {
-                                            new OpenApiParameter()
-                                            {
-                                                Name = "period",
-                                                In = ParameterLocation.Path,
-                                                Required = true,
-                                                Schema = new OpenApiSchema()
-                                                {
-                                                    Type = JsonSchemaType.String
-                                                }
-                                            }
-                                        }
-                                    },
-                                    Responses = new()
-                                    {
-                                        {
-                                            "200", new OpenApiResponse()
-                                            {
-                                                Description = "Success",
-                                                Content = new()
-                                                {
-                                                    {
-                                                        applicationJsonMediaType,
-                                                        new OpenApiMediaType
-                                                        {
-                                                            Schema = new OpenApiSchema()
-                                                            {
-                                                                Type = JsonSchemaType.Array
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        Parameters = new List<IOpenApiParameter>
-                        {
+                        Parameters = 
+                        [
                             new OpenApiParameter()
                             {
                                 Name = "period",
@@ -196,7 +129,68 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Type = JsonSchemaType.String
                                 }
                             }
-                        }
+                        ]
+                    },
+                    [getTeamsActivityByDatePath] = new OpenApiPathItem()
+                    {
+                        Operations = new()
+                        {
+                            {
+                                HttpMethod.Get, new OpenApiOperation
+                                {
+                                    OperationId = "reports.getTeamsUserActivityUserDetail-a3f1",
+                                    Summary = "Invoke function getTeamsUserActivityUserDetail",
+                                    Parameters =
+                                    [
+                                        new OpenApiParameter()
+                                        {
+                                            Name = "period",
+                                            In = ParameterLocation.Path,
+                                            Required = true,
+                                            Schema = new OpenApiSchema()
+                                            {
+                                                Type = JsonSchemaType.String
+                                            }
+                                        }
+                                    ],
+                                    Responses = new()
+                                    {
+                                        {
+                                            "200", new OpenApiResponse()
+                                            {
+                                                Description = "Success",
+                                                Content = new()
+                                                {
+                                                    {
+                                                        applicationJsonMediaType,
+                                                        new OpenApiMediaType
+                                                        {
+                                                            Schema = new OpenApiSchema()
+                                                            {
+                                                                Type = JsonSchemaType.Array
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        Parameters =
+                        [
+                            new OpenApiParameter()
+                            {
+                                Name = "period",
+                                In = ParameterLocation.Path,
+                                Required = true,
+                                Schema = new OpenApiSchema()
+                                {
+                                    Type = JsonSchemaType.String
+                                }
+                            }
+                        ]
                     },
                     [usersPath] = new OpenApiPathItem()
                     {
@@ -301,8 +295,8 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     OperationId = "users.GetMessages",
                                     Summary = "Get messages from users",
                                     Description = "The messages in a mailbox or folder. Read-only. Nullable.",
-                                    Parameters = new List<IOpenApiParameter>
-                                    {
+                                    Parameters =
+                                    [
                                         new OpenApiParameter()
                                         {
                                             Name = "$select",
@@ -315,7 +309,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                             // missing explode parameter
                                         }
-                                    },
+                                    ],
                                     Responses = new()
                                     {
                                         {
@@ -466,8 +460,8 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     OperationId = "communications.calls.call.keepAlive",
                                     Summary = "Invoke action keepAlive",
-                                    Parameters = new List<IOpenApiParameter>
-                                    {
+                                    Parameters =
+                                    [
                                         new OpenApiParameter()
                                         {
                                             Name = "call-id",
@@ -485,7 +479,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 }
                                             }
                                         }
-                                    },
+                                    ],
                                     Responses = new()
                                     {
                                         {
@@ -514,8 +508,8 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 {
                                     OperationId = "groups.group.events.event.calendar.events.delta",
                                     Summary = "Invoke function delta",
-                                    Parameters = new List<IOpenApiParameter>
-                                    {
+                                    Parameters =
+                                    [
                                         new OpenApiParameter()
                                         {
                                             Name = "group-id",
@@ -550,7 +544,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                 }
                                             }
                                         }
-                                    },
+                                    ],
                                     Responses = new()
                                     {
                                         {

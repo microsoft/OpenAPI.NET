@@ -88,15 +88,15 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public bool WriteOnly { get => Target?.WriteOnly ?? false; }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema>? AllOf { get => Target?.AllOf; }
+        public List<IOpenApiSchema>? AllOf { get => Target?.AllOf; }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema>? OneOf { get => Target?.OneOf; }
+        public List<IOpenApiSchema>? OneOf { get => Target?.OneOf; }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema>? AnyOf { get => Target?.AnyOf; }
+        public List<IOpenApiSchema>? AnyOf { get => Target?.AnyOf; }
         /// <inheritdoc/>
         public IOpenApiSchema? Not { get => Target?.Not; }
         /// <inheritdoc/>
-        public ISet<string>? Required { get => Target?.Required; }
+        public HashSet<string>? Required { get => Target?.Required; }
         /// <inheritdoc/>
         public IOpenApiSchema? Items { get => Target?.Items; }
         /// <inheritdoc/>
@@ -122,9 +122,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public JsonNode? Example { get => Target?.Example; }
         /// <inheritdoc/>
-        public IList<JsonNode>? Examples { get => Target?.Examples; }
+        public List<JsonNode>? Examples { get => Target?.Examples; }
         /// <inheritdoc/>
-        public IList<JsonNode>? Enum { get => Target?.Enum; }
+        public List<JsonNode>? Enum { get => Target?.Enum; }
         /// <inheritdoc/>
         public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? false; }
         /// <inheritdoc/>
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Models.References
         public Dictionary<string, object>? Annotations { get => Target?.Annotations; }
 
         /// <inheritdoc/>
-        public Dictionary<string, ISet<string>>? DependentRequired { get => Target?.DependentRequired; }
+        public Dictionary<string, HashSet<string>>? DependentRequired { get => Target?.DependentRequired; }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)

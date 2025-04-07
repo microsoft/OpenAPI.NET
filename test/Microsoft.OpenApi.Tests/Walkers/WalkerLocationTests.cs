@@ -37,11 +37,11 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             var doc = new OpenApiDocument
             {
-                Servers = new List<OpenApiServer>
-                {
+                Servers =
+                [
                     new(),
                     new()
-                },
+                ],
                 Tags = new HashSet<OpenApiTag>
                 {
                     new()
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             var derivedSchema = new OpenApiSchema
             {
-                AnyOf = new List<IOpenApiSchema> { new OpenApiSchemaReference("base") },
+                AnyOf = [new OpenApiSchemaReference("base")],
             };
 
             var testHeader = new OpenApiHeader()
@@ -301,12 +301,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(ISet<OpenApiTag> openApiTags)
+        public override void Visit(HashSet<OpenApiTag> openApiTags)
         {
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(IList<OpenApiServer> servers)
+        public override void Visit(List<OpenApiServer> servers)
         {
             Locations.Add(this.PathString);
         }
@@ -315,7 +315,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add(this.PathString);
         }
-        public override void Visit(ISet<OpenApiTagReference> openApiTags)
+        public override void Visit(HashSet<OpenApiTagReference> openApiTags)
         {
             Locations.Add(this.PathString);
         }

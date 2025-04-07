@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var openApiDocument = new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Servers = [new() { Url = "https://localhost/" }],
                 Paths = new()
                 {
                     { path, new OpenApiPathItem() {
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             return new()
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Servers = [new() { Url = "https://localhost/" }],
                 Paths = new() {
                     { "/foo", new OpenApiPathItem()
                         {
@@ -168,22 +168,22 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                     {
                                         "averageAudioDegradation", new OpenApiSchema
                                         {
-                                            AnyOf = new List<IOpenApiSchema>
-                                            {
+                                            AnyOf =
+                                            [
                                                 new OpenApiSchema() { Type = JsonSchemaType.Number | JsonSchemaType.Null },
                                                 new OpenApiSchema() { Type = JsonSchemaType.String }
-                                            },
+                                            ],
                                             Format = "float",
                                         }
                                     },
                                     {
                                         "defaultPrice", new OpenApiSchema
                                         {
-                                            OneOf = new List<IOpenApiSchema>
-                                            {
+                                            OneOf =
+                                            [
                                                 new OpenApiSchema() { Type = JsonSchemaType.Number, Format = "double" },
                                                 new OpenApiSchema() { Type = JsonSchemaType.String }
-                                            }
+                                            ]
                                         }
                                     }
                                 }

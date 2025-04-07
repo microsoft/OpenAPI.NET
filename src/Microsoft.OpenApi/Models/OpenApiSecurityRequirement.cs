@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models
     /// then the value is a list of scope names required for the execution.
     /// For other security scheme types, the array MUST be empty.
     /// </summary>
-    public class OpenApiSecurityRequirement : Dictionary<OpenApiSecuritySchemeReference, IList<string>>,
+    public class OpenApiSecurityRequirement : Dictionary<OpenApiSecuritySchemeReference, List<string>>,
         IOpenApiSerializable
     {
         /// <summary>

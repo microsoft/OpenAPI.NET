@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/> and child objects
         /// </summary>
-        internal void Walk(ISet<OpenApiTag>? tags)
+        internal void Walk(HashSet<OpenApiTag>? tags)
         {
             if (tags == null)
             {
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/> and child objects
         /// </summary>
-        internal void Walk(ISet<OpenApiTagReference>? tags)
+        internal void Walk(HashSet<OpenApiTagReference>? tags)
         {
             if (tags == null)
             {
@@ -307,7 +307,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of  <see cref="OpenApiServer"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiServer>? servers)
+        internal void Walk(List<OpenApiServer>? servers)
         {
             if (servers == null)
             {
@@ -610,7 +610,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiSecurityRequirement"/>
         /// </summary>
-        internal void Walk(IList<OpenApiSecurityRequirement>? securityRequirements)
+        internal void Walk(List<OpenApiSecurityRequirement>? securityRequirements)
         {
             if (securityRequirements == null)
             {
@@ -631,7 +631,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        internal void Walk(IList<IOpenApiParameter>? parameters)
+        internal void Walk(List<IOpenApiParameter>? parameters)
         {
             if (parameters == null)
             {
@@ -1000,7 +1000,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the list of <see cref="IOpenApiExample"/> and child objects
         /// </summary>
-        internal void Walk(IList<IOpenApiExample> examples)
+        internal void Walk(List<IOpenApiExample> examples)
         {
             if (examples == null)
             {
@@ -1022,7 +1022,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits a list of <see cref="IOpenApiSchema"/> and child objects
         /// </summary>
-        internal void Walk(IList<IOpenApiSchema> schemas)
+        internal void Walk(List<IOpenApiSchema> schemas)
         {
             if (schemas == null)
             {
@@ -1221,7 +1221,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiServer e: Walk(e); break;
                 case OpenApiServerVariable e: Walk(e); break;
                 case OpenApiTag e: Walk(e); break;
-                case ISet<OpenApiTag> e: Walk(e); break;
+                case HashSet<OpenApiTag> e: Walk(e); break;
                 case IOpenApiExtensible e: Walk(e); break;
                 case IOpenApiExtension e: Walk(e); break;
             }

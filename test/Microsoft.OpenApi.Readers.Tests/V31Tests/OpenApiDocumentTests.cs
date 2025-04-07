@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "id",
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "id",
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },

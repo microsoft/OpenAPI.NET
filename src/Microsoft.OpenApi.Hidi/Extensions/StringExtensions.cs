@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Hidi.Extensions
         /// <param name="target">The target string to split by char. </param>
         /// <param name="separator">The char separator.</param>
         /// <returns>An <see cref="IList{String}"/> containing substrings.</returns>
-        public static IList<string> SplitByChar(this string target, char separator)
+        public static List<string> SplitByChar(this string target, char separator)
         {
             if (string.IsNullOrWhiteSpace(target))
             {

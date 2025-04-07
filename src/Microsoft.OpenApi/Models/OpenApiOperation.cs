@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Models
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public ISet<OpenApiTagReference>? Tags 
+        public HashSet<OpenApiTagReference>? Tags 
         { 
             get
             {
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
         /// The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
         /// </summary>
-        public IList<IOpenApiParameter>? Parameters { get; set; }
+        public List<IOpenApiParameter>? Parameters { get; set; }
 
         /// <summary>
         /// The request body applicable for this operation.
@@ -110,14 +110,14 @@ namespace Microsoft.OpenApi.Models
         /// This definition overrides any declared top-level security.
         /// To remove a top-level security declaration, an empty array can be used.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? Security { get; set; }
+        public List<OpenApiSecurityRequirement>? Security { get; set; }
 
         /// <summary>
         /// An alternative server array to service this operation.
         /// If an alternative server object is specified at the Path Item Object or Root level,
         /// it will be overridden by this value.
         /// </summary>
-        public IList<OpenApiServer>? Servers { get; set; }
+        public List<OpenApiServer>? Servers { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -138,18 +138,18 @@ namespace Microsoft.OpenApi.Models
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
+            Tags = operation.Tags != null ? [.. operation.Tags] : null;
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;
             OperationId = operation.OperationId ?? OperationId;
-            Parameters = operation.Parameters != null ? new List<IOpenApiParameter>(operation.Parameters) : null;
+            Parameters = operation.Parameters != null ? [.. operation.Parameters] : null;
             RequestBody = operation.RequestBody?.CreateShallowCopy();
             Responses = operation.Responses != null ? new(operation.Responses) : null;
             Callbacks = operation.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
             Deprecated = operation.Deprecated;
-            Security = operation.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
-            Servers = operation.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;
+            Security = operation.Security != null ? [.. operation.Security] : null;
+            Servers = operation.Servers != null ? [.. operation.Servers] : null;
             Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
             Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
         }

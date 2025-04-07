@@ -318,12 +318,12 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Arrange
             var schema = new OpenApiSchema
             {
-                Enum = new List<JsonNode>
-                {
+                Enum =
+                [
                     new OpenApiAny("NaN").Node,
                     new OpenApiAny("Infinity").Node,
                     new OpenApiAny("-Infinity").Node
-                }
+                ]
             };
 
             // Act

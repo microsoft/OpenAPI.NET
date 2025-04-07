@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openApiDocument = new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Servers = [new() { Url = "https://localhost/" }],
                 Paths = new()
                 {
                     {"/foo", new OpenApiPathItem() {
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // Given a set of RequestUrls
             var requestUrls = new Dictionary<string, List<string>>
             {
-                    {"/foo", new List<string> {"GET","POST"}}
+                    {"/foo", ["GET","POST"]}
             };
 
             // When
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openApiDocument = new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Servers = [new() { Url = "https://localhost/" }],
                 Paths = new()
                 {
                     ["/test/{id}"] = new OpenApiPathItem()
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             var requestUrls = new Dictionary<string, List<string>>
             {
-                    {"/test/{id}", new List<string> {"GET","PATCH"}}
+                    {"/test/{id}",["GET","PATCH"]}
             };
 
             // Act
@@ -302,7 +302,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // Assert
             foreach (var pathItem in subsetOpenApiDocument.Paths)
             {
-                Assert.True(pathItem.Value.Parameters!.Any());
+                Assert.True(pathItem.Value.Parameters!.Count != 0);
                 Assert.Single(pathItem.Value.Parameters!);
             }
         }

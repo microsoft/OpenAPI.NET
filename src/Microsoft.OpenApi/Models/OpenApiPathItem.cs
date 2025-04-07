@@ -26,10 +26,10 @@ namespace Microsoft.OpenApi.Models
         public Dictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
 
         /// <inheritdoc/>
-        public IList<OpenApiServer>? Servers { get; set; }
+        public List<OpenApiServer>? Servers { get; set; }
 
         /// <inheritdoc/>
-        public IList<IOpenApiParameter>? Parameters { get; set; }
+        public List<IOpenApiParameter>? Parameters { get; set; }
 
         /// <inheritdoc/>
         public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -59,8 +59,8 @@ namespace Microsoft.OpenApi.Models
             Summary = pathItem.Summary ?? Summary;
             Description = pathItem.Description ?? Description;
             Operations = pathItem.Operations != null ? new Dictionary<HttpMethod, OpenApiOperation>(pathItem.Operations) : null;
-            Servers = pathItem.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
-            Parameters = pathItem.Parameters != null ? new List<IOpenApiParameter>(pathItem.Parameters) : null;
+            Servers = pathItem.Servers != null ? [.. pathItem.Servers] : null;
+            Parameters = pathItem.Parameters != null ? [.. pathItem.Parameters] : null;
             Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
         }
 

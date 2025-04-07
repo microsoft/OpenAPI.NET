@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiPaths>(nameof(PathMustBeUnique),
                 (context, item) =>
                 {
-                    var hashSet = new HashSet<string>();
+                    var HashSet = new HashSet<string>();
 
                     foreach (var path in item.Keys)
                     {
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                         var pathSignature = GetPathSignature(path);
                         
-                        if (!hashSet.Add(pathSignature))
+                        if (!HashSet.Add(pathSignature))
                             context.CreateError(nameof(PathMustBeUnique),
                                 string.Format(SRResource.Validation_PathSignatureMustBeUnique, pathSignature));
 

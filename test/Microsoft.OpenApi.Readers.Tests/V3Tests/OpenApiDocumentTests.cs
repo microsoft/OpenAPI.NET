@@ -291,13 +291,13 @@ paths: {}
                         Url = new Uri("http://opensource.org/licenses/MIT")
                     }
                 },
-                Servers = new List<OpenApiServer>
-                {
+                Servers =
+                [
                     new OpenApiServer
                     {
                         Url = "http://petstore.swagger.io/api"
                     }
-                },
+                ],
                 Paths = new OpenApiPaths
                 {
                     ["/pets"] = new OpenApiPathItem
@@ -710,13 +710,13 @@ paths: {}
                         Url = new Uri("http://opensource.org/licenses/MIT")
                     }
                 },
-                Servers = new List<OpenApiServer>
-                    {
+                Servers =
+                    [
                         new OpenApiServer
                         {
                             Url = "http://petstore.swagger.io/api"
                         }
-                    },
+                    ],
                 Paths = new OpenApiPaths
                 {
                     ["/pets"] = new OpenApiPathItem
@@ -868,18 +868,18 @@ paths: {}
                                         }
                                     }
                                 },
-                                Security = new List<OpenApiSecurityRequirement>
-                                    {
+                                Security =
+                                    [
                                         new OpenApiSecurityRequirement
                                         {
-                                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
-                                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
-                                            {
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = [],
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] =
+                                            [
                                                 "scope1",
                                                 "scope2"
-                                            }
+                                            ]
                                         }
-                                    }
+                                    ]
                             }
                         }
                     },
@@ -1014,19 +1014,19 @@ paths: {}
                             Description = "tagDescription2"
                         }
                     },
-                Security = new List<OpenApiSecurityRequirement>
-                    {
+                Security =
+                    [
                         new OpenApiSecurityRequirement
                         {
-                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
-                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
-                            {
+                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = [],
+                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] =
+                            [
                                 "scope1",
                                 "scope2",
                                 "scope3"
-                            }
+                            ]
                         }
-                    }
+                    ]
             };
             expected.RegisterComponents();
             expected.SetReferenceHostDocument();

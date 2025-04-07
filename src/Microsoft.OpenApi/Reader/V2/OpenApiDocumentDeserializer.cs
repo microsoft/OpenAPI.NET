@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, RootNode rootNode)
+        private static void MakeServers(List<OpenApiServer> servers, ParsingContext context, RootNode rootNode)
         {
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
                 basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
-                schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
+                schemes = schemes ?? [defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped)];
             }
             else if (String.IsNullOrEmpty(host) && String.IsNullOrEmpty(basePath))
             {
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Reader.V2
             // Post Process OpenApi Object
             if (openApiDoc.Servers == null)
             {
-                openApiDoc.Servers = new List<OpenApiServer>();
+                openApiDoc.Servers = [];
             }
 
             MakeServers(openApiDoc.Servers, openApiNode.Context, rootNode);

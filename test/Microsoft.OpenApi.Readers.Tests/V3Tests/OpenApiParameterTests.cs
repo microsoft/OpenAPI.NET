@@ -320,13 +320,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Version = "1.0.0",
                     Title = "Swagger Petstore (Simple)"
                 },
-                Servers = new List<OpenApiServer>
-                {
+                Servers =
+                [
                     new OpenApiServer
                     {
                         Url = "http://petstore.swagger.io/api"
                     }
-                },
+                ],
                 Paths = new OpenApiPaths
                 {
                     ["/pets"] = new OpenApiPathItem

@@ -144,19 +144,19 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
-    public IList<IOpenApiSchema>? AllOf { get; }
+    public List<IOpenApiSchema>? AllOf { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
-    public IList<IOpenApiSchema>? OneOf { get; }
+    public List<IOpenApiSchema>? OneOf { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
-    public IList<IOpenApiSchema>? AnyOf { get; }
+    public List<IOpenApiSchema>? AnyOf { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -167,7 +167,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public ISet<string>? Required { get; }
+    public HashSet<string>? Required { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -246,12 +246,12 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// To represent examples that cannot be naturally represented in JSON or YAML, 
     /// a list of values can be used to contain the examples with escaping where necessary.
     /// </summary>
-    public IList<JsonNode>? Examples { get; }
+    public List<JsonNode>? Examples { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// </summary>
-    public IList<JsonNode>? Enum { get; }
+    public List<JsonNode>? Enum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -289,5 +289,5 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// Follow JSON Schema definition:https://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.4
     /// </summary>
-    public Dictionary<string, ISet<string>>? DependentRequired { get; }
+    public Dictionary<string, HashSet<string>>? DependentRequired { get; }
 }
