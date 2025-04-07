@@ -19,5 +19,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\test\Microsoft.OpenApi.Readers.Tests\V3Tests\Samples\OpenApiDocument\petStore.yaml" />
   </ItemGroup>
 </Project>
