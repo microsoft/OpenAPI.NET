@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
@@ -20,19 +21,27 @@ public class Descriptions
     {
         return await ParseDocumentAsync(PetStorePath);
     }
+    [Benchmark]
+    public async Task<OpenApiDocument> GHES()
+    {
+        return await ParseDocumentAsync(GHESDescriptionUrl);
+    }
     private readonly Dictionary<string, MemoryStream> _streams = new(StringComparer.OrdinalIgnoreCase);
     [GlobalSetup]
     public async Task GetAllDescriptions()
     {
+        _httpClient = new HttpClient();
         readerSettings = new OpenApiReaderSettings
         {
             LeaveStreamOpen = true,
         };
         readerSettings.AddYamlReader();
-        await LoadDocumentIntoStreams(PetStorePath);
+        await LoadDocumentFromAssemblyIntoStreams(PetStorePath);
+        await LoadDocumentFromUrlIntoStreams(GHESDescriptionUrl);
     }
     private OpenApiReaderSettings readerSettings;
     private const string PetStorePath = @"petStore.yaml";
+    private const string GHESDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions/ghes-3.16/ghes-3.16.2022-11-28.yaml";
     private async Task<OpenApiDocument> ParseDocumentAsync(string fileName)
     {
         var stream = _streams[fileName];
@@ -41,8 +50,18 @@ public class Descriptions
         var (document, _) = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, readerSettings).ConfigureAwait(false);
         return document;
     }
+    private HttpClient _httpClient;
+    private async Task LoadDocumentFromUrlIntoStreams(string url)
+    {
+        var response = await _httpClient.GetAsync(url).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+        var stream = new MemoryStream(); // NOT disposed on purpose
+        await response.Content.CopyToAsync(stream).ConfigureAwait(false);
+        stream.Seek(0, SeekOrigin.Begin);
+        _streams.Add(url, stream);
+    }
     private static readonly Assembly assembly = typeof(Descriptions).GetTypeInfo().Assembly;
-    private async Task LoadDocumentIntoStreams(string fileName)
+    private async Task LoadDocumentFromAssemblyIntoStreams(string fileName)
     {
         using var resource = assembly.GetManifestResourceStream($"PerformanceTests.{fileName}");
         var stream = new MemoryStream(); // NOT disposed on purpose
@@ -58,5 +77,6 @@ public class Descriptions
             stream.Dispose();
         }
         _streams.Clear();
+        _httpClient.Dispose();
     }
 }
