@@ -17,14 +17,24 @@ namespace performance;
 public class Descriptions
 {
     [Benchmark]
-    public async Task<OpenApiDocument> PetStore()
+    public async Task<OpenApiDocument> PetStoreYaml()
     {
-        return await ParseDocumentAsync(PetStorePath);
+        return await ParseDocumentAsync(PetStoreYamlPath);
     }
     [Benchmark]
-    public async Task<OpenApiDocument> GHES()
+    public async Task<OpenApiDocument> PetStoreJson()
     {
-        return await ParseDocumentAsync(GHESDescriptionUrl);
+        return await ParseDocumentAsync(PetStoreJsonPath, OpenApiConstants.Json);
+    }
+    [Benchmark]
+    public async Task<OpenApiDocument> GHESYaml()
+    {
+        return await ParseDocumentAsync(GHESYamlDescriptionUrl);
+    }
+    [Benchmark]
+    public async Task<OpenApiDocument> GHESJson()
+    {
+        return await ParseDocumentAsync(GHESJsonDescriptionUrl, OpenApiConstants.Json);
     }
     private readonly Dictionary<string, MemoryStream> _streams = new(StringComparer.OrdinalIgnoreCase);
     [GlobalSetup]
@@ -36,18 +46,23 @@ public class Descriptions
             LeaveStreamOpen = true,
         };
         readerSettings.AddYamlReader();
-        await LoadDocumentFromAssemblyIntoStreams(PetStorePath);
-        await LoadDocumentFromUrlIntoStreams(GHESDescriptionUrl);
+        await LoadDocumentFromAssemblyIntoStreams(PetStoreYamlPath);
+        await LoadDocumentFromAssemblyIntoStreams(PetStoreJsonPath);
+        await LoadDocumentFromUrlIntoStreams(GHESYamlDescriptionUrl);
+        await LoadDocumentFromUrlIntoStreams(GHESJsonDescriptionUrl);
     }
     private OpenApiReaderSettings readerSettings;
-    private const string PetStorePath = @"petStore.yaml";
-    private const string GHESDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions/ghes-3.16/ghes-3.16.2022-11-28.yaml";
-    private async Task<OpenApiDocument> ParseDocumentAsync(string fileName)
+    private const string PetStoreYamlPath = @"petStore.yaml";
+    private const string PetStoreJsonPath = @"petStore.json";
+    private const string GHESYamlDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions/ghes-3.16/ghes-3.16.2022-11-28.yaml";
+    private const string GHESJsonDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions/ghes-3.16/ghes-3.16.2022-11-28.json";
+    private async Task<OpenApiDocument> ParseDocumentAsync(string fileName, string format = null)
     {
+        format ??= OpenApiConstants.Yaml;
         var stream = _streams[fileName];
         stream.Seek(0, SeekOrigin.Begin);
         
-        var (document, _) = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Yaml, readerSettings).ConfigureAwait(false);
+        var (document, _) = await OpenApiDocument.LoadAsync(stream, format, readerSettings).ConfigureAwait(false);
         return document;
     }
     private HttpClient _httpClient;
