@@ -106,9 +106,9 @@ namespace Microsoft.OpenApi.Reader.V2
                     (o, n, t) =>
                     {
                         var min = n.GetScalarValue();
-                        if (min != null)
+                        if (!string.IsNullOrEmpty(min))
                         {
-                            GetOrCreateSchema(o).Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(min, decimal.MinValue);
+                            GetOrCreateSchema(o).Minimum = min;
                         }
                     }
                 },
@@ -117,9 +117,9 @@ namespace Microsoft.OpenApi.Reader.V2
                     (o, n, t) =>
                     {
                         var max = n.GetScalarValue();
-                        if (max != null)
+                        if (!string.IsNullOrEmpty(max))
                         {
-                            GetOrCreateSchema(o).Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(max, decimal.MaxValue);
+                            GetOrCreateSchema(o).Maximum = max;
                         }
                     }
                 },

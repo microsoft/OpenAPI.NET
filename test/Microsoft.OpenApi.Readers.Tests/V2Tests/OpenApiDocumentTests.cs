@@ -62,8 +62,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var expectedPropertySchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Number,
-                Minimum = (decimal)100.54,
-                ExclusiveMaximum = (decimal)60000000.35,
+                Minimum = "100.54",
+                ExclusiveMaximum = "60000000.35",
             };
 
             Assert.Equivalent(expectedPropertySchema, samplePropertySchema);
