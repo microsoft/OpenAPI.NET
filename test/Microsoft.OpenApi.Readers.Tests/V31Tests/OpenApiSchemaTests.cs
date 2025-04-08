@@ -239,22 +239,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     ["six"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum true",
-                        ExclusiveMinimum = 10
+                        ExclusiveMinimum = "10"
                     },
                     ["seven"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum false",
-                        Minimum = 10
+                        Minimum = "10"
                     },
                     ["eight"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum true",
-                        ExclusiveMaximum = 20
+                        ExclusiveMaximum = "20"
                     },
                     ["nine"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum false",
-                        Maximum = 20
+                        Maximum = "20"
                     },
                     ["ten"] = new OpenApiSchema()
                     {

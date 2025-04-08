@@ -251,8 +251,8 @@ get:
                             ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
-                                Minimum = 100,
-                                Maximum = 600
+                                Minimum = "100",
+                                Maximum = "600"
                             },
                             ["message"] = new OpenApiSchema()
                             {
@@ -370,7 +370,7 @@ get:
                                         Format = "int32",
                                         Description = "the size of the pack the dog is from",
                                         Default = 0,
-                                        Minimum = 0
+                                        Minimum = "0"
                                     }
                                 }
                             }

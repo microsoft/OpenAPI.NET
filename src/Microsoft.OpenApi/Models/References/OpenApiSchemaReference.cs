@@ -60,9 +60,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public Dictionary<string, IOpenApiSchema>? Definitions { get => Target?.Definitions; }
         /// <inheritdoc/>
-        public decimal? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
+        public string? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
         /// <inheritdoc/>
-        public decimal? ExclusiveMinimum { get => Target?.ExclusiveMinimum; }
+        public string? ExclusiveMinimum { get => Target?.ExclusiveMinimum; }
         /// <inheritdoc/>
         public JsonSchemaType? Type { get => Target?.Type; }
         /// <inheritdoc/>
@@ -70,9 +70,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string? Format { get => Target?.Format; }
         /// <inheritdoc/>
-        public decimal? Maximum { get => Target?.Maximum; }
+        public string? Maximum { get => Target?.Maximum; }
         /// <inheritdoc/>
-        public decimal? Minimum { get => Target?.Minimum; }
+        public string? Minimum { get => Target?.Minimum; }
         /// <inheritdoc/>
         public int? MaxLength { get => Target?.MaxLength; }
         /// <inheritdoc/>

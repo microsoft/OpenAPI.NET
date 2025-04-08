@@ -429,8 +429,8 @@ namespace Microsoft.OpenApi.Models.Interfaces
         System.Collections.Generic.List<System.Text.Json.Nodes.JsonNode>? Enum { get; }
         System.Text.Json.Nodes.JsonNode? Example { get; }
         System.Collections.Generic.List<System.Text.Json.Nodes.JsonNode>? Examples { get; }
-        decimal? ExclusiveMaximum { get; }
-        decimal? ExclusiveMinimum { get; }
+        string? ExclusiveMaximum { get; }
+        string? ExclusiveMinimum { get; }
         Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; }
         string? Format { get; }
         string? Id { get; }
@@ -438,11 +438,11 @@ namespace Microsoft.OpenApi.Models.Interfaces
         int? MaxItems { get; }
         int? MaxLength { get; }
         int? MaxProperties { get; }
-        decimal? Maximum { get; }
+        string? Maximum { get; }
         int? MinItems { get; }
         int? MinLength { get; }
         int? MinProperties { get; }
-        decimal? Minimum { get; }
+        string? Minimum { get; }
         decimal? MultipleOf { get; }
         Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Not { get; }
         System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? OneOf { get; }
@@ -1031,8 +1031,8 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.List<System.Text.Json.Nodes.JsonNode>? Enum { get; set; }
         public System.Text.Json.Nodes.JsonNode? Example { get; set; }
         public System.Collections.Generic.List<System.Text.Json.Nodes.JsonNode>? Examples { get; set; }
-        public decimal? ExclusiveMaximum { get; set; }
-        public decimal? ExclusiveMinimum { get; set; }
+        public string? ExclusiveMaximum { get; set; }
+        public string? ExclusiveMinimum { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; set; }
         public string? Format { get; set; }
@@ -1041,11 +1041,11 @@ namespace Microsoft.OpenApi.Models
         public int? MaxItems { get; set; }
         public int? MaxLength { get; set; }
         public int? MaxProperties { get; set; }
-        public decimal? Maximum { get; set; }
+        public string? Maximum { get; set; }
         public int? MinItems { get; set; }
         public int? MinLength { get; set; }
         public int? MinProperties { get; set; }
-        public decimal? Minimum { get; set; }
+        public string? Minimum { get; set; }
         public decimal? MultipleOf { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Not { get; set; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? OneOf { get; set; }
@@ -1363,8 +1363,8 @@ namespace Microsoft.OpenApi.Models.References
         public System.Collections.Generic.List<System.Text.Json.Nodes.JsonNode>? Enum { get; }
         public System.Text.Json.Nodes.JsonNode? Example { get; }
         public System.Collections.Generic.List<System.Text.Json.Nodes.JsonNode>? Examples { get; }
-        public decimal? ExclusiveMaximum { get; }
-        public decimal? ExclusiveMinimum { get; }
+        public string? ExclusiveMaximum { get; }
+        public string? ExclusiveMinimum { get; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; }
         public string? Format { get; }
@@ -1373,11 +1373,11 @@ namespace Microsoft.OpenApi.Models.References
         public int? MaxItems { get; }
         public int? MaxLength { get; }
         public int? MaxProperties { get; }
-        public decimal? Maximum { get; }
+        public string? Maximum { get; }
         public int? MinItems { get; }
         public int? MinLength { get; }
         public int? MinProperties { get; }
-        public decimal? Minimum { get; }
+        public string? Minimum { get; }
         public decimal? MultipleOf { get; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Not { get; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? OneOf { get; }
