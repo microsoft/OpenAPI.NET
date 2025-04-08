@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <summary>
         /// Resolved target of the reference.
         /// </summary>
-        public override OpenApiTag Target
+        public override IOpenApiTag? Target
         {
             get
             {
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiTagReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Tag, externalResource)
+        public OpenApiTagReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Tag, externalResource)
         {
         }
         /// <summary>
@@ -48,19 +48,19 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
         }
 
         /// <inheritdoc/>
-        public OpenApiExternalDocs ExternalDocs { get => Target?.ExternalDocs; }
+        public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public string Name { get => Target?.Name; }
+        public string? Name { get => Target?.Name; }
         /// <inheritdoc/>
         public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
         {

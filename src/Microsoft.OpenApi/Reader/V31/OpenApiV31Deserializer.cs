@@ -20,11 +20,11 @@ namespace Microsoft.OpenApi.Reader.V31
     internal static partial class OpenApiV31Deserializer
     {
         private static void ParseMap<T>(
-            MapNode mapNode,
+            MapNode? mapNode,
             T domainObject,
-            FixedFieldMap<T> fixedFieldMap,
+            FixedFieldMap<T> fixedFieldMap,            
             PatternFieldMap<T> patternFieldMap, 
-            OpenApiDocument doc = null)
+            OpenApiDocument doc)
         {
             if (mapNode == null)
             {
@@ -92,8 +92,10 @@ namespace Microsoft.OpenApi.Reader.V31
                             if (propertyMapElement.Value != null)
                             {
                                 var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
-
-                                anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
+                                if (any is not null)
+                                {
+                                    anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
+                                }
                             }
                         }
                     }
@@ -135,22 +137,23 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
-            return node.Context.ExtensionParsers.TryGetValue(name, out var parser)
+            return node.Context.ExtensionParsers is not null && node.Context.ExtensionParsers.TryGetValue(name, out var parser)
                 ? parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_1)
                 : new OpenApiAny(node.CreateAny());
         }
 
-        private static string LoadString(ParseNode node)
+        private static string? LoadString(ParseNode node)
         {
             return node.GetScalarValue();
         }
 
-        private static bool LoadBool(ParseNode node)
+        private static bool? LoadBool(ParseNode node)
         {
-            return bool.Parse(node.GetScalarValue());
+            var value = node.GetScalarValue();
+            return value is not null ? bool.Parse(value) : null;
         }
 
-        private static (string, string) GetReferenceIdAndExternalResource(string pointer)
+        private static (string, string?) GetReferenceIdAndExternalResource(string pointer)
         {
             /* Check whether the reference pointer is a URL
              * (id keyword allows you to supply a URL for the schema as a target for referencing)
@@ -159,10 +162,10 @@ namespace Microsoft.OpenApi.Reader.V31
              * E.g. $ref: '#/components/schemas/pet'
              */
             var refSegments = pointer.Split('/');
-            string refId = !pointer.Contains('#') ? pointer : refSegments.Last();
+            string refId = !pointer.Contains('#') ? pointer : refSegments[refSegments.Count()-1];
 
-            var isExternalResource = !refSegments.First().StartsWith("#", StringComparison.OrdinalIgnoreCase);
-            string externalResource = null;
+            var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
+            string? externalResource = null;
             if (isExternalResource && pointer.Contains('#'))
             {
                 externalResource = pointer.Split('#')[0].TrimEnd('#');

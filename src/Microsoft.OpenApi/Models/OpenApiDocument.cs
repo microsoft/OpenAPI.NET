@@ -17,8 +17,6 @@ using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 
-#nullable enable
-
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -132,19 +130,48 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiDocument(OpenApiDocument? document)
         {
-            Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
-            Info = document?.Info != null ? new(document?.Info) : new OpenApiInfo();
+            Workspace = document?.Workspace != null ? new(document.Workspace) : null;
+            Info = document?.Info != null ? new(document.Info) : new OpenApiInfo();
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
-            Paths = document?.Paths != null ? new(document?.Paths) : new OpenApiPaths();
+            Paths = document?.Paths != null ? new(document.Paths) : new OpenApiPaths();
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             Security = document?.Security != null ? new List<OpenApiSecurityRequirement>(document.Security) : null;
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
-            ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
+            ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
             Metadata = document?.Metadata != null ? new Dictionary<string, object>(document.Metadata) : null;
             BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/> to an Open API document using the specified version.
+        /// </summary>
+        /// <param name="version">The Open API specification version to serialize the document as.</param>
+        /// <param name="writer">The <see cref="IOpenApiWriter"/> to serialize the document to.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="version"/> is not a supported Open API specification version.
+        /// </exception>
+        public void SerializeAs(OpenApiSpecVersion version, IOpenApiWriter writer)
+        {
+            switch (version)
+            {
+                case OpenApiSpecVersion.OpenApi2_0:
+                    SerializeAsV2(writer);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi3_0:
+                    SerializeAsV3(writer);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi3_1:
+                    SerializeAsV31(writer);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(version), version, string.Format(Properties.SRResource.OpenApiSpecVersionNotSupported, version));
+            }
         }
 
         /// <summary>
@@ -265,12 +292,19 @@ namespace Microsoft.OpenApi.Models
 
                 if (loops.TryGetValue(typeof(IOpenApiSchema), out var schemas))
                 {
-                    var openApiSchemas = schemas.Cast<IOpenApiSchema>().Distinct().OfType<OpenApiSchemaReference>()
-                         .ToDictionary<OpenApiSchemaReference, string, IOpenApiSchema>(k => k.Reference.Id, v => v);
+                    var openApiSchemas = schemas.Cast<IOpenApiSchema>()
+                        .Distinct()
+                        .OfType<OpenApiSchemaReference>()
+                        .Where(k => k.Reference?.Id is not null)
+                        .ToDictionary<OpenApiSchemaReference, string, IOpenApiSchema>(
+                            k => k.Reference?.Id!,
+                            v => v
+                        );
+
 
                     foreach (var schema in openApiSchemas.Values.ToList())
                     {
-                        FindSchemaReferences.ResolveSchemas(Components, openApiSchemas);
+                        FindSchemaReferences.ResolveSchemas(Components, openApiSchemas!);
                     }
 
                     writer.WriteOptionalMap(
@@ -308,7 +342,9 @@ namespace Microsoft.OpenApi.Models
                 {
                     foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
                     {
-                        parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter(writer));
+                        var paramValue = requestBody.Value.ConvertToBodyParameter(writer);
+                        if (paramValue is not null)
+                            parameters.Add(requestBody.Key, paramValue);
                     }
                 }
                 writer.WriteOptionalMap(
@@ -377,7 +413,7 @@ namespace Microsoft.OpenApi.Models
             }
         }
 
-        private static string ParseServerUrl(OpenApiServer server)
+        private static string? ParseServerUrl(OpenApiServer server)
         {
             return server.ReplaceServerUrlVariables(new Dictionary<string, string>(0));
         }
@@ -393,61 +429,70 @@ namespace Microsoft.OpenApi.Models
             // one host, port, and base path.
             var serverUrl = ParseServerUrl(servers[0]);
 
-            // Divide the URL in the Url property into host and basePath required in OpenAPI V2
-            // The Url property cannot contain path templating to be valid for V2 serialization.
-            var firstServerUrl = new Uri(serverUrl, UriKind.RelativeOrAbsolute);
-
-            // host
-            if (firstServerUrl.IsAbsoluteUri)
+            if (serverUrl != null)
             {
-                writer.WriteProperty(
-                    OpenApiConstants.Host,
-                    firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
+                // Divide the URL in the Url property into host and basePath required in OpenAPI V2
+                // The Url property cannot contain path templating to be valid for V2 serialization.
+                var firstServerUrl = new Uri(serverUrl, UriKind.RelativeOrAbsolute);
 
-                // basePath
-                if (firstServerUrl.AbsolutePath != "/")
+                // host
+                if (firstServerUrl.IsAbsoluteUri)
                 {
-                    writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
-                }
-            }
-            else
-            {
-                var relativeUrl = firstServerUrl.OriginalString;
-                if (relativeUrl.StartsWith("//", StringComparison.OrdinalIgnoreCase))
-                {
-                    var pathPosition = relativeUrl.IndexOf('/', 3);
-                    writer.WriteProperty(OpenApiConstants.Host, relativeUrl.Substring(0, pathPosition));
-                    relativeUrl = relativeUrl.Substring(pathPosition);
-                }
-                if (!String.IsNullOrEmpty(relativeUrl) && relativeUrl != "/")
-                {
-                    writer.WriteProperty(OpenApiConstants.BasePath, relativeUrl);
-                }
-            }
+                    writer.WriteProperty(
+                        OpenApiConstants.Host,
+                        firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
 
-            // Consider all schemes of the URLs in the server list that have the same
-            // host, port, and base path as the first server.
-            var schemes = servers.Select(
-                    s =>
+                    // basePath
+                    if (firstServerUrl.AbsolutePath != "/")
                     {
-                        Uri.TryCreate(ParseServerUrl(s), UriKind.RelativeOrAbsolute, out var url);
-                        return url;
-                    })
-                .Where(
-                    u => u is not null &&
-                        Uri.Compare(
-                            u,
-                            firstServerUrl,
-                            UriComponents.Host | UriComponents.Port | UriComponents.Path,
-                            UriFormat.SafeUnescaped,
-                            StringComparison.OrdinalIgnoreCase) ==
-                        0 && u.IsAbsoluteUri)
-                .Select(u => u!.Scheme)
-                .Distinct()
-                .ToList();
+                        writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+                    }
+                }
+                else
+                {
+                    var relativeUrl = firstServerUrl.OriginalString;
+                    if (relativeUrl.StartsWith("//", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var pathPosition = relativeUrl.IndexOf('/', 3);
+                        writer.WriteProperty(OpenApiConstants.Host, relativeUrl.Substring(0, pathPosition));
+                        relativeUrl = relativeUrl.Substring(pathPosition);
+                    }
+                    if (!String.IsNullOrEmpty(relativeUrl) && relativeUrl != "/")
+                    {
+                        writer.WriteProperty(OpenApiConstants.BasePath, relativeUrl);
+                    }
+                }
 
-            // schemes
-            writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+                // Consider all schemes of the URLs in the server list that have the same
+                // host, port, and base path as the first server.
+                var schemes = servers.Select(
+                        s =>
+                        {
+                            Uri.TryCreate(ParseServerUrl(s), UriKind.RelativeOrAbsolute, out var url);
+                            return url;
+                        })
+                    .Where(
+                        u => u is not null &&
+                            Uri.Compare(
+                                u,
+                                firstServerUrl,
+                                UriComponents.Host | UriComponents.Port | UriComponents.Path,
+                                UriFormat.SafeUnescaped,
+                                StringComparison.OrdinalIgnoreCase) ==
+                            0 && u.IsAbsoluteUri)
+                    .Select(u => u!.Scheme)
+                    .Distinct()
+                    .ToList();
+
+                // schemes
+                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => 
+                {
+                    if(!string.IsNullOrEmpty(s) && s is not null)
+                    {
+                        w.WriteValue(s);
+                    }
+                });
+            }            
         }
 
         /// <summary>
@@ -463,16 +508,14 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
+        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : IOpenApiReferenceable
         {
-            if (reference.IsExternal)
+
+            if (ResolveReference(reference, reference.IsExternal) is T result)
             {
-                return ResolveReference(reference, true) as T;
+                return result;
             }
-            else
-            {
-                return ResolveReference(reference, false) as T;
-            }
+            return default;
         }
 
         /// <summary>
@@ -521,19 +564,15 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            if (!reference.Type.HasValue)
-            {
-                throw new ArgumentException(Properties.SRResource.LocalReferenceRequiresType);
-            }
-
             string uriLocation;
-            if (reference.Id.Contains("/")) // this means its a URL reference
+            var id = reference.Id;
+            if (!string.IsNullOrEmpty(id) && id!.Contains("/")) // this means its a URL reference
             {
-                uriLocation = reference.Id;
+                uriLocation = id;
             }
             else
             {
-                string relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{reference.Id}";
+                string relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
                 Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource) : null;
 
                 uriLocation = useExternal && externalResourceUri is not null
@@ -678,9 +717,10 @@ namespace Microsoft.OpenApi.Models
             switch (referenceHolder)
             {
                 case OpenApiSchemaReference schema:
-                    if (!Schemas.ContainsKey(schema.Reference.Id))
+                    var id = schema.Reference?.Id;
+                    if (id is not null && Schemas is not null && !Schemas.ContainsKey(id))
                     {
-                        Schemas.Add(schema.Reference.Id, schema);
+                        Schemas.Add(id, schema);
                     }
                     break;
 
@@ -693,10 +733,14 @@ namespace Microsoft.OpenApi.Models
         public override void Visit(IOpenApiSchema schema)
         {
             // This is needed to handle schemas used in Responses in components
-            if (schema is OpenApiSchemaReference {Reference: not null} schemaReference && !Schemas.ContainsKey(schemaReference.Reference.Id))
+            if (schema is OpenApiSchemaReference { Reference: not null } schemaReference)
             {
-                Schemas.Add(schemaReference.Reference.Id, schema);
-            }
+                var id = schemaReference.Reference?.Id;
+                if (id is not null && Schemas is not null && !Schemas.ContainsKey(id))
+                {
+                    Schemas.Add(id, schema);
+                }
+            } 
             base.Visit(schema);
         }
     }

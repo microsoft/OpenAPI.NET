@@ -35,14 +35,14 @@ namespace Microsoft.OpenApi.Reader
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (settings is null) throw new ArgumentNullException(nameof(settings));
 
-            JsonNode jsonNode;
+            JsonNode? jsonNode;
             var diagnostic = new OpenApiDiagnostic();
             settings ??= new OpenApiReaderSettings();
 
             // Parse the JSON text in the stream into JsonNodes
             try
             {
-                jsonNode = JsonNode.Parse(input);
+                jsonNode = JsonNode.Parse(input) ?? throw new InvalidOperationException($"Cannot parse input stream, {nameof(input)}.");
             }
             catch (JsonException ex)
             {
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Reader
                 DefaultContentType = settings.DefaultContentType
             };
 
-            OpenApiDocument document = null;
+            OpenApiDocument? document = null;
             try
             {
                 // Parse the OpenAPI Document
@@ -92,17 +92,20 @@ namespace Microsoft.OpenApi.Reader
             }
 
             // Validate the document
-            if (settings.RuleSet != null && settings.RuleSet.Rules.Any())
+            if (document is not null && settings.RuleSet is not null && settings.RuleSet.Rules.Any())
             {
                 var openApiErrors = document.Validate(settings.RuleSet);
-                foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
+                if(openApiErrors is not null)
                 {
-                    diagnostic.Errors.Add(item);
-                }
-                foreach (var item in openApiErrors.OfType<OpenApiValidatorWarning>())
-                {
-                    diagnostic.Warnings.Add(item);
-                }
+                    foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
+                    {
+                        diagnostic.Errors.Add(item);
+                    }
+                    foreach (var item in openApiErrors.OfType<OpenApiValidatorWarning>())
+                    {
+                        diagnostic.Warnings.Add(item);
+                    }
+                }                
             }
 
             return new()
@@ -128,13 +131,14 @@ namespace Microsoft.OpenApi.Reader
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (settings is null) throw new ArgumentNullException(nameof(settings));
 
-            JsonNode jsonNode;
+            JsonNode? jsonNode;
             var diagnostic = new OpenApiDiagnostic();
 
             // Parse the JSON text in the stream into JsonNodes
             try
             {
-                jsonNode = await JsonNode.ParseAsync(input, cancellationToken: cancellationToken).ConfigureAwait(false);
+                jsonNode = await JsonNode.ParseAsync(input, cancellationToken: cancellationToken).ConfigureAwait(false) ??
+                    throw new InvalidOperationException($"failed to parse input stream, {nameof(input)}");
             }
             catch (JsonException ex)
             {
@@ -150,11 +154,11 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(MemoryStream input,
+        public T? ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  OpenApiDocument openApiDocument,
                                  out OpenApiDiagnostic diagnostic,
-                                 OpenApiReaderSettings settings = null) where T : IOpenApiElement
+                                 OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             Utils.CheckArgumentNull(input);
             Utils.CheckArgumentNull(openApiDocument);
@@ -164,7 +168,7 @@ namespace Microsoft.OpenApi.Reader
             // Parse the JSON
             try
             {
-                jsonNode = JsonNode.Parse(input);
+                jsonNode = JsonNode.Parse(input) ?? throw new InvalidOperationException($"Failed to parse stream, {nameof(input)}");
             }
             catch (JsonException ex)
             {
@@ -177,11 +181,11 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
-        public T ReadFragment<T>(JsonNode input,
-                         OpenApiSpecVersion version,
-                         OpenApiDocument openApiDocument,
-                         out OpenApiDiagnostic diagnostic,
-                         OpenApiReaderSettings settings = null) where T : IOpenApiElement
+        public T? ReadFragment<T>(JsonNode input,
+         OpenApiSpecVersion version,
+         OpenApiDocument openApiDocument,
+         out OpenApiDiagnostic diagnostic,
+         OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             diagnostic = new();
             settings ??= new OpenApiReaderSettings();
@@ -190,7 +194,7 @@ namespace Microsoft.OpenApi.Reader
                 ExtensionParsers = settings.ExtensionParsers
             };
 
-            IOpenApiElement element = null;
+            IOpenApiElement? element = null;
             try
             {
                 // Parse the OpenAPI element
@@ -202,16 +206,19 @@ namespace Microsoft.OpenApi.Reader
             }
 
             // Validate the element
-            if (settings.RuleSet != null && settings.RuleSet.Rules.Any())
+            if (element is not null && settings.RuleSet is not null && settings.RuleSet.Rules.Any())
             {
                 var errors = element.Validate(settings.RuleSet);
-                foreach (var item in errors)
+                if (errors is not null)
                 {
-                    diagnostic.Errors.Add(item);
+                    foreach (var item in errors)
+                    {
+                        diagnostic.Errors.Add(item);
+                    }
                 }
             }
 
-            return (T)element;
+            return (T?)element;
         }
     }
 }

@@ -39,27 +39,47 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "required", (o, n, _) =>
+                    "required",
+                    (o, n, t) =>
                     {
-                        o.Required = bool.Parse(n.GetScalarValue());
+                        var required = n.GetScalarValue();
+                        if (required != null)
+                        {
+                            o.Required = bool.Parse(required);
+                        }
                     }
                 },
                 {
-                    "deprecated", (o, n, _) =>
+                    "deprecated",
+                    (o, n, t) =>
                     {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
+                        var deprecated = n.GetScalarValue();
+                        if (deprecated != null)
+                        {
+                            o.Deprecated = bool.Parse(deprecated);
+                        }
                     }
                 },
                 {
-                    "allowEmptyValue", (o, n, _) =>
+                    "allowEmptyValue",
+                    (o, n, t) =>
                     {
-                        o.AllowEmptyValue = bool.Parse(n.GetScalarValue());
+                        var allowEmptyValue = n.GetScalarValue();
+                        if (allowEmptyValue != null)
+                        {
+                            o.AllowEmptyValue = bool.Parse(allowEmptyValue);
+                        }
                     }
                 },
                 {
-                    "allowReserved", (o, n, _) =>
+                    "allowReserved",
+                    (o, n, _) =>
                     {
-                        o.AllowReserved = bool.Parse(n.GetScalarValue());
+                        var allowReserved = n.GetScalarValue();
+                        if (allowReserved != null)
+                        {
+                            o.AllowReserved = bool.Parse(allowReserved);
+                        }
                     }
                 },
                 {
@@ -75,7 +95,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "explode", (o, n, _) =>
                     {
-                        o.Explode = bool.Parse(n.GetScalarValue());
+                        var explode = n.GetScalarValue();
+                        if (explode != null)
+                        {
+                            o.Explode = bool.Parse(explode);
+                        }
                     }
                 },
                 {

@@ -1,4 +1,4 @@
-
+﻿
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the headers object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiSerializable, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiHeader>
+public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiHeader>, IOpenApiReferenceable
 {
     /// <summary>
     /// Determines whether this header is mandatory.
@@ -45,21 +45,21 @@ public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiSerializable
     /// <summary>
     /// The schema defining the type used for the request body.
     /// </summary>
-    public IOpenApiSchema Schema { get; }
+    public IOpenApiSchema? Schema { get; }
 
     /// <summary>
     /// Example of the media type.
     /// </summary>
-    public JsonNode Example { get; }
+    public JsonNode? Example { get; }
 
     /// <summary>
     /// Examples of the media type.
     /// </summary>
-    public IDictionary<string, IOpenApiExample> Examples { get; }
+    public IDictionary<string, IOpenApiExample>? Examples { get; }
 
     /// <summary>
     /// A map containing the representations for the header.
     /// </summary>
-    public IDictionary<string, OpenApiMediaType> Content { get; }
+    public IDictionary<string, OpenApiMediaType>? Content { get; }
 
 }

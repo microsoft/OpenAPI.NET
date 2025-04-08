@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Equals implementation for IEquatable.
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as RuntimeExpression);
         }
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Equals implementation for object of the same type.
         /// </summary>
-        public bool Equals(RuntimeExpression obj)
+        public bool Equals(RuntimeExpression? obj)
         {
             return obj != null && obj.Expression == Expression;
         }

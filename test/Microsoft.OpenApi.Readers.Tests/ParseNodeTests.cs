@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.YamlReader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests
             var result = OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
             Assert.Equivalent(new List<OpenApiError>() {
-                new OpenApiError(new OpenApiReaderException("Expected a value."))
+                new OpenApiError(new OpenApiReaderException("Expected a value while parsing at #/schemes."))
             }, result.Diagnostic.Errors);
         }
 

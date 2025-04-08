@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$vocabulary",
-                (o, n, _) => o.Vocabulary = n.CreateSimpleMap(LoadBool)
+                (o, n, _) => o.Vocabulary = n.CreateSimpleMap(LoadBool).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
             },
             {
                 "$dynamicRef",
@@ -49,13 +49,27 @@ namespace Microsoft.OpenApi.Reader.V31
                 "$defs",
                 (o, n, t) => o.Definitions = n.CreateMap(LoadSchema, t)
             },
-            {
+             {
                 "multipleOf",
-                (o, n, _) => o.MultipleOf = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var multipleOf = n.GetScalarValue();
+                    if (multipleOf != null)
+                    {
+                        o.MultipleOf = decimal.Parse(multipleOf, NumberStyles.Float, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "maximum",
-                (o, n, _) => o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n,_) =>
+                {
+                    var max = n.GetScalarValue();
+                    if (max != null)
+                    {
+                        o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(max, decimal.MaxValue);
+                    }
+                }
             },
             {
                 "exclusiveMaximum",
@@ -63,7 +77,14 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "minimum",
-                (o, n, _) => o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
+                (o, n, _) =>
+                {
+                    var min = n.GetScalarValue();
+                    if (min != null)
+                    {
+                        o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(min, decimal.MinValue);
+                    }
+                }
             },
             {
                 "exclusiveMinimum",
@@ -71,11 +92,25 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "maxLength",
-                (o, n, _) => o.MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var maxLength = n.GetScalarValue();
+                    if (maxLength != null)
+                    {
+                        o.MaxLength = int.Parse(maxLength, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "minLength",
-                (o, n, _) => o.MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var minLength = n.GetScalarValue();
+                    if (minLength != null)
+                    {
+                        o.MinLength = int.Parse(minLength, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "pattern",
@@ -83,31 +118,73 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "maxItems",
-                (o, n, _) => o.MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var maxItems = n.GetScalarValue();
+                    if (maxItems != null)
+                    {
+                        o.MaxItems = int.Parse(maxItems, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "minItems",
-                (o, n, _) => o.MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var minItems = n.GetScalarValue();
+                    if (minItems != null)
+                    {
+                        o.MinItems = int.Parse(minItems, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "uniqueItems",
-                (o, n, _) => o.UniqueItems = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var uniqueItems = n.GetScalarValue();
+                    if (uniqueItems != null)
+                    {
+                        o.UniqueItems = bool.Parse(uniqueItems);
+                    }
+                }
             },
             {
                 "unevaluatedProperties",
-                (o, n, _) => o.UnevaluatedProperties = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var unevaluatedProps = n.GetScalarValue();
+                    if (unevaluatedProps != null)
+                    {
+                        o.UnevaluatedProperties = bool.Parse(unevaluatedProps);
+                    }
+                }
             },
             {
                 "maxProperties",
-                (o, n, _) => o.MaxProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var maxProps = n.GetScalarValue();
+                    if (maxProps != null)
+                    {
+                        o.MaxProperties = int.Parse(maxProps, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "minProperties",
-                (o, n, _) => o.MinProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                (o, n, _) =>
+                {
+                    var minProps = n.GetScalarValue();
+                    if (minProps != null)
+                    {
+                        o.MinProperties = int.Parse(minProps, CultureInfo.InvariantCulture);
+                    }
+                }
             },
             {
                 "required",
-                (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc))
+                (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc).Where(s => s != null))
             },
             {
                 "enum",
@@ -119,7 +196,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     if (n is ValueNode)
                     {
-                        o.Type = n.GetScalarValue().ToJsonSchemaType();
+                        o.Type = n.GetScalarValue()?.ToJsonSchemaType();
                     }
                     else
                     {
@@ -127,8 +204,11 @@ namespace Microsoft.OpenApi.Reader.V31
                         JsonSchemaType combinedType = 0;
                         foreach(var type in list)
                         {
-                            var schemaType = type.ToJsonSchemaType();
-                            combinedType |= schemaType;
+                            if (type is not null)
+                            {
+                                var schemaType = type.ToJsonSchemaType();
+                                combinedType |= schemaType;
+                            }                            
                         }
                         o.Type = combinedType;
                     }
@@ -171,7 +251,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     if (n is ValueNode)
                     {
-                        o.AdditionalPropertiesAllowed = bool.Parse(n.GetScalarValue());
+                        var value = n.GetScalarValue();
+                        if (value is not null)
+                        {
+                            o.AdditionalPropertiesAllowed = bool.Parse(value);
+                        }
                     }
                     else
                     {
@@ -195,10 +279,14 @@ namespace Microsoft.OpenApi.Reader.V31
                 "nullable",
                 (o, n, _) => 
                 {
-                    var nullable = bool.Parse(n.GetScalarValue());
-                    if (nullable) // if nullable, convert type into an array of type(s) and null
+                    var value = n.GetScalarValue();
+                    if (value is not null)
                     {
-                        o.Type |= JsonSchemaType.Null;
+                        var nullable = bool.Parse(value);
+                        if (nullable) // if nullable, convert type into an array of type(s) and null
+                        {
+                            o.Type |= JsonSchemaType.Null;
+                        }
                     }
                 }
             },
@@ -208,11 +296,25 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "readOnly",
-                (o, n, _) => o.ReadOnly = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var readOnly = n.GetScalarValue();
+                    if (readOnly != null)
+                    {
+                        o.ReadOnly = bool.Parse(readOnly);
+                    }
+                }
             },
             {
                 "writeOnly",
-                (o, n, _) => o.WriteOnly = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var writeOnly = n.GetScalarValue();
+                    if (writeOnly != null)
+                    {
+                        o.WriteOnly = bool.Parse(writeOnly);
+                    }
+                }
             },
             {
                 "xml",
@@ -232,7 +334,14 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "deprecated",
-                (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                (o, n, t) =>
+                {
+                    var deprecated = n.GetScalarValue();
+                    if (deprecated != null)
+                    {
+                        o.Deprecated = bool.Parse(deprecated);
+                    }
+                }
             },
             {
                 "dependentRequired",
@@ -257,7 +366,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+                var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+                result.Reference.SetSummaryAndDescriptionFromMapNode(mapNode);
+                return result;
             }
 
             var schema = new OpenApiSchema();
@@ -271,13 +382,13 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
                 }
-                else
+                else if (schema.UnrecognizedKeywords is not null && propertyNode.JsonNode is not null)
                 {
                     schema.UnrecognizedKeywords[propertyNode.Name] = propertyNode.JsonNode;
                 }
             }
 
-            if (schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+            if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
             {
                 var type = schema.Type;
                 schema.Type = type | JsonSchemaType.Null;

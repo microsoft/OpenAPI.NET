@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -24,11 +25,9 @@ namespace Microsoft.OpenApi.Validations
         /// Create a visitor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
-        /// <param name="hostDocument"></param>
-        public OpenApiValidator(ValidationRuleSet ruleSet, OpenApiDocument hostDocument = null)
+        public OpenApiValidator(ValidationRuleSet ruleSet)
         {
             _ruleSet = ruleSet;
-            HostDocument = hostDocument;
         }
 
         /// <summary>
@@ -40,11 +39,6 @@ namespace Microsoft.OpenApi.Validations
         /// Gets the validation warnings.
         /// </summary>
         public IEnumerable<OpenApiValidatorWarning> Warnings { get => _warnings; }
-
-        /// <summary>
-        /// The host document used for validation.
-        /// </summary>
-        public OpenApiDocument HostDocument { get; set; }
 
         /// <summary>
         /// Register an error with the validation context.
@@ -155,7 +149,7 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(OpenApiOperation operation) => Validate(operation);
         /// <inheritdoc/>
-        public override void Visit(IDictionary<OperationType, OpenApiOperation> operations) => Validate(operations, operations.GetType());
+        public override void Visit(IDictionary<HttpMethod, OpenApiOperation> operations) => Validate(operations, operations.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, IOpenApiHeader> headers) => Validate(headers, headers.GetType());
         /// <inheritdoc/>
@@ -182,7 +176,7 @@ namespace Microsoft.OpenApi.Validations
         /// This overload allows applying rules based on actual object type, rather than matched interface.  This is
         /// needed for validating extensions.
         /// </summary>
-        private void Validate(object item, Type type)
+        private void Validate(object? item, Type type)
         {
             if (item == null)
             {
@@ -196,10 +190,13 @@ namespace Microsoft.OpenApi.Validations
             }
 
             var rules = _ruleSet.FindRules(type);
-            foreach (var rule in rules)
+            if (rules is not null)
             {
-                rule.Evaluate(this, item);
-            }
+                foreach (var rule in rules)
+                {
+                    rule.Evaluate(this, item);
+                }
+            }            
         }
     }
 }

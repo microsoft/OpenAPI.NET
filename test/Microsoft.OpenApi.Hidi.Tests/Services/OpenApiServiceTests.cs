@@ -12,7 +12,7 @@ using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.YamlReader;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
@@ -45,9 +45,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 {
                     ["/test"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation()
+                            [HttpMethod.Get] = new OpenApiOperation()
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Interfaces;
+﻿using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Models.Interfaces;
 
@@ -6,15 +6,15 @@ namespace Microsoft.OpenApi.Models.Interfaces;
 /// Defines the base properties for the path item object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiTag : IOpenApiSerializable, IOpenApiReadOnlyExtensible, IOpenApiReadOnlyDescribedElement, IShallowCopyable<IOpenApiTag>
+public interface IOpenApiTag : IOpenApiReadOnlyExtensible, IOpenApiReadOnlyDescribedElement, IShallowCopyable<IOpenApiTag>, IOpenApiReferenceable
 {
     /// <summary>
     /// The name of the tag.
     /// </summary>
-    public string Name { get; }
+    public string? Name { get; }
 
     /// <summary>
     /// Additional external documentation for this tag.
     /// </summary>
-    public OpenApiExternalDocs ExternalDocs { get; }
+    public OpenApiExternalDocs? ExternalDocs { get; }
 }

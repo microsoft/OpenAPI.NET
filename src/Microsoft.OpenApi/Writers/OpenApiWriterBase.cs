@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
@@ -52,7 +53,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter"></param>
         /// <param name="settings"></param>
-        protected OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings)
+        protected OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings? settings)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
@@ -229,7 +230,7 @@ namespace Microsoft.OpenApi.Writers
         /// Write object value.
         /// </summary>
         /// <param name="value">The object value.</param>
-        public virtual void WriteValue(object value)
+        public virtual void WriteValue(object? value)
         {
             if (value == null)
             {
@@ -332,7 +333,7 @@ namespace Microsoft.OpenApi.Writers
         /// Get current scope.
         /// </summary>
         /// <returns></returns>
-        protected Scope CurrentScope()
+        protected Scope? CurrentScope()
         {
             return Scopes.Count == 0 ? null : Scopes.Peek();
         }
@@ -437,7 +438,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <inheritdoc/>
-        public void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version)
+        public static void WriteV2Examples(IOpenApiWriter writer, OpenApiExample example, OpenApiSpecVersion version)
         {
             writer.WriteStartObject();
 

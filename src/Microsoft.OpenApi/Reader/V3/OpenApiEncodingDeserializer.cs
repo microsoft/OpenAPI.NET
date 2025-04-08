@@ -37,11 +37,25 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "explode",
-                (o, n, _) => o.Explode = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var explode = n.GetScalarValue();
+                    if (explode != null)
+                    {
+                        o.Explode = bool.Parse(explode);
+                    }
+                }
             },
             {
                 "allowedReserved", 
-                (o, n, _) => o.AllowReserved = bool.Parse(n.GetScalarValue())
+                (o, n, _) =>
+                {
+                    var allowReserved = n.GetScalarValue();
+                    if (allowReserved != null)
+                    {
+                         o.AllowReserved = bool.Parse(allowReserved);
+                     }
+                }
             },
         };
 

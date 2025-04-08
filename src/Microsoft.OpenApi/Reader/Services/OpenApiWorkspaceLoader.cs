@@ -21,16 +21,19 @@ namespace Microsoft.OpenApi.Reader.Services
         }
 
         internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference,
-                                                         OpenApiDocument document,
-                                                         string format = null,
-                                                         OpenApiDiagnostic diagnostic = null,
+                                                         OpenApiDocument? document,
+                                                         string? format = null,
+                                                         OpenApiDiagnostic? diagnostic = null,
                                                          CancellationToken cancellationToken = default)
         {
-            _workspace.AddDocumentId(reference.ExternalResource, document.BaseUri);
+            _workspace.AddDocumentId(reference.ExternalResource, document?.BaseUri);
             var version = diagnostic?.SpecificationVersion ?? OpenApiSpecVersion.OpenApi3_0;
-            _workspace.RegisterComponents(document);
-            document.Workspace = _workspace;
-
+            if (document is not null)
+            {
+                _workspace.RegisterComponents(document);
+                document.Workspace = _workspace;
+            }
+            
             // Collect remote references by walking document
             var referenceCollector = new OpenApiRemoteReferenceCollector();
             var collectorWalker = new OpenApiWalker(referenceCollector);
@@ -43,10 +46,10 @@ namespace Microsoft.OpenApi.Reader.Services
             {
 
                 // If not already in workspace, load it and process references
-                if (!_workspace.Contains(item.ExternalResource))
+                if (item.ExternalResource is not null && !_workspace.Contains(item.ExternalResource))
                 {
                     var uri = new Uri(item.ExternalResource, UriKind.RelativeOrAbsolute);
-                    var input = await _loader.LoadAsync(item.HostDocument.BaseUri, uri, cancellationToken).ConfigureAwait(false);
+                    var input = await _loader.LoadAsync(item.HostDocument!.BaseUri, uri, cancellationToken).ConfigureAwait(false);
                     var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken).ConfigureAwait(false);
                     // Merge diagnostics
                     if (result.Diagnostic != null)

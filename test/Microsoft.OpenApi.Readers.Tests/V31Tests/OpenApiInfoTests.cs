@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V31;
+using Microsoft.OpenApi.YamlReader;
 using SharpYaml.Serialization;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicInfo.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = yamlStream.Documents[0].RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);

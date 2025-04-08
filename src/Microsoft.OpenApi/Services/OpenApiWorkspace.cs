@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Services
 
         private class UriWithFragmentEquailityComparer : IEqualityComparer<Uri>
         {
-            public bool Equals(Uri x, Uri y)
+            public bool Equals(Uri? x, Uri? y)
             {
                 if (ReferenceEquals(x, y))
                 {
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// The base location from where all relative references are resolved
         /// </summary>
-        public Uri BaseUrl { get; }
+        public Uri? BaseUrl { get; }
        
         /// <summary>
         /// Initialize workspace pointing to a base URL to allow resolving relative document locations.  Use a file:// url to point to a folder
@@ -92,78 +92,107 @@ namespace Microsoft.OpenApi.Services
             string location;
 
             // Register Schema
-            foreach (var item in document.Components.Schemas)
+            if (document.Components.Schemas != null)
             {
-                location = item.Value.Id ?? baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.Schemas)
+                {
+                    location = item.Value.Id ?? baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register Parameters
-            foreach (var item in document.Components.Parameters)
+            if (document.Components.Parameters != null)
             {
-                location = baseUri + ReferenceType.Parameter.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.Parameters)
+                {
+                    location = baseUri + ReferenceType.Parameter.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register Responses
-            foreach (var item in document.Components.Responses)
+            if (document.Components.Responses != null)
             {
-                location = baseUri + ReferenceType.Response.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.Responses)
+                {
+                    location = baseUri + ReferenceType.Response.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register RequestBodies
-            foreach (var item in document.Components.RequestBodies)
+            if (document.Components.RequestBodies != null)
             {
-                location = baseUri + ReferenceType.RequestBody.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.RequestBodies)
+                {
+                    location = baseUri + ReferenceType.RequestBody.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register Links
-            foreach (var item in document.Components.Links)
+            if (document.Components.Links != null)
             {
-                location = baseUri + ReferenceType.Link.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.Links)
+                {
+                    location = baseUri + ReferenceType.Link.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register Callbacks
-            foreach (var item in document.Components.Callbacks)
+            if (document.Components.Callbacks != null)
             {
-                location = baseUri + ReferenceType.Callback.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.Callbacks)
+                {
+                    location = baseUri + ReferenceType.Callback.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register PathItems
-            foreach (var item in document.Components.PathItems)
+            if (document.Components.PathItems != null)
             {
-                location = baseUri + ReferenceType.PathItem.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.PathItems)
+                {
+                    location = baseUri + ReferenceType.PathItem.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register Examples
-            foreach (var item in document.Components.Examples)
+            if (document.Components.Examples != null)
             {
-                location = baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.Examples)
+                {
+                    location = baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register Headers
-            foreach (var item in document.Components.Headers)
+            if (document.Components.Headers != null)
             {
-                location = baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.Headers)
+                {
+                    location = baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
 
             // Register SecuritySchemes
-            foreach (var item in document.Components.SecuritySchemes)
+            if (document.Components.SecuritySchemes != null)
             {
-                location = baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + item.Key;
-                RegisterComponent(location, item.Value);
+                foreach (var item in document.Components.SecuritySchemes)
+                {
+                    location = baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
             }
         }
 
-        private string getBaseUri(OpenApiDocument openApiDocument)
+        private static string getBaseUri(OpenApiDocument openApiDocument)
         {
             return openApiDocument.BaseUri + "#" + OpenApiConstants.ComponentsSegment;
         }
@@ -199,7 +228,7 @@ namespace Microsoft.OpenApi.Services
                 IOpenApiExample => baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + id,
                 IOpenApiHeader => baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + id,
                 IOpenApiSecurityScheme => baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + id,
-                _ => throw new ArgumentException($"Invalid component type {componentToRegister.GetType().Name}"),
+                _ => throw new ArgumentException($"Invalid component type {componentToRegister!.GetType().Name}"),
             };
 
             return RegisterComponent(location, componentToRegister);
@@ -214,22 +243,23 @@ namespace Microsoft.OpenApi.Services
         internal bool RegisterComponent<T>(string location, T component)
         {
             var uri = ToLocationUrl(location);
-            if (component is IOpenApiReferenceable referenceable)
+            if (uri is not null)
             {
-                if (!_IOpenApiReferenceableRegistry.ContainsKey(uri))
+                if (component is IOpenApiReferenceable referenceable)
                 {
-                    _IOpenApiReferenceableRegistry[uri] = referenceable;
-                    return true;
+                    if (!_IOpenApiReferenceableRegistry.ContainsKey(uri))
+                    {
+                        _IOpenApiReferenceableRegistry[uri] = referenceable;
+                        return true;
+                    }
                 }
-            }
-            else if (component is Stream stream)
-            {
-                if (!_artifactsRegistry.ContainsKey(uri))
+                else if (component is Stream stream && !_artifactsRegistry.ContainsKey(uri))
                 {
                     _artifactsRegistry[uri] = stream;
                     return true;
                 }
-            }
+                return false;
+            }            
 
             return false;
         }
@@ -239,26 +269,26 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void AddDocumentId(string key, Uri value)
+        public void AddDocumentId(string? key, Uri? value)
         {
-            if (!_documentsIdRegistry.ContainsKey(key))
+            if (!string.IsNullOrEmpty(key) && key is not null && value is not null && !_documentsIdRegistry.ContainsKey(key))
             {
                 _documentsIdRegistry[key] = value;
             }
         }
 
-#nullable enable
         /// <summary>
         /// Retrieves the document id given a key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns>The document id of the given key.</returns>
-        public Uri? GetDocumentId(string key)
+        public Uri? GetDocumentId(string? key)
         {
-            if (_documentsIdRegistry.TryGetValue(key, out var id))
+            if (key is not null && _documentsIdRegistry.TryGetValue(key, out var id))
             {
                 return id;
             }
+
             return null;
         }
 
@@ -270,6 +300,7 @@ namespace Microsoft.OpenApi.Services
         public bool Contains(string location)
         {
             var key = ToLocationUrl(location);
+            if (key is null) return false;
             return _IOpenApiReferenceableRegistry.ContainsKey(key) || _artifactsRegistry.ContainsKey(key);
         }
 
@@ -284,22 +315,28 @@ namespace Microsoft.OpenApi.Services
             if (string.IsNullOrEmpty(location)) return default;
 
             var uri = ToLocationUrl(location);
-            if (_IOpenApiReferenceableRegistry.TryGetValue(uri, out var referenceableValue))
+            if (uri is not null)
             {
-                return (T)referenceableValue;
-            }
-            else if (_artifactsRegistry.TryGetValue(uri, out var artifact))
-            {
-                return (T)(object)artifact;
-            }
+                if (_IOpenApiReferenceableRegistry.TryGetValue(uri, out var referenceableValue) && referenceableValue is T referenceable)
+                {
+                    return referenceable;
+                }
+                else if (_artifactsRegistry.TryGetValue(uri, out var artifact) && artifact is T artifactValue)
+                {
+                    return artifactValue;
+                }
+            }            
 
             return default;
         }
-#nullable restore
 
-        private Uri ToLocationUrl(string location)
+        private Uri? ToLocationUrl(string location)
         {
-            return new(BaseUrl, location);
+            if (BaseUrl is not null)
+            {
+                return new(BaseUrl, location);
+            }
+            return null;
         }
     }
 }

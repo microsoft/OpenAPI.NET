@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        protected OpenApiExtensibleDictionary():this(null) { }
+        protected OpenApiExtensibleDictionary():this([]) { }
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiExtensibleDictionary{T}"/> class.
         /// </summary>
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
         protected OpenApiExtensibleDictionary(
             Dictionary<string, T> dictionary,
-            IDictionary<string, IOpenApiExtension> extensions = null) : base(dictionary is null ? [] : dictionary)
+            IDictionary<string, IOpenApiExtension>? extensions = null) : base(dictionary is null ? [] : dictionary)
         {
             Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : [];
         }
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
 
         /// <summary>

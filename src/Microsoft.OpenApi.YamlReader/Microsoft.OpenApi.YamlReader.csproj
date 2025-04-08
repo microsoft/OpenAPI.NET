@@ -1,16 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net8.0;</TargetFrameworks>
         <!-- net6.0 target is present because of the conditional build in OpenApiYamlReader.Read -->
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
+        <Description>OpenAPI.NET Reader for YAML documents</Description>
         <SignAssembly>true</SignAssembly>
         <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net5.0'))">true</IsTrimmable>
         <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net8.0'))">true</IsAotCompatible>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <NoWarn>NU5048</NoWarn>
+        <Nullable>enable</Nullable>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
@@ -27,7 +28,7 @@
 
     <ItemGroup>
 
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.2">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.61">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>

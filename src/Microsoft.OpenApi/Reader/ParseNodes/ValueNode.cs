@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using Microsoft.OpenApi.Exceptions;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
@@ -17,14 +18,16 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         {
             if (node is not JsonValue scalarNode)
             {
-                throw new OpenApiReaderException("Expected a value.", node);
+                throw new OpenApiReaderException($"Expected a value while parsing at {Context.GetLocation()}.");
             }
             _node = scalarNode;
         }
 
         public override string GetScalarValue()
         {
-            return Convert.ToString(_node.GetValue<object>(), CultureInfo.InvariantCulture);
+            var scalarValue = _node.GetValue<object>();
+            return Convert.ToString(scalarValue, CultureInfo.InvariantCulture) 
+                ?? throw new OpenApiReaderException($"Expected a value at {Context.GetLocation()}.");
         }
 
         /// <summary>

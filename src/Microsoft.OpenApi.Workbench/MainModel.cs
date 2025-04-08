@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -11,9 +11,10 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.YamlReader;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Workbench
 {
@@ -242,7 +243,7 @@ namespace Microsoft.OpenApi.Workbench
                         : new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                 }
 
-                var readResult = await OpenApiDocument.LoadAsync(stream, Format.GetDisplayName());
+                var readResult = await OpenApiDocument.LoadAsync(stream, Format.GetDisplayName().ToLowerInvariant(), settings);
                 var document = readResult.Document;
                 var context = readResult.Diagnostic;
 
@@ -298,13 +299,13 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         private async Task<string> WriteContentsAsync(OpenApiDocument document)
         {
-            var outputStream = new MemoryStream();
+            using var outputStream = new MemoryStream();
 
             await document.SerializeAsync(
                 outputStream,
                 Version,
                 Format,
-                (Writers.OpenApiWriterSettings)new()
+                new OpenApiWriterSettings()
                 {
                     InlineLocalReferences = InlineLocal,
                     InlineExternalReferences = InlineExternal

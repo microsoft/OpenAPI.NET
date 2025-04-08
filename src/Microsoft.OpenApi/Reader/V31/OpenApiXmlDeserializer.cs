@@ -23,29 +23,42 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
             },
             {
-                "namespace", (o, n, _) =>
+                "namespace",
+                (o, n, _) =>
                 {
-                    o.Namespace = new Uri(n.GetScalarValue(), UriKind.Absolute);
+                    var value = n.GetScalarValue();
+                    if (value != null)
+                    {
+                        o.Namespace = new(value, UriKind.Absolute);
+                    }
                 }
             },
             {
-                "prefix", (o, n, _) =>
+                "prefix",
+                (o, n, _) => o.Prefix = n.GetScalarValue()
+            },
+            {
+                "attribute",
+                (o, n, _) =>
                 {
-                    o.Prefix = n.GetScalarValue();
+                    var attribute = n.GetScalarValue();
+                    if (attribute is not null)
+                    {
+                        o.Attribute = bool.Parse(attribute);
+                    }
                 }
             },
             {
-                "attribute", (o, n, _) =>
+                "wrapped",
+                (o, n, _) =>
                 {
-                    o.Attribute = bool.Parse(n.GetScalarValue());
+                    var wrapped = n.GetScalarValue();
+                    if (wrapped is not null)
+                    {
+                        o.Wrapped = bool.Parse(wrapped);
+                    }
                 }
-            },
-            {
-                "wrapped", (o, n, _) =>
-                {
-                    o.Wrapped = bool.Parse(n.GetScalarValue());
-                }
-            },
+            }
         };
 
         private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =

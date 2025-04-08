@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -17,10 +17,10 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : IOpenApiHeader, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiHeader : IOpenApiHeader, IOpenApiExtensible
     {
         /// <inheritdoc/>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <inheritdoc/>
         public bool Required { get; set; }
@@ -41,19 +41,19 @@ namespace Microsoft.OpenApi.Models
         public bool AllowReserved { get; set; }
 
         /// <inheritdoc/>
-        public IOpenApiSchema Schema { get; set; }
+        public IOpenApiSchema? Schema { get; set; }
 
         /// <inheritdoc/>
-        public JsonNode Example { get; set; }
+        public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample> Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
+        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models
             Style = header.Style ?? Style;
             Explode = header.Explode;
             AllowReserved = header.AllowReserved;
-            Schema = header.Schema.CreateShallowCopy();
+            Schema = header.Schema?.CreateShallowCopy();
             Example = header.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
             Examples = header.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
             Content = header.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Models
 
             // schema
             var targetSchema = Schema switch {
-                OpenApiSchemaReference schemaReference => schemaReference.Target,
+                OpenApiSchemaReference schemaReference => schemaReference.RecursiveTarget,
                 OpenApiSchema schema => schema,
                 _ => null,
             };

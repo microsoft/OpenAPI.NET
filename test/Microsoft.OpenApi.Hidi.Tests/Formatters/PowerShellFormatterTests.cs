@@ -10,16 +10,23 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
 {
     public class PowerShellFormatterTests
     {
+        public static IEnumerable<object[]> TestCases
+        {
+            get
+            {
+                yield return new object[] { "drives.drive.ListDrive", "drive_ListDrive", HttpMethod.Get };
+                yield return new object[] { "print.taskDefinitions.tasks.GetTrigger", "print.taskDefinition.task_GetTrigger", HttpMethod.Get };
+                yield return new object[] { "groups.sites.termStore.groups.GetSets", "group.site.termStore.group_GetSet", HttpMethod.Get };
+                yield return new object[] { "external.industryData.ListDataConnectors", "external.industryData_ListDataConnector", HttpMethod.Get };
+                yield return new object[] { "applications.application.UpdateLogo", "application_SetLogo", HttpMethod.Put };
+                yield return new object[] { "identityGovernance.lifecycleWorkflows.workflows.workflow.activate", "identityGovernance.lifecycleWorkflow.workflow_activate", HttpMethod.Post };
+                yield return new object[] { "directory.GetDeletedItems.AsApplication", "directory_GetDeletedItemAsApplication", HttpMethod.Get };
+                yield return new object[] { "education.users.GetCount-6be9", "education.user_GetCount", HttpMethod.Get };
+            }
+        }
         [Theory]
-        [InlineData("drives.drive.ListDrive", "drive_ListDrive", OperationType.Get)]
-        [InlineData("print.taskDefinitions.tasks.GetTrigger", "print.taskDefinition.task_GetTrigger", OperationType.Get)]
-        [InlineData("groups.sites.termStore.groups.GetSets", "group.site.termStore.group_GetSet", OperationType.Get)]
-        [InlineData("external.industryData.ListDataConnectors", "external.industryData_ListDataConnector", OperationType.Get)]
-        [InlineData("applications.application.UpdateLogo", "application_SetLogo", OperationType.Put)]
-        [InlineData("identityGovernance.lifecycleWorkflows.workflows.workflow.activate", "identityGovernance.lifecycleWorkflow.workflow_activate", OperationType.Post)]
-        [InlineData("directory.GetDeletedItems.AsApplication", "directory_GetDeletedItemAsApplication", OperationType.Get)]
-        [InlineData("education.users.GetCount-6be9", "education.user_GetCount", OperationType.Get)]
-        public void FormatOperationIdsInOpenAPIDocument(string operationId, string expectedOperationId, OperationType operationType, string path = "/foo")
+        [MemberData(nameof(TestCases))]
+        public void FormatOperationIdsInOpenAPIDocument(string operationId, string expectedOperationId, HttpMethod operationType, string path = "/foo")
         {
             // Arrange
             var openApiDocument = new OpenApiDocument
@@ -29,7 +36,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 Paths = new()
                 {
                     { path, new OpenApiPathItem() {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             { operationType, new() { OperationId = operationId } }
                           }
@@ -44,7 +51,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             walker.Walk(openApiDocument);
 
             // Assert
-            Assert.Equal(expectedOperationId, openApiDocument.Paths[path].Operations[operationType].OperationId);
+            Assert.Equal(expectedOperationId, openApiDocument.Paths[path].Operations?[operationType].OperationId);
         }
 
         [Fact]
@@ -61,20 +68,20 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             Assert.NotNull(openApiDocument.Components);
             Assert.NotNull(openApiDocument.Components.Schemas);
             var testSchema = openApiDocument.Components.Schemas["TestSchema"];
-            var averageAudioDegradationProperty = testSchema.Properties["averageAudioDegradation"];
-            var defaultPriceProperty = testSchema.Properties["defaultPrice"];
+            var averageAudioDegradationProperty = testSchema.Properties?["averageAudioDegradation"];
+            var defaultPriceProperty = testSchema.Properties?["defaultPrice"];
 
             // Assert
             Assert.NotNull(openApiDocument.Components);
             Assert.NotNull(openApiDocument.Components.Schemas);
             Assert.NotNull(testSchema);
-            Assert.Null(averageAudioDegradationProperty.AnyOf);
-            Assert.Equal(JsonSchemaType.Number | JsonSchemaType.Null, averageAudioDegradationProperty.Type);
-            Assert.Equal("float", averageAudioDegradationProperty.Format);
-            Assert.Equal(JsonSchemaType.Null, averageAudioDegradationProperty.Type & JsonSchemaType.Null);
-            Assert.Null(defaultPriceProperty.OneOf);
-            Assert.Equal(JsonSchemaType.Number, defaultPriceProperty.Type);
-            Assert.Equal("double", defaultPriceProperty.Format);
+            Assert.Null(averageAudioDegradationProperty?.AnyOf);
+            Assert.Equal(JsonSchemaType.Number | JsonSchemaType.Null, averageAudioDegradationProperty?.Type);
+            Assert.Equal("float", averageAudioDegradationProperty?.Format);
+            Assert.Equal(JsonSchemaType.Null, averageAudioDegradationProperty?.Type & JsonSchemaType.Null);
+            Assert.Null(defaultPriceProperty?.OneOf);
+            Assert.Equal(JsonSchemaType.Number, defaultPriceProperty?.Type);
+            Assert.Equal("double", defaultPriceProperty?.Format);
             Assert.NotNull(testSchema.AdditionalProperties);
         }
 
@@ -89,7 +96,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var idsParameter = openApiDocument.Paths["/foo"].Operations[OperationType.Get].Parameters?.Where(static p => p.Name == "ids").FirstOrDefault();
+            var idsParameter = openApiDocument.Paths["/foo"].Operations?[HttpMethod.Get].Parameters?.Where(static p => p.Name == "ids").FirstOrDefault();
 
             // Assert
             Assert.Null(idsParameter?.Content);
@@ -106,10 +113,10 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 Paths = new() {
                     { "/foo", new OpenApiPathItem()
                         {
-                            Operations = new Dictionary<OperationType, OpenApiOperation>
+                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
                             {
                                 {
-                                    OperationType.Get, new()
+                                    HttpMethod.Get, new()
                                     {
                                         OperationId = "Foo.GetFoo",
                                         Parameters =

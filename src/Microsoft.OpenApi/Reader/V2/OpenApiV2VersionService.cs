@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Reader.V2
             Diagnostic = diagnostic;
         }
 
-        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new()
+        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new()
         {
             [typeof(OpenApiAny)] = OpenApiV2Deserializer.LoadAny,
             [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
@@ -50,173 +50,18 @@ namespace Microsoft.OpenApi.Reader.V2
             [typeof(OpenApiXml)] = OpenApiV2Deserializer.LoadXml
         };
 
-        private static OpenApiReference ParseLocalReference(string localReference)
-        {
-            if (string.IsNullOrWhiteSpace(localReference))
-            {
-                throw new ArgumentException(
-                    string.Format(
-                        SRResource.ArgumentNullOrWhiteSpace,
-                        nameof(localReference)));
-            }
-
-            var segments = localReference.Split('/');
-
-            // /definitions/Pet/...
-            if (segments.Length >= 3)
-            {
-                var referenceType = ParseReferenceType(segments[1]);
-                var id = localReference.Substring(
-                    segments[0].Length + "/".Length + segments[1].Length + "/".Length);
-
-                return new() { Type = referenceType, Id = id };
-            }
-
-            throw new OpenApiException(
-                string.Format(
-                    SRResource.ReferenceHasInvalidFormat,
-                    localReference));
-        }
-
-        private static ReferenceType ParseReferenceType(string referenceTypeName)
-        {
-            switch (referenceTypeName)
-            {
-                case "definitions":
-                    return ReferenceType.Schema;
-
-                case "parameters":
-                    return ReferenceType.Parameter;
-
-                case "responses":
-                    return ReferenceType.Response;
-
-                case "headers":
-                    return ReferenceType.Header;
-
-                case "tags":
-                    return ReferenceType.Tag;
-
-                case "securityDefinitions":
-                    return ReferenceType.SecurityScheme;
-
-                default:
-                    throw new OpenApiReaderException($"Unknown reference type '{referenceTypeName}'");
-            }
-        }
-
-        private static ReferenceType GetReferenceTypeV2FromName(string referenceType)
-        {
-            switch (referenceType)
-            {
-                case "definitions":
-                    return ReferenceType.Schema;
-
-                case "parameters":
-                    return ReferenceType.Parameter;
-
-                case "responses":
-                    return ReferenceType.Response;
-
-                case "tags":
-                    return ReferenceType.Tag;
-
-                case "securityDefinitions":
-                    return ReferenceType.SecurityScheme;
-
-                default:
-                    throw new ArgumentException();
-            }
-        }
-
-        /// <summary>
-        /// Parse the string to a <see cref="OpenApiReference"/> object.
-        /// </summary>
-        public OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type, string summary = null, string description = null)
-        {
-            if (!string.IsNullOrWhiteSpace(reference))
-            {
-                var segments = reference.Split('#');
-                if (segments.Length == 1)
-                {
-                    // Either this is an external reference as an entire file
-                    // or a simple string-style reference for tag and security scheme.
-                    if (type == null)
-                    {
-                        // "$ref": "Pet.json"
-                        return new()
-                        {
-                            ExternalResource = segments[0]
-                        };
-                    }
-
-                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
-                    {
-                        return new()
-                        {
-                            Type = type,
-                            Id = reference
-                        };
-                    }
-                }
-                else if (segments.Length == 2)
-                {
-                    if (reference.StartsWith("#", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // "$ref": "#/definitions/Pet"
-                        try
-                        {
-                            return ParseLocalReference(segments[1]);
-                        }
-                        catch (OpenApiException ex)
-                        {
-                            Diagnostic.Errors.Add(new(ex));
-                            return null;
-                        }
-                    }
-
-                    // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
-                    var id = segments[1];
-                    // $ref: externalSource.yaml#/Pet
-                    if (id.StartsWith("/definitions/", StringComparison.Ordinal))
-                    {
-                        var localSegments = id.Split('/');
-                        var referencedType = GetReferenceTypeV2FromName(localSegments[1]);
-                        if (type == null)
-                        {
-                            type = referencedType;
-                        }
-                        else
-                        {
-                            if (type != referencedType)
-                            {
-                                throw new OpenApiException("Referenced type mismatch");
-                            }
-                        }
-                        id = localSegments[2];
-                    }
-
-                    // $ref: externalSource.yaml#/Pet
-                    return new()
-                    {
-                        ExternalResource = segments[0],
-                        Type = type,
-                        Id = id
-                    };
-                }
-            }
-
-            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
-        }
-
         public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
             return OpenApiV2Deserializer.LoadOpenApi(rootNode, location);
         }
 
-        public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
+        public T? LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
         {
-            return (T)_loaders[typeof(T)](node, doc);
+            if (_loaders.TryGetValue(typeof(T), out var loader) && loader(node, doc) is T result)
+            {
+                return result;
+            }
+            return default;
         }
 
         /// <inheritdoc />

@@ -51,10 +51,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                 {
                     ["/"] = new OpenApiPathItem() // root path
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "graphService.GetGraphService",
                                     Responses = new()
@@ -72,10 +72,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [getTeamsActivityByPeriodPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "reports.getTeamsUserActivityCounts",
                                     Summary = "Invoke function getTeamsUserActivityUserCounts",
@@ -137,10 +137,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [getTeamsActivityByDatePath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "reports.getTeamsUserActivityUserDetail-a3f1",
                                     Summary = "Invoke function getTeamsUserActivityUserDetail",
@@ -200,10 +200,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [usersPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "users.user.ListUser",
                                     Summary = "Get entities from users",
@@ -246,10 +246,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [usersByIdPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "users.user.GetUser",
                                     Summary = "Get entity from users by key",
@@ -274,7 +274,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 }
                             },
                             {
-                                OperationType.Patch, new OpenApiOperation
+                                HttpMethod.Patch, new OpenApiOperation
                                 {
                                     OperationId = "users.user.UpdateUser",
                                     Summary = "Update entity in users",
@@ -293,10 +293,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [messagesByIdPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "users.GetMessages",
                                     Summary = "Get messages from users",
@@ -340,10 +340,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [administrativeUnitRestorePath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Post, new OpenApiOperation
+                                HttpMethod.Post, new OpenApiOperation
                                 {
                                     OperationId = "administrativeUnits.restore",
                                     Summary = "Invoke action restore",
@@ -391,10 +391,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [logoPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Put, new OpenApiOperation
+                                HttpMethod.Put, new OpenApiOperation
                                 {
                                     OperationId = "applications.application.UpdateLogo",
                                     Summary = "Update media content for application in applications",
@@ -413,10 +413,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [securityProfilesPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "security.ListHostSecurityProfiles",
                                     Summary = "Get hostSecurityProfiles from security",
@@ -459,10 +459,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [communicationsCallsKeepAlivePath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Post, new OpenApiOperation
+                                HttpMethod.Post, new OpenApiOperation
                                 {
                                     OperationId = "communications.calls.call.keepAlive",
                                     Summary = "Invoke action keepAlive",
@@ -507,10 +507,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [eventsDeltaPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "groups.group.events.event.calendar.events.delta",
                                     Summary = "Invoke function delta",
@@ -594,10 +594,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     },
                     [refPath] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
                         {
                             {
-                                OperationType.Get, new OpenApiOperation
+                                HttpMethod.Get, new OpenApiOperation
                                 {
                                     OperationId = "applications.GetRefCreatedOnBehalfOf",
                                     Summary = "Get ref of createdOnBehalfOf from applications"
@@ -678,23 +678,23 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                     }
                 }
             };
-            document.Paths[getTeamsActivityByPeriodPath].Operations[OperationType.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("reports.Functions", document)};
-            document.Paths[getTeamsActivityByDatePath].Operations[OperationType.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("reports.Functions", document)};
-            document.Paths[usersPath].Operations[OperationType.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
-            document.Paths[usersByIdPath].Operations[OperationType.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
-            document.Paths[usersByIdPath].Operations[OperationType.Patch].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
-            document.Paths[messagesByIdPath].Operations[OperationType.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.message", document)};
-            document.Paths[administrativeUnitRestorePath].Operations[OperationType.Post].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("administrativeUnits.Actions", document)};
-            document.Paths[logoPath].Operations[OperationType.Put].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.application", document)};
-            document.Paths[securityProfilesPath].Operations[OperationType.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("security.hostSecurityProfile", document)};
-            document.Paths[communicationsCallsKeepAlivePath].Operations[OperationType.Post].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("communications.Actions", document)};
-            document.Paths[eventsDeltaPath].Operations[OperationType.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("groups.Functions", document)};
-            document.Paths[refPath].Operations[OperationType.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.directoryObject", document)};
-            ((OpenApiSchema)document.Paths[usersPath].Operations[OperationType.Get].Responses!["200"].Content[applicationJsonMediaType].Schema!.Properties["value"]).Items = new OpenApiSchemaReference("microsoft.graph.user", document);
-            document.Paths[usersByIdPath].Operations[OperationType.Get].Responses!["200"].Content[applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.user", document);
-            document.Paths[messagesByIdPath].Operations[OperationType.Get].Responses!["200"].Content[applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.message", document);
-            ((OpenApiSchema)document.Paths[securityProfilesPath].Operations[OperationType.Get].Responses!["200"].Content[applicationJsonMediaType].Schema!.Properties["value"]).Items = new OpenApiSchemaReference("microsoft.graph.networkInterface", document);
-            ((OpenApiSchema)document.Paths[eventsDeltaPath].Operations[OperationType.Get].Responses!["200"].Content[applicationJsonMediaType].Schema!.Properties["value"]).Items = new OpenApiSchemaReference("microsoft.graph.event", document);
+            document.Paths[getTeamsActivityByPeriodPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("reports.Functions", document)};
+            document.Paths[getTeamsActivityByDatePath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("reports.Functions", document)};
+            document.Paths[usersPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
+            document.Paths[usersByIdPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
+            document.Paths[usersByIdPath].Operations![HttpMethod.Patch].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.user", document)};
+            document.Paths[messagesByIdPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("users.message", document)};
+            document.Paths[administrativeUnitRestorePath].Operations![HttpMethod.Post].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("administrativeUnits.Actions", document)};
+            document.Paths[logoPath].Operations![HttpMethod.Put].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.application", document)};
+            document.Paths[securityProfilesPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("security.hostSecurityProfile", document)};
+            document.Paths[communicationsCallsKeepAlivePath].Operations![HttpMethod.Post].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("communications.Actions", document)};
+            document.Paths[eventsDeltaPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("groups.Functions", document)};
+            document.Paths[refPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.directoryObject", document)};
+            ((OpenApiSchema)document.Paths[usersPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.user", document);
+            document.Paths[usersByIdPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.user", document);
+            document.Paths[messagesByIdPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.message", document);
+            ((OpenApiSchema)document.Paths[securityProfilesPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.networkInterface", document);
+            ((OpenApiSchema)document.Paths[eventsDeltaPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.event", document);
             return document;
         }
     }

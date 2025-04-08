@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -20,8 +21,18 @@ namespace Microsoft.OpenApi.Reader.V3
             new()
             {
                 {
-                    "tags", (o, n, doc) => { 
-                        if (n.CreateSimpleList((valueNode, doc) => LoadTagByReference(valueNode.GetScalarValue(), doc), doc) is {Count: > 0} tags)
+                    "tags", (o, n, doc) => {
+                        if (n.CreateSimpleList(
+                            (valueNode, doc) =>
+                            {
+                                var val = valueNode.GetScalarValue();
+                                if (string.IsNullOrEmpty(val))
+                                    return null;   // Avoid exception on empty tag, we'll remove these from the list further on
+                                return LoadTagByReference(val , doc);
+                                },
+                            doc)
+                        // Filter out empty tags instead of excepting on them
+                        .OfType<OpenApiTagReference>().ToList() is {Count: > 0} tags)
                         {
                             o.Tags = new HashSet<OpenApiTagReference>(tags, OpenApiTagComparer.Instance);
                         }
@@ -61,7 +72,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "deprecated",
-                    (o, n, _) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                    (o, n, _) =>
+                    {
+                        var deprecated = n.GetScalarValue();
+                        if (deprecated != null)
+                        {
+                            o.Deprecated = bool.Parse(deprecated);
+                        }
+                    }
                 },
                 {
                     "security",
@@ -91,7 +109,7 @@ namespace Microsoft.OpenApi.Reader.V3
         }
 
         private static OpenApiTagReference LoadTagByReference(
-            string tagName, OpenApiDocument hostDocument)
+            string tagName, OpenApiDocument? hostDocument)
         {
             return new OpenApiTagReference(tagName, hostDocument);
         }

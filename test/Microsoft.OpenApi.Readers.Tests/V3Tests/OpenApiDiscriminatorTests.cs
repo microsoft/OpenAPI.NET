@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -25,19 +27,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             memoryStream.Position = 0;
 
             // Act
-            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, new(), out var diagnostic, SettingsFixture.ReaderSettings);
+            var openApiDocument = new OpenApiDocument();
+            var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, openApiDocument, out var diagnostic, SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
-                new OpenApiDiscriminator
-                {
-                    PropertyName = "pet_type",
-                    Mapping =
+               new OpenApiDiscriminator
+               {
+                   PropertyName = "pet_type",
+                   Mapping =
                     {
-                            ["puppy"] = "#/components/schemas/Dog",
-                            ["kitten"] = "Cat"
+                            ["puppy"] = new OpenApiSchemaReference("Dog", openApiDocument),
+                            ["kitten"] = new OpenApiSchemaReference("Cat" , openApiDocument, "https://gigantic-server.com/schemas/animals.json"),
+                            ["monster"] = new OpenApiSchemaReference("schema.json" , openApiDocument, "https://gigantic-server.com/schemas/Monster/schema.json")
                     }
-                }, discriminator);
+               }, discriminator);
         }
     }
 }

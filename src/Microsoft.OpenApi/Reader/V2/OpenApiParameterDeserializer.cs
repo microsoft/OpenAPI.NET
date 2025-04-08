@@ -35,19 +35,52 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "required",
-                    (o, n, t) => o.Required = bool.Parse(n.GetScalarValue())
+                    (o, n, t) =>
+                    {
+                        var required = n.GetScalarValue();
+                        if (required != null)
+                        {
+                            o.Required = bool.Parse(required);
+                        }
+                    }
                 },
                 {
                     "deprecated",
-                    (o, n, t) => o.Deprecated = bool.Parse(n.GetScalarValue())
+                    (o, n, t) =>
+                    {
+                        var deprecated = n.GetScalarValue();
+                        if (deprecated != null)
+                        {
+                            o.Deprecated = bool.Parse(deprecated);
+                        }
+                    }
                 },
                 {
                     "allowEmptyValue",
-                    (o, n, t) => o.AllowEmptyValue = bool.Parse(n.GetScalarValue())
+                    (o, n, t) =>
+                    {
+                        var allowEmptyValue = n.GetScalarValue();
+                        if (allowEmptyValue != null)
+                        {
+                            o.AllowEmptyValue = bool.Parse(allowEmptyValue);
+                        }
+                    }
                 },
                 {
                     "type",
-                    (o, n, t) => GetOrCreateSchema(o).Type = n.GetScalarValue().ToJsonSchemaType()
+                    (o, n, t) =>
+                    {
+                        var type = n.GetScalarValue();
+                        if (type != null)
+                        {                            
+                            var schema = GetOrCreateSchema(o);
+                            schema.Type = type.ToJsonSchemaType();
+                            if ("file".Equals(type, StringComparison.OrdinalIgnoreCase))
+                            {
+                                schema.Format = "binary";
+                            }
+                        }
+                    }
                 },
                 {
                     "items",
@@ -55,7 +88,14 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "collectionFormat",
-                    (o, n, t) => LoadStyle(o, n.GetScalarValue())
+                    (o, n, t) =>
+                    {
+                        var collectionFormat = n.GetScalarValue();
+                        if (collectionFormat != null)
+                        {
+                            LoadStyle(o, collectionFormat);
+                        }
+                    }
                 },
                 {
                     "format",
@@ -63,23 +103,58 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "minimum",
-                    (o, n, t) => GetOrCreateSchema(o).Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MinValue)
+                    (o, n, t) =>
+                    {
+                        var min = n.GetScalarValue();
+                        if (min != null)
+                        {
+                            GetOrCreateSchema(o).Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(min, decimal.MinValue);
+                        }
+                    }
                 },
                 {
                     "maximum",
-                    (o, n, t) => GetOrCreateSchema(o).Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                    (o, n, t) =>
+                    {
+                        var max = n.GetScalarValue();
+                        if (max != null)
+                        {
+                            GetOrCreateSchema(o).Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(max, decimal.MaxValue);
+                        }
+                    }
                 },
                 {
                     "maxLength",
-                    (o, n, t) => GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                    (o, n, t) =>
+                    {
+                        var maxLength = n.GetScalarValue();
+                        if (maxLength != null)
+                        {
+                            GetOrCreateSchema(o).MaxLength = int.Parse(maxLength, CultureInfo.InvariantCulture);
+                        }
+                    }
                 },
                 {
                     "minLength",
-                    (o, n, t) => GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
+                    (o, n, t) =>
+                    {
+                        var minLength = n.GetScalarValue();
+                        if (minLength != null)
+                        {
+                            GetOrCreateSchema(o).MinLength = int.Parse(minLength, CultureInfo.InvariantCulture);
+                        }
+                    }
                 },
                 {
                     "readOnly",
-                    (o, n, t) => GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue())
+                    (o, n, t) =>
+                    {
+                        var readOnly = n.GetScalarValue();
+                        if (readOnly != null)
+                        {
+                            GetOrCreateSchema(o).ReadOnly = bool.Parse(readOnly);
+                        }
+                    }
                 },
                 {
                     "default",
@@ -139,7 +214,7 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        private static void LoadParameterExamplesExtension(OpenApiParameter parameter, ParseNode node, OpenApiDocument hostDocument)
+        private static void LoadParameterExamplesExtension(OpenApiParameter parameter, ParseNode node, OpenApiDocument? hostDocument)
         {
             var examples = LoadExamplesExtension(node);
             node.Context.SetTempStorage(TempStorageKeys.Examples, examples, parameter);
@@ -187,12 +262,12 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        public static IOpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiParameter? LoadParameter(ParseNode node, OpenApiDocument hostDocument)
         {
             return LoadParameter(node, false, hostDocument);
         }
 
-        public static IOpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
+        public static IOpenApiParameter? LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
         {
             // Reset the local variables every time this method is called.
             node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
@@ -226,7 +301,13 @@ namespace Microsoft.OpenApi.Reader.V2
                 node.Context.SetTempStorage("examples", null);
             }
 
-            var isBodyOrFormData = (bool)node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
+            var isBodyOrFormData = false;
+            var paramData = node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
+            if (paramData is bool boolValue)
+            {
+                isBodyOrFormData = boolValue;
+            }
+
             if (isBodyOrFormData && !loadRequestBody)
             {
                 return null; // Don't include Form or Body parameters when normal parameters are loaded.

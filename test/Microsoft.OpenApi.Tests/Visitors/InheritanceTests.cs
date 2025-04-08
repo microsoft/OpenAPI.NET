@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -28,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(OpenApiPaths));
             visitor.Visit(default(IOpenApiPathItem));
             visitor.Visit(default(OpenApiServerVariable));
-            visitor.Visit(default(IDictionary<OperationType, OpenApiOperation>));
+            visitor.Visit(default(IDictionary<HttpMethod, OpenApiOperation>));
             visitor.Visit(default(OpenApiOperation));
             visitor.Visit(default(IList<IOpenApiParameter>));
             visitor.Visit(default(IOpenApiParameter));
@@ -142,7 +143,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(serverVariable);
             }
 
-            public override void Visit(IDictionary<OperationType, OpenApiOperation> operations)
+            public override void Visit(IDictionary<HttpMethod, OpenApiOperation> operations)
             {
                 EncodeCall();
                 base.Visit(operations);

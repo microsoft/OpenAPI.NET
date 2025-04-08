@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
@@ -95,7 +96,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             Assert.True(workspace.Contains($"{Path.Combine(referenceBaseUri, "Directory", "Pets.yaml")}#/components/schemas/Pets"));
             Assert.True(workspace.Contains($"{Path.Combine(referenceBaseUri, "Directory", "Pets.yaml")}#/components/schemas/Pet"));
 
-            var operationResponseSchema = document.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var operationResponseSchema = document.Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
             Assert.IsType<OpenApiSchemaReference>(operationResponseSchema);
             
             var petsSchema = operationResponseSchema.Properties["pets"];

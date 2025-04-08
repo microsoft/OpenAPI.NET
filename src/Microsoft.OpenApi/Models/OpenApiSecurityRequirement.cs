@@ -37,7 +37,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (w, s) => w.WritePropertyName(s.Reference.ReferenceV3));
+            SerializeInternal(writer, (w, s) =>
+            {
+                if(!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                {
+                    w.WritePropertyName(s.Reference.ReferenceV3);
+                }
+            });
         }
 
         /// <summary>
@@ -45,7 +51,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (w, s) => w.WritePropertyName(s.Reference.ReferenceV3));
+            SerializeInternal(writer, (w, s) =>
+            {
+                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                {
+                    w.WritePropertyName(s.Reference.ReferenceV3);
+                }
+            });
         }
 
         /// <summary>
@@ -98,7 +110,7 @@ namespace Microsoft.OpenApi.Models
             /// <summary>
             /// Determines whether the specified objects are equal.
             /// </summary>
-            public bool Equals(OpenApiSecuritySchemeReference x, OpenApiSecuritySchemeReference y)
+            public bool Equals(OpenApiSecuritySchemeReference? x, OpenApiSecuritySchemeReference? y)
             {
                 if (x == null && y == null)
                 {
@@ -122,7 +134,8 @@ namespace Microsoft.OpenApi.Models
                 {
                     return 0;
                 }
-                return string.IsNullOrEmpty(obj?.Reference?.Id) ? 0 : obj.Reference.Id.GetHashCode();
+                var id = obj.Reference?.Id;
+                return string.IsNullOrEmpty(id) ? 0 : id!.GetHashCode();
             }
         }
     }

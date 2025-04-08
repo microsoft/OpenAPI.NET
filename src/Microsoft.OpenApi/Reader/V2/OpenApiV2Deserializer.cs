@@ -20,12 +20,12 @@ namespace Microsoft.OpenApi.Reader.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static void ParseMap<T>(
-            MapNode mapNode,
+            MapNode? mapNode,
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap,
-            List<string> requiredFields = null, 
-            OpenApiDocument doc = null)
+            OpenApiDocument doc,
+            List<string>? requiredFields = null)
         {
             if (mapNode == null)
             {
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
-            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
+            if (node.Context.ExtensionParsers is not null && node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
                 return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi2_0);
             }
@@ -90,18 +90,18 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        private static string LoadString(ParseNode node)
+        private static string? LoadString(ParseNode node)
         {
             return node.GetScalarValue();
         }
 
-        private static (string, string) GetReferenceIdAndExternalResource(string pointer)
+        private static (string, string?) GetReferenceIdAndExternalResource(string pointer)
         {
             var refSegments = pointer.Split('/');
-            var refId = refSegments.Last();
-            var isExternalResource = !refSegments.First().StartsWith("#", StringComparison.OrdinalIgnoreCase);
+            var refId = refSegments[refSegments.Count() -1];
+            var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
 
-            string externalResource = isExternalResource ? $"{refSegments.First()}/{refSegments[1].TrimEnd('#')}" : null;
+            string? externalResource = isExternalResource ? $"{refSegments[0]}/{refSegments[1].TrimEnd('#')}" : null;
 
             return (refId, externalResource);
         }

@@ -5,11 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
@@ -62,113 +60,9 @@ namespace Microsoft.OpenApi.Reader.V3
             [typeof(OpenApiServer)] = OpenApiV3Deserializer.LoadServer,
             [typeof(OpenApiServerVariable)] = OpenApiV3Deserializer.LoadServerVariable,
             [typeof(OpenApiTag)] = OpenApiV3Deserializer.LoadTag,
-            [typeof(OpenApiXml)] = OpenApiV3Deserializer.LoadXml
+            [typeof(OpenApiXml)] = OpenApiV3Deserializer.LoadXml,
+            [typeof(OpenApiSchemaReference)] = OpenApiV3Deserializer.LoadMapping
         };
-
-        /// <summary>
-        /// Parse the string to a <see cref="OpenApiReference"/> object.
-        /// </summary>
-        /// <param name="reference">The URL of the reference</param>
-        /// <param name="type">The type of object referenced based on the context of the reference</param>
-        /// <param name="summary"></param>
-        /// <param name="description"></param>
-        public OpenApiReference ConvertToOpenApiReference(
-            string reference,
-            ReferenceType? type,
-            string summary = null,
-            string description = null)
-        {
-            if (!string.IsNullOrWhiteSpace(reference))
-            {
-                var segments = reference.Split('#');
-                if (segments.Length == 1)
-                {
-                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
-                    {
-                        return new()
-                        {
-                            Type = type,
-                            Id = reference
-                        };
-                    }
-
-                    // Either this is an external reference as an entire file
-                    // or a simple string-style reference for tag and security scheme.
-                    return new()
-                    {
-                        Type = type,
-                        ExternalResource = segments[0]
-                    };
-                }
-                else if (segments.Length == 2)
-                {
-                    if (reference.StartsWith("#", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // "$ref": "#/components/schemas/Pet"
-                        try
-                        {
-                            return ParseLocalReference(segments[1]);
-                        }
-                        catch (OpenApiException ex)
-                        {
-                            Diagnostic.Errors.Add(new(ex));
-                        }
-                    }
-                    // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
-                    var id = segments[1];
-                    var isFragment = false;
-
-                    // $ref: externalSource.yaml#/Pet
-                    if (id.StartsWith("/components/", StringComparison.Ordinal))
-                    {
-                        var localSegments = segments[1].Split('/');
-                        localSegments[2].TryGetEnumFromDisplayName<ReferenceType>(out var referencedType);
-                        if (type == null)
-                        {
-                            type = referencedType;
-                        }
-                        else
-                        {
-                            if (type != referencedType)
-                            {
-                                throw new OpenApiException("Referenced type mismatch");
-                            }
-                        }
-                        id = localSegments[3];
-                    }
-                    else if (id.StartsWith("/paths/", StringComparison.Ordinal))
-                    {
-                        var localSegments = segments[1].Split(_pathSeparator, StringSplitOptions.RemoveEmptyEntries);
-                        if (localSegments.Length == 2)
-                        {
-                            // The reference of a path may contain JSON escape character ~1 for the forward-slash character, replace this otherwise
-                            // the reference cannot be resolved.
-                            id = localSegments[1].Replace("~1", "/");
-                        }
-                        else
-                        {
-                            throw new OpenApiException("Referenced Path mismatch");
-                        }
-                    }
-                    else
-                    {
-                        isFragment = true;
-                    }
-
-                    var openApiReference = new OpenApiReference
-                    {
-                        ExternalResource = segments[0],
-                        Type = type,
-                        Id = id,
-                        IsFragment = isFragment,
-                    };
-
-                    return openApiReference;
-                }
-            }
-
-            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
-        }
 
         public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
@@ -181,7 +75,7 @@ namespace Microsoft.OpenApi.Reader.V3
         }
 
         /// <inheritdoc />
-        public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
+        public string? GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
             if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)) &&
                 mapNode
@@ -193,36 +87,6 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             return null;
-        }
-
-        private OpenApiReference ParseLocalReference(string localReference)
-        {
-            if (string.IsNullOrWhiteSpace(localReference))
-            {
-                throw new ArgumentException(string.Format(SRResource.ArgumentNullOrWhiteSpace, nameof(localReference)));
-            }
-
-            var segments = localReference.Split('/');
-
-            if (segments.Length == 4 && segments[1] == "components") // /components/{type}/pet
-            {
-                segments[2].TryGetEnumFromDisplayName<ReferenceType>(out var referenceType);
-                var refId = segments[3];
-                if (segments[2] == "pathItems")
-                {
-                    refId = "/" + segments[3];
-                }
-
-                var parsedReference = new OpenApiReference
-                {
-                    Type = referenceType,
-                    Id = refId
-                };
-
-                return parsedReference;
-            }
-
-            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, localReference));
-        }
+        }        
     }
 }

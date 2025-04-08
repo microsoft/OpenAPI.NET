@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models.References
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiSchemaReference(string referenceId, OpenApiDocument hostDocument = null, string externalResource = null):base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
+        public OpenApiSchemaReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
         {
         }
         /// <summary>
@@ -37,46 +37,38 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
-            get => string.IsNullOrEmpty(Reference?.Description) ? Target?.Description : Reference.Description;
-            set
-            {
-                if (Reference is not null)
-                {
-                    Reference.Description = value;
-                }
-            }
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public string Title { get => Target?.Title; }
+        public string? Title { get => Target?.Title; }
         /// <inheritdoc/>
-        public Uri Schema { get => Target?.Schema; }
+        public Uri? Schema { get => Target?.Schema; }
         /// <inheritdoc/>
-        public string Id { get => Target?.Id; }
+        public string? Id { get => Target?.Id; }
         /// <inheritdoc/>
-        public string Comment { get => Target?.Comment; }
+        public string? Comment { get => Target?.Comment; }
         /// <inheritdoc/>
-        public IDictionary<string, bool> Vocabulary { get => Target?.Vocabulary; }
+        public IDictionary<string, bool>? Vocabulary { get => Target?.Vocabulary; }
         /// <inheritdoc/>
-        public string DynamicRef { get => Target?.DynamicRef; }
+        public string? DynamicRef { get => Target?.DynamicRef; }
         /// <inheritdoc/>
-        public string DynamicAnchor { get => Target?.DynamicAnchor; }
+        public string? DynamicAnchor { get => Target?.DynamicAnchor; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema> Definitions { get => Target?.Definitions; }
+        public IDictionary<string, IOpenApiSchema>? Definitions { get => Target?.Definitions; }
         /// <inheritdoc/>
         public decimal? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
         /// <inheritdoc/>
         public decimal? ExclusiveMinimum { get => Target?.ExclusiveMinimum; }
         /// <inheritdoc/>
-        public bool UnEvaluatedProperties { get => Target?.UnEvaluatedProperties ?? false; }
-        /// <inheritdoc/>
         public JsonSchemaType? Type { get => Target?.Type; }
         /// <inheritdoc/>
-        public string Const { get => Target?.Const; }
+        public string? Const { get => Target?.Const; }
         /// <inheritdoc/>
-        public string Format { get => Target?.Format; }
+        public string? Format { get => Target?.Format; }
         /// <inheritdoc/>
         public decimal? Maximum { get => Target?.Maximum; }
         /// <inheritdoc/>
@@ -86,27 +78,27 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public int? MinLength { get => Target?.MinLength; }
         /// <inheritdoc/>
-        public string Pattern { get => Target?.Pattern; }
+        public string? Pattern { get => Target?.Pattern; }
         /// <inheritdoc/>
         public decimal? MultipleOf { get => Target?.MultipleOf; }
         /// <inheritdoc/>
-        public JsonNode Default { get => Target?.Default; }
+        public JsonNode? Default { get => Target?.Default; }
         /// <inheritdoc/>
         public bool ReadOnly { get => Target?.ReadOnly ?? false; }
         /// <inheritdoc/>
         public bool WriteOnly { get => Target?.WriteOnly ?? false; }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema> AllOf { get => Target?.AllOf; }
+        public IList<IOpenApiSchema>? AllOf { get => Target?.AllOf; }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema> OneOf { get => Target?.OneOf; }
+        public IList<IOpenApiSchema>? OneOf { get => Target?.OneOf; }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema> AnyOf { get => Target?.AnyOf; }
+        public IList<IOpenApiSchema>? AnyOf { get => Target?.AnyOf; }
         /// <inheritdoc/>
-        public IOpenApiSchema Not { get => Target?.Not; }
+        public IOpenApiSchema? Not { get => Target?.Not; }
         /// <inheritdoc/>
-        public ISet<string> Required { get => Target?.Required; }
+        public ISet<string>? Required { get => Target?.Required; }
         /// <inheritdoc/>
-        public IOpenApiSchema Items { get => Target?.Items; }
+        public IOpenApiSchema? Items { get => Target?.Items; }
         /// <inheritdoc/>
         public int? MaxItems { get => Target?.MaxItems; }
         /// <inheritdoc/>
@@ -114,9 +106,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public bool? UniqueItems { get => Target?.UniqueItems; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema> Properties { get => Target?.Properties; }
+        public IDictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema> PatternProperties { get => Target?.PatternProperties; }
+        public IDictionary<string, IOpenApiSchema>? PatternProperties { get => Target?.PatternProperties; }
         /// <inheritdoc/>
         public int? MaxProperties { get => Target?.MaxProperties; }
         /// <inheritdoc/>
@@ -124,39 +116,39 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public bool AdditionalPropertiesAllowed { get => Target?.AdditionalPropertiesAllowed ?? true; }
         /// <inheritdoc/>
-        public IOpenApiSchema AdditionalProperties { get => Target?.AdditionalProperties; }
+        public IOpenApiSchema? AdditionalProperties { get => Target?.AdditionalProperties; }
         /// <inheritdoc/>
-        public OpenApiDiscriminator Discriminator { get => Target?.Discriminator; }
+        public OpenApiDiscriminator? Discriminator { get => Target?.Discriminator; }
         /// <inheritdoc/>
-        public JsonNode Example { get => Target?.Example; }
+        public JsonNode? Example { get => Target?.Example; }
         /// <inheritdoc/>
-        public IList<JsonNode> Examples { get => Target?.Examples; }
+        public IList<JsonNode>? Examples { get => Target?.Examples; }
         /// <inheritdoc/>
-        public IList<JsonNode> Enum { get => Target?.Enum; }
+        public IList<JsonNode>? Enum { get => Target?.Enum; }
         /// <inheritdoc/>
         public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? false; }
         /// <inheritdoc/>
-        public OpenApiExternalDocs ExternalDocs { get => Target?.ExternalDocs; }
+        public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
         /// <inheritdoc/>
         public bool Deprecated { get => Target?.Deprecated ?? false; }
         /// <inheritdoc/>
-        public OpenApiXml Xml { get => Target?.Xml; }
+        public OpenApiXml? Xml { get => Target?.Xml; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public IDictionary<string, JsonNode> UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
+        public IDictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
 
         /// <inheritdoc/>
-        public IDictionary<string, object> Annotations { get => Target?.Annotations; }
+        public IDictionary<string, object>? Annotations { get => Target?.Annotations; }
 
         /// <inheritdoc/>
-        public IDictionary<string, ISet<string>> DependentRequired { get => Target?.DependentRequired; }
+        public IDictionary<string, ISet<string>>? DependentRequired { get => Target?.DependentRequired; }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV3(w));
+            SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV31(w));
         }
 
         /// <inheritdoc/>

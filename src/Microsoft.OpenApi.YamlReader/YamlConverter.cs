@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 using SharpYaml;
 using SharpYaml.Serialization;
 
-namespace Microsoft.OpenApi.Reader
+namespace Microsoft.OpenApi.YamlReader
 {
     /// <summary>
     /// Provides extensions to convert YAML models to JSON models.

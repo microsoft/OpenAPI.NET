@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -8,16 +8,30 @@ namespace Microsoft.OpenApi.Models.References;
 /// </summary>
 /// <typeparam name="T">The concrete class implementation type for the model.</typeparam>
 /// <typeparam name="V">The interface type for the model.</typeparam>
-public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiSerializable
+public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiReferenceable, IOpenApiSerializable
 {
     /// <inheritdoc/>
-    public virtual T Target
+    public virtual V? Target
     {
         get
         {
-            return Reference.HostDocument?.ResolveReferenceTo<T>(Reference);
+            if (Reference.HostDocument is null) return default;
+            return Reference.HostDocument.ResolveReferenceTo<V>(Reference);
         }
     }
+    /// <inheritdoc/>
+    public T? RecursiveTarget
+    {
+        get
+        {
+            return Target switch {
+                BaseOpenApiReferenceHolder<T, V> recursiveTarget => recursiveTarget.RecursiveTarget,
+                T concrete => concrete,
+                _ => null
+            };
+        }
+    }
+
     /// <summary>
     /// Copy constructor
     /// </summary>
@@ -25,7 +39,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, V> source)
     {
         Utils.CheckArgumentNull(source);
-        Reference = source.Reference != null ? new(source.Reference) : null;
+        Reference = new(source.Reference);
         //no need to copy summary and description as if they are not overridden, they will be fetched from the target
         //if they are, the reference copy will handle it
     }
@@ -40,7 +54,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// 1. a absolute/relative file path, for example:  ../commons/pet.json
     /// 2. a Url, for example: http://localhost/pet.json
     /// </param>
-    protected BaseOpenApiReferenceHolder(string referenceId, OpenApiDocument hostDocument, ReferenceType referenceType, string externalResource)
+    protected BaseOpenApiReferenceHolder(string referenceId, OpenApiDocument? hostDocument, ReferenceType referenceType, string? externalResource)
     {
         Utils.CheckArgumentNullOrEmpty(referenceId);
         // we're not checking for null hostDocument as it's optional and can be set via additional methods by a walker
@@ -56,8 +70,14 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     }
     /// <inheritdoc/>
     public bool UnresolvedReference { get => Reference is null || Target is null; }
+
+#if NETSTANDARD2_1_OR_GREATER
+    /// <inheritdoc/>
+    public required OpenApiReference Reference { get; init; }
+#else
     /// <inheritdoc/>
     public OpenApiReference Reference { get; init; }
+#endif
     /// <inheritdoc/>
     public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
     /// <inheritdoc/>
@@ -70,7 +90,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         }
         else
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, (writer, element) => element?.SerializeAsV3(writer));
         }
     }
 
@@ -96,7 +116,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         }
         else
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV2(writer));
+            SerializeInternal(writer, (writer, element) => element?.SerializeAsV2(writer));
         }
     }
 
@@ -110,6 +130,9 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         Action<IOpenApiWriter, V> action)
     {
         Utils.CheckArgumentNull(writer);
-        action(writer, Target);
+        if (Target is not null)
+        {
+            action(writer, Target);
+        }
     }
 }

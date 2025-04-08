@@ -4,11 +4,12 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.YamlReader;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -101,13 +102,13 @@ components:
         public void PathItemReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal([OperationType.Get, OperationType.Post, OperationType.Delete],
+            Assert.Equal([HttpMethod.Get, HttpMethod.Post, HttpMethod.Delete],
                 _localPathItemReference.Operations.Select(o => o.Key));
             Assert.Equal(3, _localPathItemReference.Operations.Count);
             Assert.Equal("Local reference: User path item description", _localPathItemReference.Description);
             Assert.Equal("Local reference: User path item summary", _localPathItemReference.Summary);
 
-            Assert.Equal([OperationType.Get, OperationType.Post, OperationType.Delete],
+            Assert.Equal([HttpMethod.Get, HttpMethod.Post, HttpMethod.Delete],
                 _externalPathItemReference.Operations.Select(o => o.Key));
             Assert.Equal("External reference: User path item description", _externalPathItemReference.Description);
             Assert.Equal("External reference: User path item summary", _externalPathItemReference.Summary);

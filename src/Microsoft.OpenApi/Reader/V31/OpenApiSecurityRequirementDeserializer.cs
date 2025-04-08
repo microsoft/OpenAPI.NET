@@ -1,6 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -24,8 +25,9 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 var scheme = LoadSecuritySchemeByReference(property.Name, hostDocument);
 
-                var scopes = property.Value.CreateSimpleList((value, p) => value.GetScalarValue(), hostDocument);
-
+                var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument)
+                                    .OfType<string>()
+                                    .ToList();
                 if (scheme != null)
                 {
                     securityRequirement.Add(scheme, scopes);
@@ -40,7 +42,7 @@ namespace Microsoft.OpenApi.Reader.V31
             return securityRequirement;
         }
 
-        private static OpenApiSecuritySchemeReference LoadSecuritySchemeByReference(string schemeName, OpenApiDocument hostDocument)
+        private static OpenApiSecuritySchemeReference LoadSecuritySchemeByReference(string schemeName, OpenApiDocument? hostDocument)
         {
             return new OpenApiSecuritySchemeReference(schemeName, hostDocument);
         }
