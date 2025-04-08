@@ -51,8 +51,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Number,
-                            Minimum = 5,
-                            Maximum = 10
+                            Minimum = "5",
+                            Maximum = "10"
                         }
                     }
                 }
@@ -69,8 +69,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
-                                Minimum = 5,
-                                Maximum = 10
+                                Minimum = "5",
+                                Maximum = "10"
                             }
                         }
                     }
@@ -125,8 +125,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Number,
-                            Minimum = 5,
-                            Maximum = 10
+                            Minimum = "5",
+                            Maximum = "10"
                         }
                     }
                 }
@@ -143,8 +143,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
-                                Minimum = 5,
-                                Maximum = 10
+                                Minimum = "5",
+                                Maximum = "10"
                             }
                         }
                     }
