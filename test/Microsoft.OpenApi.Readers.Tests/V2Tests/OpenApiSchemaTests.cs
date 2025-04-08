@@ -85,12 +85,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 Type = JsonSchemaType.Number,
                 Format = "float",
-                Enum = new List<JsonNode>
-                {
-                    new OpenApiAny(7).Node,
-                    new OpenApiAny(8).Node,
-                    new OpenApiAny(9).Node
-                }
+                Enum = [7, 8, 9]
             };
 
             schema.Should().BeEquivalentTo(expected, options =>

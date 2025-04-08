@@ -212,8 +212,8 @@ get:
                 },
                 Example = new JsonObject
                 {
-                    ["name"] = new OpenApiAny("Puma").Node,
-                    ["id"] = new OpenApiAny(1).Node
+                    ["name"] = "Puma",
+                    ["id"] = 1
                 }
             }, options => options
             .IgnoringCyclicReferences()

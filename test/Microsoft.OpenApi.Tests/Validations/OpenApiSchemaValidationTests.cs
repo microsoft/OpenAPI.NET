@@ -73,22 +73,22 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema()
             {
-                Enum = 
-                {
-                    new OpenApiAny("1").Node,
-                    new OpenApiAny(new JsonObject()
+                Enum =
+                [
+                    1,
+                    new JsonObject()
                     {
                         ["x"] = 2,
                         ["y"] = "20",
                         ["z"] = "200"
-                    }).Node,
-                    new OpenApiAny(new JsonArray() { 3 }).Node,
-                    new OpenApiAny(new JsonObject()
+                    },
+                    new JsonArray() { 3 },
+                    new JsonObject()
                     {
                         ["x"] = 4,
                         ["y"] = 40,
-                    }).Node
-                },
+                    }
+                ],
                 Type = JsonSchemaType.Object,
                 AdditionalProperties = new OpenApiSchema()
                 {
