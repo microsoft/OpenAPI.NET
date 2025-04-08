@@ -44,17 +44,17 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public IDictionary<string, IOpenApiSchema>? Definitions { get; set; }
 
-        private decimal? _exclusiveMaximum;
+        private string? _exclusiveMaximum;
         /// <inheritdoc />
-        public decimal? ExclusiveMaximum
+        public string? ExclusiveMaximum
         {
             get
             {
-                if (_exclusiveMaximum.HasValue)
+                if (!string.IsNullOrEmpty(_exclusiveMaximum))
                 {
                     return _exclusiveMaximum;
                 }
-                if (IsExclusiveMaximum == true && _maximum.HasValue)
+                if (IsExclusiveMaximum == true && !string.IsNullOrEmpty(_maximum))
                 {
                     return _maximum;
                 }
@@ -73,17 +73,17 @@ namespace Microsoft.OpenApi.Models
         /// DO NOT CHANGE THE VISIBILITY OF THIS PROPERTY TO PUBLIC
         internal bool? IsExclusiveMaximum { get; set; }
 
-        private decimal? _exclusiveMinimum;
+        private string? _exclusiveMinimum;
         /// <inheritdoc />
-        public decimal? ExclusiveMinimum
+        public string? ExclusiveMinimum
         {
             get
             {
-                if (_exclusiveMinimum.HasValue)
+                if (!string.IsNullOrEmpty(_exclusiveMinimum))
                 {
                     return _exclusiveMinimum;
                 }
-                if (IsExclusiveMinimum == true && _minimum.HasValue)
+                if (IsExclusiveMinimum == true && !string.IsNullOrEmpty(_minimum))
                 {
                     return _minimum;
                 }
@@ -114,9 +114,9 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public string? Description { get; set; }
 
-        private decimal? _maximum;
+        private string? _maximum;
         /// <inheritdoc />
-        public decimal? Maximum
+        public string? Maximum
         {
             get
             {
@@ -132,10 +132,10 @@ namespace Microsoft.OpenApi.Models
             }
         }
 
-        private decimal? _minimum;
+        private string? _minimum;
 
         /// <inheritdoc />
-        public decimal? Minimum
+        public string? Minimum
         {
             get
             {
@@ -334,38 +334,43 @@ namespace Microsoft.OpenApi.Models
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private static void SerializeBounds(IOpenApiWriter writer, OpenApiSpecVersion version, string propertyName, string exclusivePropertyName, string isExclusivePropertyName, decimal? value, decimal? exclusiveValue, bool? isExclusiveValue)
+        private static void SerializeBounds(IOpenApiWriter writer, OpenApiSpecVersion version, string propertyName, string exclusivePropertyName, string isExclusivePropertyName, string? value, string? exclusiveValue, bool? isExclusiveValue)
         {
             if (version >= OpenApiSpecVersion.OpenApi3_1)
             {
-                if (exclusiveValue.HasValue)
+                if (!string.IsNullOrEmpty(exclusiveValue) && exclusiveValue is not null)
                 {
                     // was explicitly set in the document or object model
-                    writer.WriteProperty(exclusivePropertyName, exclusiveValue.Value);
+                    writer.WritePropertyName(exclusivePropertyName);
+                    writer.WriteRaw(exclusiveValue);
                 }
-                else if (isExclusiveValue == true && value.HasValue)
+                else if (isExclusiveValue == true && !string.IsNullOrEmpty(value))
                 {
                     // came from parsing an old document
-                    writer.WriteProperty(exclusivePropertyName, value);
+                    writer.WritePropertyName(exclusivePropertyName);
+                    writer.WriteRaw(value!);
                 }
-                else if (value.HasValue)
+                else if (!string.IsNullOrEmpty(value))
                 {
                     // was explicitly set in the document or object model
-                    writer.WriteProperty(propertyName, value);
+                    writer.WritePropertyName(propertyName);
+                    writer.WriteRaw(value!);
                 }
             }
             else
             {
-                if (exclusiveValue.HasValue)
+                if (!string.IsNullOrEmpty(exclusiveValue))
                 {
                     // was explicitly set in a new document being downcast or object model
-                    writer.WriteProperty(propertyName, exclusiveValue.Value);
+                    writer.WritePropertyName(propertyName);
+                    writer.WriteRaw(exclusiveValue!);
                     writer.WriteProperty(isExclusivePropertyName, true);
                 }
-                else if (value.HasValue)
+                else if (!string.IsNullOrEmpty(value))
                 {
                     // came from parsing an old document, we're just mirroring the information
-                    writer.WriteProperty(propertyName, value);
+                    writer.WritePropertyName(propertyName);
+                    writer.WriteRaw(value!);
                     if (isExclusiveValue.HasValue)
                         writer.WriteProperty(isExclusivePropertyName, isExclusiveValue.Value);
                 }
