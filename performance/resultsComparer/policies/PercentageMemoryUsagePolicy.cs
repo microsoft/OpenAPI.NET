@@ -49,7 +49,7 @@ internal abstract class PercentageMemoryUsagePolicy(float tolerancePercentagePoi
     }
     private static double GetPercentageDifference(BenchmarkMemory x, BenchmarkMemory y)
     {
-        return Math.Abs(GetAbsoluteRatio(x, y)) * 100;
+        return Math.Truncate(Math.Abs(GetAbsoluteRatio(x, y)) * 10000) / 100;
     }
     private static double GetAbsoluteRatio(BenchmarkMemory x, BenchmarkMemory y)
     {
