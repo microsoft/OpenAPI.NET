@@ -344,33 +344,33 @@ namespace Microsoft.OpenApi.Models
                     writer.WritePropertyName(exclusivePropertyName);
                     writer.WriteRaw(exclusiveValue);
                 }
-                else if (isExclusiveValue == true && !string.IsNullOrEmpty(value))
+                else if (isExclusiveValue == true && !string.IsNullOrEmpty(value) && value is not null)
                 {
                     // came from parsing an old document
                     writer.WritePropertyName(exclusivePropertyName);
-                    writer.WriteRaw(value!);
+                    writer.WriteRaw(value);
                 }
-                else if (!string.IsNullOrEmpty(value))
+                else if (!string.IsNullOrEmpty(value) && value is not null)
                 {
                     // was explicitly set in the document or object model
                     writer.WritePropertyName(propertyName);
-                    writer.WriteRaw(value!);
+                    writer.WriteRaw(value);
                 }
             }
             else
             {
-                if (!string.IsNullOrEmpty(exclusiveValue))
+                if (!string.IsNullOrEmpty(exclusiveValue) && exclusiveValue is not null)
                 {
                     // was explicitly set in a new document being downcast or object model
                     writer.WritePropertyName(propertyName);
-                    writer.WriteRaw(exclusiveValue!);
+                    writer.WriteRaw(exclusiveValue);
                     writer.WriteProperty(isExclusivePropertyName, true);
                 }
-                else if (!string.IsNullOrEmpty(value))
+                else if (!string.IsNullOrEmpty(value) && value is not null)
                 {
                     // came from parsing an old document, we're just mirroring the information
                     writer.WritePropertyName(propertyName);
-                    writer.WriteRaw(value!);
+                    writer.WriteRaw(value);
                     if (isExclusiveValue.HasValue)
                         writer.WriteProperty(isExclusivePropertyName, isExclusiveValue.Value);
                 }
