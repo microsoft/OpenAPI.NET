@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>performance.EmptyModels-20250408-145658</title>
+<title>performance.EmptyModels-20250408-151749</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -13,7 +13,7 @@
 </head>
 <body>
 <pre><code>
-BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.3476)
+BenchmarkDotNet v0.14.0, Ubuntu 22.04.5 LTS (Jammy Jellyfish) WSL
 11th Gen Intel Core i7-1185G7 3.00GHz, 1 CPU, 8 logical and 4 physical cores
 .NET SDK 8.0.407
   [Host]   : .NET 8.0.14 (8.0.1425.11118), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
@@ -24,36 +24,36 @@ WarmupCount=3
 </code></pre>
 
 <table>
-<thead><tr><th>Method               </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
+<thead><tr><th>Method               </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>EmptyApiCallback</td><td>43.413 ns</td><td>64.615 ns</td><td>3.5418 ns</td><td>41.429 ns</td><td>0.0306</td><td>-</td><td>192 B</td>
-</tr><tr><td>EmptyApiComponents</td><td>174.428 ns</td><td>177.831 ns</td><td>9.7475 ns</td><td>178.768 ns</td><td>0.1566</td><td>0.0005</td><td>984 B</td>
-</tr><tr><td>EmptyApiContact</td><td>17.993 ns</td><td>19.112 ns</td><td>1.0476 ns</td><td>17.865 ns</td><td>0.0204</td><td>-</td><td>128 B</td>
-</tr><tr><td>EmptyApiDiscriminator</td><td>32.343 ns</td><td>24.299 ns</td><td>1.3319 ns</td><td>32.988 ns</td><td>0.0318</td><td>-</td><td>200 B</td>
-</tr><tr><td>EmptyDocument</td><td>556.709 ns</td><td>374.450 ns</td><td>20.5249 ns</td><td>550.393 ns</td><td>0.2203</td><td>0.0010</td><td>1384 B</td>
-</tr><tr><td>EmptyApiEncoding</td><td>34.972 ns</td><td>22.225 ns</td><td>1.2182 ns</td><td>34.710 ns</td><td>0.0344</td><td>-</td><td>216 B</td>
-</tr><tr><td>EmptyApiExample</td><td>17.051 ns</td><td>19.571 ns</td><td>1.0728 ns</td><td>16.492 ns</td><td>0.0217</td><td>-</td><td>136 B</td>
-</tr><tr><td>EmptyApiExternalDocs</td><td>21.698 ns</td><td>52.592 ns</td><td>2.8827 ns</td><td>20.859 ns</td><td>0.0191</td><td>-</td><td>120 B</td>
-</tr><tr><td>EmptyApiHeader</td><td>51.813 ns</td><td>71.591 ns</td><td>3.9242 ns</td><td>49.602 ns</td><td>0.0510</td><td>-</td><td>320 B</td>
-</tr><tr><td>EmptyApiInfo</td><td>18.290 ns</td><td>7.732 ns</td><td>0.4238 ns</td><td>18.079 ns</td><td>0.0255</td><td>-</td><td>160 B</td>
-</tr><tr><td>EmptyApiLicense</td><td>19.421 ns</td><td>45.906 ns</td><td>2.5163 ns</td><td>20.804 ns</td><td>0.0204</td><td>-</td><td>128 B</td>
-</tr><tr><td>EmptyApiLink</td><td>32.448 ns</td><td>11.779 ns</td><td>0.6456 ns</td><td>32.340 ns</td><td>0.0370</td><td>-</td><td>232 B</td>
-</tr><tr><td>EmptyApiMediaType</td><td>61.900 ns</td><td>160.639 ns</td><td>8.8052 ns</td><td>59.521 ns</td><td>0.0471</td><td>-</td><td>296 B</td>
-</tr><tr><td>EmptyApiOAuthFlow</td><td>38.086 ns</td><td>57.540 ns</td><td>3.1540 ns</td><td>37.072 ns</td><td>0.0344</td><td>-</td><td>216 B</td>
-</tr><tr><td>EmptyApiOAuthFlows</td><td>17.813 ns</td><td>26.116 ns</td><td>1.4315 ns</td><td>17.183 ns</td><td>0.0217</td><td>-</td><td>136 B</td>
-</tr><tr><td>EmptyApiOperation</td><td>284.797 ns</td><td>90.805 ns</td><td>4.9773 ns</td><td>285.265 ns</td><td>0.1007</td><td>0.0001</td><td>632 B</td>
-</tr><tr><td>EmptyApiParameter</td><td>113.771 ns</td><td>621.746 ns</td><td>34.0800 ns</td><td>111.246 ns</td><td>0.0534</td><td>-</td><td>336 B</td>
-</tr><tr><td>EmptyApiPathItem</td><td>106.226 ns</td><td>177.486 ns</td><td>9.7286 ns</td><td>102.109 ns</td><td>0.0458</td><td>-</td><td>288 B</td>
-</tr><tr><td>EmptyApiPaths</td><td>134.175 ns</td><td>18.198 ns</td><td>0.9975 ns</td><td>134.283 ns</td><td>0.0393</td><td>-</td><td>248 B</td>
-</tr><tr><td>EmptyApiRequestBody</td><td>105.229 ns</td><td>16.300 ns</td><td>0.8935 ns</td><td>105.228 ns</td><td>0.0331</td><td>-</td><td>208 B</td>
-</tr><tr><td>EmptyApiResponse</td><td>195.390 ns</td><td>23.409 ns</td><td>1.2831 ns</td><td>195.320 ns</td><td>0.0598</td><td>-</td><td>376 B</td>
-</tr><tr><td>EmptyApiResponses</td><td>80.140 ns</td><td>260.612 ns</td><td>14.2850 ns</td><td>76.470 ns</td><td>0.0393</td><td>-</td><td>248 B</td>
-</tr><tr><td>EmptyApiSchema</td><td>196.306 ns</td><td>987.242 ns</td><td>54.1141 ns</td><td>186.016 ns</td><td>0.1707</td><td>0.0005</td><td>1072 B</td>
-</tr><tr><td>EmptyApiSecurityRequirement</td><td>9.601 ns</td><td>1.589 ns</td><td>0.0871 ns</td><td>9.649 ns</td><td>0.0166</td><td>-</td><td>104 B</td>
-</tr><tr><td>EmptyApiSecurityScheme</td><td>30.086 ns</td><td>342.099 ns</td><td>18.7516 ns</td><td>19.844 ns</td><td>0.0268</td><td>-</td><td>168 B</td>
-</tr><tr><td>EmptyApiServer</td><td>33.843 ns</td><td>20.069 ns</td><td>1.1001 ns</td><td>33.641 ns</td><td>0.0331</td><td>-</td><td>208 B</td>
-</tr><tr><td>EmptyApiServerVariable</td><td>17.171 ns</td><td>9.809 ns</td><td>0.5377 ns</td><td>17.034 ns</td><td>0.0204</td><td>-</td><td>128 B</td>
-</tr><tr><td>EmptyApiTag</td><td>16.494 ns</td><td>5.025 ns</td><td>0.2754 ns</td><td>16.402 ns</td><td>0.0204</td><td>-</td><td>128 B</td>
+</thead><tbody><tr><td>EmptyApiCallback</td><td>38.08 ns</td><td>18.788 ns</td><td>1.030 ns</td><td>0.0306</td><td>-</td><td>192 B</td>
+</tr><tr><td>EmptyApiComponents</td><td>197.64 ns</td><td>23.748 ns</td><td>1.302 ns</td><td>0.1566</td><td>0.0005</td><td>984 B</td>
+</tr><tr><td>EmptyApiContact</td><td>20.72 ns</td><td>5.135 ns</td><td>0.281 ns</td><td>0.0204</td><td>-</td><td>128 B</td>
+</tr><tr><td>EmptyApiDiscriminator</td><td>38.21 ns</td><td>7.074 ns</td><td>0.388 ns</td><td>0.0318</td><td>-</td><td>200 B</td>
+</tr><tr><td>EmptyDocument</td><td>734.06 ns</td><td>86.948 ns</td><td>4.766 ns</td><td>0.2203</td><td>0.0010</td><td>1384 B</td>
+</tr><tr><td>EmptyApiEncoding</td><td>36.83 ns</td><td>16.946 ns</td><td>0.929 ns</td><td>0.0344</td><td>-</td><td>216 B</td>
+</tr><tr><td>EmptyApiExample</td><td>25.31 ns</td><td>54.053 ns</td><td>2.963 ns</td><td>0.0217</td><td>-</td><td>136 B</td>
+</tr><tr><td>EmptyApiExternalDocs</td><td>31.36 ns</td><td>34.894 ns</td><td>1.913 ns</td><td>0.0191</td><td>-</td><td>120 B</td>
+</tr><tr><td>EmptyApiHeader</td><td>83.42 ns</td><td>105.740 ns</td><td>5.796 ns</td><td>0.0509</td><td>-</td><td>320 B</td>
+</tr><tr><td>EmptyApiInfo</td><td>33.48 ns</td><td>113.942 ns</td><td>6.246 ns</td><td>0.0255</td><td>-</td><td>160 B</td>
+</tr><tr><td>EmptyApiLicense</td><td>47.42 ns</td><td>131.044 ns</td><td>7.183 ns</td><td>0.0204</td><td>-</td><td>128 B</td>
+</tr><tr><td>EmptyApiLink</td><td>59.54 ns</td><td>128.628 ns</td><td>7.051 ns</td><td>0.0370</td><td>-</td><td>232 B</td>
+</tr><tr><td>EmptyApiMediaType</td><td>68.45 ns</td><td>27.431 ns</td><td>1.504 ns</td><td>0.0471</td><td>-</td><td>296 B</td>
+</tr><tr><td>EmptyApiOAuthFlow</td><td>44.79 ns</td><td>22.253 ns</td><td>1.220 ns</td><td>0.0344</td><td>-</td><td>216 B</td>
+</tr><tr><td>EmptyApiOAuthFlows</td><td>26.24 ns</td><td>54.893 ns</td><td>3.009 ns</td><td>0.0216</td><td>-</td><td>136 B</td>
+</tr><tr><td>EmptyApiOperation</td><td>130.32 ns</td><td>400.514 ns</td><td>21.954 ns</td><td>0.1006</td><td>-</td><td>632 B</td>
+</tr><tr><td>EmptyApiParameter</td><td>59.98 ns</td><td>18.536 ns</td><td>1.016 ns</td><td>0.0535</td><td>-</td><td>336 B</td>
+</tr><tr><td>EmptyApiPathItem</td><td>57.97 ns</td><td>100.637 ns</td><td>5.516 ns</td><td>0.0459</td><td>-</td><td>288 B</td>
+</tr><tr><td>EmptyApiPaths</td><td>62.88 ns</td><td>153.718 ns</td><td>8.426 ns</td><td>0.0395</td><td>-</td><td>248 B</td>
+</tr><tr><td>EmptyApiRequestBody</td><td>46.17 ns</td><td>167.895 ns</td><td>9.203 ns</td><td>0.0331</td><td>-</td><td>208 B</td>
+</tr><tr><td>EmptyApiResponse</td><td>78.70 ns</td><td>44.209 ns</td><td>2.423 ns</td><td>0.0598</td><td>-</td><td>376 B</td>
+</tr><tr><td>EmptyApiResponses</td><td>49.13 ns</td><td>2.420 ns</td><td>0.133 ns</td><td>0.0395</td><td>-</td><td>248 B</td>
+</tr><tr><td>EmptyApiSchema</td><td>138.20 ns</td><td>37.314 ns</td><td>2.045 ns</td><td>0.1707</td><td>0.0005</td><td>1072 B</td>
+</tr><tr><td>EmptyApiSecurityRequirement</td><td>13.38 ns</td><td>2.406 ns</td><td>0.132 ns</td><td>0.0166</td><td>-</td><td>104 B</td>
+</tr><tr><td>EmptyApiSecurityScheme</td><td>21.99 ns</td><td>3.714 ns</td><td>0.204 ns</td><td>0.0268</td><td>-</td><td>168 B</td>
+</tr><tr><td>EmptyApiServer</td><td>37.40 ns</td><td>3.161 ns</td><td>0.173 ns</td><td>0.0331</td><td>-</td><td>208 B</td>
+</tr><tr><td>EmptyApiServerVariable</td><td>23.73 ns</td><td>5.836 ns</td><td>0.320 ns</td><td>0.0204</td><td>-</td><td>128 B</td>
+</tr><tr><td>EmptyApiTag</td><td>23.21 ns</td><td>31.131 ns</td><td>1.706 ns</td><td>0.0204</td><td>-</td><td>128 B</td>
 </tr></tbody></table>
 </body>
 </html>
