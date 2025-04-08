@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Readers;
 
 namespace performance;
 
@@ -24,7 +24,7 @@ public class Descriptions
     [Benchmark]
     public async Task<OpenApiDocument> PetStoreJson()
     {
-        return await ParseDocumentAsync(PetStoreJsonPath, OpenApiConstants.Json);
+        return await ParseDocumentAsync(PetStoreJsonPath);
     }
     [Benchmark]
     public async Task<OpenApiDocument> GHESYaml()
@@ -34,7 +34,7 @@ public class Descriptions
     [Benchmark]
     public async Task<OpenApiDocument> GHESJson()
     {
-        return await ParseDocumentAsync(GHESJsonDescriptionUrl, OpenApiConstants.Json);
+        return await ParseDocumentAsync(GHESJsonDescriptionUrl);
     }
     private readonly Dictionary<string, MemoryStream> _streams = new(StringComparer.OrdinalIgnoreCase);
     [GlobalSetup]
@@ -45,7 +45,6 @@ public class Descriptions
         {
             LeaveStreamOpen = true,
         };
-        readerSettings.AddYamlReader();
         await LoadDocumentFromAssemblyIntoStreams(PetStoreYamlPath);
         await LoadDocumentFromAssemblyIntoStreams(PetStoreJsonPath);
         await LoadDocumentFromUrlIntoStreams(GHESYamlDescriptionUrl);
@@ -56,14 +55,14 @@ public class Descriptions
     private const string PetStoreJsonPath = @"petStore.json";
     private const string GHESYamlDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions/ghes-3.16/ghes-3.16.2022-11-28.yaml";
     private const string GHESJsonDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions/ghes-3.16/ghes-3.16.2022-11-28.json";
-    private async Task<OpenApiDocument> ParseDocumentAsync(string fileName, string format = null)
+    private async Task<OpenApiDocument> ParseDocumentAsync(string fileName)
     {
-        format ??= OpenApiConstants.Yaml;
         var stream = _streams[fileName];
         stream.Seek(0, SeekOrigin.Begin);
+        var reader = new OpenApiStreamReader(readerSettings);
         
-        var (document, _) = await OpenApiDocument.LoadAsync(stream, format, readerSettings).ConfigureAwait(false);
-        return document;
+        var result = await reader.ReadAsync(stream).ConfigureAwait(false);
+        return result.OpenApiDocument;
     }
     private HttpClient _httpClient;
     private async Task LoadDocumentFromUrlIntoStreams(string url)
