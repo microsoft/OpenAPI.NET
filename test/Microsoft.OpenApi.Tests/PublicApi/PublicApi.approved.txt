@@ -142,6 +142,13 @@ namespace Microsoft.OpenApi.Expressions
 }
 namespace Microsoft.OpenApi.Extensions
 {
+    public static class DictionaryExtensions
+    {
+        public static System.Collections.Generic.IDictionary<TKey, TValue> Sort<TKey, TValue>(this System.Collections.Generic.IDictionary<TKey, TValue> source)
+            where TKey :  notnull { }
+        public static System.Collections.Generic.IDictionary<TKey, TValue> Sort<TKey, TValue>(this System.Collections.Generic.IDictionary<TKey, TValue> source, System.Collections.Generic.IComparer<TKey> comparer)
+            where TKey :  notnull { }
+    }
     public static class EnumExtensions
     {
         [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2075", Justification="Fields are never trimmed for enum types.")]
