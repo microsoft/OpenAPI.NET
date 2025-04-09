@@ -159,24 +159,22 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
 
 ```csharp
 
-        public virtual decimal? ExclusiveMaximum { get; set; }  // New, but currently named v31ExclusiveMaximum
-        public virtual decimal? ExclusiveMinimum { get; set; } // New, but Currently named v31ExclusiveMinimum)
-        public virtual decimal? ExclusiveMaximum { get; set; }  //type changed to reflect the new version of JSON schema
-        public virtual decimal? ExclusiveMinimum { get; set; } // type changed to reflect the new version of JSON schema
-        public virtual JsonSchemaType? Type { get; set; }  // Was string, now flagged enum
-        public virtual decimal? Maximum { get; set; }      // Double???
-        public virtual decimal? Minimum { get; set; }       // Double???
+        public decimal? ExclusiveMaximum { get; set; }  //type changed to reflect the new version of JSON schema
+        public decimal? ExclusiveMinimum { get; set; } // type changed to reflect the new version of JSON schema
+        public JsonSchemaType? Type { get; set; }  // Was string, now flagged enum
+        public decimal? Maximum { get; set; }      // Double???
+        public decimal? Minimum { get; set; }       // Double???
 
-        public virtual JsonNode Default { get; set; }  // Type matching no longer enforced. Was IOpenApiAny
-        public virtual bool ReadOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
-        public virtual bool WriteOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
+        public JsonNode Default { get; set; }  // Type matching no longer enforced. Was IOpenApiAny
+        public bool ReadOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
+        public bool WriteOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
 
-        public virtual JsonNode Example { get; set; }  // No longer IOpenApiAny
-        public virtual IList<JsonNode> Examples { get; set; }
-        public virtual IList<JsonNode> Enum { get; set; }
-        public virtual OpenApiExternalDocs ExternalDocs { get; set; }  // OpenApi Vocab
-        public virtual bool Deprecated { get; set; }  // OpenApi Vocab
-        public virtual OpenApiXml Xml { get; set; }  // OpenApi Vocab
+        public JsonNode Example { get; set; }  // No longer IOpenApiAny
+        public IList<JsonNode> Examples { get; set; }
+        public IList<JsonNode> Enum { get; set; }
+        public OpenApiExternalDocs ExternalDocs { get; set; }  // OpenApi Vocab
+        public bool Deprecated { get; set; }  // OpenApi Vocab
+        public OpenApiXml Xml { get; set; }  // OpenApi Vocab
 
         public IDictionary<string, object> Annotations { get; set; }  // Custom keywords?
 ```
@@ -190,9 +188,9 @@ public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiRe
 {
         public OpenApiSchema() { }
         public OpenApiSchema(OpenApiSchema schema) { }
-        public virtual void SerializeAsV31(IOpenApiWriter writer) { }
-        public virtual void SerializeAsV3(IOpenApiWriter writer) { }
-        public virtual void SerializeAsV2(IOpenApiWriter writer) { }
+        public void SerializeAsV31(IOpenApiWriter writer) { }
+        public void SerializeAsV3(IOpenApiWriter writer) { }
+        public void SerializeAsV2(IOpenApiWriter writer) { }
 }
 
 ```
@@ -258,7 +256,7 @@ public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenA
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
         /// </summary>
-        public virtual IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+        public IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
     }
 ```
 
