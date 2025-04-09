@@ -71,9 +71,9 @@ In the OpenAPI specification, there are a few properties that are defined as typ
 
 In the v1 library, there are a set of classes that are derived from the `OpenApiAny` base class which is an abstract model which reflects the JSON data model plus some additional primitive types such as `decimal`, `float`, `datetime` etc.
 
-In v2 we are removing this abstraction and relying on the JsonNode model to represent these inner types. In v1 we were not able to reliably identify the additional primitive types and it caused a significant amount of false negatives in error reporting as well as incorrectly parsed data values.
+In v2 we are removing this abstraction and relying on the `JsonNode` model to represent these inner types. In v1 we were not able to reliably identify the additional primitive types and it caused a significant amount of false negatives in error reporting as well as incorrectly parsed data values.
 
-Due to JsonNode implicit operators, this makes initialization sometimes easier, instead of:
+Due to `JsonNode` implicit operators, this makes initialization sometimes easier, instead of:
 ```csharp
     new OpenApiParameter
                 {
@@ -85,7 +85,7 @@ Due to JsonNode implicit operators, this makes initialization sometimes easier, 
 ```
 the assignment becomes simply,
 ```csharp
-                    Example = (float)0.5,
+                    Example = 0.5f,
 ```
 
 For a more complex example, where the developer wants to create an extension that is an object they would do this in v1:
@@ -153,7 +153,6 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
         public IDictionary<string, OpenApiSchema> Definitions { get; set; }
         public IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
         public bool UnevaluatedProperties { get; set;}
-        public bool UnEvaluatedProperties { get; set; }  // Duplicate should be removed
 
 ```
 #### Changes to existing keywords
@@ -174,7 +173,7 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
 
         public virtual JsonNode Example { get; set; }  // No longer IOpenApiAny
         public virtual IList<JsonNode> Examples { get; set; }
-        public virtual IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
+        public virtual IList<JsonNode> Enum { get; set; }
         public virtual OpenApiExternalDocs ExternalDocs { get; set; }  // OpenApi Vocab
         public virtual bool Deprecated { get; set; }  // OpenApi Vocab
         public virtual OpenApiXml Xml { get; set; }  // OpenApi Vocab
@@ -184,7 +183,7 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
 
 #### OpenApiSchema methods
 
-Other than the addition of the SerializeAsV31, the methods have not changed.
+Other than the addition of `SerializeAsV31`, the methods have not changed.
 
 ```csharp
 public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
@@ -200,7 +199,7 @@ public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiRe
 
 ## OpenAPI v3.1 Support
 
-There are a number of new features in OpenAPI v3.1 that are now supported in OpenAPI.Net.
+There are a number of new features in OpenAPI v3.1 that are now supported in OpenAPI.NET.
 
 ### Webhooks
 
@@ -213,7 +212,6 @@ public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenA
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
         public IDictionary<string, OpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
-
 }
 ```
 
