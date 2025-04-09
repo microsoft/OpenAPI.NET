@@ -267,11 +267,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Type = JsonSchemaType.Number,
                     Format = "float",
                     Enum =
-                        {
-                            new OpenApiAny(7).Node,
-                            new OpenApiAny(8).Node,
-                            new OpenApiAny(9).Node
-                        }
+                    [
+                        new OpenApiAny(7).Node,
+                        new OpenApiAny(8).Node,
+                        new OpenApiAny(9).Node
+                    ]
                 }
             };
 

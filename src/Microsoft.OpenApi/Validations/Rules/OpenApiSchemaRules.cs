@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         {
             if (discriminatorName is not null)
             {
-                if (!schema.Required?.Contains(discriminatorName) ?? false)
+                if (schema.Required is null || !schema.Required.Contains(discriminatorName))
                 {
                     // recursively check nested schema.OneOf, schema.AnyOf or schema.AllOf and their required fields for the discriminator
                     if (schema.OneOf?.Count != 0)
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// between other schemas which may satisfy the payload description.</param>
         /// <param name="childSchema">The child schema.</param>
         /// <returns></returns>
-        public static bool TraverseSchemaElements(string discriminatorName, IList<IOpenApiSchema>? childSchema)
+        public static bool TraverseSchemaElements(string discriminatorName, List<IOpenApiSchema>? childSchema)
         {
             if (childSchema is not null)
             {

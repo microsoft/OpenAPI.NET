@@ -85,12 +85,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 Type = JsonSchemaType.Number,
                 Format = "float",
-                Enum = new List<JsonNode>
-                {
+                Enum =
+                [
                     new OpenApiAny(7).Node,
                     new OpenApiAny(8).Node,
                     new OpenApiAny(9).Node
-                }
+                ]
             };
 
             schema.Should().BeEquivalentTo(expected, options =>
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var targetSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["prop1"] = new OpenApiSchema()
                     {
@@ -117,12 +117,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 }
             };
-            workingDocument.Components.Schemas.Add(referenceId, targetSchema);
+            workingDocument.Components.Schemas = new()
+            {
+                [referenceId] = targetSchema
+            };
             workingDocument.Workspace.RegisterComponents(workingDocument);
             var referenceSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["propA"] = new OpenApiSchemaReference(referenceId, workingDocument),
                 }

@@ -18,8 +18,8 @@ namespace Microsoft.OpenApi.Validations
     public class OpenApiValidator : OpenApiVisitorBase, IValidationContext
     {
         private readonly ValidationRuleSet _ruleSet;
-        private readonly IList<OpenApiValidatorError> _errors = new List<OpenApiValidatorError>();
-        private readonly IList<OpenApiValidatorWarning> _warnings = new List<OpenApiValidatorWarning>();
+        private readonly List<OpenApiValidatorError> _errors = [];
+        private readonly List<OpenApiValidatorWarning> _warnings = [];
 
         /// <summary>
         /// Create a visitor that will validate an OpenAPIDocument
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IOpenApiExtension openApiExtension) => Validate(openApiExtension, openApiExtension.GetType());
 
         /// <inheritdoc/>
-        public override void Visit(IList<IOpenApiExample> example) => Validate(example, example.GetType());
+        public override void Visit(List<IOpenApiExample> example) => Validate(example, example.GetType());
 
         /// <inheritdoc/>
         public override void Visit(IOpenApiPathItem pathItem) => Validate(pathItem);
@@ -149,21 +149,21 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(OpenApiOperation operation) => Validate(operation);
         /// <inheritdoc/>
-        public override void Visit(IDictionary<HttpMethod, OpenApiOperation> operations) => Validate(operations, operations.GetType());
+        public override void Visit(Dictionary<HttpMethod, OpenApiOperation> operations) => Validate(operations, operations.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, IOpenApiHeader> headers) => Validate(headers, headers.GetType());
+        public override void Visit(Dictionary<string, IOpenApiHeader> headers) => Validate(headers, headers.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
+        public override void Visit(Dictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
+        public override void Visit(Dictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
+        public override void Visit(Dictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, IOpenApiLink> links) => Validate(links, links.GetType());
+        public override void Visit(Dictionary<string, IOpenApiLink> links) => Validate(links, links.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiServerVariable> serverVariables) => Validate(serverVariables, serverVariables.GetType());
+        public override void Visit(Dictionary<string, OpenApiServerVariable> serverVariables) => Validate(serverVariables, serverVariables.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiEncoding> encodings) => Validate(encodings, encodings.GetType());
+        public override void Visit(Dictionary<string, OpenApiEncoding> encodings) => Validate(encodings, encodings.GetType());
 
         private void Validate<T>(T item)
         {

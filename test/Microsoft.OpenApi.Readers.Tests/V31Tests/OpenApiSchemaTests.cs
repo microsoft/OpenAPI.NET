@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["fruits"] = new OpenApiSchema
                     {
@@ -66,11 +66,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "veggieName",
                             "veggieLike"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "veggieType", new HashSet<string> { "veggieColor", "veggieSize" } }
                         },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["veggieName"] = new OpenApiSchema
                             {
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["one"] = new OpenApiSchema()
                     {
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["one"] = new OpenApiSchema()
                     {

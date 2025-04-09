@@ -14,16 +14,16 @@ public interface IOpenApiPathItem : IOpenApiDescribedElement, IOpenApiSummarized
     /// <summary>
     /// Gets the definition of operations on this path.
     /// </summary>
-    public IDictionary<HttpMethod, OpenApiOperation>? Operations { get; }
+    public Dictionary<HttpMethod, OpenApiOperation>? Operations { get; }
 
     /// <summary>
     /// An alternative server array to service all operations in this path.
     /// </summary>
-    public IList<OpenApiServer>? Servers { get; }
+    public List<OpenApiServer>? Servers { get; }
 
     /// <summary>
     /// A list of parameters that are applicable for all the operations described under this path.
     /// These parameters can be overridden at the operation level, but cannot be removed there.
     /// </summary>
-    public IList<IOpenApiParameter>? Parameters { get; }
+    public List<IOpenApiParameter>? Parameters { get; }
 }

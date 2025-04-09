@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiHeader _headerFragment = new()
         {
             Schema = new OpenApiSchema(),
-            Examples =
+            Examples = new Dictionary<string, IOpenApiExample>
             {
                 { "example1", new OpenApiExample() }
             }
@@ -28,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiParameter _parameterFragment = new()
         {
             Schema = new OpenApiSchema(),
-            Examples =
+            Examples = new Dictionary<string, IOpenApiExample>
             {
                 { "example1", new OpenApiExample() }
             }
@@ -36,32 +37,31 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiRequestBody _requestBodyFragment = new();
         private static readonly OpenApiResponse _responseFragment = new()
         {
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 { "header1", new OpenApiHeader() }
             },
-            Links =
+            Links = new Dictionary<string, IOpenApiLink>
             {
                 { "link1", new OpenApiLink() }
             }
         };
         private static readonly OpenApiSecurityScheme _securitySchemeFragment = new OpenApiSecurityScheme();
         public static IEnumerable<object[]> ResolveReferenceCanResolveValidJsonPointersTestData =>
-        new List<object[]>
-        {
-            new object[] { _callbackFragment, "/", _callbackFragment },
-            new object[] { _exampleFragment, "/", _exampleFragment },
-            new object[] { _linkFragment, "/", _linkFragment },
-            new object[] { _headerFragment, "/", _headerFragment },
-            new object[] { _headerFragment, "/examples/example1", _headerFragment.Examples["example1"] },
-            new object[] { _parameterFragment, "/", _parameterFragment },
-            new object[] { _parameterFragment, "/examples/example1", _parameterFragment.Examples["example1"] },
-            new object[] { _requestBodyFragment, "/", _requestBodyFragment },
-            new object[] { _responseFragment, "/", _responseFragment },
-            new object[] { _responseFragment, "/headers/header1", _responseFragment.Headers["header1"] },
-            new object[] { _responseFragment, "/links/link1", _responseFragment.Links["link1"] },
-            new object[] { _securitySchemeFragment, "/", _securitySchemeFragment},
-        };
+        [
+            [_callbackFragment, "/", _callbackFragment],
+            [_exampleFragment, "/", _exampleFragment],
+            [_linkFragment, "/", _linkFragment],
+            [_headerFragment, "/", _headerFragment],
+            [_headerFragment, "/examples/example1", _headerFragment.Examples["example1"]],
+            [_parameterFragment, "/", _parameterFragment],
+            [_parameterFragment, "/examples/example1", _parameterFragment.Examples["example1"]],
+            [_requestBodyFragment, "/", _requestBodyFragment],
+            [_responseFragment, "/", _responseFragment],
+            [_responseFragment, "/headers/header1", _responseFragment.Headers["header1"]],
+            [_responseFragment, "/links/link1", _responseFragment.Links["link1"]],
+            [_securitySchemeFragment, "/", _securitySchemeFragment],
+        ];
 
         [Theory]
         [MemberData(nameof(ResolveReferenceCanResolveValidJsonPointersTestData))]
@@ -78,25 +78,24 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         }
 
         public static IEnumerable<object[]> ResolveReferenceShouldThrowOnInvalidReferenceIdTestData =>
-        new List<object[]>
-        {
-            new object[] { _callbackFragment, "/a" },
-            new object[] { _headerFragment, "/a" },
-            new object[] { _headerFragment, "/examples" },
-            new object[] { _headerFragment, "/examples/" },
-            new object[] { _headerFragment, "/examples/a" },
-            new object[] { _parameterFragment, "/a" },
-            new object[] { _parameterFragment, "/examples" },
-            new object[] { _parameterFragment, "/examples/" },
-            new object[] { _parameterFragment, "/examples/a" },
-            new object[] { _responseFragment, "/a" },
-            new object[] { _responseFragment, "/headers" },
-            new object[] { _responseFragment, "/headers/" },
-            new object[] { _responseFragment, "/headers/a" },
-            new object[] { _responseFragment, "/content" },
-            new object[] { _responseFragment, "/content/" },
-            new object[] { _responseFragment, "/content/a" }
-        };
+        [
+            [_callbackFragment, "/a"],
+            [_headerFragment, "/a"],
+            [_headerFragment, "/examples"],
+            [_headerFragment, "/examples/"],
+            [_headerFragment, "/examples/a"],
+            [_parameterFragment, "/a"],
+            [_parameterFragment, "/examples"],
+            [_parameterFragment, "/examples/"],
+            [_parameterFragment, "/examples/a"],
+            [_responseFragment, "/a"],
+            [_responseFragment, "/headers"],
+            [_responseFragment, "/headers/"],
+            [_responseFragment, "/headers/a"],
+            [_responseFragment, "/content"],
+            [_responseFragment, "/content/"],
+            [_responseFragment, "/content/a"]
+        ];
 
         [Theory]
         [MemberData(nameof(ResolveReferenceShouldThrowOnInvalidReferenceIdTestData))]

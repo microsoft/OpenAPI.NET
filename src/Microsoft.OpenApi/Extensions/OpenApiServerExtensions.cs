@@ -21,7 +21,7 @@ public static class OpenApiServerExtensions
     ///   1. A substitution has no valid value in both the supplied dictionary and the default
     ///   2. A substitution's value is not available in the enum provided
     /// </exception>
-    public static string? ReplaceServerUrlVariables(this OpenApiServer server, IDictionary<string, string>? values = null)
+    public static string? ReplaceServerUrlVariables(this OpenApiServer server, Dictionary<string, string>? values = null)
     {
         var parsedUrl = server.Url;
         if (server.Variables is not null && parsedUrl is not null)

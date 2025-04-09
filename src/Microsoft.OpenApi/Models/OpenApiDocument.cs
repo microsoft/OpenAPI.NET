@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer>? Servers { get; set; } = new List<OpenApiServer>();
+        public List<OpenApiServer>? Servers { get; set; } = [];
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// A map of requests initiated other than by an API call, for example by an out of band registration. 
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
-        public IDictionary<string, IOpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, IOpenApiPathItem>();
+        public Dictionary<string, IOpenApiPathItem>? Webhooks { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -71,14 +71,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? Security { get; set; } =
-            new List<OpenApiSecurityRequirement>();
+        public List<OpenApiSecurityRequirement>? Security { get; set; }
 
         private HashSet<OpenApiTag>? _tags;
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public ISet<OpenApiTag>? Tags 
+        public HashSet<OpenApiTag>? Tags 
         { 
             get
             {
@@ -104,10 +103,10 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Metadata { get; set; }
+        public Dictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Implements IBaseDocument
@@ -133,11 +132,11 @@ namespace Microsoft.OpenApi.Models
             Workspace = document?.Workspace != null ? new(document.Workspace) : null;
             Info = document?.Info != null ? new(document.Info) : new OpenApiInfo();
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
-            Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
-            Paths = document?.Paths != null ? new(document.Paths) : new OpenApiPaths();
+            Servers = document?.Servers != null ? [.. document.Servers] : null;
+            Paths = document?.Paths != null ? new(document.Paths) : [];
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
-            Security = document?.Security != null ? new List<OpenApiSecurityRequirement>(document.Security) : null;
+            Security = document?.Security != null ? [.. document.Security] : null;
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
@@ -415,10 +414,10 @@ namespace Microsoft.OpenApi.Models
 
         private static string? ParseServerUrl(OpenApiServer server)
         {
-            return server.ReplaceServerUrlVariables(new Dictionary<string, string>(0));
+            return server.ReplaceServerUrlVariables([]);
         }
 
-        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer>? servers)
+        private static void WriteHostInfoV2(IOpenApiWriter writer, List<OpenApiServer>? servers)
         {
             if (servers == null || !servers.Any())
             {
@@ -652,43 +651,43 @@ namespace Microsoft.OpenApi.Models
             switch (componentToRegister)
             {
                 case IOpenApiSchema openApiSchema:
-                    Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
+                    Components.Schemas ??= [];
                     Components.Schemas.Add(id, openApiSchema);
                     break;
                 case IOpenApiParameter openApiParameter:
-                    Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
+                    Components.Parameters ??= [];
                     Components.Parameters.Add(id, openApiParameter);
                     break;
                 case IOpenApiResponse openApiResponse:
-                    Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
+                    Components.Responses ??= [];
                     Components.Responses.Add(id, openApiResponse);
                     break;
                 case IOpenApiRequestBody openApiRequestBody:
-                    Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
+                    Components.RequestBodies ??= [];
                     Components.RequestBodies.Add(id, openApiRequestBody);
                     break;
                 case IOpenApiLink openApiLink:
-                    Components.Links ??= new Dictionary<string, IOpenApiLink>();
+                    Components.Links ??= [];
                     Components.Links.Add(id, openApiLink);
                     break;
                 case IOpenApiCallback openApiCallback:
-                    Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
+                    Components.Callbacks ??= [];
                     Components.Callbacks.Add(id, openApiCallback);
                     break;
                 case IOpenApiPathItem openApiPathItem:
-                    Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
+                    Components.PathItems ??= [];
                     Components.PathItems.Add(id, openApiPathItem);
                     break;
                 case IOpenApiExample openApiExample:
-                    Components.Examples ??= new Dictionary<string, IOpenApiExample>();
+                    Components.Examples ??= [];
                     Components.Examples.Add(id, openApiExample);
                     break;
                 case IOpenApiHeader openApiHeader:
-                    Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
+                    Components.Headers ??= [];
                     Components.Headers.Add(id, openApiHeader);
                     break;
                 case IOpenApiSecurityScheme openApiSecurityScheme:
-                    Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+                    Components.SecuritySchemes ??= [];
                     Components.SecuritySchemes.Add(id, openApiSecurityScheme);
                     break;
                 default:

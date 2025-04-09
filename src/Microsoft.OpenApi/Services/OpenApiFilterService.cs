@@ -109,17 +109,19 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
 
-                if (result.CurrentKeys?.Operation != null && result.Operation != null)
+                if (result.CurrentKeys?.Operation != null && result.Operation != null && pathItem is OpenApiPathItem openApiPathItem)
                 {
-                    pathItem?.Operations?.Add(result.CurrentKeys.Operation, result.Operation);
+                    openApiPathItem.Operations ??= [];
+                    openApiPathItem.Operations?.Add(result.CurrentKeys.Operation, result.Operation);
 
                     if (result.Parameters?.Any() ?? false)
                     {
+                        openApiPathItem.Parameters ??= [];
                         foreach (var parameter in result.Parameters)
                         {
-                            if (pathItem?.Parameters is not null && !pathItem.Parameters.Contains(parameter))
+                            if (openApiPathItem?.Parameters is not null && !openApiPathItem.Parameters.Contains(parameter))
                             {
-                                pathItem.Parameters.Add(parameter);
+                                openApiPathItem.Parameters.Add(parameter);
                             }
                         }
                     }
@@ -151,7 +153,7 @@ namespace Microsoft.OpenApi.Services
             return rootNode;
         }
 
-        private static IDictionary<HttpMethod, OpenApiOperation>? GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
+        private static Dictionary<HttpMethod, OpenApiOperation>? GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
         {
             if (relativeUrl.Equals("/", StringComparison.Ordinal) && rootNode.HasOperations(label))
             {
@@ -160,7 +162,7 @@ namespace Microsoft.OpenApi.Services
 
             var urlSegments = relativeUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            IDictionary<HttpMethod, OpenApiOperation>? operations = null;
+            Dictionary<HttpMethod, OpenApiOperation>? operations = null;
 
             var targetChild = rootNode;
 
@@ -228,7 +230,7 @@ namespace Microsoft.OpenApi.Services
             return operations;
         }
 
-        private static IList<SearchResult> FindOperations(OpenApiDocument sourceDocument, Func<string, HttpMethod, OpenApiOperation, bool> predicate)
+        private static List<SearchResult> FindOperations(OpenApiDocument sourceDocument, Func<string, HttpMethod, OpenApiOperation, bool> predicate)
         {
             var search = new OperationSearch(predicate);
             var walker = new OpenApiWalker(search);
@@ -260,7 +262,7 @@ namespace Microsoft.OpenApi.Services
                     if (target?.Schemas is not null && !target.Schemas.ContainsKey(item.Key))
                     {
                         moreStuff = true;
-                        target.Schemas.Add(item);
+                        target.Schemas.Add(item.Key, item.Value);
                     }
                 }
             }
@@ -272,7 +274,7 @@ namespace Microsoft.OpenApi.Services
                     if (target?.Parameters is not null && !target.Parameters.ContainsKey(item.Key))
                     {
                         moreStuff = true;
-                        target.Parameters.Add(item);
+                        target.Parameters.Add(item.Key, item.Value);
                     }
                 }
             }
@@ -284,7 +286,7 @@ namespace Microsoft.OpenApi.Services
                     if (target?.Responses is not null && !target.Responses.ContainsKey(item.Key))
                     {
                         moreStuff = true;
-                        target.Responses.Add(item);
+                        target.Responses.Add(item.Key, item.Value);
                     }
                 }
             }
@@ -295,7 +297,7 @@ namespace Microsoft.OpenApi.Services
                                             .Where(item => target?.RequestBodies is not null && !target.RequestBodies.ContainsKey(item.Key)))
                 {
                     moreStuff = true;
-                    target?.RequestBodies?.Add(item);
+                    target?.RequestBodies?.Add(item.Key, item.Value);
                 }
             }
 
@@ -305,7 +307,7 @@ namespace Microsoft.OpenApi.Services
                                             .Where(item => target?.Headers is not null && !target.Headers.ContainsKey(item.Key)))
                 {
                     moreStuff = true;
-                    target?.Headers?.Add(item);
+                    target?.Headers?.Add(item.Key, item.Value);
                 }
             }
 
@@ -315,7 +317,7 @@ namespace Microsoft.OpenApi.Services
                                             .Where(item => target?.Links is not null && !target.Links.ContainsKey(item.Key)))
                 {
                     moreStuff = true;
-                    target?.Links?.Add(item);
+                    target?.Links?.Add(item.Key, item.Value);
                 }
             }
 
@@ -325,7 +327,7 @@ namespace Microsoft.OpenApi.Services
                                             .Where(item => target?.Callbacks is not null && !target.Callbacks.ContainsKey(item.Key)))
                 {
                     moreStuff = true;
-                    target?.Callbacks?.Add(item);
+                    target?.Callbacks?.Add(item.Key, item.Value);
                 }
             }
 
@@ -335,7 +337,7 @@ namespace Microsoft.OpenApi.Services
                                             .Where(item => target?.Examples is not null && !target.Examples.ContainsKey(item.Key)))
                 {
                     moreStuff = true;
-                    target?.Examples?.Add(item);
+                    target?.Examples?.Add(item.Key, item.Value);
                 }
             }
 
@@ -345,14 +347,14 @@ namespace Microsoft.OpenApi.Services
                                             .Where(item => target?.SecuritySchemes is not null && !target.SecuritySchemes.ContainsKey(item.Key)))
                 {
                     moreStuff = true;
-                    target?.SecuritySchemes?.Add(item);
+                    target?.SecuritySchemes?.Add(item.Key, item.Value);
                 }
             }
 
             return moreStuff;
         }
 
-        private static string ExtractPath(string url, IList<OpenApiServer>? serverList)
+        private static string ExtractPath(string url, List<OpenApiServer>? serverList)
         {
             // if OpenAPI has servers, then see if the url matches one of them
             var baseUrl = serverList?.Select(s => s.Url?.TrimEnd('/'))
@@ -363,7 +365,7 @@ namespace Microsoft.OpenApi.Services
                     : url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
         }
 
-        private static void ValidateFilters(IDictionary<string, List<string>>? requestUrls, string? operationIds, string? tags)
+        private static void ValidateFilters(Dictionary<string, List<string>>? requestUrls, string? operationIds, string? tags)
         {
             if (requestUrls != null && (operationIds != null || tags != null))
             {
@@ -438,7 +440,7 @@ namespace Microsoft.OpenApi.Services
             return (path, operationType, _) => operationTypes.Contains(operationType + path);
         }
 
-        private static List<string> GetOperationTypes(IDictionary<HttpMethod, OpenApiOperation> openApiOperations, List<string> url, string path)
+        private static List<string> GetOperationTypes(Dictionary<HttpMethod, OpenApiOperation> openApiOperations, List<string> url, string path)
         {
             // Add the available ops if they are in the postman collection. See path.Value
             return openApiOperations.Where(ops => url.Contains(ops.Key.ToString().ToUpper()))

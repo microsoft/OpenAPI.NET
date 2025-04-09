@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "API Support",
             Url = new("http://www.example.com/support"),
             Email = "support@example.com",
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new()
             {
                 {"x-internal-id", new OpenApiAny(42)}
             }
