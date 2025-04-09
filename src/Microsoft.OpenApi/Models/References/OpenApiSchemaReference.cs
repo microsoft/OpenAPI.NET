@@ -140,9 +140,6 @@ namespace Microsoft.OpenApi.Models.References
         public Dictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
 
         /// <inheritdoc/>
-        public Dictionary<string, object>? Annotations { get => Target?.Annotations; }
-
-        /// <inheritdoc/>
         public Dictionary<string, HashSet<string>>? DependentRequired { get => Target?.DependentRequired; }
 
         /// <inheritdoc/>

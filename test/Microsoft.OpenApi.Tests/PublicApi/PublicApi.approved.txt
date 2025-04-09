@@ -415,7 +415,6 @@ namespace Microsoft.OpenApi.Models.Interfaces
         Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? AdditionalProperties { get; }
         bool AdditionalPropertiesAllowed { get; }
         System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? AllOf { get; }
-        System.Collections.Generic.Dictionary<string, object>? Annotations { get; }
         System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? AnyOf { get; }
         string? Comment { get; }
         string? Const { get; }
@@ -1010,13 +1009,12 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponses() { }
         public OpenApiResponses(Microsoft.OpenApi.Models.OpenApiResponses openApiResponses) { }
     }
-    public class OpenApiSchema : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema
+    public class OpenApiSchema : Microsoft.OpenApi.Interfaces.IMetadataContainer, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>, Microsoft.OpenApi.Models.Interfaces.IOpenApiDescribedElement, Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema
     {
         public OpenApiSchema() { }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? AdditionalProperties { get; set; }
         public bool AdditionalPropertiesAllowed { get; set; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? AllOf { get; set; }
-        public System.Collections.Generic.Dictionary<string, object>? Annotations { get; set; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? AnyOf { get; set; }
         public string? Comment { get; set; }
         public string? Const { get; set; }
@@ -1042,6 +1040,7 @@ namespace Microsoft.OpenApi.Models
         public int? MaxLength { get; set; }
         public int? MaxProperties { get; set; }
         public string? Maximum { get; set; }
+        public System.Collections.Generic.Dictionary<string, object>? Metadata { get; set; }
         public int? MinItems { get; set; }
         public int? MinLength { get; set; }
         public int? MinProperties { get; set; }
@@ -1348,7 +1347,6 @@ namespace Microsoft.OpenApi.Models.References
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? AdditionalProperties { get; }
         public bool AdditionalPropertiesAllowed { get; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? AllOf { get; }
-        public System.Collections.Generic.Dictionary<string, object>? Annotations { get; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema>? AnyOf { get; }
         public string? Comment { get; }
         public string? Const { get; }
