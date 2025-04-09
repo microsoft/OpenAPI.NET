@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -35,8 +36,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                new OpenApiDiscriminator
                {
                    PropertyName = "pet_type",
-                   Mapping =
-                    {
+                   Mapping = new Dictionary<string, OpenApiSchemaReference>
+                   {
                             ["puppy"] = new OpenApiSchemaReference("Dog", openApiDocument),
                             ["kitten"] = new OpenApiSchemaReference("Cat" , openApiDocument, "https://gigantic-server.com/schemas/animals.json"),
                             ["monster"] = new OpenApiSchemaReference("schema.json" , openApiDocument, "https://gigantic-server.com/schemas/Monster/schema.json")

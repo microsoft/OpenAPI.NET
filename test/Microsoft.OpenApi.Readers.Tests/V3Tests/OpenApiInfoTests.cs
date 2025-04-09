@@ -2,11 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -35,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Contact = new OpenApiContact
                     {
                         Email = "example@example.com",
-                        Extensions =
+                        Extensions = new Dictionary<string, IOpenApiExtension>
                         {
                                 ["x-twitter"] = new OpenApiAny("@exampleTwitterHandler")
                         },
@@ -44,11 +46,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     },
                     License = new OpenApiLicense
                     {
-                        Extensions = { ["x-disclaimer"] = new OpenApiAny("Sample Extension String Disclaimer") },
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        { 
+                            ["x-disclaimer"] = new OpenApiAny("Sample Extension String Disclaimer") 
+                        },
                         Name = "licenseName",
                         Url = new Uri("http://www.example.com/url2")
                     },
-                    Extensions =
+                    Extensions = new Dictionary<string, IOpenApiExtension>
                     {
                             ["x-something"] = new OpenApiAny("Sample Extension String Something"),
                             ["x-contact"] = new OpenApiAny(new JsonObject()

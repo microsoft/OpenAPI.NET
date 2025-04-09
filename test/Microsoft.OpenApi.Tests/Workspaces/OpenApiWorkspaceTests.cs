@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -28,7 +29,7 @@ namespace Microsoft.OpenApi.Tests
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>()
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation()
                             {
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Tests
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
@@ -55,7 +56,8 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new OpenApiComponents()
                 {
-                    Schemas = {
+                    Schemas = new()
+                    {
                         ["test"] = testSchema
                     }
                 }
@@ -108,7 +110,7 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
             var responseFragment = new OpenApiResponse
             {
-                Headers =
+                Headers = new Dictionary<string, IOpenApiHeader>
                 {
                     { "header1", new OpenApiHeader() }
                 }
@@ -130,7 +132,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new()
                 {
-                    Schemas = 
+                    Schemas = new()
                     {
                         ["test"] = new OpenApiSchema()
                         {

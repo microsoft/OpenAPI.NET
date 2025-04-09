@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiRequestBody
+    public class OpenApiRequestBody : IOpenApiExtensible, IOpenApiRequestBody
     {
         /// <inheritdoc />
         public string? Description { get; set; }
@@ -25,10 +25,10 @@ namespace Microsoft.OpenApi.Models
         public bool Required { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

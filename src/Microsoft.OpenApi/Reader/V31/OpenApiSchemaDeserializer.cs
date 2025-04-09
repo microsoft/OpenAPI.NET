@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -65,30 +66,30 @@ namespace Microsoft.OpenApi.Reader.V31
                 (o, n,_) =>
                 {
                     var max = n.GetScalarValue();
-                    if (max != null)
+                    if (!string.IsNullOrEmpty(max))
                     {
-                        o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(max, decimal.MaxValue);
+                        o.Maximum = max;
                     }
                 }
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) => o.ExclusiveMaximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) => o.ExclusiveMaximum = n.GetScalarValue()
             },
             {
                 "minimum",
                 (o, n, _) =>
                 {
                     var min = n.GetScalarValue();
-                    if (min != null)
+                    if (!string.IsNullOrEmpty(min))
                     {
-                        o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(min, decimal.MinValue);
+                        o.Minimum = min;
                     }
                 }
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) => o.ExclusiveMinimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(n.GetScalarValue(), decimal.MaxValue)
+                (o, n, _) => o.ExclusiveMinimum = n.GetScalarValue()
             },
             {
                 "maxLength",
@@ -382,8 +383,9 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
                 }
-                else if (schema.UnrecognizedKeywords is not null && propertyNode.JsonNode is not null)
+                else if (propertyNode.JsonNode is not null)
                 {
+                    schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                     schema.UnrecognizedKeywords[propertyNode.Name] = propertyNode.JsonNode;
                 }
             }

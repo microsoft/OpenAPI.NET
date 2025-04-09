@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Prefix = "sample",
             Wrapped = true,
             Attribute = true,
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new()
             {
                 {"x-xml-extension", new OpenApiAny(7)}
             }

@@ -52,13 +52,13 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiServer? Server { get => Target?.Server; }
 
         /// <inheritdoc/>
-        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get => Target?.Parameters; }
+        public Dictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
         public RuntimeExpressionAnyWrapper? RequestBody { get => Target?.RequestBody; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)

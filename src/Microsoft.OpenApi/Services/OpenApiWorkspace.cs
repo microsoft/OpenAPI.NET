@@ -18,7 +18,30 @@ namespace Microsoft.OpenApi.Services
     {
         private readonly Dictionary<string, Uri> _documentsIdRegistry = new();
         private readonly Dictionary<Uri, Stream> _artifactsRegistry = new();        
-        private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new();
+        private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new(new UriWithFragmentEquailityComparer());
+
+        private class UriWithFragmentEquailityComparer : IEqualityComparer<Uri>
+        {
+            public bool Equals(Uri? x, Uri? y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+
+                if (x is null || y is null)
+                {
+                    return false;
+                }
+
+                return x.AbsoluteUri == y.AbsoluteUri;
+            }
+
+            public int GetHashCode(Uri obj)
+            {
+                return obj.AbsoluteUri.GetHashCode();
+            }
+        }
 
         /// <summary>
         /// The base location from where all relative references are resolved
@@ -171,7 +194,7 @@ namespace Microsoft.OpenApi.Services
 
         private static string getBaseUri(OpenApiDocument openApiDocument)
         {
-            return openApiDocument.BaseUri + OpenApiConstants.ComponentsSegment;
+            return openApiDocument.BaseUri + "#" + OpenApiConstants.ComponentsSegment;
         }
 
         /// <summary>

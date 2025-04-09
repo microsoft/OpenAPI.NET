@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiComponents AdvancedComponents = new()
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -66,11 +66,11 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents AdvancedComponentsWithReference = new()
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["schema2"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, IOpenApiSchema>
+                    Properties = new()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents BrokenComponents = new()
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
@@ -134,8 +134,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema4"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,
-                    AllOf = new List<IOpenApiSchema>
-                    {
+                    AllOf =
+                    [
                         null,
                         null,
                         new OpenApiSchema()
@@ -144,20 +144,20 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         null,
                         null
-                    }
+                    ]
                 }
             }
         };
 
         public static OpenApiComponents TopLevelReferencingComponents = new()
         {
-            Schemas =
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -170,12 +170,12 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new()
         {
-            Schemas =
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties =
+                    Properties = new()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelSelfReferencingComponents = new()
         {
-            Schemas =
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchemaReference("schema1", null)
             }
@@ -207,11 +207,11 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents ComponentsWithPathItem = new OpenApiComponents
         {
-            Schemas = new Dictionary<string, IOpenApiSchema>()
+            Schemas = new()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, IOpenApiSchema>()
+                    Properties = new()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
                 ["schema2"] = new OpenApiSchema()
                 {
-                    Properties = new Dictionary<string, IOpenApiSchema>()
+                    Properties = new()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -236,14 +236,14 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["/pets"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Post] = new OpenApiOperation
                         {
                             RequestBody = new OpenApiRequestBody
                             {
                                 Description = "Information about a new pet in the system",
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {

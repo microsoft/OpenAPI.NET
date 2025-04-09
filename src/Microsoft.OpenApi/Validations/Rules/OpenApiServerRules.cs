@@ -36,9 +36,9 @@ namespace Microsoft.OpenApi.Validations.Rules
                             context.Enter(variable.Key);
                             ValidateServerVariableRequiredFields(context, variable.Key, variable.Value);
                             context.Exit();
-                        }
-                        context.Exit();
-                    }                   
+                        }                        
+                    }
+                    context.Exit();
                 });
 
         // add more rules

@@ -110,19 +110,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "coordinates",
-                    Content =
+                    Content = new()
                     {
                         ["application/json"] = new()
                         {
                            Schema = new OpenApiSchema()
                            {
                                 Type = JsonSchemaType.Object,
-                                Required =
+                                Required = new HashSet<string>
                                 {
                                     "lat",
                                     "long"
                                 },
-                                Properties =
+                                Properties = new()
                                 {
                                     ["lat"] = new OpenApiSchema()
                                     {
@@ -273,7 +273,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Examples =
+                    Examples = new Dictionary<string, IOpenApiExample>
                     {
                         ["example1"] = new OpenApiExample()
                         {
@@ -320,18 +320,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Version = "1.0.0",
                     Title = "Swagger Petstore (Simple)"
                 },
-                Servers = new List<OpenApiServer>
-                {
+                Servers =
+                [
                     new OpenApiServer
                     {
                         Url = "http://petstore.swagger.io/api"
                     }
-                },
+                ],
                 Paths = new OpenApiPaths
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {

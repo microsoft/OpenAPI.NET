@@ -47,13 +47,13 @@ namespace Microsoft.OpenApi.Models
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
+        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
