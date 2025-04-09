@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Example using relative references into sub directories
+paths:
+  "/pets":
+    get:
+      summary: List all pets
+      operationId: listPets
+      responses:
+        '200':
+          description: An array of pets
+          content:
+            application/json:
+              schema:
+                "$ref": "./Directory/PetsPage.yaml#/components/schemas/PetsPage"

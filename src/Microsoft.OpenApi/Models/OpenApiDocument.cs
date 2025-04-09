@@ -109,9 +109,9 @@ namespace Microsoft.OpenApi.Models
         public Dictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
-        /// Implements IBaseDocument
+        /// Absolute location of the document or a generated placeholder if location is not given
         /// </summary>
-        public Uri BaseUri { get; }
+        public Uri BaseUri { get; internal set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -571,14 +571,15 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                string relativePath = OpenApiConstants.ComponentsSegment + reference.Type.GetDisplayName() + "/" + id;
+                string relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
+                Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource) : null;
 
-                uriLocation = useExternal
-                    ? Workspace?.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
+                uriLocation = useExternal && externalResourceUri is not null
+                    ? externalResourceUri.AbsoluteUri + relativePath
                     : BaseUri + relativePath;
             }
 
-            return Workspace?.ResolveReference<IOpenApiReferenceable>(uriLocation);
+            return Workspace?.ResolveReference<IOpenApiReferenceable>(new Uri(uriLocation).AbsoluteUri);
         }
 
         /// <summary>
