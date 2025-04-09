@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 8.x
 
       - name: Checkout repository
         id: checkout_repo
@@ -36,3 +36,55 @@ jobs:
         shell: pwsh
         run: |
           dotnet test Microsoft.OpenApi.sln -c Release -v n
+
+  validate-trimming:
+    name: Validate Project for Trimming
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Validate Trimming warnings
+        run: dotnet publish -c Release -r win-x64 /p:TreatWarningsAsErrors=true /warnaserror -f net8.0
+        working-directory: ./test/Microsoft.OpenApi.Trimming.Tests
+
+  validate-performance:
+    name: Validate performance of the library
+    runs-on: ubuntu-latest
+    needs: [ci]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Copy committed results
+        run: |
+          mkdir -p ./performanceResults
+          cp -r ./performance/benchmark/BenchmarkDotNet.Artifacts/results/* ./performanceResults
+      
+      - name: Run performance tests
+        run: |
+          dotnet run -c Release
+        working-directory: ./performance/benchmark
+
+      - name: Run comparison tool for empty models
+        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT -p IdenticalMemoryUsage
+        shell: bash
+        env:
+          NEW_REPORT: "${{ github.workspace }}/performance/benchmark/BenchmarkDotNet.Artifacts/results/performance.EmptyModels-report.json"
+          OLD_REPORT: "${{ github.workspace }}/performanceResults/performance.EmptyModels-report.json"
+
+      - name: Run comparison tool for descriptions
+        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT -p ZeroPointOnePercentDifferenceMemoryUsage
+        shell: bash
+        env:
+          NEW_REPORT: "${{ github.workspace }}/performance/benchmark/BenchmarkDotNet.Artifacts/results/performance.Descriptions-report.json"
+          OLD_REPORT: "${{ github.workspace }}/performanceResults/performance.Descriptions-report.json"

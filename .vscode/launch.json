@@ -22,7 +22,38 @@
         {
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
-            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/main/debugger-launchjson.md
+            "name": "Launch Benchmark",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/performance/benchmark/bin/Release/net8.0/PerformanceTests.dll",
+            // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+            "console": "internalConsole",
+            "stopAtEntry": false,
+        },
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/main/debugger-launchjson.md
+            "name": "Launch Results comparer",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/performance/resultsComparer/bin/Debug/net8.0/resultsComparer.dll",
+            "cwd": "${workspaceFolder}/performance/resultsComparer",
+            "args": ["compare"],
+            // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "requireExactSource": false,
+        },
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/main/debugger-launchjson.md
             "name": "Launch Workbench",
             "type": "coreclr",
             "request": "launch",
