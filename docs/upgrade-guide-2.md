@@ -176,7 +176,7 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
         public bool Deprecated { get; set; }  // OpenApi Vocab
         public OpenApiXml Xml { get; set; }  // OpenApi Vocab
 
-        public IDictionary<string, object> Annotations { get; set; }  // Custom keywords?
+        public IDictionary<string, object> Metadata { get; set; }  // Custom property bag to be used by the application, used to be named annotations
 ```
 
 #### OpenApiSchema methods
