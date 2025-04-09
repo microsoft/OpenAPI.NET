@@ -27,6 +27,15 @@ In v1, instances of `$ref` were resolved in a second pass of the document to ens
 
 In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library to be able to read OpenAPI descriptions in either YAML or JSON.  In OpenAPI.NET v2, the core Microsoft.OpenAPI library can both read and write JSON.  It is only necessary to use the newly renamed [Microsoft.OpenApi.YamlReader](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) library if you need YAML support. This allows teams who are only working in JSON to avoid the additional dependency and therefore eliminate all non-.NET library references.
 
+Once the dependency is added, the reader needs to be added to the reader settings as demonstrated below
+
+```csharp
+var settings = new OpenApiReaderSettings();  
+settings.AddYamlReader();  
+
+var result = OpenApiDocument.LoadAsync(openApiString, settings: settings); 
+```
+
 ## API Enhancements
 
 The v1 library attempted to mimic the pattern of `XmlTextReader` and `JsonTextReader` for the purpose of loading OpenAPI documents from strings, streams and text readers.
