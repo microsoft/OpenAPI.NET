@@ -1,9 +1,13 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -59,13 +63,69 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             result = await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings);
 
             var externalDocBaseUri = result.Document.Workspace.GetDocumentId("./TodoComponents.yaml");
-            var schemasPath = "/components/schemas/";
-            var parametersPath = "/components/parameters/";
+            var schemasPath = "#/components/schemas/";
+            var parametersPath = "#/components/parameters/";
 
             Assert.NotNull(externalDocBaseUri);
             Assert.True(result.Document.Workspace.Contains(externalDocBaseUri + schemasPath + "todo"));
             Assert.True(result.Document.Workspace.Contains(externalDocBaseUri + schemasPath + "entity"));
             Assert.True(result.Document.Workspace.Contains(externalDocBaseUri + parametersPath + "filter"));
+        }
+
+        [Fact]
+        public async Task LoadDocumentWithExternalReferencesInSubDirectories()
+        {
+            var sampleFolderPath = $"V3Tests/Samples/OpenApiWorkspace/ExternalReferencesInSubDirectories";
+            var referenceBaseUri = "file://" + Path.GetFullPath(sampleFolderPath);
+
+            // Create a reader that will resolve all references also of documentes located in the non-root directory
+            var settings = new OpenApiReaderSettings()
+            {
+                LoadExternalRefs = true,
+                BaseUrl = new Uri("file://")
+            };
+            settings.AddYamlReader();
+
+            // Act
+            var result = await OpenApiDocument.LoadAsync($"{sampleFolderPath}/Root.yaml", settings);
+            var document = result.Document;
+            var workspace = result.Document.Workspace;
+
+            // Assert
+            Assert.True(workspace.Contains($"{Path.Combine(referenceBaseUri, "Directory", "PetsPage.yaml")}#/components/schemas/PetsPage"));
+            Assert.True(workspace.Contains($"{Path.Combine(referenceBaseUri, "Directory", "Pets.yaml")}#/components/schemas/Pets"));
+            Assert.True(workspace.Contains($"{Path.Combine(referenceBaseUri, "Directory", "Pets.yaml")}#/components/schemas/Pet"));
+
+            var operationResponseSchema = document.Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+            Assert.IsType<OpenApiSchemaReference>(operationResponseSchema);
+            
+            var petsSchema = operationResponseSchema.Properties["pets"];
+            Assert.IsType<OpenApiSchemaReference>(petsSchema);
+            Assert.Equal(JsonSchemaType.Array, petsSchema.Type);
+                        
+            var petSchema = petsSchema.Items;
+            Assert.IsType<OpenApiSchemaReference>(petSchema);
+
+            Assert.Equivalent(new OpenApiSchema
+            {
+                Required = new HashSet<string> { "id", "name" },
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["id"] = new OpenApiSchema
+                    {
+                        Type =  JsonSchemaType.Integer,
+                        Format = "int64"
+                    },
+                    ["name"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    },
+                    ["tag"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    }
+                }
+            }, petSchema);
         }
     }
 
@@ -76,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             return null;
         }
 
-        public Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
+        public Task<Stream> LoadAsync(Uri baseUrl, Uri uri, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<Stream>(null);
         }
@@ -89,7 +149,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             return null;
         }
 
-        public Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
+        public Task<Stream> LoadAsync(Uri baseUrl, Uri uri, CancellationToken cancellationToken = default)
         {
             var path = new Uri(new("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
             path = path[1..]; // remove leading slash

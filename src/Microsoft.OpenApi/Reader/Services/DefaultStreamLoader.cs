@@ -17,30 +17,24 @@ namespace Microsoft.OpenApi.Reader.Services
     /// </summary>
     public class DefaultStreamLoader : IStreamLoader
     {
-        private readonly Uri baseUrl;
         private readonly HttpClient _httpClient;
 
         /// <summary>
         /// The default stream loader
         /// </summary>
-        /// <param name="baseUrl"></param>
         /// <param name="httpClient">The HttpClient to use to retrieve documents when needed</param>
-        public DefaultStreamLoader(Uri baseUrl, HttpClient httpClient)
+        public DefaultStreamLoader(HttpClient httpClient)
         {
-            this.baseUrl = baseUrl;
             _httpClient = Utils.CheckArgumentNull(httpClient);
         }
 
         /// <inheritdoc/>
-        public async Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default)
+        public async Task<Stream> LoadAsync(Uri baseUrl, Uri uri, CancellationToken cancellationToken = default)
         {
-            var absoluteUri = (baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri), baseUrl.IsAbsoluteUri, uri.IsAbsoluteUri) switch
+            var absoluteUri = baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) switch
             {
-                (true, _, _) => new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())),
-                // this overcomes a URI concatenation issue for local paths on linux OSes
-                (_, true, false) when baseUrl.Scheme.Equals("file", StringComparison.OrdinalIgnoreCase) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) =>
-                    new Uri(Path.Combine(baseUrl.AbsoluteUri, uri.ToString())),
-                (_, _, _) => new Uri(baseUrl, uri),
+                true => new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())),
+                _ => new Uri(baseUrl, uri),
             };
 
             return absoluteUri.Scheme switch

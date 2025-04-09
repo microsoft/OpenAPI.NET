@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiPathItem
+    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiPathItem
     {
         /// <inheritdoc/>
         public string? Summary { get; set; }
@@ -23,17 +23,16 @@ namespace Microsoft.OpenApi.Models
         public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
-            = new Dictionary<HttpMethod, OpenApiOperation>();
+        public Dictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
 
         /// <inheritdoc/>
-        public IList<OpenApiServer>? Servers { get; set; } = [];
+        public List<OpenApiServer>? Servers { get; set; }
 
         /// <inheritdoc/>
-        public IList<IOpenApiParameter>? Parameters { get; set; } = [];
+        public List<IOpenApiParameter>? Parameters { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Add one operation into this path item.
@@ -42,10 +41,8 @@ namespace Microsoft.OpenApi.Models
         /// <param name="operation">The operation item.</param>
         public void AddOperation(HttpMethod operationType, OpenApiOperation operation)
         {
-            if (Operations is not null)
-            {
-                Operations[operationType] = operation;
-            }
+            Operations ??= [];
+            Operations[operationType] = operation;
         }
 
         /// <summary>
@@ -62,8 +59,8 @@ namespace Microsoft.OpenApi.Models
             Summary = pathItem.Summary ?? Summary;
             Description = pathItem.Description ?? Description;
             Operations = pathItem.Operations != null ? new Dictionary<HttpMethod, OpenApiOperation>(pathItem.Operations) : null;
-            Servers = pathItem.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
-            Parameters = pathItem.Parameters != null ? new List<IOpenApiParameter>(pathItem.Parameters) : null;
+            Servers = pathItem.Servers != null ? [.. pathItem.Servers] : null;
+            Parameters = pathItem.Parameters != null ? [.. pathItem.Parameters] : null;
             Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
         }
 

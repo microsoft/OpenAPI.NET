@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
+using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -265,11 +267,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Type = JsonSchemaType.Number,
                     Format = "float",
                     Enum =
-                        {
-                            new OpenApiAny(7).Node,
-                            new OpenApiAny(8).Node,
-                            new OpenApiAny(9).Node
-                        }
+                    [
+                        new OpenApiAny(7).Node,
+                        new OpenApiAny(8).Node,
+                        new OpenApiAny(9).Node
+                    ]
                 }
             };
 
@@ -278,6 +280,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 .IgnoringCyclicReferences()
                                 .Excluding((IMemberInfo memberInfo) =>
                                     memberInfo.Path.EndsWith("Parent")));
+        }
+
+        [Fact]
+        public void ParseFormDataParameterShouldSucceed()
+        {
+            // Arrange
+            var expected = @"{
+  ""type"": ""string"",
+  ""description"": ""file to upload"",
+  ""format"": ""binary""
+}";
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "formDataParameter.json")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var schema = operation.RequestBody?.Content["multipart/form-data"].Schema.Properties["file"];
+            var writer = new StringWriter();
+            schema.SerializeAsV2(new OpenApiJsonWriter(writer));
+            var json = writer.ToString();
+
+            // Assert
+            Assert.Equal("binary", schema.Format);
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), json.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

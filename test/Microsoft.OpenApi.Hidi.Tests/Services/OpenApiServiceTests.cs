@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 {
                     ["/test"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation()
                         }

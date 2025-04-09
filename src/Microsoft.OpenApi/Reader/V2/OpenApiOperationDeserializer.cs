@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Models.Interfaces;
 using System;
+using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -195,7 +196,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
-                new List<string> { "application/x-www-form-urlencoded" };
+                ["application/x-www-form-urlencoded"];
 
             var formBody = new OpenApiRequestBody
             {
@@ -222,7 +223,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
-                new List<string> { "application/json" };
+                ["application/json"];
 
             var requestBody = new OpenApiRequestBody
             {
@@ -238,8 +239,9 @@ namespace Microsoft.OpenApi.Reader.V2
                 Extensions = bodyParameter.Extensions
             };
 
-            if (requestBody.Extensions is not null && bodyParameter.Name is not null)
+            if (bodyParameter.Name is not null)
             {
+                requestBody.Extensions ??= [];
                 requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
             }            
             return requestBody;

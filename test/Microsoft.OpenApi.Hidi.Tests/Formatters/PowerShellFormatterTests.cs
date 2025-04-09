@@ -32,11 +32,11 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var openApiDocument = new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Servers = [new() { Url = "https://localhost/" }],
                 Paths = new()
                 {
                     { path, new OpenApiPathItem() {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             { operationType, new() { OperationId = operationId } }
                           }
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var walker = new OpenApiWalker(powerShellFormatter);
             walker.Walk(openApiDocument);
 
-            var idsParameter = openApiDocument.Paths["/foo"].Operations?[HttpMethod.Get].Parameters?.Where(static p => p.Name == "ids").FirstOrDefault();
+            var idsParameter = openApiDocument.Paths["/foo"].Operations?[HttpMethod.Get].Parameters?.FirstOrDefault(static p => p.Name == "ids");
 
             // Assert
             Assert.Null(idsParameter?.Content);
@@ -109,11 +109,11 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             return new()
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Servers = [new() { Url = "https://localhost/" }],
                 Paths = new() {
                     { "/foo", new OpenApiPathItem()
                         {
-                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                            Operations = new()
                             {
                                 {
                                     HttpMethod.Get, new()
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                             {
                                                 Name = "ids",
                                                 In = ParameterLocation.Query,
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new()
                                                 {
                                                     {
                                                         "application/json",
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                                 }
                                             }
                                         ],
-                                        Extensions = new Dictionary<string, IOpenApiExtension>
+                                        Extensions = new()
                                         {
                                             {
                                                 "x-ms-docs-operation-type", new OpenApiAny("function")
@@ -158,32 +158,32 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 },
                 Components = new()
                 {
-                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    Schemas = new()
                     {
                         { "TestSchema",  new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Properties = new Dictionary<string, IOpenApiSchema>
+                                Properties = new()
                                 {
                                     {
                                         "averageAudioDegradation", new OpenApiSchema
                                         {
-                                            AnyOf = new List<IOpenApiSchema>
-                                            {
+                                            AnyOf =
+                                            [
                                                 new OpenApiSchema() { Type = JsonSchemaType.Number | JsonSchemaType.Null },
                                                 new OpenApiSchema() { Type = JsonSchemaType.String }
-                                            },
+                                            ],
                                             Format = "float",
                                         }
                                     },
                                     {
                                         "defaultPrice", new OpenApiSchema
                                         {
-                                            OneOf = new List<IOpenApiSchema>
-                                            {
+                                            OneOf =
+                                            [
                                                 new OpenApiSchema() { Type = JsonSchemaType.Number, Format = "double" },
                                                 new OpenApiSchema() { Type = JsonSchemaType.String }
-                                            }
+                                            ]
                                         }
                                     }
                                 }

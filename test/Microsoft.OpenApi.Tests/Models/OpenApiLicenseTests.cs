@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Name = "Apache 2.0",
             Url = new("http://www.apache.org/licenses/LICENSE-2.0.html"),
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new()
             {
                 {"x-copyright", new OpenApiAny("Abc")}
             }

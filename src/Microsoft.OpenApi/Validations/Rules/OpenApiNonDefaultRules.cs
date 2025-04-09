@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         private static void ValidateMismatchedDataType(IValidationContext context,
                                                       string ruleName,
                                                       JsonNode? example,
-                                                      IDictionary<string, IOpenApiExample>? examples,
+                                                      Dictionary<string, IOpenApiExample>? examples,
                                                       IOpenApiSchema? schema)
         {
             // example

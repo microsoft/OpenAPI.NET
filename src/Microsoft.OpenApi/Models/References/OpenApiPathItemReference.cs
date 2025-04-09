@@ -53,16 +53,16 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public IDictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
+        public Dictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
 
         /// <inheritdoc/>
-        public IList<OpenApiServer>? Servers { get => Target?.Servers; }
+        public List<OpenApiServer>? Servers { get => Target?.Servers; }
 
         /// <inheritdoc/>
-        public IList<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
+        public List<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)

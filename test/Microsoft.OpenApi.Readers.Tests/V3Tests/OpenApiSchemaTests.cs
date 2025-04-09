@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models.References;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.OpenApi.YamlReader;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -121,7 +122,7 @@ get:
                 new OpenApiPathItem
                 {
                     Summary = "externally referenced path item",
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation()
                         {
@@ -194,7 +195,7 @@ get:
             new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties =
+                Properties = new()
                 {
                         ["id"] = new OpenApiSchema()
                         {
@@ -206,7 +207,7 @@ get:
                             Type = JsonSchemaType.String
                         }
                 },
-                Required =
+                Required = new HashSet<string>
                 {
                         "name"
                 },
@@ -240,25 +241,25 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new()
                 {
                     ["ErrorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
-                        Properties =
+                        Properties = new()
                         {
                             ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
-                                Minimum = 100,
-                                Maximum = 600
+                                Minimum = "100",
+                                Maximum = "600"
                             },
                             ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
                         },
-                        Required =
+                        Required = new HashSet<string>
                         {
                             "message",
                             "code"
@@ -267,13 +268,13 @@ get:
                     ["ExtendedErrorModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ErrorModel", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Required = {"rootCause"},
-                                Properties =
+                                Required = new HashSet<string> {"rootCause"},
+                                Properties = new()
                                 {
                                     ["rootCause"] = new OpenApiSchema()
                                     {
@@ -281,7 +282,7 @@ get:
                                     }
                                 }
                             }
-                        }
+                        ]
                     }
                 }
             };
@@ -297,7 +298,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new()
                 {
                     ["Pet"] = new OpenApiSchema()
                     {
@@ -306,7 +307,7 @@ get:
                         {
                             PropertyName = "petType"
                         },
-                        Properties =
+                        Properties = new()
                         {
                             ["name"] = new OpenApiSchema()
                             {
@@ -317,7 +318,7 @@ get:
                                 Type = JsonSchemaType.String
                             }
                         },
-                        Required =
+                        Required = new HashSet<string>
                         {
                             "name",
                             "petType"
@@ -327,41 +328,41 @@ get:
                     {
                         Description = "A representation of a cat",
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("Pet", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Required = {"huntingSkill"},
-                                Properties =
+                                Required = new HashSet<string>{"huntingSkill"},
+                                Properties = new()
                                 {
                                     ["huntingSkill"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.String,
                                         Description = "The measured skill for hunting",
                                         Enum =
-                                        {
+                                        [
                                             "clueless",
                                             "lazy",
                                             "adventurous",
                                             "aggressive"
-                                        }
+                                        ]
                                     }
                                 }
                             }
-                        }
+                        ]
                     },
                     ["Dog"] = new OpenApiSchema()
                     {
                         Description = "A representation of a dog",
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("Pet", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Required = {"packSize"},
-                                Properties =
+                                Required = new HashSet<string>{"packSize"},
+                                Properties = new()
                                 {
                                     ["packSize"] = new OpenApiSchema()
                                     {
@@ -369,11 +370,11 @@ get:
                                         Format = "int32",
                                         Description = "the size of the pack the dog is from",
                                         Default = 0,
-                                        Minimum = 0
+                                        Minimum = "0"
                                     }
                                 }
                             }
-                        }
+                        ]
                     }
                 }
             };
@@ -403,42 +404,42 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new()
                 {
                     ["RelativePathModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ExternalRelativePathModel", result.Document, "./FirstLevel/SecondLevel/ThridLevel/File.json")
-                        }
+                        ]
                     },
                     ["SimpleRelativePathModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ExternalSimpleRelativePathModel", result.Document, "File.json")
-                        }
+                        ]
                     },
                     ["AbsoluteWindowsPathModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ExternalAbsWindowsPathModel", result.Document, @"A:\Dir\File.json")
-                        }
+                        ]
                     },
                     ["AbsoluteUnixPathModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ExternalAbsUnixPathModel", result.Document, "/Dir/File.json")
-                        }
+                        ]
                     },
                     ["HttpsUrlModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [                            
                             new OpenApiSchemaReference("ExternalHttpsModel", result.Document, "https://host.lan:1234/path/to/file/resource.json")
-                        }
+                        ]
                     }
                 }
             };

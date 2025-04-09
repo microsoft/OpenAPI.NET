@@ -21,13 +21,10 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, item) =>
                 {
                     context.Enter("email");
-                    if (item is {Email: not null})
+                    if (item is {Email: not null} && !item.Email.IsEmailAddress())
                     {
-                        if (!item.Email.IsEmailAddress())
-                        {
-                            context.CreateError(nameof(EmailMustBeEmailFormat),
-                                String.Format(SRResource.Validation_StringMustBeEmailAddress, item.Email));
-                        }
+                        context.CreateError(nameof(EmailMustBeEmailFormat),
+                            String.Format(SRResource.Validation_StringMustBeEmailAddress, item.Email));
                     }
                     context.Exit();
                 });
