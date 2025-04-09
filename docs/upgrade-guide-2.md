@@ -5,6 +5,7 @@ author: rachit.malik
 ms.author: malikrachit
 ms.topic: conceptual
 ---
+
 # Introduction
 
 We are excited to announce the preview of a new version of the OpenAPI.NET library!  
@@ -14,7 +15,7 @@ OpenAPI.NET v2 is a major update to the OpenAPI.NET library. This release includ
 
 Since the release of the first version of the OpenAPI.NET library in 2018, there has not been a major version update to the library. With the addition of support for OpenAPI v3.1 it was necessary to make some breaking changes. With this opportunity, we have taken the time to make some other improvements to the library, based on the experience we have gained supporting a large community of users for the last six years .
 
-# Performance Improvements
+## Performance Improvements
 
 One of the key features of OpenAPI.NET is its performance. This version makes it possible to parse JSON based OpenAPI descriptions even faster. OpenAPI.NET v1 relied on the excellent YamlSharp library for parsing both JSON and YAML files. With OpenAPI.NET v2 we are relying on System.Text.Json for parsing JSON files. For YAML files, we continue to use YamlSharp to parse YAML but then convert to JsonNodes for processing. This allows us to take advantage of the performance improvements in System.Text.Json while still supporting YAML files.
 
@@ -34,12 +35,14 @@ The v1 library attempted to mimic the pattern of `XmlTextReader` and `JsonTextRe
     var reader = new OpenApiStringReader();
     var openApiDoc = reader.Read(stringOpenApiDoc, out var diagnostic);
 ```
+
 The same pattern can be used for `OpenApiStreamReader` and `OpenApiTextReader`.  When we introduced the `ReadAsync` methods we eliminated the use of the `out` parameter.
 
 ```csharp
     var reader = new OpenApiStreamReader();
     var (document, diagnostics) = await reader.ReadAsync(streamOpenApiDoc);
 ```
+
 A `ReadResult` object acts as a tuple of `OpenApiDocument` and `OpenApiDiagnostic`.
 
 The challenge with this approach is that the reader classes are not very discoverable and the behaviour is not actually consistent with the `*TextReader` pattern that allows incrementally reading the document. This library does not support incrementally reading the OpenAPI Document. It only reads a complete document and returns an `OpenApiDocument` instance.
@@ -64,6 +67,7 @@ When the loading methods are used without a format parameter, we will attempt to
 ### Removing the OpenAPI Any classes
 
 In the OpenAPI specification, there are a few properties that are defined as type `any`. This includes:
+
 - the example property in the parameter, media type objects
 - the value property in the example object
 - the values in the link object's parameters dictionary and `requestBody` property
@@ -74,6 +78,7 @@ In the v1 library, there are a set of classes that are derived from the `OpenApi
 In v2 we are removing this abstraction and relying on the `JsonNode` model to represent these inner types. In v1 we were not able to reliably identify the additional primitive types and it caused a significant amount of false negatives in error reporting as well as incorrectly parsed data values.
 
 Due to `JsonNode` implicit operators, this makes initialization sometimes easier, instead of:
+
 ```csharp
     new OpenApiParameter
                 {
@@ -83,7 +88,9 @@ Due to `JsonNode` implicit operators, this makes initialization sometimes easier
                     Example = new OpenApiFloat(5),
                 };
 ```
+
 the assignment becomes simply,
+
 ```csharp
                     Example = 0.5f,
 ```
@@ -128,11 +135,9 @@ In v2, the equivalent code would be,
 
 ```
 
-
 ### Updates to OpenApiSchema
 
 The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema.  In 3.0 and earlier, OpenAPI used a "subset, superset" of JSON Schema draft-4. This caused many problems for developers trying to use JSON Schema validation libraries with the JSON Schema in their OpenAPI descriptions.  In OpenAPI 3.1, the 2020-12 draft version of JSON Schema was adopted and a new JSON Schema vocabulary was adopted to support OpenAPI specific keywords.  All attempts to constrain what JSON Schema keywords could be used in OpenAPI were removed.
-
 
 #### New keywords introduced in 2020-12
 
@@ -155,6 +160,7 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
         public bool UnevaluatedProperties { get; set;}
 
 ```
+
 #### Changes to existing keywords
 
 ```csharp
@@ -229,7 +235,6 @@ public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenA
     }
 ```
 
-
 ### License SPDX identifiers
 
 ```csharp
@@ -270,9 +275,12 @@ Through the use of proxy objects in order to represent references, it is now pos
         Description = "Customer Id"
     };
 ```
+
 ### Use HTTP Method Object Instead of Enum
+
 HTTP methods are now represented as objects instead of enums. This change enhances flexibility but requires updates to how HTTP methods are handled in your code.
 Example:
+
 ```csharp
 // Before (1.6)
 OpenApiOperation operation = new OpenApiOperation
@@ -288,9 +296,11 @@ OpenApiOperation operation = new OpenApiOperation
 ```
 
 #### 2. Enable Null Reference Type Support
+
 Version 2.0 preview 13 introduces support for null reference types, which improves type safety and reduces the likelihood of null reference exceptions.
 
 **Example:**
+
 ```csharp
 // Before (1.6)
 OpenApiDocument document = new OpenApiDocument
@@ -310,9 +320,11 @@ OpenApiDocument document = new OpenApiDocument
 ```
 
 #### 3. References as Components
+
 References can now be used as components, allowing for more modular and reusable OpenAPI documents.
 
 **Example:**
+
 ```csharp
 // Before (1.6)
 OpenApiSchema schema = new OpenApiSchema
@@ -338,6 +350,7 @@ OpenApiComponents components = new OpenApiComponents
 ```
 
 ### OpenApiDocument.SerializeAs()
+
 The `SerializeAs()` method simplifies serialization scenarios, making it easier to convert OpenAPI documents to different formats.
 **Example:**
 
@@ -349,9 +362,11 @@ string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.
 
 ### Bug Fixes
 
-## Serialization of References: 
+## Serialization of References
+
 Fixed a bug where references would not serialize summary or descriptions in OpenAPI 3.1.
 **Example:**
+
 ```csharp
 OpenApiSchemaReference schemaRef = new OpenApiSchemaReference("MySchema")
 {
@@ -360,6 +375,7 @@ OpenApiSchemaReference schemaRef = new OpenApiSchemaReference("MySchema")
 };
 ```
 
-## Feedback  
- If you have any feedback please file a GitHub issue here: https://github.com/microsoft/OpenAPI.NET/issues  
- The team is looking forward to hear your experience trying the new version and we hope you have fun busting out your OpenAPI 3.1 descriptions. 
+## Feedback
+
+If you have any feedback please file a GitHub issue [here](https://github.com/microsoft/OpenAPI.NET/issues)
+The team is looking forward to hear your experience trying the new version and we hope you have fun busting out your OpenAPI 3.1 descriptions.
