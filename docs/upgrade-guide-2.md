@@ -162,8 +162,8 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
         public string? ExclusiveMaximum { get; set; }  // type changed to reflect the new version of JSON schema
         public string? ExclusiveMinimum { get; set; } // type changed to reflect the new version of JSON schema
         public JsonSchemaType? Type { get; set; }  // Was string, now flagged enum
-        public string? Maximum { get; set; }      // Double???
-        public string? Minimum { get; set; }       // Double???
+        public string? Maximum { get; set; }      // type changed to overcome double vs decimal issues
+        public string? Minimum { get; set; }       // type changed to overcome double vs decimal issues
 
         public JsonNode Default { get; set; }  // Type matching no longer enforced. Was IOpenApiAny
         public bool ReadOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
