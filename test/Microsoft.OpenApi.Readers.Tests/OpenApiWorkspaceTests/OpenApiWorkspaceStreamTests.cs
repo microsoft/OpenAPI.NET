@@ -104,7 +104,9 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             Assert.Equal(JsonSchemaType.Array, petsSchema.Type);
                         
             var petSchema = petsSchema.Items;
-            Assert.IsType<OpenApiSchemaReference>(petSchema);
+            var petSchemaReference = Assert.IsType<OpenApiSchemaReference>(petSchema);
+            var petSchemaTarget = petSchemaReference.RecursiveTarget;
+            Assert.NotNull(petSchemaTarget);
 
             Assert.Equivalent(new OpenApiSchema
             {
@@ -125,7 +127,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                         Type = JsonSchemaType.String
                     }
                 }
-            }, petSchema);
+            }, petSchemaTarget);
         }
     }
 

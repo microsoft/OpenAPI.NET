@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
-                            Annotations = new Dictionary<string, object> { { "key1", "value" } }
+                            Metadata = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     }
                 },
@@ -55,10 +55,10 @@ namespace Microsoft.OpenApi.Tests.Models
                         ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
-                            Annotations = new Dictionary<string, object> { { "key1", "value" } }
+                            Metadata = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     },
-                    Annotations = new Dictionary<string, object> { { "key1", "value" } },
+                    Metadata = new Dictionary<string, object> { { "key1", "value" } },
                 },
                 ["schema2"] = new OpenApiSchema()
                 {

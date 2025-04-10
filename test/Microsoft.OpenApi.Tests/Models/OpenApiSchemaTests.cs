@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Url = new("http://example.com/externalDocs")
             },
-            Annotations = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } }
+            Metadata = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } }
         };
 
         public static readonly OpenApiSchema AdvancedSchemaObject = new()
@@ -473,24 +473,24 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void OpenApiSchemaCopyConstructorWithAnnotationsSucceeds()
+        public void OpenApiSchemaCopyConstructorWithMetadataSucceeds()
         {
             var baseSchema = new OpenApiSchema
             {
-                Annotations = new Dictionary<string, object>
+                Metadata = new Dictionary<string, object>
                 {
                     ["key1"] = "value1",
                     ["key2"] = 2
                 }
             };
 
-            var actualSchema = baseSchema.CreateShallowCopy();
+            var actualSchema = Assert.IsType<OpenApiSchema>(baseSchema.CreateShallowCopy());
 
-            Assert.Equal(baseSchema.Annotations["key1"], actualSchema.Annotations["key1"]);
+            Assert.Equal(baseSchema.Metadata["key1"], actualSchema.Metadata["key1"]);
 
-            baseSchema.Annotations["key1"] = "value2";
+            baseSchema.Metadata["key1"] = "value2";
 
-            Assert.NotEqual(baseSchema.Annotations["key1"], actualSchema.Annotations["key1"]);
+            Assert.NotEqual(baseSchema.Metadata["key1"], actualSchema.Metadata["key1"]);
         }
 
         public static TheoryData<JsonNode> SchemaExamples()
