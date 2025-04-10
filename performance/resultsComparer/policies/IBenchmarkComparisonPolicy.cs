@@ -31,6 +31,7 @@ internal interface IBenchmarkComparisonPolicy : IEqualityComparer<BenchmarkMemor
         return [
             IdenticalMemoryUsagePolicy.Instance,
             ZeroPointOnePercentDifferenceMemoryUsagePolicy.Instance,
+            ZeroPointTwoPercentDifferenceMemoryUsagePolicy.Instance,
             OnePercentDifferenceMemoryUsagePolicy.Instance,
             TwoPercentDifferenceMemoryUsagePolicy.Instance,
             FivePercentDifferenceMemoryUsagePolicy.Instance,
