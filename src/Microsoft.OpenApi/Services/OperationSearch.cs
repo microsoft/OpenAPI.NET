@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// A list of operations from the operation search.
         /// </summary>
-        public IList<SearchResult> SearchResults => _searchResults;
+        public List<SearchResult> SearchResults => _searchResults;
 
         /// <summary>
         /// The OperationSearch constructor.
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Services
         /// Visits list of <see cref="OpenApiParameter"/>.
         /// </summary>
         /// <param name="parameters">The target list of <see cref="OpenApiParameter"/>.</param>
-        public override void Visit(IList<IOpenApiParameter> parameters)
+        public override void Visit(List<IOpenApiParameter> parameters)
         {
             /* The Parameter.Explode property should be true
              * if Parameter.Style == Form; but OData query params

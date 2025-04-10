@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : IOpenApiExtensible, IOpenApiReferenceable, IOpenApiTag, IOpenApiDescribedElement
+    public class OpenApiTag : IOpenApiExtensible, IOpenApiTag, IOpenApiDescribedElement
     {
         /// <inheritdoc/>
         public string? Name { get; set; }
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

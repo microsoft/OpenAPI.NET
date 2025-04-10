@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models.References
         public Uri? OpenIdConnectUrl { get => Target?.OpenIdConnectUrl; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public SecuritySchemeType? Type { get => Target?.Type; }

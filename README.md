@@ -55,7 +55,7 @@ var document = new OpenApiDocument
     {
         ["/pets"] = new OpenApiPathItem
         {
-            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+            Operations = new()
             {
                 [HttpMethod.Get] = new OpenApiOperation
                 {

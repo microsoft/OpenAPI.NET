@@ -85,13 +85,13 @@ namespace Microsoft.OpenApi.Validations.Rules
                     return;
                 }
 
-                foreach (var kvp in anyObject)
+                foreach (var key in from kvp in anyObject
+                                    let key = kvp.Key
+                                    select key)
                 {
-                    var key = kvp.Key;
                     context.Enter(key);
-
                     if (schema.Properties != null &&
-                        schema.Properties.TryGetValue(key, out var property))
+                                        schema.Properties.TryGetValue(key, out var property))
                     {
                         ValidateDataTypeMismatch(context, ruleName, anyObject[key], property);
                     }

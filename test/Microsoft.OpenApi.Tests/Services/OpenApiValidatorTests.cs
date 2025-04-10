@@ -37,16 +37,16 @@ namespace Microsoft.OpenApi.Tests.Services
                         "/test",
                         new OpenApiPathItem()
                         {
-                            Operations =
-                        {
-                            [HttpMethod.Get] = new()
+                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
                             {
-                                Responses =
+                                [HttpMethod.Get] = new()
                                 {
-                                    ["200"] = new OpenApiResponse()
+                                    Responses =
+                                    {
+                                        ["200"] = new OpenApiResponse()
+                                    }
                                 }
                             }
-                        }
                         }
                     }
                 }
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     Title = "foo",
                     Version = "1.2.2"
                 },
-                Servers = new List<OpenApiServer> {
+                Servers = [
                 new()
                 {
                     Url = "http://example.org"
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 new()
                 {
                 },
-            },
+            ],
                 Paths = new()
             };
 
@@ -131,7 +131,10 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var extensionNode = JsonSerializer.Serialize(fooExtension);
             var jsonNode = JsonNode.Parse(extensionNode);
-            openApiDocument.Info.Extensions.Add("x-foo", new OpenApiAny(jsonNode));
+            openApiDocument.Info.Extensions = new Dictionary<string, IOpenApiExtension>
+            {
+                { "x-foo", new OpenApiAny(jsonNode) }
+            };
 
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);

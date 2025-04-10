@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var schema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties =
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["property1"] = new OpenApiSchema()
                     {
@@ -187,7 +187,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             var components = new OpenApiComponents
             {
-                Schemas = {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
                     {
                         "schema1",
                         new OpenApiSchema
@@ -219,7 +220,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             var components = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
                     {
                         "Person",
@@ -230,11 +231,11 @@ namespace Microsoft.OpenApi.Validations.Tests
                             {
                                 PropertyName = "type"
                             },
-                            OneOf = new List<IOpenApiSchema>
-                            {
+                            OneOf =
+                            [
                                 new OpenApiSchema()
                                 {
-                                    Properties =
+                                    Properties = new Dictionary<string, IOpenApiSchema>
                                     {
                                         {
                                             "type",
@@ -245,7 +246,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                         }
                                     },
                                 }
-                            },
+                            ],
                         }
                     }
                 }

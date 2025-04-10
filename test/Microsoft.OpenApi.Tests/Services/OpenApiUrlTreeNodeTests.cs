@@ -21,14 +21,14 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 ["/"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new(),
                     }
                 },
                 ["/houses"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new(),
                         [HttpMethod.Post] = new()
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 ["/cars"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Post] = new()
                     }
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var pathItem1 = new OpenApiPathItem
             {
-                Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                Operations = new()
                 {
                     {
                         HttpMethod.Get, new OpenApiOperation
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var pathItem2 = new OpenApiPathItem
             {
-                Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                Operations = new()
                 {
                     {
                         HttpMethod.Get, new OpenApiOperation
@@ -241,7 +241,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     ["/houses"] = new OpenApiPathItem(),
                     ["/cars/{car-id}"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -269,7 +269,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     ["/cars/{car-id}"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation

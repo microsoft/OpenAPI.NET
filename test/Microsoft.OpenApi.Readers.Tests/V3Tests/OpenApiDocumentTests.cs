@@ -112,7 +112,7 @@ paths: {}
                         Version = "0.9.1",
                     },
                     Servers =
-                    {
+                    [
                         new OpenApiServer
                         {
                             Url = new Uri("http://www.example.org/api").ToString(),
@@ -123,7 +123,7 @@ paths: {}
                             Url = new Uri("https://www.example.org/api").ToString(),
                             Description = "The https endpoint"
                         }
-                    },
+                    ],
                     Paths = new OpenApiPaths()
                 }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
@@ -190,7 +190,7 @@ paths: {}
 
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new()
                 {
                     ["pet1"] = new OpenApiSchema()
                     {
@@ -200,7 +200,7 @@ paths: {}
                                 "id",
                                 "name"
                             },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -224,7 +224,7 @@ paths: {}
                             {
                                 "name"
                             },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -249,7 +249,7 @@ paths: {}
                                 "code",
                                 "message"
                             },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["code"] = new OpenApiSchema()
                             {
@@ -291,18 +291,18 @@ paths: {}
                         Url = new Uri("http://opensource.org/licenses/MIT")
                     }
                 },
-                Servers = new List<OpenApiServer>
-                {
+                Servers =
+                [
                     new OpenApiServer
                     {
                         Url = "http://petstore.swagger.io/api"
                     }
-                },
+                ],
                 Paths = new OpenApiPaths
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -343,7 +343,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -366,7 +366,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -377,7 +377,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -395,7 +395,7 @@ paths: {}
                                 {
                                     Description = "Pet to add to the store",
                                     Required = true,
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -408,7 +408,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -419,7 +419,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -430,7 +430,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -444,7 +444,7 @@ paths: {}
                     },
                     ["/pets/{id}"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -471,7 +471,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -486,7 +486,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -497,7 +497,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -535,7 +535,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -546,7 +546,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -576,7 +576,7 @@ paths: {}
 
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new()
                 {
                     ["pet1"] = new OpenApiSchema()
                     {
@@ -586,7 +586,7 @@ paths: {}
                                 "id",
                                 "name"
                             },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -610,7 +610,7 @@ paths: {}
                             {
                                 "name"
                             },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -635,7 +635,7 @@ paths: {}
                                 "code",
                                 "message"
                             },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["code"] = new OpenApiSchema()
                             {
@@ -710,18 +710,18 @@ paths: {}
                         Url = new Uri("http://opensource.org/licenses/MIT")
                     }
                 },
-                Servers = new List<OpenApiServer>
-                    {
+                Servers =
+                    [
                         new OpenApiServer
                         {
                             Url = "http://petstore.swagger.io/api"
                         }
-                    },
+                    ],
                 Paths = new OpenApiPaths
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -767,7 +767,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -790,7 +790,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -801,7 +801,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -824,7 +824,7 @@ paths: {}
                                 {
                                     Description = "Pet to add to the store",
                                     Required = true,
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -837,7 +837,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -848,7 +848,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -859,7 +859,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -868,24 +868,24 @@ paths: {}
                                         }
                                     }
                                 },
-                                Security = new List<OpenApiSecurityRequirement>
-                                    {
+                                Security =
+                                    [
                                         new OpenApiSecurityRequirement
                                         {
-                                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
-                                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
-                                            {
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = [],
+                                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] =
+                                            [
                                                 "scope1",
                                                 "scope2"
-                                            }
+                                            ]
                                         }
-                                    }
+                                    ]
                             }
                         }
                     },
                     ["/pets/{id}"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -912,7 +912,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -927,7 +927,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -938,7 +938,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -976,7 +976,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -987,7 +987,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -1014,19 +1014,19 @@ paths: {}
                             Description = "tagDescription2"
                         }
                     },
-                Security = new List<OpenApiSecurityRequirement>
-                    {
+                Security =
+                    [
                         new OpenApiSecurityRequirement
                         {
-                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = new List<string>(),
-                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] = new List<string>
-                            {
+                            [new OpenApiSecuritySchemeReference("securitySchemeName1")] = [],
+                            [new OpenApiSecuritySchemeReference("securitySchemeName2")] =
+                            [
                                 "scope1",
                                 "scope2",
                                 "scope3"
-                            }
+                            ]
                         }
-                    }
+                    ]
             };
             expected.RegisterComponents();
             expected.SetReferenceHostDocument();
@@ -1101,7 +1101,7 @@ paths: {}
                     AllowReserved = true,
                     Style = ParameterStyle.Simple,
                     Explode = true,
-                    Examples =
+                    Examples = new Dictionary<string, IOpenApiExample>
                     {
                             { "uuid1", new OpenApiExample()
                                 {
@@ -1247,7 +1247,7 @@ paths: {}
             {
                 Type = JsonSchemaType.Object,
                 Description = "A pet",
-                Properties =
+                Properties = new()
                 {
                     ["id"] = new OpenApiSchema
                     {
@@ -1272,7 +1272,7 @@ paths: {}
             document.AddComponent("PetReference", petSchemaReference);
             document.Paths.Add("/pets", new OpenApiPathItem
             {
-                Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                Operations = new()
                 {
                     [HttpMethod.Get] = new OpenApiOperation
                     {
@@ -1282,7 +1282,7 @@ paths: {}
                             ["200"] = new OpenApiResponse
                             {
                                 Description = "A list of pets",
-                                Content =
+                                Content = new()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -1338,7 +1338,7 @@ paths: {}
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -1436,17 +1436,17 @@ components:
                     Version = "0.9.1",
                 },
                 Servers =
+                [
+                    new OpenApiServer
                     {
-                        new OpenApiServer
+                        Url = "http://www.example.org/api/{version}",
+                        Description = "The http endpoint",
+                        Variables = new Dictionary<string, OpenApiServerVariable>
                         {
-                            Url = "http://www.example.org/api/{version}",
-                            Description = "The http endpoint",
-                            Variables = new Dictionary<string, OpenApiServerVariable>
-                            {
-                                {"version", new OpenApiServerVariable {Default = "v2", Enum = ["v1", "v2"]}}
-                            }
+                            {"version", new OpenApiServerVariable {Default = "v2", Enum = ["v1", "v2"]}}
                         }
-                    },
+                    }
+                ],
                 Paths = new()
             };
 

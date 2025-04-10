@@ -14,6 +14,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// A collection of properties associated with the current OpenAPI element.
         /// </summary>
-        IDictionary<string, object>? Metadata { get; set; }
+        Dictionary<string, object>? Metadata { get; set; }
     }
 }

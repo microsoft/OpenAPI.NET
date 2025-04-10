@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             var document = new OpenApiDocument();
             document.Components = new()
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>()
+                Schemas = new()
                 {
                     ["test"] = sharedSchema
                 }
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             {
                 ["/"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new()
                         {
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                             {
                                 ["200"] = new OpenApiResponse()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new()
                                         {
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var rules = new Dictionary<Type, IList<ValidationRule>>()
+            var rules = new Dictionary<Type, List<ValidationRule>>()
             {
                 { typeof(IOpenApiSchema),
                     new List<ValidationRule>() { new AlwaysFailRule<IOpenApiSchema>() }
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             {
                 ["/"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new()
                         {
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                             {
                                 ["200"] = new OpenApiResponse()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new()
                                         {
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var rules = new Dictionary<Type, IList<ValidationRule>>()
+            var rules = new Dictionary<Type, List<ValidationRule>>()
             {
                 { typeof(OpenApiSchema),
                     new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
