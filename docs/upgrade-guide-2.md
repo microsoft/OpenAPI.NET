@@ -489,3 +489,16 @@ OpenApiSchemaReference schemaRef = new OpenApiSchemaReference("MySchema")
 
 If you have any feedback please file a GitHub issue [here](https://github.com/microsoft/OpenAPI.NET/issues)
 The team is looking forward to hear your experience trying the new version and we hope you have fun busting out your OpenAPI 3.1 descriptions.
+
+## Todos
+
+- Models now have matching interfaces + reference type + type assertion pattern + reference fields removed from the base model + Target + RecursiveTarget + removed OpenApiReferenceResolver.
+- Workspace + component resolution.
+- Visitor and Validator method now pass the interface model.
+- Removed all the IEffective/GetEffective infrastructure.
+- OpenApiSchema.Type is now a flag enum + bitwise operations.
+- JsonSchemaDialect + BaseUri in document.
+- Copy constructors are gone, use shallow copy method.
+- Multiple methods that should have been internal have been changed from public to private link OpenApiLink.SerializeAsV3WithoutReference.
+- duplicated _style property on parameter was removed.
+- ValidationRuleSet now accepts a key?
