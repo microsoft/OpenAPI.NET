@@ -149,58 +149,58 @@ In v2 we are removing this abstraction and relying on the `JsonNode` model to re
 Due to `JsonNode` implicit operators, this makes initialization sometimes easier, instead of:
 
 ```csharp
-    new OpenApiParameter
-                {
-                    In = null,
-                    Name = "username",
-                    Description = "username to fetch",
-                    Example = new OpenApiFloat(5),
-                };
+new OpenApiParameter
+{
+    In = null,
+    Name = "username",
+    Description = "username to fetch",
+    Example = new OpenApiFloat(5),
+};
 ```
 
 the assignment becomes simply,
 
 ```csharp
-                    Example = 0.5f,
+    Example = 0.5f,
 ```
 
 For a more complex example, where the developer wants to create an extension that is an object they would do this in v1:
 
 ```csharp
-    var openApiObject = new OpenApiObject
-            {
-                {"stringProp", new OpenApiString("stringValue1")},
-                {"objProp", new OpenApiObject()},
-                {
-                    "arrayProp",
-                    new OpenApiArray
-                    {
-                        new OpenApiBoolean(false)
-                    }
-                }
-            };
-    var parameter = new OpenApiParameter();
-    parameter.Extensions.Add("x-foo", new OpenApiAny(openApiObject));
+var openApiObject = new OpenApiObject
+{
+    {"stringProp", new OpenApiString("stringValue1")},
+    {"objProp", new OpenApiObject()},
+    {
+        "arrayProp",
+        new OpenApiArray
+        {
+            new OpenApiBoolean(false)
+        }
+    }
+};
+var parameter = new OpenApiParameter();
+parameter.Extensions.Add("x-foo", new OpenApiAny(openApiObject));
 
 ```
 
 In v2, the equivalent code would be,
 
 ```csharp
-   var openApiObject = new JsonObject
-            {
-                {"stringProp", "stringValue1"},
-                {"objProp", new JsonObject()},
-                {
-                    "arrayProp",
-                    new JsonArray
-                    {
-                        false
-                    }
-                }
-            };
-    var parameter = new OpenApiParameter();
-    parameter.Extensions.Add("x-foo", new OpenApiAny(openApiObject));
+var openApiObject = new JsonObject
+{
+    {"stringProp", "stringValue1"},
+    {"objProp", new JsonObject()},
+    {
+        "arrayProp",
+        new JsonArray
+        {
+            false
+        }
+    }
+};
+var parameter = new OpenApiParameter();
+parameter.Extensions.Add("x-foo", new OpenApiAny(openApiObject));
 
 ```
 
@@ -298,25 +298,24 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
 #### Changes to existing keywords
 
 ```csharp
+public string? ExclusiveMaximum { get; set; }  // type changed to reflect the new version of JSON schema
+public string? ExclusiveMinimum { get; set; } // type changed to reflect the new version of JSON schema
+public JsonSchemaType? Type { get; set; }  // Was string, now flagged enum
+public string? Maximum { get; set; }      // type changed to overcome double vs decimal issues
+public string? Minimum { get; set; }       // type changed to overcome double vs decimal issues
 
-        public string? ExclusiveMaximum { get; set; }  // type changed to reflect the new version of JSON schema
-        public string? ExclusiveMinimum { get; set; } // type changed to reflect the new version of JSON schema
-        public JsonSchemaType? Type { get; set; }  // Was string, now flagged enum
-        public string? Maximum { get; set; }      // type changed to overcome double vs decimal issues
-        public string? Minimum { get; set; }       // type changed to overcome double vs decimal issues
+public JsonNode Default { get; set; }  // Type matching no longer enforced. Was IOpenApiAny
+public bool ReadOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
+public bool WriteOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
 
-        public JsonNode Default { get; set; }  // Type matching no longer enforced. Was IOpenApiAny
-        public bool ReadOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
-        public bool WriteOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
+public JsonNode Example { get; set; }  // No longer IOpenApiAny
+public IList<JsonNode> Examples { get; set; }
+public IList<JsonNode> Enum { get; set; }
+public OpenApiExternalDocs ExternalDocs { get; set; }  // OpenApi Vocab
+public bool Deprecated { get; set; }  // OpenApi Vocab
+public OpenApiXml Xml { get; set; }  // OpenApi Vocab
 
-        public JsonNode Example { get; set; }  // No longer IOpenApiAny
-        public IList<JsonNode> Examples { get; set; }
-        public IList<JsonNode> Enum { get; set; }
-        public OpenApiExternalDocs ExternalDocs { get; set; }  // OpenApi Vocab
-        public bool Deprecated { get; set; }  // OpenApi Vocab
-        public OpenApiXml Xml { get; set; }  // OpenApi Vocab
-
-        public IDictionary<string, object> Metadata { get; set; }  // Custom property bag to be used by the application, used to be named annotations
+public IDictionary<string, object> Metadata { get; set; }  // Custom property bag to be used by the application, used to be named annotations
 ```
 
 #### OpenApiSchema methods
@@ -324,13 +323,13 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
 Other than the addition of `SerializeAsV31`, the methods have not changed.
 
 ```csharp
-public class OpenApiSchema : IOpenApiAnnotatable, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
+public class OpenApiSchema : IOpenApiMetadataContainer, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
 {
-        public OpenApiSchema() { }
-        public OpenApiSchema(OpenApiSchema schema) { }
-        public void SerializeAsV31(IOpenApiWriter writer) { }
-        public void SerializeAsV3(IOpenApiWriter writer) { }
-        public void SerializeAsV2(IOpenApiWriter writer) { }
+    public OpenApiSchema() { }
+    public OpenApiSchema(OpenApiSchema schema) { }
+    public void SerializeAsV31(IOpenApiWriter writer) { }
+    public void SerializeAsV3(IOpenApiWriter writer) { }
+    public void SerializeAsV2(IOpenApiWriter writer) { }
 }
 
 ```
@@ -343,60 +342,52 @@ There are a number of new features in OpenAPI v3.1 that are now supported in Ope
 
 ```csharp
 
-public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenApiAnnotatable {
-        /// <summary>
-        /// The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement.
-        /// A map of requests initiated other than by an API call, for example by an out of band registration. 
-        /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
-        /// </summary>
-        public IDictionary<string, OpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
+public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenApiMetadataContainer
+{
+    public IDictionary<string, OpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
 }
 ```
 
 ### Summary in info object
 
 ```csharp
-
+public class OpenApiInfo : IOpenApiSerializable, IOpenApiExtensible
+{
     /// <summary>
-    /// Open API Info Object, it provides the metadata about the Open API.
+    /// A short summary of the API.
     /// </summary>
-    public class OpenApiInfo : IOpenApiSerializable, IOpenApiExtensible
-    {
-        /// <summary>
-        /// A short summary of the API.
-        /// </summary>
-        public string Summary { get; set; }
-    }
+    public string Summary { get; set; }
+}
 ```
 
 ### License SPDX identifiers
 
 ```csharp
+/// <summary>
+/// License Object.
+/// </summary>
+public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible
+{
     /// <summary>
-    /// License Object.
+    /// An SPDX license expression for the API. The identifier field is mutually exclusive of the Url property.
     /// </summary>
-    public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible
-    {
-        /// <summary>
-        /// An SPDX license expression for the API. The identifier field is mutually exclusive of the Url property.
-        /// </summary>
-        public string Identifier { get; set; }
-    }
+    public string Identifier { get; set; }
+}
 ```
 
 ### Reusable path items
 
 ```csharp
+/// <summary>
+/// Components Object.
+/// </summary>
+public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
+{
     /// <summary>
-    /// Components Object.
+    /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
     /// </summary>
-    public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
-    {
-        /// <summary>
-        /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
-        /// </summary>
-        public IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
-    }
+    public IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+}
 ```
 
 #### Summary and Description alongside $ref
@@ -404,10 +395,10 @@ public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenA
 Through the use of proxy objects in order to represent references, it is now possible to set the Summary and Description property on an object that is a reference. This was previously not possible.
 
 ```csharp
-    var parameter = new OpenApiParameterReference("id", hostdocument)
-    {
-        Description = "Customer Id"
-    };
+var parameter = new OpenApiParameterReference("id", hostdocument)
+{
+    Description = "Customer Id"
+};
 ```
 
 ### Use HTTP Method Object Instead of Enum
