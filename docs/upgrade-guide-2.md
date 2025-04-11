@@ -39,6 +39,14 @@ Is now:
 var result = await myOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 ```
 
+### Trimming support
+
+To better support applications deployed in high performance environments or on devices which have limited compute available, any usage of reflection has been removed from the code base. This also brings support for trimming to the library. Any method relying on reflection has been removed or re-written.
+
+> Note: as part of this change, the following types have been removed:
+>
+> - StringExtensions
+
 ## Reduced Dependencies
 
 In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library to be able to read OpenAPI descriptions in either YAML or JSON.  In OpenAPI.NET v2, the core Microsoft.OpenAPI library can both read and write JSON.  It is only necessary to use the newly renamed [Microsoft.OpenApi.YamlReader](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) library if you need YAML support. This allows teams who are only working in JSON to avoid the additional dependency and therefore eliminate all non-.NET library references.
