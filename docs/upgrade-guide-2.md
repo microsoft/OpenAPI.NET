@@ -250,6 +250,19 @@ schema.AnyOf = [];
 // now a List<OpenApiSchema> instead of IList<OpenApiSchema>
 ```
 
+### Ephemeral object properties are now in Metadata
+
+In version 1.X applications could add ephemeral properties to some of the models from the libraries. These properties would be carried along in an "Annotations" property, but not serialized. This is especially helpful when building integrations that build document in multiple phases and need additional context to complete the work. The property is now named metadata to avoid any confusion with other terms. The parent interface has also been renamed from `IOpenApiAnnotatable` to `IMetadataContainer`.
+
+```csharp
+var schema = new OpenApiSchema();
+
+// 1.X
+var info = schema.Annotations["foo"];
+// 2.X
+var info = schema.Metadata["foo"];
+```
+
 ### Updates to OpenApiSchema
 
 The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema.  In 3.0 and earlier, OpenAPI used a "subset, superset" of JSON Schema draft-4. This caused many problems for developers trying to use JSON Schema validation libraries with the JSON Schema in their OpenAPI descriptions.  In OpenAPI 3.1, the 2020-12 draft version of JSON Schema was adopted and a new JSON Schema vocabulary was adopted to support OpenAPI specific keywords.  All attempts to constrain what JSON Schema keywords could be used in OpenAPI were removed.
