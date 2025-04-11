@@ -85,18 +85,24 @@ var result = OpenApiDocument.LoadAsync(openApiString, settings: settings);
 
 ## API Enhancements
 
+### Loading the document
+
 The v1 library attempted to mimic the pattern of `XmlTextReader` and `JsonTextReader` for the purpose of loading OpenAPI documents from strings, streams and text readers.
 
 ```csharp
-    var reader = new OpenApiStringReader();
-    var openApiDoc = reader.Read(stringOpenApiDoc, out var diagnostic);
+var reader = new OpenApiStringReader();
+var openApiDoc = reader.Read(stringOpenApiDoc, out var diagnostic);
 ```
 
-The same pattern can be used for `OpenApiStreamReader` and `OpenApiTextReader`.  When we introduced the `ReadAsync` methods we eliminated the use of the `out` parameter.
+The same pattern can be used for `OpenApiStreamReader` and `OpenApiTextReader`.  When we introduced the `ReadAsync` methods we eliminated the use of the `out` parameter. To improve code readability, we've added deconstruction support to `ReadResult`. The properties also have been renamed to avoid confusion with their types.
 
 ```csharp
-    var reader = new OpenApiStreamReader();
-    var (document, diagnostics) = await reader.ReadAsync(streamOpenApiDoc);
+var reader = new OpenApiStreamReader();
+var (document, diagnostics) = await reader.ReadAsync(streamOpenApiDoc);
+// or
+var result = await reader.ReadAsync(streamOpenApiDoc);
+var document = result.Document;
+var diagnostics = result.Diagnostics;
 ```
 
 A `ReadResult` object acts as a tuple of `OpenApiDocument` and `OpenApiDiagnostic`.
