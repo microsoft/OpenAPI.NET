@@ -73,6 +73,13 @@ As the YAML format is only supported when including the `Microsoft.OpenApi.YamlR
 
 When the loading methods are used without a format parameter, we will attempt to parse the document using the default JSON reader.  If that fails and the YAML reader is registered, then we will attempt to read as YAML.  The goal is always to provide the fastest path with JSON but still maintain the convenience of not having to care whether a URL points to YAML or JSON if you need that flexibility.
 
+### Additional exceptions
+
+While parsing an OpenAPI description, the library will now throw the following new exceptions:
+
+- `OpenApiReaderException` when the reader for the format cannot be found, the document cannot be parsed because it does not follow the format conventions, etc...
+- `OpenApiUnsupportedSpecVersionException` when the document's version is not implemented by this version of the library and therefore cannot be parsed.
+
 ### Removing the OpenAPI Any classes
 
 In the OpenAPI specification, there are a few properties that are defined as type `any`. This includes:
