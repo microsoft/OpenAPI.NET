@@ -413,7 +413,7 @@ public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
 }
 ```
 
-#### Summary and Description alongside $ref
+### Summary and Description alongside $ref
 
 Through the use of proxy objects in order to represent references, it is now possible to set the Summary and Description property on an object that is a reference. This was previously not possible.
 
@@ -422,6 +422,13 @@ var parameter = new OpenApiParameterReference("id", hostdocument)
 {
     Description = "Customer Id"
 };
+```
+
+Once serialized results in:
+
+```yaml
+$ref: id
+description: Customer Id
 ```
 
 ### Use HTTP Method Object Instead of Enum
@@ -443,7 +450,7 @@ OpenApiOperation operation = new OpenApiOperation
 };
 ```
 
-#### 3. References as Components
+### References as Components
 
 References can now be used as components, allowing for more modular and reusable OpenAPI documents.
 
@@ -465,9 +472,9 @@ OpenApiComponents components = new OpenApiComponents
 {
     Schemas = new Dictionary<string, IOpenApiSchema>
     {
-        ["MySchema"] = new OpenApiSchema
+        ["MySchema"] = new OpenApiSchemaReference("MyOtherSchema")
         {
-            Reference = new OpenApiSchemaReference("MySchema")
+            Description = "Other reusable schema from initial schema"
         }
     }
 };
