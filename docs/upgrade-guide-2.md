@@ -144,6 +144,28 @@ In v2, the equivalent code would be,
 
 ```
 
+> Note: as part of this change, the following types have been removed from the library:
+>
+> - AnyType
+> - IOpenApiAny
+> - OpenApiAnyCloneHelper
+> - OpenApiArray
+> - OpenApiBinary
+> - OpenApiBoolean
+> - OpenApiByte
+> - OpenApiDate
+> - OpenApiDateTime
+> - OpenApiDouble
+> - OpenApiFloat
+> - OpenApiInteger
+> - OpenApiLong
+> - OpenApiNull
+> - OpenApiObject
+> - OpenApiPassword
+> - OpenApiPrimitive
+> - OpenApiString
+> - PrimitiveType
+
 ### Updates to OpenApiSchema
 
 The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema.  In 3.0 and earlier, OpenAPI used a "subset, superset" of JSON Schema draft-4. This caused many problems for developers trying to use JSON Schema validation libraries with the JSON Schema in their OpenAPI descriptions.  In OpenAPI 3.1, the 2020-12 draft version of JSON Schema was adopted and a new JSON Schema vocabulary was adopted to support OpenAPI specific keywords.  All attempts to constrain what JSON Schema keywords could be used in OpenAPI were removed.
