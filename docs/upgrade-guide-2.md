@@ -23,6 +23,29 @@ In v1, instances of `$ref` were resolved in a second pass of the document to ens
 
 [How does this change the behaviour of external references?]
 
+### Results
+
+The following benchmark results outline an overall 50% reduction in processing time for the document parsing as well as 35% reduction in memory allocation when parsing JSON.
+For YAML, the results between the different versions of the library are similar (some of the optimizations being compensated by the additional features).
+
+#### 1.X
+
+| Method       | Mean           | Error        | StdDev       | Gen0       | Gen1       | Gen2      | Allocated    |
+|------------- |---------------:|-------------:|-------------:|-----------:|-----------:|----------:|-------------:|
+| PetStoreYaml |       448.7 μs |     326.6 μs |     17.90 μs |    58.5938 |    11.7188 |         - |    381.79 KB |
+| PetStoreJson |       484.8 μs |     156.9 μs |      8.60 μs |    62.5000 |    15.6250 |         - |    389.28 KB |
+| GHESYaml     | 1,008,349.6 μs | 565,392.0 μs | 30,991.04 μs | 66000.0000 | 23000.0000 | 4000.0000 |    382785 KB |
+| GHESJson     | 1,039,447.0 μs | 267,501.0 μs | 14,662.63 μs | 67000.0000 | 23000.0000 | 4000.0000 | 389970.77 KB |
+
+#### 2.X
+
+| Method       | Mean         | Error         | StdDev       | Gen0       | Gen1       | Gen2      | Allocated    |
+|------------- |-------------:|--------------:|-------------:|-----------:|-----------:|----------:|-------------:|
+| PetStoreYaml |     450.5 μs |      59.26 μs |      3.25 μs |    58.5938 |    11.7188 |         - |    377.15 KB |
+| PetStoreJson |     172.8 μs |     123.46 μs |      6.77 μs |    39.0625 |     7.8125 |         - |    239.29 KB |
+| GHESYaml     | 943,452.7 μs | 137,685.49 μs |  7,547.01 μs | 66000.0000 | 21000.0000 | 3000.0000 | 389463.91 KB |
+| GHESJson     | 468,401.8 μs | 300,711.80 μs | 16,483.03 μs | 41000.0000 | 15000.0000 | 3000.0000 | 250934.62 KB |
+
 ### Asynchronous API surface
 
 Any method which results in input/output access (memory, network, storage) is now Async and returns a `Task<Result>` to avoid any blocking calls an improve concurrency.
