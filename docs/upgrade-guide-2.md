@@ -276,22 +276,22 @@ The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema
 #### New keywords introduced in 2020-12
 
 ```csharp
-        /// $schema, a JSON Schema dialect identifier. Value must be a URI
-        public string Schema { get; set; }
-        /// $id - Identifies a schema resource with its canonical URI.
-        public string Id { get; set; }
-        /// $comment - reserves a location for comments from schema authors to readers or maintainers of the schema.
-        public string Comment { get; set; }
-        /// $vocabulary- used in meta-schemas to identify the vocabularies available for use in schemas described by that meta-schema.
-        public IDictionary<string, bool> Vocabulary { get; set; }
-        /// $dynamicRef - an applicator that allows for deferring the full resolution until runtime, at which point it is resolved each time it is encountered while evaluating an instance
-        public string DynamicRef { get; set; }
-        /// $dynamicAnchor - used to create plain name fragments that are not tied to any particular structural location for referencing purposes, which are taken into consideration for dynamic referencing.
-        public string DynamicAnchor { get; set; }
-        /// $defs - reserves a location for schema authors to inline re-usable JSON Schemas into a more general schema.
-        public IDictionary<string, OpenApiSchema> Definitions { get; set; }
-        public IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
-        public bool UnevaluatedProperties { get; set;}
+/// $schema, a JSON Schema dialect identifier. Value must be a URI
+public string Schema { get; set; }
+/// $id - Identifies a schema resource with its canonical URI.
+public string Id { get; set; }
+/// $comment - reserves a location for comments from schema authors to readers or maintainers of the schema.
+public string Comment { get; set; }
+/// $vocabulary- used in meta-schemas to identify the vocabularies available for use in schemas described by that meta-schema.
+public IDictionary<string, bool> Vocabulary { get; set; }
+/// $dynamicRef - an applicator that allows for deferring the full resolution until runtime, at which point it is resolved each time it is encountered while evaluating an instance
+public string DynamicRef { get; set; }
+/// $dynamicAnchor - used to create plain name fragments that are not tied to any particular structural location for referencing purposes, which are taken into consideration for dynamic referencing.
+public string DynamicAnchor { get; set; }
+/// $defs - reserves a location for schema authors to inline re-usable JSON Schemas into a more general schema.
+public IDictionary<string, OpenApiSchema> Definitions { get; set; }
+public IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
+public bool UnevaluatedProperties { get; set;}
 
 ```
 
