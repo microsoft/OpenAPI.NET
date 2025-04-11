@@ -23,6 +23,22 @@ In v1, instances of `$ref` were resolved in a second pass of the document to ens
 
 [How does this change the behaviour of external references?]
 
+### Asynchronous API surface
+
+Any method which results in input/output access (memory, network, storage) is now Async and returns a `Task<Result>` to avoid any blocking calls an improve concurrency.
+
+For example:
+
+```csharp
+var result = myOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+```
+
+Is now:
+
+```csharp
+var result = await myOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+```
+
 ## Reduced Dependencies
 
 In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library to be able to read OpenAPI descriptions in either YAML or JSON.  In OpenAPI.NET v2, the core Microsoft.OpenAPI library can both read and write JSON.  It is only necessary to use the newly renamed [Microsoft.OpenApi.YamlReader](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) library if you need YAML support. This allows teams who are only working in JSON to avoid the additional dependency and therefore eliminate all non-.NET library references.
