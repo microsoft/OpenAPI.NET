@@ -47,6 +47,29 @@ To better support applications deployed in high performance environments or on d
 >
 > - StringExtensions
 
+### Collections are not initialized
+
+To lower the memory footprint of the library, collections are now NOT initialized anymore when instantiating any of the models.
+
+Example
+
+```csharp
+var mySchema = new OpenApiSchema();
+
+// 1.6: works
+// 2.X: if null reference types is enabled in the target application,
+//      this will lead to a warning or error at compile time.
+//      And fail at runtime with a null reference exception.
+mySchema.AnyOf.Add(otherSchema);
+
+// one solution
+mySchema.AnyOf ??= [];
+mySchema.AnyOf.Add(otherSchema);
+
+// alternative
+mySchema.AnyOf = [otherSchema];
+```
+
 ## Reduced Dependencies
 
 In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library to be able to read OpenAPI descriptions in either YAML or JSON.  In OpenAPI.NET v2, the core Microsoft.OpenAPI library can both read and write JSON.  It is only necessary to use the newly renamed [Microsoft.OpenApi.YamlReader](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) library if you need YAML support. This allows teams who are only working in JSON to avoid the additional dependency and therefore eliminate all non-.NET library references.
