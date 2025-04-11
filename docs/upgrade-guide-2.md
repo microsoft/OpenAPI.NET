@@ -522,4 +522,5 @@ The team is looking forward to hear your experience trying the new version and w
 - Copy constructors are gone, use shallow copy method.
 - Multiple methods that should have been internal have been changed from public to private link OpenApiLink.SerializeAsV3WithoutReference.
 - duplicated _style property on parameter was removed.
+- discriminator now uses references.
 - ValidationRuleSet now accepts a key?
