@@ -237,6 +237,19 @@ var document = new OpenApiDocument
 var componentA = document.Components["A"];
 ```
 
+### Collections are implementations
+
+Any collection used by the model now documents using the implementation type instead of the interface. This facilitates the usage of new language features such as collections initialization.
+
+```csharp
+var schema = new OpenApiSchema();
+
+// 1.X: does not compile due to the lack of implementation type
+// 2.X: compiles successfully
+schema.AnyOf = [];
+// now a List<OpenApiSchema> instead of IList<OpenApiSchema>
+```
+
 ### Updates to OpenApiSchema
 
 The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema.  In 3.0 and earlier, OpenAPI used a "subset, superset" of JSON Schema draft-4. This caused many problems for developers trying to use JSON Schema validation libraries with the JSON Schema in their OpenAPI descriptions.  In OpenAPI 3.1, the 2020-12 draft version of JSON Schema was adopted and a new JSON Schema vocabulary was adopted to support OpenAPI specific keywords.  All attempts to constrain what JSON Schema keywords could be used in OpenAPI were removed.
