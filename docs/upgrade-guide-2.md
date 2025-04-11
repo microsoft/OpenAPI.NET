@@ -220,6 +220,23 @@ In v2, the equivalent code would be,
 > - OpenApiString
 > - PrimitiveType
 
+### Enable Null Reference Type Support
+
+Version 2.0 preview 13 introduces support for null reference types, which improves type safety and reduces the likelihood of null reference exceptions.
+
+**Example:**
+
+```csharp
+var document = new OpenApiDocument
+{
+    Components = null
+};
+
+// 1.X: no compilation error or warning, but fails with a null reference exception at runtime
+// 2.X: compilation error or warning depending on the project configuration
+var componentA = document.Components["A"];
+```
+
 ### Updates to OpenApiSchema
 
 The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema.  In 3.0 and earlier, OpenAPI used a "subset, superset" of JSON Schema draft-4. This caused many problems for developers trying to use JSON Schema validation libraries with the JSON Schema in their OpenAPI descriptions.  In OpenAPI 3.1, the 2020-12 draft version of JSON Schema was adopted and a new JSON Schema vocabulary was adopted to support OpenAPI specific keywords.  All attempts to constrain what JSON Schema keywords could be used in OpenAPI were removed.
@@ -378,30 +395,6 @@ OpenApiOperation operation = new OpenApiOperation
 {
     HttpMethod = new HttpMethod("GET") // or HttpMethod.Get
 };
-```
-
-#### 2. Enable Null Reference Type Support
-
-Version 2.0 preview 13 introduces support for null reference types, which improves type safety and reduces the likelihood of null reference exceptions.
-
-**Example:**
-
-```csharp
-// Before (1.6)
-OpenApiDocument document = new OpenApiDocument
-{
-    Components = new OpenApiComponents()
-};
-
-// After (2.0)
-OpenApiDocument document = new OpenApiDocument
-{
-    Components = new OpenApiComponents()
-    {
-        Schemas = new Dictionary<string, IOpenApiSchema?>()
-    }
-};
-
 ```
 
 #### 3. References as Components
