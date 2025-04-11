@@ -9,6 +9,13 @@ internal sealed class ZeroPointOnePercentDifferenceMemoryUsagePolicy : Percentag
     public ZeroPointOnePercentDifferenceMemoryUsagePolicy():base(0.1f) {}
 }
 
+internal sealed class ZeroPointTwoPercentDifferenceMemoryUsagePolicy : PercentageMemoryUsagePolicy
+{
+    public static ZeroPointTwoPercentDifferenceMemoryUsagePolicy Instance { get; } = new ZeroPointTwoPercentDifferenceMemoryUsagePolicy();
+    protected override string TypeName => nameof(ZeroPointTwoPercentDifferenceMemoryUsagePolicy);
+    public ZeroPointTwoPercentDifferenceMemoryUsagePolicy():base(0.2f) {}
+}
+
 internal sealed class OnePercentDifferenceMemoryUsagePolicy : PercentageMemoryUsagePolicy
 {
     public static OnePercentDifferenceMemoryUsagePolicy Instance { get; } = new OnePercentDifferenceMemoryUsagePolicy();

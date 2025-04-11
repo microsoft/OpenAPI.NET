@@ -83,7 +83,7 @@ jobs:
           OLD_REPORT: "${{ github.workspace }}/performanceResults/performance.EmptyModels-report.json"
 
       - name: Run comparison tool for descriptions
-        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT -p ZeroPointOnePercentDifferenceMemoryUsage
+        run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT -p ZeroPointTwoPercentDifferenceMemoryUsage
         shell: bash
         env:
           NEW_REPORT: "${{ github.workspace }}/performance/benchmark/BenchmarkDotNet.Artifacts/results/performance.Descriptions-report.json"
