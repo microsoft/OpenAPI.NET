@@ -544,6 +544,9 @@ namespace Microsoft.OpenApi.Models
         {
             // Build the final string by converting each byte
             // into hex and appending it to a StringBuilder
+#if NET
+            return Convert.ToHexString(hash);
+#else
             var sb = new StringBuilder();
             for (var i = 0; i < hash.Length; i++)
             {
@@ -551,6 +554,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             return sb.ToString();
+#endif
         }
 
         /// <summary>
