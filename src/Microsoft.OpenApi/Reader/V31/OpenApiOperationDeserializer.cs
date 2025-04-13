@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -96,8 +97,11 @@ namespace Microsoft.OpenApi.Reader.V31
                 },
                 {
                     "security", (o, n, t) =>
-                    {
-                        o.Security = n.CreateList(LoadSecurityRequirement, t);
+                    { 
+                        if (n.JsonNode is JsonArray)
+                        {
+                            o.Security = new List<OpenApiSecurityRequirement>(n.CreateList(LoadSecurityRequirement, t)); 
+                        } 
                     }
                 },
                 {

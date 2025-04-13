@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Models.Interfaces;
 using System;
-using Microsoft.OpenApi.Interfaces;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -96,7 +96,10 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "security",
-                    (o, n, t) => o.Security = n.CreateList(LoadSecurityRequirement, t)
+                    (o, n, t) => { if (n.JsonNode is JsonArray)
+                    {
+                        o.Security = new List<OpenApiSecurityRequirement>(n.CreateList(LoadSecurityRequirement, t)); 
+                    } }
                 },
             };
 
