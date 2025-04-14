@@ -550,7 +550,7 @@ namespace Microsoft.OpenApi.Models
             async Task WriteDocumentAsync(TextWriter writer, CancellationToken token)
             {
                 var openApiJsonWriter = new OpenApiJsonWriter(writer, new() { Terse = true });
-                SerializeAsV3(openApiJsonWriter);
+                SerializeAsV31(openApiJsonWriter);
                 await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
             }
         }
