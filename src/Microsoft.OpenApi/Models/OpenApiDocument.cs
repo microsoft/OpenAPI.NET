@@ -524,9 +524,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>The hash value.</returns>
         public async Task<string> GetHashCodeAsync(CancellationToken cancellationToken = default)
         {
-            byte[]? hash;
-
-#if NET
+#if NET7_OR_GREATER
             using var memoryStream = new MemoryStream();
             using var streamWriter = new StreamWriter(memoryStream);
 
@@ -534,7 +532,7 @@ namespace Microsoft.OpenApi.Models
 
             memoryStream.Seek(0, SeekOrigin.Begin);
 
-            hash = await SHA512.HashDataAsync(memoryStream, cancellationToken).ConfigureAwait(false);
+            var hash = await SHA512.HashDataAsync(memoryStream, cancellationToken).ConfigureAwait(false);
 #else
             using HashAlgorithm sha = SHA512.Create();
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
@@ -544,7 +542,7 @@ namespace Microsoft.OpenApi.Models
 
             cryptoStream.FlushFinalBlock();
 
-            hash = sha.Hash;
+            var hash = sha.Hash;
 #endif
 
             return ConvertByteArrayToString(hash ?? []);
