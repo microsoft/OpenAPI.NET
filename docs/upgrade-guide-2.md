@@ -346,7 +346,7 @@ public IDictionary<string, object> Metadata { get; set; }  // Custom property ba
 Other than the addition of `SerializeAsV31`, the methods have not changed.
 
 ```csharp
-public class OpenApiSchema : IOpenApiMetadataContainer, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
+public class OpenApiSchema : IMetadataContainer, IOpenApiExtensible, IOpenApiReferenceable, IOpenApiSerializable
 {
     public OpenApiSchema() { }
     public OpenApiSchema(OpenApiSchema schema) { }
