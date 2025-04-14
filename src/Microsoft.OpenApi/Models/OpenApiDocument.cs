@@ -544,7 +544,7 @@ namespace Microsoft.OpenApi.Models
         {
             // Build the final string by converting each byte
             // into hex and appending it to a StringBuilder
-#if NET
+#if NET5_0_OR_GREATER
             return Convert.ToHexString(hash);
 #else
             var sb = new StringBuilder();
