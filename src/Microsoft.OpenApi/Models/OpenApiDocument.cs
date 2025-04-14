@@ -524,20 +524,35 @@ namespace Microsoft.OpenApi.Models
         /// <returns>The hash value.</returns>
         public async Task<string> GetHashCodeAsync(CancellationToken cancellationToken = default)
         {
+#if NET7_OR_GREATER
+            using var memoryStream = new MemoryStream();
+            using var streamWriter = new StreamWriter(memoryStream);
+
+            await WriteDocumentAsync(streamWriter, cancellationToken).ConfigureAwait(false);
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            var hash = await SHA512.HashDataAsync(memoryStream, cancellationToken).ConfigureAwait(false);
+#else
             using HashAlgorithm sha = SHA512.Create();
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
-            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
-            SerializeAsV3(openApiJsonWriter);
-            await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
+            await WriteDocumentAsync(streamWriter, cancellationToken).ConfigureAwait(false);
 
-#if NET5_0_OR_GREATER
-            await cryptoStream.FlushFinalBlockAsync(cancellationToken).ConfigureAwait(false);
-#else
             cryptoStream.FlushFinalBlock();
+
+            var hash = sha.Hash;
 #endif
-            return ConvertByteArrayToString(sha.Hash ?? []);
+
+            return ConvertByteArrayToString(hash ?? []);
+
+            async Task WriteDocumentAsync(TextWriter writer, CancellationToken token)
+            {
+                var openApiJsonWriter = new OpenApiJsonWriter(writer, new() { Terse = true });
+                SerializeAsV31(openApiJsonWriter);
+                await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
+            }
         }
 
         private static string ConvertByteArrayToString(byte[] hash)
