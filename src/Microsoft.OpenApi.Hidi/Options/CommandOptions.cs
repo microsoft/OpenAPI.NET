@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Hidi.Options
         public readonly Option<bool> CleanOutputOption = new("--clean-output", "Overwrite an existing file");
         public readonly Option<string> VersionOption = new("--version", "OpenAPI specification version");
         public readonly Option<string> MetadataVersionOption = new("--metadata-version", "Graph metadata version to use.");
-        public readonly Option<string?> FormatOption = new("--format", "File format");
+        public readonly Option<string> FormatOption = new("--format", "File format");
         public readonly Option<bool> TerseOutputOption = new("--terse-output", "Produce terse json output");
         public readonly Option<string> SettingsFileOption = new("--settings-path", "The configuration file with CSDL conversion settings.");
         public readonly Option<LogLevel> LogLevelOption = new("--log-level", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
