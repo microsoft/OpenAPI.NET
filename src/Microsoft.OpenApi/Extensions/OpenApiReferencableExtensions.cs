@@ -64,10 +64,9 @@ namespace Microsoft.OpenApi.Extensions
             if (OpenApiConstants.Examples.Equals(propertyName, StringComparison.Ordinal) &&
                 !string.IsNullOrEmpty(mapKey) &&
                 headerElement?.Examples != null &&
-                headerElement.Examples.TryGetValue(mapKey, out var exampleElement) &&
-                exampleElement is IOpenApiReferenceable referenceable)
+                headerElement.Examples.TryGetValue(mapKey, out var exampleElement))
             {
-                return referenceable;
+                return exampleElement;
             }
             throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
         }
@@ -81,10 +80,9 @@ namespace Microsoft.OpenApi.Extensions
             if (OpenApiConstants.Examples.Equals(propertyName, StringComparison.Ordinal) &&
                 !string.IsNullOrEmpty(mapKey) &&
                 parameterElement?.Examples != null &&
-                parameterElement.Examples.TryGetValue(mapKey, out var exampleElement) &&
-                exampleElement is IOpenApiReferenceable referenceable)
+                parameterElement.Examples.TryGetValue(mapKey, out var exampleElement))
             {
-                return referenceable;
+                return exampleElement;
             }
             throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
         }
@@ -99,17 +97,15 @@ namespace Microsoft.OpenApi.Extensions
             {
                 if (OpenApiConstants.Headers.Equals(propertyName, StringComparison.Ordinal) &&
                     responseElement?.Headers != null &&
-                    responseElement.Headers.TryGetValue(mapKey, out var headerElement) &&
-                    headerElement is IOpenApiReferenceable referenceable)
+                    responseElement.Headers.TryGetValue(mapKey, out var headerElement))
                 {
-                    return referenceable;
+                    return headerElement;
                 }
                 if (OpenApiConstants.Links.Equals(propertyName, StringComparison.Ordinal) &&
                     responseElement?.Links != null &&
-                    responseElement.Links.TryGetValue(mapKey, out var linkElement) &&
-                    linkElement is IOpenApiReferenceable referenceable2)
+                    responseElement.Links.TryGetValue(mapKey, out var linkElement))
                 {
-                    return referenceable2;
+                    return linkElement;
                 }
             }
             throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
