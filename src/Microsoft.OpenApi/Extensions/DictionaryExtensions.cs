@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Extensions
         /// Returns a new dictionary with entries sorted by key using the default comparer.
         /// </summary>
         public static SortedDictionary<TKey, TValue> Sort<TKey, TValue>(
-            this IDictionary<TKey, TValue> source)
+            this Dictionary<TKey, TValue> source)
             where TKey : notnull
         {
             Utils.CheckArgumentNull(source);
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Extensions
         /// Returns a new dictionary with entries sorted by key using a custom comparer.
         /// </summary>
         public static SortedDictionary<TKey, TValue> Sort<TKey, TValue>(
-            this IDictionary<TKey, TValue> source,
+            this Dictionary<TKey, TValue> source,
             IComparer<TKey> comparer)
             where TKey : notnull
         {
