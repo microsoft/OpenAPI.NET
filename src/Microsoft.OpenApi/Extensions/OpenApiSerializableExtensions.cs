@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
@@ -28,7 +29,7 @@ namespace Microsoft.OpenApi.Extensions
         public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            return element.SerializeAsync(stream, specVersion, OpenApiFormat.Json, cancellationToken);
+            return element.SerializeAsync(stream, specVersion, OpenApiConstants.Json, cancellationToken);
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Microsoft.OpenApi.Extensions
         public static Task SerializeAsYamlAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            return element.SerializeAsync(stream, specVersion, OpenApiFormat.Yaml, cancellationToken);
+            return element.SerializeAsync(stream, specVersion, OpenApiConstants.Yaml, cancellationToken);
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace Microsoft.OpenApi.Extensions
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format,
+            string format,
             CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
@@ -81,7 +82,7 @@ namespace Microsoft.OpenApi.Extensions
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format,
+            string format,
             OpenApiWriterSettings? settings = null,
             CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
@@ -92,8 +93,8 @@ namespace Microsoft.OpenApi.Extensions
 
             IOpenApiWriter writer = format switch
             {
-                OpenApiFormat.Json => new OpenApiJsonWriter(streamWriter, settings, false),
-                OpenApiFormat.Yaml => new OpenApiYamlWriter(streamWriter, settings),
+                OpenApiConstants.Json => new OpenApiJsonWriter(streamWriter, settings, false),
+                OpenApiConstants.Yaml => new OpenApiYamlWriter(streamWriter, settings),
                 _ => throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format)),
             };
             return element.SerializeAsync(writer, specVersion, cancellationToken);
@@ -147,7 +148,7 @@ namespace Microsoft.OpenApi.Extensions
             CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            return element.SerializeAsync(specVersion, OpenApiFormat.Json, cancellationToken);
+            return element.SerializeAsync(specVersion, OpenApiConstants.Json, cancellationToken);
         }
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace Microsoft.OpenApi.Extensions
             CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            return element.SerializeAsync(specVersion, OpenApiFormat.Yaml, cancellationToken);
+            return element.SerializeAsync(specVersion, OpenApiConstants.Yaml, cancellationToken);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace Microsoft.OpenApi.Extensions
         public static async Task<string> SerializeAsync<T>(
             this T element,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format,
+            string format,
             CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
