@@ -296,15 +296,12 @@ namespace Microsoft.OpenApi.Models
                         .OfType<OpenApiSchemaReference>()
                         .Where(k => k.Reference?.Id is not null)
                         .ToDictionary<OpenApiSchemaReference, string, IOpenApiSchema>(
-                            k => k.Reference?.Id!,
+                            k => k.Reference.Id!,
                             v => v
                         );
 
 
-                    foreach (var schema in openApiSchemas.Values.ToList())
-                    {
-                        FindSchemaReferences.ResolveSchemas(Components, openApiSchemas!);
-                    }
+                    FindSchemaReferences.ResolveSchemas(Components, openApiSchemas);
 
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
@@ -723,8 +720,10 @@ namespace Microsoft.OpenApi.Models
 
         public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, IOpenApiSchema> schemas)
         {
-            var visitor = new FindSchemaReferences();
-            visitor.Schemas = schemas;
+            var visitor = new FindSchemaReferences
+            {
+                Schemas = schemas
+            };
             var walker = new OpenApiWalker(visitor);
             walker.Walk(components);
         }
