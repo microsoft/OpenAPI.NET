@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Expressions
             {
                 return true;
             }
-            return obj is RuntimeExpression runtimeExpression && Equals(runtimeExpression);
+            return obj.GetType() == GetType() && Equals((RuntimeExpression)obj);
         }
 
         /// <inheritdoc />
