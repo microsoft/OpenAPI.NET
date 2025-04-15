@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Interfaces
 {
@@ -13,6 +14,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Specification extensions.
         /// </summary>
-        Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        OpenApiExtensionDictionary? Extensions { get; set; }
     }
 }
