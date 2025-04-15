@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Expressions
         /// </summary>
         public override int GetHashCode()
         {
-            return Expression.GetHashCode();
+            return StringComparer.Ordinal.GetHashCode(Expression);
         }
 
         /// <summary>
@@ -86,15 +86,21 @@ namespace Microsoft.OpenApi.Expressions
         /// </summary>
         public override bool Equals(object? obj)
         {
-            return Equals(obj as RuntimeExpression);
+            if (obj == null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            return obj is RuntimeExpression runtimeExpression && Equals(runtimeExpression);
         }
 
-        /// <summary>
-        /// Equals implementation for object of the same type.
-        /// </summary>
-        public bool Equals(RuntimeExpression? obj)
+        /// <inheritdoc />
+        public bool Equals(RuntimeExpression? other)
         {
-            return obj != null && obj.Expression == Expression;
+            return other is not null && StringComparer.Ordinal.Equals(Expression, other.Expression);
         }
 
         /// <inheritdoc />
