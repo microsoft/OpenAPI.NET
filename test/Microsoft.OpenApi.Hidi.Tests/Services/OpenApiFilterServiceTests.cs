@@ -244,7 +244,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openApiOperationTags = doc?.Paths["/items"].Operations?[HttpMethod.Get].Tags?.ToArray();
             Assert.NotNull(openApiOperationTags);
             Assert.Single(openApiOperationTags);
-            Assert.True(openApiOperationTags[0].UnresolvedReference);
+            Assert.NotNull(openApiOperationTags[0].Target);
 
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             if (doc is not null)
@@ -271,7 +271,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 var trimmedOpenApiOperationTags = subsetOpenApiDocument.Paths?["/items"].Operations?[HttpMethod.Get].Tags?.ToArray();
                 Assert.NotNull(trimmedOpenApiOperationTags);
                 Assert.Single(trimmedOpenApiOperationTags);
-                Assert.True(trimmedOpenApiOperationTags[0].UnresolvedReference);
+                Assert.NotNull(trimmedOpenApiOperationTags[0].Target);
 
                 // Finally try to write the trimmed document as v3 document
                 var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -302,7 +302,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // Assert
             foreach (var pathItem in subsetOpenApiDocument.Paths)
             {
-                Assert.True(pathItem.Value.Parameters!.Count != 0);
+                Assert.NotNull(pathItem.Value.Parameters);
+                Assert.NotEmpty(pathItem.Value.Parameters);
                 Assert.Single(pathItem.Value.Parameters!);
             }
         }

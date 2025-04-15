@@ -99,6 +99,8 @@ components:
       in: header
 security:
   - api_key: [ ]
+tags:
+  - name: pets
 webhooks:
   newPetAlert:
     post:

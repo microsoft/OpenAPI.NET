@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi;
 
@@ -31,6 +32,10 @@ internal sealed class OpenApiTagComparer : IEqualityComparer<IOpenApiTag>
         {
             return true;
         }
+        if (x is OpenApiTagReference referenceX && y is OpenApiTagReference referenceY)
+        {
+            return StringComparer.Equals(referenceX.Name ?? referenceX.Reference.Id, referenceY.Name ?? referenceY.Reference.Id);
+        }
         return StringComparer.Equals(x.Name, y.Name);
     }
 
@@ -41,5 +46,13 @@ internal sealed class OpenApiTagComparer : IEqualityComparer<IOpenApiTag>
     internal static readonly StringComparer StringComparer = StringComparer.Ordinal;
 
     /// <inheritdoc/>
-    public int GetHashCode(IOpenApiTag obj) => string.IsNullOrEmpty(obj?.Name) ? 0 : StringComparer.GetHashCode(obj!.Name);
+    public int GetHashCode(IOpenApiTag obj)
+    {
+        string? value = obj?.Name;
+        if (value is null && obj is OpenApiTagReference reference)
+        {
+            value = reference.Reference.Id;
+        }
+        return string.IsNullOrEmpty(value) ? 0 : StringComparer.GetHashCode(value);
+    }
 }

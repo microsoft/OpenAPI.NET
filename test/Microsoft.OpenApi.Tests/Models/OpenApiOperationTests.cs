@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -858,6 +859,35 @@ namespace Microsoft.OpenApi.Tests.Models
             baseOperation.Metadata["key1"] = "value2";
 
             Assert.NotEqual(baseOperation.Metadata["key1"], actualOperation.Metadata["key1"]);
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public async Task SerializeAsJsonAsyncThrowsIfTagReferenceIsUnresolved(OpenApiSpecVersion version)
+        {
+            var document = new OpenApiDocument()
+            {
+                Tags =
+                [
+                    new() { Name = "one" },
+                    new() { Name = "three" }
+                ]
+            };
+
+            var operation = new OpenApiOperation()
+            {
+                Tags =
+                [
+                    new OpenApiTagReference("one", document),
+                    new OpenApiTagReference("two", document),
+                    new OpenApiTagReference("three", document)
+                ]
+            };
+
+            var exception = await Assert.ThrowsAsync<OpenApiException>(() => operation.SerializeAsJsonAsync(version));
+            Assert.Equal("The OpenAPI tag reference 'two' does reference a valid tag.", exception.Message);
         }
     }
 }
