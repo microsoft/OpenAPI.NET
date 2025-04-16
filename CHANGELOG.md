@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.0.0-preview.17](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.16...v2.0.0-preview.17) (2025-04-16)
+
+
+### Features
+
+* discriminator mappings now use schema references ([b4877f6](https://github.com/microsoft/OpenAPI.NET/commit/b4877f674ad1a240a367390d40d122eebccc0b20))
+* openapiformat enum cleanup ([#2326](https://github.com/microsoft/OpenAPI.NET/issues/2326)) ([19ffd13](https://github.com/microsoft/OpenAPI.NET/commit/19ffd136a7d2137f3de0896148d9a39f469ac711))
+* Remove default collection initialization for perf reasons ([#2284](https://github.com/microsoft/OpenAPI.NET/issues/2284)) ([3604382](https://github.com/microsoft/OpenAPI.NET/commit/36043829d29340a47fc93c6477a38ea93e59ef57))
+
+
+### Bug Fixes
+
+* Empty tag causes error generating Kiota client [#2283](https://github.com/microsoft/OpenAPI.NET/issues/2283) ([#2286](https://github.com/microsoft/OpenAPI.NET/issues/2286)) ([521d636](https://github.com/microsoft/OpenAPI.NET/commit/521d636e2c437c25e1758e9f6a22793d74adf2d7))
+* hidi fails to parse yaml files when fixing references ([a5c4d61](https://github.com/microsoft/OpenAPI.NET/commit/a5c4d6109c433b949cdb1665c00ad778b82b28b0))
+* hidi fails to parse yaml files when fixing references ([c5b69fe](https://github.com/microsoft/OpenAPI.NET/commit/c5b69fed9c413a6399c36e0f543e1019faac77e6))
+* Improve handling of OpenAPI tag references ([#2325](https://github.com/microsoft/OpenAPI.NET/issues/2325)) ([bf9954a](https://github.com/microsoft/OpenAPI.NET/commit/bf9954a257691231fac6f56667bde208a98a5b42))
+* read (Exclusive)Maximum and (Exclusive)Minimum values as strings and write their raw values during serialization ([#2309](https://github.com/microsoft/OpenAPI.NET/issues/2309)) ([ac66756](https://github.com/microsoft/OpenAPI.NET/commit/ac667560a951bef2824851c208c55ba070e96163))
+* relative references in subdirectory documents are not loading [#1674](https://github.com/microsoft/OpenAPI.NET/issues/1674) ([#2243](https://github.com/microsoft/OpenAPI.NET/issues/2243)) ([4bcbd51](https://github.com/microsoft/OpenAPI.NET/commit/4bcbd51caff689a73e90efbc08f683383741e004))
+* renames annotations schema property to metadata to match [#2241](https://github.com/microsoft/OpenAPI.NET/issues/2241) ([28e4a75](https://github.com/microsoft/OpenAPI.NET/commit/28e4a7590fb3525e30970112191d72eaf048ad6b))
+* renames annotations schema property to metadata to match [#2241](https://github.com/microsoft/OpenAPI.NET/issues/2241) ([33fc7cb](https://github.com/microsoft/OpenAPI.NET/commit/33fc7cbcda71efea47070ab7a6ebf9db8787a7f8))
+* set format to binary for file uploads ([#2305](https://github.com/microsoft/OpenAPI.NET/issues/2305)) ([47f10d3](https://github.com/microsoft/OpenAPI.NET/commit/47f10d323e78b9e6caa757c0d2efa378a19fc28c))
+
 ## [2.0.0-preview.16](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.15...v2.0.0-preview.16) (2025-03-20)
 
 

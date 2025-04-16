@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Workbench
         /// <summary>
         /// Default format.
         /// </summary>
-        private OpenApiFormat _format = OpenApiFormat.Yaml;
+        private string _format = OpenApiConstants.Yaml;
 
         /// <summary>
         /// Default version.
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Workbench
             }
         }
 
-        public OpenApiFormat Format
+        public string Format
         {
             get => _format;
             set
@@ -166,14 +166,14 @@ namespace Microsoft.OpenApi.Workbench
 
         public bool IsYaml
         {
-            get => Format == OpenApiFormat.Yaml;
-            set => Format = value ? OpenApiFormat.Yaml : Format;
+            get => Format == OpenApiConstants.Yaml;
+            set => Format = value ? OpenApiConstants.Yaml : Format;
         }
 
         public bool IsJson
         {
-            get => Format == OpenApiFormat.Json;
-            set => Format = value ? OpenApiFormat.Json : Format;
+            get => Format == OpenApiConstants.Json;
+            set => Format = value ? OpenApiConstants.Json : Format;
         }
 
         public bool IsV2_0
@@ -243,7 +243,7 @@ namespace Microsoft.OpenApi.Workbench
                         : new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                 }
 
-                var readResult = await OpenApiDocument.LoadAsync(stream, Format.GetDisplayName().ToLowerInvariant(), settings);
+                var readResult = await OpenApiDocument.LoadAsync(stream, Format.ToLowerInvariant(), settings);
                 var document = readResult.Document;
                 var context = readResult.Diagnostic;
 

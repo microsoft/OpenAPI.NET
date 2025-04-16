@@ -487,8 +487,22 @@ The `SerializeAs()` method simplifies serialization scenarios, making it easier 
 
 ```csharp
 OpenApiDocument document = new OpenApiDocument();
-string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json);
+string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json);
 
+```
+
+### Use OpenApiConstants string Instead of OpenApiFormat Enum
+
+OpenApiConstants are now used instead of OpenApiFormat enums.
+
+**Example:**
+
+```csharp
+// Before (1.6)
+var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json); 
+
+// After (2.0)
+var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
 ```
 
 ### Bug Fixes

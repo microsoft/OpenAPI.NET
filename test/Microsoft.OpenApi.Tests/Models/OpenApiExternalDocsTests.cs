@@ -22,9 +22,9 @@ namespace Microsoft.OpenApi.Tests.Models
         #region OpenAPI V3
 
         [Theory]
-        [InlineData(OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public async Task SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expected)
+        [InlineData(OpenApiConstants.Json, "{ }")]
+        [InlineData(OpenApiConstants.Yaml, "{ }")]
+        public async Task SerializeBasicExternalDocsAsV3Works(string format, string expected)
         {
             // Arrange & Act
             var actual = await BasicExDocs.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);
