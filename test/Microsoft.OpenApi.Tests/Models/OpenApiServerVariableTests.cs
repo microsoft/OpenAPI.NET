@@ -25,9 +25,9 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Theory]
-        [InlineData(OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public async Task SerializeBasicServerVariableAsV3Works(OpenApiFormat format, string expected)
+        [InlineData(OpenApiConstants.Json, "{ }")]
+        [InlineData(OpenApiConstants.Yaml, "{ }")]
+        public async Task SerializeBasicServerVariableAsV3Works(string format, string expected)
         {
             // Arrange & Act
             var actual = await BasicServerVariable.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);

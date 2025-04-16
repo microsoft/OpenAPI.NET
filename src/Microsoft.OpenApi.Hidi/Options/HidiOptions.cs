@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Hidi.Options
         public bool CleanOutput { get; set; }
         public string? Version { get; set; }
         public string? MetadataVersion { get; set; }
-        public OpenApiFormat? OpenApiFormat { get; set; }
+        public string? OpenApiFormat { get; set; }
         public bool TerseOutput { get; set; }
         public IConfiguration? SettingsConfig { get; set; }
         public LogLevel LogLevel { get; set; }

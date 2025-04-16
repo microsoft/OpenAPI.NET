@@ -30,13 +30,13 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiXml BasicXml = new();
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Yaml)]
         public async Task SerializeBasicXmlWorks(
             OpenApiSpecVersion version,
-            OpenApiFormat format)
+            string format)
         {
             // Act
             var actual = await BasicXml.SerializeAsync(version, format);
