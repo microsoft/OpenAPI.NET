@@ -16,8 +16,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     {
         private const string SampleFolderPath = "V31Tests/Samples/OpenApiDocument/";
 
-        [Fact]
-        public async Task Serialize_DoesNotMutateDom()
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        public async Task Serialize_DoesNotMutateDom(OpenApiSpecVersion version)
         {
             // Arrange
             var filePath = Path.Combine(SampleFolderPath, "docWith31properties.json");
@@ -37,7 +40,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             // Serialize using native OpenAPI writer
             var jsonWriter = new StringWriter();
             var openApiWriter = new OpenApiJsonWriter(jsonWriter);
-            doc.SerializeAsV31(openApiWriter);
+            switch (version)
+            {
+                case OpenApiSpecVersion.OpenApi3_1:
+                    doc.SerializeAsV31(openApiWriter);
+                    break;
+                case OpenApiSpecVersion.OpenApi3_0:
+                    doc.SerializeAsV3(openApiWriter);
+                    break;
+                default:
+                    doc.SerializeAsV2(openApiWriter);
+                    break;
+            }
 
             // Serialize again with STJ after native writer serialization
             var finalSerialized = JsonSerializer.Serialize(doc, options);
