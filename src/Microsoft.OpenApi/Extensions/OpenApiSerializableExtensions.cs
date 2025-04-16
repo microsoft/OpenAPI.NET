@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Extensions
 
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
 
-            IOpenApiWriter writer = format switch
+            IOpenApiWriter writer = format.ToLowerInvariant() switch
             {
                 OpenApiConstants.Json => new OpenApiJsonWriter(streamWriter, settings, false),
                 OpenApiConstants.Yaml => new OpenApiYamlWriter(streamWriter, settings),

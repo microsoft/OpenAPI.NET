@@ -202,8 +202,9 @@ namespace Microsoft.OpenApi.Hidi
                     InlineLocalReferences = options.InlineLocal,
                     InlineExternalReferences = options.InlineExternal
                 };
-
-                IOpenApiWriter writer = openApiFormat switch
+#pragma warning disable CA1308
+                IOpenApiWriter writer = openApiFormat.ToLowerInvariant() switch
+#pragma warning restore CA1308
                 {
                     OpenApiConstants.Json => options.TerseOutput ? new(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
                     OpenApiConstants.Yaml => new OpenApiYamlWriter(textWriter, settings),
