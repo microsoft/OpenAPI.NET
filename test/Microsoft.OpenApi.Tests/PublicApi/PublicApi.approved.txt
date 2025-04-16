@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Expressions
         public const string Prefix = "$";
         protected RuntimeExpression() { }
         public abstract string Expression { get; }
-        public bool Equals(Microsoft.OpenApi.Expressions.RuntimeExpression? obj) { }
+        public bool Equals(Microsoft.OpenApi.Expressions.RuntimeExpression? other) { }
         public override bool Equals(object? obj) { }
         public override int GetHashCode() { }
         public override string ToString() { }
