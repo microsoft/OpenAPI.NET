@@ -10,6 +10,15 @@ namespace Microsoft.OpenApi.Any
         public OpenApiAny(System.Text.Json.Nodes.JsonNode jsonNode) { }
         public System.Text.Json.Nodes.JsonNode Node { get; }
         public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+        public static System.Text.Json.Nodes.JsonNode op_Implicit(Microsoft.OpenApi.Any.OpenApiAny openApiAny) { }
+        public static Microsoft.OpenApi.Any.OpenApiAny op_Implicit(System.Text.Json.Nodes.JsonNode jsonNode) { }
+    }
+    public class OpenApiExtensionDictionary : System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>
+    {
+        public OpenApiExtensionDictionary() { }
+        public OpenApiExtensionDictionary(Microsoft.OpenApi.Any.OpenApiExtensionDictionary extensions) { }
+        public Microsoft.OpenApi.Any.OpenApiAny this[string key] { get; set; }
+        public void Add(string key, object value) { }
     }
 }
 namespace Microsoft.OpenApi.Attributes
@@ -205,7 +214,7 @@ namespace Microsoft.OpenApi.Interfaces
     public interface IOpenApiElement { }
     public interface IOpenApiExtensible : Microsoft.OpenApi.Interfaces.IOpenApiElement
     {
-        System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
     }
     public interface IOpenApiExtension
     {
@@ -213,7 +222,7 @@ namespace Microsoft.OpenApi.Interfaces
     }
     public interface IOpenApiReadOnlyExtensible
     {
-        System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
     }
     public interface IOpenApiReader
     {
@@ -497,7 +506,7 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiCallback : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback>, Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback
     {
         public OpenApiCallback() { }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public System.Collections.Generic.Dictionary<Microsoft.OpenApi.Expressions.RuntimeExpression, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>? PathItems { get; set; }
         public void AddPathItem(Microsoft.OpenApi.Expressions.RuntimeExpression expression, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem pathItem) { }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback CreateShallowCopy() { }
@@ -511,7 +520,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiComponents(Microsoft.OpenApi.Models.OpenApiComponents? components) { }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback>? Callbacks { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample>? Examples { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader>? Headers { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>? Links { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>? Parameters { get; set; }
@@ -687,7 +696,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiContact() { }
         public OpenApiContact(Microsoft.OpenApi.Models.OpenApiContact contact) { }
         public string? Email { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public string? Name { get; set; }
         public System.Uri? Url { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -698,7 +707,7 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiDiscriminator() { }
         public OpenApiDiscriminator(Microsoft.OpenApi.Models.OpenApiDiscriminator discriminator) { }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.References.OpenApiSchemaReference>? Mapping { get; set; }
         public string? PropertyName { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -711,7 +720,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDocument(Microsoft.OpenApi.Models.OpenApiDocument? document) { }
         public System.Uri BaseUri { get; }
         public Microsoft.OpenApi.Models.OpenApiComponents? Components { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; set; }
         public Microsoft.OpenApi.Models.OpenApiInfo Info { get; set; }
         public System.Uri? JsonSchemaDialect { get; set; }
@@ -742,7 +751,7 @@ namespace Microsoft.OpenApi.Models
         public bool? AllowReserved { get; set; }
         public string? ContentType { get; set; }
         public bool? Explode { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader>? Headers { get; set; }
         public Microsoft.OpenApi.Models.ParameterStyle? Style { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -762,7 +771,7 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiExample() { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public string? ExternalValue { get; set; }
         public string? Summary { get; set; }
         public System.Text.Json.Nodes.JsonNode? Value { get; set; }
@@ -775,8 +784,8 @@ namespace Microsoft.OpenApi.Models
         where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
         protected OpenApiExtensibleDictionary() { }
-        protected OpenApiExtensibleDictionary(System.Collections.Generic.Dictionary<string, T> dictionary, System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? extensions = null) { }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        protected OpenApiExtensibleDictionary(System.Collections.Generic.Dictionary<string, T> dictionary, Microsoft.OpenApi.Any.OpenApiExtensionDictionary? extensions = null) { }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -786,7 +795,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiExternalDocs() { }
         public OpenApiExternalDocs(Microsoft.OpenApi.Models.OpenApiExternalDocs externalDocs) { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public System.Uri? Url { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -803,7 +812,7 @@ namespace Microsoft.OpenApi.Models
         public System.Text.Json.Nodes.JsonNode? Example { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample>? Examples { get; set; }
         public bool Explode { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public bool Required { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Schema { get; set; }
         public Microsoft.OpenApi.Models.ParameterStyle? Style { get; set; }
@@ -818,7 +827,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiInfo(Microsoft.OpenApi.Models.OpenApiInfo info) { }
         public Microsoft.OpenApi.Models.OpenApiContact? Contact { get; set; }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiLicense? License { get; set; }
         public string? Summary { get; set; }
         public System.Uri? TermsOfService { get; set; }
@@ -832,7 +841,7 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiLicense() { }
         public OpenApiLicense(Microsoft.OpenApi.Models.OpenApiLicense license) { }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public string? Identifier { get; set; }
         public string? Name { get; set; }
         public System.Uri? Url { get; set; }
@@ -844,7 +853,7 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiLink() { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public string? OperationId { get; set; }
         public string? OperationRef { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.RuntimeExpressionAnyWrapper>? Parameters { get; set; }
@@ -862,7 +871,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiEncoding>? Encoding { get; set; }
         public System.Text.Json.Nodes.JsonNode? Example { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample>? Examples { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Schema { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -873,7 +882,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiOAuthFlow() { }
         public OpenApiOAuthFlow(Microsoft.OpenApi.Models.OpenApiOAuthFlow oAuthFlow) { }
         public System.Uri? AuthorizationUrl { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public System.Uri? RefreshUrl { get; set; }
         public System.Collections.Generic.Dictionary<string, string>? Scopes { get; set; }
         public System.Uri? TokenUrl { get; set; }
@@ -887,7 +896,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiOAuthFlows(Microsoft.OpenApi.Models.OpenApiOAuthFlows oAuthFlows) { }
         public Microsoft.OpenApi.Models.OpenApiOAuthFlow? AuthorizationCode { get; set; }
         public Microsoft.OpenApi.Models.OpenApiOAuthFlow? ClientCredentials { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiOAuthFlow? Implicit { get; set; }
         public Microsoft.OpenApi.Models.OpenApiOAuthFlow? Password { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -902,7 +911,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback>? Callbacks { get; set; }
         public bool Deprecated { get; set; }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; set; }
         public System.Collections.Generic.Dictionary<string, object>? Metadata { get; set; }
         public string? OperationId { get; set; }
@@ -928,7 +937,7 @@ namespace Microsoft.OpenApi.Models
         public System.Text.Json.Nodes.JsonNode? Example { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample>? Examples { get; set; }
         public bool Explode { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.ParameterLocation? In { get; set; }
         public string? Name { get; set; }
         public bool Required { get; set; }
@@ -943,7 +952,7 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiPathItem() { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public System.Collections.Generic.Dictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation>? Operations { get; set; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>? Parameters { get; set; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.OpenApiServer>? Servers { get; set; }
@@ -983,7 +992,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiRequestBody() { }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType>? Content { get; set; }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public bool Required { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter ConvertToBodyParameter(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter> ConvertToFormDataParameters(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -997,7 +1006,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponse() { }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType>? Content { get; set; }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader>? Headers { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>? Links { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiResponse CreateShallowCopy() { }
@@ -1033,7 +1042,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.List<System.Text.Json.Nodes.JsonNode>? Examples { get; set; }
         public string? ExclusiveMaximum { get; set; }
         public string? ExclusiveMinimum { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; set; }
         public string? Format { get; set; }
         public string? Id { get; set; }
@@ -1080,7 +1089,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiSecurityScheme() { }
         public string? BearerFormat { get; set; }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiOAuthFlows? Flows { get; set; }
         public Microsoft.OpenApi.Models.ParameterLocation? In { get; set; }
         public string? Name { get; set; }
@@ -1097,7 +1106,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiServer() { }
         public OpenApiServer(Microsoft.OpenApi.Models.OpenApiServer server) { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public string? Url { get; set; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiServerVariable>? Variables { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1111,7 +1120,7 @@ namespace Microsoft.OpenApi.Models
         public string? Default { get; set; }
         public string? Description { get; set; }
         public System.Collections.Generic.List<string>? Enum { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1120,7 +1129,7 @@ namespace Microsoft.OpenApi.Models
     {
         public OpenApiTag() { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; set; }
         public string? Name { get; set; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiTag CreateShallowCopy() { }
@@ -1133,7 +1142,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiXml() { }
         public OpenApiXml(Microsoft.OpenApi.Models.OpenApiXml xml) { }
         public bool Attribute { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; set; }
         public string? Name { get; set; }
         public System.Uri? Namespace { get; set; }
         public string? Prefix { get; set; }
@@ -1235,7 +1244,7 @@ namespace Microsoft.OpenApi.Models.References
     public class OpenApiCallbackReference : Microsoft.OpenApi.Models.References.BaseOpenApiReferenceHolder<Microsoft.OpenApi.Models.OpenApiCallback, Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable, Microsoft.OpenApi.Interfaces.IShallowCopyable<Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback>, Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback
     {
         public OpenApiCallbackReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public System.Collections.Generic.Dictionary<Microsoft.OpenApi.Expressions.RuntimeExpression, Microsoft.OpenApi.Models.Interfaces.IOpenApiPathItem>? PathItems { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback source) { }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiCallback CreateShallowCopy() { }
@@ -1245,7 +1254,7 @@ namespace Microsoft.OpenApi.Models.References
     {
         public OpenApiExampleReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public string? ExternalValue { get; }
         public string? Summary { get; set; }
         public System.Text.Json.Nodes.JsonNode? Value { get; }
@@ -1264,7 +1273,7 @@ namespace Microsoft.OpenApi.Models.References
         public System.Text.Json.Nodes.JsonNode? Example { get; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample>? Examples { get; }
         public bool Explode { get; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public bool Required { get; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiSchema? Schema { get; }
         public Microsoft.OpenApi.Models.ParameterStyle? Style { get; }
@@ -1275,7 +1284,7 @@ namespace Microsoft.OpenApi.Models.References
     {
         public OpenApiLinkReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public string? OperationId { get; }
         public string? OperationRef { get; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.RuntimeExpressionAnyWrapper>? Parameters { get; }
@@ -1296,7 +1305,7 @@ namespace Microsoft.OpenApi.Models.References
         public System.Text.Json.Nodes.JsonNode? Example { get; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiExample>? Examples { get; }
         public bool Explode { get; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public Microsoft.OpenApi.Models.ParameterLocation? In { get; }
         public string? Name { get; }
         public bool Required { get; }
@@ -1309,7 +1318,7 @@ namespace Microsoft.OpenApi.Models.References
     {
         public OpenApiPathItemReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public System.Collections.Generic.Dictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.Models.OpenApiOperation>? Operations { get; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>? Parameters { get; }
         public System.Collections.Generic.List<Microsoft.OpenApi.Models.OpenApiServer>? Servers { get; }
@@ -1323,7 +1332,7 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiRequestBodyReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType>? Content { get; }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public bool Required { get; }
         public Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter? ConvertToBodyParameter(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.Interfaces.IOpenApiParameter>? ConvertToFormDataParameters(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -1336,7 +1345,7 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiResponseReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType>? Content { get; }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiHeader>? Headers { get; }
         public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.Interfaces.IOpenApiLink>? Links { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiResponse CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.Models.Interfaces.IOpenApiResponse source) { }
@@ -1365,7 +1374,7 @@ namespace Microsoft.OpenApi.Models.References
         public System.Collections.Generic.List<System.Text.Json.Nodes.JsonNode>? Examples { get; }
         public string? ExclusiveMaximum { get; }
         public string? ExclusiveMinimum { get; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; }
         public string? Format { get; }
         public string? Id { get; }
@@ -1406,7 +1415,7 @@ namespace Microsoft.OpenApi.Models.References
         public OpenApiSecuritySchemeReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public string? BearerFormat { get; }
         public string? Description { get; set; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public Microsoft.OpenApi.Models.OpenApiOAuthFlows? Flows { get; }
         public Microsoft.OpenApi.Models.ParameterLocation? In { get; }
         public string? Name { get; }
@@ -1420,7 +1429,7 @@ namespace Microsoft.OpenApi.Models.References
     {
         public OpenApiTagReference(string referenceId, Microsoft.OpenApi.Models.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public string? Description { get; }
-        public System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? Extensions { get; }
+        public Microsoft.OpenApi.Any.OpenApiExtensionDictionary? Extensions { get; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs? ExternalDocs { get; }
         public string? Name { get; }
         public override Microsoft.OpenApi.Models.Interfaces.IOpenApiTag? Target { get; }
@@ -1921,7 +1930,7 @@ namespace Microsoft.OpenApi.Writers
     public static class OpenApiWriterAnyExtensions
     {
         public static void WriteAny(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Text.Json.Nodes.JsonNode? node) { }
-        public static void WriteExtensions(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension>? extensions, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+        public static void WriteExtensions(this Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.Any.OpenApiExtensionDictionary? extensions, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
     }
     public abstract class OpenApiWriterBase : Microsoft.OpenApi.Writers.IOpenApiWriter
     {
