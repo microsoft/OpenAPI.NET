@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -122,7 +123,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <inheritdoc />
         public Dictionary<string, object>? Metadata { get; set; }
@@ -150,7 +151,7 @@ namespace Microsoft.OpenApi.Models
             Deprecated = operation.Deprecated;
             Security = operation.Security != null ? [.. operation.Security] : null;
             Servers = operation.Servers != null ? [.. operation.Servers] : null;
-            Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
+            Extensions = operation.Extensions != null ? new OpenApiExtensionDictionary(operation.Extensions) : null;
             Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
         }
 

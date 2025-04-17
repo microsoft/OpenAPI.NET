@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -53,7 +54,7 @@ namespace Microsoft.OpenApi.Models
         public Dictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -77,7 +78,7 @@ namespace Microsoft.OpenApi.Models
             Example = header.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
             Examples = header.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
             Content = header.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
-            Extensions = header.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
+            Extensions = header.Extensions != null ? new OpenApiExtensionDictionary(header.Extensions) : null;
         }
 
         /// <summary>

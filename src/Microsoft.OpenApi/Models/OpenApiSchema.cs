@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiXml? Xml { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <inheritdoc />
         public Dictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
@@ -316,7 +316,7 @@ namespace Microsoft.OpenApi.Models
             ExternalDocs = schema.ExternalDocs != null ? new(schema.ExternalDocs) : null;
             Deprecated = schema.Deprecated;
             Xml = schema.Xml != null ? new(schema.Xml) : null;
-            Extensions = schema.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
+            Extensions = schema.Extensions != null ? new OpenApiExtensionDictionary(schema.Extensions) : null;
             Annotations = schema.Annotations != null ? new Dictionary<string, object>(schema.Annotations) : null;
             UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
             DependentRequired = schema.DependentRequired != null ? new Dictionary<string, HashSet<string>>(schema.DependentRequired) : null;

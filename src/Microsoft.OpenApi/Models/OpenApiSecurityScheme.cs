@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         public Uri? OpenIdConnectUrl { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -61,7 +62,7 @@ namespace Microsoft.OpenApi.Models
             BearerFormat = securityScheme.BearerFormat ?? BearerFormat;
             Flows = securityScheme.Flows != null ? new(securityScheme.Flows) : null;
             OpenIdConnectUrl = securityScheme.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
-            Extensions = securityScheme.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
+            Extensions = securityScheme.Extensions != null ? new OpenApiExtensionDictionary(securityScheme.Extensions) : null;
         }
 
         /// <summary>

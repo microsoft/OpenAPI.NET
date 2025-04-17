@@ -131,9 +131,9 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var extensionNode = JsonSerializer.Serialize(fooExtension);
             var jsonNode = JsonNode.Parse(extensionNode);
-            openApiDocument.Info.Extensions = new Dictionary<string, IOpenApiExtension>
+            openApiDocument.Info.Extensions = new OpenApiExtensionDictionary
             {
-                { "x-foo", new OpenApiAny(jsonNode) }
+                { "x-foo", jsonNode }
             };
 
             var validator = new OpenApiValidator(ruleset);

@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(callback);
             PathItems = callback?.PathItems != null ? new(callback.PathItems) : null;
-            Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
+            Extensions = callback?.Extensions != null ? new OpenApiExtensionDictionary(callback.Extensions) : null;
         }
 
         /// <summary>
@@ -92,7 +92,6 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, version);
-            Extensions!["x-extensions"] = new JsonObject(); //this works
 
             writer.WriteEndObject();
         }

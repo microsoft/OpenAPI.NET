@@ -41,7 +41,8 @@ namespace Microsoft.OpenApi.Readers.Tests
             var diag = new OpenApiDiagnostic();
             var actual = OpenApiDocument.Parse(description, "yaml", settings: settings);
 
-            var fooExtension = actual.Document.Info.Extensions["x-foo"] as FooExtension;
+            var extension = actual.Document.Info.Extensions["x-foo"] as IOpenApiExtension;
+            var fooExtension = extension as FooExtension;
 
             Assert.NotNull(fooExtension);
             Assert.Equal("hey", fooExtension.Bar);

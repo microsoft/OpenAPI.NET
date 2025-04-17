@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Interfaces;
 
@@ -10,6 +13,5 @@ public interface IOpenApiReadOnlyExtensible
     /// <summary>
     /// Specification extensions.
     /// </summary>
-    Dictionary<string, IOpenApiExtension>? Extensions { get; }
-
+    OpenApiExtensionDictionary? Extensions { get; }
 }

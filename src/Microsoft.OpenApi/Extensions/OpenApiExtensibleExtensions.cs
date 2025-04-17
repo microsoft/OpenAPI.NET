@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -32,9 +32,8 @@ namespace Microsoft.OpenApi.Extensions
             {
                 throw new OpenApiException(string.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
             }
-
             element.Extensions ??= [];
-            element.Extensions[name] = Utils.CheckArgumentNull(any);
+            element.Extensions[name] = (OpenApiAny)Utils.CheckArgumentNull(any);
         }
     }
 }

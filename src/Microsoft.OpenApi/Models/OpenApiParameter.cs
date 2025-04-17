@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -70,7 +71,7 @@ namespace Microsoft.OpenApi.Models
         public Dictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// A parameterless constructor
@@ -94,7 +95,7 @@ namespace Microsoft.OpenApi.Models
             Examples = parameter.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
             Content = parameter.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
-            Extensions = parameter.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
+            Extensions = parameter.Extensions != null ? new OpenApiExtensionDictionary(parameter.Extensions) : null;
             AllowEmptyValue = parameter.AllowEmptyValue;
             Deprecated = parameter.Deprecated;
         }
@@ -199,7 +200,7 @@ namespace Microsoft.OpenApi.Models
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
-            var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
+            var extensionsClone = Extensions is not null ? new OpenApiExtensionDictionary(Extensions) : null;
 
             // schema
             if (this is OpenApiBodyParameter)

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -28,7 +29,7 @@ namespace Microsoft.OpenApi.Models
         public Dictionary<string, IOpenApiLink>? Links { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -45,7 +46,7 @@ namespace Microsoft.OpenApi.Models
             Headers = response.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
             Content = response.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
             Links = response.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
-            Extensions = response.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
+            Extensions = response.Extensions != null ? new OpenApiExtensionDictionary(response.Extensions) : null;
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace Microsoft.OpenApi.Models
             // description
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
-            var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
+            var extensionsClone = Extensions is not null ? new OpenApiExtensionDictionary(Extensions) : null;
 
             if (Content != null)
             {

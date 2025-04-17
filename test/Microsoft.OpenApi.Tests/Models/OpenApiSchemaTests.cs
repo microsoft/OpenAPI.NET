@@ -473,7 +473,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void OpenApiSchemaCopyConstructorWithAnnotationsSucceeds()
+        public void OpenApiSchemaCopyConstructorWithAnnotationsAndExtensionsSucceeds()
         {
             var baseSchema = new OpenApiSchema
             {
@@ -481,16 +481,23 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["key1"] = "value1",
                     ["key2"] = 2
+                },
+                Extensions = new OpenApiExtensionDictionary
+                {
+                    ["key1"] = JsonValue.Create("value1"),
                 }
             };
 
             var actualSchema = baseSchema.CreateShallowCopy();
 
             Assert.Equal(baseSchema.Annotations["key1"], actualSchema.Annotations["key1"]);
+            Assert.Equal(baseSchema.Extensions["key1"], actualSchema.Extensions["key1"]);
 
             baseSchema.Annotations["key1"] = "value2";
+            baseSchema.Extensions["key1"] = JsonValue.Create("value2");
 
             Assert.NotEqual(baseSchema.Annotations["key1"], actualSchema.Annotations["key1"]);
+            Assert.NotEqual(baseSchema.Extensions["key1"], actualSchema.Extensions["key1"]);
         }
 
         public static TheoryData<JsonNode> SchemaExamples()
