@@ -14,6 +14,17 @@ namespace Microsoft.OpenApi.Any
     public class OpenApiExtensionDictionary : Dictionary<string, IOpenApiExtension>
     {
         /// <summary>
+        /// Initializes a copy of <see cref="OpenApiExtensionDictionary"/> object
+        /// </summary>
+        /// <param name="extensions"></param>
+        public OpenApiExtensionDictionary(OpenApiExtensionDictionary extensions) : base(dictionary: extensions) { }
+
+        /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiExtensionDictionary() { }
+
+        /// <summary>
         /// Override the base class indexer to return OpenApiAny.
         /// </summary>
         /// <param name="key"></param>
@@ -21,7 +32,7 @@ namespace Microsoft.OpenApi.Any
         public new OpenApiAny this[string key]
         {           
             get => (OpenApiAny)base[key];
-            set => base[key] = ConvertIfJsonNode(value);
+            set => base[key] = ConvertIfJsonNode(value)!;
         }
 
         /// <summary>
@@ -31,35 +42,17 @@ namespace Microsoft.OpenApi.Any
         /// <param name="value"></param>
         public void Add(string key, object value)
         {
-            base.Add(key, ConvertIfJsonNode(value));
+            base.Add(key, ConvertIfJsonNode(value)!);
         }
 
-        private static IOpenApiExtension ConvertIfJsonNode(object? value)
+        private static IOpenApiExtension? ConvertIfJsonNode(object? value)
         {
             return value switch
             {
                 IOpenApiExtension extension => extension,
                 JsonNode node => (OpenApiAny)node,
-                _ => throw new InvalidOperationException($"Cannot convert value of type '{value?.GetType().Name}' to IOpenApiExtension.")
+                _ => null
             };
-        }
-
-        /// <summary>
-        /// Test the OpenApiExtensionDictionary and base class implementations.
-        /// </summary>
-        public static void TestExtensions()
-        {
-            var jsonNode = new JsonObject();
-            var extensions = new OpenApiExtensionDictionary
-            {
-                ["x-key"] = jsonNode
-            };
-            extensions.Add("x-key", jsonNode);
-            var extensions2 = new Dictionary<string, IOpenApiExtension>
-            {
-                ["x-key"] = (OpenApiAny)jsonNode
-            };
-            extensions2.Add("x-key", (OpenApiAny)jsonNode);
         }
     }
 }
