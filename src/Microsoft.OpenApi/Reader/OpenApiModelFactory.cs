@@ -118,30 +118,31 @@ namespace Microsoft.OpenApi.Reader
 #endif
             settings ??= new OpenApiReaderSettings();
 
-            Stream preparedStream;
+            Stream? preparedStream = null;
             if (format is null)
             {
                 (preparedStream, format) = await PrepareStreamForReadingAsync(input, format, cancellationToken).ConfigureAwait(false);
             }
-            else
-            {
-                preparedStream = input;
-            }
 
             // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
-            using (preparedStream)
+            var result = await InternalLoadAsync(preparedStream ?? input, format, settings, cancellationToken).ConfigureAwait(false);
+            if (!settings.LeaveStreamOpen)
             {
-                var result = await InternalLoadAsync(preparedStream, format, settings, cancellationToken).ConfigureAwait(false);
-                if (!settings.LeaveStreamOpen)
-                {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-                    await input.DisposeAsync().ConfigureAwait(false);
+                await input.DisposeAsync().ConfigureAwait(false);
 #else
-                    input.Dispose();
+                input.Dispose();
 #endif
-                }
-                return result;
             }
+            if (preparedStream is not null && preparedStream != input)
+            {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+                await preparedStream.DisposeAsync().ConfigureAwait(false);
+#else
+                preparedStream.Dispose();
+#endif
+            }
+            return result;
         }
 
         /// <summary>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>performance.Descriptions-20250409-150544</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.3476)
+11th Gen Intel Core i7-1185G7 3.00GHz, 1 CPU, 8 logical and 4 physical cores
+.NET SDK 8.0.408
+  [Host]   : .NET 8.0.15 (8.0.1525.16413), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  ShortRun : .NET 8.0.15 (8.0.1525.16413), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method</th><th>Mean  </th><th>Error  </th><th>StdDev</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>PetStoreYaml</td><td>450.5 &mu;s</td><td>59.26 &mu;s</td><td>3.25 &mu;s</td><td>58.5938</td><td>11.7188</td><td>-</td><td>377.15 KB</td>
+</tr><tr><td>PetStoreJson</td><td>172.8 &mu;s</td><td>123.46 &mu;s</td><td>6.77 &mu;s</td><td>39.0625</td><td>7.8125</td><td>-</td><td>239.29 KB</td>
+</tr><tr><td>GHESYaml</td><td>943,452.7 &mu;s</td><td>137,685.49 &mu;s</td><td>7,547.01 &mu;s</td><td>66000.0000</td><td>21000.0000</td><td>3000.0000</td><td>389463.91 KB</td>
+</tr><tr><td>GHESJson</td><td>468,401.8 &mu;s</td><td>300,711.80 &mu;s</td><td>16,483.03 &mu;s</td><td>41000.0000</td><td>15000.0000</td><td>3000.0000</td><td>250934.62 KB</td>
+</tr></tbody></table>
+</body>
+</html>

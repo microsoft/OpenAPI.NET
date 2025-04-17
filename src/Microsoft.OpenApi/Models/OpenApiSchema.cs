@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IMetadataContainer
     {
         /// <inheritdoc />
         public string? Title { get; set; }
@@ -248,7 +248,7 @@ namespace Microsoft.OpenApi.Models
         public Dictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, object>? Annotations { get; set; }
+        public Dictionary<string, object>? Metadata { get; set; }
 
         /// <inheritdoc />
         public Dictionary<string, HashSet<string>>? DependentRequired { get; set; }
@@ -317,7 +317,7 @@ namespace Microsoft.OpenApi.Models
             Deprecated = schema.Deprecated;
             Xml = schema.Xml != null ? new(schema.Xml) : null;
             Extensions = schema.Extensions != null ? new OpenApiExtensionDictionary(schema.Extensions) : null;
-            Annotations = schema.Annotations != null ? new Dictionary<string, object>(schema.Annotations) : null;
+            Metadata = schema is IMetadataContainer { Metadata: not null } mContainer ? new Dictionary<string, object>(mContainer.Metadata) : null;
             UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
             DependentRequired = schema.DependentRequired != null ? new Dictionary<string, HashSet<string>>(schema.DependentRequired) : null;
         }

@@ -17,6 +17,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// </summary>
     public string? Title { get; }
 
+
     /// <summary>
     /// $schema, a JSON Schema dialect identifier. Value must be a URI
     /// </summary>
@@ -279,12 +280,6 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// This object stores any unrecognized keywords found in the schema.
     /// </summary>
     public Dictionary<string, JsonNode>? UnrecognizedKeywords { get; }
-
-    /// <summary>
-    /// Any annotation to attach to the schema to be used by the application.
-    /// Annotations are NOT (de)serialized with the schema and can be used for custom properties.
-    /// </summary>
-    public Dictionary<string, object>? Annotations { get; }
 
     /// <summary>
     /// Follow JSON Schema definition:https://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.4

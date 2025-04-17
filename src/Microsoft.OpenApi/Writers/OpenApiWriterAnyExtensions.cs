@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WritePrimitive(this IOpenApiWriter writer, JsonValue jsonValue)
         {
-            if (jsonValue.TryGetValue(out string? stringValue))
+            if (jsonValue.TryGetValue(out string? stringValue) && stringValue is not null)
                 writer.WriteValue(stringValue);
             else if (jsonValue.TryGetValue(out DateTime dateTimeValue))
                 writer.WriteValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)); // ISO 8601 format

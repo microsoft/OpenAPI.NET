@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await info.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);
+            var actual = await info.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

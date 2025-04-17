@@ -88,7 +88,7 @@ var stream = await httpClient.GetStreamAsync("main/examples/v3.0/petstore.yaml")
 var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
 // Write V2 as JSON
-var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
+var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
 
 ```
 

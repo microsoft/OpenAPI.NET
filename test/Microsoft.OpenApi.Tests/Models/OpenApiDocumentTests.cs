@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
-                            Annotations = new Dictionary<string, object> { { "key1", "value" } }
+                            Metadata = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     }
                 },
@@ -55,10 +55,10 @@ namespace Microsoft.OpenApi.Tests.Models
                         ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
-                            Annotations = new Dictionary<string, object> { { "key1", "value" } }
+                            Metadata = new Dictionary<string, object> { { "key1", "value" } }
                         }
                     },
-                    Annotations = new Dictionary<string, object> { { "key1", "value" } },
+                    Metadata = new Dictionary<string, object> { { "key1", "value" } },
                 },
                 ["schema2"] = new OpenApiSchema()
                 {
@@ -1557,7 +1557,7 @@ definitions:
             document.Paths["/"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema = new OpenApiSchemaReference("test", document);
 
             // Act
-            var actual = await document.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
+            var actual = await document.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
 
             // Assert
             Assert.NotEmpty(actual);

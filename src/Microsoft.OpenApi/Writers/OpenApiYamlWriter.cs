@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The string value.</param>
         public override void WriteValue(string value)
         {
-            if (!UseLiteralStyle || value?.IndexOfAny(new[] { '\n', '\r' }) == -1)
+            if (!UseLiteralStyle || value.IndexOfAny(['\n', '\r']) == -1)
             {
                 WriteValueSeparator();
 
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Writers
                 WriteChompingIndicator(value);
 
                 // Write indentation indicator when it starts with spaces
-                if (value is not null && value.StartsWith(" ", StringComparison.OrdinalIgnoreCase))
+                if (value[0] == ' ')
                 {
                     Writer.Write(IndentationString.Length);
                 }

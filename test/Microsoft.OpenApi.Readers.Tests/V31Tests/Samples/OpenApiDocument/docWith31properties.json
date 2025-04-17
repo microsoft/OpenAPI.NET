@@ -1,0 +1,166 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Sample OpenAPI 3.1 API",
+    "description": "A sample API demonstrating OpenAPI 3.1 features",
+    "version": "2.0.0",
+    "summary": "Sample OpenAPI 3.1 API with the latest features",
+    "license": {
+      "name": "Apache 2.0",
+      "identifier": "Apache-2.0"
+    }
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "servers": [
+    {
+      "url": "https://api.example.com/v2",
+      "description": "Main production server"
+    }
+  ],
+  "webhooks": {
+    "newPetAlert": {
+      "post": {
+        "summary": "Notify about a new pet being added",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook processed successfully"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/pets": {
+      "get": {
+        "summary": "List all pets",
+        "operationId": "listPets",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "How many items to return at one time (max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 1,
+              "exclusiveMaximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of pets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://example.com/schemas/pet.json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sample": {
+      "get": {
+        "summary": "Sample endpoint",
+        "responses": {
+          "200": {
+            "description": "Sample response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "$id": "https://example.com/schemas/person.schema.yaml",
+                  "$comment": "A schema defining a pet object with optional references to dynamic components.",
+                  "$vocabulary": {
+                    "https://json-schema.org/draft/2020-12/vocab/core": true,
+                    "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+                    "https://json-schema.org/draft/2020-12/vocab/validation": true,
+                    "https://json-schema.org/draft/2020-12/vocab/meta-data": false,
+                    "https://json-schema.org/draft/2020-12/vocab/format-annotation": false
+                  },
+                  "title": "Pet",
+                  "description": "Schema for a pet object",
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "$comment": "The pet's full name"
+                    },
+                    "address": {
+                      "$dynamicRef": "#addressDef",
+                      "$comment": "Reference to an address definition which can change dynamically"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "$dynamicAnchor": "addressDef"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "Pet": {
+        "$id": "https://example.com/schemas/pet.json",
+        "type": "object",
+        "required": [
+          "id",
+          "weight"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "weight": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Weight of the pet in kilograms"
+          },
+          "attributes": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Dynamic attributes for the pet",
+            "patternProperties": {
+              "^attr_[A-Za-z]+$": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "$comment": "This schema represents a pet in the system.",
+        "$defs": {
+          "ExtraInfo": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
