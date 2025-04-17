@@ -70,12 +70,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            openApiAny.Should().BeEquivalentTo((OpenApiAny)
                 new JsonObject
                 {
                     ["foo"] = "bar",
                     ["baz"] = new JsonArray() { 1, 2 }
-                }), options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
