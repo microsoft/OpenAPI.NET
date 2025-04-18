@@ -2249,6 +2249,8 @@ components:
             doc!.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
             var actual = stringWriter.ToString();
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+            var actualOperation = doc.Paths["/repairs"]!.Operations![HttpMethod.Get];
+            Assert.Null(actualOperation.Security);
         }
         
         [Fact]
@@ -2282,6 +2284,9 @@ components:
             doc!.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
             var actual = stringWriter.ToString();
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+            var actualOperation = doc.Paths["/repairs"]!.Operations![HttpMethod.Get];
+            Assert.NotNull(actualOperation.Security);
+            Assert.Empty(actualOperation.Security);
         }
     }
 }
