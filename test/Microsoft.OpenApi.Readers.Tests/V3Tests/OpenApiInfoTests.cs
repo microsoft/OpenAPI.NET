@@ -37,47 +37,47 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Contact = new OpenApiContact
                     {
                         Email = "example@example.com",
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new OpenApiExtensionDictionary
                         {
-                                ["x-twitter"] = new OpenApiAny("@exampleTwitterHandler")
+                                ["x-twitter"] = JsonValue.Create("@exampleTwitterHandler")
                         },
                         Name = "John Doe",
                         Url = new Uri("http://www.example.com/url1")
                     },
                     License = new OpenApiLicense
                     {
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new OpenApiExtensionDictionary
                         { 
-                            ["x-disclaimer"] = new OpenApiAny("Sample Extension String Disclaimer") 
+                            ["x-disclaimer"] = JsonValue.Create("Sample Extension String Disclaimer") 
                         },
                         Name = "licenseName",
                         Url = new Uri("http://www.example.com/url2")
                     },
-                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    Extensions = new OpenApiExtensionDictionary
                     {
-                            ["x-something"] = new OpenApiAny("Sample Extension String Something"),
-                            ["x-contact"] = new OpenApiAny(new JsonObject()
+                            ["x-something"] = JsonValue.Create("Sample Extension String Something"),
+                            ["x-contact"] = new JsonObject()
                             {
                                 ["name"] = "John Doe",
                                 ["url"] = "http://www.example.com/url3",
                                 ["email"] = "example@example.com"
-                            }),
-                            ["x-list"] = new OpenApiAny (new JsonArray { "1", "2" })
+                            },
+                            ["x-list"] = new JsonArray { "1", "2" }
                     }
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(i => ((OpenApiAny)i.Contact.Extensions["x-twitter"]).Node.Parent)
-                .Excluding(i => ((OpenApiAny)i.License.Extensions["x-disclaimer"]).Node.Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-something"]).Node.Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["name"].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["name"].Root)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["url"].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["url"].Root)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["email"].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["email"].Root)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[0].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[0].Root)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[1].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[1].Root));
+                .Excluding(i => i.Contact.Extensions["x-twitter"].Node.Parent)
+                .Excluding(i => i.License.Extensions["x-disclaimer"].Node.Parent)
+                .Excluding(i => i.Extensions["x-something"].Node.Parent)
+                .Excluding(i => i.Extensions["x-contact"].Node["name"].Parent)
+                .Excluding(i => i.Extensions["x-contact"].Node["name"].Root)
+                .Excluding(i => i.Extensions["x-contact"].Node["url"].Parent)
+                .Excluding(i => i.Extensions["x-contact"].Node["url"].Root)
+                .Excluding(i => i.Extensions["x-contact"].Node["email"].Parent)
+                .Excluding(i => i.Extensions["x-contact"].Node["email"].Root)
+                .Excluding(i => i.Extensions["x-list"].Node[0].Parent)
+                .Excluding(i => i.Extensions["x-list"].Node[0].Root)
+                .Excluding(i => i.Extensions["x-list"].Node[1].Parent)
+                .Excluding(i => i.Extensions["x-list"].Node[1].Root));
         }
 
         [Fact]

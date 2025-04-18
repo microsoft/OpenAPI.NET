@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
 
-            ruleset.Add(typeof(OpenApiAny), 
+            ruleset.Add(typeof(OpenApiAny),
              new ValidationRule<OpenApiAny>("FooExtensionRule",
                  (context, item) =>
                  {
@@ -131,9 +131,9 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var extensionNode = JsonSerializer.Serialize(fooExtension);
             var jsonNode = JsonNode.Parse(extensionNode);
-            openApiDocument.Info.Extensions = new Dictionary<string, IOpenApiExtension>
+            openApiDocument.Info.Extensions = new OpenApiExtensionDictionary
             {
-                { "x-foo", new OpenApiAny(jsonNode) }
+                { "x-foo", jsonNode }
             };
 
             var validator = new OpenApiValidator(ruleset);
@@ -150,8 +150,8 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void RemoveRuleByName_Invalid()
         {
-            Assert.Throws<ArgumentNullException>(() => new ValidationRule<OpenApiAny>(null, (vc, oaa) => { }));
-            Assert.Throws<ArgumentNullException>(() => new ValidationRule<OpenApiAny>(string.Empty, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<JsonNode>(null, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<JsonNode>(string.Empty, (vc, oaa) => { }));
         }
 
         [Fact]

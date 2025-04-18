@@ -10,10 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -318,12 +316,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Arrange
             var schema = new OpenApiSchema
             {
-                Enum =
-                [
-                    new OpenApiAny("NaN").Node,
-                    new OpenApiAny("Infinity").Node,
-                    new OpenApiAny("-Infinity").Node
-                ]
+                Enum = ["NaN", "Infinity", "-Infinity"]
             };
 
             // Act
@@ -333,7 +326,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var jsonString = schemaBuilder.ToString();
 
             // Assert
-            var exception = Record.Exception(() => System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString));
+            var exception = Record.Exception(() => JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString));
             Assert.Null(exception);
         }
     }

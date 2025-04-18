@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -51,7 +52,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OpenApiExtensionDictionary? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public string? ExternalValue { get => Target?.ExternalValue; }

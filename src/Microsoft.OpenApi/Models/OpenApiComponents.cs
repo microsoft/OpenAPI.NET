@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -69,7 +70,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -91,7 +92,7 @@ namespace Microsoft.OpenApi.Models
             Links = components?.Links != null ? new Dictionary<string, IOpenApiLink>(components.Links) : null;
             Callbacks = components?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(components.Callbacks) : null;
             PathItems = components?.PathItems != null ? new Dictionary<string, IOpenApiPathItem>(components.PathItems) : null;
-            Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
+            Extensions = components?.Extensions != null ? new OpenApiExtensionDictionary(components.Extensions) : null;
         }
 
         /// <summary>

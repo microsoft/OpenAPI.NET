@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -32,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -47,7 +48,7 @@ namespace Microsoft.OpenApi.Models
             Name = contact?.Name ?? Name;
             Url = contact?.Url != null ? new Uri(contact.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Email = contact?.Email ?? Email;
-            Extensions = contact?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(contact.Extensions) : null;
+            Extensions = contact?.Extensions != null ? new OpenApiExtensionDictionary(contact.Extensions) : null;
         }
 
         /// <summary>

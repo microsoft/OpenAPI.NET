@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -103,7 +104,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <inheritdoc />
         public Dictionary<string, object>? Metadata { get; set; }
@@ -139,7 +140,7 @@ namespace Microsoft.OpenApi.Models
             Security = document?.Security != null ? [.. document.Security] : null;
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
-            Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
+            Extensions = document?.Extensions != null ? new OpenApiExtensionDictionary(document.Extensions) : null;
             Metadata = document?.Metadata != null ? new Dictionary<string, object>(document.Metadata) : null;
             BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
         }

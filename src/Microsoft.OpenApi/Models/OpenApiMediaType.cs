@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -45,7 +46,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -61,7 +62,7 @@ namespace Microsoft.OpenApi.Models
             Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
             Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
-            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
+            Extensions = mediaType?.Extensions != null ? new OpenApiExtensionDictionary(mediaType.Extensions) : null;
         }
 
         /// <summary>

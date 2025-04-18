@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 
@@ -52,7 +53,7 @@ namespace Microsoft.OpenApi.Models.References
         public Dictionary<string, IOpenApiLink>? Links { get => Target?.Links; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OpenApiExtensionDictionary? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiResponse CopyReferenceAsTargetElementWithOverrides(IOpenApiResponse source)

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -38,7 +39,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -54,7 +55,7 @@ namespace Microsoft.OpenApi.Models
             TokenUrl = oAuthFlow?.TokenUrl != null ? new Uri(oAuthFlow.TokenUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             RefreshUrl = oAuthFlow?.RefreshUrl != null ? new Uri(oAuthFlow.RefreshUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Scopes = oAuthFlow?.Scopes != null ? new Dictionary<string, string>(oAuthFlow.Scopes) : null;
-            Extensions = oAuthFlow?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlow.Extensions) : null;
+            Extensions = oAuthFlow?.Extensions != null ? new OpenApiExtensionDictionary(oAuthFlow.Extensions) : null;
         }
 
         /// <summary>

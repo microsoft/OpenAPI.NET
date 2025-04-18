@@ -42,9 +42,9 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Name = "tag"
             };
-            tag.Extensions = new Dictionary<string, IOpenApiExtension>
+            tag.Extensions = new OpenApiExtensionDictionary
             {
-                { "tagExt", new OpenApiAny("value") }
+                { "tagExt", "value" }
             };
 
             // Act

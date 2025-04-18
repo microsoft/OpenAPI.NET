@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
@@ -26,7 +27,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         {
             PropertyName = discriminator?.PropertyName ?? PropertyName;
             Mapping = discriminator?.Mapping != null ? new Dictionary<string, OpenApiSchemaReference>(discriminator.Mapping) : null;
-            Extensions = discriminator?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(discriminator.Extensions) : null;
+            Extensions = discriminator?.Extensions != null ? new OpenApiExtensionDictionary(discriminator.Extensions) : null;
         }
 
         /// <summary>

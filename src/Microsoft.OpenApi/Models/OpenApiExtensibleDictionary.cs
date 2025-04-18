@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -28,15 +29,15 @@ namespace Microsoft.OpenApi.Models
         /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
         protected OpenApiExtensibleDictionary(
             Dictionary<string, T> dictionary,
-            Dictionary<string, IOpenApiExtension>? extensions = null) : base(dictionary is null ? [] : dictionary)
+            OpenApiExtensionDictionary? extensions = null) : base(dictionary is null ? [] : dictionary)
         {
-            Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : [];
+            Extensions = extensions != null ? new OpenApiExtensionDictionary(extensions) : [];
         }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
 
         /// <summary>

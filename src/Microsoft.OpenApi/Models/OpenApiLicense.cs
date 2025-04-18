@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -46,7 +47,7 @@ namespace Microsoft.OpenApi.Models
             Name = license?.Name ?? Name;
             Identifier = license?.Identifier ?? Identifier;
             Url = license?.Url != null ? new Uri(license.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
-            Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
+            Extensions = license?.Extensions != null ? new OpenApiExtensionDictionary(license.Extensions) : null;
         }
 
         /// <summary>

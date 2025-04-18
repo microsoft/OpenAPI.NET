@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -75,19 +75,19 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Enum =
                 [
-                    new OpenApiAny("1").Node,
-                    new OpenApiAny(new JsonObject()
+                    1,
+                    new JsonObject()
                     {
                         ["x"] = 2,
                         ["y"] = "20",
                         ["z"] = "200"
-                    }).Node,
-                    new OpenApiAny(new JsonArray() { 3 }).Node,
-                    new OpenApiAny(new JsonObject()
+                    },
+                    new JsonArray() { 3 },
+                    new JsonObject()
                     {
                         ["x"] = 4,
                         ["y"] = 40,
-                    }).Node
+                    }
                 ],
                 Type = JsonSchemaType.Object,
                 AdditionalProperties = new OpenApiSchema()

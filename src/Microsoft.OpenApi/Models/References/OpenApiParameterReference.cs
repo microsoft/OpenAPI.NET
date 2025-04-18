@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 
@@ -79,7 +80,7 @@ namespace Microsoft.OpenApi.Models.References
         public Dictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OpenApiExtensionDictionary? Extensions { get => Target?.Extensions; }
         
         /// <inheritdoc/>
         public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter  source)

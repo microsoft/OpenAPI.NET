@@ -37,5 +37,17 @@ namespace Microsoft.OpenApi.Any
         {
             writer.WriteAny(Node);
         }
+
+        /// <summary>
+        /// Implicit conversion from JsonNode to an OpenApiAny.
+        /// </summary>
+        /// <param name="jsonNode"></param>
+        public static implicit operator OpenApiAny(JsonNode jsonNode) => new(jsonNode);
+
+        /// <summary>
+        /// Implicit conversion from OpenApiAny to a JsonNode.
+        /// </summary>
+        /// <param name="openApiAny"></param>
+        public static implicit operator JsonNode(OpenApiAny openApiAny) => openApiAny.Node;
     }
 }

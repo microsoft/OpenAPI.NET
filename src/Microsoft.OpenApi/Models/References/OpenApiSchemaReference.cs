@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -134,7 +135,7 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public OpenApiXml? Xml { get => Target?.Xml; }
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OpenApiExtensionDictionary? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public Dictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }

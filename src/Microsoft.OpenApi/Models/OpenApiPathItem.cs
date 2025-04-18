@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         public List<IOpenApiParameter>? Parameters { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Add one operation into this path item.
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
             Operations = pathItem.Operations != null ? new Dictionary<HttpMethod, OpenApiOperation>(pathItem.Operations) : null;
             Servers = pathItem.Servers != null ? [.. pathItem.Servers] : null;
             Parameters = pathItem.Parameters != null ? [.. pathItem.Parameters] : null;
-            Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
+            Extensions = pathItem.Extensions != null ? new OpenApiExtensionDictionary(pathItem.Extensions) : null;
         }
 
         /// <summary>

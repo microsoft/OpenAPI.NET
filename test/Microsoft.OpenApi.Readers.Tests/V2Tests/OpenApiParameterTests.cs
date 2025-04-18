@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float",
-                        Default = new OpenApiAny(5).Node
+                        Default = 5
                     }
                 }, options => options.IgnoringCyclicReferences().Excluding(x => x.Schema.Default.Parent));
         }
@@ -266,12 +266,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Type = JsonSchemaType.Number,
                     Format = "float",
-                    Enum =
-                    [
-                        new OpenApiAny(7).Node,
-                        new OpenApiAny(8).Node,
-                        new OpenApiAny(9).Node
-                    ]
+                    Enum = [7, 8, 9]
                 }
             };
 

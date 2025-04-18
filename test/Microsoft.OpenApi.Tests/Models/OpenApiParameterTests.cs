@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -74,11 +74,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = JsonSchemaType.Array,
                 Items = new OpenApiSchema()
                 {
-                    Enum =
-                    [
-                        new OpenApiAny("value1").Node,
-                        new OpenApiAny("value2").Node
-                    ]
+                    Enum = ["value1", "value2"]
                 }
             }
         };
@@ -95,11 +91,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = JsonSchemaType.Array,
                 Items = new OpenApiSchema()
                 {
-                    Enum =
-                    [
-                        new OpenApiAny("value1").Node,
-                        new OpenApiAny("value2").Node
-                    ]
+                    Enum = ["value1", "value2"]
                 }
             }
         };

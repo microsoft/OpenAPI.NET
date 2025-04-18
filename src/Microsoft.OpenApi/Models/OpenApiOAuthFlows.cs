@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -53,7 +54,7 @@ namespace Microsoft.OpenApi.Models
             Password = oAuthFlows?.Password != null ? new(oAuthFlows.Password) : null;
             ClientCredentials = oAuthFlows?.ClientCredentials != null ? new(oAuthFlows.ClientCredentials) : null;
             AuthorizationCode = oAuthFlows?.AuthorizationCode != null ? new(oAuthFlows.AuthorizationCode) : null;
-            Extensions = oAuthFlows?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlows.Extensions) : null;
+            Extensions = oAuthFlows?.Extensions != null ? new OpenApiExtensionDictionary(oAuthFlows.Extensions) : null;
         }
 
         /// <summary>

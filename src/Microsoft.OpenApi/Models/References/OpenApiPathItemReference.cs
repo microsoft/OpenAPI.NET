@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Net.Http;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -62,7 +63,7 @@ namespace Microsoft.OpenApi.Models.References
         public List<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OpenApiExtensionDictionary? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)

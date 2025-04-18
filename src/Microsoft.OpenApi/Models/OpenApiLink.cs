@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -33,7 +34,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiServer? Server { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -52,7 +53,7 @@ namespace Microsoft.OpenApi.Models
             RequestBody = link.RequestBody != null ? new(link.RequestBody) : null;
             Description = link.Description ?? Description;
             Server = link.Server != null ? new(link.Server) : null;
-            Extensions = link.Extensions != null ? new Dictionary<string, IOpenApiExtension>(link.Extensions) : null;
+            Extensions = link.Extensions != null ? new OpenApiExtensionDictionary(link.Extensions) : null;
         }
 
         /// <inheritdoc/>

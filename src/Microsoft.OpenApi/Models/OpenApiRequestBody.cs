@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Models
         public Dictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OpenApiExtensionDictionary? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Models
             Description = requestBody.Description ?? Description;
             Required = requestBody.Required;
             Content = requestBody.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
-            Extensions = requestBody.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
+            Extensions = requestBody.Extensions != null ? new OpenApiExtensionDictionary(requestBody.Extensions) : null;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Models
                 Schema = Content?.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
                 Examples = Content?.Values.FirstOrDefault()?.Examples,
                 Required = Required,
-                Extensions = Extensions?.ToDictionary(static k => k.Key, static v => v.Value)
+                Extensions = Extensions != null ? new OpenApiExtensionDictionary(Extensions) : null
             };
             // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             if (bodyParameter.Extensions is not null && 
