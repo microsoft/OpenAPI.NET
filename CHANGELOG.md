@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview.18](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.17...v2.0.0-preview.18) (2025-04-18)
+
+
+### Bug Fixes
+
+* avoid calling virtual members in constructor ([5835057](https://github.com/microsoft/OpenAPI.NET/commit/5835057a7e905e371f859e727ddaf65ec08c6db0))
+* normalized override implementation for parameter types serialization in v2 ([5930916](https://github.com/microsoft/OpenAPI.NET/commit/593091621926defcbc2727a922613e34557d882a))
+
 ## [2.0.0-preview.17](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.16...v2.0.0-preview.17) (2025-04-16)
 
 
