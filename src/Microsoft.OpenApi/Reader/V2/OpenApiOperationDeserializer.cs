@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     "security",
                     (o, n, t) => { if (n.JsonNode is JsonArray)
                     {
-                        o.Security = new List<OpenApiSecurityRequirement>(n.CreateList(LoadSecurityRequirement, t)); 
+                        o.Security = n.CreateList(LoadSecurityRequirement, t); 
                     } }
                 },
             };
