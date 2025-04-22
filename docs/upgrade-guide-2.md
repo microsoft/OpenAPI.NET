@@ -361,6 +361,29 @@ public class OpenApiSchema : IMetadataContainer, IOpenApiExtensible, IOpenApiRef
 
 There are a number of new features in OpenAPI v3.1 that are now supported in OpenAPI.NET.
 
+### JsonSchema Dialect and BaseUri in OpenApiDocument
+To enable full compatibility with JSON Schema, the OpenApiDocument class now supports a jsonSchemaDialect property. This property specifies the JSON Schema dialect used throughout the document, using a URI. By explicitly declaring the dialect, tooling no longer needs to infer which draft is being used based on schema structure or references.
+
+In addition, a BaseUri property has been added to represent the absolute location of the OpenAPI document. If the document’s location is not provided, this property will be set to a generated placeholder URI.
+
+```csharp
+    /// <summary>
+    /// Describes an OpenAPI object (OpenAPI document). See: https://spec.openapis.org
+    /// </summary>
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
+    {
+        /// <summary>
+        /// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
+        /// </summary>
+        public Uri? JsonSchemaDialect { get; set; }
+
+        /// <summary>
+        /// Absolute location of the document or a generated placeholder if location is not given
+        /// </summary>
+        public Uri BaseUri { get; internal set; }
+    }
+```
+
 ### Webhooks
 
 ```csharp
@@ -483,6 +506,7 @@ OpenApiComponents components = new OpenApiComponents
 ### OpenApiDocument.SerializeAs()
 
 The `SerializeAs()` method simplifies serialization scenarios, making it easier to convert OpenAPI documents to different formats.
+
 **Example:**
 
 ```csharp
@@ -505,6 +529,120 @@ var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, Open
 var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
 ```
 
+### OpenApiSchema's Type property is now a flaggable enum
+
+In v2.0, the Type property in OpenApiSchema is now defined as a flaggable enum, allowing consumers to swap nullable for type arrays.
+
+**Example:**
+```csharp
+// v1.6.x
+var schema = new OpenApiSchema
+{
+    Type = "string",
+    Nullable = true
+}
+
+// v2.0
+var schema = new OpenApiSchema
+{
+    Type = JsonSchemaType.String | JsonSchemaType.Null
+}
+
+```
+
+### Component registration in a document's workspace
+
+When loading up a file into an in-memory document, all the components contained in the document are registered within the document's workspace by default to aid with reference resolution.
+However if you're working directly with a DOM and you need the references resolved, you can register the components as below:
+
+```csharp
+// register all components
+document.Workspace.RegisterComponents(OpenApiDocument document);
+
+// register single component
+document.AddComponent<T>(string id, T componentToRegister);
+```
+
+### Refactored model architecture
+
+The following structural improvements have been made to the OpenAPI model layer to enhance type safety, extensibility, and maintainability:
+
+1. Model Interfaces Introduced:
+Each model now has a corresponding interface (e.g., IOpenApiSchema for OpenApiSchema). This allows for better abstraction and testing support, while also simplifying cross-cutting concerns like serialization.
+
+2. Models as Reference Types:
+All models are now implemented as reference types to ensure consistent identity semantics, especially when managing circular references or shared definitions.
+
+3. Type Assertion Pattern Adopted:
+A standardized pattern has been introduced for casting model instances to specific types safely and predictably, reducing the risk of invalid casts or reflection-based logic.
+
+4. Removed Reference Fields from Base Models:
+Fields like Reference that were previously defined on base model types have been removed. Models that support referencing now handle this behavior explicitly via composition rather than inheritance.
+
+5. New Target and RecursiveTarget Properties:
+A Target property that points to the actual resolved model instance as well as a RecursiveTarget property that handles recursive references and supports advanced dereferencing logic have been introduced.
+
+6. Removed OpenApiReferenceResolver:
+This resolver class has been removed in favor of a more streamlined resolution model using the Target and RecursiveTarget properties along with updated reader/serializer pipelines.
+
+### Visitor and Validator now pass an interface model
+
+**Example:**
+```csharp
+//v1.6.x
+public override void Visit(OpenApiParameter parameter){}
+
+//v2.0
+public override void Visit(IOpenApiParameter parameter){}
+```
+
+### Cleaned up the IEffective/GetEffective infrastructure
+
+All the IEffective and GetEffective methods in the models have been removed as we've implemented lazy reference resolution using the proxy design.
+
+### Shallow Copy in place of copy constructors
+
+Copy constructors have been eliminated from the models in favor of a more straightforward approach using a shallow copy method. This simplifies the codebase and reduces potential issues with deep copying and unintended side effects.
+
+**Example:**
+```csharp
+var schema = new OpenApiSchema();
+var schemaCopy = schema.CreateShallowCopy();
+```
+
+### Duplicated _style Property on Parameter Removed
+
+The redundant _style property on the Parameter model has been removed to simplify the model's structure.
+
+### Discriminator now use References
+
+Discriminator mappings have been updated from using a Dictionary<string, string> to a Dictionary<string, OpenApiSchemaReference>. This change improves the handling of discriminator mappings by referencing OpenAPI schema components more explicitly, which enhances schema resolution.
+
+**Example:**
+```csharp
+// v1.6.x
+Discriminator = new()
+{
+    PropertyName = "@odata.type",
+    Mapping = new Dictionary<string, string> {
+        {
+            "#microsoft.graph.directoryObject", "#/components/schemas/microsoft.graph.directoryObject"
+        }
+    }
+}
+
+//v2.0
+Discriminator = new()public string? ExclusiveMaximum
+{
+    PropertyName = "@odata.type",
+    Mapping = new Dictionary<string, OpenApiSchemaReference> {
+        {
+            "#microsoft.graph.directoryObject", new OpenApiSchemaReference("microsoft.graph.directoryObject")
+        }
+    }
+}
+```
+
 ### Bug Fixes
 
 ## Serialization of References
@@ -524,17 +662,3 @@ OpenApiSchemaReference schemaRef = new OpenApiSchemaReference("MySchema")
 
 If you have any feedback please file a GitHub issue [here](https://github.com/microsoft/OpenAPI.NET/issues)
 The team is looking forward to hear your experience trying the new version and we hope you have fun busting out your OpenAPI 3.1 descriptions.
-
-## Todos
-
-- Models now have matching interfaces + reference type + type assertion pattern + reference fields removed from the base model + Target + RecursiveTarget + removed OpenApiReferenceResolver.
-- Workspace + component resolution.
-- Visitor and Validator method now pass the interface model.
-- Removed all the IEffective/GetEffective infrastructure.
-- OpenApiSchema.Type is now a flag enum + bitwise operations.
-- JsonSchemaDialect + BaseUri in document.
-- Copy constructors are gone, use shallow copy method.
-- Multiple methods that should have been internal have been changed from public to private link OpenApiLink.SerializeAsV3WithoutReference.
-- duplicated _style property on parameter was removed.
-- discriminator now uses references.
-- ValidationRuleSet now accepts a key?
