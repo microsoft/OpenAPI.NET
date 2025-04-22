@@ -367,21 +367,21 @@ To enable full compatibility with JSON Schema, the OpenApiDocument class now sup
 In addition, a BaseUri property has been added to represent the absolute location of the OpenAPI document. If the document’s location is not provided, this property will be set to a generated placeholder URI.
 
 ```csharp
+/// <summary>
+/// Describes an OpenAPI object (OpenAPI document). See: https://spec.openapis.org
+/// </summary>
+public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
+{
     /// <summary>
-    /// Describes an OpenAPI object (OpenAPI document). See: https://spec.openapis.org
+    /// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
-    {
-        /// <summary>
-        /// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
-        /// </summary>
-        public Uri? JsonSchemaDialect { get; set; }
+    public Uri? JsonSchemaDialect { get; set; }
 
-        /// <summary>
-        /// Absolute location of the document or a generated placeholder if location is not given
-        /// </summary>
-        public Uri BaseUri { get; internal set; }
-    }
+    /// <summary>
+    /// Absolute location of the document or a generated placeholder if location is not given
+    /// </summary>
+    public Uri BaseUri { get; internal set; }
+}
 ```
 
 ### Webhooks
