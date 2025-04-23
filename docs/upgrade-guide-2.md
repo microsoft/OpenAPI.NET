@@ -602,7 +602,7 @@ All the IEffective and GetEffective methods in the models have been removed as w
 
 ### Shallow Copy in place of copy constructors
 
-Copy constructors have been eliminated from the models in favor of a more straightforward approach using a shallow copy method. This simplifies the codebase and reduces potential issues with deep copying and unintended side effects.
+Copy constructors for referenceable components have been made internal, a new *CreateShallowCopy()* method has been exposed on these models to facilitate deep copying.
 
 **Example:**
 ```csharp
