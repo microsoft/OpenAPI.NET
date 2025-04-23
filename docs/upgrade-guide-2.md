@@ -362,7 +362,7 @@ public class OpenApiSchema : IMetadataContainer, IOpenApiExtensible, IOpenApiRef
 There are a number of new features in OpenAPI v3.1 that are now supported in OpenAPI.NET.
 
 ### JsonSchema Dialect and BaseUri in OpenApiDocument
-To enable full compatibility with JSON Schema, the OpenApiDocument class now supports a jsonSchemaDialect property. This property specifies the JSON Schema dialect used throughout the document, using a URI. By explicitly declaring the dialect, tooling no longer needs to infer which draft is being used based on schema structure or references.
+To enable full compatibility with JSON Schema, the OpenApiDocument class now supports a jsonSchemaDialect property. This property specifies the JSON Schema dialect used throughout the document, using a URI. By explicitly declaring the dialect, tooling can be directed to use a JSON Schema version other than the default [2020-12 draft](https://json-schema.org/draft/2020-12/json-schema-core.html).  However, OpenAPI.NET does not guarantee compatibility with versions other than 2020-12.
 
 In addition, a BaseUri property has been added to represent the absolute location of the OpenAPI document. If the document’s location is not provided, this property will be set to a generated placeholder URI.
 
