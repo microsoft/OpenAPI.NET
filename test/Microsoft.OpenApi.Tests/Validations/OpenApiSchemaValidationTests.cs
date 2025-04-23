@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
@@ -75,15 +75,15 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Enum =
                 [
-                    new OpenApiAny("1").Node,
-                    new OpenApiAny(new JsonObject()
+                    new JsonNodeExtension("1").Node,
+                    new JsonNodeExtension(new JsonObject()
                     {
                         ["x"] = 2,
                         ["y"] = "20",
                         ["z"] = "200"
                     }).Node,
-                    new OpenApiAny(new JsonArray() { 3 }).Node,
-                    new OpenApiAny(new JsonObject()
+                    new JsonNodeExtension(new JsonArray() { 3 }).Node,
+                    new JsonNodeExtension(new JsonObject()
                     {
                         ["x"] = 4,
                         ["y"] = 40,
