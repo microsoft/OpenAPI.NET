@@ -203,7 +203,7 @@ var openApiObject = new OpenApiObject
     }
 };
 var parameter = new OpenApiParameter();
-parameter.Extensions.Add("x-foo", new OpenApiAny(openApiObject));
+parameter.Extensions.Add("x-foo", new JsonNodeExtension(openApiObject));
 
 ```
 
@@ -223,7 +223,7 @@ var openApiObject = new JsonObject
     }
 };
 var parameter = new OpenApiParameter();
-parameter.Extensions.Add("x-foo", new OpenApiAny(openApiObject));
+parameter.Extensions.Add("x-foo", new JsonNodeExtension(openApiObject));
 
 ```
 
