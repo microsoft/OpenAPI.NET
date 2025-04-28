@@ -490,7 +490,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
 
             // xml
-            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, callback);
 
             // externalDocs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);

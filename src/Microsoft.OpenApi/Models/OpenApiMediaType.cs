@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Models
             // examples
             if (Examples != null && Examples.Any())
             {
-                SerializeExamples(writer, Examples);
+                SerializeExamples(writer, Examples, callback);
             }
 
             // encoding
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Models
             // Media type does not exist in V2.
         }
 
-        private static void SerializeExamples(IOpenApiWriter writer, Dictionary<string, IOpenApiExample> examples)
+        private static void SerializeExamples(IOpenApiWriter writer, Dictionary<string, IOpenApiExample> examples, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             /* Special case for writing out empty arrays as valid response examples
             * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                writer.WriteOptionalMap(OpenApiConstants.Examples, examples, (w, e) => e.SerializeAsV3(w));
+                writer.WriteOptionalMap(OpenApiConstants.Examples, examples, callback);
             }
         }
     }
