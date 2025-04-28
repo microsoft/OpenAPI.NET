@@ -10,13 +10,14 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiPathItemSerializationTests
     {
-        private static readonly IOpenApiPathItem _pathItem = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"];
-        private static readonly Mock<OpenApiOperation> _operationMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiServer> _serverMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiParameter> _parameterMock = new() { CallBase = true };
+        private readonly IOpenApiPathItem _pathItem;
+        private readonly Mock<OpenApiOperation> _operationMock = new() { CallBase = true };
+        private readonly Mock<OpenApiServer> _serverMock = new() { CallBase = true };
+        private readonly Mock<OpenApiParameter> _parameterMock = new() { CallBase = true };
 
         public OpenApiPathItemSerializationTests()
         {
+            _pathItem = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"];
             _pathItem.Operations[HttpMethod.Get] = _operationMock.Object;
             _pathItem.Servers[0] = _serverMock.Object ;
             _pathItem.Parameters[0] = _parameterMock.Object;

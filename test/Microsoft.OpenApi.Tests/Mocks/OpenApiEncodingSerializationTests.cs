@@ -9,12 +9,12 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiEncodingSerializationTests
     {
-        // test for header
-        private static readonly OpenApiEncoding _encoding = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Encoding["x-rate-limit"];
-        private static readonly Mock<OpenApiHeader> _headerMock = new() { CallBase = true };
+        private readonly OpenApiEncoding _encoding;
+        private readonly Mock<OpenApiHeader> _headerMock = new() { CallBase = true };
 
         public OpenApiEncodingSerializationTests()
         {
+            _encoding = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Encoding["x-rate-limit"];
             _encoding.Headers["x-encoding"] = _headerMock.Object;
         }
 

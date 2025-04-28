@@ -8,12 +8,13 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiInfoSerializationTests
     {
-        private static readonly OpenApiInfo _info = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Info;
-        private static readonly Mock<OpenApiContact> _contactMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiLicense> _licenseMock = new() { CallBase = true };
+        private readonly OpenApiInfo _info;
+        private readonly Mock<OpenApiContact> _contactMock = new() { CallBase = true };
+        private readonly Mock<OpenApiLicense> _licenseMock = new() { CallBase = true };
 
         public OpenApiInfoSerializationTests()
         {
+            _info = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Info;
             _info.Contact = _contactMock.Object;
             _info.License = _licenseMock.Object;
         }

@@ -9,13 +9,14 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiMediaTypeSerializationTests
     {
-        private static readonly OpenApiMediaType _mediaType = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"];
-        private static readonly Mock<OpenApiSchema> _schemaMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiEncoding> _encodingMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiExample> _exampleMock = new() { CallBase = true };
+        private readonly OpenApiMediaType _mediaType;
+        private readonly Mock<OpenApiSchema> _schemaMock = new() { CallBase = true };
+        private readonly Mock<OpenApiEncoding> _encodingMock = new() { CallBase = true };
+        private readonly Mock<OpenApiExample> _exampleMock = new() { CallBase = true };
 
         public OpenApiMediaTypeSerializationTests()
         {
+            _mediaType = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"];
             _mediaType.Schema = _schemaMock.Object;
             _mediaType.Examples["cat"] = _exampleMock.Object;
             _mediaType.Examples["example"] = _exampleMock.Object;

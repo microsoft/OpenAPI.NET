@@ -9,11 +9,12 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiTagsSerialization
     {
-        private static readonly OpenApiTag _tag = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Tags.ToList()[0];
-        private static readonly Mock<OpenApiExternalDocs> _externalDocsMock = new() { CallBase = true };
+        private readonly OpenApiTag _tag;
+        private readonly Mock<OpenApiExternalDocs> _externalDocsMock = new() { CallBase = true };
 
         public OpenApiTagsSerialization()
         {
+            _tag = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Tags.ToList()[0];
             _tag.ExternalDocs = _externalDocsMock.Object;
         }
 

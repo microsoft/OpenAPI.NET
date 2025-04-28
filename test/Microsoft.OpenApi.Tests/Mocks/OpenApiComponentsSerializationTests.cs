@@ -8,20 +8,21 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiComponentsSerializationTests
     {
-        private static readonly OpenApiComponents _components = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Components;
-        private static readonly Mock<OpenApiSchema> _schemaMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiRequestBody> _requestBodyMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiResponse> _responseMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiParameter> _parameterMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiHeader> _headerMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiSecurityScheme> _securitySchemeMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiLink> _linkMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiCallback> _callbackMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiExample> _exampleMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiPathItem> _pathItemMock = new() { CallBase = true };
+        private readonly OpenApiComponents _components;
+        private readonly Mock<OpenApiSchema> _schemaMock = new() { CallBase = true };
+        private readonly Mock<OpenApiRequestBody> _requestBodyMock = new() { CallBase = true };
+        private readonly Mock<OpenApiResponse> _responseMock = new() { CallBase = true };
+        private readonly Mock<OpenApiParameter> _parameterMock = new() { CallBase = true };
+        private readonly Mock<OpenApiHeader> _headerMock = new() { CallBase = true };
+        private readonly Mock<OpenApiSecurityScheme> _securitySchemeMock = new() { CallBase = true };
+        private readonly Mock<OpenApiLink> _linkMock = new() { CallBase = true };
+        private readonly Mock<OpenApiCallback> _callbackMock = new() { CallBase = true };
+        private readonly Mock<OpenApiExample> _exampleMock = new() { CallBase = true };
+        private readonly Mock<OpenApiPathItem> _pathItemMock = new() { CallBase = true };
 
         public OpenApiComponentsSerializationTests()
         {
+            _components = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Components;
             _components.Schemas["pet"] = _schemaMock.Object;
             _components.RequestBodies["pet"] = _requestBodyMock.Object;
             _components.Responses["200"] = _responseMock.Object;

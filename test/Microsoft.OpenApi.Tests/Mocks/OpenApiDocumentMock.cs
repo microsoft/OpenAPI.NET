@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
     {
         public static OpenApiDocument CreateCompleteOpenApiDocument()
         {
-            var doc = new OpenApiDocument
+            return new OpenApiDocument
             {
                 Info = new OpenApiInfo
                 {
@@ -92,6 +92,13 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                         Value = JsonValue.Create("Fluffy")
                                     }
                                 },
+                                Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType
+                                    {
+                                        Schema = new OpenApiSchemaReference("Pet")
+                                    }
+                                }
                             }
                         ],
                         Operations = new Dictionary<HttpMethod, OpenApiOperation>
@@ -179,6 +186,17 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                                         Summary = "An example cat",
                                                         Value = JsonValue.Create("Fluffy")
                                                     }
+                                                },
+                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                {
+                                                    ["application/json"] = new OpenApiMediaType
+                                                    {
+                                                        Schema = new OpenApiSchema
+                                                        {
+                                                            Type = JsonSchemaType.Array,
+                                                            Items = new OpenApiSchemaReference("Pet")
+                                                        }
+                                                    }
                                                 }
                                             }
                                         },
@@ -233,8 +251,24 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                             }
                                         }
                                     }
-                                }
-                            }
+                                },
+                                Security =
+                                [
+                                    new OpenApiSecurityRequirement
+                                    {
+                                        [new OpenApiSecuritySchemeReference("securitySchemeName1")] = [],
+                                        [new OpenApiSecuritySchemeReference("securitySchemeName2")] =
+                                        [
+                                            "scope1",
+                                            "scope2"
+                                        ]
+                                    }
+                                ],
+                                Tags = new HashSet<OpenApiTagReference>
+                                {
+                                    new OpenApiTagReference("tagId1", new OpenApiDocument{ Tags = new HashSet<OpenApiTag>() { new OpenApiTag{Name = "tagId1"}} })
+                                },
+                                                }
                         }
                     }
                 },
@@ -420,7 +454,6 @@ namespace Microsoft.OpenApi.Tests.Mocks
                     Url = new Uri("https://example.com/docs")
                 }
             };
-            return doc;
         }
     }
 

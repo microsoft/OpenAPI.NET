@@ -10,11 +10,12 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiRequestBodySerializationTests
     {
-        private static readonly IOpenApiRequestBody _requestBody = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].RequestBody;
-        private static readonly Mock<OpenApiMediaType> _mediaTypeMock = new() { CallBase = true };
+        private readonly IOpenApiRequestBody _requestBody;
+        private readonly Mock<OpenApiMediaType> _mediaTypeMock = new() { CallBase = true };
 
         public OpenApiRequestBodySerializationTests()
         {
+            _requestBody = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].RequestBody;
             _requestBody.Content["application/json"] = _mediaTypeMock.Object;
         }
 

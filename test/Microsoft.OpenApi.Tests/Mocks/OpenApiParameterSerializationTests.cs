@@ -8,13 +8,14 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiParameterSerializationTests
     {
-        private static readonly OpenApiParameter _parameter = (OpenApiParameter)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Parameters[0];
-        private static readonly Mock<OpenApiSchema> _schemaMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiMediaType> _contentMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiExample> _exampleMock = new() { CallBase = true };
+        private readonly OpenApiParameter _parameter;
+        private readonly Mock<OpenApiSchema> _schemaMock = new() { CallBase = true };
+        private readonly Mock<OpenApiMediaType> _contentMock = new() { CallBase = true };
+        private readonly Mock<OpenApiExample> _exampleMock = new() { CallBase = true };
 
         public OpenApiParameterSerializationTests()
         {
+            _parameter = (OpenApiParameter)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Parameters[0];
             _parameter.Schema = _schemaMock.Object;
             _parameter.Content["application/json"] = _contentMock.Object;
             _parameter.Examples["example"] = _exampleMock.Object;

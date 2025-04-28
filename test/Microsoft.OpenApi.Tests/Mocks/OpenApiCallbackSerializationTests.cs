@@ -10,11 +10,12 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiCallbackSerializationTests
     {
-        private static readonly OpenApiCallback _callback = (OpenApiCallback)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Callbacks["onData"];
-        private static readonly Mock<OpenApiPathItem> _pathItemMock = new() { CallBase = true };
+        private readonly OpenApiCallback _callback;
+        private readonly Mock<OpenApiPathItem> _pathItemMock = new() { CallBase = true };
 
         public OpenApiCallbackSerializationTests()
         {
+            _callback = (OpenApiCallback)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Callbacks["onData"];
             _callback.PathItems[RuntimeExpression.Build("{$request.body#/callbackUrl}")] = _pathItemMock.Object;
         }
 

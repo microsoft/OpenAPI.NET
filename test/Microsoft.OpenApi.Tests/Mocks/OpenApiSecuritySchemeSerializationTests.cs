@@ -8,11 +8,12 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiSecuritySchemeSerializationTests
     {
-        private static readonly OpenApiSecurityScheme _securityScheme = (OpenApiSecurityScheme)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Components.SecuritySchemes["api_key"];
-        private static readonly Mock<OpenApiOAuthFlows> _authFlowMock = new() { CallBase = true };
+        private readonly OpenApiSecurityScheme _securityScheme;
+        private readonly Mock<OpenApiOAuthFlows> _authFlowMock = new() { CallBase = true };
 
         public OpenApiSecuritySchemeSerializationTests()
         {
+            _securityScheme = (OpenApiSecurityScheme)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Components.SecuritySchemes["api_key"];
             _securityScheme.Flows = _authFlowMock.Object;
         }
 

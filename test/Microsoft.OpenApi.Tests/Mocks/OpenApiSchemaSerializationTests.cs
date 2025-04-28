@@ -9,11 +9,12 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiSchemaSerializationTests
     {
-        private static readonly OpenApiSchema _schema = (OpenApiSchema)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].RequestBody.Content["application/xml"].Schema;
-        private static readonly Mock<OpenApiXml> _xmlMock = new() { CallBase = true };
+        private readonly OpenApiSchema _schema;
+        private readonly Mock<OpenApiXml> _xmlMock = new() { CallBase = true };
 
         public OpenApiSchemaSerializationTests()
         {
+            _schema = (OpenApiSchema)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
             _schema.Xml = _xmlMock.Object;
         }
 

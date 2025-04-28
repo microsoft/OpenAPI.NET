@@ -9,17 +9,17 @@ namespace Microsoft.OpenApi.Tests.Mocks
 {
     public class OpenApiDocumentSerializationTests
     {
-        // test for PathItems, servers
-        private static readonly OpenApiDocument _document = OpenApiDocumentMock.CreateCompleteOpenApiDocument();
-        private static readonly Mock<OpenApiPathItem> _pathItemMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiPathItem> _webhookPathItemMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiServer> _serverMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiTag> _tagMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiSecurityRequirement> _securityMock = new() { CallBase = true };
-        private static readonly Mock<OpenApiComponents> _componentsMock = new() { CallBase = true };
+        private readonly OpenApiDocument _document;
+        private readonly Mock<OpenApiPathItem> _pathItemMock = new() { CallBase = true };
+        private readonly Mock<OpenApiPathItem> _webhookPathItemMock = new() { CallBase = true };
+        private readonly Mock<OpenApiServer> _serverMock = new() { CallBase = true };
+        private readonly Mock<OpenApiTag> _tagMock = new() { CallBase = true };
+        private readonly Mock<OpenApiSecurityRequirement> _securityMock = new() { CallBase = true };
+        private readonly Mock<OpenApiComponents> _componentsMock = new() { CallBase = true };
 
         public OpenApiDocumentSerializationTests()
         {
+            _document = OpenApiDocumentMock.CreateCompleteOpenApiDocument();
             _document.Paths["/pets"] = _pathItemMock.Object;
             _document.Webhooks["pets"] = _webhookPathItemMock.Object;
             _document.Servers[0] = _serverMock.Object;
