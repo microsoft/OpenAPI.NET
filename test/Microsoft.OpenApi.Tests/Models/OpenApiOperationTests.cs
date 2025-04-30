@@ -887,7 +887,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             var exception = await Assert.ThrowsAsync<OpenApiException>(() => operation.SerializeAsJsonAsync(version));
-            Assert.Equal("The OpenAPI tag reference 'two' does reference a valid tag.", exception.Message);
+            Assert.Equal("The OpenAPI tag reference 'two' does not reference a valid tag.", exception.Message);
         }
     }
 }
