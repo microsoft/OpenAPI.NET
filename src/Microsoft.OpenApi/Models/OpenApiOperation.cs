@@ -365,7 +365,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (tag.Target is null)
                     {
-                        throw new OpenApiException($"The OpenAPI tag reference '{tag.Reference.Id}' does reference a valid tag.");
+                        throw new OpenApiException($"The OpenAPI tag reference '{tag.Reference.Id}' does not reference a valid tag.");
                     }
                 }
             }
