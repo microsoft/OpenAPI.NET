@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         /// Examples of the media type.
         /// Each example object SHOULD match the media type and specified schema if present.
         /// </summary>
-        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
+        public OrderedDictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <summary>
         /// A map between a property name and its encoding information.
@@ -40,12 +40,12 @@ namespace Microsoft.OpenApi.Models
         /// The encoding object SHALL only apply to requestBody objects
         /// when the media type is multipart or application/x-www-form-urlencoded.
         /// </summary>
-        public Dictionary<string, OpenApiEncoding>? Encoding { get; set; }
+        public OrderedDictionary<string, OpenApiEncoding>? Encoding { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -59,9 +59,9 @@ namespace Microsoft.OpenApi.Models
         {
             Schema = mediaType?.Schema?.CreateShallowCopy();
             Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
-            Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples) : null;
-            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
-            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
+            Examples = mediaType?.Examples != null ? new OrderedDictionary<string, IOpenApiExample>(mediaType.Examples) : null;
+            Encoding = mediaType?.Encoding != null ? new OrderedDictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
+            Extensions = mediaType?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Models
             // Media type does not exist in V2.
         }
 
-        private static void SerializeExamples(IOpenApiWriter writer, Dictionary<string, IOpenApiExample> examples)
+        private static void SerializeExamples(IOpenApiWriter writer, OrderedDictionary<string, IOpenApiExample> examples)
         {
             /* Special case for writing out empty arrays as valid response examples
             * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true

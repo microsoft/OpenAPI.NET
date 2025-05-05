@@ -23,13 +23,13 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="operationIds">Comma delimited list of operationIds or * for all operations.</param>
         /// <param name="tags">Comma delimited list of tags or a single regex.</param>
-        /// <param name="requestUrls">A dictionary of requests from a postman collection.</param>
+        /// <param name="requestUrls">A OrderedDictionary of requests from a postman collection.</param>
         /// <param name="source">The input OpenAPI document.</param>
         /// <returns>A predicate.</returns>
         public static Func<string, HttpMethod, OpenApiOperation, bool> CreatePredicate(
                 string? operationIds = null,
                 string? tags = null,
-                Dictionary<string, List<string>>? requestUrls = null,
+                OrderedDictionary<string, List<string>>? requestUrls = null,
                 OpenApiDocument? source = null)
         {
             Func<string, HttpMethod, OpenApiOperation, bool> predicate;
@@ -141,9 +141,9 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Creates an <see cref="OpenApiUrlTreeNode"/> from a collection of <see cref="OpenApiDocument"/>.
         /// </summary>
-        /// <param name="sources">Dictionary of labels and their corresponding <see cref="OpenApiDocument"/> objects.</param>
+        /// <param name="sources">OrderedDictionary of labels and their corresponding <see cref="OpenApiDocument"/> objects.</param>
         /// <returns>The created <see cref="OpenApiUrlTreeNode"/>.</returns>
-        public static OpenApiUrlTreeNode CreateOpenApiUrlTreeNode(Dictionary<string, OpenApiDocument> sources)
+        public static OpenApiUrlTreeNode CreateOpenApiUrlTreeNode(OrderedDictionary<string, OpenApiDocument> sources)
         {
             var rootNode = OpenApiUrlTreeNode.Create();
             foreach (var source in sources)
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Services
             return rootNode;
         }
 
-        private static Dictionary<HttpMethod, OpenApiOperation>? GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
+        private static OrderedDictionary<HttpMethod, OpenApiOperation>? GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
         {
             if (relativeUrl.Equals("/", StringComparison.Ordinal) && rootNode.HasOperations(label))
             {
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Services
 
             var urlSegments = relativeUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            Dictionary<HttpMethod, OpenApiOperation>? operations = null;
+            OrderedDictionary<HttpMethod, OpenApiOperation>? operations = null;
 
             var targetChild = rootNode;
 
@@ -365,7 +365,7 @@ namespace Microsoft.OpenApi.Services
                     : url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
         }
 
-        private static void ValidateFilters(Dictionary<string, List<string>>? requestUrls, string? operationIds, string? tags)
+        private static void ValidateFilters(OrderedDictionary<string, List<string>>? requestUrls, string? operationIds, string? tags)
         {
             if (requestUrls != null && (operationIds != null || tags != null))
             {
@@ -404,7 +404,7 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
-        private static Func<string, HttpMethod, OpenApiOperation, bool> GetRequestUrlsPredicate(Dictionary<string, List<string>> requestUrls, OpenApiDocument source)
+        private static Func<string, HttpMethod, OpenApiOperation, bool> GetRequestUrlsPredicate(OrderedDictionary<string, List<string>> requestUrls, OpenApiDocument source)
         {
             var operationTypes = new List<string>();
             if (source != null)
@@ -412,10 +412,10 @@ namespace Microsoft.OpenApi.Services
                 var apiVersion = source.Info.Version;
                 if (apiVersion is not null)
                 {
-                    var sources = new Dictionary<string, OpenApiDocument> { { apiVersion, source } };
+                    var sources = new OrderedDictionary<string, OpenApiDocument> { { apiVersion, source } };
                     var rootNode = CreateOpenApiUrlTreeNode(sources);
 
-                    // Iterate through urls dictionary and fetch operations for each url
+                    // Iterate through urls OrderedDictionary and fetch operations for each url
                     foreach (var url in requestUrls)
                     {
                         var serverList = source.Servers;
@@ -440,7 +440,7 @@ namespace Microsoft.OpenApi.Services
             return (path, operationType, _) => operationTypes.Contains(operationType + path);
         }
 
-        private static List<string> GetOperationTypes(Dictionary<HttpMethod, OpenApiOperation> openApiOperations, List<string> url, string path)
+        private static List<string> GetOperationTypes(OrderedDictionary<HttpMethod, OpenApiOperation> openApiOperations, List<string> url, string path)
         {
             // Add the available ops if they are in the postman collection. See path.Value
             return openApiOperations.Where(ops => url.Contains(ops.Key.ToString().ToUpper()))

@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var rules = new Dictionary<Type, List<ValidationRule>>()
+            var rules = new OrderedDictionary<Type, List<ValidationRule>>()
             {
                 { typeof(IOpenApiSchema),
                     new List<ValidationRule>() { new AlwaysFailRule<IOpenApiSchema>() }
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var rules = new Dictionary<Type, List<ValidationRule>>()
+            var rules = new OrderedDictionary<Type, List<ValidationRule>>()
             {
                 { typeof(OpenApiSchema),
                     new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }

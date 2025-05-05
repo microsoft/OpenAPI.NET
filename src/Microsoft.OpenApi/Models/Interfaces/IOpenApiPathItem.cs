@@ -14,7 +14,7 @@ public interface IOpenApiPathItem : IOpenApiDescribedElement, IOpenApiSummarized
     /// <summary>
     /// Gets the definition of operations on this path.
     /// </summary>
-    public Dictionary<HttpMethod, OpenApiOperation>? Operations { get; }
+    public OrderedDictionary<HttpMethod, OpenApiOperation>? Operations { get; }
 
     /// <summary>
     /// An alternative server array to service all operations in this path.

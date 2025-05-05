@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                new OpenApiDiscriminator
                {
                    PropertyName = "pet_type",
-                   Mapping = new Dictionary<string, OpenApiSchemaReference>
+                   Mapping = new OrderedDictionary<string, OpenApiSchemaReference>
                    {
                             ["puppy"] = new OpenApiSchemaReference("Dog", openApiDocument),
                             ["kitten"] = new OpenApiSchemaReference("Cat" , openApiDocument, "https://gigantic-server.com/schemas/animals.json"),

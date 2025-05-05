@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Models
             TermsOfService = info?.TermsOfService ?? TermsOfService;
             Contact = info?.Contact != null ? new(info.Contact) : null;
             License = info?.License != null ? new(info.License) : null;
-            Extensions = info?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(info.Extensions) : null;
+            Extensions = info?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(info.Extensions) : null;
         }
 
         /// <summary>

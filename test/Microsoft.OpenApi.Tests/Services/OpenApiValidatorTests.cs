@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Services
                         "/test",
                         new OpenApiPathItem()
                         {
-                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                            Operations = new OrderedDictionary<HttpMethod, OpenApiOperation>
                             {
                                 [HttpMethod.Get] = new()
                                 {
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var extensionNode = JsonSerializer.Serialize(fooExtension);
             var jsonNode = JsonNode.Parse(extensionNode);
-            openApiDocument.Info.Extensions = new Dictionary<string, IOpenApiExtension>
+            openApiDocument.Info.Extensions = new OrderedDictionary<string, IOpenApiExtension>
             {
                 { "x-foo", new OpenApiAny(jsonNode) }
             };

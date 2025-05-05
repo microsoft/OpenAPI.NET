@@ -149,21 +149,21 @@ namespace Microsoft.OpenApi.Validations
         /// <inheritdoc/>
         public override void Visit(OpenApiOperation operation) => Validate(operation);
         /// <inheritdoc/>
-        public override void Visit(Dictionary<HttpMethod, OpenApiOperation> operations) => Validate(operations, operations.GetType());
+        public override void Visit(OrderedDictionary<HttpMethod, OpenApiOperation> operations) => Validate(operations, operations.GetType());
         /// <inheritdoc/>
-        public override void Visit(Dictionary<string, IOpenApiHeader> headers) => Validate(headers, headers.GetType());
+        public override void Visit(OrderedDictionary<string, IOpenApiHeader> headers) => Validate(headers, headers.GetType());
         /// <inheritdoc/>
-        public override void Visit(Dictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
+        public override void Visit(OrderedDictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
         /// <inheritdoc/>
-        public override void Visit(Dictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
+        public override void Visit(OrderedDictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
         /// <inheritdoc/>
-        public override void Visit(Dictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
+        public override void Visit(OrderedDictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
         /// <inheritdoc/>
-        public override void Visit(Dictionary<string, IOpenApiLink> links) => Validate(links, links.GetType());
+        public override void Visit(OrderedDictionary<string, IOpenApiLink> links) => Validate(links, links.GetType());
         /// <inheritdoc/>
-        public override void Visit(Dictionary<string, OpenApiServerVariable> serverVariables) => Validate(serverVariables, serverVariables.GetType());
+        public override void Visit(OrderedDictionary<string, OpenApiServerVariable> serverVariables) => Validate(serverVariables, serverVariables.GetType());
         /// <inheritdoc/>
-        public override void Visit(Dictionary<string, OpenApiEncoding> encodings) => Validate(encodings, encodings.GetType());
+        public override void Visit(OrderedDictionary<string, OpenApiEncoding> encodings) => Validate(encodings, encodings.GetType());
 
         private void Validate<T>(T item)
         {

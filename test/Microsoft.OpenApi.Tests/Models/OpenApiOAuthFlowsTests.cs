@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Implicit = new()
             {
                 AuthorizationUrl = new("http://example.com/authorization"),
-                Scopes = new Dictionary<string, string>
+                Scopes = new OrderedDictionary<string, string>
                 {
                     ["scopeName1"] = "description1",
                     ["scopeName2"] = "description2"
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Implicit = new()
             {
                 AuthorizationUrl = new("http://example.com/authorization"),
-                Scopes = new Dictionary<string, string>
+                Scopes = new OrderedDictionary<string, string>
                 {
                     ["scopeName1"] = "description1",
                     ["scopeName2"] = "description2"
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 TokenUrl = new("http://example.com/token"),
                 RefreshUrl = new("http://example.com/refresh"),
-                Scopes = new Dictionary<string, string>
+                Scopes = new OrderedDictionary<string, string>
                 {
                     ["scopeName3"] = "description3",
                     ["scopeName4"] = "description4"

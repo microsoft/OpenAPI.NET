@@ -173,7 +173,7 @@ components:
             {
                 Components = new OpenApiComponents
                 {
-                    Headers = new Dictionary<string, IOpenApiHeader>
+                    Headers = new OrderedDictionary<string, IOpenApiHeader>
                     {
                         { "header1", new OpenApiHeader
                             {

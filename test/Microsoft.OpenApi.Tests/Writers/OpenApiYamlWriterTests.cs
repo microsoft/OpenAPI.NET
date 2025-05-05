@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Simple map
             yield return new object[]
             {
-                new Dictionary<string, object>
+                new OrderedDictionary<string, object>
                 {
                     ["property1"] = "value1",
                     ["property2"] = "value2",
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Simple map with duplicate value
             yield return new object[]
             {
-                new Dictionary<string, object>
+                new OrderedDictionary<string, object>
                 {
                     ["property1"] = "value1",
                     ["property2"] = "value1",
@@ -130,13 +130,13 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Empty map and empty list
             yield return new object[]
             {
-                new Dictionary<string, object>
+                new OrderedDictionary<string, object>
                 {
-                    ["property1"] = new Dictionary<string, object>(),
+                    ["property1"] = new OrderedDictionary<string, object>(),
                     ["property2"] = new List<string>(),
                     ["property3"] = new List<object>
                     {
-                        new Dictionary<string, object>(),
+                        new OrderedDictionary<string, object>(),
                     },
                     ["property4"] = "value4"
                 },
@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Number, boolean, and null handling
             yield return new object[]
             {
-                new Dictionary<string, object>
+                new OrderedDictionary<string, object>
                 {
                     ["property1"] = "10.0",
                     ["property2"] = "10",
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // DateTime
             yield return new object[]
             {
-                new Dictionary<string, object>
+                new OrderedDictionary<string, object>
                 {
                     ["property1"] = new DateTime(1970, 01, 01),
                     ["property2"] = new DateTimeOffset(new DateTime(1970, 01, 01), TimeSpan.FromHours(3)),
@@ -200,14 +200,14 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Nested map
             yield return new object[]
             {
-                new Dictionary<string, object>
+                new OrderedDictionary<string, object>
                 {
-                    ["property1"] = new Dictionary<string, object>
+                    ["property1"] = new OrderedDictionary<string, object>
                     {
                         ["innerProperty1"] = "innerValue1"
                     },
                     ["property2"] = "value2",
-                    ["property3"] = new Dictionary<string, object>
+                    ["property3"] = new OrderedDictionary<string, object>
                     {
                         ["innerProperty3"] = "innerValue3"
                     },
@@ -226,15 +226,15 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Nested map and list
             yield return new object[]
             {
-                new Dictionary<string, object>
+                new OrderedDictionary<string, object>
                 {
-                    ["property1"] = new Dictionary<string, object>(),
+                    ["property1"] = new OrderedDictionary<string, object>(),
                     ["property2"] = new List<string>(),
                     ["property3"] = new List<object>
                     {
-                        new Dictionary<string, object>(),
+                        new OrderedDictionary<string, object>(),
                         "string1",
-                        new Dictionary<string, object>
+                        new OrderedDictionary<string, object>
                         {
                             ["innerProperty1"] = new List<object>(),
                             ["innerProperty2"] = "string2",
@@ -277,8 +277,8 @@ namespace Microsoft.OpenApi.Tests.Writers
                 writer.WriteValue(value);
             }
             else if (value.GetType().IsGenericType &&
-                (typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
-                    typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
+                (typeof(OrderedDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
+                    typeof(OrderedDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
             {
                 writer.WriteStartObject();
                 foreach (var elementValue in (dynamic)(value))
@@ -304,7 +304,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [MemberData(nameof(WriteMapAsYamlShouldMatchExpectedTestCasesSimple))]
         [MemberData(nameof(WriteMapAsYamlShouldMatchExpectedTestCasesComplex))]
-        public void WriteMapAsYamlShouldMatchExpected(Dictionary<string, object> inputMap, string expectedYaml)
+        public void WriteMapAsYamlShouldMatchExpected(OrderedDictionary<string, object> inputMap, string expectedYaml)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);

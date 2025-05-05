@@ -61,16 +61,16 @@ namespace Microsoft.OpenApi.Models
         public IOpenApiSchema? Schema { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
+        public OrderedDictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <inheritdoc/>
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
+        public OrderedDictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// A parameterless constructor
@@ -91,10 +91,10 @@ namespace Microsoft.OpenApi.Models
             Explode = parameter.Explode;
             AllowReserved = parameter.AllowReserved;
             Schema = parameter.Schema?.CreateShallowCopy();
-            Examples = parameter.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
+            Examples = parameter.Examples != null ? new OrderedDictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
-            Content = parameter.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
-            Extensions = parameter.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
+            Content = parameter.Content != null ? new OrderedDictionary<string, OpenApiMediaType>(parameter.Content) : null;
+            Extensions = parameter.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter.AllowEmptyValue;
             Deprecated = parameter.Deprecated;
         }
@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="writer">Writer to use for the serialization</param>
         /// <param name="extensionsClone">Extensions clone</param>
-        internal virtual void WriteRequestBodySchemaForV2(IOpenApiWriter writer, Dictionary<string, IOpenApiExtension>? extensionsClone)
+        internal virtual void WriteRequestBodySchemaForV2(IOpenApiWriter writer, OrderedDictionary<string, IOpenApiExtension>? extensionsClone)
         {
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
@@ -269,7 +269,7 @@ namespace Microsoft.OpenApi.Models
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
-            var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
+            var extensionsClone = Extensions is not null ? Extensions : null;
 
             // schema
             WriteRequestBodySchemaForV2(writer, extensionsClone);
@@ -317,7 +317,7 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     internal class OpenApiBodyParameter : OpenApiParameter
     {
-        internal override void WriteRequestBodySchemaForV2(IOpenApiWriter writer, Dictionary<string, IOpenApiExtension>? extensionsClone)
+        internal override void WriteRequestBodySchemaForV2(IOpenApiWriter writer, OrderedDictionary<string, IOpenApiExtension>? extensionsClone)
         {
             writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
         }

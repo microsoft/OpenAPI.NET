@@ -22,11 +22,11 @@ namespace Microsoft.OpenApi.Validations.Tests
         private readonly ValidationRule _parameterValidationRule = new ValidationRule<OpenApiParameter>(nameof(_parameterValidationRule),
             (context, item) => { });
 
-        private readonly Dictionary<Type, List<ValidationRule>> _rulesDictionary;
+        private readonly OrderedDictionary<Type, List<ValidationRule>> _rulesDictionary;
 
         public ValidationRuleSetTests()
         {
-            _rulesDictionary = new Dictionary<Type, List<ValidationRule>>()
+            _rulesDictionary = new OrderedDictionary<Type, List<ValidationRule>>()
             {
                 {typeof(OpenApiContact), [_contactValidationRule] },
                 {typeof(OpenApiHeader), [_headerValidationRule] },
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             ruleSet.Add(typeof(OpenApiResponse), [responseValidationRule]);
             ruleSet.Add(typeof(OpenApiTag), [tagValidationRule]);
-            var rulesDictionary = new Dictionary<Type, List<ValidationRule>>()
+            var rulesDictionary = new OrderedDictionary<Type, List<ValidationRule>>()
             {
                 {typeof(OpenApiPaths), [pathsValidationRule] }
             };
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var ruleSet = new ValidationRuleSet();
             var tagValidationRule = new ValidationRule<OpenApiTag>("ValidateTags", (context, item) => { });
             var pathsValidationRule = new ValidationRule<OpenApiPaths>("ValidatePaths", (context, item) => { });
-            var rulesDictionary = new Dictionary<Type, List<ValidationRule>>()
+            var rulesDictionary = new OrderedDictionary<Type, List<ValidationRule>>()
             {
                 {typeof(OpenApiPaths), [pathsValidationRule] },
                 {typeof(OpenApiTag), [tagValidationRule] }

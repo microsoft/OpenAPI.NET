@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Reader.V31
             Diagnostic = diagnostic;
         }
 
-        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new Dictionary<Type, Func<ParseNode, OpenApiDocument, object>>
+        private readonly OrderedDictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new OrderedDictionary<Type, Func<ParseNode, OpenApiDocument, object>>
         {
             [typeof(OpenApiAny)] = OpenApiV31Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV31Deserializer.LoadCallback,

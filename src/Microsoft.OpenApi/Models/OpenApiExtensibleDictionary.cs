@@ -9,10 +9,10 @@ using Microsoft.OpenApi.Writers;
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// Generic dictionary type for Open API dictionary element.
+    /// Generic OrderedDictionary type for Open API OrderedDictionary element.
     /// </summary>
     /// <typeparam name="T">The Open API element, <see cref="IOpenApiElement"/></typeparam>
-    public abstract class OpenApiExtensibleDictionary<T> : Dictionary<string, T>,
+    public abstract class OpenApiExtensibleDictionary<T> : OrderedDictionary<string, T>,
         IOpenApiSerializable,
         IOpenApiExtensible
         where T : IOpenApiSerializable
@@ -24,19 +24,19 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiExtensibleDictionary{T}"/> class.
         /// </summary>
-        /// <param name="dictionary">The generic dictionary.</param>
-        /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
+        /// <param name="OrderedDictionary">The generic OrderedDictionary.</param>
+        /// <param name="extensions">The OrderedDictionary of <see cref="IOpenApiExtension"/>.</param>
         protected OpenApiExtensibleDictionary(
-            Dictionary<string, T> dictionary,
-            Dictionary<string, IOpenApiExtension>? extensions = null) : base(dictionary is null ? [] : dictionary)
+            OrderedDictionary<string, T> OrderedDictionary,
+            OrderedDictionary<string, IOpenApiExtension>? extensions = null) : base(OrderedDictionary is null ? [] : OrderedDictionary)
         {
-            Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : [];
+            Extensions = extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(extensions) : [];
         }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
 
         /// <summary>

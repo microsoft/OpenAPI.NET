@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "$vocabulary",
-                (o, n, _) => o.Vocabulary = n.CreateSimpleMap(LoadBool).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
+                (o, n, _) => o.Vocabulary = n.CreateSimpleMap(LoadBool).ToOrderedDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
             },
             {
                 "$dynamicRef",
@@ -385,7 +385,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
                 else if (propertyNode.JsonNode is not null)
                 {
-                    schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+                    schema.UnrecognizedKeywords ??= new OrderedDictionary<string, JsonNode>();
                     schema.UnrecognizedKeywords[propertyNode.Name] = propertyNode.JsonNode;
                 }
             }

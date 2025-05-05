@@ -52,13 +52,13 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public string? Comment { get => Target?.Comment; }
         /// <inheritdoc/>
-        public Dictionary<string, bool>? Vocabulary { get => Target?.Vocabulary; }
+        public OrderedDictionary<string, bool>? Vocabulary { get => Target?.Vocabulary; }
         /// <inheritdoc/>
         public string? DynamicRef { get => Target?.DynamicRef; }
         /// <inheritdoc/>
         public string? DynamicAnchor { get => Target?.DynamicAnchor; }
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiSchema>? Definitions { get => Target?.Definitions; }
+        public OrderedDictionary<string, IOpenApiSchema>? Definitions { get => Target?.Definitions; }
         /// <inheritdoc/>
         public string? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
         /// <inheritdoc/>
@@ -106,9 +106,9 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public bool? UniqueItems { get => Target?.UniqueItems; }
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
+        public OrderedDictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiSchema>? PatternProperties { get => Target?.PatternProperties; }
+        public OrderedDictionary<string, IOpenApiSchema>? PatternProperties { get => Target?.PatternProperties; }
         /// <inheritdoc/>
         public int? MaxProperties { get => Target?.MaxProperties; }
         /// <inheritdoc/>
@@ -134,13 +134,13 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public OpenApiXml? Xml { get => Target?.Xml; }
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public Dictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
+        public OrderedDictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
 
         /// <inheritdoc/>
-        public Dictionary<string, HashSet<string>>? DependentRequired { get => Target?.DependentRequired; }
+        public OrderedDictionary<string, HashSet<string>>? DependentRequired { get => Target?.DependentRequired; }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)

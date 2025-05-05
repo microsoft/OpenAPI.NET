@@ -19,57 +19,57 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiSchema"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiSchema>? Schemas { get; set; }
+        public OrderedDictionary<string, IOpenApiSchema>? Schemas { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiResponse"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiResponse>? Responses { get; set; }
+        public OrderedDictionary<string, IOpenApiResponse>? Responses { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiParameter"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiParameter>? Parameters { get; set; }
+        public OrderedDictionary<string, IOpenApiParameter>? Parameters { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
+        public OrderedDictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiRequestBody"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiRequestBody>? RequestBodies { get; set; }
+        public OrderedDictionary<string, IOpenApiRequestBody>? RequestBodies { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiHeader"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiHeader>? Headers { get; set; }
+        public OrderedDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiSecurityScheme>? SecuritySchemes { get; set; }
+        public OrderedDictionary<string, IOpenApiSecurityScheme>? SecuritySchemes { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiLink"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiLink>? Links { get; set; }
+        public OrderedDictionary<string, IOpenApiLink>? Links { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public Dictionary<string, IOpenApiCallback>? Callbacks { get; set; }
+        public OrderedDictionary<string, IOpenApiCallback>? Callbacks { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiPathItem"/> Object.
         /// </summary>
-        public Dictionary<string, IOpenApiPathItem>? PathItems { get; set; }
+        public OrderedDictionary<string, IOpenApiPathItem>? PathItems { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -81,17 +81,17 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents? components)
         {
-            Schemas = components?.Schemas != null ? new Dictionary<string, IOpenApiSchema>(components.Schemas) : null;
-            Responses = components?.Responses != null ? new Dictionary<string, IOpenApiResponse>(components.Responses) : null;
-            Parameters = components?.Parameters != null ? new Dictionary<string, IOpenApiParameter>(components.Parameters) : null;
-            Examples = components?.Examples != null ? new Dictionary<string, IOpenApiExample>(components.Examples) : null;
-            RequestBodies = components?.RequestBodies != null ? new Dictionary<string, IOpenApiRequestBody>(components.RequestBodies) : null;
-            Headers = components?.Headers != null ? new Dictionary<string, IOpenApiHeader>(components.Headers) : null;
-            SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, IOpenApiSecurityScheme>(components.SecuritySchemes) : null;
-            Links = components?.Links != null ? new Dictionary<string, IOpenApiLink>(components.Links) : null;
-            Callbacks = components?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(components.Callbacks) : null;
-            PathItems = components?.PathItems != null ? new Dictionary<string, IOpenApiPathItem>(components.PathItems) : null;
-            Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
+            Schemas = components?.Schemas != null ? new OrderedDictionary<string, IOpenApiSchema>(components.Schemas) : null;
+            Responses = components?.Responses != null ? new OrderedDictionary<string, IOpenApiResponse>(components.Responses) : null;
+            Parameters = components?.Parameters != null ? new OrderedDictionary<string, IOpenApiParameter>(components.Parameters) : null;
+            Examples = components?.Examples != null ? new OrderedDictionary<string, IOpenApiExample>(components.Examples) : null;
+            RequestBodies = components?.RequestBodies != null ? new OrderedDictionary<string, IOpenApiRequestBody>(components.RequestBodies) : null;
+            Headers = components?.Headers != null ? new OrderedDictionary<string, IOpenApiHeader>(components.Headers) : null;
+            SecuritySchemes = components?.SecuritySchemes != null ? new OrderedDictionary<string, IOpenApiSecurityScheme>(components.SecuritySchemes) : null;
+            Links = components?.Links != null ? new OrderedDictionary<string, IOpenApiLink>(components.Links) : null;
+            Callbacks = components?.Callbacks != null ? new OrderedDictionary<string, IOpenApiCallback>(components.Callbacks) : null;
+            PathItems = components?.PathItems != null ? new OrderedDictionary<string, IOpenApiPathItem>(components.PathItems) : null;
+            Extensions = components?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 
         /// <summary>

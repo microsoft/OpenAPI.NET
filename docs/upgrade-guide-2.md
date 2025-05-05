@@ -504,6 +504,57 @@ var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, Open
 // After (2.0)
 var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
 ```
+### Use OrderedDictionary string Instead of Dictionary
+
+Changed all collections to ordered collections.
+
+**Example:**
+
+```csharp
+// Before (1.6)
+new OpenApiSchema
+    {
+        Required = new HashSet<string> { "id", "name" },
+        Properties = new Dictionary<string, IOpenApiSchema>
+        {
+            ["id"] = new OpenApiSchema
+            {
+                Type =  JsonSchemaType.Integer,
+                Format = "int64"
+            },
+            ["name"] = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String
+            },
+            ["tag"] = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String
+            }
+        }
+    } 
+
+// After (2.0)
+new OpenApiSchema
+    {
+        Required = new HashSet<string> { "id", "name" },
+        Properties = new OrderedDictionary<string, IOpenApiSchema>
+        {
+            ["id"] = new OpenApiSchema
+            {
+                Type =  JsonSchemaType.Integer,
+                Format = "int64"
+            },
+            ["name"] = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String
+            },
+            ["tag"] = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String
+            }
+        }
+    }
+```
 
 ### Bug Fixes
 

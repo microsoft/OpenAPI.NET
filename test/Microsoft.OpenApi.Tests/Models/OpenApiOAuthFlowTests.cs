@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiOAuthFlow PartialOAuthFlow = new()
         {
             AuthorizationUrl = new("http://example.com/authorization"),
-            Scopes = new Dictionary<string, string>
+            Scopes = new OrderedDictionary<string, string>
             {
                 ["scopeName3"] = "description3",
                 ["scopeName4"] = "description4"
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Models
             AuthorizationUrl = new("http://example.com/authorization"),
             TokenUrl = new("http://example.com/token"),
             RefreshUrl = new("http://example.com/refresh"),
-            Scopes = new Dictionary<string, string>
+            Scopes = new OrderedDictionary<string, string>
             {
                 ["scopeName3"] = "description3",
                 ["scopeName4"] = "description4"

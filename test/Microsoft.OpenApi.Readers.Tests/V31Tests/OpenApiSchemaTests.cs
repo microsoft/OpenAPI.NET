@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = JsonSchemaType.Array
                     }
                 },
-                Definitions = new Dictionary<string, IOpenApiSchema>
+                Definitions = new OrderedDictionary<string, IOpenApiSchema>
                 {
                     ["veggie"] = new OpenApiSchema
                     {
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "veggieName",
                             "veggieLike"
                         },
-                        DependentRequired = new Dictionary<string, HashSet<string>>
+                        DependentRequired = new OrderedDictionary<string, HashSet<string>>
                         {
                             { "veggieType", new HashSet<string> { "veggieColor", "veggieSize" } }
                         },
@@ -475,7 +475,7 @@ description: Schema for a person object
             var schemaString = writer.ToString();
 
             // Assert
-            Assert.Equal(5, schema.Vocabulary.Keys.Count);
+            Assert.Equal(5, schema.Vocabulary.Keys.Count());
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
 

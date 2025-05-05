@@ -273,7 +273,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Examples = new Dictionary<string, IOpenApiExample>
+                    Examples = new OrderedDictionary<string, IOpenApiExample>
                     {
                         ["example1"] = new OpenApiExample()
                         {
@@ -347,7 +347,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 },
                 Components = new OpenApiComponents
                 {
-                    Parameters = new Dictionary<string, IOpenApiParameter>()
+                    Parameters = new OrderedDictionary<string, IOpenApiParameter>()
                     {
                         ["tagsParameter"] = parameter,
                     }

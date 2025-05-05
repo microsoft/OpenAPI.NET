@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Hidi
 
         private static OpenApiDocument ApplyFilters(HidiOptions options, ILogger logger, ApiDependency? apiDependency, JsonDocument? postmanCollection, OpenApiDocument document)
         {
-            Dictionary<string, List<string>> requestUrls;
+            OrderedDictionary<string, List<string>> requestUrls;
             if (apiDependency != null)
             {
                 requestUrls = GetRequestUrlsFromManifest(apiDependency);
@@ -262,7 +262,7 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static Func<string, HttpMethod, OpenApiOperation, bool>? FilterOpenApiDocument(string? filterByOperationIds, string? filterByTags, Dictionary<string, List<string>> requestUrls, OpenApiDocument document, ILogger logger)
+        private static Func<string, HttpMethod, OpenApiOperation, bool>? FilterOpenApiDocument(string? filterByOperationIds, string? filterByTags, OrderedDictionary<string, List<string>> requestUrls, OpenApiDocument document, ILogger logger)
         {
             Func<string, HttpMethod, OpenApiOperation, bool>? predicate = null;
 
@@ -295,18 +295,18 @@ namespace Microsoft.OpenApi.Hidi
             return predicate;
         }
 
-        private static Dictionary<string, List<string>> GetRequestUrlsFromManifest(ApiDependency apiDependency)
+        private static OrderedDictionary<string, List<string>> GetRequestUrlsFromManifest(ApiDependency apiDependency)
         {
             // Get the request URLs from the API Dependencies in the API manifest
             var requests = apiDependency
                     .Requests.Where(static r => !r.Exclude && !string.IsNullOrEmpty(r.UriTemplate) && !string.IsNullOrEmpty(r.Method))
                                 .Select(static r => new { UriTemplate = r.UriTemplate!, Method = r.Method! })
                     .GroupBy(static r => r.UriTemplate)
-                    .ToDictionary(static g => g.Key, static g => g.Select(static r => r.Method).ToList());
+                    .ToOrderedDictionary(static g => g.Key, static g => g.Select(static r => r.Method).ToList());
             // This makes the assumption that the UriTemplate in the ApiManifest matches exactly the UriTemplate in the OpenAPI document
             // This does not need to be the case.  The URI template in the API manifest could map to a set of OpenAPI paths.
             // Additional logic will be required to handle this scenario.  I suggest we build this into the OpenAPI.Net library at some point.
-            return requests;
+            return new OrderedDictionary<string, List<string>>(requests);
         }
 
         private static XslCompiledTransform GetFilterTransform()
@@ -451,10 +451,10 @@ namespace Microsoft.OpenApi.Hidi
         /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
         /// </summary>
         /// <param name="stream"> A file stream.</param>
-        /// <returns> A dictionary of request urls and http methods from a collection.</returns>
-        public static Dictionary<string, List<string>> ParseJsonCollectionFile(Stream stream, ILogger logger)
+        /// <returns> A OrderedDictionary of request urls and http methods from a collection.</returns>
+        public static OrderedDictionary<string, List<string>> ParseJsonCollectionFile(Stream stream, ILogger logger)
         {
-            var requestUrls = new Dictionary<string, List<string>>();
+            var requestUrls = new OrderedDictionary<string, List<string>>();
 
             logger.LogTrace("Parsing the json collection file into a JsonDocument");
             using var document = JsonDocument.Parse(stream);
@@ -466,7 +466,7 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-        private static Dictionary<string, List<string>> EnumerateJsonDocument(JsonElement itemElement, Dictionary<string, List<string>> paths)
+        private static OrderedDictionary<string, List<string>> EnumerateJsonDocument(JsonElement itemElement, OrderedDictionary<string, List<string>> paths)
         {
             var itemsArray = itemElement.GetProperty("item");
 
@@ -476,7 +476,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     if (item.TryGetProperty("request", out var request))
                     {
-                        // Fetch list of methods and urls from collection, store them in a dictionary
+                        // Fetch list of methods and urls from collection, store them in a OrderedDictionary
                         var path = request.GetProperty("url").GetProperty("raw").ToString();
                         var method = request.GetProperty("method").ToString();
                         if (paths.TryGetValue(path, out var value))

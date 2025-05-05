@@ -19,16 +19,16 @@ namespace Microsoft.OpenApi.Models
         public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiHeader>? Headers { get; set; }
+        public OrderedDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
+        public OrderedDictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiLink>? Links { get; set; }
+        public OrderedDictionary<string, IOpenApiLink>? Links { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -42,10 +42,10 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(response);
             Description = response.Description ?? Description;
-            Headers = response.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
-            Content = response.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
-            Links = response.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
-            Extensions = response.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
+            Headers = response.Headers != null ? new OrderedDictionary<string, IOpenApiHeader>(response.Headers) : null;
+            Content = response.Content != null ? new OrderedDictionary<string, OpenApiMediaType>(response.Content) : null;
+            Links = response.Links != null ? new OrderedDictionary<string, IOpenApiLink>(response.Links) : null;
+            Extensions = response.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(response.Extensions) : null;
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Models
             // description
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
-            var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
+            var extensionsClone = Extensions is not null ? Extensions : null;
 
             if (Content != null)
             {
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Models
 
                         foreach (var example in Content
                             .Select(static x => x.Value.Examples)
-                            .OfType<Dictionary<string, IOpenApiExample>>()
+                            .OfType<OrderedDictionary<string, IOpenApiExample>>()
                             .SelectMany(static x => x))
                         {
                             writer.WritePropertyName(example.Key);

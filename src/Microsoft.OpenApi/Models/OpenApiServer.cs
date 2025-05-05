@@ -28,12 +28,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map between a variable name and its value. The value is used for substitution in the server's URL template.
         /// </summary>
-        public Dictionary<string, OpenApiServerVariable>? Variables { get; set; }
+        public OrderedDictionary<string, OpenApiServerVariable>? Variables { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -47,8 +47,8 @@ namespace Microsoft.OpenApi.Models
         {
             Description = server?.Description ?? Description;
             Url = server?.Url ?? Url;
-            Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server.Variables) : null;
-            Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
+            Variables = server?.Variables != null ? new OrderedDictionary<string, OpenApiServerVariable>(server.Variables) : null;
+            Extensions = server?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(server.Extensions) : null;
         }
 
         /// <summary>

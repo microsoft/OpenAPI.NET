@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var schema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new OrderedDictionary<string, IOpenApiSchema>
                 {
                     ["property1"] = new OpenApiSchema()
                     {
@@ -187,7 +187,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new OrderedDictionary<string, IOpenApiSchema>
                 {
                     {
                         "schema1",
@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new OrderedDictionary<string, IOpenApiSchema>
                 {
                     {
                         "Person",
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                             [
                                 new OpenApiSchema()
                                 {
-                                    Properties = new Dictionary<string, IOpenApiSchema>
+                                    Properties = new OrderedDictionary<string, IOpenApiSchema>
                                     {
                                         {
                                             "type",

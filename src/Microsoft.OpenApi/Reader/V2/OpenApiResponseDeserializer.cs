@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 ?? context.DefaultContentType ?? ["application/octet-stream"];
 
             var schema = context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response);
-            var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response);
+            var examples = context.GetFromTempStorage<OrderedDictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response);
 
             foreach (var produce in produces)
             {
@@ -110,10 +110,10 @@ namespace Microsoft.OpenApi.Reader.V2
             node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
         }
 
-        private static Dictionary<string, IOpenApiExample> LoadExamplesExtension(ParseNode node)
+        private static OrderedDictionary<string, IOpenApiExample> LoadExamplesExtension(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.ExamplesExtension);
-            var examples = new Dictionary<string, IOpenApiExample>();
+            var examples = new OrderedDictionary<string, IOpenApiExample>();
 
             foreach (var examplesNode in mapNode)
             {
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             var exampleNode = node.CreateAny();
 
-            response.Content ??= new Dictionary<string, OpenApiMediaType>();
+            response.Content ??= new OrderedDictionary<string, OpenApiMediaType>();
 
             OpenApiMediaType mediaTypeObject;
             if (response.Content.TryGetValue(mediaType, out var value))

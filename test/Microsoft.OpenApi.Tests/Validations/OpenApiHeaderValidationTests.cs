@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         Type = JsonSchemaType.Integer
                     }
                 },
-                Examples = new Dictionary<string, IOpenApiExample>
+                Examples = new OrderedDictionary<string, IOpenApiExample>
                 {
                     ["example0"] = new OpenApiExample()
                     {

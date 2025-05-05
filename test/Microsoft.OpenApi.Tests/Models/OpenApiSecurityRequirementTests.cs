@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Components = new()
                     {
-                        SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+                        SecuritySchemes = new OrderedDictionary<string, IOpenApiSecurityScheme>
                         {
                             ["scheme1"] = new OpenApiSecurityScheme
                             {

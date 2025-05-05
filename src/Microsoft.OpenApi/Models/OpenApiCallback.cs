@@ -16,13 +16,13 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiCallback : IOpenApiExtensible, IOpenApiCallback
     {
         /// <inheritdoc/>
-        public Dictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get; set; }
+        public OrderedDictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get; set; }
 
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
         {
             Utils.CheckArgumentNull(callback);
             PathItems = callback?.PathItems != null ? new(callback.PathItems) : null;
-            Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
+            Extensions = callback?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(callback.Extensions) : null;
         }
 
         /// <summary>

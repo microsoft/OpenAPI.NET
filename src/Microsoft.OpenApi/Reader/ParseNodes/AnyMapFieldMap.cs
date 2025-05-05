@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
 {
-    internal class AnyMapFieldMap<T, U> : Dictionary<string, AnyMapFieldMapParameter<T, U>>
+    internal class AnyMapFieldMap<T, U> : OrderedDictionary<string, AnyMapFieldMapParameter<T, U>>
     {
     }
 }

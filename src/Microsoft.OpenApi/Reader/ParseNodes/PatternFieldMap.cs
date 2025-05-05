@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
 {
-    internal class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument>>
+    internal class PatternFieldMap<T> : OrderedDictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument>>
     {
     }
 }

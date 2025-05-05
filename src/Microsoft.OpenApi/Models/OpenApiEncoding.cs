@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map allowing additional information to be provided as headers.
         /// </summary>
-        public Dictionary<string, IOpenApiHeader>? Headers { get; set; }
+        public OrderedDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <summary>
         /// Describes how a specific property value will be serialized depending on its type.
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -65,11 +65,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiEncoding(OpenApiEncoding encoding)
         {
             ContentType = encoding?.ContentType ?? ContentType;
-            Headers = encoding?.Headers != null ? new Dictionary<string, IOpenApiHeader>(encoding.Headers) : null;
+            Headers = encoding?.Headers != null ? new OrderedDictionary<string, IOpenApiHeader>(encoding.Headers) : null;
             Style = encoding?.Style ?? Style;
             Explode = encoding?.Explode ?? Explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
-            Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
+            Extensions = encoding?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
         }
 
         /// <summary>

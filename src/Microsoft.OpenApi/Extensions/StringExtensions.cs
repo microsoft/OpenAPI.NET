@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Extensions
         }
         private static ReadOnlyDictionary<string, object> GetEnumValues<T>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] Type enumType) where T : Enum
         {
-            var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            var result = new OrderedDictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             foreach (var field in enumType.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
                 if (field.GetCustomAttribute<DisplayAttribute>() is { } displayAttribute

@@ -192,7 +192,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                                 Schema = new OpenApiSchemaReference("derived")
                                             }
                                         },
-                                        Headers = new Dictionary<string, IOpenApiHeader>
+                                        Headers = new OrderedDictionary<string, IOpenApiHeader>
                                         {
                                             ["test-header"] = testHeaderReference
                                         }
@@ -209,11 +209,11 @@ namespace Microsoft.OpenApi.Tests.Walkers
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
                     },
-                    Headers = new Dictionary<string, IOpenApiHeader>
+                    Headers = new OrderedDictionary<string, IOpenApiHeader>
                     {
                         ["test-header"] = testHeader
                     },
-                    SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+                    SecuritySchemes = new OrderedDictionary<string, IOpenApiSecurityScheme>
                     {
                         ["test-secScheme"] = new OpenApiSecuritySchemeReference("reference-to-scheme")
                     }
@@ -285,7 +285,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add("referenceAt: " + this.PathString);
         }
-        public override void Visit(Dictionary<string, OpenApiMediaType> content)
+        public override void Visit(OrderedDictionary<string, OpenApiMediaType> content)
         {
             Locations.Add(this.PathString);
         }

@@ -62,14 +62,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         }
     }
 
-    public class HttpMethodOperationDictionaryConverter : JsonConverter<Dictionary<HttpMethod, OpenApiOperation>>
+    public class HttpMethodOperationDictionaryConverter : JsonConverter<OrderedDictionary<HttpMethod, OpenApiOperation>>
     {
-        public override Dictionary<HttpMethod, OpenApiOperation> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override OrderedDictionary<HttpMethod, OpenApiOperation> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
 
-        public override void Write(Utf8JsonWriter writer, Dictionary<HttpMethod, OpenApiOperation> value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, OrderedDictionary<HttpMethod, OpenApiOperation> value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 

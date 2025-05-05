@@ -15,13 +15,13 @@ public class OpenApiServerExtensionsTests
         {
             Url = "http://example.com/api/{version}",
             Description = string.Empty,
-            Variables = new Dictionary<string, OpenApiServerVariable>
+            Variables = new OrderedDictionary<string, OpenApiServerVariable>
             {
                 { "version", new OpenApiServerVariable { Default = "v1", Enum = ["v1", "v2"]} }
             }
         };
 
-        var url = variable.ReplaceServerUrlVariables(new Dictionary<string, string> {{"version", "v2"}});
+        var url = variable.ReplaceServerUrlVariables(new OrderedDictionary<string, string> {{"version", "v2"}});
         
         Assert.Equal("http://example.com/api/v2", url);
     }
@@ -33,13 +33,13 @@ public class OpenApiServerExtensionsTests
         {
             Url = "http://example.com/api/{version}",
             Description = string.Empty,
-            Variables = new Dictionary<string, OpenApiServerVariable>
+            Variables = new OrderedDictionary<string, OpenApiServerVariable>
             {
                 { "version", new OpenApiServerVariable { Default = "v1", Enum = ["v1", "v2"]} }
             }
         };
 
-        var url = variable.ReplaceServerUrlVariables(new Dictionary<string, string>(0));
+        var url = variable.ReplaceServerUrlVariables(new OrderedDictionary<string, string>());
         
         Assert.Equal("http://example.com/api/v1", url);
     }
@@ -51,7 +51,7 @@ public class OpenApiServerExtensionsTests
         {
             Url = "http://example.com/api/{version}",
             Description = string.Empty,
-            Variables = new Dictionary<string, OpenApiServerVariable>
+            Variables = new OrderedDictionary<string, OpenApiServerVariable>
             {
                 { "version", new OpenApiServerVariable { Enum = ["v1", "v2"]} }
             }
@@ -59,7 +59,7 @@ public class OpenApiServerExtensionsTests
 
         Assert.Throws<ArgumentException>(() =>
         {
-            variable.ReplaceServerUrlVariables(new Dictionary<string, string>(0));
+            variable.ReplaceServerUrlVariables(new OrderedDictionary<string, string>());
         });
     }
 
@@ -70,7 +70,7 @@ public class OpenApiServerExtensionsTests
         {
             Url = "http://example.com/api/{version}",
             Description = string.Empty,
-            Variables = new Dictionary<string, OpenApiServerVariable>
+            Variables = new OrderedDictionary<string, OpenApiServerVariable>
             {
                 { "version", new OpenApiServerVariable { Enum = ["v1", "v2"]} }
             }
@@ -78,7 +78,7 @@ public class OpenApiServerExtensionsTests
 
         Assert.Throws<ArgumentException>(() =>
         {
-            variable.ReplaceServerUrlVariables(new Dictionary<string, string> {{"version", "v3"}});
+            variable.ReplaceServerUrlVariables(new OrderedDictionary<string, string> {{"version", "v3"}});
         });
     }
 
@@ -89,7 +89,7 @@ public class OpenApiServerExtensionsTests
         {
             Url = "http://example.com/api/{version}",
             Description = string.Empty,
-            Variables = new Dictionary<string, OpenApiServerVariable>
+            Variables = new OrderedDictionary<string, OpenApiServerVariable>
             {
                 { "version", new OpenApiServerVariable { Enum = []} }
             }
@@ -97,7 +97,7 @@ public class OpenApiServerExtensionsTests
 
         Assert.Throws<ArgumentException>(() =>
         {
-            variable.ReplaceServerUrlVariables(new Dictionary<string, string> {{"version", "v1"}});
+            variable.ReplaceServerUrlVariables(new OrderedDictionary<string, string> {{"version", "v1"}});
         });
     }
 }

@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public Dictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
+        public OrderedDictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
 
         /// <inheritdoc/>
         public List<OpenApiServer>? Servers { get => Target?.Servers; }
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Models.References
         public List<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)

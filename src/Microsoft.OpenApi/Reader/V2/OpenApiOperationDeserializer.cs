@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {
                     Properties = formParameters
                     .Where(p => p.Name != null)
-                    .ToDictionary(
+                    .ToOrderedDictionary(
                         k => k.Name!,
                         v =>
                         {
@@ -200,7 +200,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var formBody = new OpenApiRequestBody
             {
-                Content = consumes.ToDictionary(
+                Content = consumes.ToOrderedDictionary(
                     k => k,
                     _ => mediaType)
             };
@@ -229,7 +229,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 Description = bodyParameter.Description,
                 Required = bodyParameter.Required,
-                Content = consumes.ToDictionary(
+                Content = consumes.ToOrderedDictionary(
                     k => k,
                     _ => new OpenApiMediaType
                     {

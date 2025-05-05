@@ -14,5 +14,5 @@ public interface IOpenApiCallback : IOpenApiReadOnlyExtensible, IShallowCopyable
     /// <summary>
     /// A Path Item Object used to define a callback request and expected responses.
     /// </summary>
-    public Dictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get; }
+    public OrderedDictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get; }
 }

@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     new OpenApiSchema() { Type = JsonSchemaType.String }
                 ]
             },
-            Examples = new Dictionary<string, IOpenApiExample>
+            Examples = new OrderedDictionary<string, IOpenApiExample>
             {
                 ["test"] = new OpenApiExample()
                 {
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Type = JsonSchemaType.Object
             },
-            Examples = new Dictionary<string, IOpenApiExample>
+            Examples = new OrderedDictionary<string, IOpenApiExample>
             {
                 ["test"] = new OpenApiExample()
                 {

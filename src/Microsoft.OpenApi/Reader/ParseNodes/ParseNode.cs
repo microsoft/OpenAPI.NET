@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create list from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
+        public virtual OrderedDictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
         {
             throw new OpenApiReaderException("Cannot create map from this type of node.", Context);
         }
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create simple list from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
+        public virtual OrderedDictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
             throw new OpenApiReaderException("Cannot create simple map from this type of node.", Context);
         }
@@ -86,7 +86,8 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create a list from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, HashSet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
+        public virtual OrderedDictionary<string, HashSet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
+            where T : notnull
         {
             throw new OpenApiReaderException("Cannot create array map from this type of node.", Context);
         }

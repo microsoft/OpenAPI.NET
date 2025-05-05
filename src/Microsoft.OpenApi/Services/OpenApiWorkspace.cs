@@ -16,9 +16,9 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
-        private readonly Dictionary<string, Uri> _documentsIdRegistry = new();
-        private readonly Dictionary<Uri, Stream> _artifactsRegistry = new();        
-        private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new(new UriWithFragmentEquailityComparer());
+        private readonly OrderedDictionary<string, Uri> _documentsIdRegistry = new();
+        private readonly OrderedDictionary<Uri, Stream> _artifactsRegistry = new();        
+        private readonly OrderedDictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new(new UriWithFragmentEquailityComparer());
 
         private class UriWithFragmentEquailityComparer : IEqualityComparer<Uri>
         {

@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Url = "https://{username}.example.com:{port}/{basePath}",
-            Variables = new Dictionary<string, OpenApiServerVariable>
+            Variables = new OrderedDictionary<string, OpenApiServerVariable>
             {
                 ["username"] = new()
                 {

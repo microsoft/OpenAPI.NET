@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models
         public string? OperationId { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; }
+        public OrderedDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; }
 
         /// <inheritdoc/>
         public RuntimeExpressionAnyWrapper? RequestBody { get; set; }
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiServer? Server { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -48,11 +48,11 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(link);
             OperationRef = link.OperationRef ?? OperationRef;
             OperationId = link.OperationId ?? OperationId;
-            Parameters = link.Parameters != null ? new Dictionary<string, RuntimeExpressionAnyWrapper>(link.Parameters) : null;
+            Parameters = link.Parameters != null ? new OrderedDictionary<string, RuntimeExpressionAnyWrapper>(link.Parameters) : null;
             RequestBody = link.RequestBody != null ? new(link.RequestBody) : null;
             Description = link.Description ?? Description;
             Server = link.Server != null ? new(link.Server) : null;
-            Extensions = link.Extensions != null ? new Dictionary<string, IOpenApiExtension>(link.Extensions) : null;
+            Extensions = link.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(link.Extensions) : null;
         }
 
         /// <inheritdoc/>

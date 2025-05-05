@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Reader.V3
                         }
                     }
                 },
-                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
+                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToOrderedDictionary(kv => kv.Key, kv => kv.Value!)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =

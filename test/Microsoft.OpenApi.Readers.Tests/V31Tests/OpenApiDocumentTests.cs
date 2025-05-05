@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "id",
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, HashSet<string>>
+                        DependentRequired = new OrderedDictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, HashSet<string>>
+                        DependentRequired = new OrderedDictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Version = "1.0.0",
                     Title = "Webhook Example"
                 },
-                Webhooks = new Dictionary<string, IOpenApiPathItem>
+                Webhooks = new OrderedDictionary<string, IOpenApiPathItem>
                 {
                     ["pets"] = new OpenApiPathItem
                     {
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "id",
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, HashSet<string>>
+                        DependentRequired = new OrderedDictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, HashSet<string>>
+                        DependentRequired = new OrderedDictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
@@ -299,7 +299,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.Document);
 
-            components.PathItems = new Dictionary<string, IOpenApiPathItem>
+            components.PathItems = new OrderedDictionary<string, IOpenApiPathItem>
             {
                 ["pets"] = new OpenApiPathItem
                 {
@@ -407,7 +407,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     Version = "1.0.0"
                 },
                 JsonSchemaDialect = new Uri("http://json-schema.org/draft-07/schema#"),
-                Webhooks = new Dictionary<string, IOpenApiPathItem>
+                Webhooks = new OrderedDictionary<string, IOpenApiPathItem>
                 {
                     ["pets"] = components.PathItems["pets"]
                 },

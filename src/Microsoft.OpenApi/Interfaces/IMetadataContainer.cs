@@ -14,5 +14,5 @@ public interface IMetadataContainer
     /// A collection of properties associated with the current OpenAPI element to be used by the application.
     /// Metadata are NOT (de)serialized with the schema and can be used for custom properties.
     /// </summary>
-    Dictionary<string, object>? Metadata { get; set; }
+    OrderedDictionary<string, object>? Metadata { get; set; }
 }

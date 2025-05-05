@@ -18,10 +18,10 @@ public static class OpenApiServerExtensions
     /// <returns>A URL with the provided variables substituted.</returns>
     /// <exception cref="ArgumentException">
     /// Thrown when:
-    ///   1. A substitution has no valid value in both the supplied dictionary and the default
+    ///   1. A substitution has no valid value in both the supplied OrderedDictionary and the default
     ///   2. A substitution's value is not available in the enum provided
     /// </exception>
-    public static string? ReplaceServerUrlVariables(this OpenApiServer server, Dictionary<string, string>? values = null)
+    public static string? ReplaceServerUrlVariables(this OpenApiServer server, OrderedDictionary<string, string>? values = null)
     {
         var parsedUrl = server.Url;
         if (server.Variables is not null && parsedUrl is not null)

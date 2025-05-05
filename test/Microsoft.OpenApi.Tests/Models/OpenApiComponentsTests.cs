@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+            SecuritySchemes = new OrderedDictionary<string, IOpenApiSecurityScheme>
             {
                 ["securityScheme1"] = new OpenApiSecurityScheme()
                 {
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         Implicit = new()
                         {
-                            Scopes = new Dictionary<string, string>
+                            Scopes = new OrderedDictionary<string, string>
                             {
                                 ["operation1:object1"] = "operation 1 on object 1",
                                 ["operation2:object2"] = "operation 2 on object 2"
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 },
             },
-            SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+            SecuritySchemes = new OrderedDictionary<string, IOpenApiSecurityScheme>
             {
                 ["securityScheme1"] = new OpenApiSecurityScheme()
                 {
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         Implicit = new()
                         {
-                            Scopes = new Dictionary<string, string>
+                            Scopes = new OrderedDictionary<string, string>
                             {
                                 ["operation1:object1"] = "operation 1 on object 1",
                                 ["operation2:object2"] = "operation 2 on object 2"
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            PathItems = new Dictionary<string, IOpenApiPathItem>
+            PathItems = new OrderedDictionary<string, IOpenApiPathItem>
             {
                 ["/pets"] = new OpenApiPathItem
                 {
