@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations
     /// </summary>
     public sealed class ValidationRuleSet
     {
-        private Dictionary<Type, List<ValidationRule>> _rulesDictionary = new();
+        private OrderedDictionary<Type, List<ValidationRule>> _rulesDictionary = new();
 
         private static ValidationRuleSet? _defaultRuleSet;
 
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="ruleSet">The rule set to add validation rules to.</param>
         /// <param name="rules">The validation rules to be added to the rules set.</param>
         /// <exception cref="OpenApiException">Throws a null argument exception if the arguments are null.</exception>
-        public static void AddValidationRules(ValidationRuleSet ruleSet, Dictionary<Type, List<ValidationRule>> rules)
+        public static void AddValidationRules(ValidationRuleSet ruleSet, OrderedDictionary<Type, List<ValidationRule>> rules)
         {
             if (ruleSet == null || rules == null)
             {
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Validations
         /// Initializes a new instance of the <see cref="ValidationRuleSet"/> class.
         /// </summary>
         /// <param name="rules">Rules to be contained in this ruleset.</param>
-        public ValidationRuleSet(Dictionary<Type, List<ValidationRule>> rules)
+        public ValidationRuleSet(OrderedDictionary<Type, List<ValidationRule>> rules)
         {
             if (rules == null)
             {
@@ -199,13 +199,18 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="ruleName">Name of the rule.</param>
         public void Remove(string ruleName)
         {
-            foreach (KeyValuePair<Type, List<ValidationRule>> rule in _rulesDictionary)
+            var updatedRules = new OrderedDictionary<Type, List<ValidationRule>>();
+
+            foreach (var kvp in _rulesDictionary)
             {
-                _rulesDictionary[rule.Key] = rule.Value.Where(vr => !vr.Name.Equals(ruleName, StringComparison.Ordinal)).ToList();
+                var filteredRules = kvp.Value.Where(vr => !vr.Name.Equals(ruleName, StringComparison.Ordinal)).ToList();
+                if (filteredRules.Any())
+                {
+                    updatedRules.Add(kvp.Key, filteredRules);
+                }
             }
 
-            // Remove types with no rule
-            _rulesDictionary = _rulesDictionary.Where(r => r.Value.Any()).ToDictionary(r => r.Key, r => r.Value);
+            _rulesDictionary = updatedRules;
         }
 
         /// <summary>

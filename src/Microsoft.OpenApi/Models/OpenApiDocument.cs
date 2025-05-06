@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// A map of requests initiated other than by an API call, for example by an out of band registration. 
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
-        public Dictionary<string, IOpenApiPathItem>? Webhooks { get; set; }
+        public OrderedDictionary<string, IOpenApiPathItem>? Webhooks { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -103,10 +103,10 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, object>? Metadata { get; set; }
+        public OrderedDictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Absolute location of the document or a generated placeholder if location is not given
@@ -134,13 +134,13 @@ namespace Microsoft.OpenApi.Models
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
             Servers = document?.Servers != null ? [.. document.Servers] : null;
             Paths = document?.Paths != null ? new(document.Paths) : [];
-            Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
+            Webhooks = document?.Webhooks != null ? new OrderedDictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             Security = document?.Security != null ? [.. document.Security] : null;
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
-            Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
-            Metadata = document?.Metadata != null ? new Dictionary<string, object>(document.Metadata) : null;
+            Extensions = document?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(document.Extensions) : null;
+            Metadata = document?.Metadata != null ? new OrderedDictionary<string, object>(document.Metadata) : null;
             BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
         }
 
@@ -295,7 +295,7 @@ namespace Microsoft.OpenApi.Models
                         .Distinct()
                         .OfType<OpenApiSchemaReference>()
                         .Where(k => k.Reference?.Id is not null)
-                        .ToDictionary<OpenApiSchemaReference, string, IOpenApiSchema>(
+                        .ToOrderedDictionary<OpenApiSchemaReference, string, IOpenApiSchema>(
                             k => k.Reference.Id!,
                             v => v
                         );
@@ -331,7 +331,7 @@ namespace Microsoft.OpenApi.Models
 
                 // parameters
                 var parameters = Components?.Parameters != null
-                    ? new Dictionary<string, IOpenApiParameter>(Components.Parameters)
+                    ? new OrderedDictionary<string, IOpenApiParameter>(Components.Parameters)
                     : [];
 
                 if (Components?.RequestBodies != null)
@@ -712,13 +712,14 @@ namespace Microsoft.OpenApi.Models
             }
             return Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false;
         }
+
     }
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, IOpenApiSchema> Schemas = new(StringComparer.Ordinal);
+        private OrderedDictionary<string, IOpenApiSchema> Schemas = new();
 
-        public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, IOpenApiSchema> schemas)
+        public static void ResolveSchemas(OpenApiComponents? components, OrderedDictionary<string, IOpenApiSchema> schemas)
         {
             var visitor = new FindSchemaReferences
             {

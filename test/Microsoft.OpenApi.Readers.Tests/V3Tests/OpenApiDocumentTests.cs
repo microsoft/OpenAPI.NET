@@ -649,7 +649,7 @@ paths: {}
                         }
                     },
                 },
-                SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+                SecuritySchemes = new OrderedDictionary<string, IOpenApiSecurityScheme>
                 {
                     ["securitySchemeName1"] = new OpenApiSecurityScheme
                     {
@@ -1101,7 +1101,7 @@ paths: {}
                     AllowReserved = true,
                     Style = ParameterStyle.Simple,
                     Explode = true,
-                    Examples = new Dictionary<string, IOpenApiExample>
+                    Examples = new OrderedDictionary<string, IOpenApiExample>
                     {
                             { "uuid1", new OpenApiExample()
                                 {
@@ -1354,7 +1354,7 @@ paths: {}
                 },
                 Components = new OpenApiComponents
                 {
-                    Parameters = new Dictionary<string, IOpenApiParameter>
+                    Parameters = new OrderedDictionary<string, IOpenApiParameter>
                     {
                         ["LimitParameter"] = parameter
                     }
@@ -1441,7 +1441,7 @@ components:
                     {
                         Url = "http://www.example.org/api/{version}",
                         Description = "The http endpoint",
-                        Variables = new Dictionary<string, OpenApiServerVariable>
+                        Variables = new OrderedDictionary<string, OpenApiServerVariable>
                         {
                             {"version", new OpenApiServerVariable {Default = "v2", Enum = ["v1", "v2"]}}
                         }

@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Models
         public JsonNode? Value { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Models
             Description = example.Description ?? Description;
             Value = example.Value != null ? JsonNodeCloneHelper.Clone(example.Value) : null;
             ExternalValue = example.ExternalValue ?? ExternalValue;
-            Extensions = example.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
+            Extensions = example.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(example.Extensions) : null;
         }
 
         /// <inheritdoc/>

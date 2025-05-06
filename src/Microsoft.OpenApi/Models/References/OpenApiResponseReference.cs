@@ -43,16 +43,16 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public OrderedDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiHeader>? Headers { get => Target?.Headers; }
+        public OrderedDictionary<string, IOpenApiHeader>? Headers { get => Target?.Headers; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiLink>? Links { get => Target?.Links; }
+        public OrderedDictionary<string, IOpenApiLink>? Links { get => Target?.Links; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiResponse CopyReferenceAsTargetElementWithOverrides(IOpenApiResponse source)

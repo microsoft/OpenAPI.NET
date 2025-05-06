@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             mediaType.Should().BeEquivalentTo(
                 new OpenApiMediaType
                 {
-                    Examples = new Dictionary<string, IOpenApiExample>
+                    Examples = new OrderedDictionary<string, IOpenApiExample>
                     {
                         ["example1"] = new OpenApiExample()
                         {

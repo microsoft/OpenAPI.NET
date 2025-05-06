@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Contact = new OpenApiContact
                     {
                         Email = "example@example.com",
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new OrderedDictionary<string, IOpenApiExtension>
                         {
                                 ["x-twitter"] = new OpenApiAny("@exampleTwitterHandler")
                         },
@@ -46,14 +46,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     },
                     License = new OpenApiLicense
                     {
-                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        Extensions = new OrderedDictionary<string, IOpenApiExtension>
                         { 
                             ["x-disclaimer"] = new OpenApiAny("Sample Extension String Disclaimer") 
                         },
                         Name = "licenseName",
                         Url = new Uri("http://www.example.com/url2")
                     },
-                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    Extensions = new OrderedDictionary<string, IOpenApiExtension>
                     {
                             ["x-something"] = new OpenApiAny("Sample Extension String Something"),
                             ["x-contact"] = new OpenApiAny(new JsonObject()

@@ -10,6 +10,6 @@ public interface IOpenApiReadOnlyExtensible
     /// <summary>
     /// Specification extensions.
     /// </summary>
-    Dictionary<string, IOpenApiExtension>? Extensions { get; }
+    OrderedDictionary<string, IOpenApiExtension>? Extensions { get; }
 
 }

@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Implicit = new()
                 {
-                    Scopes = new Dictionary<string, string>
+                    Scopes = new OrderedDictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Implicit = new()
                 {
-                    Scopes = new Dictionary<string, string>
+                    Scopes = new OrderedDictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ClientCredentials = new()
                 {
-                    Scopes = new Dictionary<string, string>
+                    Scopes = new OrderedDictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 AuthorizationCode = new()
                 {
-                    Scopes = new Dictionary<string, string>
+                    Scopes = new OrderedDictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"

@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             };
 
             // Given a set of RequestUrls
-            var requestUrls = new Dictionary<string, List<string>>
+            var requestUrls = new OrderedDictionary<string, List<string>>
             {
                     {"/foo", ["GET","POST"]}
             };
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 }
             };
 
-            var requestUrls = new Dictionary<string, List<string>>
+            var requestUrls = new OrderedDictionary<string, List<string>>
             {
                     {"/test/{id}",["GET","PATCH"]}
             };

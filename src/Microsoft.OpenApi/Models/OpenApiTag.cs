@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
             Name = tag.Name ?? Name;
             Description = tag.Description ?? Description;
             ExternalDocs = tag.ExternalDocs != null ? new(tag.ExternalDocs) : null;
-            Extensions = tag.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
+            Extensions = tag.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(tag.Extensions) : null;
         }
 
         /// <summary>

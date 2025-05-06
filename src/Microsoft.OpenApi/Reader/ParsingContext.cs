@@ -21,14 +21,14 @@ namespace Microsoft.OpenApi.Reader
     public class ParsingContext
     {
         private readonly Stack<string> _currentLocation = new();
-        private readonly Dictionary<string, object> _tempStorage = new();
-        private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new();
-        private readonly Dictionary<string, Stack<string>> _loopStacks = new();
+        private readonly OrderedDictionary<string, object> _tempStorage = new();
+        private readonly OrderedDictionary<object, OrderedDictionary<string, object>> _scopedTempStorage = new();
+        private readonly OrderedDictionary<string, Stack<string>> _loopStacks = new();
 
         /// <summary>
         /// Extension parsers
         /// </summary>
-        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>? ExtensionParsers { get; set; } = 
+        public OrderedDictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>? ExtensionParsers { get; set; } = 
             new();
 
         internal RootNode? RootNode { get; set; }
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         public T? GetFromTempStorage<T>(string key, object? scope = null)
         {
-            Dictionary<string, object>? storage;
+            OrderedDictionary<string, object>? storage;
 
             if (scope == null)
             {
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         public void SetTempStorage(string key, object? value, object? scope = null)
         {
-            Dictionary<string, object>? storage;
+            OrderedDictionary<string, object>? storage;
 
             if (scope == null)
             {

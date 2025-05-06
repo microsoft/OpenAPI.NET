@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// Constructor
         /// </summary>
         public AnyMapFieldMapParameter(
-            Func<T, Dictionary<string, U>?> propertyMapGetter,
+            Func<T, OrderedDictionary<string, U>?> propertyMapGetter,
             Func<U, JsonNode?> propertyGetter,
             Action<U, JsonNode> propertySetter,
             Func<T, IOpenApiSchema?> schemaGetter)
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         /// <summary>
         /// Function to retrieve the property that is a map from string to an inner element containing IOpenApiAny.
         /// </summary>
-        public Func<T, Dictionary<string, U>?> PropertyMapGetter { get; }
+        public Func<T, OrderedDictionary<string, U>?> PropertyMapGetter { get; }
 
         /// <summary>
         /// Function to retrieve the value of the property from an inner element.

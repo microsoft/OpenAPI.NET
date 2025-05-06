@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// All the subdirectories of a node.
         /// </summary>
-        public Dictionary<string, OpenApiUrlTreeNode> Children { get; } = new Dictionary<string, OpenApiUrlTreeNode>();
+        public OrderedDictionary<string, OpenApiUrlTreeNode> Children { get; } = new OrderedDictionary<string, OpenApiUrlTreeNode>();
 
         /// <summary>
         /// The relative directory path of the current node from the root node.
@@ -29,14 +29,14 @@ namespace Microsoft.OpenApi.Services
         public string Path { get; set; } = "";
 
         /// <summary>
-        /// Dictionary of labels and Path Item objects that describe the operations available on a node.
+        /// OrderedDictionary of labels and Path Item objects that describe the operations available on a node.
         /// </summary>
-        public Dictionary<string, IOpenApiPathItem> PathItems { get; } = new Dictionary<string, IOpenApiPathItem>();
+        public OrderedDictionary<string, IOpenApiPathItem> PathItems { get; } = new OrderedDictionary<string, IOpenApiPathItem>();
 
         /// <summary>
-        /// A dictionary of key value pairs that contain information about a node.
+        /// A OrderedDictionary of key value pairs that contain information about a node.
         /// </summary>
-        public Dictionary<string, List<string>> AdditionalData { get; set; } = new Dictionary<string, List<string>>();
+        public OrderedDictionary<string, List<string>> AdditionalData { get; set; } = new OrderedDictionary<string, List<string>>();
 
         /// <summary>
         /// Flag indicating whether a node segment is a path parameter.
@@ -49,11 +49,11 @@ namespace Microsoft.OpenApi.Services
         public string Segment { get; private set; }
 
         /// <summary>
-        /// Flag indicating whether the node's PathItems dictionary has operations
+        /// Flag indicating whether the node's PathItems OrderedDictionary has operations
         /// under a given label.
         /// </summary>
         /// <param name="label">The name of the key for the target operations
-        /// in the node's PathItems dictionary.</param>
+        /// in the node's PathItems OrderedDictionary.</param>
         /// <returns>true or false.</returns>
         public bool HasOperations(string label)
         {
@@ -223,8 +223,8 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Adds additional data information to the AdditionalData property of the node.
         /// </summary>
-        /// <param name="additionalData">A dictionary of key value pairs that contain information about a node.</param>
-        public void AddAdditionalData(Dictionary<string, List<string>> additionalData)
+        /// <param name="additionalData">A OrderedDictionary of key value pairs that contain information about a node.</param>
+        public void AddAdditionalData(OrderedDictionary<string, List<string>> additionalData)
         {
             Utils.CheckArgumentNull(additionalData);
 
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, upper-cased, concatenated HTTP methods.
+        /// OrderedDictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, upper-cased, concatenated HTTP methods.
         /// </summary>
         public readonly static IReadOnlyDictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>(StringComparer.OrdinalIgnoreCase)
         {

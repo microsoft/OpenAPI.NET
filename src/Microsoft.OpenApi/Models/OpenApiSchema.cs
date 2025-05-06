@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         public string? Comment { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, bool>? Vocabulary { get; set; }
+        public OrderedDictionary<string, bool>? Vocabulary { get; set; }
 
         /// <inheritdoc />
         public string? DynamicRef { get; set; }
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Models
         public string? DynamicAnchor { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiSchema>? Definitions { get; set; }
+        public OrderedDictionary<string, IOpenApiSchema>? Definitions { get; set; }
 
         private string? _exclusiveMaximum;
         /// <inheritdoc />
@@ -200,10 +200,10 @@ namespace Microsoft.OpenApi.Models
         public bool? UniqueItems { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiSchema>? Properties { get; set; }
+        public OrderedDictionary<string, IOpenApiSchema>? Properties { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiSchema>? PatternProperties { get; set; }
+        public OrderedDictionary<string, IOpenApiSchema>? PatternProperties { get; set; }
 
         /// <inheritdoc />
         public int? MaxProperties { get; set; }
@@ -242,16 +242,16 @@ namespace Microsoft.OpenApi.Models
         public OpenApiXml? Xml { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
+        public OrderedDictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, object>? Metadata { get; set; }
+        public OrderedDictionary<string, object>? Metadata { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, HashSet<string>>? DependentRequired { get; set; }
+        public OrderedDictionary<string, HashSet<string>>? DependentRequired { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -270,10 +270,10 @@ namespace Microsoft.OpenApi.Models
             Const = schema.Const ?? Const;
             Schema = schema.Schema ?? Schema;
             Comment = schema.Comment ?? Comment;
-            Vocabulary = schema.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
+            Vocabulary = schema.Vocabulary != null ? new OrderedDictionary<string, bool>(schema.Vocabulary) : null;
             DynamicAnchor = schema.DynamicAnchor ?? DynamicAnchor;
             DynamicRef = schema.DynamicRef ?? DynamicRef;
-            Definitions = schema.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
+            Definitions = schema.Definitions != null ? new OrderedDictionary<string, IOpenApiSchema>(schema.Definitions) : null;
             UnevaluatedProperties = schema.UnevaluatedProperties;
             ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
             ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
@@ -303,8 +303,8 @@ namespace Microsoft.OpenApi.Models
             MaxItems = schema.MaxItems ?? MaxItems;
             MinItems = schema.MinItems ?? MinItems;
             UniqueItems = schema.UniqueItems ?? UniqueItems;
-            Properties = schema.Properties != null ? new Dictionary<string, IOpenApiSchema>(schema.Properties) : null;
-            PatternProperties = schema.PatternProperties != null ? new Dictionary<string, IOpenApiSchema>(schema.PatternProperties) : null;
+            Properties = schema.Properties != null ? new OrderedDictionary<string, IOpenApiSchema>(schema.Properties) : null;
+            PatternProperties = schema.PatternProperties != null ? new OrderedDictionary<string, IOpenApiSchema>(schema.PatternProperties) : null;
             MaxProperties = schema.MaxProperties ?? MaxProperties;
             MinProperties = schema.MinProperties ?? MinProperties;
             AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
@@ -316,10 +316,10 @@ namespace Microsoft.OpenApi.Models
             ExternalDocs = schema.ExternalDocs != null ? new(schema.ExternalDocs) : null;
             Deprecated = schema.Deprecated;
             Xml = schema.Xml != null ? new(schema.Xml) : null;
-            Extensions = schema.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
-            Metadata = schema is IMetadataContainer { Metadata: not null } mContainer ? new Dictionary<string, object>(mContainer.Metadata) : null;
-            UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
-            DependentRequired = schema.DependentRequired != null ? new Dictionary<string, HashSet<string>>(schema.DependentRequired) : null;
+            Extensions = schema.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(schema.Extensions) : null;
+            Metadata = schema is IMetadataContainer { Metadata: not null } mContainer ? new OrderedDictionary<string, object>(mContainer.Metadata) : null;
+            UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new OrderedDictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
+            DependentRequired = schema.DependentRequired != null ? new OrderedDictionary<string, HashSet<string>>(schema.DependentRequired) : null;
         }
 
         /// <inheritdoc />

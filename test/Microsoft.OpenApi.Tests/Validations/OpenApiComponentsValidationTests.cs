@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             var components = new OpenApiComponents
             {
-                Responses = new Dictionary<string, IOpenApiResponse>
+                Responses = new OrderedDictionary<string, IOpenApiResponse>
                 {
                     { key, new OpenApiResponse { Description = "any" } }
                 }

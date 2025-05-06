@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public Dictionary<string, IOpenApiCallback>? Callbacks { get; set; }
+        public OrderedDictionary<string, IOpenApiCallback>? Callbacks { get; set; }
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -123,10 +123,10 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, object>? Metadata { get; set; }
+        public OrderedDictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -147,12 +147,12 @@ namespace Microsoft.OpenApi.Models
             Parameters = operation.Parameters != null ? [.. operation.Parameters] : null;
             RequestBody = operation.RequestBody?.CreateShallowCopy();
             Responses = operation.Responses != null ? new(operation.Responses) : null;
-            Callbacks = operation.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
+            Callbacks = operation.Callbacks != null ? new OrderedDictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
             Deprecated = operation.Deprecated;
             Security = operation.Security != null ? [.. operation.Security] : null;
             Servers = operation.Servers != null ? [.. operation.Servers] : null;
-            Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
-            Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
+            Extensions = operation.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(operation.Extensions) : null;
+            Metadata = operation.Metadata != null ? new OrderedDictionary<string, object>(operation.Metadata) : null;
         }
 
         /// <summary>

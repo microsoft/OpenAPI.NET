@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "serverDescription"
                 }
             ],
-            Metadata = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } },
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value1" }, { "key2", 2 } },
         };
 
         private static OpenApiOperation _advancedOperationWithTagsAndSecurity => new()
@@ -180,7 +180,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Components = new() 
                     {
-                        SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+                        SecuritySchemes = new OrderedDictionary<string, IOpenApiSecurityScheme>
                         {
                             ["securitySchemeId1"] = new OpenApiSecurityScheme
                             {
@@ -845,7 +845,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var baseOperation = new OpenApiOperation
             {
-                Metadata = new Dictionary<string, object>
+                Metadata = new OrderedDictionary<string, object>
                 {
                     ["key1"] = "value1",
                     ["key2"] = 2

@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         private static OpenApiCallback AdvancedCallback => new()
         {
-            PathItems = new Dictionary<RuntimeExpression, IOpenApiPathItem>
+            PathItems = new OrderedDictionary<RuntimeExpression, IOpenApiPathItem>
             {
                 [RuntimeExpression.Build("$request.body#/url")]
                 = new OpenApiPathItem()
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         private static OpenApiCallback ReferencedCallback => new()
         {
-            PathItems = new Dictionary<RuntimeExpression, IOpenApiPathItem>
+            PathItems = new OrderedDictionary<RuntimeExpression, IOpenApiPathItem>
             {
                 [RuntimeExpression.Build("$request.body#/url")]
                 = new OpenApiPathItem()

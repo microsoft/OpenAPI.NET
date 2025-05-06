@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Url = new("http://example.com/externalDocs")
             },
-            Metadata = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } }
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value1" }, { "key2", 2 } }
         };
 
         public static readonly OpenApiSchema AdvancedSchemaObject = new()
@@ -477,7 +477,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var baseSchema = new OpenApiSchema
             {
-                Metadata = new Dictionary<string, object>
+                Metadata = new OrderedDictionary<string, object>
                 {
                     ["key1"] = "value1",
                     ["key2"] = 2
@@ -601,7 +601,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var schema = new OpenApiSchema
             {
-                UnrecognizedKeywords = new Dictionary<string, JsonNode>()
+                UnrecognizedKeywords = new OrderedDictionary<string, JsonNode>()
                 {
                     ["customKeyWord"] = "bar",
                     ["anotherKeyword"] = 42

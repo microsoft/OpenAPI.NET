@@ -21,12 +21,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
-        public Dictionary<string, OpenApiSchemaReference>? Mapping { get; set; }
+        public OrderedDictionary<string, OpenApiSchemaReference>? Mapping { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -39,8 +39,8 @@ namespace Microsoft.OpenApi.Models
         public OpenApiDiscriminator(OpenApiDiscriminator discriminator)
         {
             PropertyName = discriminator?.PropertyName ?? PropertyName;
-            Mapping = discriminator?.Mapping != null ? new Dictionary<string, OpenApiSchemaReference>(discriminator.Mapping) : null;
-            Extensions = discriminator?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(discriminator.Extensions) : null;
+            Mapping = discriminator?.Mapping != null ? new OrderedDictionary<string, OpenApiSchemaReference>(discriminator.Mapping) : null;
+            Extensions = discriminator?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(discriminator.Extensions) : null;
         }
 
         /// <summary>

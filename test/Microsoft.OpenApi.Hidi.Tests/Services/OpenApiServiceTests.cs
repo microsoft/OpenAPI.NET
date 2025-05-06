@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             };
 
             // Act
-            var requestUrls = new Dictionary<string, List<string>>()
+            var requestUrls = new OrderedDictionary<string, List<string>>()
             {
                 { "/test", ["GET"] }
             };

@@ -33,12 +33,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. A map between the scope name and a short description for it.
         /// </summary>
-        public Dictionary<string, string>? Scopes { get; set; }
+        public OrderedDictionary<string, string>? Scopes { get; set; }
 
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -53,8 +53,8 @@ namespace Microsoft.OpenApi.Models
             AuthorizationUrl = oAuthFlow?.AuthorizationUrl != null ? new Uri(oAuthFlow.AuthorizationUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             TokenUrl = oAuthFlow?.TokenUrl != null ? new Uri(oAuthFlow.TokenUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             RefreshUrl = oAuthFlow?.RefreshUrl != null ? new Uri(oAuthFlow.RefreshUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
-            Scopes = oAuthFlow?.Scopes != null ? new Dictionary<string, string>(oAuthFlow.Scopes) : null;
-            Extensions = oAuthFlow?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlow.Extensions) : null;
+            Scopes = oAuthFlow?.Scopes != null ? new OrderedDictionary<string, string>(oAuthFlow.Scopes) : null;
+            Extensions = oAuthFlow?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(oAuthFlow.Extensions) : null;
         }
 
         /// <summary>

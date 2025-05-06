@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Extensions
             return schemaType.ToIdentifiersInternal().ToArray();
         }
 
-        private static readonly Dictionary<JsonSchemaType, string> allSchemaTypes = new()
+        private static readonly OrderedDictionary<JsonSchemaType, string> allSchemaTypes = new()
         {
             { JsonSchemaType.Boolean, "boolean" },
             { JsonSchemaType.Integer, "integer" },
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Extensions
             return type;
         }
 
-        private static readonly Dictionary<Type, Func<OpenApiSchema>> _simpleTypeToOpenApiSchema = new()
+        private static readonly OrderedDictionary<Type, Func<OpenApiSchema>> _simpleTypeToOpenApiSchema = new()
         {
             [typeof(bool)] = () => new() { Type = JsonSchemaType.Boolean },
             [typeof(byte)] = () => new() { Type = JsonSchemaType.String, Format = "byte" },

@@ -354,7 +354,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var label = "personal";
             var rootNode = OpenApiUrlTreeNode.Create(doc, label);
 
-            var additionalData1 = new Dictionary<string, List<string>>
+            var additionalData1 = new OrderedDictionary<string, List<string>>
             {
                 {"DatePurchased", new List<string> { "21st April 2021" } },
                 {"Location", new List<string> { "Seattle, WA" } },
@@ -363,13 +363,13 @@ namespace Microsoft.OpenApi.Tests.Services
             };
             rootNode.AddAdditionalData(additionalData1);
 
-            var additionalData2 = new Dictionary<string, List<string>>
+            var additionalData2 = new OrderedDictionary<string, List<string>>
             {
                 {"Bedrooms", new List<string> { "Five" } }
             };
             rootNode.Children["houses"].AddAdditionalData(additionalData2);
 
-            var additionalData3 = new Dictionary<string, List<string>>
+            var additionalData3 = new OrderedDictionary<string, List<string>>
             {
                 {"Categories", new List<string> { "Coupe", "Sedan", "Convertible" } }
             };
