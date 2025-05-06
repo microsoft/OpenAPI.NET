@@ -214,8 +214,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // security
-            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, callback);
-
+            writer.WriteOptionalOrEmptyCollection(OpenApiConstants.Security, Security, callback);
+            
             // servers
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, callback);
 
