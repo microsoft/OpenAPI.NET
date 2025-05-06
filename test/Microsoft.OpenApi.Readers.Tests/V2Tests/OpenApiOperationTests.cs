@@ -8,9 +8,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -96,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 },
                 Extensions = new()
                 {
-                    [OpenApiConstants.BodyName] = new OpenApiAny("petObject")
+                    [OpenApiConstants.BodyName] = new JsonNodeExtension("petObject")
                 }
             },
             Responses = new OpenApiResponses

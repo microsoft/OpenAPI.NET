@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         }
 
         /// <summary>
-        /// Function to retrieve the property that is a map from string to an inner element containing IOpenApiAny.
+        /// Function to retrieve the property that is a map from string to an inner element.
         /// </summary>
         public Func<T, Dictionary<string, U>?> PropertyMapGetter { get; }
 

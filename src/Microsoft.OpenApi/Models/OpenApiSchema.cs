@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -755,7 +754,7 @@ namespace Microsoft.OpenApi.Models
             var isNullable = (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null)) ||
                                 Extensions is not null &&
                                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
-                                nullExtRawValue is OpenApiAny { Node: JsonNode jsonNode } &&
+                                nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode } &&
                                 jsonNode.GetValueKind() is JsonValueKind.True;
             if (type is null)
             {

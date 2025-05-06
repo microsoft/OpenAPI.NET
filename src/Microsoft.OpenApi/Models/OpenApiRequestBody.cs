@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -110,7 +109,7 @@ namespace Microsoft.OpenApi.Models
             // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             if (bodyParameter.Extensions is not null && 
                 bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyNameExtension) &&
-                bodyNameExtension is OpenApiAny bodyName)
+                bodyNameExtension is JsonNodeExtension bodyName)
             {
                 bodyParameter.Name = string.IsNullOrEmpty(bodyName.Node.ToString()) ? "body" : bodyName.Node.ToString();
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);

@@ -4,7 +4,7 @@
 using System.IO;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = JsonSchemaType.Number,
                         Format = "float",
-                        Default = new OpenApiAny(5).Node
+                        Default = new JsonNodeExtension(5).Node
                     }
                 }, options => options.IgnoringCyclicReferences().Excluding(x => x.Schema.Default.Parent));
         }
@@ -268,9 +268,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Format = "float",
                     Enum =
                     [
-                        new OpenApiAny(7).Node,
-                        new OpenApiAny(8).Node,
-                        new OpenApiAny(9).Node
+                        new JsonNodeExtension(7).Node,
+                        new JsonNodeExtension(8).Node,
+                        new JsonNodeExtension(9).Node
                     ]
                 }
             };

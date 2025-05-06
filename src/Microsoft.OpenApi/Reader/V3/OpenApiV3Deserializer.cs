@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -131,9 +131,9 @@ namespace Microsoft.OpenApi.Reader.V3
             };
         }
 
-        public static OpenApiAny LoadAny(ParseNode node, OpenApiDocument hostDocument)
+        public static JsonNodeExtension LoadAny(ParseNode node, OpenApiDocument hostDocument)
         {
-            return new OpenApiAny(node.CreateAny());
+            return new JsonNodeExtension(node.CreateAny());
         }
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
             else
             {
-                return new OpenApiAny(node.CreateAny());
+                return new JsonNodeExtension(node.CreateAny());
             }
         }
 

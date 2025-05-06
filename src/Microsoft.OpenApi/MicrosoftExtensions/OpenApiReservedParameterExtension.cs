@@ -5,7 +5,7 @@
 
 using System;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -35,7 +35,7 @@ public class OpenApiReservedParameterExtension : IOpenApiExtension
         get; set;
     }
     /// <summary>
-    /// Parses the <see cref="OpenApiAny"/> to <see cref="OpenApiReservedParameterExtension"/>.
+    /// Parses the <see cref="JsonNodeExtension"/> to <see cref="OpenApiReservedParameterExtension"/>.
     /// </summary>
     /// <param name="source">The source object.</param>
     /// <returns>The <see cref="OpenApiReservedParameterExtension"/>.</returns>

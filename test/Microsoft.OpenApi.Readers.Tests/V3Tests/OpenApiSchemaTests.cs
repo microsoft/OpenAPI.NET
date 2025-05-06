@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
 using SharpYaml.Serialization;
@@ -65,12 +64,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 }";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
+            var jsonNodeExtension = OpenApiModelFactory.Parse<JsonNodeExtension>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            jsonNodeExtension.Should().BeEquivalentTo(new JsonNodeExtension(
                 new JsonObject
                 {
                     ["foo"] = "bar",
@@ -88,12 +87,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
+            var jsonNodeExtension = OpenApiModelFactory.Parse<JsonNodeExtension>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            jsonNodeExtension.Should().BeEquivalentTo(new JsonNodeExtension(
                 new JsonArray
                 {
                     "foo",
@@ -213,8 +212,8 @@ get:
                 },
                 Example = new JsonObject
                 {
-                    ["name"] = new OpenApiAny("Puma").Node,
-                    ["id"] = new OpenApiAny(1).Node
+                    ["name"] = new JsonNodeExtension("Puma").Node,
+                    ["id"] = new JsonNodeExtension(1).Node
                 }
             }, options => options
             .IgnoringCyclicReferences()

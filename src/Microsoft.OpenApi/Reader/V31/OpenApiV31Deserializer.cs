@@ -4,9 +4,9 @@
 using System;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Reader.V31
         {
             return node.Context.ExtensionParsers is not null && node.Context.ExtensionParsers.TryGetValue(name, out var parser)
                 ? parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_1)
-                : new OpenApiAny(node.CreateAny());
+                : new JsonNodeExtension(node.CreateAny());
         }
 
         private static string? LoadString(ParseNode node)
