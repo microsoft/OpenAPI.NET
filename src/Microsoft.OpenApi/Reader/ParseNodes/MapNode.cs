@@ -156,6 +156,16 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return refNode?.GetScalarValue();
         }
 
+        public string? GetJsonSchemaIdentifier()
+        {
+            if (!_node.TryGetPropertyValue("$id", out JsonNode? idNode))
+            {
+                return null;
+            }
+
+            return idNode?.GetScalarValue();
+        }
+
         public string? GetSummaryValue()
         {
             if (!_node.TryGetPropertyValue("summary", out JsonNode? summaryNode))

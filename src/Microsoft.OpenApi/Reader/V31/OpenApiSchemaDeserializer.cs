@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -363,6 +363,7 @@ namespace Microsoft.OpenApi.Reader.V31
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 
             var pointer = mapNode.GetReferencePointer();
+            var identifier = mapNode.GetJsonSchemaIdentifier();
 
             if (pointer != null)
             {
@@ -395,6 +396,12 @@ namespace Microsoft.OpenApi.Reader.V31
                 var type = schema.Type;
                 schema.Type = type | JsonSchemaType.Null;
                 schema.Extensions.Remove(OpenApiConstants.NullableExtension);
+            }
+
+            if (identifier is not null && hostDocument.Workspace is not null)
+            {
+                // register the schema in our registry using the identifer's URL
+                hostDocument.Workspace.RegisterComponentForDocument(hostDocument, schema, identifier);
             }
 
             return schema;
