@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.1
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi3_1);
             writer.WriteProperty(OpenApiConstants.Identifier, Identifier);
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
             writer.WriteEndObject();
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v2.0
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi2_0);
             writer.WriteEndObject();
