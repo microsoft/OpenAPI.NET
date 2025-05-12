@@ -3,14 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Models.Interfaces;
 using System;
-using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -242,7 +240,7 @@ namespace Microsoft.OpenApi.Reader.V2
             if (bodyParameter.Name is not null)
             {
                 requestBody.Extensions ??= [];
-                requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
+                requestBody.Extensions[OpenApiConstants.BodyName] = new JsonNodeExtension(bodyParameter.Name);
             }            
             return requestBody;
         }

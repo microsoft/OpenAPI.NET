@@ -5,20 +5,20 @@ using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Any
+namespace Microsoft.OpenApi.Extensions
 {
     /// <summary>
     /// A wrapper class for JsonNode
     /// </summary>
-    public class OpenApiAny : IOpenApiElement, IOpenApiExtension
+    public class JsonNodeExtension : IOpenApiElement, IOpenApiExtension
     {
         private readonly JsonNode jsonNode;
 
         /// <summary>
-        /// Initializes the <see cref="OpenApiAny"/> class.
+        /// Initializes the <see cref="JsonNodeExtension"/> class.
         /// </summary>
         /// <param name="jsonNode"></param>
-        public OpenApiAny(JsonNode jsonNode)
+        public JsonNodeExtension(JsonNode jsonNode)
         {
             this.jsonNode = jsonNode;
         }
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Any
         public JsonNode Node { get { return jsonNode; } }
 
         /// <summary>
-        /// Writes out the OpenApiAny type.
+        /// Writes out the JsonNodeExtension type.
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="specVersion"></param>
