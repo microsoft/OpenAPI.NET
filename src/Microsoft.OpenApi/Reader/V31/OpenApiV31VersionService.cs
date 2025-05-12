@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new Dictionary<Type, Func<ParseNode, OpenApiDocument, object>>
         {
-            [typeof(OpenApiAny)] = OpenApiV31Deserializer.LoadAny,
+            [typeof(JsonNodeExtension)] = OpenApiV31Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV31Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV31Deserializer.LoadComponents,
             [typeof(OpenApiContact)] = OpenApiV31Deserializer.LoadContact,

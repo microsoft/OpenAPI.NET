@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -971,12 +970,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = JsonSchemaType.Integer,
                                         Extensions = new()
                                         {
-                                            ["my-extension"] = new OpenApiAny(4)
+                                            ["my-extension"] = new JsonNodeExtension(4)
                                         }
                                     },
                                     Extensions = new()
                                     {
-                                        ["my-extension"] = new OpenApiAny(4),
+                                        ["my-extension"] = new JsonNodeExtension(4),
                                     }
                                 },
                                 new OpenApiParameter
@@ -990,12 +989,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = JsonSchemaType.Integer,
                                         Extensions = new()
                                         {
-                                            ["my-extension"] = new OpenApiAny(4)
+                                            ["my-extension"] = new JsonNodeExtension(4)
                                         }
                                     },
                                     Extensions = new()
                                     {
-                                        ["my-extension"] = new OpenApiAny(4),
+                                        ["my-extension"] = new JsonNodeExtension(4),
                                     }
                                 },
                             ],
@@ -1555,7 +1554,7 @@ definitions:
             document.Paths["/"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema = new OpenApiSchemaReference("test", document);
 
             // Act
-            var actual = await document.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
+            var actual = await document.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
 
             // Assert
             Assert.NotEmpty(actual);
@@ -2077,7 +2076,7 @@ components:
                         Name = "tag1",
                         Extensions = new()
                         {
-                            ["x-tag1"] = new OpenApiAny("tag1")
+                            ["x-tag1"] = new JsonNodeExtension("tag1")
                         }
                     },
                     new OpenApiTag
@@ -2085,7 +2084,7 @@ components:
                         Name = "tag2",
                         Extensions = new()
                         {
-                            ["x-tag2"] = new OpenApiAny("tag2")
+                            ["x-tag2"] = new JsonNodeExtension("tag2")
                         }
                     }
                 }
@@ -2106,7 +2105,7 @@ components:
                         Name = "tag1",
                         Extensions = new()
                         {
-                            ["x-tag1"] = new OpenApiAny("tag1")
+                            ["x-tag1"] = new JsonNodeExtension("tag1")
                         }
                     },
                     new OpenApiTag
@@ -2114,7 +2113,7 @@ components:
                         Name = "tag2",
                         Extensions = new()
                         {
-                            ["x-tag2"] = new OpenApiAny("tag2")
+                            ["x-tag2"] = new JsonNodeExtension("tag2")
                         }
                     },
                     new OpenApiTag
@@ -2122,7 +2121,7 @@ components:
                         Name = "tag1",
                         Extensions = new()
                         {
-                            ["x-tag1"] = new OpenApiAny("tag1")
+                            ["x-tag1"] = new JsonNodeExtension("tag1")
                         }
                     }
                 }

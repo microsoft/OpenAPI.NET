@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -23,20 +20,20 @@ namespace Microsoft.OpenApi.Tests.Models
             Attribute = true,
             Extensions = new()
             {
-                {"x-xml-extension", new OpenApiAny(7)}
+                {"x-xml-extension", new JsonNodeExtension(7)}
             }
         };
 
         public static OpenApiXml BasicXml = new();
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Yaml)]
         public async Task SerializeBasicXmlWorks(
             OpenApiSpecVersion version,
-            OpenApiFormat format)
+            string format)
         {
             // Act
             var actual = await BasicXml.SerializeAsync(version, format);

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using Microsoft.OpenApi.MicrosoftExtensions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Tests.MicrosoftExtensions;
 
@@ -77,9 +77,9 @@ public class OpenApiPagingExtensionsTests
         // Arrange
         var obj = new JsonObject
         {
-            ["nextLinkName"] = new OpenApiAny("@odata.nextLink").Node,
-            ["operationName"] = new OpenApiAny("more").Node,
-            ["itemName"] = new OpenApiAny("item").Node,
+            ["nextLinkName"] = new JsonNodeExtension("@odata.nextLink").Node,
+            ["operationName"] = new JsonNodeExtension("more").Node,
+            ["itemName"] = new JsonNodeExtension("item").Node,
         };
 
         // Act

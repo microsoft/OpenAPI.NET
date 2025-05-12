@@ -5,16 +5,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -38,7 +35,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Example = "Blabla",
                     Extensions = new()
                     {
-                        ["myextension"] = new OpenApiAny("myextensionvalue"),
+                        ["myextension"] = new JsonNodeExtension("myextensionvalue"),
                     }, 
                 }
             },
@@ -77,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Example = "Blabla",
                     Extensions = new()
                     {
-                        ["myextension"] = new OpenApiAny("myextensionvalue"),
+                        ["myextension"] = new JsonNodeExtension("myextensionvalue"),
                     },
                 }
             },
@@ -175,16 +172,16 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Yaml)]
         public async Task SerializeBasicResponseWorks(
             OpenApiSpecVersion version,
-            OpenApiFormat format)
+            string format)
         {
             // Arrange
-            var expected = format == OpenApiFormat.Json ? @"{
+            var expected = format == OpenApiConstants.Json ? @"{
   ""description"": null
 }" : @"description: ";
 

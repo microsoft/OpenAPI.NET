@@ -81,3 +81,5 @@ components:
       value:
         name: "New Item"
 
+tags:
+  - name: list.items

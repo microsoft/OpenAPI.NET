@@ -5,7 +5,6 @@
 
 using System;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using System.Text.Json.Nodes;
@@ -103,7 +102,7 @@ public class OpenApiDeprecationExtension : IOpenApiExtension
         return null;
     }
     /// <summary>
-    /// Parses the <see cref="OpenApiAny"/> to <see cref="OpenApiDeprecationExtension"/>.
+    /// Parses the <see cref="JsonNodeExtension"/> to <see cref="OpenApiDeprecationExtension"/>.
     /// </summary>
     /// <param name="source">The source object.</param>
     /// <returns>The <see cref="OpenApiDeprecationExtension"/>.</returns>

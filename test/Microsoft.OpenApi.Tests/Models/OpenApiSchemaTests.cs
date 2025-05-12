@@ -8,9 +8,7 @@ using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -538,7 +536,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Extensions = new()
                 {
-                    { "x-myextension", new OpenApiAny(42) }
+                    { "x-myextension", new JsonNodeExtension(42) }
                 }
             };
 
@@ -549,7 +547,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act && Assert
             schemaCopy.Extensions = new()
             {
-                { "x-myextension" , new OpenApiAny(40) }
+                { "x-myextension" , new JsonNodeExtension(40) }
             };
             Assert.NotEqual(schema.Extensions, schemaCopy.Extensions);
         }

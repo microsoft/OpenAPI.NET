@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Reader.V2;
 using Xunit;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using System.Text.Json.Nodes;
 using System.Collections.Generic;
 using FluentAssertions.Equivalency;
@@ -87,9 +87,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Format = "float",
                 Enum =
                 [
-                    new OpenApiAny(7).Node,
-                    new OpenApiAny(8).Node,
-                    new OpenApiAny(9).Node
+                    new JsonNodeExtension(7).Node,
+                    new JsonNodeExtension(8).Node,
+                    new JsonNodeExtension(9).Node
                 ]
             };
 

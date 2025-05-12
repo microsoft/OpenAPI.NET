@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 "yaml", SettingsFixture.ReaderSettings);
 
             Assert.Equal("0.9.1", result.Document.Info.Version, StringComparer.OrdinalIgnoreCase);
-            var extension = Assert.IsType<OpenApiAny>(result.Document.Info.Extensions["x-extension"]);
+            var extension = Assert.IsType<JsonNodeExtension>(result.Document.Info.Extensions["x-extension"]);
             Assert.Equal(2.335M, extension.Node.GetValue<decimal>());
             var sampleSchema = Assert.IsType<OpenApiSchema>(result.Document.Components.Schemas["sampleSchema"]);
             var samplePropertySchema = Assert.IsType<OpenApiSchema>(sampleSchema.Properties["sampleProperty"]);

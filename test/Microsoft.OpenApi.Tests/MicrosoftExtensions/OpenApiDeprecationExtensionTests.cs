@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using Microsoft.OpenApi.MicrosoftExtensions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using System.Text.Json.Nodes;

@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
-    /// Extensions methods for writing the <see cref="OpenApiAny"/>
+    /// Extensions methods for writing the <see cref="JsonNodeExtension"/>
     /// </summary>
     public static class OpenApiWriterAnyExtensions
     {
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WritePrimitive(this IOpenApiWriter writer, JsonValue jsonValue)
         {
-            if (jsonValue.TryGetValue(out string? stringValue))
+            if (jsonValue.TryGetValue(out string? stringValue) && stringValue is not null)
                 writer.WriteValue(stringValue);
             else if (jsonValue.TryGetValue(out DateTime dateTimeValue))
                 writer.WriteValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)); // ISO 8601 format

@@ -132,9 +132,9 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public async Task SerializeBasicMediaTypeAsV3Works(OpenApiFormat format, string expected)
+        [InlineData(OpenApiConstants.Json, "{ }")]
+        [InlineData(OpenApiConstants.Yaml, "{ }")]
+        public async Task SerializeBasicMediaTypeAsV3Works(string format, string expected)
         {
             // Arrange & Act
             var actual = await BasicMediaType.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);

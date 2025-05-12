@@ -3,15 +3,6 @@
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo(@"Microsoft.OpenApi.Readers.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100957cb48387b2a5f54f5ce39255f18f26d32a39990db27cf48737afc6bc62759ba996b8a2bfb675d4e39f3d06ecb55a178b1b4031dcb2a767e29977d88cce864a0d16bfc1b3bebb0edf9fe285f10fffc0a85f93d664fa05af07faa3aad2e545182dbf787e3fd32b56aca95df1a3c4e75dec164a3f1a4c653d971b01ffc39eb3c4")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo(@"Microsoft.OpenApi.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100957cb48387b2a5f54f5ce39255f18f26d32a39990db27cf48737afc6bc62759ba996b8a2bfb675d4e39f3d06ecb55a178b1b4031dcb2a767e29977d88cce864a0d16bfc1b3bebb0edf9fe285f10fffc0a85f93d664fa05af07faa3aad2e545182dbf787e3fd32b56aca95df1a3c4e75dec164a3f1a4c653d971b01ffc39eb3c4")]
 [assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v8.0", FrameworkDisplayName=".NET 8.0")]
-namespace Microsoft.OpenApi.Any
-{
-    public class OpenApiAny : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
-    {
-        public OpenApiAny(System.Text.Json.Nodes.JsonNode jsonNode) { }
-        public System.Text.Json.Nodes.JsonNode Node { get; }
-        public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
-    }
-}
 namespace Microsoft.OpenApi.Attributes
 {
     [System.AttributeUsage(System.AttributeTargets.Property | System.AttributeTargets.Field)]
@@ -115,7 +106,7 @@ namespace Microsoft.OpenApi.Expressions
         public const string Prefix = "$";
         protected RuntimeExpression() { }
         public abstract string Expression { get; }
-        public bool Equals(Microsoft.OpenApi.Expressions.RuntimeExpression? obj) { }
+        public bool Equals(Microsoft.OpenApi.Expressions.RuntimeExpression? other) { }
         public override bool Equals(object? obj) { }
         public override int GetHashCode() { }
         public override string ToString() { }
@@ -149,6 +140,12 @@ namespace Microsoft.OpenApi.Extensions
             where T : System.Attribute { }
         public static string GetDisplayName(this System.Enum enumValue) { }
     }
+    public class JsonNodeExtension : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
+    {
+        public JsonNodeExtension(System.Text.Json.Nodes.JsonNode jsonNode) { }
+        public System.Text.Json.Nodes.JsonNode Node { get; }
+        public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+    }
     public static class OpenApiElementExtensions
     {
         public static System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiError> Validate(this Microsoft.OpenApi.Interfaces.IOpenApiElement element, Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet) { }
@@ -172,13 +169,13 @@ namespace Microsoft.OpenApi.Extensions
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
         public static System.Threading.Tasks.Task SerializeAsYamlAsync<T>(this T element, System.IO.Stream stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
-        public static System.Threading.Tasks.Task<string> SerializeAsync<T>(this T element, Microsoft.OpenApi.OpenApiSpecVersion specVersion, Microsoft.OpenApi.OpenApiFormat format, System.Threading.CancellationToken cancellationToken = default)
+        public static System.Threading.Tasks.Task<string> SerializeAsync<T>(this T element, Microsoft.OpenApi.OpenApiSpecVersion specVersion, string format, System.Threading.CancellationToken cancellationToken = default)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
         public static System.Threading.Tasks.Task SerializeAsync<T>(this T element, Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
-        public static System.Threading.Tasks.Task SerializeAsync<T>(this T element, System.IO.Stream stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, Microsoft.OpenApi.OpenApiFormat format, System.Threading.CancellationToken cancellationToken = default)
+        public static System.Threading.Tasks.Task SerializeAsync<T>(this T element, System.IO.Stream stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, string format, System.Threading.CancellationToken cancellationToken = default)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
-        public static System.Threading.Tasks.Task SerializeAsync<T>(this T element, System.IO.Stream stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, Microsoft.OpenApi.OpenApiFormat format, Microsoft.OpenApi.Writers.OpenApiWriterSettings? settings = null, System.Threading.CancellationToken cancellationToken = default)
+        public static System.Threading.Tasks.Task SerializeAsync<T>(this T element, System.IO.Stream stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, string format, Microsoft.OpenApi.Writers.OpenApiWriterSettings? settings = null, System.Threading.CancellationToken cancellationToken = default)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
     }
     public static class OpenApiServerExtensions
@@ -258,11 +255,6 @@ namespace Microsoft.OpenApi
         public Microsoft.OpenApi.JsonPointer? ParentPointer { get; }
         public string[] Tokens { get; }
         public override string ToString() { }
-    }
-    public enum OpenApiFormat
-    {
-        Json = 0,
-        Yaml = 1,
     }
     public enum OpenApiSpecVersion
     {

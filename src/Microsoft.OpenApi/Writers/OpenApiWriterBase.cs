@@ -238,47 +238,45 @@ namespace Microsoft.OpenApi.Writers
                 return;
             }
 
-            var type = value.GetType();
-
-            if (type == typeof(string))
+            if (value is string strValue)
             {
-                WriteValue((string)(value));
+                WriteValue(strValue);
             }
-            else if (type == typeof(int) || type == typeof(int?))
+            else if (value is int intValue)
             {
-                WriteValue((int)value);
+                WriteValue(intValue);
             }
-            else if (type == typeof(uint) || type == typeof(uint?))
+            else if (value is uint uintValue)
             {
-                WriteValue((uint)value);
+                WriteValue(uintValue);
             }
-            else if (type == typeof(long) || type == typeof(long?))
+            else if (value is long longValue)
             {
-                WriteValue((long)value);
+                WriteValue(longValue);
             }
-            else if (type == typeof(bool) || type == typeof(bool?))
+            else if (value is bool boolValue)
             {
-                WriteValue((bool)value);
+                WriteValue(boolValue);
             }
-            else if (type == typeof(float) || type == typeof(float?))
+            else if (value is float floatValue)
             {
-                WriteValue((float)value);
+                WriteValue(floatValue);
             }
-            else if (type == typeof(double) || type == typeof(double?))
+            else if (value is double doubleValue)
             {
-                WriteValue((double)value);
+                WriteValue(doubleValue);
             }
-            else if (type == typeof(decimal) || type == typeof(decimal?))
+            else if (value is decimal decimalValue)
             {
-                WriteValue((decimal)value);
+                WriteValue(decimalValue);
             }
-            else if (type == typeof(DateTime) || type == typeof(DateTime?))
+            else if (value is DateTime DateTimeValue)
             {
-                WriteValue((DateTime)value);
+                WriteValue(DateTimeValue);
             }
-            else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
+            else if (value is DateTimeOffset DateTimeOffsetValue)
             {
-                WriteValue((DateTimeOffset)value);
+                WriteValue(DateTimeOffsetValue);
             }
             else if (value is IEnumerable<object> enumerable)
             {
@@ -286,7 +284,7 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                throw new OpenApiWriterException(string.Format(SRResource.OpenApiUnsupportedValueType, type.FullName));
+                throw new OpenApiWriterException(string.Format(SRResource.OpenApiUnsupportedValueType, value.GetType().FullName));
             }
         }
 

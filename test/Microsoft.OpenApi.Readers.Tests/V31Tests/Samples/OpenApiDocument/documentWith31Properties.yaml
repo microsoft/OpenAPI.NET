@@ -122,5 +122,8 @@ components:
         ExtraInfo:
           type: string
 
+tags:
+  - name: pets
+
 security:
   - api_key: []
