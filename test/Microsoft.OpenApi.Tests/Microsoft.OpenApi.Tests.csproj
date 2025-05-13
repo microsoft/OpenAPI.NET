@@ -26,7 +26,6 @@
     <ProjectReference Include="..\..\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj" />
     <ProjectReference Include="..\..\src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj" />
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
-    <ProjectReference Include="..\Microsoft.OpenApi.Hidi.Tests\Microsoft.OpenApi.Hidi.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
