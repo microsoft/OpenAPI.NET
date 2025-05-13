@@ -1,0 +1,11 @@
+openapi: 3.1.0
+info:
+  title: Example of reference object pointing to a parameter
+  version: 1.0.0
+paths: {}
+components:
+  securitySchemes:
+    customapikey:
+      type: apiKey
+      name: x-api-key
+      in: header

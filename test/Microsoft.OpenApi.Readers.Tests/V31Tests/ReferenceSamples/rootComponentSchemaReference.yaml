@@ -1,0 +1,24 @@
+openapi: 3.1.0
+info:
+    title: Reference at the root of a component schema
+    version: 1.0.0
+paths:
+    /items:
+        get:
+          responses:
+            200:
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/specialitem'
+components:
+    schemas:
+      specialitem:  # Use the item type but provide a different title for the type
+        title: Special Item
+        $ref: "#/components/schemas/item"
+      item:
+        title: Item
+        type: object
