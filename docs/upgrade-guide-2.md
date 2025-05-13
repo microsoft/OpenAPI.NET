@@ -632,7 +632,7 @@ Discriminator = new()
 }
 
 //v2.0
-Discriminator = new()public string? ExclusiveMaximum
+Discriminator = new()
 {
     PropertyName = "@odata.type",
     Mapping = new Dictionary<string, OpenApiSchemaReference> {
