@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
                     o.Components.Parameters = n.CreateMap(LoadParameter, o)
                         .Where(kvp => kvp.Value != null)
-                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value!);
+                        .ToOrderedDictionary(kvp => kvp.Key, kvp => kvp.Value!);
 
                 o.Components.RequestBodies = n.CreateMap((p, d) =>
                         {
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Reader.V2
                         },
                         doc
                   ).Where(kvp => kvp.Value != null)
-                   .ToDictionary(kvp => kvp.Key, kvp => kvp.Value!);
+                   .ToOrderedDictionary(kvp => kvp.Key, kvp => kvp.Value!);
                 }
             },
             {
@@ -313,8 +313,8 @@ namespace Microsoft.OpenApi.Reader.V2
 
     internal class RequestBodyReferenceFixer : OpenApiVisitorBase
     {
-        private readonly Dictionary<string, IOpenApiRequestBody> _requestBodies;
-        public RequestBodyReferenceFixer(Dictionary<string, IOpenApiRequestBody> requestBodies)
+        private readonly OrderedDictionary<string, IOpenApiRequestBody> _requestBodies;
+        public RequestBodyReferenceFixer(OrderedDictionary<string, IOpenApiRequestBody> requestBodies)
         {
             _requestBodies = requestBodies;
         }

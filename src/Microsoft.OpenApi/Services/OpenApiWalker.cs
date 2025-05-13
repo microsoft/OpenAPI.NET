@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits Webhooks and child objects
         /// </summary>
-        internal void Walk(Dictionary<string, IOpenApiPathItem>? webhooks)
+        internal void Walk(OrderedDictionary<string, IOpenApiPathItem>? webhooks)
         {
             if (webhooks == null)
             {
@@ -345,7 +345,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of extensions
+        /// Visits OrderedDictionary of extensions
         /// </summary>
         internal void Walk(IOpenApiExtensible? openApiExtensible)
         {
@@ -486,9 +486,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiServerVariable"/>
+        /// Visits OrderedDictionary of <see cref="OpenApiServerVariable"/>
         /// </summary>
-        internal void Walk(Dictionary<string, OpenApiServerVariable>? serverVariables)
+        internal void Walk(OrderedDictionary<string, OpenApiServerVariable>? serverVariables)
         {
             if (serverVariables == null)
             {
@@ -563,9 +563,9 @@ namespace Microsoft.OpenApi.Services
          }
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiOperation"/>
+        /// Visits OrderedDictionary of <see cref="OpenApiOperation"/>
         /// </summary>
-        internal void Walk(Dictionary<HttpMethod, OpenApiOperation>? operations)
+        internal void Walk(OrderedDictionary<HttpMethod, OpenApiOperation>? operations)
         {
             if (operations == null)
             {
@@ -745,9 +745,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiHeader"/>
+        /// Visits OrderedDictionary of <see cref="OpenApiHeader"/>
         /// </summary>
-        internal void Walk(Dictionary<string, IOpenApiHeader>? headers)
+        internal void Walk(OrderedDictionary<string, IOpenApiHeader>? headers)
         {
             if (headers == null)
             {
@@ -767,9 +767,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="IOpenApiCallback"/>
+        /// Visits OrderedDictionary of <see cref="IOpenApiCallback"/>
         /// </summary>
-        internal void Walk(Dictionary<string, IOpenApiCallback>? callbacks)
+        internal void Walk(OrderedDictionary<string, IOpenApiCallback>? callbacks)
         {
             if (callbacks == null)
             {
@@ -789,9 +789,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiMediaType"/>
+        /// Visits OrderedDictionary of <see cref="OpenApiMediaType"/>
         /// </summary>
-        internal void Walk(Dictionary<string, OpenApiMediaType>? content)
+        internal void Walk(OrderedDictionary<string, OpenApiMediaType>? content)
         {
             if (content == null)
             {
@@ -829,9 +829,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiEncoding"/>
+        /// Visits OrderedDictionary of <see cref="OpenApiEncoding"/>
         /// </summary>
-        internal void Walk(Dictionary<string, OpenApiEncoding>? encodings)
+        internal void Walk(OrderedDictionary<string, OpenApiEncoding>? encodings)
         {
             if (encodings == null)
             {
@@ -941,9 +941,9 @@ namespace Microsoft.OpenApi.Services
 
 
         /// <summary>
-        /// Visits dictionary of <see cref="IOpenApiExample"/>
+        /// Visits OrderedDictionary of <see cref="IOpenApiExample"/>
         /// </summary>
-        internal void Walk(Dictionary<string, IOpenApiExample>? examples)
+        internal void Walk(OrderedDictionary<string, IOpenApiExample>? examples)
         {
             if (examples == null)
             {
@@ -1066,9 +1066,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="IOpenApiLink"/> and child objects
+        /// Visits OrderedDictionary of <see cref="IOpenApiLink"/> and child objects
         /// </summary>
-        internal void Walk(Dictionary<string, IOpenApiLink>? links)
+        internal void Walk(OrderedDictionary<string, IOpenApiLink>? links)
         {
             if (links == null)
             {
@@ -1201,11 +1201,11 @@ namespace Microsoft.OpenApi.Services
                 case IOpenApiCallback e: Walk(e); break;
                 case OpenApiEncoding e: Walk(e); break;
                 case IOpenApiExample e: Walk(e); break;
-                case Dictionary<string, IOpenApiExample> e: Walk(e); break;
+                case OrderedDictionary<string, IOpenApiExample> e: Walk(e); break;
                 case OpenApiExternalDocs e: Walk(e); break;
                 case OpenApiHeader e: Walk(e); break;
                 case OpenApiLink e: Walk(e); break;
-                case Dictionary<string, IOpenApiLink> e: Walk(e); break;
+                case OrderedDictionary<string, IOpenApiLink> e: Walk(e); break;
                 case OpenApiMediaType e: Walk(e); break;
                 case OpenApiOAuthFlows e: Walk(e); break;
                 case OpenApiOAuthFlow e: Walk(e); break;

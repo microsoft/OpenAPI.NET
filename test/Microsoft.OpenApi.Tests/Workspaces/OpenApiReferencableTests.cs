@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiHeader _headerFragment = new()
         {
             Schema = new OpenApiSchema(),
-            Examples = new Dictionary<string, IOpenApiExample>
+            Examples = new OrderedDictionary<string, IOpenApiExample>
             {
                 { "example1", new OpenApiExample() }
             }
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiParameter _parameterFragment = new()
         {
             Schema = new OpenApiSchema(),
-            Examples = new Dictionary<string, IOpenApiExample>
+            Examples = new OrderedDictionary<string, IOpenApiExample>
             {
                 { "example1", new OpenApiExample() }
             }
@@ -37,11 +37,11 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiRequestBody _requestBodyFragment = new();
         private static readonly OpenApiResponse _responseFragment = new()
         {
-            Headers = new Dictionary<string, IOpenApiHeader>
+            Headers = new OrderedDictionary<string, IOpenApiHeader>
             {
                 { "header1", new OpenApiHeader() }
             },
-            Links = new Dictionary<string, IOpenApiLink>
+            Links = new OrderedDictionary<string, IOpenApiLink>
             {
                 { "link1", new OpenApiLink() }
             }

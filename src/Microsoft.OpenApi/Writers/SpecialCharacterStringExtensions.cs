@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Writers
 
         // Double-quoted strings are needed for these non-printable control characters.
         // http://www.yaml.org/spec/1.2/spec.html#style/flow/double-quoted
-        private static readonly Dictionary<char, string> _yamlControlCharacterCharReplacements = new()
+        private static readonly OrderedDictionary<char, string> _yamlControlCharacterCharReplacements = new()
         {
             {'\0', "\\0"},
             {'\x01', "\\x01"},
@@ -101,8 +101,8 @@ namespace Microsoft.OpenApi.Writers
             {'\x1f', "\\x1f"},
         };
         
-        private static readonly Dictionary<string, string> _yamlControlCharacterStringReplacements = _yamlControlCharacterCharReplacements
-            .ToDictionary(x => x.Key.ToString(), x => x.Value);
+        private static readonly OrderedDictionary<string, string> _yamlControlCharacterStringReplacements = _yamlControlCharacterCharReplacements
+            .ToOrderedDictionary(x => x.Key.ToString(), x => x.Value);
 
         /// <summary>
         /// Escapes all special characters and put the string in quotes if necessary to

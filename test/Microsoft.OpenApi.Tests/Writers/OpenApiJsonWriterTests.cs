@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesSimple()
         {
             return
-                from input in new Dictionary<string, object>[] {
+                from input in new OrderedDictionary<string, object>[] {
                     // Simple map
                     new() {
                         ["property1"] = "value1",
@@ -98,14 +98,14 @@ namespace Microsoft.OpenApi.Tests.Writers
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesComplex()
         {
             return
-                from input in new Dictionary<string, object>[] {
+                from input in new OrderedDictionary<string, object>[] {
                     // Empty map and empty list
                     new() {
-                        ["property1"] = new Dictionary<string, object>(),
+                        ["property1"] = new OrderedDictionary<string, object>(),
                         ["property2"] = new List<string>(),
                         ["property3"] = new List<object>
                         {
-                            new Dictionary<string, object>(),
+                            new OrderedDictionary<string, object>(),
                         },
                         ["property4"] = "value4"
                     },
@@ -134,12 +134,12 @@ namespace Microsoft.OpenApi.Tests.Writers
 
                     // Nested map
                     new() {
-                        ["property1"] = new Dictionary<string, object>
+                        ["property1"] = new OrderedDictionary<string, object>
                         {
                             ["innerProperty1"] = "innerValue1"
                         },
                         ["property2"] = "value2",
-                        ["property3"] = new Dictionary<string, object>
+                        ["property3"] = new OrderedDictionary<string, object>
                         {
                             ["innerProperty3"] = "innerValue3"
                         },
@@ -148,13 +148,13 @@ namespace Microsoft.OpenApi.Tests.Writers
 
                     // Nested map and list
                     new() {
-                        ["property1"] = new Dictionary<string, object>(),
+                        ["property1"] = new OrderedDictionary<string, object>(),
                         ["property2"] = new List<string>(),
                         ["property3"] = new List<object>
                         {
-                            new Dictionary<string, object>(),
+                            new OrderedDictionary<string, object>(),
                             "string1",
-                            new Dictionary<string, object>
+                            new OrderedDictionary<string, object>
                             {
                                 ["innerProperty1"] = new List<object>(),
                                 ["innerProperty2"] = "string2",
@@ -186,8 +186,8 @@ namespace Microsoft.OpenApi.Tests.Writers
                 writer.WriteValue(value);
             }
             else if (value.GetType().IsGenericType &&
-                (typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
-                    typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
+                (typeof(OrderedDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
+                    typeof(OrderedDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
             {
                 writer.WriteStartObject();
                 foreach (var elementValue in (dynamic)(value))
@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [MemberData(nameof(WriteMapAsJsonShouldMatchExpectedTestCasesSimple))]
         [MemberData(nameof(WriteMapAsJsonShouldMatchExpectedTestCasesComplex))]
-        public void WriteMapAsJsonShouldMatchExpected(Dictionary<string, object> inputMap, bool produceTerseOutput)
+        public void WriteMapAsJsonShouldMatchExpected(OrderedDictionary<string, object> inputMap, bool produceTerseOutput)
         {
             // Arrange
             using var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -332,7 +332,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var jsonString = schemaBuilder.ToString();
 
             // Assert
-            var exception = Record.Exception(() => System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString));
+            var exception = Record.Exception(() => System.Text.Json.JsonSerializer.Deserialize<OrderedDictionary<string, object>>(jsonString));
             Assert.Null(exception);
         }
     }

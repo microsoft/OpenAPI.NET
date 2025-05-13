@@ -294,7 +294,7 @@ namespace Microsoft.OpenApi.Reader.V2
             }
 
             // load examples from storage and add them to the parameter
-            var examples = node.Context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, parameter);
+            var examples = node.Context.GetFromTempStorage<OrderedDictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, parameter);
             if (examples != null)
             {
                 parameter.Examples = examples;

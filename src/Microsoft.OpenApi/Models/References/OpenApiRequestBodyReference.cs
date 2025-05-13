@@ -45,13 +45,13 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public OrderedDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
         public bool Required { get => Target?.Required ?? false; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiRequestBody CopyReferenceAsTargetElementWithOverrides(IOpenApiRequestBody source)

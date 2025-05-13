@@ -24,7 +24,7 @@ public interface IOpenApiLink : IOpenApiDescribedElement, IOpenApiReadOnlyExtens
     /// <summary>
     /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
     /// </summary>
-    public Dictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; }
+    public OrderedDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; }
 
     /// <summary>
     /// A literal value or {expression} to use as a request body when calling the target operation.

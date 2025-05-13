@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Implicit = new()
                         {
                             AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
-                            Scopes = new Dictionary<string, string>
+                            Scopes = new OrderedDictionary<string, string>
                             {
                                 ["write:pets"] = "modify pets in your account",
                                 ["read:pets"] = "read your pets"
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Password = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                            Scopes = new Dictionary<string, string>
+                            Scopes = new OrderedDictionary<string, string>
                             {
                                     ["write:pets"] = "modify pets in your account",
                                     ["read:pets"] = "read your pets"
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ClientCredentials = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                            Scopes = new Dictionary<string, string>
+                            Scopes = new OrderedDictionary<string, string>
                             {
                                     ["write:pets"] = "modify pets in your account",
                                     ["read:pets"] = "read your pets"
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                            Scopes = new Dictionary<string, string>
+                            Scopes = new OrderedDictionary<string, string>
                             {
                                     ["write:pets"] = "modify pets in your account",
                                     ["read:pets"] = "read your pets"

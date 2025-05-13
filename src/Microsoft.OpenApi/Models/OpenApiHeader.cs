@@ -47,13 +47,13 @@ namespace Microsoft.OpenApi.Models
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
+        public OrderedDictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
+        public OrderedDictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -75,9 +75,9 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = header.AllowReserved;
             Schema = header.Schema?.CreateShallowCopy();
             Example = header.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
-            Examples = header.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
-            Content = header.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
-            Extensions = header.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
+            Examples = header.Examples != null ? new OrderedDictionary<string, IOpenApiExample>(header.Examples) : null;
+            Content = header.Content != null ? new OrderedDictionary<string, OpenApiMediaType>(header.Content) : null;
+            Extensions = header.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Models
             Prefix = xml?.Prefix ?? Prefix;
             Attribute = xml?.Attribute ?? Attribute;
             Wrapped = xml?.Wrapped ?? Wrapped;
-            Extensions = xml?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(xml.Extensions) : null;
+            Extensions = xml?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(xml.Extensions) : null;
         }
 
         /// <summary>

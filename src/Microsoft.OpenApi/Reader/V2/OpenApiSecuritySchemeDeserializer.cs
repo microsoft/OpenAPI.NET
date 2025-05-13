@@ -92,8 +92,8 @@ namespace Microsoft.OpenApi.Reader.V2
                         {
                             _flow.Scopes = n.CreateSimpleMap(LoadString)
                                 .Where(kv => kv.Value != null)
-                                .ToDictionary(kv => kv.Key, kv => kv.Value!);
-                        } 
+                                .ToOrderedDictionary(kv => kv.Key, kv => kv.Value!);
+                        }
                     }
                 }
             };

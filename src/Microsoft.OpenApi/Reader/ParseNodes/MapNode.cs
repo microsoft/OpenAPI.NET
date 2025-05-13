@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             }
         }
 
-        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
+        public override OrderedDictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             var nodes = jsonMap.Select(
@@ -75,10 +75,10 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     };
                 });
 
-            return nodes.ToDictionary(k => k.key, v => v.value);
+            return nodes.ToOrderedDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
+        public override OrderedDictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             var nodes = jsonMap.Select(
@@ -99,10 +99,10 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                     }
                 });
 
-            return nodes.ToDictionary(k => k.key, v => v.value);
+            return nodes.ToOrderedDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, HashSet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
+        public override OrderedDictionary<string, HashSet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
 
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                 }
             });
 
-            return nodes.ToDictionary(kvp => kvp.key, kvp => kvp.values);
+            return nodes.ToOrderedDictionary(kvp => kvp.key, kvp => kvp.values);
         }
 
         public IEnumerator<PropertyNode> GetEnumerator()

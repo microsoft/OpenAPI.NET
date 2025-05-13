@@ -543,7 +543,7 @@ responses: { }";
             openApiDocument.AddComponent("UserSchema", new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new OrderedDictionary<string, IOpenApiSchema>
                 {
                     ["name"] = new OpenApiSchema
                     {

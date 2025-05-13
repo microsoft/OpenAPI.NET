@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Models
         public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
+        public OrderedDictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
 
         /// <inheritdoc/>
         public List<OpenApiServer>? Servers { get; set; }
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         public List<IOpenApiParameter>? Parameters { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Add one operation into this path item.
@@ -58,10 +58,10 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(pathItem);
             Summary = pathItem.Summary ?? Summary;
             Description = pathItem.Description ?? Description;
-            Operations = pathItem.Operations != null ? new Dictionary<HttpMethod, OpenApiOperation>(pathItem.Operations) : null;
+            Operations = pathItem.Operations != null ? new OrderedDictionary<HttpMethod, OpenApiOperation>(pathItem.Operations) : null;
             Servers = pathItem.Servers != null ? [.. pathItem.Servers] : null;
             Parameters = pathItem.Parameters != null ? [.. pathItem.Parameters] : null;
-            Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
+            Extensions = pathItem.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
         }
 
         /// <summary>

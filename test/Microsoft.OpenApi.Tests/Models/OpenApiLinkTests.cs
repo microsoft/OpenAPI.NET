@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiLink AdvancedLink => new()
         {
             OperationId = "operationId1",
-            Parameters = new Dictionary<string, RuntimeExpressionAnyWrapper>
+            Parameters = new OrderedDictionary<string, RuntimeExpressionAnyWrapper>
             {
                 ["parameter1"] = new()
                 {
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiLink ReferencedLink => new()
         {
             OperationId = "operationId1",
-            Parameters = new Dictionary<string, RuntimeExpressionAnyWrapper>
+            Parameters = new OrderedDictionary<string, RuntimeExpressionAnyWrapper>
             {
                 ["parameter1"] = new()
                 {

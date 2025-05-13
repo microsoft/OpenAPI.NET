@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiEncoding
                 {
                     ContentType = "image/png, image/jpeg",
-                    Headers = new Dictionary<string, IOpenApiHeader>
+                    Headers = new OrderedDictionary<string, IOpenApiHeader>
                     {
                         ["X-Rate-Limit-Limit"] =
                             new OpenApiHeader()

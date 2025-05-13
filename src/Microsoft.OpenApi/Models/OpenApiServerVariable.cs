@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Models
             Description = serverVariable?.Description;
             Default = serverVariable?.Default;
             Enum = serverVariable?.Enum != null ? new(serverVariable.Enum) : serverVariable?.Enum;
-            Extensions = serverVariable?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(serverVariable.Extensions) : serverVariable?.Extensions;
+            Extensions = serverVariable?.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(serverVariable.Extensions) : serverVariable?.Extensions;
         }
 
         /// <summary>

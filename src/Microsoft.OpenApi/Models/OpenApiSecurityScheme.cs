@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         public Uri? OpenIdConnectUrl { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
             BearerFormat = securityScheme.BearerFormat ?? BearerFormat;
             Flows = securityScheme.Flows != null ? new(securityScheme.Flows) : null;
             OpenIdConnectUrl = securityScheme.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
-            Extensions = securityScheme.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
+            Extensions = securityScheme.Extensions != null ? new OrderedDictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
         }
 
         /// <summary>

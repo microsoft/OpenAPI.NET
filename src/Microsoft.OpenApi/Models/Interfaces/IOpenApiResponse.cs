@@ -12,18 +12,18 @@ public interface IOpenApiResponse : IOpenApiDescribedElement, IOpenApiReadOnlyEx
     /// <summary>
     /// Maps a header name to its definition.
     /// </summary>
-    public Dictionary<string, IOpenApiHeader>? Headers { get; }
+    public OrderedDictionary<string, IOpenApiHeader>? Headers { get; }
 
     /// <summary>
     /// A map containing descriptions of potential response payloads.
     /// The key is a media type or media type range and the value describes it.
     /// </summary>
-    public Dictionary<string, OpenApiMediaType>? Content { get; }
+    public OrderedDictionary<string, OpenApiMediaType>? Content { get; }
 
     /// <summary>
     /// A map of operations links that can be followed from the response.
     /// The key of the map is a short name for the link,
     /// following the naming constraints of the names for Component Objects.
     /// </summary>
-    public Dictionary<string, IOpenApiLink>? Links { get; }
+    public OrderedDictionary<string, IOpenApiLink>? Links { get; }
 }

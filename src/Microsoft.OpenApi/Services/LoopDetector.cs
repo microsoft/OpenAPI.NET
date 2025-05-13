@@ -5,7 +5,7 @@ namespace Microsoft.OpenApi.Services
 {
     internal class LoopDetector
     {
-        private readonly Dictionary<Type, Stack<object>> _loopStacks = new();
+        private readonly OrderedDictionary<Type, Stack<object>> _loopStacks = new();
 
         /// <summary>
         /// Maintain history of traversals to avoid stack overflows from cycles
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// List of Loops detected
         /// </summary>
-        public Dictionary<Type, List<object>> Loops { get; } = new();
+        public OrderedDictionary<Type, List<object>> Loops { get; } = new();
 
         /// <summary>
         /// Reset loop tracking stack

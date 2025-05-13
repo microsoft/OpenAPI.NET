@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             Assert.Equivalent(new OpenApiSchema
             {
                 Required = new HashSet<string> { "id", "name" },
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new OrderedDictionary<string, IOpenApiSchema>
                 {
                     ["id"] = new OpenApiSchema
                     {

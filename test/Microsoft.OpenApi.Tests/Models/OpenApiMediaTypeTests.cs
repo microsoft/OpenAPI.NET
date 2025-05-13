@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiMediaType AdvanceMediaType = new()
             {
                 Example = 42,
-            Encoding = new Dictionary<string, OpenApiEncoding>
+            Encoding = new OrderedDictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
             }
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Encoding = new Dictionary<string, OpenApiEncoding>
+            Encoding = new OrderedDictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
             }
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiMediaType MediaTypeWithXmlExample = new()
         {
             Example = "<xml>123</xml>",
-            Encoding = new Dictionary<string, OpenApiEncoding>
+            Encoding = new OrderedDictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
             }
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithObjectExamples = new()
         {
-            Examples = new Dictionary<string, IOpenApiExample>
+            Examples = new OrderedDictionary<string, IOpenApiExample>
             {
                 ["object1"] = new OpenApiExample()
                 {
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Encoding = new Dictionary<string, OpenApiEncoding>
+            Encoding = new OrderedDictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
             }
@@ -435,8 +435,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var clone = new OpenApiMediaType(MediaTypeWithObjectExamples)
             {
                 Example = 42,
-                Examples = new Dictionary<string, IOpenApiExample>(),
-                Encoding = new Dictionary<string, OpenApiEncoding>(),
+                Examples = new OrderedDictionary<string, IOpenApiExample>(),
+                Encoding = new OrderedDictionary<string, OpenApiEncoding>(),
                 Extensions = new()
             };
 

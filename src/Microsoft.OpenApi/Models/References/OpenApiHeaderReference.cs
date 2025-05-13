@@ -68,13 +68,13 @@ namespace Microsoft.OpenApi.Models.References
         public JsonNode? Example { get => Target?.Example; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
+        public OrderedDictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public OrderedDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public OrderedDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader source)

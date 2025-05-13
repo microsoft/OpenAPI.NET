@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
-                            Metadata = new Dictionary<string, object> { { "key1", "value" } }
+                            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } }
                         }
                     }
                 },
@@ -52,10 +52,10 @@ namespace Microsoft.OpenApi.Tests.Models
                         ["property1"] = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.String,
-                            Metadata = new Dictionary<string, object> { { "key1", "value" } }
+                            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } }
                         }
                     },
-                    Metadata = new Dictionary<string, object> { { "key1", "value" } },
+                    Metadata = new OrderedDictionary<string, object> { { "key1", "value" } },
                 },
                 ["schema2"] = new OpenApiSchema()
                 {
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Metadata = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } },
             Components = TopLevelReferencingComponents
         };
 
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Metadata = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponentsWithOtherProperties
         };
 
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Version = "1.0.0"
             },
-            Metadata = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } },
             Components = TopLevelSelfReferencingComponents
         };
 
@@ -485,7 +485,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Metadata = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponentsWithReference
         };
 
@@ -861,7 +861,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Metadata = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -872,7 +872,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Title = "Webhook Example",
                 Version = "1.0.0"
             },
-            Webhooks = new Dictionary<string, IOpenApiPathItem>
+            Webhooks = new OrderedDictionary<string, IOpenApiPathItem>
             {
                 ["newPet"] = new OpenApiPathItem
                 {
@@ -933,7 +933,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static readonly OpenApiDocument DuplicateExtensions = new OpenApiDocument
+        public static OpenApiDocument DuplicateExtensions() => new OpenApiDocument
         {
             Info = new OpenApiInfo
             {
@@ -1020,7 +1020,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Metadata = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1050,7 +1050,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 new()
                 {
                     Url = "https://{endpoint}/openai",
-                    Variables = new Dictionary<string, OpenApiServerVariable>
+                    Variables = new OrderedDictionary<string, OpenApiServerVariable>
                     {
                         ["endpoint"] = new()
                         {
@@ -1320,7 +1320,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Metadata = new Dictionary<string, object> { { "key1", "value" } },
+            Metadata = new OrderedDictionary<string, object> { { "key1", "value" } },
             Components = AdvancedComponents
         };
 
@@ -1402,7 +1402,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            DuplicateExtensions.SerializeAsV3(writer);
+            var doc = DuplicateExtensions();
+            doc.SerializeAsV3(writer);
             await writer.FlushAsync();
 
             // Assert
@@ -1419,7 +1420,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            DuplicateExtensions.SerializeAsV2(writer);
+            var doc = DuplicateExtensions();
+            doc.SerializeAsV2(writer);
             await writer.FlushAsync();
 
             // Assert
