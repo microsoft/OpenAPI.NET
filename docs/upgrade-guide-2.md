@@ -543,9 +543,22 @@ var schema = new OpenApiSchema
 }
 
 // v2.0
+// bitwise OR(|) - combines flags to allow multiple types
 var schema = new OpenApiSchema
 {
-    Type = JsonSchemaType.String | JsonSchemaType.Null
+    Type = JsonSchemaType.String | JsonSchemaType.Null 
+}
+
+// bitwise NOT(~) - inverts bits; filters out null flag
+var schema = new OpenApiSchema
+{
+    Type = JsonSchemaType.String & ~JsonSchemaType.Null
+}
+
+// bitwise AND(&) - intersects flags to check for a specific type
+var schema = new OpenApiSchema
+{
+    Type = (JsonSchemaType.String & JsonSchemaType.Null) == JsonSchemaType.Null 
 }
 
 ```
