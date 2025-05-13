@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0-preview.18](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.17...v2.0.0-preview.18) (2025-05-13)
+
+
+### Features
+
+* upgrades openapi.net.odata and apimanifest to the latest version ([80844a6](https://github.com/microsoft/OpenAPI.NET/commit/80844a60ae50ba0a4d54d7dd2e45ce8360206bf5))
+* upgrades openapi.net.odata and apimanifest to the latest version ([938a2e0](https://github.com/microsoft/OpenAPI.NET/commit/938a2e07b40b082e01ed1cdf3244767cbdca4061))
+
+
+### Bug Fixes
+
+* avoid calling virtual members in constructor ([5835057](https://github.com/microsoft/OpenAPI.NET/commit/5835057a7e905e371f859e727ddaf65ec08c6db0))
+* Fix typo in error message ([#2345](https://github.com/microsoft/OpenAPI.NET/issues/2345)) ([3f8b2b9](https://github.com/microsoft/OpenAPI.NET/commit/3f8b2b99c07bd3c58825728c2dd2ffed91d88fbe))
+* handle deserializing and writing empty security requirements [#1426](https://github.com/microsoft/OpenAPI.NET/issues/1426) ([#2323](https://github.com/microsoft/OpenAPI.NET/issues/2323)) ([962e0e4](https://github.com/microsoft/OpenAPI.NET/commit/962e0e436f96b1b68613013d75307dc1f92ce15c))
+* normalized override implementation for parameter types serialization in v2 ([5930916](https://github.com/microsoft/OpenAPI.NET/commit/593091621926defcbc2727a922613e34557d882a))
+
 ## [2.0.0-preview.17](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.16...v2.0.0-preview.17) (2025-04-16)
 
 
