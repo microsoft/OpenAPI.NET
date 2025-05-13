@@ -56,5 +56,13 @@
     </None>
       
     <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />
+      
+    <None Update="Models\Samples\docWithoutOperationSecurity.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+      
+    <None Update="Models\Samples\docWithEmptyOperationSecurity.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

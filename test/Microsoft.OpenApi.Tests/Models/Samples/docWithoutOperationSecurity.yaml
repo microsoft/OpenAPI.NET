@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: Repair Service
+  version: 1.0.0
+servers:
+  - url: https://pluginrentu.azurewebsites.net/api
+paths:
+  /repairs:
+    get:
+      operationId: listRepairs
+      summary: List all repairs
+      description: Returns a list of repairs with their details and images
+      responses:
+        '200':
+          description: A list of repairs
+          content:
+            application/json:
+              schema:
+                type: object

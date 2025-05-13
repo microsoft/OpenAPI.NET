@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
-using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
 
@@ -2177,7 +2176,7 @@ components:
         }
 
         [Fact]
-        public async Task SerializeDocWithSecuritySchemeWithInlineRefererencesWorks()
+        public async Task SerializeDocWithSecuritySchemeWithInlineReferencesWorks()
         {
             var expected = @"openapi: 3.0.4
 info:
@@ -2217,6 +2216,76 @@ components:
             doc.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
             var actual = stringWriter.ToString();
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
+        
+        [Fact]
+        public async Task SerializeDocWithoutOperationSecurityWorks()
+        {
+            var expected = """
+                           openapi: 3.0.4
+                           info:
+                             title: Repair Service
+                             version: 1.0.0
+                           servers:
+                             - url: https://pluginrentu.azurewebsites.net/api
+                           paths:
+                             /repairs:
+                               get:
+                                 summary: List all repairs
+                                 description: Returns a list of repairs with their details and images
+                                 operationId: listRepairs
+                                 responses:
+                                   '200':
+                                     description: A list of repairs
+                                     content:
+                                       application/json:
+                                         schema:
+                                           type: object
+                           """;
+
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithoutOperationSecurity.yaml", SettingsFixture.ReaderSettings)).Document;
+            var stringWriter = new StringWriter();
+            doc!.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
+            var actual = stringWriter.ToString();
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+            var actualOperation = doc.Paths["/repairs"]!.Operations![HttpMethod.Get];
+            Assert.Null(actualOperation.Security);
+        }
+        
+        [Fact]
+        public async Task SerializeDocWithEmptyOperationSecurityWorks()
+        {
+            var expected = """
+                           openapi: 3.0.4
+                           info:
+                             title: Repair Service
+                             version: 1.0.0
+                           servers:
+                             - url: https://pluginrentu.azurewebsites.net/api
+                           paths:
+                             /repairs:
+                               get:
+                                 summary: List all repairs
+                                 description: Returns a list of repairs with their details and images
+                                 operationId: listRepairs
+                                 responses:
+                                   '200':
+                                     description: A list of repairs
+                                     content:
+                                       application/json:
+                                         schema:
+                                           type: object
+                                 security: [ ]
+                           """;
+
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithEmptyOperationSecurity.yaml", SettingsFixture.ReaderSettings)).Document;
+            var stringWriter = new StringWriter();
+            doc!.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
+            var actual = stringWriter.ToString();
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+            var actualOperation = doc.Paths["/repairs"]!.Operations![HttpMethod.Get];
+            Assert.NotNull(actualOperation.Security);
+            Assert.Empty(actualOperation.Security);
         }
     }
 }
