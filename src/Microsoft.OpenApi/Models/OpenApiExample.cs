@@ -50,13 +50,13 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
         }
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0);
         }

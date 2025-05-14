@@ -322,13 +322,13 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <inheritdoc />
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <inheritdoc />
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
@@ -489,7 +489,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
 
             // xml
-            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, callback);
 
             // externalDocs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
@@ -513,7 +513,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <inheritdoc />
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }

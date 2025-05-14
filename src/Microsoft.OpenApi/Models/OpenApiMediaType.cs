@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.1.
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w));
         }
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
         }
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Models
             // examples
             if (Examples != null && Examples.Any())
             {
-                SerializeExamples(writer, Examples);
+                SerializeExamples(writer, Examples, callback);
             }
 
             // encoding
@@ -114,12 +114,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v2.0.
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             // Media type does not exist in V2.
         }
 
-        private static void SerializeExamples(IOpenApiWriter writer, Dictionary<string, IOpenApiExample> examples)
+        private static void SerializeExamples(IOpenApiWriter writer, Dictionary<string, IOpenApiExample> examples, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             /* Special case for writing out empty arrays as valid response examples
             * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                writer.WriteOptionalMap(OpenApiConstants.Examples, examples, (w, e) => e.SerializeAsV3(w));
+                writer.WriteOptionalMap(OpenApiConstants.Examples, examples, callback);
             }
         }
     }
