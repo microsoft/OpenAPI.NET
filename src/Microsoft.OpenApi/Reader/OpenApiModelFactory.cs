@@ -241,11 +241,10 @@ namespace Microsoft.OpenApi.Reader
         {
             settings ??= DefaultReaderSettings.Value;
             var reader = settings.GetReader(format);
-            var location = new Uri(OpenApiConstants.BaseRegistryUri);
-            if (input is FileStream fileStream)
-            {
-                location = new Uri(fileStream.Name);
-            }
+            var location =
+                        settings.BaseUrl ??
+                        (input is FileStream fileStream ? new Uri(fileStream.Name) : null) ??
+                        new Uri(OpenApiConstants.BaseRegistryUri);
 
             var readResult = await reader.ReadAsync(input, location, settings, cancellationToken).ConfigureAwait(false);
 
@@ -290,7 +289,7 @@ namespace Microsoft.OpenApi.Reader
             return readResult;
         }
 
-      private static async Task<(Stream, string?)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
+        private static async Task<(Stream, string?)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -308,8 +307,8 @@ namespace Microsoft.OpenApi.Reader
                     var mediaType = response.Content.Headers.ContentType?.MediaType;
                     var contentType = mediaType?.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
                     format = contentType?.Split('/').Last().Split('+').Last().Split('-').Last();
-                    
-                  // for non-standard MIME types e.g. text/x-yaml used in older libs or apps
+
+                    // for non-standard MIME types e.g. text/x-yaml used in older libs or apps
 #if NETSTANDARD2_0
                     stream = await response.Content.ReadAsStreamAsync();
 #else
