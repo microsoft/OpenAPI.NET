@@ -158,7 +158,23 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateReferences()
         {
-            var baseSchema = new OpenApiSchema();
+            var baseSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new()
+                {
+                    ["type"] = new OpenApiSchema() { Type = JsonSchemaType.String }
+                },
+                Required = new HashSet<string> { "type" },
+                Discriminator = new OpenApiDiscriminator
+                {
+                    PropertyName = "type",
+                    Mapping = new Dictionary<string, OpenApiSchemaReference>
+                    {
+                        ["derived"] = new OpenApiSchemaReference("derived")
+                    }
+                }
+            };
 
             var derivedSchema = new OpenApiSchema
             {
@@ -229,7 +245,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "referenceAt: #/paths/~1/get/responses/200/headers/test-header",
                 "referenceAt: #/components/schemas/derived/anyOf/0",
                 "referenceAt: #/components/securitySchemes/test-secScheme",
-                "referenceAt: #/components/headers/test-header/schema"
+                "referenceAt: #/components/headers/test-header/schema",
+                "referenceAt: #/components/schemas/base/discriminator/mapping/derived",
             }, locator.Locations.Where(l => l.StartsWith("referenceAt:", StringComparison.OrdinalIgnoreCase)));
         }
     }

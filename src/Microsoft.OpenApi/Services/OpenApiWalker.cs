@@ -932,11 +932,34 @@ namespace Microsoft.OpenApi.Services
                 Walk("additionalProperties", () => Walk(schema.AdditionalProperties));
             }
 
+            Walk("discriminator", () => Walk(schema.Discriminator));
+
             Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.ExternalDocs));
 
             Walk(schema as IOpenApiExtensible);
 
             _schemaLoop.Pop();
+        }
+
+        internal void Walk(OpenApiDiscriminator? openApiDiscriminator)
+        {
+            if (openApiDiscriminator == null)
+            {
+                return;
+            }
+
+            _visitor.Visit(openApiDiscriminator);
+
+            if (openApiDiscriminator.Mapping != null)
+            {
+                Walk("mapping", () =>
+                {
+                    foreach (var item in openApiDiscriminator.Mapping)
+                    {
+                        Walk(item.Key, () => Walk((IOpenApiSchema)item.Value));
+                    }
+                });
+            }
         }
 
 
@@ -1215,6 +1238,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiRequestBody e: Walk(e); break;
                 case OpenApiResponse e: Walk(e); break;
                 case OpenApiSchema e: Walk(e); break;
+                case OpenApiDiscriminator e: Walk(e); break;
                 case OpenApiSecurityRequirement e: Walk(e); break;
                 case OpenApiSecurityScheme e: Walk(e); break;
                 case OpenApiServer e: Walk(e); break;
