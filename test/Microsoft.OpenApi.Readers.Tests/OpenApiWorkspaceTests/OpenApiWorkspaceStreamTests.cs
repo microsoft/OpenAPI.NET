@@ -82,7 +82,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             var settings = new OpenApiReaderSettings()
             {
                 LoadExternalRefs = true,
-                BaseUrl = new Uri("file://")
             };
             settings.AddYamlReader();
 
