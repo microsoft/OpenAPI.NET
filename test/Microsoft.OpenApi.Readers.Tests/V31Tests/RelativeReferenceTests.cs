@@ -198,7 +198,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings)).Document;
             var schema = actual.Components.Schemas["a"].Properties["b"].Properties["c"].Properties["b"];
             schema.SerializeAsV31(writer);
-            var content = stringWriter.ToString();
 
             // Assert
             Assert.Equal(JsonSchemaType.Object | JsonSchemaType.Null, schema.Type);
