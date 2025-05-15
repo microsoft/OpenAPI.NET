@@ -242,8 +242,8 @@ namespace Microsoft.OpenApi.Reader
             settings ??= DefaultReaderSettings.Value;
             var reader = settings.GetReader(format);
             var location =
-                        settings.BaseUrl ??
                         (input is FileStream fileStream ? new Uri(fileStream.Name) : null) ??
+                        settings.BaseUrl ??
                         new Uri(OpenApiConstants.BaseRegistryUri);
 
             var readResult = await reader.ReadAsync(input, location, settings, cancellationToken).ConfigureAwait(false);
