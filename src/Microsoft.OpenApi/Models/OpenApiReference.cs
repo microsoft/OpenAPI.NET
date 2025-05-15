@@ -73,6 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiDocument? HostDocument { get => hostDocument; init => hostDocument = value; }
 
+        private string? _referenceV3;
         /// <summary>
         /// Gets the full reference string for v3.0.
         /// </summary>
@@ -80,9 +81,14 @@ namespace Microsoft.OpenApi.Models
         {
             get
             {
+                if (!string.IsNullOrEmpty(_referenceV3))
+                {
+                    return _referenceV3;
+                }
+
                 if (IsExternal)
                 {
-                    return GetExternalReferenceV3();
+                    return _referenceV3 = GetExternalReferenceV3();
                 }
 
                 if (Type == ReferenceType.Tag)
@@ -100,7 +106,14 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/components/" + Type.GetDisplayName() + "/" + Id;
+                return _referenceV3 = "#/components/" + Type.GetDisplayName() + "/" + Id;
+            }
+            set 
+            { 
+                if (value is not null)
+                {
+                    _referenceV3 = value;
+                }               
             }
         }
 
@@ -297,6 +310,16 @@ namespace Microsoft.OpenApi.Models
             if (!string.IsNullOrEmpty(summary))
             {
                 Summary = summary;
+            }
+        }
+
+        internal void SetJsonPointerPath(string pointer)
+        {
+            // Eg of an internal subcomponent's JSONPath: #/components/schemas/person/properties/address
+            if ((pointer.Contains("#") || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase)) 
+                && !string.IsNullOrEmpty(ReferenceV3) && !ReferenceV3!.Equals(pointer, StringComparison.OrdinalIgnoreCase))
+            {
+                ReferenceV3 = pointer;
             }
         }
     }

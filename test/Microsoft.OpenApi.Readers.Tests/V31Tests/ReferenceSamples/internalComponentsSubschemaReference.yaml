@@ -21,8 +21,24 @@ paths:
                 application/json:
                   schema:
                     $ref: '#/components/schemas/person/properties/address'
+    /human:
+        get:
+          responses:
+            200:
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/human/allOf/0'
 components:
   schemas:
+      human:
+         allOf:
+         - $ref: '#/components/schemas/person/items'
+         - type: object
+           properties:
+             name:
+               type: string
       person:
         type: object
         properties:
@@ -35,3 +51,5 @@ components:
                         type: string
                     city:
                         type: string
+        items:
+            type: integer

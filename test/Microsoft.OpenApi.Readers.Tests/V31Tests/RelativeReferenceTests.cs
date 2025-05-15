@@ -137,6 +137,42 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         }
 
         [Fact]
+        public async Task ParseInternalComponentSubschemaJsonSchemaReferenceWorks()
+        {
+            // Arrange
+            var filePath = Path.Combine(SampleFolderPath, "internalComponentsSubschemaReference.yaml");
+
+            // Act
+            var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings)).Document;
+            var addressSchema = actual.Paths["/person/{id}/address"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+            var itemsSchema = actual.Paths["/human"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+
+            // Assert
+            Assert.Equal(JsonSchemaType.Object, addressSchema.Type);
+            Assert.Equal(JsonSchemaType.Integer, itemsSchema.Type);
+        }
+
+        [Fact]
+        public async Task ParseExternalComponentSubschemaJsonSchemaReferenceWorks()
+        {
+            // Arrange
+            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+            var settings = new OpenApiReaderSettings
+            {
+                LoadExternalRefs = true,
+                BaseUrl = new(path),
+            };
+            settings.AddYamlReader();
+
+            // Act
+            var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalComponentSubschemaReference.yaml"), settings)).Document;
+            var schema = actual.Paths["/person/{id}"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+
+            // Assert
+            Assert.Equal(JsonSchemaType.Object, schema.Type);
+        }
+
+        [Fact]
         public async Task ParseReferenceToInternalComponentUsingDollarIdWorks()
         {
             // Arrange
@@ -148,6 +184,24 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             Assert.Equal(JsonSchemaType.Object, schema.Type);
+        }
+
+        [Fact]
+        public async Task ParseLocalReferenceToJsonSchemaResourceWorks()
+        {
+            // Arrange
+            var filePath = Path.Combine(SampleFolderPath, "localReferenceToJsonSchemaResource.yaml");
+            var stringWriter = new StringWriter();
+            var writer = new OpenApiYamlWriter(stringWriter);
+
+            // Act
+            var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings)).Document;
+            var schema = actual.Components.Schemas["a"].Properties["b"].Properties["c"].Properties["b"];
+            schema.SerializeAsV31(writer);
+            var content = stringWriter.ToString();
+
+            // Assert
+            Assert.Equal(JsonSchemaType.Object | JsonSchemaType.Null, schema.Type);
         }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
@@ -370,8 +370,9 @@ namespace Microsoft.OpenApi.Reader.V31
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
                 result.Reference.SetSummaryAndDescriptionFromMapNode(mapNode);
+                result.Reference.SetJsonPointerPath(pointer);
                 return result;
-            }
+            }            
 
             var schema = new OpenApiSchema();
 
@@ -400,7 +401,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             if (identifier is not null && hostDocument.Workspace is not null)
             {
-                // register the schema in our registry using the identifer's URL
+                // register the schema in our registry using the identifier's URL
                 hostDocument.Workspace.RegisterComponentForDocument(hostDocument, schema, identifier);
             }
 
