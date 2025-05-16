@@ -765,7 +765,6 @@ namespace Microsoft.OpenApi.Models
             }
             else if (!HasMultipleTypes(type.Value))
             {
-
                 switch (version)
                 {
                     case OpenApiSpecVersion.OpenApi3_1 when isNullable:
@@ -773,7 +772,6 @@ namespace Microsoft.OpenApi.Models
                         break;
                     case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value == JsonSchemaType.Null:
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.ToFirstIdentifier());
                         break;
                     case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value != JsonSchemaType.Null:
                         writer.WriteProperty(OpenApiConstants.Nullable, true);

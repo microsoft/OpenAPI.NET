@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 "type",
                 (o, n, _) => {
                     var type = n.GetScalarValue()?.ToJsonSchemaType();
-                    // so we don't loose the value from nullable
+                    // so we don't lose the value from nullable
                     if (o.Type.HasValue)
                         o.Type |= type;
                     else
