@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.0-preview.19](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.18...v2.0.0-preview.19) (2025-05-16)
+
+
+### Bug Fixes
+
+* base url should be read from the settings when available ([f5d6e81](https://github.com/microsoft/OpenAPI.NET/commit/f5d6e81c21fd18b6de0fb19b535ad6dbc187790d))
+* base url should be read from the settings when available ([b17b7d8](https://github.com/microsoft/OpenAPI.NET/commit/b17b7d8d25fdf9a767411481287aacee31434aaa))
+* discriminator mapping references don't get a document when created from DOM ([767d3fb](https://github.com/microsoft/OpenAPI.NET/commit/767d3fb163b273b275cd67d710c573c59e4e642b))
+* discriminator mapping references don't get a document when created from DOM ([fdfe002](https://github.com/microsoft/OpenAPI.NET/commit/fdfe002d551fc3feaaeb5af24042826f13bdf412))
+
 ## [2.0.0-preview.18](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.17...v2.0.0-preview.18) (2025-05-13)
 
 
