@@ -362,9 +362,9 @@ public class OpenApiSchema : IMetadataContainer, IOpenApiExtensible, IOpenApiRef
 There are a number of new features in OpenAPI v3.1 that are now supported in OpenAPI.NET.
 
 ### JsonSchema Dialect and BaseUri in OpenApiDocument
-To enable full compatibility with JSON Schema, the OpenApiDocument class now supports a jsonSchemaDialect property. This property specifies the JSON Schema dialect used throughout the document, using a URI. By explicitly declaring the dialect, tooling can be directed to use a JSON Schema version other than the default [2020-12 draft](https://json-schema.org/draft/2020-12/json-schema-core.html).  However, OpenAPI.NET does not guarantee compatibility with versions other than 2020-12.
+To enable full compatibility with JSON Schema, the `OpenApiDocument` class now supports a `JsonSchemaDialect` property. This property specifies the JSON Schema dialect used throughout the document, using a URI. By explicitly declaring the dialect, tooling can be directed to use a JSON Schema version other than the default [2020-12 draft](https://json-schema.org/draft/2020-12/json-schema-core.html).  However, OpenAPI.NET does not guarantee compatibility with versions other than 2020-12.
 
-In addition, a BaseUri property has been added to represent the identity of the OpenAPI document. If the document’s identity is not provided or cannot be determined at based on its location, this property will be set to a generated placeholder URI.
+In addition, a `BaseUri` property has been added to represent the identity of the OpenAPI document. If the document’s identity is not provided or cannot be determined at based on its location, this property will be set to a generated placeholder URI.
 
 ```csharp
 /// <summary>
@@ -517,7 +517,7 @@ string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiConstan
 
 ### Use OpenApiConstants string Instead of OpenApiFormat Enum
 
-OpenApiConstants are now used instead of OpenApiFormat enums.
+`OpenApiConstants` are now used instead the `OpenApiFormat` enumeration.
 
 **Example:**
 
@@ -531,7 +531,7 @@ var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, Open
 
 ### OpenApiSchema's Type property is now a flaggable enum
 
-In v2.0, the Type property in OpenApiSchema is now defined as a flaggable enum, allowing consumers to swap nullable for type arrays.
+In v2.0, the Type property in `OpenApiSchema` is now defined as a flaggable enum, allowing consumers to swap nullable for type arrays.
 
 **Example:**
 ```csharp
@@ -581,7 +581,7 @@ document.AddComponent<T>(string id, T componentToRegister);
 The following structural improvements have been made to the OpenAPI model layer to enhance type safety, extensibility, and maintainability:
 
 1. Model Interfaces Introduced:
-Each model now has a corresponding interface (e.g., IOpenApiSchema for OpenApiSchema). This allows for better abstraction and testing support, while also simplifying cross-cutting concerns like serialization.
+Each model now has a corresponding interface (e.g., `IOpenApiSchema` for `OpenApiSchema`). This allows for better abstraction and testing support, while also simplifying cross-cutting concerns like serialization.
 
 2. Models as Reference Types:
 All models are now implemented as reference types to ensure consistent identity semantics, especially when managing circular references or shared definitions.
@@ -590,13 +590,13 @@ All models are now implemented as reference types to ensure consistent identity 
 A standardized pattern has been introduced for casting model instances to specific types safely and predictably, reducing the risk of invalid casts or reflection-based logic.
 
 4. Removed Reference Fields from Base Models:
-Fields like Reference that were previously defined on base model types have been removed. Models that support referencing now handle this behavior explicitly via composition rather than inheritance.
+Properties like `Reference` that were previously defined on base model types have been removed. Models that support referencing now handle this behavior explicitly via composition rather than inheritance.
 
 5. New Target and RecursiveTarget Properties:
-A Target property that points to the actual resolved model instance as well as a RecursiveTarget property that handles recursive references and supports advanced dereferencing logic have been introduced.
+A `Target` property that points to the actual resolved model instance as well as a `RecursiveTarget` property that handles recursive references and supports advanced dereferencing logic have been introduced.
 
 6. Removed OpenApiReferenceResolver:
-This resolver class has been removed in favor of a more streamlined resolution model using the Target and RecursiveTarget properties along with updated reader/serializer pipelines.
+This resolver class has been removed in favor of a more streamlined resolution model using the `Target` and `RecursiveTarget` properties along with updated reader/serializer pipelines.
 
 ### Visitor and Validator now pass an interface model
 
@@ -611,11 +611,11 @@ public override void Visit(IOpenApiParameter parameter){}
 
 ### Cleaned up the IEffective/GetEffective infrastructure
 
-All the IEffective and GetEffective methods in the models have been removed as we've implemented lazy reference resolution using the proxy design.
+All the `IEffective` and `GetEffective` infrastructure in the models have been removed as we've implemented lazy reference resolution using the proxy design.
 
 ### Shallow Copy in place of copy constructors
 
-Copy constructors for referenceable components have been made internal, a new *CreateShallowCopy()* method has been exposed on these models to facilitate cloning.
+Copy constructors for referenceable components have been made internal, a new `CreateShallowCopy()` method has been exposed on these models to facilitate cloning.
 
 **Example:**
 ```csharp
@@ -629,7 +629,7 @@ The redundant _style property on the Parameter model has been removed to simplif
 
 ### Discriminator now use References
 
-Discriminator mappings have been updated from using a Dictionary<string, string> to a Dictionary<string, OpenApiSchemaReference>. This change improves the handling of discriminator mappings by referencing OpenAPI schema components more explicitly, which enhances schema resolution.
+Discriminator mappings have been updated from using a `Dictionary<string, string>` to a `Dictionary<string, OpenApiSchemaReference>`. This change improves the handling of discriminator mappings by referencing OpenAPI schema components more explicitly, which enhances schema resolution.
 
 **Example:**
 ```csharp
