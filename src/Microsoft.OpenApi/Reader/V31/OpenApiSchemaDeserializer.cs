@@ -363,14 +363,16 @@ namespace Microsoft.OpenApi.Reader.V31
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 
             var pointer = mapNode.GetReferencePointer();
+            var identifier = mapNode.GetJsonSchemaIdentifier();
 
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
                 result.Reference.SetSummaryAndDescriptionFromMapNode(mapNode);
+                result.Reference.SetJsonPointerPath(pointer);
                 return result;
-            }
+            }            
 
             var schema = new OpenApiSchema();
 
@@ -395,6 +397,12 @@ namespace Microsoft.OpenApi.Reader.V31
                 var type = schema.Type;
                 schema.Type = type | JsonSchemaType.Null;
                 schema.Extensions.Remove(OpenApiConstants.NullableExtension);
+            }
+
+            if (identifier is not null && hostDocument.Workspace is not null)
+            {
+                // register the schema in our registry using the identifier's URL
+                hostDocument.Workspace.RegisterComponentForDocument(hostDocument, schema, identifier);
             }
 
             return schema;

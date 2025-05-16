@@ -1,0 +1,18 @@
+openapi: 3.1.0
+info:
+    title: OpenAPI document containing reusable components
+    version: 1.0.0
+components:
+  schemas:
+      person:
+        type: object
+        properties:
+            name:
+                type: string
+            address:
+                type: object
+                properties:
+                    street:
+                        type: string
+                    city:
+                        type: string

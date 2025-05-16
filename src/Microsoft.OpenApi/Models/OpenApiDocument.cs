@@ -587,7 +587,26 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                string relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
+                string relativePath;
+
+                if (!string.IsNullOrEmpty(reference.ReferenceV3) && IsSubComponent(reference.ReferenceV3!))
+                {
+                    // Enables setting the complete JSON path for nested subschemas e.g. #/components/schemas/person/properties/address
+                    if (useExternal)
+                    {
+                        var relPathSegment = reference.ReferenceV3!.Split('#')[1];
+                        relativePath = $"#{relPathSegment}";
+                    }
+                    else
+                    {
+                        relativePath = reference.ReferenceV3!;
+                    }
+                }
+                else
+                {
+                    relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
+                }
+
                 Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource) : null;
 
                 uriLocation = useExternal && externalResourceUri is not null
@@ -595,7 +614,30 @@ namespace Microsoft.OpenApi.Models
                     : BaseUri + relativePath;
             }
 
+            if (reference.Type is ReferenceType.Schema && !uriLocation.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                return Workspace?.ResolveJsonSchemaReference(new Uri(uriLocation).AbsoluteUri);
+            }
+
             return Workspace?.ResolveReference<IOpenApiReferenceable>(new Uri(uriLocation).AbsoluteUri);
+        }
+
+        private static bool IsSubComponent(string reference)
+        {
+            // Normalize fragment part only
+            var parts = reference.Split('#');
+            var fragment = parts.Length > 1 ? parts[1] : string.Empty;
+
+            if (fragment.StartsWith("/components/schemas/", StringComparison.OrdinalIgnoreCase))
+            {
+                var segments = fragment.Split('/');
+
+                // Expect exactly 4 segments for root-level schema: ["", "components", "schemas", "person"]
+                // Anything longer means it's a subcomponent.
+                return segments.Length > 4;
+            }
+
+            return false;
         }
 
         /// <summary>
