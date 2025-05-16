@@ -514,7 +514,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ExternalDocumentDereferenceToOpenApiDocumentUsingJsonPointerWorks()
         {
             // Arrange
-            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+            var documentName = "externalRefByJsonPointer.yaml";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath, documentName);
 
             var settings = new OpenApiReaderSettings
             {
@@ -524,7 +525,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             settings.AddYamlReader();
 
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefByJsonPointer.yaml"), settings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, documentName), settings);
             var responseSchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
 
             // Assert

@@ -78,11 +78,10 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             var sampleFolderPath = $"V3Tests/Samples/OpenApiWorkspace/ExternalReferencesInSubDirectories";
             var referenceBaseUri = "file://" + Path.GetFullPath(sampleFolderPath);
 
-            // Create a reader that will resolve all references also of documentes located in the non-root directory
+            // Create a reader that will resolve all references also of documents located in the non-root directory
             var settings = new OpenApiReaderSettings()
             {
                 LoadExternalRefs = true,
-                BaseUrl = new Uri("file://")
             };
             settings.AddYamlReader();
 
