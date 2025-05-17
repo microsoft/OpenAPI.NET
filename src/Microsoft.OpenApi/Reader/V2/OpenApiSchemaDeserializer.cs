@@ -271,6 +271,16 @@ namespace Microsoft.OpenApi.Reader.V2
                 propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
             }
 
+            if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+            {
+                if (schema.Type.HasValue)
+                    schema.Type |= JsonSchemaType.Null;
+                else
+                    schema.Type = JsonSchemaType.Null;
+
+                schema.Extensions.Remove(OpenApiConstants.NullableExtension);
+            }
+
             return schema;
         }
     }

@@ -104,6 +104,14 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public JsonSchemaType? Type { get; set; }
 
+        // x-nullable is filtered out by deserializers, but keep the check here in case it gets added from user code.
+        private bool IsNullable =>
+            (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null)) ||
+            Extensions is not null &&
+            Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
+            nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode } &&
+            jsonNode.GetValueKind() is JsonValueKind.True;
+
         /// <inheritdoc />
         public string? Const { get; set; }
 
@@ -437,7 +445,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
-            SerializeTypeProperty(Type, writer, version);
+            SerializeTypeProperty(writer, version);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
@@ -478,6 +486,12 @@ namespace Microsoft.OpenApi.Models
 
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
+
+            // nullable
+            if (version == OpenApiSpecVersion.OpenApi3_0)
+            {
+                SerializeNullable(writer, version);
+            }
 
             // discriminator
             writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, callback);
@@ -619,7 +633,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // type
-            SerializeTypeProperty(Type, writer, OpenApiSpecVersion.OpenApi2_0);
+            SerializeTypeProperty(writer, OpenApiSpecVersion.OpenApi2_0);
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -742,68 +756,36 @@ namespace Microsoft.OpenApi.Models
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
+            // x-nullable extension
+            SerializeNullable(writer, OpenApiSpecVersion.OpenApi2_0);
+
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }
 
-        private void SerializeTypeProperty(JsonSchemaType? type, IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            // check whether nullable is true for upcasting purposes
-            var isNullable = (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null)) ||
-                                Extensions is not null &&
-                                Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
-                                nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode } &&
-                                jsonNode.GetValueKind() is JsonValueKind.True;
-            if (type is null)
+            if (Type is null)
             {
-                if (version is OpenApiSpecVersion.OpenApi3_0 && isNullable)
-                {
-                    writer.WriteProperty(OpenApiConstants.Nullable, true);
-                }
+                return;
             }
-            else if (!HasMultipleTypes(type.Value))
-            {
 
-                switch (version)
-                {
-                    case OpenApiSpecVersion.OpenApi3_1 when isNullable:
-                        UpCastSchemaTypeToV31(type.Value, writer);
-                        break;
-                    case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value == JsonSchemaType.Null:
-                        writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.ToFirstIdentifier());
-                        break;
-                    case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value != JsonSchemaType.Null:
-                        writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToFirstIdentifier());
-                        break;
-                    default:
-                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToFirstIdentifier());
-                        break;
-                }
-            }
-            else
+            var unifiedType = IsNullable ? Type.Value | JsonSchemaType.Null : Type.Value;
+            var typeWithoutNull = unifiedType & ~JsonSchemaType.Null;
+
+            switch (version)
             {
-                // type
-                if (version is OpenApiSpecVersion.OpenApi2_0 || version is OpenApiSpecVersion.OpenApi3_0)
-                {
-                    DowncastTypeArrayToV2OrV3(type.Value, writer, version);
-                }
-                else
-                {
-                    var list = (from JsonSchemaType flag in jsonSchemaTypeValues
-                                where type.Value.HasFlag(flag)
-                                select flag).ToList();
-                    writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) =>
+                case OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0:
+                    if (typeWithoutNull != 0 && !HasMultipleTypes(typeWithoutNull))
                     {
-                        foreach (var item in s.ToIdentifiers())
-                        {
-                            w.WriteValue(item);
-                        }
-                    });
-                }
+                        writer.WriteProperty(OpenApiConstants.Type, typeWithoutNull.ToFirstIdentifier());
+                    }
+                    break;
+                default:
+                    WriteUnifiedSchemaType(unifiedType, writer);
+                    break;
             }
         }
 
@@ -815,20 +797,17 @@ namespace Microsoft.OpenApi.Models
         private static bool HasMultipleTypes(JsonSchemaType schemaType)
         {
             var schemaTypeNumeric = (int)schemaType;
-            return !IsPowerOfTwo(schemaTypeNumeric) && // Boolean, Integer, Number, String, Array, Object
-                    schemaTypeNumeric != (int)JsonSchemaType.Null;
+            return !IsPowerOfTwo(schemaTypeNumeric);
         }
 
-        private static void UpCastSchemaTypeToV31(JsonSchemaType type, IOpenApiWriter writer)
+        private static void WriteUnifiedSchemaType(JsonSchemaType type, IOpenApiWriter writer)
         {
-            // create a new array and insert the type and "null" as values
-            var temporaryType = type | JsonSchemaType.Null;
-            var list = (from JsonSchemaType flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
-                        where temporaryType.HasFlag(flag)
-                        select flag.ToFirstIdentifier()).ToList();
-            if (list.Count > 1)
+            var array = (from JsonSchemaType flag in jsonSchemaTypeValues
+                        where type.HasFlag(flag)
+                        select flag.ToFirstIdentifier()).ToArray();
+            if (array.Length > 1)
             {
-                writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) =>
+                writer.WriteOptionalCollection(OpenApiConstants.Type, array, (w, s) =>
                 {
                     if (!string.IsNullOrEmpty(s) && s is not null)
                     {
@@ -838,7 +817,23 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                writer.WriteProperty(OpenApiConstants.Type, list[0]);
+                writer.WriteProperty(OpenApiConstants.Type, array[0]);
+            }
+        }
+
+        private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version)
+        {
+            if (IsNullable)
+            {
+                switch (version)
+                {
+                    case OpenApiSpecVersion.OpenApi2_0:
+                        writer.WriteProperty(OpenApiConstants.NullableExtension, true);
+                        break;
+                    case OpenApiSpecVersion.OpenApi3_0:
+                        writer.WriteProperty(OpenApiConstants.Nullable, true);
+                        break;
+                }
             }
         }
 
@@ -847,44 +842,6 @@ namespace Microsoft.OpenApi.Models
 #else
         private static readonly Array jsonSchemaTypeValues = System.Enum.GetValues(typeof(JsonSchemaType));
 #endif
-
-        private static void DowncastTypeArrayToV2OrV3(JsonSchemaType schemaType, IOpenApiWriter writer, OpenApiSpecVersion version)
-        {
-            /* If the array has one non-null value, emit Type as string
-            * If the array has one null value, emit x-nullable as true
-            * If the array has two values, one null and one non-null, emit Type as string and x-nullable as true
-            * If the array has more than two values or two non-null values, do not emit type
-            * */
-
-            var nullableProp = version.Equals(OpenApiSpecVersion.OpenApi2_0)
-                ? OpenApiConstants.NullableExtension
-                : OpenApiConstants.Nullable;
-
-            if (!HasMultipleTypes(schemaType & ~JsonSchemaType.Null) && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
-            {
-                foreach (JsonSchemaType flag in jsonSchemaTypeValues)
-                {
-                    // Skip if the flag is not set or if it's the Null flag
-                    if (schemaType.HasFlag(flag) && flag != JsonSchemaType.Null)
-                    {
-                        // Write the non-null flag value to the writer
-                        writer.WriteProperty(OpenApiConstants.Type, flag.ToFirstIdentifier());
-                    }
-                }
-                writer.WriteProperty(nullableProp, true);
-            }
-            else if (!HasMultipleTypes(schemaType))
-            {
-                if (schemaType is JsonSchemaType.Null)
-                {
-                    writer.WriteProperty(nullableProp, true);
-                }
-                else
-                {
-                    writer.WriteProperty(OpenApiConstants.Type, schemaType.ToFirstIdentifier());
-                }
-            }
-        }
 
         /// <inheritdoc/>
         public IOpenApiSchema CreateShallowCopy()
