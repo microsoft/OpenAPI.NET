@@ -588,18 +588,19 @@ namespace Microsoft.OpenApi.Models
             else
             {
                 string relativePath;
+                var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
 
-                if (!string.IsNullOrEmpty(reference.ReferenceV3) && IsSubComponent(reference.ReferenceV3!))
+                if (!string.IsNullOrEmpty(referenceV3) && IsSubComponent(referenceV3))
                 {
                     // Enables setting the complete JSON path for nested subschemas e.g. #/components/schemas/person/properties/address
                     if (useExternal)
                     {
-                        var relPathSegment = reference.ReferenceV3!.Split('#')[1];
+                        var relPathSegment = referenceV3.Split(['#'], StringSplitOptions.RemoveEmptyEntries)[1];
                         relativePath = $"#{relPathSegment}";
                     }
                     else
                     {
-                        relativePath = reference.ReferenceV3!;
+                        relativePath = referenceV3;
                     }
                 }
                 else
@@ -614,7 +615,7 @@ namespace Microsoft.OpenApi.Models
                     : BaseUri + relativePath;
             }
 
-            if (reference.Type is ReferenceType.Schema && !uriLocation.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            if (reference.Type is ReferenceType.Schema && uriLocation.Contains('#'))
             {
                 return Workspace?.ResolveJsonSchemaReference(new Uri(uriLocation).AbsoluteUri);
             }
@@ -630,11 +631,11 @@ namespace Microsoft.OpenApi.Models
 
             if (fragment.StartsWith("/components/schemas/", StringComparison.OrdinalIgnoreCase))
             {
-                var segments = fragment.Split('/');
+                var segments = fragment.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
 
-                // Expect exactly 4 segments for root-level schema: ["", "components", "schemas", "person"]
+                // Expect exactly 3 segments for root-level schema: ["components", "schemas", "person"]
                 // Anything longer means it's a subcomponent.
-                return segments.Length > 4;
+                return segments.Length > 3;
             }
 
             return false;

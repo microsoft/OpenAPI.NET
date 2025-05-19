@@ -16,7 +16,7 @@ paths:
                       $ref: '#/components/schemas/specialitem'
 components:
     schemas:
-      specialitem:  # Use the item type but provide a different title for the type
+      specialitem:
         title: Special Item
         $ref: "#/components/schemas/item"
       item:

@@ -106,9 +106,9 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return _referenceV3 = "#/components/" + Type.GetDisplayName() + "/" + Id;
+                return _referenceV3 = $"#/components/{Type.GetDisplayName()}/{Id}";
             }
-            set 
+            private set 
             { 
                 if (value is not null)
                 {
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/" + GetReferenceTypeNameAsV2(Type) + "/" + Id;
+                return $"#/{GetReferenceTypeNameAsV2(Type)}/{Id}";
             }
         }
 
@@ -316,7 +316,7 @@ namespace Microsoft.OpenApi.Models
         internal void SetJsonPointerPath(string pointer)
         {
             // Eg of an internal subcomponent's JSONPath: #/components/schemas/person/properties/address
-            if ((pointer.Contains("#") || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase)) 
+            if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase)) 
                 && !string.IsNullOrEmpty(ReferenceV3) && !ReferenceV3!.Equals(pointer, StringComparison.OrdinalIgnoreCase))
             {
                 ReferenceV3 = pointer;

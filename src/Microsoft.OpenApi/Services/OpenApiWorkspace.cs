@@ -336,7 +336,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public IOpenApiSchema? ResolveJsonSchemaReference(string location)
+        internal IOpenApiSchema? ResolveJsonSchemaReference(string location)
         {
             /* Enables resolving references for nested subschemas
              * Examples:
@@ -360,7 +360,7 @@ namespace Microsoft.OpenApi.Services
                     Fragment = fragment
                 }; // to avoid escaping the # character in the resulting Uri
 
-                if (_IOpenApiReferenceableRegistry.TryGetValue(uriBuilder.Uri, out var schema) && schema is OpenApiSchema targetSchema)
+                if (_IOpenApiReferenceableRegistry.TryGetValue(uriBuilder.Uri, out var schema) && schema is IOpenApiSchema targetSchema)
                 {
                     // traverse remaining segments after fetching the base schema
                     var remainingSegments = pathSegments.Skip(4).ToArray();
