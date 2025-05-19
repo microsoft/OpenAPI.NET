@@ -1270,7 +1270,7 @@ paths: {}
                 Description = "A reference to a pet"
             };
             document.AddComponent("PetReference", petSchemaReference);
-            document.AddComponent("Pet", petSchema);
+            document.AddComponent("Pet", petSchema); // does not add duplicate keys
             document.Paths.Add("/pets", new OpenApiPathItem
             {
                 Operations = new()
