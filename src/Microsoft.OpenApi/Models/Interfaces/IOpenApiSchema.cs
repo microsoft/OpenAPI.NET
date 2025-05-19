@@ -36,7 +36,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// $vocabulary- used in meta-schemas to identify the vocabularies available for use in schemas described by that meta-schema.
     /// </summary>
-    public Dictionary<string, bool>? Vocabulary { get; }
+    public IDictionary<string, bool>? Vocabulary { get; }
 
     /// <summary>
     /// $dynamicRef - an applicator that allows for deferring the full resolution until runtime, at which point it is resolved each time it is encountered while evaluating an instance
@@ -52,7 +52,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// $defs - reserves a location for schema authors to inline re-usable JSON Schemas into a more general schema. 
     /// The keyword does not directly affect the validation result
     /// </summary>
-    public Dictionary<string, IOpenApiSchema>? Definitions { get; }
+    public IDictionary<string, IOpenApiSchema>? Definitions { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -196,7 +196,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
     /// Property definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced).
     /// </summary>
-    public Dictionary<string, IOpenApiSchema>? Properties { get; }
+    public IDictionary<string, IOpenApiSchema>? Properties { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -205,7 +205,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// egular expression dialect. Each property value of this object MUST be an object, and each object MUST 
     /// be a valid Schema Object not a standard JSON Schema.
     /// </summary>
-    public Dictionary<string, IOpenApiSchema>? PatternProperties { get; }
+    public IDictionary<string, IOpenApiSchema>? PatternProperties { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -279,10 +279,10 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// This object stores any unrecognized keywords found in the schema.
     /// </summary>
-    public Dictionary<string, JsonNode>? UnrecognizedKeywords { get; }
+    public IDictionary<string, JsonNode>? UnrecognizedKeywords { get; }
 
     /// <summary>
     /// Follow JSON Schema definition:https://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.4
     /// </summary>
-    public Dictionary<string, HashSet<string>>? DependentRequired { get; }
+    public IDictionary<string, HashSet<string>>? DependentRequired { get; }
 }

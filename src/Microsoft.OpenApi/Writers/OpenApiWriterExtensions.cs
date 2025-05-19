@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteRequiredMap(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, string>? elements,
+            IDictionary<string, string>? elements,
             Action<IOpenApiWriter, string> action)
         {
             writer.WriteMapInternal(name, elements, action);
@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalMap(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, JsonNode>? elements,
+            IDictionary<string, JsonNode>? elements,
             Action<IOpenApiWriter, JsonNode> action)
         {
             if (elements != null && elements.Any())
@@ -301,7 +301,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalMap(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, string>? elements,
+            IDictionary<string, string>? elements,
             Action<IOpenApiWriter, string> action)
         {
             if (elements != null && elements.Any())
@@ -320,7 +320,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalMap(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, bool>? elements,
+            IDictionary<string, bool>? elements,
             Action<IOpenApiWriter, bool> action)
         {
             if (elements != null && elements.Any())
@@ -339,7 +339,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalMap(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, HashSet<string>>? elements,
+            IDictionary<string, HashSet<string>>? elements,
             Action<IOpenApiWriter, HashSet<string>> action)
         {
             if (elements != null && elements.Any())
@@ -359,7 +359,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalMap<T>(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, T>? elements,
+            IDictionary<string, T>? elements,
             Action<IOpenApiWriter, T> action)
             where T : IOpenApiElement
         {
@@ -380,7 +380,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalMap<T>(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, T>? elements,
+            IDictionary<string, T>? elements,
             Action<IOpenApiWriter, string, T> action)
             where T : IOpenApiElement
         {
@@ -401,7 +401,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteRequiredMap<T>(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, T>? elements,
+            IDictionary<string, T>? elements,
             Action<IOpenApiWriter, T> action)
             where T : IOpenApiElement
         {
@@ -439,7 +439,7 @@ namespace Microsoft.OpenApi.Writers
         private static void WriteMapInternal<T>(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, T>? elements,
+            IDictionary<string, T>? elements,
             Action<IOpenApiWriter, T> action)
         {
             WriteMapInternal(writer, name, elements, (w, _, s) => action(w, s));
@@ -448,7 +448,7 @@ namespace Microsoft.OpenApi.Writers
         private static void WriteMapInternal<T>(
             this IOpenApiWriter writer,
             string name,
-            Dictionary<string, T>? elements,
+            IDictionary<string, T>? elements,
             Action<IOpenApiWriter, string, T> action)
         {
             Utils.CheckArgumentNull(action);

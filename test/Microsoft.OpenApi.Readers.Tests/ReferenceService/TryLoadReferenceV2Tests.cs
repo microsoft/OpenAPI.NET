@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 new OpenApiResponse
                 {
                     Description = "Entity not found.",
-                    Content = new()
+                    Content = new Dictionary<string, OpenApiMediaType>()
                     {
                         ["application/json"] = new()
                     }
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var expected = new OpenApiResponse
                 {
                     Description = "General Error",
-                    Content = new()
+                    Content = new Dictionary<string, OpenApiMediaType>()
                     {
                         ["application/json"] = new()
                         {

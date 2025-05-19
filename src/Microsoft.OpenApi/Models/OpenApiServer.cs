@@ -28,12 +28,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map between a variable name and its value. The value is used for substitution in the server's URL template.
         /// </summary>
-        public Dictionary<string, OpenApiServerVariable>? Variables { get; set; }
+        public IDictionary<string, OpenApiServerVariable>? Variables { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

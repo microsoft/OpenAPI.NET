@@ -64,14 +64,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     ],
                     RequestBody = new OpenApiRequestBody()
                     {
-                        Content = new()
+                        Content = new Dictionary<string, OpenApiMediaType>()
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
                                 Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
-                                    Properties = new()
+                                    Properties = new Dictionary<string, IOpenApiSchema>()
                                     {
                                         ["name"] = new OpenApiSchema()
                                         {
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
-                                    Properties = new()
+                                    Properties = new Dictionary<string, IOpenApiSchema>()
                                     {
                                         ["name"] = new OpenApiSchema()
                                         {
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["200"] = new OpenApiResponse()
                         {
                             Description = "Pet updated.",
-                            Content = new()
+                            Content = new Dictionary<string, OpenApiMediaType>()
                                 {
                                     ["application/json"] = new(),
                                     ["application/xml"] = new()
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["405"] = new OpenApiResponse()
                         {
                             Description = "Invalid input",
-                            Content = new()
+                            Content = new Dictionary<string, OpenApiMediaType>()
                                 {
                                     ["application/json"] = new(),
                                     ["application/xml"] = new()
@@ -170,14 +170,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     ],
                     RequestBody = new OpenApiRequestBody()
                     {
-                        Content = new()
+                        Content = new Dictionary<string, OpenApiMediaType>()
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
                                 Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
-                                    Properties = new()
+                                    Properties = new Dictionary<string, IOpenApiSchema>()
                                     {
                                         ["name"] = new OpenApiSchema()
                                         {
@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
-                                    Properties = new()
+                                    Properties = new Dictionary<string, IOpenApiSchema>()
                                     {
                                         ["name"] = new OpenApiSchema()
                                         {
@@ -237,7 +237,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["200"] = new OpenApiResponse()
                         {
                             Description = "Pet updated.",
-                            Content = new()
+                            Content = new Dictionary<string, OpenApiMediaType>()
                                 {
                                     ["application/json"] = new(),
                                     ["application/xml"] = new()

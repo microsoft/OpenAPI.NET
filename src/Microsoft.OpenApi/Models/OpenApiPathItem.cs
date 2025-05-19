@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models
         public List<IOpenApiParameter>? Parameters { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Add one operation into this path item.

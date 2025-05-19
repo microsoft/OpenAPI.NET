@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -18,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "API Support",
             Url = new("http://www.example.com/support"),
             Email = "support@example.com",
-            Extensions = new()
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 {"x-internal-id", new JsonNodeExtension(42)}
             }

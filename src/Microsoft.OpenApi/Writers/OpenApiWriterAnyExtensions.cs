@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer">The Open API writer.</param>
         /// <param name="extensions">The specification extensions.</param>
         /// <param name="specVersion">Version of the OpenAPI specification that that will be output.</param>
-        public static void WriteExtensions(this IOpenApiWriter writer, Dictionary<string, IOpenApiExtension>? extensions, OpenApiSpecVersion specVersion)
+        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension>? extensions, OpenApiSpecVersion specVersion)
         {
             Utils.CheckArgumentNull(writer);
 

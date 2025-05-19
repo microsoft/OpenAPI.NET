@@ -1,6 +1,8 @@
 ﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Hidi.Formatters;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
@@ -123,7 +125,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                             {
                                                 Name = "ids",
                                                 In = ParameterLocation.Query,
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         "application/json",
@@ -142,7 +144,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                                 }
                                             }
                                         ],
-                                        Extensions = new()
+                                        Extensions = new Dictionary<string, IOpenApiExtension>()
                                         {
                                             {
                                                 "x-ms-docs-operation-type", new JsonNodeExtension("function")
@@ -156,12 +158,12 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                 },
                 Components = new()
                 {
-                    Schemas = new()
+                    Schemas = new Dictionary<string, IOpenApiSchema>()
                     {
                         { "TestSchema",  new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Properties = new()
+                                Properties = new Dictionary<string, IOpenApiSchema>()
                                 {
                                     {
                                         "averageAudioDegradation", new OpenApiSchema

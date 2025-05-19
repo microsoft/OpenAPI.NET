@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(serverVariable);
             }
 
-            public override void Visit(Dictionary<HttpMethod, OpenApiOperation> operations)
+            public override void Visit(IDictionary<HttpMethod, OpenApiOperation> operations)
             {
                 EncodeCall();
                 base.Visit(operations);
@@ -173,13 +173,13 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(requestBody);
             }
 
-            public override void Visit(Dictionary<string, IOpenApiHeader> headers)
+            public override void Visit(IDictionary<string, IOpenApiHeader> headers)
             {
                 EncodeCall();
                 base.Visit(headers);
             }
 
-            public override void Visit(Dictionary<string, IOpenApiCallback> callbacks)
+            public override void Visit(IDictionary<string, IOpenApiCallback> callbacks)
             {
                 EncodeCall();
                 base.Visit(callbacks);
@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(response);
             }
 
-            public override void Visit(Dictionary<string, OpenApiMediaType> content)
+            public override void Visit(IDictionary<string, OpenApiMediaType> content)
             {
                 EncodeCall();
                 base.Visit(content);
@@ -215,7 +215,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(encoding);
             }
 
-            public override void Visit(Dictionary<string, IOpenApiExample> examples)
+            public override void Visit(IDictionary<string, IOpenApiExample> examples)
             {
                 EncodeCall();
                 base.Visit(examples);
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(schema);
             }
 
-            public override void Visit(Dictionary<string, IOpenApiLink> links)
+            public override void Visit(IDictionary<string, IOpenApiLink> links)
             {
                 EncodeCall();
                 base.Visit(links);
@@ -323,13 +323,13 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(example);
             }
 
-            public override void Visit(Dictionary<string, OpenApiServerVariable> serverVariables)
+            public override void Visit(IDictionary<string, OpenApiServerVariable> serverVariables)
             {
                 EncodeCall();
                 base.Visit(serverVariables);
             }
 
-            public override void Visit(Dictionary<string, OpenApiEncoding> encodings)
+            public override void Visit(IDictionary<string, OpenApiEncoding> encodings)
             {
                 EncodeCall();
                 base.Visit(encodings);

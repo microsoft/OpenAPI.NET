@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// All the subdirectories of a node.
         /// </summary>
-        public Dictionary<string, OpenApiUrlTreeNode> Children { get; } = new Dictionary<string, OpenApiUrlTreeNode>();
+        public IDictionary<string, OpenApiUrlTreeNode> Children { get; } = new Dictionary<string, OpenApiUrlTreeNode>();
 
         /// <summary>
         /// The relative directory path of the current node from the root node.
@@ -31,12 +31,12 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Dictionary of labels and Path Item objects that describe the operations available on a node.
         /// </summary>
-        public Dictionary<string, IOpenApiPathItem> PathItems { get; } = new Dictionary<string, IOpenApiPathItem>();
+        public IDictionary<string, IOpenApiPathItem> PathItems { get; } = new Dictionary<string, IOpenApiPathItem>();
 
         /// <summary>
         /// A dictionary of key value pairs that contain information about a node.
         /// </summary>
-        public Dictionary<string, List<string>> AdditionalData { get; set; } = new Dictionary<string, List<string>>();
+        public IDictionary<string, List<string>> AdditionalData { get; set; } = new Dictionary<string, List<string>>();
 
         /// <summary>
         /// Flag indicating whether a node segment is a path parameter.
