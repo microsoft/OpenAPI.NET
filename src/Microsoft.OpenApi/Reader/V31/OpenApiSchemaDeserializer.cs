@@ -399,10 +399,10 @@ namespace Microsoft.OpenApi.Reader.V31
                 schema.Extensions.Remove(OpenApiConstants.NullableExtension);
             }
 
-            if (identifier is not null && hostDocument.Workspace is not null)
+            if (!string.IsNullOrEmpty(identifier) && hostDocument.Workspace is not null)
             {
                 // register the schema in our registry using the identifier's URL
-                hostDocument.Workspace.RegisterComponentForDocument(hostDocument, schema, identifier);
+                hostDocument.Workspace.RegisterComponentForDocument(hostDocument, schema, identifier!);
             }
 
             return schema;
