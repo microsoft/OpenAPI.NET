@@ -384,8 +384,7 @@ x-nullable: true";
             // Arrange
             var expected = @"type:
   - 'null'
-  - string
-x-nullable: true";
+  - string";
 
             var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
 
@@ -407,7 +406,7 @@ x-nullable: true";
 - ""int""
 nullable: true";
 
-            var expected = @"{ }";
+            var expected = @"x-nullable: true";
 
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml", SettingsFixture.ReaderSettings);
 
