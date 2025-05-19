@@ -665,47 +665,52 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(componentToRegister);
             Utils.CheckArgumentNullOrEmpty(id);
             Components ??= new();
+
+            static Dictionary<string, TValue> AddToDictionary<TValue>(Dictionary<string, TValue>? dict, string key, TValue value)
+            {
+                dict ??= new Dictionary<string, TValue>();
+#if NET5_0_OR_GREATER
+                dict.TryAdd(key, value);
+#else
+                if (!dict.ContainsKey(key))
+                {
+                    dict.Add(key, value);
+                }
+#endif
+                return dict;
+            }
+
             switch (componentToRegister)
             {
                 case IOpenApiSchema openApiSchema:
-                    Components.Schemas ??= [];
-                    Components.Schemas.Add(id, openApiSchema);
+                    Components.Schemas = AddToDictionary(Components.Schemas, id, openApiSchema);
                     break;
                 case IOpenApiParameter openApiParameter:
-                    Components.Parameters ??= [];
-                    Components.Parameters.Add(id, openApiParameter);
+                    Components.Parameters = AddToDictionary(Components.Parameters, id, openApiParameter);
                     break;
                 case IOpenApiResponse openApiResponse:
-                    Components.Responses ??= [];
-                    Components.Responses.Add(id, openApiResponse);
+                    Components.Responses = AddToDictionary(Components.Responses, id, openApiResponse);
                     break;
                 case IOpenApiRequestBody openApiRequestBody:
-                    Components.RequestBodies ??= [];
-                    Components.RequestBodies.Add(id, openApiRequestBody);
+                    Components.RequestBodies = AddToDictionary(Components.RequestBodies, id, openApiRequestBody);
                     break;
                 case IOpenApiLink openApiLink:
-                    Components.Links ??= [];
-                    Components.Links.Add(id, openApiLink);
+                    Components.Links = AddToDictionary(Components.Links, id, openApiLink);
                     break;
                 case IOpenApiCallback openApiCallback:
-                    Components.Callbacks ??= [];
-                    Components.Callbacks.Add(id, openApiCallback);
+                    Components.Callbacks = AddToDictionary(Components.Callbacks, id, openApiCallback);
                     break;
                 case IOpenApiPathItem openApiPathItem:
-                    Components.PathItems ??= [];
-                    Components.PathItems.Add(id, openApiPathItem);
+                    Components.PathItems = AddToDictionary(Components.PathItems, id, openApiPathItem);
                     break;
                 case IOpenApiExample openApiExample:
-                    Components.Examples ??= [];
-                    Components.Examples.Add(id, openApiExample);
+                    Components.Examples = AddToDictionary(Components.Examples, id, openApiExample);
                     break;
                 case IOpenApiHeader openApiHeader:
-                    Components.Headers ??= [];
-                    Components.Headers.Add(id, openApiHeader);
+                    Components.Headers = AddToDictionary(Components.Headers, id, openApiHeader);
                     break;
                 case IOpenApiSecurityScheme openApiSecurityScheme:
-                    Components.SecuritySchemes ??= [];
-                    Components.SecuritySchemes.Add(id, openApiSecurityScheme);
+                    Components.SecuritySchemes = AddToDictionary(Components.SecuritySchemes, id, openApiSecurityScheme);
                     break;
                 default:
                     throw new ArgumentException($"Component type {componentToRegister!.GetType().Name} is not supported.");
