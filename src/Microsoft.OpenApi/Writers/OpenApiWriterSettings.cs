@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
@@ -24,5 +25,15 @@ namespace Microsoft.OpenApi.Writers
             return (reference.IsLocal && InlineLocalReferences)
                              || (reference.IsExternal && InlineExternalReferences);
         }
+
+        /// <summary>  
+        /// Enables sorting of collections using the default comparer  
+        /// </summary>  
+        public bool EnableSorting { get; set; }
+
+        /// <summary>  
+        /// Custom comparer for sorting collections.  
+        /// </summary>  
+        public IComparer<string>? KeyComparer { get; set; }
     }
 }
