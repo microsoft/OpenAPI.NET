@@ -314,14 +314,42 @@ namespace Microsoft.OpenApi.Models
             }
         }
 
-        internal void SetJsonPointerPath(string pointer)
+        internal void SetJsonPointerPath(string pointer, string nodeLocation)
         {
-            // Eg of an internal subcomponent's JSONPath: #/components/schemas/person/properties/address
-            if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase)) 
-                && !string.IsNullOrEmpty(ReferenceV3) && !ReferenceV3!.Equals(pointer, StringComparison.OrdinalIgnoreCase))
+            // Relative reference to internal JSON schema node/resource (e.g. "#/properties/b")
+            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.Contains("/components/schemas"))
+            {
+                ReferenceV3 = ResolveRelativePointer(nodeLocation, pointer);
+            }
+
+            // Absolute reference or anchor (e.g. "#/components/schemas/..." or full URL)
+            else if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase)) 
+                && !string.Equals(ReferenceV3, pointer, StringComparison.OrdinalIgnoreCase))
             {
                 ReferenceV3 = pointer;
+            }            
+        }
+
+        private static string ResolveRelativePointer(string nodeLocation, string relativeRef)
+        {
+            // Convert nodeLocation to path segments
+            var segments = nodeLocation.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            // Convert relativeRef to dynamic segments
+            var relativeSegments = relativeRef.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+
+            // Locate the first occurrence of relativeRef segments in the full path
+            for (int i = 0; i <= segments.Count - relativeSegments.Length; i++)
+            {
+                if (relativeSegments.SequenceEqual(segments.Skip(i).Take(relativeSegments.Length)))
+                {
+                    // Trim to include just the matching segment chain
+                    segments = [.. segments.Take(i + relativeSegments.Length)];
+                    break;
+                }
             }
+
+            return $"#/{string.Join("/", segments)}";
         }
     }
 }

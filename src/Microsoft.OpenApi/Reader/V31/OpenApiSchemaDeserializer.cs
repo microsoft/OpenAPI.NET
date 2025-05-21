@@ -367,13 +367,14 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var pointer = mapNode.GetReferencePointer();
             var identifier = mapNode.GetJsonSchemaIdentifier();
+            var nodeLocation = node.Context.GetLocation();
 
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
                 result.Reference.SetSummaryAndDescriptionFromMapNode(mapNode);
-                result.Reference.SetJsonPointerPath(pointer);
+                result.Reference.SetJsonPointerPath(pointer, nodeLocation);
                 return result;
             }            
 
