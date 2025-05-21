@@ -55,17 +55,17 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     public IDictionary<string, IOpenApiSchema>? Definitions { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public string? ExclusiveMaximum { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public string? ExclusiveMinimum { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Value MUST be a string in V2 and V3.
     /// </summary>
     public JsonSchemaType? Type { get; }
@@ -76,45 +76,45 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     public string? Const { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// While relying on JSON Schema's defined formats,
     /// the OAS offers a few additional predefined formats.
     /// </summary>
     public string? Format { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public string? Maximum { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public string? Minimum { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public int? MaxLength { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public int? MinLength { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect
     /// </summary>
     public string? Pattern { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public decimal? MultipleOf { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// The default value represents what would be assumed by the consumer of the input as the value of the schema if one is not provided.
     /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
     /// For example, if type is string, then default can be "foo" but cannot be 1.
@@ -142,64 +142,64 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     public bool WriteOnly { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
     public List<IOpenApiSchema>? AllOf { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
     public List<IOpenApiSchema>? OneOf { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
     public List<IOpenApiSchema>? AnyOf { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
     public IOpenApiSchema? Not { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public HashSet<string>? Required { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Value MUST be an object and not an array. Inline or referenced schema MUST be of a Schema Object
     /// and not a standard JSON Schema. items MUST be present if the type is array.
     /// </summary>
     public IOpenApiSchema? Items { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public int? MaxItems { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public int? MinItems { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public bool? UniqueItems { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Property definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced).
     /// </summary>
     public IDictionary<string, IOpenApiSchema>? Properties { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// PatternProperty definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced)
     /// Each property name of this object SHOULD be a valid regular expression according to the ECMA 262 r
     /// egular expression dialect. Each property value of this object MUST be an object, and each object MUST 
@@ -208,12 +208,12 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     public IDictionary<string, IOpenApiSchema>? PatternProperties { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public int? MaxProperties { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public int? MinProperties { get; }
 
@@ -223,7 +223,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     public bool AdditionalPropertiesAllowed { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Value can be boolean or object. Inline or referenced schema
     /// MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
@@ -250,12 +250,12 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     public List<JsonNode>? Examples { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public List<JsonNode>? Enum { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
     public bool UnevaluatedProperties { get; } 
 

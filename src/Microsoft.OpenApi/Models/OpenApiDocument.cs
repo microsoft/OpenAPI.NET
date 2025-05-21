@@ -665,52 +665,70 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(componentToRegister);
             Utils.CheckArgumentNullOrEmpty(id);
             Components ??= new();
+
+            static bool AddToDictionary<TValue>(Dictionary<string, TValue> dict, string key, TValue value)
+            {
+#if NET5_0_OR_GREATER
+                return dict.TryAdd(key, value);
+#else
+                if (!dict.ContainsKey(key))
+                {
+                    dict.Add(key, value);
+                    return true;
+                }
+                return false;
+#endif
+            }
+
+            bool added = false;
             switch (componentToRegister)
             {
                 case IOpenApiSchema openApiSchema:
-                    Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
-                    Components.Schemas.Add(id, openApiSchema);
+                    Components.Schemas ??= [];
+                    added = AddToDictionary(Components.Schemas, id, openApiSchema);
                     break;
                 case IOpenApiParameter openApiParameter:
-                    Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
-                    Components.Parameters.Add(id, openApiParameter);
+                    Components.Parameters ??= [];
+                    added = AddToDictionary(Components.Parameters, id, openApiParameter);
                     break;
                 case IOpenApiResponse openApiResponse:
-                    Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
-                    Components.Responses.Add(id, openApiResponse);
+                    Components.Responses ??= [];
+                    added = AddToDictionary(Components.Responses, id, openApiResponse);
                     break;
                 case IOpenApiRequestBody openApiRequestBody:
-                    Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
-                    Components.RequestBodies.Add(id, openApiRequestBody);
+                    Components.RequestBodies ??= [];
+                    added = AddToDictionary(Components.RequestBodies, id, openApiRequestBody);
                     break;
                 case IOpenApiLink openApiLink:
-                    Components.Links ??= new Dictionary<string, IOpenApiLink>();
-                    Components.Links.Add(id, openApiLink);
+                    Components.Links ??= [];
+                    added = AddToDictionary(Components.Links, id, openApiLink);
                     break;
                 case IOpenApiCallback openApiCallback:
-                    Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
-                    Components.Callbacks.Add(id, openApiCallback);
+                    Components.Callbacks ??= [];
+                    added = AddToDictionary(Components.Callbacks, id, openApiCallback);
                     break;
                 case IOpenApiPathItem openApiPathItem:
-                    Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
-                    Components.PathItems.Add(id, openApiPathItem);
+                    Components.PathItems ??= [];
+                    added = AddToDictionary(Components.PathItems, id, openApiPathItem);
                     break;
                 case IOpenApiExample openApiExample:
-                    Components.Examples ??= new Dictionary<string, IOpenApiExample>();
-                    Components.Examples.Add(id, openApiExample);
+                    Components.Examples ??= [];
+                    added = AddToDictionary(Components.Examples, id, openApiExample);
                     break;
                 case IOpenApiHeader openApiHeader:
-                    Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
-                    Components.Headers.Add(id, openApiHeader);
+                    Components.Headers ??= [];
+                    added = AddToDictionary(Components.Headers, id, openApiHeader);
                     break;
                 case IOpenApiSecurityScheme openApiSecurityScheme:
-                    Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
-                    Components.SecuritySchemes.Add(id, openApiSecurityScheme);
+                    Components.SecuritySchemes ??= [];
+                    added = AddToDictionary(Components.SecuritySchemes, id, openApiSecurityScheme);
                     break;
                 default:
                     throw new ArgumentException($"Component type {componentToRegister!.GetType().Name} is not supported.");
             }
-            return Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false;
+
+            // Register only if it was actually added to the collection
+            return added && (Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false);
         }
     }
 
