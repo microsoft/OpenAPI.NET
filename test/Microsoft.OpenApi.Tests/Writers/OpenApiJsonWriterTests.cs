@@ -10,10 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -320,9 +319,9 @@ namespace Microsoft.OpenApi.Tests.Writers
             {
                 Enum =
                 [
-                    new OpenApiAny("NaN").Node,
-                    new OpenApiAny("Infinity").Node,
-                    new OpenApiAny("-Infinity").Node
+                    new JsonNodeExtension("NaN").Node,
+                    new JsonNodeExtension("Infinity").Node,
+                    new JsonNodeExtension("-Infinity").Node
                 ]
             };
 

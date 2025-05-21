@@ -708,52 +708,70 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(componentToRegister);
             Utils.CheckArgumentNullOrEmpty(id);
             Components ??= new();
+
+            static bool AddToDictionary<TValue>(Dictionary<string, TValue> dict, string key, TValue value)
+            {
+#if NET5_0_OR_GREATER
+                return dict.TryAdd(key, value);
+#else
+                if (!dict.ContainsKey(key))
+                {
+                    dict.Add(key, value);
+                    return true;
+                }
+                return false;
+#endif
+            }
+
+            bool added = false;
             switch (componentToRegister)
             {
                 case IOpenApiSchema openApiSchema:
                     Components.Schemas ??= [];
-                    Components.Schemas.Add(id, openApiSchema);
+                    added = AddToDictionary(Components.Schemas, id, openApiSchema);
                     break;
                 case IOpenApiParameter openApiParameter:
                     Components.Parameters ??= [];
-                    Components.Parameters.Add(id, openApiParameter);
+                    added = AddToDictionary(Components.Parameters, id, openApiParameter);
                     break;
                 case IOpenApiResponse openApiResponse:
                     Components.Responses ??= [];
-                    Components.Responses.Add(id, openApiResponse);
+                    added = AddToDictionary(Components.Responses, id, openApiResponse);
                     break;
                 case IOpenApiRequestBody openApiRequestBody:
                     Components.RequestBodies ??= [];
-                    Components.RequestBodies.Add(id, openApiRequestBody);
+                    added = AddToDictionary(Components.RequestBodies, id, openApiRequestBody);
                     break;
                 case IOpenApiLink openApiLink:
                     Components.Links ??= [];
-                    Components.Links.Add(id, openApiLink);
+                    added = AddToDictionary(Components.Links, id, openApiLink);
                     break;
                 case IOpenApiCallback openApiCallback:
                     Components.Callbacks ??= [];
-                    Components.Callbacks.Add(id, openApiCallback);
+                    added = AddToDictionary(Components.Callbacks, id, openApiCallback);
                     break;
                 case IOpenApiPathItem openApiPathItem:
                     Components.PathItems ??= [];
-                    Components.PathItems.Add(id, openApiPathItem);
+                    added = AddToDictionary(Components.PathItems, id, openApiPathItem);
                     break;
                 case IOpenApiExample openApiExample:
                     Components.Examples ??= [];
-                    Components.Examples.Add(id, openApiExample);
+                    added = AddToDictionary(Components.Examples, id, openApiExample);
                     break;
                 case IOpenApiHeader openApiHeader:
                     Components.Headers ??= [];
-                    Components.Headers.Add(id, openApiHeader);
+                    added = AddToDictionary(Components.Headers, id, openApiHeader);
                     break;
                 case IOpenApiSecurityScheme openApiSecurityScheme:
                     Components.SecuritySchemes ??= [];
-                    Components.SecuritySchemes.Add(id, openApiSecurityScheme);
+                    added = AddToDictionary(Components.SecuritySchemes, id, openApiSecurityScheme);
                     break;
                 default:
                     throw new ArgumentException($"Component type {componentToRegister!.GetType().Name} is not supported.");
             }
-            return Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false;
+
+            // Register only if it was actually added to the collection
+            return added && (Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false);
         }
     }
 

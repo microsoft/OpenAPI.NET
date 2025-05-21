@@ -286,7 +286,10 @@ namespace Microsoft.OpenApi.Reader.V31
                         var nullable = bool.Parse(value);
                         if (nullable) // if nullable, convert type into an array of type(s) and null
                         {
-                            o.Type |= JsonSchemaType.Null;
+                            if (o.Type.HasValue)
+                                o.Type |= JsonSchemaType.Null;
+                            else
+                                o.Type = JsonSchemaType.Null;
                         }
                     }
                 }
@@ -394,8 +397,11 @@ namespace Microsoft.OpenApi.Reader.V31
 
             if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
             {
-                var type = schema.Type;
-                schema.Type = type | JsonSchemaType.Null;
+                if (schema.Type.HasValue)
+                    schema.Type |= JsonSchemaType.Null;
+                else
+                    schema.Type = JsonSchemaType.Null;
+                
                 schema.Extensions.Remove(OpenApiConstants.NullableExtension);
             }
 

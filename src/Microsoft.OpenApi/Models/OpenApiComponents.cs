@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiComponents"/> to Open API v3.1.
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiComponents"/> to v3.0
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -338,7 +338,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             // Components object does not exist in V2.
         }

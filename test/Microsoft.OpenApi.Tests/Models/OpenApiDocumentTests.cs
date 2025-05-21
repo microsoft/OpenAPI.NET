@@ -7,14 +7,11 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
-using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
 
@@ -973,12 +970,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = JsonSchemaType.Integer,
                                         Extensions = new()
                                         {
-                                            ["my-extension"] = new OpenApiAny(4)
+                                            ["my-extension"] = new JsonNodeExtension(4)
                                         }
                                     },
                                     Extensions = new()
                                     {
-                                        ["my-extension"] = new OpenApiAny(4),
+                                        ["my-extension"] = new JsonNodeExtension(4),
                                     }
                                 },
                                 new OpenApiParameter
@@ -992,12 +989,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = JsonSchemaType.Integer,
                                         Extensions = new()
                                         {
-                                            ["my-extension"] = new OpenApiAny(4)
+                                            ["my-extension"] = new JsonNodeExtension(4)
                                         }
                                     },
                                     Extensions = new()
                                     {
-                                        ["my-extension"] = new OpenApiAny(4),
+                                        ["my-extension"] = new JsonNodeExtension(4),
                                     }
                                 },
                             ],
@@ -2079,7 +2076,7 @@ components:
                         Name = "tag1",
                         Extensions = new()
                         {
-                            ["x-tag1"] = new OpenApiAny("tag1")
+                            ["x-tag1"] = new JsonNodeExtension("tag1")
                         }
                     },
                     new OpenApiTag
@@ -2087,7 +2084,7 @@ components:
                         Name = "tag2",
                         Extensions = new()
                         {
-                            ["x-tag2"] = new OpenApiAny("tag2")
+                            ["x-tag2"] = new JsonNodeExtension("tag2")
                         }
                     }
                 }
@@ -2108,7 +2105,7 @@ components:
                         Name = "tag1",
                         Extensions = new()
                         {
-                            ["x-tag1"] = new OpenApiAny("tag1")
+                            ["x-tag1"] = new JsonNodeExtension("tag1")
                         }
                     },
                     new OpenApiTag
@@ -2116,7 +2113,7 @@ components:
                         Name = "tag2",
                         Extensions = new()
                         {
-                            ["x-tag2"] = new OpenApiAny("tag2")
+                            ["x-tag2"] = new JsonNodeExtension("tag2")
                         }
                     },
                     new OpenApiTag
@@ -2124,7 +2121,7 @@ components:
                         Name = "tag1",
                         Extensions = new()
                         {
-                            ["x-tag1"] = new OpenApiAny("tag1")
+                            ["x-tag1"] = new JsonNodeExtension("tag1")
                         }
                     }
                 }
@@ -2179,7 +2176,7 @@ components:
         }
 
         [Fact]
-        public async Task SerializeDocWithSecuritySchemeWithInlineRefererencesWorks()
+        public async Task SerializeDocWithSecuritySchemeWithInlineReferencesWorks()
         {
             var expected = @"openapi: 3.0.4
 info:
@@ -2219,6 +2216,76 @@ components:
             doc.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
             var actual = stringWriter.ToString();
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
+        
+        [Fact]
+        public async Task SerializeDocWithoutOperationSecurityWorks()
+        {
+            var expected = """
+                           openapi: 3.0.4
+                           info:
+                             title: Repair Service
+                             version: 1.0.0
+                           servers:
+                             - url: https://pluginrentu.azurewebsites.net/api
+                           paths:
+                             /repairs:
+                               get:
+                                 summary: List all repairs
+                                 description: Returns a list of repairs with their details and images
+                                 operationId: listRepairs
+                                 responses:
+                                   '200':
+                                     description: A list of repairs
+                                     content:
+                                       application/json:
+                                         schema:
+                                           type: object
+                           """;
+
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithoutOperationSecurity.yaml", SettingsFixture.ReaderSettings)).Document;
+            var stringWriter = new StringWriter();
+            doc!.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
+            var actual = stringWriter.ToString();
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+            var actualOperation = doc.Paths["/repairs"]!.Operations![HttpMethod.Get];
+            Assert.Null(actualOperation.Security);
+        }
+        
+        [Fact]
+        public async Task SerializeDocWithEmptyOperationSecurityWorks()
+        {
+            var expected = """
+                           openapi: 3.0.4
+                           info:
+                             title: Repair Service
+                             version: 1.0.0
+                           servers:
+                             - url: https://pluginrentu.azurewebsites.net/api
+                           paths:
+                             /repairs:
+                               get:
+                                 summary: List all repairs
+                                 description: Returns a list of repairs with their details and images
+                                 operationId: listRepairs
+                                 responses:
+                                   '200':
+                                     description: A list of repairs
+                                     content:
+                                       application/json:
+                                         schema:
+                                           type: object
+                                 security: [ ]
+                           """;
+
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithEmptyOperationSecurity.yaml", SettingsFixture.ReaderSettings)).Document;
+            var stringWriter = new StringWriter();
+            doc!.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
+            var actual = stringWriter.ToString();
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+            var actualOperation = doc.Paths["/repairs"]!.Operations![HttpMethod.Get];
+            Assert.NotNull(actualOperation.Security);
+            Assert.Empty(actualOperation.Security);
         }
     }
 }

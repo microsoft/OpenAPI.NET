@@ -19,9 +19,9 @@ namespace Microsoft.OpenApi.Services
     {
         private readonly Dictionary<string, Uri> _documentsIdRegistry = new();
         private readonly Dictionary<Uri, Stream> _artifactsRegistry = new();        
-        private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new(new UriWithFragmentEquailityComparer());
+        private readonly Dictionary<Uri, IOpenApiReferenceable> _IOpenApiReferenceableRegistry = new(new UriWithFragmentEqualityComparer());
 
-        private class UriWithFragmentEquailityComparer : IEqualityComparer<Uri>
+        private sealed class UriWithFragmentEqualityComparer : IEqualityComparer<Uri>
         {
             public bool Equals(Uri? x, Uri? y)
             {

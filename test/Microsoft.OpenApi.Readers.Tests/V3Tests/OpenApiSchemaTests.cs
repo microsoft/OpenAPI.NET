@@ -3,22 +3,22 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Extensions;
-using SharpYaml.Serialization;
-using Xunit;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
-using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Models.References;
-using System.Threading.Tasks;
-using System.Net.Http;
+using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.Writers;
 using Microsoft.OpenApi.YamlReader;
-using Microsoft.OpenApi.Models.Interfaces;
+using SharpYaml.Serialization;
+using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -65,12 +65,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 }";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
+            var jsonNodeExtension = OpenApiModelFactory.Parse<JsonNodeExtension>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            jsonNodeExtension.Should().BeEquivalentTo(new JsonNodeExtension(
                 new JsonObject
                 {
                     ["foo"] = "bar",
@@ -88,12 +88,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
+            var jsonNodeExtension = OpenApiModelFactory.Parse<JsonNodeExtension>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            jsonNodeExtension.Should().BeEquivalentTo(new JsonNodeExtension(
                 new JsonArray
                 {
                     "foo",
@@ -213,8 +213,8 @@ get:
                 },
                 Example = new JsonObject
                 {
-                    ["name"] = new OpenApiAny("Puma").Node,
-                    ["id"] = new OpenApiAny(1).Node
+                    ["name"] = new JsonNodeExtension("Puma").Node,
+                    ["id"] = new JsonNodeExtension(1).Node
                 }
             }, options => options
             .IgnoringCyclicReferences()
@@ -445,6 +445,43 @@ get:
             };
 
             Assert.Equivalent(expectedComponents, components);
+        }
+
+        [Fact]
+        public async Task SerializeSchemaWithNullableShouldSucceed()
+        {
+            // Arrange
+            var expected = @"type: string
+nullable: true";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
+
+            // Act
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+
+            var writer = new StringWriter();
+            schema.SerializeAsV3(new OpenApiYamlWriter(writer));
+            var schemaString = writer.ToString();
+
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public async Task SerializeSchemaWithOnlyNullableShouldSucceed()
+        {
+            // Arrange
+            var expected = @"nullable: true";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithOnlyNullable.yaml");
+
+            // Act
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+
+            var writer = new StringWriter();
+            schema.SerializeAsV3(new OpenApiYamlWriter(writer));
+            var schemaString = writer.ToString();
+
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

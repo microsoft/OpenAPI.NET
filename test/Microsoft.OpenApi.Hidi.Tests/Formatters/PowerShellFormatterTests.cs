@@ -1,8 +1,6 @@
-﻿using Microsoft.OpenApi.Any;
+﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Hidi.Formatters;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
@@ -147,7 +145,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                         Extensions = new()
                                         {
                                             {
-                                                "x-ms-docs-operation-type", new OpenApiAny("function")
+                                                "x-ms-docs-operation-type", new JsonNodeExtension("function")
                                             }
                                         }
                                     }

@@ -5,16 +5,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -38,7 +35,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Example = "Blabla",
                     Extensions = new()
                     {
-                        ["myextension"] = new OpenApiAny("myextensionvalue"),
+                        ["myextension"] = new JsonNodeExtension("myextensionvalue"),
                     }, 
                 }
             },
@@ -77,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Example = "Blabla",
                     Extensions = new()
                     {
-                        ["myextension"] = new OpenApiAny("myextensionvalue"),
+                        ["myextension"] = new JsonNodeExtension("myextensionvalue"),
                     },
                 }
             },

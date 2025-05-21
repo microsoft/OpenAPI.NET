@@ -9,8 +9,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         }
 
         /// <summary>
-        /// Create an <see cref="OpenApiAny"/>
+        /// Create an <see cref="JsonNodeExtension"/>
         /// </summary>
         /// <returns>The created Json object.</returns>
         public override JsonNode CreateAny()

@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -475,7 +474,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Extensions = new()
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiAny("call")
+                                                    "x-ms-docs-key-type", new JsonNodeExtension("call")
                                                 }
                                             }
                                         }
@@ -492,7 +491,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Extensions = new()
                                     {
                                         {
-                                            "x-ms-docs-operation-type", new OpenApiAny("action")
+                                            "x-ms-docs-operation-type", new JsonNodeExtension("action")
                                         }
                                     }
                                 }
@@ -523,7 +522,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Extensions = new()
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiAny("group")
+                                                    "x-ms-docs-key-type", new JsonNodeExtension("group")
                                                 }
                                             }
                                         },
@@ -540,7 +539,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Extensions = new()
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiAny("event")
+                                                    "x-ms-docs-key-type", new JsonNodeExtension("event")
                                                 }
                                             }
                                         }
@@ -579,7 +578,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Extensions = new()
                                     {
                                         {
-                                            "x-ms-docs-operation-type", new OpenApiAny("function")
+                                            "x-ms-docs-operation-type", new JsonNodeExtension("function")
                                         }
                                     }
                                 }
