@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
@@ -125,7 +126,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var link = new OpenApiLink()
             {
-                Extensions = new()
+                Extensions = new Dictionary<string, IOpenApiExtension>()
                 {
                     { "x-display", new JsonNodeExtension("Abc") 
                 }

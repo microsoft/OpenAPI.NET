@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var components = new OpenApiComponents
             {
-                Schemas = new()
+                Schemas = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["petSchema"] =  new OpenApiSchema()
                     {
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
-                        Properties = new()
+                        Properties = new Dictionary<string, IOpenApiSchema>()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
-                        Properties = new()
+                        Properties = new Dictionary<string, IOpenApiSchema>()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new()
+                                        Content = new Dictionary<string, OpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 {
                                     Description = "Information about a new pet in the system",
                                     Required = true,
-                                    Content = new()
+                                    Content = new Dictionary<string, OpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "Return a 200 status to indicate that the data was received successfully",
-                                        Content = new()
+                                        Content = new Dictionary<string, OpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var components = new OpenApiComponents
             {
-                Schemas = new()
+                Schemas = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["petSchema"] = new OpenApiSchema()
                     {
@@ -238,7 +238,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
-                        Properties = new()
+                        Properties = new Dictionary<string, IOpenApiSchema>()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -270,7 +270,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
-                        Properties = new()
+                        Properties = new Dictionary<string, IOpenApiSchema>()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -344,7 +344,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new()
+                                    Content = new Dictionary<string, OpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -372,7 +372,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Description = "Information about a new pet in the system",
                                 Required = true,
-                                Content = new()
+                                Content = new Dictionary<string, OpenApiMediaType>()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -385,7 +385,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "Return a 200 status to indicate that the data was received successfully",
-                                    Content = new()
+                                    Content = new Dictionary<string, OpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -447,7 +447,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new()
+                Properties = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["prop1"] = new OpenApiSchema
                     {
@@ -462,7 +462,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = JsonSchemaType.String
                     }
                 },
-                PatternProperties = new()
+                PatternProperties = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["^x-.*$"] = new OpenApiSchema
                     {

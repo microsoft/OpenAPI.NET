@@ -19,16 +19,16 @@ namespace Microsoft.OpenApi.Models
         public string? Description { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiHeader>? Headers { get; set; }
+        public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiLink>? Links { get; set; }
+        public IDictionary<string, IOpenApiLink>? Links { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

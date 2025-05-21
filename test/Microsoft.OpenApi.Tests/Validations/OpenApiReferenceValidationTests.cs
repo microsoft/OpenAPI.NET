@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             var document = new OpenApiDocument();
             document.Components = new()
             {
-                Schemas = new()
+                Schemas = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["test"] = sharedSchema
                 }
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                             {
                                 ["200"] = new OpenApiResponse()
                                 {
-                                    Content = new()
+                                    Content = new Dictionary<string, OpenApiMediaType>()
                                     {
                                         ["application/json"] = new()
                                         {
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                             {
                                 ["200"] = new OpenApiResponse()
                                 {
-                                    Content = new()
+                                    Content = new Dictionary<string, OpenApiMediaType>()
                                     {
                                         ["application/json"] = new()
                                         {

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -33,7 +34,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = "Blabla",
-                    Extensions = new()
+                    Extensions = new Dictionary<string, IOpenApiExtension>()
                     {
                         ["myextension"] = new JsonNodeExtension("myextensionvalue"),
                     }, 
@@ -72,7 +73,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = "Blabla",
-                    Extensions = new()
+                    Extensions = new Dictionary<string, IOpenApiExtension>()
                     {
                         ["myextension"] = new JsonNodeExtension("myextensionvalue"),
                     },

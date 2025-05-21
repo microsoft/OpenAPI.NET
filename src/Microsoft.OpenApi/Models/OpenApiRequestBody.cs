@@ -24,10 +24,10 @@ namespace Microsoft.OpenApi.Models
         public bool Required { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

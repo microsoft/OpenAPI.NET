@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "coordinates",
-                    Content = new()
+                    Content = new Dictionary<string, OpenApiMediaType>()
                     {
                         ["application/json"] = new()
                         {
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     "lat",
                                     "long"
                                 },
-                                Properties = new()
+                                Properties = new Dictionary<string, IOpenApiSchema>()
                                 {
                                     ["lat"] = new OpenApiSchema()
                                     {

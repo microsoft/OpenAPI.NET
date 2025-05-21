@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
@@ -111,7 +113,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var targetSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
-                Properties = new()
+                Properties = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["prop1"] = new OpenApiSchema()
                     {
@@ -119,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 }
             };
-            workingDocument.Components.Schemas = new()
+            workingDocument.Components.Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 [referenceId] = targetSchema
             };
@@ -127,7 +129,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var referenceSchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Object,
-                Properties = new()
+                Properties = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["propA"] = new OpenApiSchemaReference(referenceId, workingDocument),
                 }

@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new()
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 {"x-tag-extension", null}
             }

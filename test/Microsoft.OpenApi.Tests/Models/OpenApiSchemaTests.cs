@@ -9,6 +9,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -42,11 +43,11 @@ namespace Microsoft.OpenApi.Tests.Models
         public static readonly OpenApiSchema AdvancedSchemaObject = new()
         {
             Title = "title1",
-            Properties = new()
+            Properties = new Dictionary<string, IOpenApiSchema>()
             {
                 ["property1"] = new OpenApiSchema()
                 {
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -61,11 +62,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["property4"] = new OpenApiSchema()
                 {
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property5"] = new OpenApiSchema()
                         {
-                            Properties = new()
+                            Properties = new Dictionary<string, IOpenApiSchema>()
                             {
                                 ["property6"] = new OpenApiSchema()
                                 {
@@ -96,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 new OpenApiSchema()
                 {
                     Title = "title2",
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -112,11 +113,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 new OpenApiSchema()
                 {
                     Title = "title3",
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property3"] = new OpenApiSchema()
                         {
-                            Properties = new()
+                            Properties = new Dictionary<string, IOpenApiSchema>()
                             {
                                 ["property4"] = new OpenApiSchema()
                                 {
@@ -159,12 +160,12 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Title = "title1",
             Required = new HashSet<string> { "property1" },
-            Properties = new()
+            Properties = new Dictionary<string, IOpenApiSchema>()
             {
                 ["property1"] = new OpenApiSchema()
                 {
                     Required = new HashSet<string> { "property3" },
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -181,11 +182,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["property4"] = new OpenApiSchema()
                 {
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property5"] = new OpenApiSchema()
                         {
-                            Properties = new()
+                            Properties = new Dictionary<string, IOpenApiSchema>()
                             {
                                 ["property6"] = new OpenApiSchema()
                                 {
@@ -534,7 +535,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var schema = new OpenApiSchema
             {
-                Extensions = new()
+                Extensions = new Dictionary<string, IOpenApiExtension>()
                 {
                     { "x-myextension", new JsonNodeExtension(42) }
                 }
@@ -545,7 +546,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Single(schemaCopy.Extensions);
 
             // Act && Assert
-            schemaCopy.Extensions = new()
+            schemaCopy.Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 { "x-myextension" , new JsonNodeExtension(40) }
             };

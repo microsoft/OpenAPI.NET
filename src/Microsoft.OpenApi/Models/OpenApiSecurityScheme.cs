@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         public Uri? OpenIdConnectUrl { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

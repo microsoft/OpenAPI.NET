@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Models.Interfaces;
 using System;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -243,7 +244,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             if (bodyParameter.Name is not null)
             {
-                requestBody.Extensions ??= [];
+                requestBody.Extensions ??= new Dictionary<string, IOpenApiExtension>();
                 requestBody.Extensions[OpenApiConstants.BodyName] = new JsonNodeExtension(bodyParameter.Name);
             }            
             return requestBody;

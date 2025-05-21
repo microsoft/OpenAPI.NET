@@ -313,8 +313,8 @@ namespace Microsoft.OpenApi.Reader.V2
 
     internal class RequestBodyReferenceFixer : OpenApiVisitorBase
     {
-        private readonly Dictionary<string, IOpenApiRequestBody> _requestBodies;
-        public RequestBodyReferenceFixer(Dictionary<string, IOpenApiRequestBody> requestBodies)
+        private readonly IDictionary<string, IOpenApiRequestBody> _requestBodies;
+        public RequestBodyReferenceFixer(IDictionary<string, IOpenApiRequestBody> requestBodies)
         {
             _requestBodies = requestBodies;
         }

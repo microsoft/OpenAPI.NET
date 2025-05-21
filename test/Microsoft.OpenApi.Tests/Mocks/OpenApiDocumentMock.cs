@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new()
+                                        Content = new Dictionary<string, OpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
