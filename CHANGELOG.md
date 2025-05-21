@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview.21](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.20...v2.0.0-preview.21) (2025-05-21)
+
+
+### Bug Fixes
+
+* do not throw when operation tag is missing matching global tag ([fe133f2](https://github.com/microsoft/OpenAPI.NET/commit/fe133f2604e9b65cc1c7011aab7c62f44e649d19))
+* do not throw when operation tag is missing matching global tag ([2c5aa40](https://github.com/microsoft/OpenAPI.NET/commit/2c5aa40cbb8bf1e96c1ccce6273579e70b69ade2))
+
 ## [2.0.0-preview.20](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.19...v2.0.0-preview.20) (2025-05-20)
 
 
