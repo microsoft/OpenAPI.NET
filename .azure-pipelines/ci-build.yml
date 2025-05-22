@@ -7,7 +7,6 @@ trigger:
     include:
     - main
     - support/v1
-    - task/move-to-deploy-stage
   tags:
     include:
     - 'v*'
@@ -16,15 +15,14 @@ pr:
     include:
     - main
     - support/v1
-    - task/move-to-deploy-stage
 
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
-  REGISTRY: 'msgraphpperegistry.azurecr.io'
+  REGISTRY: 'msgraphprodregistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
-  PREVIEW_BRANCH: 'refs/heads/task/move-to-deploy-stage'
+  PREVIEW_BRANCH: 'refs/heads/main'
   
 resources:
   repositories:
@@ -361,11 +359,11 @@ extends:
                 - task: AzureCLI@2
                   displayName: 'Login to Azure Container Registry'
                   inputs:
-                    azureSubscription: 'ACR Push Test'
+                    azureSubscription: 'ACR Images Push Service Connection'
                     scriptType: bash
                     scriptLocation: inlineScript
                     inlineScript: |
-                      az acr login --name msgraphpperegistry
+                      az acr login --name $(REGISTRY)
               
                 - powershell: |
                     $content = [XML](Get-Content $(Pipeline.Workspace)/Directory.Build.props)
