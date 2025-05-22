@@ -24,7 +24,7 @@ variables:
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   REGISTRY: 'msgraphpperegistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
-  PREVIEW_BRANCH: 'refs/heads/main'
+  PREVIEW_BRANCH: 'refs/heads/task/move-to-deploy-stage'
   
 resources:
   repositories:
