@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             throw new OpenApiReaderException("Cannot create a list from this type of node.", Context);
         }
 
-        public virtual Dictionary<string, ISet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
+        public virtual Dictionary<string, HashSet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
         {
             throw new OpenApiReaderException("Cannot create array map from this type of node.", Context);
         }

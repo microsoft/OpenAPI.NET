@@ -41,9 +41,9 @@ namespace Microsoft.OpenApi.Reader.V3
                 (o, n,_) =>
                 {
                     var max = n.GetScalarValue();
-                    if (max != null)
+                    if (!string.IsNullOrEmpty(max))
                     {
-                        o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(max, decimal.MaxValue);
+                        o.Maximum = max;
                     }
                 }
             },
@@ -52,13 +52,13 @@ namespace Microsoft.OpenApi.Reader.V3
                 (o, n, _) => o.IsExclusiveMaximum = bool.Parse(n.GetScalarValue())
             },
             {
-                "minimum",
+               "minimum",
                 (o, n, _) =>
                 {
                     var min = n.GetScalarValue();
-                    if (min != null)
+                    if (!string.IsNullOrEmpty(min))
                     {
-                        o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(min, decimal.MinValue);
+                        o.Minimum = min;
                     }
                 }
             },
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 "type",
                 (o, n, _) => {
                     var type = n.GetScalarValue()?.ToJsonSchemaType();
-                    // so we don't loose the value from nullable
+                    // so we don't lose the value from nullable
                     if (o.Type.HasValue)
                         o.Type |= type;
                     else
@@ -305,6 +305,16 @@ namespace Microsoft.OpenApi.Reader.V3
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
+            }
+
+            if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+            {
+                if (schema.Type.HasValue)
+                    schema.Type |= JsonSchemaType.Null;
+                else
+                    schema.Type = JsonSchemaType.Null;
+
+                schema.Extensions.Remove(OpenApiConstants.NullableExtension);
             }
 
             return schema;

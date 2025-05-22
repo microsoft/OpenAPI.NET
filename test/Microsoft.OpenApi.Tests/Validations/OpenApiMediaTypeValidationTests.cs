@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
@@ -55,8 +56,8 @@ namespace Microsoft.OpenApi.Validations.Tests
                         Type = JsonSchemaType.Integer,
                     }
                 },
-                Examples =
-                    {
+                Examples = new Dictionary<string, IOpenApiExample>
+                {
                         ["example0"] = new OpenApiExample()
                         {
                             Value = "1",

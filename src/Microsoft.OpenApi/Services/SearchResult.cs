@@ -25,6 +25,6 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Parameters object
         /// </summary>
-        public IList<IOpenApiParameter>? Parameters { get; set; }
+        public List<IOpenApiParameter>? Parameters { get; set; }
     }
 }

@@ -10,8 +10,6 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-#nullable enable
-
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -34,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         /// Examples of the media type.
         /// Each example object SHOULD match the media type and specified schema if present.
         /// </summary>
-        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
+        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <summary>
         /// A map between a property name and its encoding information.
@@ -42,12 +40,12 @@ namespace Microsoft.OpenApi.Models
         /// The encoding object SHALL only apply to requestBody objects
         /// when the media type is multipart or application/x-www-form-urlencoded.
         /// </summary>
-        public IDictionary<string, OpenApiEncoding>? Encoding { get; set; } = new Dictionary<string, OpenApiEncoding>();
+        public Dictionary<string, OpenApiEncoding>? Encoding { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -69,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.1.
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w));
         }
@@ -77,7 +75,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
         }
@@ -101,7 +99,7 @@ namespace Microsoft.OpenApi.Models
             // examples
             if (Examples != null && Examples.Any())
             {
-                SerializeExamples(writer, Examples);
+                SerializeExamples(writer, Examples, callback);
             }
 
             // encoding
@@ -116,12 +114,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v2.0.
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             // Media type does not exist in V2.
         }
 
-        private static void SerializeExamples(IOpenApiWriter writer, IDictionary<string, IOpenApiExample> examples)
+        private static void SerializeExamples(IOpenApiWriter writer, Dictionary<string, IOpenApiExample> examples, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             /* Special case for writing out empty arrays as valid response examples
             * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true
@@ -145,7 +143,7 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                writer.WriteOptionalMap(OpenApiConstants.Examples, examples, (w, e) => e.SerializeAsV3(w));
+                writer.WriteOptionalMap(OpenApiConstants.Examples, examples, callback);
             }
         }
     }

@@ -4,12 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
@@ -34,7 +32,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new()
         {
-            [typeof(OpenApiAny)] = OpenApiV3Deserializer.LoadAny,
+            [typeof(JsonNodeExtension)] = OpenApiV3Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV3Deserializer.LoadComponents,
             [typeof(OpenApiContact)] = OpenApiV3Deserializer.LoadContact,
@@ -62,12 +60,13 @@ namespace Microsoft.OpenApi.Reader.V3
             [typeof(OpenApiServer)] = OpenApiV3Deserializer.LoadServer,
             [typeof(OpenApiServerVariable)] = OpenApiV3Deserializer.LoadServerVariable,
             [typeof(OpenApiTag)] = OpenApiV3Deserializer.LoadTag,
-            [typeof(OpenApiXml)] = OpenApiV3Deserializer.LoadXml
+            [typeof(OpenApiXml)] = OpenApiV3Deserializer.LoadXml,
+            [typeof(OpenApiSchemaReference)] = OpenApiV3Deserializer.LoadMapping
         };
 
-        public OpenApiDocument LoadDocument(RootNode rootNode)
+        public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
-            return OpenApiV3Deserializer.LoadOpenApi(rootNode);
+            return OpenApiV3Deserializer.LoadOpenApi(rootNode, location);
         }
 
         public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement

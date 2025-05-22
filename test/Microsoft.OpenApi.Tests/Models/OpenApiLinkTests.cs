@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiLink AdvancedLink => new()
         {
             OperationId = "operationId1",
-            Parameters =
+            Parameters = new Dictionary<string, RuntimeExpressionAnyWrapper>
             {
                 ["parameter1"] = new()
                 {
@@ -46,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiLink ReferencedLink => new()
         {
             OperationId = "operationId1",
-            Parameters =
+            Parameters = new Dictionary<string, RuntimeExpressionAnyWrapper>
             {
                 ["parameter1"] = new()
                 {
@@ -124,8 +125,10 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var link = new OpenApiLink()
             {
-                Extensions = {
-                { "x-display", new OpenApiAny("Abc") }
+                Extensions = new()
+                {
+                    { "x-display", new JsonNodeExtension("Abc") 
+                }
 }
             };
 

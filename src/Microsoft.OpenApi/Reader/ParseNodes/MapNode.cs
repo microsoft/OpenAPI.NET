@@ -9,8 +9,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Reader.ParseNodes
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, ISet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
+        public override Dictionary<string, HashSet<T>> CreateArrayMap<T>(Func<ValueNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
 
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
                         ? value
                         : throw new OpenApiReaderException($"Expected array while parsing {typeof(T).Name}", Context);
 
-                    ISet<T> values = new HashSet<T>(arrayNode.OfType<JsonNode>().Select(item => map(new ValueNode(Context, item), openApiDocument)));
+                    HashSet<T> values = new HashSet<T>(arrayNode.OfType<JsonNode>().Select(item => map(new ValueNode(Context, item), openApiDocument)));
 
                     return (key, values);
 
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Reader.ParseNodes
         }
 
         /// <summary>
-        /// Create an <see cref="OpenApiAny"/>
+        /// Create an <see cref="JsonNodeExtension"/>
         /// </summary>
         /// <returns>The created Json object.</returns>
         public override JsonNode CreateAny()

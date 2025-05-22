@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -37,16 +37,16 @@ namespace Microsoft.OpenApi.Tests.Services
                         "/test",
                         new OpenApiPathItem()
                         {
-                            Operations =
-                        {
-                            [HttpMethod.Get] = new()
+                            Operations = new Dictionary<HttpMethod, OpenApiOperation>
                             {
-                                Responses =
+                                [HttpMethod.Get] = new()
                                 {
-                                    ["200"] = new OpenApiResponse()
+                                    Responses =
+                                    {
+                                        ["200"] = new OpenApiResponse()
+                                    }
                                 }
                             }
-                        }
                         }
                     }
                 }
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     Title = "foo",
                     Version = "1.2.2"
                 },
-                Servers = new List<OpenApiServer> {
+                Servers = [
                 new()
                 {
                     Url = "http://example.org"
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 new()
                 {
                 },
-            },
+            ],
                 Paths = new()
             };
 
@@ -103,8 +103,8 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
 
-            ruleset.Add(typeof(OpenApiAny), 
-             new ValidationRule<OpenApiAny>("FooExtensionRule",
+            ruleset.Add(typeof(JsonNodeExtension), 
+             new ValidationRule<JsonNodeExtension>("FooExtensionRule",
                  (context, item) =>
                  {
                      if (item.Node["Bar"].ToString() == "hey")
@@ -131,7 +131,10 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var extensionNode = JsonSerializer.Serialize(fooExtension);
             var jsonNode = JsonNode.Parse(extensionNode);
-            openApiDocument.Info.Extensions.Add("x-foo", new OpenApiAny(jsonNode));
+            openApiDocument.Info.Extensions = new Dictionary<string, IOpenApiExtension>
+            {
+                { "x-foo", new JsonNodeExtension(jsonNode) }
+            };
 
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
@@ -147,8 +150,8 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void RemoveRuleByName_Invalid()
         {
-            Assert.Throws<ArgumentNullException>(() => new ValidationRule<OpenApiAny>(null, (vc, oaa) => { }));
-            Assert.Throws<ArgumentNullException>(() => new ValidationRule<OpenApiAny>(string.Empty, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<JsonNodeExtension>(null, (vc, oaa) => { }));
+            Assert.Throws<ArgumentNullException>(() => new ValidationRule<JsonNodeExtension>(string.Empty, (vc, oaa) => { }));
         }
 
         [Fact]

@@ -281,10 +281,8 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(currentDocument);
             hostDocument ??= currentDocument;
         }
-        #nullable enable
         private static string? GetPropertyValueFromNode(JsonObject jsonObject, string key) =>
         jsonObject.TryGetPropertyValue(key, out var valueNode) && valueNode is JsonValue valueCast && valueCast.TryGetValue<string>(out var strValue) ? strValue : null;
-        #nullable restore
         internal void SetSummaryAndDescriptionFromMapNode(MapNode mapNode)
         {
             var (description, summary) = mapNode.JsonNode switch {

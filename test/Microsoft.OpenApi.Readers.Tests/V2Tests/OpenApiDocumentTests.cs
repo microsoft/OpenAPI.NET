@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -55,15 +55,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 "yaml", SettingsFixture.ReaderSettings);
 
             Assert.Equal("0.9.1", result.Document.Info.Version, StringComparer.OrdinalIgnoreCase);
-            var extension = Assert.IsType<OpenApiAny>(result.Document.Info.Extensions["x-extension"]);
+            var extension = Assert.IsType<JsonNodeExtension>(result.Document.Info.Extensions["x-extension"]);
             Assert.Equal(2.335M, extension.Node.GetValue<decimal>());
             var sampleSchema = Assert.IsType<OpenApiSchema>(result.Document.Components.Schemas["sampleSchema"]);
             var samplePropertySchema = Assert.IsType<OpenApiSchema>(sampleSchema.Properties["sampleProperty"]);
             var expectedPropertySchema = new OpenApiSchema()
             {
                 Type = JsonSchemaType.Number,
-                Minimum = (decimal)100.54,
-                ExclusiveMaximum = (decimal)60000000.35,
+                Minimum = "100.54",
+                ExclusiveMaximum = "60000000.35",
             };
 
             Assert.Equivalent(expectedPropertySchema, samplePropertySchema);
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okSchema = new OpenApiSchema
             {
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     { "id", new OpenApiSchema
                         {
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var errorSchema = new OpenApiSchema
             {
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     { "code", new OpenApiSchema
                         {
@@ -132,17 +132,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Version = "1.0.0"
                 },
                 Servers =
-                {
+                [
                     new OpenApiServer
                     {
                         Url = "https://"
                     }
-                },
+                ],
                 Paths = new()
                 {
                     ["/items"] = new OpenApiPathItem()
                     {
-                        Operations =
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new()
                             {
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
-                                        Content =
+                                        Content = new()
                                         {
                                             ["application/json"] = okMediaType,
                                             ["application/xml"] = okMediaType,
@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
-                                        Content =
+                                        Content = new()
                                         {
                                             ["application/json"] = errorMediaType,
                                             ["application/xml"] = errorMediaType
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
-                                        Content =
+                                        Content = new()
                                         {
                                             ["html/text"] = okMediaType
                                         }
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
-                                        Content =
+                                        Content = new()
                                         {
                                             ["html/text"] = errorMediaType
                                         }
@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "An OK response",
-                                        Content =
+                                        Content = new()
                                         {
                                             ["application/json"] = okMediaType,
                                             ["application/xml"] = okMediaType,
@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     ["default"] = new OpenApiResponse()
                                     {
                                         Description = "An error response",
-                                        Content =
+                                        Content = new()
                                         {
                                             ["application/json"] = errorMediaType,
                                             ["application/xml"] = errorMediaType
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 },
                 Components = new()
                 {
-                    Schemas =
+                    Schemas = new()
                     {
                         ["Item"] = okSchema,
                         ["Error"] = errorSchema

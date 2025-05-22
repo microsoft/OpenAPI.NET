@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiServer"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiServer> servers)
+        public virtual void Visit(List<OpenApiServer> servers)
         {
         }
 
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits Webhooks>
         /// </summary>
-        public virtual void Visit(IDictionary<string, IOpenApiPathItem> webhooks)
+        public virtual void Visit(Dictionary<string, IOpenApiPathItem> webhooks)
         {
         }
 
@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the operations.
         /// </summary>
-        public virtual void Visit(IDictionary<HttpMethod, OpenApiOperation> operations)
+        public virtual void Visit(Dictionary<HttpMethod, OpenApiOperation> operations)
         {
         }
 
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        public virtual void Visit(IList<IOpenApiParameter> parameters)
+        public virtual void Visit(List<IOpenApiParameter> parameters)
         {
         }
 
@@ -163,14 +163,14 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits headers.
         /// </summary>
-        public virtual void Visit(IDictionary<string, IOpenApiHeader> headers)
+        public virtual void Visit(Dictionary<string, IOpenApiHeader> headers)
         {
         }
 
         /// <summary>
         /// Visits callbacks.
         /// </summary>
-        public virtual void Visit(IDictionary<string, IOpenApiCallback> callbacks)
+        public virtual void Visit(Dictionary<string, IOpenApiCallback> callbacks)
         {
         }
 
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits media type content.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiMediaType> content)
+        public virtual void Visit(Dictionary<string, OpenApiMediaType> content)
         {
         }
 
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the examples.
         /// </summary>
-        public virtual void Visit(IDictionary<string, IOpenApiExample> examples)
+        public virtual void Visit(Dictionary<string, IOpenApiExample> examples)
         {
         }
 
@@ -240,7 +240,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the links.
         /// </summary>
-        public virtual void Visit(IDictionary<string, IOpenApiLink> links)
+        public virtual void Visit(Dictionary<string, IOpenApiLink> links)
         {
         }
 
@@ -310,21 +310,21 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/>
         /// </summary>
-        public virtual void Visit(ISet<OpenApiTag> openApiTags)
+        public virtual void Visit(HashSet<OpenApiTag> openApiTags)
         {
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/>
         /// </summary>
-        public virtual void Visit(ISet<OpenApiTagReference> openApiTags)
+        public virtual void Visit(HashSet<OpenApiTagReference> openApiTags)
         {
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiSecurityRequirement"/>
         /// </summary>
-        public virtual void Visit(IList<OpenApiSecurityRequirement> openApiSecurityRequirements)
+        public virtual void Visit(List<OpenApiSecurityRequirement> openApiSecurityRequirements)
         {
         }
 
@@ -345,14 +345,14 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="IOpenApiExample"/>
         /// </summary>
-        public virtual void Visit(IList<IOpenApiExample> example)
+        public virtual void Visit(List<IOpenApiExample> example)
         {
         }
 
         /// <summary>
         /// Visits a dictionary of server variables
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiServerVariable> serverVariables)
+        public virtual void Visit(Dictionary<string, OpenApiServerVariable> serverVariables)
         {
         }
 
@@ -360,7 +360,7 @@ namespace Microsoft.OpenApi.Services
         /// Visits a dictionary of encodings
         /// </summary>
         /// <param name="encodings"></param>
-        public virtual void Visit(IDictionary<string, OpenApiEncoding> encodings)
+        public virtual void Visit(Dictionary<string, OpenApiEncoding> encodings)
         {
         }
 

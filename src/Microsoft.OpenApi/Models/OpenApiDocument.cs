@@ -17,8 +17,6 @@ using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 
-#nullable enable
-
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -51,7 +49,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer>? Servers { get; set; } = new List<OpenApiServer>();
+        public List<OpenApiServer>? Servers { get; set; } = [];
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
@@ -63,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// A map of requests initiated other than by an API call, for example by an out of band registration. 
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
-        public IDictionary<string, IOpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, IOpenApiPathItem>();
+        public Dictionary<string, IOpenApiPathItem>? Webhooks { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -73,14 +71,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? Security { get; set; } =
-            new List<OpenApiSecurityRequirement>();
+        public List<OpenApiSecurityRequirement>? Security { get; set; }
 
         private HashSet<OpenApiTag>? _tags;
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public ISet<OpenApiTag>? Tags 
+        public HashSet<OpenApiTag>? Tags 
         { 
             get
             {
@@ -106,15 +103,15 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Metadata { get; set; }
+        public Dictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
-        /// Implements IBaseDocument
+        /// Absolute location of the document or a generated placeholder if location is not given
         /// </summary>
-        public Uri BaseUri { get; }
+        public Uri BaseUri { get; internal set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -135,11 +132,11 @@ namespace Microsoft.OpenApi.Models
             Workspace = document?.Workspace != null ? new(document.Workspace) : null;
             Info = document?.Info != null ? new(document.Info) : new OpenApiInfo();
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
-            Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
-            Paths = document?.Paths != null ? new(document.Paths) : new OpenApiPaths();
+            Servers = document?.Servers != null ? [.. document.Servers] : null;
+            Paths = document?.Paths != null ? new(document.Paths) : [];
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
-            Security = document?.Security != null ? new List<OpenApiSecurityRequirement>(document.Security) : null;
+            Security = document?.Security != null ? [.. document.Security] : null;
             Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
@@ -299,15 +296,12 @@ namespace Microsoft.OpenApi.Models
                         .OfType<OpenApiSchemaReference>()
                         .Where(k => k.Reference?.Id is not null)
                         .ToDictionary<OpenApiSchemaReference, string, IOpenApiSchema>(
-                            k => k.Reference?.Id!,
+                            k => k.Reference.Id!,
                             v => v
                         );
 
 
-                    foreach (var schema in openApiSchemas.Values.ToList())
-                    {
-                        FindSchemaReferences.ResolveSchemas(Components, openApiSchemas!);
-                    }
+                    FindSchemaReferences.ResolveSchemas(Components, openApiSchemas);
 
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
@@ -417,10 +411,10 @@ namespace Microsoft.OpenApi.Models
 
         private static string? ParseServerUrl(OpenApiServer server)
         {
-            return server.ReplaceServerUrlVariables(new Dictionary<string, string>(0));
+            return server.ReplaceServerUrlVariables([]);
         }
 
-        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer>? servers)
+        private static void WriteHostInfoV2(IOpenApiWriter writer, List<OpenApiServer>? servers)
         {
             if (servers == null || !servers.Any())
             {
@@ -527,26 +521,44 @@ namespace Microsoft.OpenApi.Models
         /// <returns>The hash value.</returns>
         public async Task<string> GetHashCodeAsync(CancellationToken cancellationToken = default)
         {
+#if NET7_OR_GREATER
+            using var memoryStream = new MemoryStream();
+            using var streamWriter = new StreamWriter(memoryStream);
+
+            await WriteDocumentAsync(streamWriter, cancellationToken).ConfigureAwait(false);
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            var hash = await SHA512.HashDataAsync(memoryStream, cancellationToken).ConfigureAwait(false);
+#else
             using HashAlgorithm sha = SHA512.Create();
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
-            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
-            SerializeAsV3(openApiJsonWriter);
-            await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
+            await WriteDocumentAsync(streamWriter, cancellationToken).ConfigureAwait(false);
 
-#if NET5_0_OR_GREATER
-            await cryptoStream.FlushFinalBlockAsync(cancellationToken).ConfigureAwait(false);
-#else
             cryptoStream.FlushFinalBlock();
+
+            var hash = sha.Hash;
 #endif
-            return ConvertByteArrayToString(sha.Hash ?? []);
+
+            return ConvertByteArrayToString(hash ?? []);
+
+            async Task WriteDocumentAsync(TextWriter writer, CancellationToken token)
+            {
+                var openApiJsonWriter = new OpenApiJsonWriter(writer, new() { Terse = true });
+                SerializeAsV31(openApiJsonWriter);
+                await openApiJsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
+            }
         }
 
         private static string ConvertByteArrayToString(byte[] hash)
         {
             // Build the final string by converting each byte
             // into hex and appending it to a StringBuilder
+#if NET5_0_OR_GREATER
+            return Convert.ToHexString(hash);
+#else
             var sb = new StringBuilder();
             for (var i = 0; i < hash.Length; i++)
             {
@@ -554,6 +566,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             return sb.ToString();
+#endif
         }
 
         /// <summary>
@@ -574,14 +587,15 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                string relativePath = OpenApiConstants.ComponentsSegment + reference.Type.GetDisplayName() + "/" + id;
+                string relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
+                Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource) : null;
 
-                uriLocation = useExternal
-                    ? Workspace?.GetDocumentId(reference.ExternalResource)?.OriginalString + relativePath
+                uriLocation = useExternal && externalResourceUri is not null
+                    ? externalResourceUri.AbsoluteUri + relativePath
                     : BaseUri + relativePath;
             }
 
-            return Workspace?.ResolveReference<IOpenApiReferenceable>(uriLocation);
+            return Workspace?.ResolveReference<IOpenApiReferenceable>(new Uri(uriLocation).AbsoluteUri);
         }
 
         /// <summary>
@@ -651,52 +665,70 @@ namespace Microsoft.OpenApi.Models
             Utils.CheckArgumentNull(componentToRegister);
             Utils.CheckArgumentNullOrEmpty(id);
             Components ??= new();
+
+            static bool AddToDictionary<TValue>(Dictionary<string, TValue> dict, string key, TValue value)
+            {
+#if NET5_0_OR_GREATER
+                return dict.TryAdd(key, value);
+#else
+                if (!dict.ContainsKey(key))
+                {
+                    dict.Add(key, value);
+                    return true;
+                }
+                return false;
+#endif
+            }
+
+            bool added = false;
             switch (componentToRegister)
             {
                 case IOpenApiSchema openApiSchema:
-                    Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
-                    Components.Schemas.Add(id, openApiSchema);
+                    Components.Schemas ??= [];
+                    added = AddToDictionary(Components.Schemas, id, openApiSchema);
                     break;
                 case IOpenApiParameter openApiParameter:
-                    Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
-                    Components.Parameters.Add(id, openApiParameter);
+                    Components.Parameters ??= [];
+                    added = AddToDictionary(Components.Parameters, id, openApiParameter);
                     break;
                 case IOpenApiResponse openApiResponse:
-                    Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
-                    Components.Responses.Add(id, openApiResponse);
+                    Components.Responses ??= [];
+                    added = AddToDictionary(Components.Responses, id, openApiResponse);
                     break;
                 case IOpenApiRequestBody openApiRequestBody:
-                    Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
-                    Components.RequestBodies.Add(id, openApiRequestBody);
+                    Components.RequestBodies ??= [];
+                    added = AddToDictionary(Components.RequestBodies, id, openApiRequestBody);
                     break;
                 case IOpenApiLink openApiLink:
-                    Components.Links ??= new Dictionary<string, IOpenApiLink>();
-                    Components.Links.Add(id, openApiLink);
+                    Components.Links ??= [];
+                    added = AddToDictionary(Components.Links, id, openApiLink);
                     break;
                 case IOpenApiCallback openApiCallback:
-                    Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
-                    Components.Callbacks.Add(id, openApiCallback);
+                    Components.Callbacks ??= [];
+                    added = AddToDictionary(Components.Callbacks, id, openApiCallback);
                     break;
                 case IOpenApiPathItem openApiPathItem:
-                    Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
-                    Components.PathItems.Add(id, openApiPathItem);
+                    Components.PathItems ??= [];
+                    added = AddToDictionary(Components.PathItems, id, openApiPathItem);
                     break;
                 case IOpenApiExample openApiExample:
-                    Components.Examples ??= new Dictionary<string, IOpenApiExample>();
-                    Components.Examples.Add(id, openApiExample);
+                    Components.Examples ??= [];
+                    added = AddToDictionary(Components.Examples, id, openApiExample);
                     break;
                 case IOpenApiHeader openApiHeader:
-                    Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
-                    Components.Headers.Add(id, openApiHeader);
+                    Components.Headers ??= [];
+                    added = AddToDictionary(Components.Headers, id, openApiHeader);
                     break;
                 case IOpenApiSecurityScheme openApiSecurityScheme:
-                    Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
-                    Components.SecuritySchemes.Add(id, openApiSecurityScheme);
+                    Components.SecuritySchemes ??= [];
+                    added = AddToDictionary(Components.SecuritySchemes, id, openApiSecurityScheme);
                     break;
                 default:
                     throw new ArgumentException($"Component type {componentToRegister!.GetType().Name} is not supported.");
             }
-            return Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false;
+
+            // Register only if it was actually added to the collection
+            return added && (Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false);
         }
     }
 
@@ -706,8 +738,10 @@ namespace Microsoft.OpenApi.Models
 
         public static void ResolveSchemas(OpenApiComponents? components, Dictionary<string, IOpenApiSchema> schemas)
         {
-            var visitor = new FindSchemaReferences();
-            visitor.Schemas = schemas;
+            var visitor = new FindSchemaReferences
+            {
+                Schemas = schemas
+            };
             var walker = new OpenApiWalker(visitor);
             walker.Walk(components);
         }

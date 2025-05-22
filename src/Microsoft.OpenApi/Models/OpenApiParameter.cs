@@ -61,16 +61,16 @@ namespace Microsoft.OpenApi.Models
         public IOpenApiSchema? Schema { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample>? Examples { get; set; } = new Dictionary<string, IOpenApiExample>();
+        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <inheritdoc/>
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// A parameterless constructor
@@ -100,13 +100,13 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
@@ -165,50 +165,25 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
-
-        /// <inheritdoc/>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        /// <summary>
+        /// Write the "in" property for V2 serialization.
+        /// </summary>
+        /// <param name="writer">Writer to use for the serialization</param>
+        internal virtual void WriteInPropertyForV2(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);
+            writer.WriteProperty(OpenApiConstants.In, In?.GetDisplayName());
+        }
 
-            writer.WriteStartObject();
-
-            // in
-            if (this is OpenApiFormDataParameter)
-            {
-                writer.WriteProperty(OpenApiConstants.In, "formData");
-            }
-            else if (this is OpenApiBodyParameter)
-            {
-                writer.WriteProperty(OpenApiConstants.In, "body");
-            }
-            else
-            {
-                writer.WriteProperty(OpenApiConstants.In, In?.GetDisplayName());
-            }
-
-            // name
-            writer.WriteProperty(OpenApiConstants.Name, Name);
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // required
-            writer.WriteProperty(OpenApiConstants.Required, Required, false);
-
-            // deprecated
-            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
-
-            var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
-
-            // schema
-            if (this is OpenApiBodyParameter)
-            {
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
-            }
+        /// <summary>
+        /// Write the request body schema for V2 serialization.
+        /// </summary>
+        /// <param name="writer">Writer to use for the serialization</param>
+        /// <param name="extensionsClone">Extensions clone</param>
+        internal virtual void WriteRequestBodySchemaForV2(IOpenApiWriter writer, Dictionary<string, IOpenApiExtension>? extensionsClone)
+        {
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
-            else if (Schema is OpenApiSchemaReference { UnresolvedReference: true } || (Schema?.Type & JsonSchemaType.Object) == JsonSchemaType.Object)
+            if (Schema is OpenApiSchemaReference { UnresolvedReference: true } || (Schema?.Type & JsonSchemaType.Object) == JsonSchemaType.Object)
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }
@@ -270,7 +245,34 @@ namespace Microsoft.OpenApi.Models
                     }
                 }
             }
+        }
 
+        /// <inheritdoc/>
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
+        {
+            Utils.CheckArgumentNull(writer);
+
+            writer.WriteStartObject();
+
+            // in
+            WriteInPropertyForV2(writer);
+
+            // name
+            writer.WriteProperty(OpenApiConstants.Name, Name);
+
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
+
+            // required
+            writer.WriteProperty(OpenApiConstants.Required, Required, false);
+
+            // deprecated
+            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
+
+            var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
+
+            // schema
+            WriteRequestBodySchemaForV2(writer, extensionsClone);
             //examples
             if (Examples != null && Examples.Any())
             {
@@ -315,6 +317,14 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     internal class OpenApiBodyParameter : OpenApiParameter
     {
+        internal override void WriteRequestBodySchemaForV2(IOpenApiWriter writer, Dictionary<string, IOpenApiExtension>? extensionsClone)
+        {
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
+        }
+        internal override void WriteInPropertyForV2(IOpenApiWriter writer)
+        {
+            writer.WriteProperty(OpenApiConstants.In, "body");
+        }
     }
 
     /// <summary>
@@ -322,5 +332,9 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     internal class OpenApiFormDataParameter : OpenApiParameter
     {
+        internal override void WriteInPropertyForV2(IOpenApiWriter writer)
+        {
+            writer.WriteProperty(OpenApiConstants.In, "formData");
+        }
     }
 }

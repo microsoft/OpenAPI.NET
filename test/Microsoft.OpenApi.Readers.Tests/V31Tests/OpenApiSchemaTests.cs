@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
                 Description = "A representation of a person, company, organization, or place",
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["fruits"] = new OpenApiSchema
                     {
@@ -66,11 +66,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "veggieName",
                             "veggieLike"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "veggieType", new HashSet<string> { "veggieColor", "veggieSize" } }
                         },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["veggieName"] = new OpenApiSchema
                             {
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["one"] = new OpenApiSchema()
                     {
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["one"] = new OpenApiSchema()
                     {
@@ -239,22 +239,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     ["six"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum true",
-                        ExclusiveMinimum = 10
+                        ExclusiveMinimum = "10"
                     },
                     ["seven"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMinimum false",
-                        Minimum = 10
+                        Minimum = "10"
                     },
                     ["eight"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum true",
-                        ExclusiveMaximum = 20
+                        ExclusiveMaximum = "20"
                     },
                     ["nine"] = new OpenApiSchema()
                     {
                         Description = "exclusiveMaximum false",
-                        Maximum = 20
+                        Maximum = "20"
                     },
                     ["ten"] = new OpenApiSchema()
                     {
@@ -384,8 +384,7 @@ x-nullable: true";
             // Arrange
             var expected = @"type:
   - 'null'
-  - string
-x-nullable: true";
+  - string";
 
             var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
 
@@ -407,7 +406,7 @@ x-nullable: true";
 - ""int""
 nullable: true";
 
-            var expected = @"{ }";
+            var expected = @"x-nullable: true";
 
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml", SettingsFixture.ReaderSettings);
 

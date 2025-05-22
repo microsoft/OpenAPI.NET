@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var components = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new()
                 {
                     ["petSchema"] =  new OpenApiSchema()
                     {
@@ -42,11 +42,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "id",
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -74,11 +74,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 {
                     ["pets"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation
                             {
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 {
                                     Description = "Information about a new pet in the system",
                                     Required = true,
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "Return a 200 status to indicate that the data was received successfully",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var components = new OpenApiComponents
             {
-                Schemas = new Dictionary<string, IOpenApiSchema>
+                Schemas = new()
                 {
                     ["petSchema"] = new OpenApiSchema()
                     {
@@ -234,11 +234,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             "id",
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -266,11 +266,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         {
                             "name"
                         },
-                        DependentRequired = new Dictionary<string, ISet<string>>
+                        DependentRequired = new Dictionary<string, HashSet<string>>
                         {
                             { "tag", new HashSet<string> { "category" } }
                         },
-                        Properties = new Dictionary<string, IOpenApiSchema>
+                        Properties = new()
                         {
                             ["id"] = new OpenApiSchema()
                             {
@@ -303,48 +303,48 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             {
                 ["pets"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation
                         {
                             Description = "Returns all pets from the system that the user has access to",
                             OperationId = "findPets",
                             Parameters =
-                                [
-                                    new OpenApiParameter
+                            [
+                                new OpenApiParameter
+                                {
+                                    Name = "tags",
+                                    In = ParameterLocation.Query,
+                                    Description = "tags to filter by",
+                                    Required = false,
+                                    Schema = new OpenApiSchema()
                                     {
-                                        Name = "tags",
-                                        In = ParameterLocation.Query,
-                                        Description = "tags to filter by",
-                                        Required = false,
-                                        Schema = new OpenApiSchema()
+                                        Type = JsonSchemaType.Array,
+                                        Items = new OpenApiSchema()
                                         {
-                                            Type = JsonSchemaType.Array,
-                                            Items = new OpenApiSchema()
-                                            {
-                                                Type = JsonSchemaType.String
-                                            }
-                                        }
-                                    },
-                                    new OpenApiParameter
-                                    {
-                                        Name = "limit",
-                                        In = ParameterLocation.Query,
-                                        Description = "maximum number of results to return",
-                                        Required = false,
-                                        Schema = new OpenApiSchema()
-                                        {
-                                            Type = JsonSchemaType.Integer,
-                                            Format = "int32"
+                                            Type = JsonSchemaType.String
                                         }
                                     }
-                                ],
+                                },
+                                new OpenApiParameter
+                                {
+                                    Name = "limit",
+                                    In = ParameterLocation.Query,
+                                    Description = "maximum number of results to return",
+                                    Required = false,
+                                    Schema = new OpenApiSchema()
+                                    {
+                                        Type = JsonSchemaType.Integer,
+                                        Format = "int32"
+                                    }
+                                }
+                            ],
                             Responses = new OpenApiResponses
                             {
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -372,7 +372,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Description = "Information about a new pet in the system",
                                 Required = true,
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -385,7 +385,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "Return a 200 status to indicate that the data was received successfully",
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -447,7 +447,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new Dictionary<string, IOpenApiSchema>
+                Properties = new()
                 {
                     ["prop1"] = new OpenApiSchema
                     {
@@ -462,7 +462,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = JsonSchemaType.String
                     }
                 },
-                PatternProperties = new Dictionary<string, IOpenApiSchema>
+                PatternProperties = new()
                 {
                     ["^x-.*$"] = new OpenApiSchema
                     {
@@ -514,7 +514,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ExternalDocumentDereferenceToOpenApiDocumentUsingJsonPointerWorks()
         {
             // Arrange
-            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+            var documentName = "externalRefByJsonPointer.yaml";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath, documentName);
 
             var settings = new OpenApiReaderSettings
             {
@@ -524,11 +525,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             settings.AddYamlReader();
 
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefByJsonPointer.yaml"), settings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, documentName), settings);
             var responseSchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
 
             // Assert
-            result.Document.Workspace.Contains("./externalResource.yaml");
+            var externalResourceUri = new Uri(
+                "file://" + 
+                Path.Combine(Path.GetFullPath(SampleFolderPath), 
+                "externalResource.yaml#/components/schemas/todo")).AbsoluteUri;
+
+            Assert.True(result.Document.Workspace.Contains(externalResourceUri));
             Assert.Equal(2, responseSchema.Properties.Count); // reference has been resolved
         }
 
@@ -568,6 +574,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             await Verifier.Verify(actual);
+        }
+
+        [Fact]
+        public async Task ParseDocumentWithEmptyTagsWorks()
+        {
+            var path = Path.Combine(SampleFolderPath, "documentWithEmptyTags.json");
+            var doc = (await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings)).Document;
+
+            doc.Paths["/groups"].Operations[HttpMethod.Get].Tags.Should().BeNull("Empty tags are ignored, so we should not have any tags");
         }
 
         [Fact]

@@ -26,25 +26,27 @@ namespace Microsoft.OpenApi.YamlReader
 
         /// <inheritdoc/>
         public async Task<ReadResult> ReadAsync(Stream input,
+                                                Uri location,
                                                 OpenApiReaderSettings settings,
                                                 CancellationToken cancellationToken = default)
         {
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (input is MemoryStream memoryStream)
             {
-                return Read(memoryStream, settings);
+                return Read(memoryStream, location, settings);
             } 
             else 
             {
                 using var preparedStream = new MemoryStream();
                 await input.CopyToAsync(preparedStream, copyBufferSize, cancellationToken).ConfigureAwait(false);
                 preparedStream.Position = 0;
-                return Read(preparedStream, settings);
+                return Read(preparedStream, location, settings);
             }
         }
 
         /// <inheritdoc/>
         public ReadResult Read(MemoryStream input,
+                               Uri location,
                                OpenApiReaderSettings settings)
         {
             if (input is null) throw new ArgumentNullException(nameof(input));
@@ -74,13 +76,13 @@ namespace Microsoft.OpenApi.YamlReader
                 };
             }
 
-            return Read(jsonNode, settings);
+            return Read(jsonNode, location, settings);
         }
 
         /// <inheritdoc/>
-        public static ReadResult Read(JsonNode jsonNode, OpenApiReaderSettings settings)
+        public static ReadResult Read(JsonNode jsonNode, Uri location, OpenApiReaderSettings settings)
         {
-            return _jsonReader.Read(jsonNode, settings);
+            return _jsonReader.Read(jsonNode, location, settings);
         }
 
         /// <inheritdoc/>

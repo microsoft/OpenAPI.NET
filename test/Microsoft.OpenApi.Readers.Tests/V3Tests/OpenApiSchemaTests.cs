@@ -3,21 +3,22 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Extensions;
-using SharpYaml.Serialization;
-using Xunit;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
-using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Models.References;
-using System.Threading.Tasks;
-using System.Net.Http;
+using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.Writers;
 using Microsoft.OpenApi.YamlReader;
+using SharpYaml.Serialization;
+using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -64,12 +65,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 }";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
+            var jsonNodeExtension = OpenApiModelFactory.Parse<JsonNodeExtension>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            jsonNodeExtension.Should().BeEquivalentTo(new JsonNodeExtension(
                 new JsonObject
                 {
                     ["foo"] = "bar",
@@ -87,12 +88,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
 
             // Act
-            var openApiAny = OpenApiModelFactory.Parse<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
+            var jsonNodeExtension = OpenApiModelFactory.Parse<JsonNodeExtension>(input, OpenApiSpecVersion.OpenApi3_0, new(), out var diagnostic, settings: SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+            jsonNodeExtension.Should().BeEquivalentTo(new JsonNodeExtension(
                 new JsonArray
                 {
                     "foo",
@@ -121,7 +122,7 @@ get:
                 new OpenApiPathItem
                 {
                     Summary = "externally referenced path item",
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new OpenApiOperation()
                         {
@@ -194,7 +195,7 @@ get:
             new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties =
+                Properties = new()
                 {
                         ["id"] = new OpenApiSchema()
                         {
@@ -206,14 +207,14 @@ get:
                             Type = JsonSchemaType.String
                         }
                 },
-                Required =
+                Required = new HashSet<string>
                 {
                         "name"
                 },
                 Example = new JsonObject
                 {
-                    ["name"] = new OpenApiAny("Puma").Node,
-                    ["id"] = new OpenApiAny(1).Node
+                    ["name"] = new JsonNodeExtension("Puma").Node,
+                    ["id"] = new JsonNodeExtension(1).Node
                 }
             }, options => options
             .IgnoringCyclicReferences()
@@ -240,25 +241,25 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new()
                 {
                     ["ErrorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
-                        Properties =
+                        Properties = new()
                         {
                             ["code"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Integer,
-                                Minimum = 100,
-                                Maximum = 600
+                                Minimum = "100",
+                                Maximum = "600"
                             },
                             ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String
                             }
                         },
-                        Required =
+                        Required = new HashSet<string>
                         {
                             "message",
                             "code"
@@ -267,13 +268,13 @@ get:
                     ["ExtendedErrorModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ErrorModel", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Required = {"rootCause"},
-                                Properties =
+                                Required = new HashSet<string> {"rootCause"},
+                                Properties = new()
                                 {
                                     ["rootCause"] = new OpenApiSchema()
                                     {
@@ -281,7 +282,7 @@ get:
                                     }
                                 }
                             }
-                        }
+                        ]
                     }
                 }
             };
@@ -297,7 +298,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new()
                 {
                     ["Pet"] = new OpenApiSchema()
                     {
@@ -306,7 +307,7 @@ get:
                         {
                             PropertyName = "petType"
                         },
-                        Properties =
+                        Properties = new()
                         {
                             ["name"] = new OpenApiSchema()
                             {
@@ -317,7 +318,7 @@ get:
                                 Type = JsonSchemaType.String
                             }
                         },
-                        Required =
+                        Required = new HashSet<string>
                         {
                             "name",
                             "petType"
@@ -327,41 +328,41 @@ get:
                     {
                         Description = "A representation of a cat",
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("Pet", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Required = {"huntingSkill"},
-                                Properties =
+                                Required = new HashSet<string>{"huntingSkill"},
+                                Properties = new()
                                 {
                                     ["huntingSkill"] = new OpenApiSchema()
                                     {
                                         Type = JsonSchemaType.String,
                                         Description = "The measured skill for hunting",
                                         Enum =
-                                        {
+                                        [
                                             "clueless",
                                             "lazy",
                                             "adventurous",
                                             "aggressive"
-                                        }
+                                        ]
                                     }
                                 }
                             }
-                        }
+                        ]
                     },
                     ["Dog"] = new OpenApiSchema()
                     {
                         Description = "A representation of a dog",
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("Pet", result.Document),
                             new OpenApiSchema
                             {
                                 Type = JsonSchemaType.Object,
-                                Required = {"packSize"},
-                                Properties =
+                                Required = new HashSet<string>{"packSize"},
+                                Properties = new()
                                 {
                                     ["packSize"] = new OpenApiSchema()
                                     {
@@ -369,11 +370,11 @@ get:
                                         Format = "int32",
                                         Description = "the size of the pack the dog is from",
                                         Default = 0,
-                                        Minimum = 0
+                                        Minimum = "0"
                                     }
                                 }
                             }
-                        }
+                        ]
                     }
                 }
             };
@@ -403,47 +404,84 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new()
                 {
                     ["RelativePathModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ExternalRelativePathModel", result.Document, "./FirstLevel/SecondLevel/ThridLevel/File.json")
-                        }
+                        ]
                     },
                     ["SimpleRelativePathModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ExternalSimpleRelativePathModel", result.Document, "File.json")
-                        }
+                        ]
                     },
                     ["AbsoluteWindowsPathModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ExternalAbsWindowsPathModel", result.Document, @"A:\Dir\File.json")
-                        }
+                        ]
                     },
                     ["AbsoluteUnixPathModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [
                             new OpenApiSchemaReference("ExternalAbsUnixPathModel", result.Document, "/Dir/File.json")
-                        }
+                        ]
                     },
                     ["HttpsUrlModel"] = new OpenApiSchema()
                     {
                         AllOf =
-                        {
+                        [                            
                             new OpenApiSchemaReference("ExternalHttpsModel", result.Document, "https://host.lan:1234/path/to/file/resource.json")
-                        }
+                        ]
                     }
                 }
             };
 
             Assert.Equivalent(expectedComponents, components);
+        }
+
+        [Fact]
+        public async Task SerializeSchemaWithNullableShouldSucceed()
+        {
+            // Arrange
+            var expected = @"type: string
+nullable: true";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
+
+            // Act
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+
+            var writer = new StringWriter();
+            schema.SerializeAsV3(new OpenApiYamlWriter(writer));
+            var schemaString = writer.ToString();
+
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public async Task SerializeSchemaWithOnlyNullableShouldSucceed()
+        {
+            // Arrange
+            var expected = @"nullable: true";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithOnlyNullable.yaml");
+
+            // Act
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+
+            var writer = new StringWriter();
+            schema.SerializeAsV3(new OpenApiYamlWriter(writer));
+            var schemaString = writer.ToString();
+
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

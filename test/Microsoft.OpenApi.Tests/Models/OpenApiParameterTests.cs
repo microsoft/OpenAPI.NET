@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -45,13 +44,13 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Title = "title2",
                 Description = "description2",
-                OneOf = new List<IOpenApiSchema>
-                {
+                OneOf =
+                [
                     new OpenApiSchema() { Type = JsonSchemaType.Number, Format = "double" },
                     new OpenApiSchema() { Type = JsonSchemaType.String }
-                }
+                ]
             },
-            Examples =
+            Examples = new Dictionary<string, IOpenApiExample>
             {
                 ["test"] = new OpenApiExample()
                 {
@@ -74,10 +73,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 Items = new OpenApiSchema()
                 {
                     Enum =
-                    {
-                        new OpenApiAny("value1").Node,
-                        new OpenApiAny("value2").Node
-                    }
+                    [
+                        new JsonNodeExtension("value1").Node,
+                        new JsonNodeExtension("value2").Node
+                    ]
                 }
             }
         };
@@ -96,8 +95,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Enum =
                     [
-                        new OpenApiAny("value1").Node,
-                        new OpenApiAny("value2").Node
+                        new JsonNodeExtension("value1").Node,
+                        new JsonNodeExtension("value2").Node
                     ]
                 }
             }
@@ -131,7 +130,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Type = JsonSchemaType.Object
             },
-            Examples =
+            Examples = new Dictionary<string, IOpenApiExample>
             {
                 ["test"] = new OpenApiExample()
                 {

@@ -41,9 +41,9 @@ namespace Microsoft.OpenApi.Reader.V2
                 (o, n,_) =>
                 {
                     var max = n.GetScalarValue();
-                    if (max != null)
+                    if (!string.IsNullOrEmpty(max))
                     {
-                        o.Maximum = ParserHelper.ParseDecimalWithFallbackOnOverflow(max, decimal.MaxValue);
+                        o.Maximum = max;
                     }
                 }
             },
@@ -56,9 +56,9 @@ namespace Microsoft.OpenApi.Reader.V2
                 (o, n, _) =>
                 {
                     var min = n.GetScalarValue();
-                    if (min != null)
+                    if (!string.IsNullOrEmpty(min))
                     {
-                        o.Minimum = ParserHelper.ParseDecimalWithFallbackOnOverflow(min, decimal.MinValue);
+                        o.Minimum = min;
                     }
                 }
             },
@@ -269,6 +269,16 @@ namespace Microsoft.OpenApi.Reader.V2
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
+            }
+
+            if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+            {
+                if (schema.Type.HasValue)
+                    schema.Type |= JsonSchemaType.Null;
+                else
+                    schema.Type = JsonSchemaType.Null;
+
+                schema.Extensions.Remove(OpenApiConstants.NullableExtension);
             }
 
             return schema;

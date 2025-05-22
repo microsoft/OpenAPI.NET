@@ -4,12 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V3;
 
@@ -31,9 +29,9 @@ namespace Microsoft.OpenApi.Reader.V31
             Diagnostic = diagnostic;
         }
 
-        private readonly IDictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new Dictionary<Type, Func<ParseNode, OpenApiDocument, object>>
+        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new Dictionary<Type, Func<ParseNode, OpenApiDocument, object>>
         {
-            [typeof(OpenApiAny)] = OpenApiV31Deserializer.LoadAny,
+            [typeof(JsonNodeExtension)] = OpenApiV31Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV31Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV31Deserializer.LoadComponents,
             [typeof(OpenApiContact)] = OpenApiV31Deserializer.LoadContact,
@@ -61,12 +59,13 @@ namespace Microsoft.OpenApi.Reader.V31
             [typeof(OpenApiServer)] = OpenApiV31Deserializer.LoadServer,
             [typeof(OpenApiServerVariable)] = OpenApiV31Deserializer.LoadServerVariable,
             [typeof(OpenApiTag)] = OpenApiV31Deserializer.LoadTag,
-            [typeof(OpenApiXml)] = OpenApiV31Deserializer.LoadXml
+            [typeof(OpenApiXml)] = OpenApiV31Deserializer.LoadXml,
+            [typeof(OpenApiSchemaReference)] = OpenApiV31Deserializer.LoadMapping
         };
 
-        public OpenApiDocument LoadDocument(RootNode rootNode)
+        public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
-            return OpenApiV31Deserializer.LoadOpenApi(rootNode);
+            return OpenApiV31Deserializer.LoadOpenApi(rootNode, location);
         }
 
         public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement

@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V2;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -39,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Style = ParameterStyle.Simple
                 }
             ],
-            Operations =
+            Operations = new()
             {
                 [HttpMethod.Put] = new()
                 {
@@ -62,14 +64,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     ],
                     RequestBody = new OpenApiRequestBody()
                     {
-                        Content =
+                        Content = new()
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
                                 Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
-                                    Properties =
+                                    Properties = new()
                                     {
                                         ["name"] = new OpenApiSchema()
                                         {
@@ -93,7 +95,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
-                                    Properties =
+                                    Properties = new()
                                     {
                                         ["name"] = new OpenApiSchema()
                                         {
@@ -119,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["200"] = new OpenApiResponse()
                         {
                             Description = "Pet updated.",
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new()
                                 {
                                     ["application/json"] = new(),
                                     ["application/xml"] = new()
@@ -128,7 +130,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["405"] = new OpenApiResponse()
                         {
                             Description = "Invalid input",
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new()
                                 {
                                     ["application/json"] = new(),
                                     ["application/xml"] = new()
@@ -168,14 +170,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     ],
                     RequestBody = new OpenApiRequestBody()
                     {
-                        Content =
+                        Content = new()
                         {
                             ["application/x-www-form-urlencoded"] = new()
                             {
                                 Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
-                                    Properties =
+                                    Properties = new()
                                     {
                                         ["name"] = new OpenApiSchema()
                                         {
@@ -204,7 +206,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 Schema = new OpenApiSchema()
                                 {
                                     Type = JsonSchemaType.Object,
-                                    Properties =
+                                    Properties = new()
                                     {
                                         ["name"] = new OpenApiSchema()
                                         {
@@ -222,10 +224,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Type = JsonSchemaType.String
                                         }
                                     },
-                                    Required = new HashSet<string>
-                                    {
+                                    Required =
+                                    [
                                         "name"
-                                    }
+                                    ]
                                 }
                             }
                         }
@@ -235,7 +237,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["200"] = new OpenApiResponse()
                         {
                             Description = "Pet updated.",
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new()
                                 {
                                     ["application/json"] = new(),
                                     ["application/xml"] = new()

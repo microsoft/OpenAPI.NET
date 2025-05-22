@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -18,7 +17,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IMetadataContainer
     {
         /// <inheritdoc />
         public string? Title { get; set; }
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         public string? Comment { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, bool>? Vocabulary { get; set; }
+        public Dictionary<string, bool>? Vocabulary { get; set; }
 
         /// <inheritdoc />
         public string? DynamicRef { get; set; }
@@ -42,19 +41,19 @@ namespace Microsoft.OpenApi.Models
         public string? DynamicAnchor { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiSchema>? Definitions { get; set; }
+        public Dictionary<string, IOpenApiSchema>? Definitions { get; set; }
 
-        private decimal? _exclusiveMaximum;
+        private string? _exclusiveMaximum;
         /// <inheritdoc />
-        public decimal? ExclusiveMaximum
+        public string? ExclusiveMaximum
         {
             get
             {
-                if (_exclusiveMaximum.HasValue)
+                if (!string.IsNullOrEmpty(_exclusiveMaximum))
                 {
                     return _exclusiveMaximum;
                 }
-                if (IsExclusiveMaximum == true && _maximum.HasValue)
+                if (IsExclusiveMaximum == true && !string.IsNullOrEmpty(_maximum))
                 {
                     return _maximum;
                 }
@@ -73,17 +72,17 @@ namespace Microsoft.OpenApi.Models
         /// DO NOT CHANGE THE VISIBILITY OF THIS PROPERTY TO PUBLIC
         internal bool? IsExclusiveMaximum { get; set; }
 
-        private decimal? _exclusiveMinimum;
+        private string? _exclusiveMinimum;
         /// <inheritdoc />
-        public decimal? ExclusiveMinimum
+        public string? ExclusiveMinimum
         {
             get
             {
-                if (_exclusiveMinimum.HasValue)
+                if (!string.IsNullOrEmpty(_exclusiveMinimum))
                 {
                     return _exclusiveMinimum;
                 }
-                if (IsExclusiveMinimum == true && _minimum.HasValue)
+                if (IsExclusiveMinimum == true && !string.IsNullOrEmpty(_minimum))
                 {
                     return _minimum;
                 }
@@ -105,6 +104,14 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public JsonSchemaType? Type { get; set; }
 
+        // x-nullable is filtered out by deserializers, but keep the check here in case it gets added from user code.
+        private bool IsNullable =>
+            (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null)) ||
+            Extensions is not null &&
+            Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
+            nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode } &&
+            jsonNode.GetValueKind() is JsonValueKind.True;
+
         /// <inheritdoc />
         public string? Const { get; set; }
 
@@ -114,9 +121,9 @@ namespace Microsoft.OpenApi.Models
         /// <inheritdoc />
         public string? Description { get; set; }
 
-        private decimal? _maximum;
+        private string? _maximum;
         /// <inheritdoc />
-        public decimal? Maximum
+        public string? Maximum
         {
             get
             {
@@ -132,10 +139,10 @@ namespace Microsoft.OpenApi.Models
             }
         }
 
-        private decimal? _minimum;
+        private string? _minimum;
 
         /// <inheritdoc />
-        public decimal? Minimum
+        public string? Minimum
         {
             get
             {
@@ -173,19 +180,19 @@ namespace Microsoft.OpenApi.Models
         public bool WriteOnly { get; set; }
 
         /// <inheritdoc />
-        public IList<IOpenApiSchema>? AllOf { get; set; } = [];
+        public List<IOpenApiSchema>? AllOf { get; set; }
 
         /// <inheritdoc />
-        public IList<IOpenApiSchema>? OneOf { get; set; } = [];
+        public List<IOpenApiSchema>? OneOf { get; set; }
 
         /// <inheritdoc />
-        public IList<IOpenApiSchema>? AnyOf { get; set; } = [];
+        public List<IOpenApiSchema>? AnyOf { get; set; }
 
         /// <inheritdoc />
         public IOpenApiSchema? Not { get; set; }
 
         /// <inheritdoc />
-        public ISet<string>? Required { get; set; } = new HashSet<string>();
+        public HashSet<string>? Required { get; set; }
 
         /// <inheritdoc />
         public IOpenApiSchema? Items { get; set; }
@@ -200,10 +207,10 @@ namespace Microsoft.OpenApi.Models
         public bool? UniqueItems { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiSchema>? Properties { get; set; } = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
+        public Dictionary<string, IOpenApiSchema>? Properties { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiSchema>? PatternProperties { get; set; } = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
+        public Dictionary<string, IOpenApiSchema>? PatternProperties { get; set; }
 
         /// <inheritdoc />
         public int? MaxProperties { get; set; }
@@ -224,13 +231,13 @@ namespace Microsoft.OpenApi.Models
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc />
-        public IList<JsonNode>? Examples { get; set; }
+        public List<JsonNode>? Examples { get; set; }
 
         /// <inheritdoc />
-        public IList<JsonNode>? Enum { get; set; } = new List<JsonNode>();
+        public List<JsonNode>? Enum { get; set; }
 
         /// <inheritdoc />
-        public bool UnevaluatedProperties { get; set;}
+        public bool UnevaluatedProperties { get; set; }
 
         /// <inheritdoc />
         public OpenApiExternalDocs? ExternalDocs { get; set; }
@@ -242,16 +249,16 @@ namespace Microsoft.OpenApi.Models
         public OpenApiXml? Xml { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, JsonNode>? UnrecognizedKeywords { get; set; } = new Dictionary<string, JsonNode>();
+        public Dictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Annotations { get; set; }
+        public Dictionary<string, object>? Metadata { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, ISet<string>>? DependentRequired { get; set; } = new Dictionary<string, ISet<string>>();
+        public Dictionary<string, HashSet<string>>? DependentRequired { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -294,11 +301,11 @@ namespace Microsoft.OpenApi.Models
             Default = schema.Default != null ? JsonNodeCloneHelper.Clone(schema.Default) : null;
             ReadOnly = schema.ReadOnly;
             WriteOnly = schema.WriteOnly;
-            AllOf = schema.AllOf != null ? new List<IOpenApiSchema>(schema.AllOf) : null;
-            OneOf = schema.OneOf != null ? new List<IOpenApiSchema>(schema.OneOf) : null;
-            AnyOf = schema.AnyOf != null ? new List<IOpenApiSchema>(schema.AnyOf) : null;
+            AllOf = schema.AllOf != null ? [.. schema.AllOf] : null;
+            OneOf = schema.OneOf != null ? [.. schema.OneOf] : null;
+            AnyOf = schema.AnyOf != null ? [.. schema.AnyOf] : null;
             Not = schema.Not?.CreateShallowCopy();
-            Required = schema.Required != null ? new HashSet<string>(schema.Required) : null;
+            Required = schema.Required != null ? [.. schema.Required] : null;
             Items = schema.Items?.CreateShallowCopy();
             MaxItems = schema.MaxItems ?? MaxItems;
             MinItems = schema.MinItems ?? MinItems;
@@ -309,63 +316,68 @@ namespace Microsoft.OpenApi.Models
             MinProperties = schema.MinProperties ?? MinProperties;
             AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
             AdditionalProperties = schema.AdditionalProperties?.CreateShallowCopy();
-            Discriminator = schema.Discriminator != null ? new(schema.Discriminator) : null; 
+            Discriminator = schema.Discriminator != null ? new(schema.Discriminator) : null;
             Example = schema.Example != null ? JsonNodeCloneHelper.Clone(schema.Example) : null;
-            Examples = schema.Examples != null ? new List<JsonNode>(schema.Examples) : null;
-            Enum = schema.Enum != null ? new List<JsonNode>(schema.Enum) : null;
+            Examples = schema.Examples != null ? [.. schema.Examples] : null;
+            Enum = schema.Enum != null ? [.. schema.Enum] : null;
             ExternalDocs = schema.ExternalDocs != null ? new(schema.ExternalDocs) : null;
             Deprecated = schema.Deprecated;
             Xml = schema.Xml != null ? new(schema.Xml) : null;
             Extensions = schema.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
-            Annotations = schema.Annotations != null ? new Dictionary<string, object>(schema.Annotations) : null;
+            Metadata = schema is IMetadataContainer { Metadata: not null } mContainer ? new Dictionary<string, object>(mContainer.Metadata) : null;
             UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
-            DependentRequired = schema.DependentRequired != null ? new Dictionary<string, ISet<string>>(schema.DependentRequired) : null;
+            DependentRequired = schema.DependentRequired != null ? new Dictionary<string, HashSet<string>>(schema.DependentRequired) : null;
         }
 
         /// <inheritdoc />
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <inheritdoc />
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private static void SerializeBounds(IOpenApiWriter writer, OpenApiSpecVersion version, string propertyName, string exclusivePropertyName, string isExclusivePropertyName, decimal? value, decimal? exclusiveValue, bool? isExclusiveValue)
+        private static void SerializeBounds(IOpenApiWriter writer, OpenApiSpecVersion version, string propertyName, string exclusivePropertyName, string isExclusivePropertyName, string? value, string? exclusiveValue, bool? isExclusiveValue)
         {
             if (version >= OpenApiSpecVersion.OpenApi3_1)
             {
-                if (exclusiveValue.HasValue)
+                if (!string.IsNullOrEmpty(exclusiveValue) && exclusiveValue is not null)
                 {
                     // was explicitly set in the document or object model
-                    writer.WriteProperty(exclusivePropertyName, exclusiveValue.Value);
+                    writer.WritePropertyName(exclusivePropertyName);
+                    writer.WriteRaw(exclusiveValue);
                 }
-                else if (isExclusiveValue == true && value.HasValue)
+                else if (isExclusiveValue == true && !string.IsNullOrEmpty(value) && value is not null)
                 {
                     // came from parsing an old document
-                    writer.WriteProperty(exclusivePropertyName, value);
+                    writer.WritePropertyName(exclusivePropertyName);
+                    writer.WriteRaw(value);
                 }
-                else if (value.HasValue)
+                else if (!string.IsNullOrEmpty(value) && value is not null)
                 {
                     // was explicitly set in the document or object model
-                    writer.WriteProperty(propertyName, value);
+                    writer.WritePropertyName(propertyName);
+                    writer.WriteRaw(value);
                 }
             }
             else
             {
-                if (exclusiveValue.HasValue)
+                if (!string.IsNullOrEmpty(exclusiveValue) && exclusiveValue is not null)
                 {
                     // was explicitly set in a new document being downcast or object model
-                    writer.WriteProperty(propertyName, exclusiveValue.Value);
+                    writer.WritePropertyName(propertyName);
+                    writer.WriteRaw(exclusiveValue);
                     writer.WriteProperty(isExclusivePropertyName, true);
                 }
-                else if (value.HasValue)
+                else if (!string.IsNullOrEmpty(value) && value is not null)
                 {
                     // came from parsing an old document, we're just mirroring the information
-                    writer.WriteProperty(propertyName, value);
+                    writer.WritePropertyName(propertyName);
+                    writer.WriteRaw(value);
                     if (isExclusiveValue.HasValue)
                         writer.WriteProperty(isExclusivePropertyName, isExclusiveValue.Value);
                 }
@@ -421,7 +433,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
-            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => 
+            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) =>
             {
                 if (!string.IsNullOrEmpty(s) && s is not null)
                 {
@@ -433,7 +445,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
-            SerializeTypeProperty(Type, writer, version);
+            SerializeTypeProperty(writer, version);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
@@ -475,6 +487,12 @@ namespace Microsoft.OpenApi.Models
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
+            // nullable
+            if (version == OpenApiSpecVersion.OpenApi3_0)
+            {
+                SerializeNullable(writer, version);
+            }
+
             // discriminator
             writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, callback);
 
@@ -485,7 +503,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
 
             // xml
-            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, callback);
 
             // externalDocs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
@@ -502,14 +520,14 @@ namespace Microsoft.OpenApi.Models
             // Unrecognized keywords
             if (UnrecognizedKeywords is not null && UnrecognizedKeywords.Any())
             {
-                writer.WriteOptionalMap(OpenApiConstants.UnrecognizedKeywords, UnrecognizedKeywords, (w,s) => w.WriteAny(s));
+                writer.WriteOptionalMap(OpenApiConstants.UnrecognizedKeywords, UnrecognizedKeywords, (w, s) => w.WriteAny(s));
             }
 
             writer.WriteEndObject();
         }
 
         /// <inheritdoc />
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }
@@ -607,7 +625,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="propertyName">The property name that will be serialized.</param>
         private void SerializeAsV2(
             IOpenApiWriter writer,
-            ISet<string>? parentRequiredProperties,
+            HashSet<string>? parentRequiredProperties,
             string? propertyName)
         {
             parentRequiredProperties ??= new HashSet<string>();
@@ -615,7 +633,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // type
-            SerializeTypeProperty(Type, writer, OpenApiSpecVersion.OpenApi2_0);
+            SerializeTypeProperty(writer, OpenApiSpecVersion.OpenApi2_0);
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -665,7 +683,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
-            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => 
+            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) =>
             {
                 if (!string.IsNullOrEmpty(s) && s is not null)
                 {
@@ -738,69 +756,37 @@ namespace Microsoft.OpenApi.Models
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
+            // x-nullable extension
+            SerializeNullable(writer, OpenApiSpecVersion.OpenApi2_0);
+
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }
 
-        private void SerializeTypeProperty(JsonSchemaType? type, IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            // check whether nullable is true for upcasting purposes
-            var isNullable = (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null)) ||
-                                Extensions is not null &&
-                                Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) && 
-                                nullExtRawValue is OpenApiAny { Node: JsonNode jsonNode } &&
-                                jsonNode.GetValueKind() is JsonValueKind.True;
-            if (type is null)
+            if (Type is null)
             {
-                if (version is OpenApiSpecVersion.OpenApi3_0 && isNullable)
-                {
-                    writer.WriteProperty(OpenApiConstants.Nullable, true);
-                }
+                return;
             }
-            else if (!HasMultipleTypes(type.Value))
+
+            var unifiedType = IsNullable ? Type.Value | JsonSchemaType.Null : Type.Value;
+            var typeWithoutNull = unifiedType & ~JsonSchemaType.Null;
+
+            switch (version)
             {
-                
-                switch (version)
-                {
-                    case OpenApiSpecVersion.OpenApi3_1 when isNullable:
-                        UpCastSchemaTypeToV31(type.Value, writer);
-                        break;
-                    case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value == JsonSchemaType.Null:
-                        writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, JsonSchemaType.Object.ToFirstIdentifier());
-                        break;
-                    case OpenApiSpecVersion.OpenApi3_0 when isNullable && type.Value != JsonSchemaType.Null:
-                        writer.WriteProperty(OpenApiConstants.Nullable, true);
-                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToFirstIdentifier());
-                        break;
-                    default:
-                        writer.WriteProperty(OpenApiConstants.Type, type.Value.ToFirstIdentifier());
-                        break;
-                }
-            }
-            else
-            {
-                // type
-                if (version is OpenApiSpecVersion.OpenApi2_0 || version is OpenApiSpecVersion.OpenApi3_0)
-                {
-                    DowncastTypeArrayToV2OrV3(type.Value, writer, version);
-                }
-                else
-                {
-                    var list = (from JsonSchemaType flag in jsonSchemaTypeValues
-                                where type.Value.HasFlag(flag)
-                                select flag).ToList();
-                    writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) =>
+                case OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0:
+                    if (typeWithoutNull != 0 && !HasMultipleTypes(typeWithoutNull))
                     {
-                        foreach(var item in s.ToIdentifiers())
-                        {
-                            w.WriteValue(item);
-                        }
-                    });
-                }
-            } 
+                        writer.WriteProperty(OpenApiConstants.Type, typeWithoutNull.ToFirstIdentifier());
+                    }
+                    break;
+                default:
+                    WriteUnifiedSchemaType(unifiedType, writer);
+                    break;
+            }
         }
 
         private static bool IsPowerOfTwo(int x)
@@ -811,20 +797,17 @@ namespace Microsoft.OpenApi.Models
         private static bool HasMultipleTypes(JsonSchemaType schemaType)
         {
             var schemaTypeNumeric = (int)schemaType;
-            return !IsPowerOfTwo(schemaTypeNumeric) && // Boolean, Integer, Number, String, Array, Object
-                    schemaTypeNumeric != (int)JsonSchemaType.Null;
+            return !IsPowerOfTwo(schemaTypeNumeric);
         }
 
-        private static void UpCastSchemaTypeToV31(JsonSchemaType type, IOpenApiWriter writer)
+        private static void WriteUnifiedSchemaType(JsonSchemaType type, IOpenApiWriter writer)
         {
-            // create a new array and insert the type and "null" as values
-            var temporaryType = type | JsonSchemaType.Null;
-            var list = (from JsonSchemaType flag in jsonSchemaTypeValues// Check if the flag is set in 'type' using a bitwise AND operation
-                        where temporaryType.HasFlag(flag)
-                        select flag.ToFirstIdentifier()).ToList();
-            if (list.Count > 1)
+            var array = (from JsonSchemaType flag in jsonSchemaTypeValues
+                        where type.HasFlag(flag)
+                        select flag.ToFirstIdentifier()).ToArray();
+            if (array.Length > 1)
             {
-                writer.WriteOptionalCollection(OpenApiConstants.Type, list, (w, s) => 
+                writer.WriteOptionalCollection(OpenApiConstants.Type, array, (w, s) =>
                 {
                     if (!string.IsNullOrEmpty(s) && s is not null)
                     {
@@ -834,7 +817,23 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                writer.WriteProperty(OpenApiConstants.Type, list[0]);
+                writer.WriteProperty(OpenApiConstants.Type, array[0]);
+            }
+        }
+
+        private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version)
+        {
+            if (IsNullable)
+            {
+                switch (version)
+                {
+                    case OpenApiSpecVersion.OpenApi2_0:
+                        writer.WriteProperty(OpenApiConstants.NullableExtension, true);
+                        break;
+                    case OpenApiSpecVersion.OpenApi3_0:
+                        writer.WriteProperty(OpenApiConstants.Nullable, true);
+                        break;
+                }
             }
         }
 
@@ -843,44 +842,6 @@ namespace Microsoft.OpenApi.Models
 #else
         private static readonly Array jsonSchemaTypeValues = System.Enum.GetValues(typeof(JsonSchemaType));
 #endif
-
-        private void DowncastTypeArrayToV2OrV3(JsonSchemaType schemaType, IOpenApiWriter writer, OpenApiSpecVersion version)
-        {
-            /* If the array has one non-null value, emit Type as string
-            * If the array has one null value, emit x-nullable as true
-            * If the array has two values, one null and one non-null, emit Type as string and x-nullable as true
-            * If the array has more than two values or two non-null values, do not emit type
-            * */
-
-            var nullableProp = version.Equals(OpenApiSpecVersion.OpenApi2_0)
-                ? OpenApiConstants.NullableExtension
-                : OpenApiConstants.Nullable;
-
-            if (!HasMultipleTypes(schemaType & ~JsonSchemaType.Null) && (schemaType & JsonSchemaType.Null) == JsonSchemaType.Null) // checks for two values and one is null
-            {
-                foreach (JsonSchemaType flag in jsonSchemaTypeValues)
-                {
-                    // Skip if the flag is not set or if it's the Null flag
-                    if (schemaType.HasFlag(flag) && flag != JsonSchemaType.Null)
-                    {
-                        // Write the non-null flag value to the writer
-                        writer.WriteProperty(OpenApiConstants.Type, flag.ToFirstIdentifier());
-                    }
-                }
-                writer.WriteProperty(nullableProp, true);
-            }
-            else if (!HasMultipleTypes(schemaType))
-            {
-                if (schemaType is JsonSchemaType.Null)
-                {
-                    writer.WriteProperty(nullableProp, true);
-                }
-                else
-                {
-                    writer.WriteProperty(OpenApiConstants.Type, schemaType.ToFirstIdentifier());
-                }
-            }
-        }
 
         /// <inheritdoc/>
         public IOpenApiSchema CreateShallowCopy()

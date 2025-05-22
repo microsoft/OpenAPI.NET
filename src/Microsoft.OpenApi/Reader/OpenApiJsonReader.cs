@@ -25,9 +25,11 @@ namespace Microsoft.OpenApi.Reader
         /// Reads the memory stream input and parses it into an Open API document.
         /// </summary>
         /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
+        /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
         public ReadResult Read(MemoryStream input,
+                               Uri location,
                                OpenApiReaderSettings settings)
         {
             if (input is null) throw new ArgumentNullException(nameof(input));
@@ -52,16 +54,18 @@ namespace Microsoft.OpenApi.Reader
                 };
             }
 
-            return Read(jsonNode, settings);
+            return Read(jsonNode, location, settings);
         }
 
         /// <summary>
         /// Parses the JsonNode input into an Open API document.
         /// </summary>
         /// <param name="jsonNode">The JsonNode input.</param>
+        /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
         public ReadResult Read(JsonNode jsonNode,
+                               Uri location,
                                OpenApiReaderSettings settings)
         {
             if (jsonNode is null) throw new ArgumentNullException(nameof(jsonNode));
@@ -79,7 +83,7 @@ namespace Microsoft.OpenApi.Reader
             try
             {
                 // Parse the OpenAPI Document
-                document = context.Parse(jsonNode);
+                document = context.Parse(jsonNode, location);
                 document.SetReferenceHostDocument();
             }
             catch (OpenApiException ex)
@@ -115,10 +119,12 @@ namespace Microsoft.OpenApi.Reader
         /// Reads the stream input asynchronously and parses it into an Open API document.
         /// </summary>
         /// <param name="input">Memory stream containing OpenAPI description to parse.</param>
+        /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
         public async Task<ReadResult> ReadAsync(Stream input,
+                                                Uri location,
                                                 OpenApiReaderSettings settings,
                                                 CancellationToken cancellationToken = default)
         {
@@ -144,7 +150,7 @@ namespace Microsoft.OpenApi.Reader
                 };
             }
 
-            return Read(jsonNode, settings);
+            return Read(jsonNode, location, settings);
         }
 
         /// <inheritdoc/>

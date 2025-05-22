@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new()
         {
-            [typeof(OpenApiAny)] = OpenApiV2Deserializer.LoadAny,
+            [typeof(JsonNodeExtension)] = OpenApiV2Deserializer.LoadAny,
             [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
             [typeof(OpenApiExternalDocs)] = OpenApiV2Deserializer.LoadExternalDocs,
             [typeof(OpenApiHeader)] = OpenApiV2Deserializer.LoadHeader,
@@ -50,9 +50,9 @@ namespace Microsoft.OpenApi.Reader.V2
             [typeof(OpenApiXml)] = OpenApiV2Deserializer.LoadXml
         };
 
-        public OpenApiDocument LoadDocument(RootNode rootNode)
+        public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
-            return OpenApiV2Deserializer.LoadOpenApi(rootNode);
+            return OpenApiV2Deserializer.LoadOpenApi(rootNode, location);
         }
 
         public T? LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement

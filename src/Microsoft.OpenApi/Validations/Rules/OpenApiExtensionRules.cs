@@ -29,9 +29,9 @@ namespace Microsoft.OpenApi.Validations.Rules
                         {
                             context.CreateError(nameof(ExtensionNameMustStartWithXDash),
                                 string.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible, context.PathString));
-                        }
-                        context.Exit();
-                    }                    
+                        }                        
+                    }
+                    context.Exit();
                 });
     }
 }

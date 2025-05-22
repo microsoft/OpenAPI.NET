@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible, IOpenApiLink
+    public class OpenApiLink : IOpenApiExtensible, IOpenApiLink
     {
         /// <inheritdoc/>
         public string? OperationRef { get; set; }
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models
         public string? OperationId { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; } = new Dictionary<string, RuntimeExpressionAnyWrapper>();
+        public Dictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; }
 
         /// <inheritdoc/>
         public RuntimeExpressionAnyWrapper? RequestBody { get; set; }
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiServer? Server { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -56,13 +56,13 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
         }
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <inheritdoc/>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             // Link object does not exist in V2.
         }

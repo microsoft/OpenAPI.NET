@@ -4,12 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
-
-#nullable enable
 
 namespace Microsoft.OpenApi.Models
 {
@@ -28,7 +27,7 @@ namespace Microsoft.OpenApi.Models
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public ISet<OpenApiTagReference>? Tags 
+        public HashSet<OpenApiTagReference>? Tags 
         { 
             get
             {
@@ -75,7 +74,7 @@ namespace Microsoft.OpenApi.Models
         /// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
         /// The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
         /// </summary>
-        public IList<IOpenApiParameter>? Parameters { get; set; } = [];
+        public List<IOpenApiParameter>? Parameters { get; set; }
 
         /// <summary>
         /// The request body applicable for this operation.
@@ -88,7 +87,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
         /// </summary>
-        public OpenApiResponses? Responses { get; set; } = new();
+        public OpenApiResponses? Responses { get; set; } = [];
 
         /// <summary>
         /// A map of possible out-of band callbacks related to the parent operation.
@@ -98,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; } = new Dictionary<string, IOpenApiCallback>();
+        public Dictionary<string, IOpenApiCallback>? Callbacks { get; set; }
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -112,22 +111,22 @@ namespace Microsoft.OpenApi.Models
         /// This definition overrides any declared top-level security.
         /// To remove a top-level security declaration, an empty array can be used.
         /// </summary>
-        public IList<OpenApiSecurityRequirement>? Security { get; set; } = new List<OpenApiSecurityRequirement>();
+        public List<OpenApiSecurityRequirement>? Security { get; set; }
 
         /// <summary>
         /// An alternative server array to service this operation.
         /// If an alternative server object is specified at the Path Item Object or Root level,
         /// it will be overridden by this value.
         /// </summary>
-        public IList<OpenApiServer>? Servers { get; set; } = new List<OpenApiServer>();
+        public List<OpenApiServer>? Servers { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, object>? Metadata { get; set; }
+        public Dictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -140,18 +139,18 @@ namespace Microsoft.OpenApi.Models
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
+            Tags = operation.Tags != null ? [.. operation.Tags] : null;
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;
             OperationId = operation.OperationId ?? OperationId;
-            Parameters = operation.Parameters != null ? new List<IOpenApiParameter>(operation.Parameters) : null;
+            Parameters = operation.Parameters != null ? [.. operation.Parameters] : null;
             RequestBody = operation.RequestBody?.CreateShallowCopy();
             Responses = operation.Responses != null ? new(operation.Responses) : null;
             Callbacks = operation.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
             Deprecated = operation.Deprecated;
-            Security = operation.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
-            Servers = operation.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;
+            Security = operation.Security != null ? [.. operation.Security] : null;
+            Servers = operation.Servers != null ? [.. operation.Servers] : null;
             Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
             Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
         }
@@ -159,7 +158,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.1.
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -167,7 +166,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
@@ -215,8 +214,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // security
-            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, callback);
-
+            writer.WriteOptionalOrEmptyCollection(OpenApiConstants.Security, Security, callback);
+            
             // servers
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, callback);
 
@@ -229,7 +228,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v2.0.
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -295,7 +294,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var produces = Responses
                     .Where(static r => r.Value.Content != null)
-                    .SelectMany(static r => r.Value.Content?.Keys ?? [])
+                    .SelectMany(static r => r.Value.Content?.Keys ?? Enumerable.Empty<string>())
                     .Where(static m => !string.IsNullOrEmpty(m))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray();

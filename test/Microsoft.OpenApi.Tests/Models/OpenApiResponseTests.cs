@@ -5,15 +5,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -25,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse AdvancedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content =
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -35,13 +33,13 @@ namespace Microsoft.OpenApi.Tests.Models
                         Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = "Blabla",
-                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    Extensions = new()
                     {
-                        ["myextension"] = new OpenApiAny("myextensionvalue"),
+                        ["myextension"] = new JsonNodeExtension("myextensionvalue"),
                     }, 
                 }
             },
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
@@ -64,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse AdvancedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content =
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -74,13 +72,13 @@ namespace Microsoft.OpenApi.Tests.Models
                         Items = new OpenApiSchemaReference("customType", null)
                     },
                     Example = "Blabla",
-                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    Extensions = new()
                     {
-                        ["myextension"] = new OpenApiAny("myextensionvalue"),
+                        ["myextension"] = new JsonNodeExtension("myextensionvalue"),
                     },
                 }
             },
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
@@ -105,7 +103,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse ReferencedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content =
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -116,7 +114,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
@@ -141,7 +139,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse ReferencedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content =
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -152,7 +150,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Headers =
+            Headers = new Dictionary<string, IOpenApiHeader>
             {
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
@@ -174,16 +172,16 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Yaml)]
         public async Task SerializeBasicResponseWorks(
             OpenApiSpecVersion version,
-            OpenApiFormat format)
+            string format)
         {
             // Arrange
-            var expected = format == OpenApiFormat.Json ? @"{
+            var expected = format == OpenApiConstants.Json ? @"{
   ""description"": null
 }" : @"description: ";
 

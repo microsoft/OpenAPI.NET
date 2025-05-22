@@ -1,11 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -22,9 +20,9 @@ namespace Microsoft.OpenApi.Tests.Models
             Contact = OpenApiContactTests.AdvanceContact,
             License = OpenApiLicenseTests.AdvanceLicense,
             Version = "1.1.1",
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new()
             {
-                {"x-updated", new OpenApiAny("metadata")}
+                {"x-updated", new JsonNodeExtension("metadata")}
             }
         };
 
@@ -205,7 +203,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await info.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);
+            var actual = await info.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

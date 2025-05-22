@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Properties;
@@ -73,22 +73,22 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema()
             {
-                Enum = 
-                {
-                    new OpenApiAny("1").Node,
-                    new OpenApiAny(new JsonObject()
+                Enum =
+                [
+                    new JsonNodeExtension("1").Node,
+                    new JsonNodeExtension(new JsonObject()
                     {
                         ["x"] = 2,
                         ["y"] = "20",
                         ["z"] = "200"
                     }).Node,
-                    new OpenApiAny(new JsonArray() { 3 }).Node,
-                    new OpenApiAny(new JsonObject()
+                    new JsonNodeExtension(new JsonArray() { 3 }).Node,
+                    new JsonNodeExtension(new JsonObject()
                     {
                         ["x"] = 4,
                         ["y"] = 40,
                     }).Node
-                },
+                ],
                 Type = JsonSchemaType.Object,
                 AdditionalProperties = new OpenApiSchema()
                 {
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var schema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties =
+                Properties = new Dictionary<string, IOpenApiSchema>
                 {
                     ["property1"] = new OpenApiSchema()
                     {
@@ -187,7 +187,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             var components = new OpenApiComponents
             {
-                Schemas = {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
                     {
                         "schema1",
                         new OpenApiSchema
@@ -219,7 +220,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             var components = new OpenApiComponents
             {
-                Schemas =
+                Schemas = new Dictionary<string, IOpenApiSchema>
                 {
                     {
                         "Person",
@@ -230,11 +231,11 @@ namespace Microsoft.OpenApi.Validations.Tests
                             {
                                 PropertyName = "type"
                             },
-                            OneOf = new List<IOpenApiSchema>
-                            {
+                            OneOf =
+                            [
                                 new OpenApiSchema()
                                 {
-                                    Properties =
+                                    Properties = new Dictionary<string, IOpenApiSchema>
                                     {
                                         {
                                             "type",
@@ -245,7 +246,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                         }
                                     },
                                 }
-                            },
+                            ],
                         }
                     }
                 }

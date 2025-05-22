@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             // Order matters. Resolve operationId.
             operationId = RemoveHashSuffix(operationId);
             if (operationTypeExtension.IsEquals("action") || operationTypeExtension.IsEquals("function"))
-                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? new List<IOpenApiParameter>());
+                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? []);
             operationId = SingularizeAndDeduplicateOperationId(operationId.SplitByChar('.'));
             operationId = ResolveODataCastOperationId(operationId);
             operationId = ResolveByRefOperationId(operationId);
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return match.Success ? $"{match.Groups[1]}{match.Groups[2]}" : operationId;
         }
 
-        private static string SingularizeAndDeduplicateOperationId(IList<string> operationIdSegments)
+        private static string SingularizeAndDeduplicateOperationId(List<string> operationIdSegments)
         {
             var segmentsCount = operationIdSegments.Count;
             var lastSegmentIndex = segmentsCount - 1;
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return s_hashSuffixRegex.Match(operationId).Value;
         }
 
-        private static string RemoveKeyTypeSegment(string operationId, IList<IOpenApiParameter> parameters)
+        private static string RemoveKeyTypeSegment(string operationId, List<IOpenApiParameter> parameters)
         {
             var segments = operationId.SplitByChar('.');
             foreach (var parameter in parameters)
@@ -159,9 +159,9 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return string.Join('.', segments);
         }
 
-        private static void ResolveFunctionParameters(IList<IOpenApiParameter> parameters)
+        private static void ResolveFunctionParameters(List<IOpenApiParameter> parameters)
         {
-            foreach (var parameter in parameters.OfType<OpenApiParameter>().Where(static p => p.Content?.Any() ?? false))
+            foreach (var parameter in parameters.OfType<OpenApiParameter>().Where(static p => p.Content?.Count > 0))
             {
                 // Replace content with a schema object of type array
                 // for structured or collection-valued function parameters

@@ -79,11 +79,11 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openApiDocument = new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Servers = [new() { Url = "https://localhost/" }],
                 Paths = new()
                 {
                     {"/foo", new OpenApiPathItem() {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             { HttpMethod.Get, new() },
                             { HttpMethod.Patch, new() },
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // Given a set of RequestUrls
             var requestUrls = new Dictionary<string, List<string>>
             {
-                    {"/foo", new List<string> {"GET","POST"}}
+                    {"/foo", ["GET","POST"]}
             };
 
             // When
@@ -116,12 +116,12 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openApiDocument = new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
+                Servers = [new() { Url = "https://localhost/" }],
                 Paths = new()
                 {
                     ["/test/{id}"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             { HttpMethod.Get, new() },
                             { HttpMethod.Patch, new() }
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             var requestUrls = new Dictionary<string, List<string>>
             {
-                    {"/test/{id}", new List<string> {"GET","PATCH"}}
+                    {"/test/{id}",["GET","PATCH"]}
             };
 
             // Act
@@ -244,7 +244,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openApiOperationTags = doc?.Paths["/items"].Operations?[HttpMethod.Get].Tags?.ToArray();
             Assert.NotNull(openApiOperationTags);
             Assert.Single(openApiOperationTags);
-            Assert.True(openApiOperationTags[0].UnresolvedReference);
+            Assert.NotNull(openApiOperationTags[0].Target);
 
             var predicate = OpenApiFilterService.CreatePredicate(operationIds: operationIds);
             if (doc is not null)
@@ -271,7 +271,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 var trimmedOpenApiOperationTags = subsetOpenApiDocument.Paths?["/items"].Operations?[HttpMethod.Get].Tags?.ToArray();
                 Assert.NotNull(trimmedOpenApiOperationTags);
                 Assert.Single(trimmedOpenApiOperationTags);
-                Assert.True(trimmedOpenApiOperationTags[0].UnresolvedReference);
+                Assert.NotNull(trimmedOpenApiOperationTags[0].Target);
 
                 // Finally try to write the trimmed document as v3 document
                 var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -302,7 +302,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // Assert
             foreach (var pathItem in subsetOpenApiDocument.Paths)
             {
-                Assert.True(pathItem.Value.Parameters!.Any());
+                Assert.NotNull(pathItem.Value.Parameters);
+                Assert.NotEmpty(pathItem.Value.Parameters);
                 Assert.Single(pathItem.Value.Parameters!);
             }
         }

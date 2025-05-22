@@ -17,9 +17,11 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Use Uri to locate data and convert into an input object.
         /// </summary>
+        /// <param name="baseUrl">Base URL of parent to which a relative reference could be loaded. 
+        /// If the <paramref name="uri"/> is an absolute parameter the value of this parameter will be ignored</param>
         /// <param name="uri">Identifier of some source of an OpenAPI Description</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A data object that can be processed by a reader to generate an <see cref="OpenApiDocument"/></returns>
-        Task<Stream> LoadAsync(Uri uri, CancellationToken cancellationToken = default);
+        Task<Stream> LoadAsync(Uri baseUrl, Uri uri, CancellationToken cancellationToken = default);
     }
 }

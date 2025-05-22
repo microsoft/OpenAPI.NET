@@ -79,7 +79,8 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithObjectExamples = new()
         {
-            Examples = {
+            Examples = new Dictionary<string, IOpenApiExample>
+            {
                 ["object1"] = new OpenApiExample()
                 {
                     Value = new JsonObject
@@ -131,9 +132,9 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public async Task SerializeBasicMediaTypeAsV3Works(OpenApiFormat format, string expected)
+        [InlineData(OpenApiConstants.Json, "{ }")]
+        [InlineData(OpenApiConstants.Yaml, "{ }")]
+        public async Task SerializeBasicMediaTypeAsV3Works(string format, string expected)
         {
             // Arrange & Act
             var actual = await BasicMediaType.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);
@@ -436,7 +437,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Example = 42,
                 Examples = new Dictionary<string, IOpenApiExample>(),
                 Encoding = new Dictionary<string, OpenApiEncoding>(),
-                Extensions = new Dictionary<string, IOpenApiExtension>()
+                Extensions = new()
             };
 
             // Assert

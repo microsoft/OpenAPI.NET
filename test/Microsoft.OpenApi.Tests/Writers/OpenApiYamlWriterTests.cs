@@ -9,6 +9,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -276,7 +277,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 writer.WriteValue(value);
             }
             else if (value.GetType().IsGenericType &&
-                (typeof(IDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
+                (typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
                     typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
             {
                 writer.WriteStartObject();
@@ -303,7 +304,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [MemberData(nameof(WriteMapAsYamlShouldMatchExpectedTestCasesSimple))]
         [MemberData(nameof(WriteMapAsYamlShouldMatchExpectedTestCasesComplex))]
-        public void WriteMapAsYamlShouldMatchExpected(IDictionary<string, object> inputMap, string expectedYaml)
+        public void WriteMapAsYamlShouldMatchExpected(Dictionary<string, object> inputMap, string expectedYaml)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -456,14 +457,16 @@ namespace Microsoft.OpenApi.Tests.Writers
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations = {
+                        Operations = new()
+                        {
                             [HttpMethod.Get] = new()
                             {
                                 Responses = {
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "OK",
-                                        Content = {
+                                        Content = new()
+                                        {
                                             ["application/json"] = new()
                                             {
                                                 Schema = new OpenApiSchemaReference("thing")
@@ -477,8 +480,10 @@ namespace Microsoft.OpenApi.Tests.Writers
                 },
                 Components = new()
                 {
-                    Schemas = {
-                        ["thing"] = thingSchema}
+                    Schemas = new()
+                    {
+                        ["thing"] = thingSchema
+                    }
                 }
             };
             doc.RegisterComponents();

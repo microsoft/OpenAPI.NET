@@ -118,30 +118,31 @@ namespace Microsoft.OpenApi.Reader
 #endif
             settings ??= new OpenApiReaderSettings();
 
-            Stream preparedStream;
+            Stream? preparedStream = null;
             if (format is null)
             {
                 (preparedStream, format) = await PrepareStreamForReadingAsync(input, format, cancellationToken).ConfigureAwait(false);
             }
-            else
-            {
-                preparedStream = input;
-            }
 
             // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
-            using (preparedStream)
+            var result = await InternalLoadAsync(preparedStream ?? input, format, settings, cancellationToken).ConfigureAwait(false);
+            if (!settings.LeaveStreamOpen)
             {
-                var result = await InternalLoadAsync(preparedStream, format, settings, cancellationToken).ConfigureAwait(false);
-                if (!settings.LeaveStreamOpen)
-                {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-                    await input.DisposeAsync().ConfigureAwait(false);
+                await input.DisposeAsync().ConfigureAwait(false);
 #else
-                    input.Dispose();
+                input.Dispose();
 #endif
-                }
-                return result;
             }
+            if (preparedStream is not null && preparedStream != input)
+            {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+                await preparedStream.DisposeAsync().ConfigureAwait(false);
+#else
+                preparedStream.Dispose();
+#endif
+            }
+            return result;
         }
 
         /// <summary>
@@ -240,7 +241,12 @@ namespace Microsoft.OpenApi.Reader
         {
             settings ??= DefaultReaderSettings.Value;
             var reader = settings.GetReader(format);
-            var readResult = await reader.ReadAsync(input, settings, cancellationToken).ConfigureAwait(false);
+            var location =
+                        (input is FileStream fileStream ? new Uri(fileStream.Name) : null) ??
+                        settings.BaseUrl ??
+                        new Uri(OpenApiConstants.BaseRegistryUri);
+
+            var readResult = await reader.ReadAsync(input, location, settings, cancellationToken).ConfigureAwait(false);
 
             if (settings.LoadExternalRefs)
             {
@@ -258,13 +264,10 @@ namespace Microsoft.OpenApi.Reader
 
         private static async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument? document, OpenApiReaderSettings settings, string? format = null, CancellationToken token = default)
         {
-            // Create workspace for all documents to live in.
-            var baseUrl = settings.BaseUrl ?? new Uri(OpenApiConstants.BaseRegistryUri);
-            var openApiWorkSpace = new OpenApiWorkspace(baseUrl);
-
-            // Load this root document into the workspace
-            var streamLoader = new DefaultStreamLoader(baseUrl, settings.HttpClient);
-            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, settings.CustomExternalLoader ?? streamLoader, settings);
+            // Load this document into the workspace
+            var streamLoader = new DefaultStreamLoader(settings.HttpClient);
+            var workspace = document?.Workspace ?? new OpenApiWorkspace();
+            var workspaceLoader = new OpenApiWorkspaceLoader(workspace, settings.CustomExternalLoader ?? streamLoader, settings);
             return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, token).ConfigureAwait(false);
         }
 
@@ -280,12 +283,13 @@ namespace Microsoft.OpenApi.Reader
                 throw new ArgumentException($"Cannot parse the stream: {nameof(input)} is empty or contains no elements.");
             }
 
+            var location = new Uri(OpenApiConstants.BaseRegistryUri);
             var reader = settings.GetReader(format);
-            var readResult = reader.Read(input, settings);
+            var readResult = reader.Read(input, location, settings);
             return readResult;
         }
 
-      private static async Task<(Stream, string?)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
+        private static async Task<(Stream, string?)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -303,8 +307,8 @@ namespace Microsoft.OpenApi.Reader
                     var mediaType = response.Content.Headers.ContentType?.MediaType;
                     var contentType = mediaType?.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
                     format = contentType?.Split('/').Last().Split('+').Last().Split('-').Last();
-                    
-                  // for non-standard MIME types e.g. text/x-yaml used in older libs or apps
+
+                    // for non-standard MIME types e.g. text/x-yaml used in older libs or apps
 #if NETSTANDARD2_0
                     stream = await response.Content.ReadAsStreamAsync();
 #else

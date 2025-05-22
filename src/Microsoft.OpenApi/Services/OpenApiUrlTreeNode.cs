@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// All the subdirectories of a node.
         /// </summary>
-        public IDictionary<string, OpenApiUrlTreeNode> Children { get; } = new Dictionary<string, OpenApiUrlTreeNode>();
+        public Dictionary<string, OpenApiUrlTreeNode> Children { get; } = new Dictionary<string, OpenApiUrlTreeNode>();
 
         /// <summary>
         /// The relative directory path of the current node from the root node.
@@ -31,12 +31,12 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Dictionary of labels and Path Item objects that describe the operations available on a node.
         /// </summary>
-        public IDictionary<string, IOpenApiPathItem> PathItems { get; } = new Dictionary<string, IOpenApiPathItem>();
+        public Dictionary<string, IOpenApiPathItem> PathItems { get; } = new Dictionary<string, IOpenApiPathItem>();
 
         /// <summary>
         /// A dictionary of key value pairs that contain information about a node.
         /// </summary>
-        public IDictionary<string, List<string>> AdditionalData { get; set; } = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> AdditionalData { get; set; } = new Dictionary<string, List<string>>();
 
         /// <summary>
         /// Flag indicating whether a node segment is a path parameter.
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Services
         {
             Utils.CheckArgumentNullOrEmpty(label);
 
-            return PathItems is not null && PathItems.TryGetValue(label, out var item) && item.Operations is not null && item.Operations.Any();
+            return PathItems is not null && PathItems.TryGetValue(label, out var item) && item.Operations is { Count : > 0 };
         }
 
         /// <summary>
@@ -151,13 +151,6 @@ namespace Microsoft.OpenApi.Services
             }
 
             var segments = path.Split('/');
-            if (path.EndsWith("/", StringComparison.OrdinalIgnoreCase))
-            {
-                // Remove the last element, which is empty, and append the trailing slash to the new last element
-                // This is to support URLs with trailing slashes
-                Array.Resize(ref segments, segments.Length - 1);
-                segments[segments.Length - 1] += @"\";
-            }
 
             return Attach(segments: segments,
                           pathItem: pathItem,
@@ -179,13 +172,21 @@ namespace Microsoft.OpenApi.Services
                                           string currentPath)
         {
             var segment = segments.FirstOrDefault();
-            if (string.IsNullOrEmpty(segment))
+            // empty segment is significant
+            if (segment is null)
             {
                 if (PathItems.ContainsKey(label))
                 {
                     throw new ArgumentException($"A duplicate label already exists for this node: {label}", nameof(label));
                 }
 
+                Path = currentPath;
+                PathItems.Add(label, pathItem);
+                return this;
+            }
+            // special casing for '/' (root node)
+            if (segment.Length == 0 && currentPath.Length == 0)
+            {
                 Path = currentPath;
                 PathItems.Add(label, pathItem);
                 return this;

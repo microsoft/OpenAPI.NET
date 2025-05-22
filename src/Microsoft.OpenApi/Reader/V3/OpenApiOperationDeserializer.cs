@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -20,8 +22,18 @@ namespace Microsoft.OpenApi.Reader.V3
             new()
             {
                 {
-                    "tags", (o, n, doc) => { 
-                        if (n.CreateSimpleList((valueNode, doc) => LoadTagByReference(valueNode.GetScalarValue(), doc), doc) is {Count: > 0} tags)
+                    "tags", (o, n, doc) => {
+                        if (n.CreateSimpleList(
+                            (valueNode, doc) =>
+                            {
+                                var val = valueNode.GetScalarValue();
+                                if (string.IsNullOrEmpty(val))
+                                    return null;   // Avoid exception on empty tag, we'll remove these from the list further on
+                                return LoadTagByReference(val , doc);
+                                },
+                            doc)
+                        // Filter out empty tags instead of excepting on them
+                        .OfType<OpenApiTagReference>().ToList() is {Count: > 0} tags)
                         {
                             o.Tags = new HashSet<OpenApiTagReference>(tags, OpenApiTagComparer.Instance);
                         }
@@ -72,7 +84,13 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "security",
-                    (o, n, t) => o.Security = n.CreateList(LoadSecurityRequirement, t)
+                    (o, n, t) =>
+                    { 
+                        if (n.JsonNode is JsonArray)
+                        {
+                            o.Security = n.CreateList(LoadSecurityRequirement, t);
+                        } 
+                    }
                 },
                 {
                     "servers",

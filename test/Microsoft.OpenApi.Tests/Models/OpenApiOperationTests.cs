@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
@@ -44,15 +45,15 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Description = "description2",
                 Required = true,
-                Content = new Dictionary<string, OpenApiMediaType>
+                Content = new()
                 {
                     ["application/json"] = new()
                     {
                         Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Number,
-                            Minimum = 5,
-                            Maximum = 10
+                            Minimum = "5",
+                            Maximum = "10"
                         }
                     }
                 }
@@ -62,28 +63,28 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["200"] = new OpenApiResponseReference("response1"),
                 ["400"] = new OpenApiResponse()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>
+                    Content = new()
                     {
                         ["application/json"] = new()
                         {
                             Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
-                                Minimum = 5,
-                                Maximum = 10
+                                Minimum = "5",
+                                Maximum = "10"
                             }
                         }
                     }
                 }
             },
-            Servers = new List<OpenApiServer>
-            {
+            Servers =
+            [
                 new()
                 {
                     Url = "http://server.com",
                     Description = "serverDescription"
                 }
-            },
+            ],
             Metadata = new Dictionary<string, object> { { "key1", "value1" }, { "key2", 2 } },
         };
 
@@ -118,15 +119,15 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Description = "description2",
                 Required = true,
-                Content = new Dictionary<string, OpenApiMediaType>
+                Content = new()
                 {
                     ["application/json"] = new()
                     {
                         Schema = new OpenApiSchema()
                         {
                             Type = JsonSchemaType.Number,
-                            Minimum = 5,
-                            Maximum = 10
+                            Minimum = "5",
+                            Maximum = "10"
                         }
                     }
                 }
@@ -136,40 +137,40 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["200"] = new OpenApiResponseReference("response1"),
                 ["400"] = new OpenApiResponse()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>
+                    Content = new()
                     {
                         ["application/json"] = new()
                         {
                             Schema = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.Number,
-                                Minimum = 5,
-                                Maximum = 10
+                                Minimum = "5",
+                                Maximum = "10"
                             }
                         }
                     }
                 }
             },
-            Security = new List<OpenApiSecurityRequirement>
-            {
+            Security =
+            [
                 new()
                 {
-                    [new OpenApiSecuritySchemeReference("securitySchemeId1", __advancedOperationWithTagsAndSecurity_supportingDocument)] = new List<string>(),
-                    [new OpenApiSecuritySchemeReference("securitySchemeId2", __advancedOperationWithTagsAndSecurity_supportingDocument)] = new List<string>
-                    {
+                    [new OpenApiSecuritySchemeReference("securitySchemeId1", __advancedOperationWithTagsAndSecurity_supportingDocument)] = [],
+                    [new OpenApiSecuritySchemeReference("securitySchemeId2", __advancedOperationWithTagsAndSecurity_supportingDocument)] =
+                    [
                         "scopeName1",
                         "scopeName2"
-                    }
+                    ]
                 }
-            },
-            Servers = new List<OpenApiServer>
-            {
+            ],
+            Servers =
+            [
                 new()
                 {
                     Url = "http://server.com",
                     Description = "serverDescription"
                 }
-            }
+            ]
         };
         private static OpenApiDocument __advancedOperationWithTagsAndSecurity_supportingDocument 
         {
@@ -222,13 +223,13 @@ namespace Microsoft.OpenApi.Tests.Models
                 ],
                 RequestBody = new OpenApiRequestBody()
                 {
-                    Content =
+                    Content = new()
                     {
                         ["application/x-www-form-urlencoded"] = new()
                         {
                             Schema = new OpenApiSchema()
                             {
-                                Properties =
+                                Properties = new()
                                 {
                                     ["name"] = new OpenApiSchema()
                                     {
@@ -251,7 +252,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Schema = new OpenApiSchema()
                             {
-                                Properties =
+                                Properties = new()
                                 {
                                     ["name"] = new OpenApiSchema()
                                     {

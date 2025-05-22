@@ -22,9 +22,9 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Theory]
-        [InlineData(OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public async Task SerializeBasicEncodingAsV3Works(OpenApiFormat format, string expected)
+        [InlineData(OpenApiConstants.Json, "{ }")]
+        [InlineData(OpenApiConstants.Yaml, "{ }")]
+        public async Task SerializeBasicEncodingAsV3Works(string format, string expected)
         {
             // Arrange & Act
             var actual = await BasicEncoding.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);

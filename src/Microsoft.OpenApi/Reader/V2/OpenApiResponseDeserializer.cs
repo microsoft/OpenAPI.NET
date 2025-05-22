@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             if (response.Content == null)
             {
-                response.Content = new Dictionary<string, OpenApiMediaType>();
+                response.Content = [];
             }
             else if (context.GetFromTempStorage<bool>(TempStorageKeys.ResponseProducesSet, response))
             {
@@ -72,11 +72,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces)
                 ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces)
-                ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
+                ?? context.DefaultContentType ?? ["application/octet-stream"];
 
             var schema = context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response);
-            var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response)
-                ?? new Dictionary<string, IOpenApiExample>();
+            var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, response);
 
             foreach (var produce in produces)
             {

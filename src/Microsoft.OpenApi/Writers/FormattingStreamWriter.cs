@@ -19,12 +19,13 @@ namespace Microsoft.OpenApi.Writers
         public FormattingStreamWriter(Stream stream, IFormatProvider formatProvider)
             : base(stream)
         {
-            this.FormatProvider = formatProvider;
+            _formatProvider = formatProvider;
         }
+        private readonly IFormatProvider _formatProvider;
 
         /// <summary>
         /// The <see cref="IFormatProvider"/> associated with this <see cref="FormattingStreamWriter"/>.
         /// </summary>
-        public override IFormatProvider FormatProvider { get; }
+        public override IFormatProvider FormatProvider { get => _formatProvider; }
     }
 }

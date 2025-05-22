@@ -2,11 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
@@ -35,44 +37,47 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Contact = new OpenApiContact
                     {
                         Email = "example@example.com",
-                        Extensions =
+                        Extensions = new Dictionary<string, IOpenApiExtension>
                         {
-                                ["x-twitter"] = new OpenApiAny("@exampleTwitterHandler")
+                                ["x-twitter"] = new JsonNodeExtension("@exampleTwitterHandler")
                         },
                         Name = "John Doe",
                         Url = new Uri("http://www.example.com/url1")
                     },
                     License = new OpenApiLicense
                     {
-                        Extensions = { ["x-disclaimer"] = new OpenApiAny("Sample Extension String Disclaimer") },
+                        Extensions = new Dictionary<string, IOpenApiExtension>
+                        { 
+                            ["x-disclaimer"] = new JsonNodeExtension("Sample Extension String Disclaimer") 
+                        },
                         Name = "licenseName",
                         Url = new Uri("http://www.example.com/url2")
                     },
-                    Extensions =
+                    Extensions = new Dictionary<string, IOpenApiExtension>
                     {
-                            ["x-something"] = new OpenApiAny("Sample Extension String Something"),
-                            ["x-contact"] = new OpenApiAny(new JsonObject()
+                            ["x-something"] = new JsonNodeExtension("Sample Extension String Something"),
+                            ["x-contact"] = new JsonNodeExtension(new JsonObject()
                             {
                                 ["name"] = "John Doe",
                                 ["url"] = "http://www.example.com/url3",
                                 ["email"] = "example@example.com"
                             }),
-                            ["x-list"] = new OpenApiAny (new JsonArray { "1", "2" })
+                            ["x-list"] = new JsonNodeExtension (new JsonArray { "1", "2" })
                     }
                 }, options => options.IgnoringCyclicReferences()
-                .Excluding(i => ((OpenApiAny)i.Contact.Extensions["x-twitter"]).Node.Parent)
-                .Excluding(i => ((OpenApiAny)i.License.Extensions["x-disclaimer"]).Node.Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-something"]).Node.Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["name"].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["name"].Root)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["url"].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["url"].Root)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["email"].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["email"].Root)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[0].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[0].Root)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[1].Parent)
-                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[1].Root));
+                .Excluding(i => ((JsonNodeExtension)i.Contact.Extensions["x-twitter"]).Node.Parent)
+                .Excluding(i => ((JsonNodeExtension)i.License.Extensions["x-disclaimer"]).Node.Parent)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-something"]).Node.Parent)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["name"].Parent)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["name"].Root)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["url"].Parent)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["url"].Root)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["email"].Parent)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["email"].Root)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-list"]).Node[0].Parent)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-list"]).Node[0].Root)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-list"]).Node[1].Parent)
+                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-list"]).Node[1].Root));
         }
 
         [Fact]

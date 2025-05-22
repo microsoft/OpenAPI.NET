@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 {
                     ["/test"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             [HttpMethod.Get] = new OpenApiOperation()
                         }
@@ -261,7 +261,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
                 Version = "3.0",
-                OpenApiFormat = OpenApiFormat.Yaml,
+                OpenApiFormat = OpenApiConstants.Yaml,
                 TerseOutput = false,
                 InlineLocal = false,
                 InlineExternal = false,
@@ -296,7 +296,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
                 Version = "3.0",
-                OpenApiFormat = OpenApiFormat.Yaml,
+                OpenApiFormat = OpenApiConstants.Yaml,
                 TerseOutput = false,
                 InlineLocal = false,
                 InlineExternal = false,

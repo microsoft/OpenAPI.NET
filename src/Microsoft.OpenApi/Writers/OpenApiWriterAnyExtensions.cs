@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
-    /// Extensions methods for writing the <see cref="OpenApiAny"/>
+    /// Extensions methods for writing the <see cref="JsonNodeExtension"/>
     /// </summary>
     public static class OpenApiWriterAnyExtensions
     {
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer">The Open API writer.</param>
         /// <param name="extensions">The specification extensions.</param>
         /// <param name="specVersion">Version of the OpenAPI specification that that will be output.</param>
-        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension>? extensions, OpenApiSpecVersion specVersion)
+        public static void WriteExtensions(this IOpenApiWriter writer, Dictionary<string, IOpenApiExtension>? extensions, OpenApiSpecVersion specVersion)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WritePrimitive(this IOpenApiWriter writer, JsonValue jsonValue)
         {
-            if (jsonValue.TryGetValue(out string? stringValue))
+            if (jsonValue.TryGetValue(out string? stringValue) && stringValue is not null)
                 writer.WriteValue(stringValue);
             else if (jsonValue.TryGetValue(out DateTime dateTimeValue))
                 writer.WriteValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)); // ISO 8601 format

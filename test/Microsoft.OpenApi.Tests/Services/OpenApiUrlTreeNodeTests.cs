@@ -21,14 +21,14 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 ["/"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new(),
                     }
                 },
                 ["/houses"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Get] = new(),
                         [HttpMethod.Post] = new()
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 ["/cars"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                    Operations = new()
                     {
                         [HttpMethod.Post] = new()
                     }
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var pathItem1 = new OpenApiPathItem
             {
-                Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                Operations = new()
                 {
                     {
                         HttpMethod.Get, new OpenApiOperation
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var pathItem2 = new OpenApiPathItem
             {
-                Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                Operations = new()
                 {
                     {
                         HttpMethod.Get, new OpenApiOperation
@@ -231,6 +231,66 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
+        public void CreatePathsWithTrailingSlashWorks()
+        {
+            var doc = new OpenApiDocument
+            {
+                Paths = new()
+                {
+                    ["/"] = new OpenApiPathItem(),
+                    ["/cars"] = new OpenApiPathItem(),
+                    ["/cars/"] = new OpenApiPathItem(),
+                    ["/cars/coupes"] = new OpenApiPathItem()
+                }
+            };
+
+            var label = "assets";
+            var rootNode = OpenApiUrlTreeNode.Create(doc, label);
+
+            Assert.NotNull(rootNode);
+            Assert.Single(rootNode.Children);
+            var carsNode = rootNode.Children["cars"];
+            Assert.Equal("cars", carsNode.Segment);
+            Assert.Equal(2, carsNode.Children.Count);
+            var emptyNode = carsNode.Children[""];
+            Assert.Empty(emptyNode.Segment);
+            Assert.Empty(emptyNode.Children);
+            var coupesNode = carsNode.Children["coupes"];
+            Assert.Equal("coupes", coupesNode.Segment);
+            Assert.Empty(coupesNode.Children);
+        }
+
+        [Fact]
+        public void CreatePathsWithTrailingSlashWorksInverted()
+        {
+            var doc = new OpenApiDocument
+            {
+                Paths = new()
+                {
+                    ["/"] = new OpenApiPathItem(),
+                    ["/cars/"] = new OpenApiPathItem(),
+                    ["/cars"] = new OpenApiPathItem(), // only difference from previous test, tests that node mapping is not order specific
+                    ["/cars/coupes"] = new OpenApiPathItem()
+                }
+            };
+
+            var label = "assets";
+            var rootNode = OpenApiUrlTreeNode.Create(doc, label);
+
+            Assert.NotNull(rootNode);
+            Assert.Single(rootNode.Children);
+            var carsNode = rootNode.Children["cars"];
+            Assert.Equal("cars", carsNode.Segment);
+            Assert.Equal(2, carsNode.Children.Count);
+            var emptyNode = carsNode.Children[""];
+            Assert.Empty(emptyNode.Segment);
+            Assert.Empty(emptyNode.Children);
+            var coupesNode = carsNode.Children["coupes"];
+            Assert.Equal("coupes", coupesNode.Segment);
+            Assert.Empty(coupesNode.Children);
+        }
+
+        [Fact]
         public void HasOperationsWorks()
         {
             var doc1 = new OpenApiDocument
@@ -241,7 +301,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     ["/houses"] = new OpenApiPathItem(),
                     ["/cars/{car-id}"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -269,7 +329,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     ["/cars/{car-id}"] = new OpenApiPathItem()
                     {
-                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        Operations = new()
                         {
                             {
                                 HttpMethod.Get, new OpenApiOperation
@@ -468,16 +528,16 @@ namespace Microsoft.OpenApi.Tests.Services
             await Verifier.Verify(diagram);
         }
 
-        public static TheoryData<string, string[], string, string> SupportsTrailingSlashesInPathData => new TheoryData<string, string[], string, string>
+        public static TheoryData<string, string[], string> SupportsTrailingSlashesInPathData => new TheoryData<string, string[], string>
         {
             // Path, children up to second to leaf, last expected leaf node name, expected leaf node path
-            { "/cars/{car-id}/build/", ["cars", "{car-id}"], @"build\", @"\cars\{car-id}\build\" },
-            { "/cars/", [], @"cars\", @"\cars\" },
+            { "/cars/{car-id}/build/", ["cars", "{car-id}", "build"], @"\cars\{car-id}\build\" },
+            { "/cars/", ["cars"], @"\cars\" },
         };
 
         [Theory]
         [MemberData(nameof(SupportsTrailingSlashesInPathData))]
-        public void SupportsTrailingSlashesInPath(string path, string[] childrenBeforeLastNode, string expectedLeafNodeName, string expectedLeafNodePath)
+        public void SupportsTrailingSlashesInPath(string path, string[] childrenBeforeLastNode, string expectedLeafNodePath)
         {
             var openApiDocument = new OpenApiDocument
             {
@@ -496,7 +556,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 secondToLeafNode = secondToLeafNode.Children[childName];
             }
 
-            Assert.True(secondToLeafNode.Children.TryGetValue(expectedLeafNodeName, out var leafNode));
+            Assert.True(secondToLeafNode.Children.TryGetValue(string.Empty, out var leafNode));
             Assert.Equal(expectedLeafNodePath, leafNode.Path);
             Assert.Empty(leafNode.Children);
         }

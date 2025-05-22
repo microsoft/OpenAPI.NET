@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Hidi
                 if (options.Output == null)
                 {
 #pragma warning disable CA1308 // Normalize strings to uppercase
-                    var extension = options.OpenApiFormat?.GetDisplayName().ToLowerInvariant();
+                    var extension = options.OpenApiFormat?.ToLowerInvariant();
                     var inputExtension = !string.IsNullOrEmpty(extension) ? string.Concat(".", extension) 
                         : GetInputPathExtension(options.OpenApi, options.Csdl);
 
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Default to yaml and OpenApiVersion 3_1 during csdl to OpenApi conversion
-                var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
+                var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiConstants.Yaml);
                 var openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_1;
 
                 // If ApiManifest is provided, set the referenced OpenAPI document
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Load OpenAPI document
-                var document = await GetOpenApiAsync(options, openApiFormat.GetDisplayName(), logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApiAsync(options, openApiFormat, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null && document is not null)
                 {
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static async Task WriteOpenApiAsync(HidiOptions options, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
+        private static async Task WriteOpenApiAsync(HidiOptions options, string openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
         {
             using (logger.BeginScope("Output"))
             {
@@ -202,11 +202,12 @@ namespace Microsoft.OpenApi.Hidi
                     InlineLocalReferences = options.InlineLocal,
                     InlineExternalReferences = options.InlineExternal
                 };
-
-                IOpenApiWriter writer = openApiFormat switch
+#pragma warning disable CA1308
+                IOpenApiWriter writer = openApiFormat.ToLowerInvariant() switch
+#pragma warning restore CA1308
                 {
-                    OpenApiFormat.Json => options.TerseOutput ? new(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
-                    OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
+                    OpenApiConstants.Json => options.TerseOutput ? new(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
+                    OpenApiConstants.Yaml => new OpenApiYamlWriter(textWriter, settings),
                     _ => throw new ArgumentException("Unknown format"),
                 };
 
@@ -438,7 +439,10 @@ namespace Microsoft.OpenApi.Hidi
             var sb = new StringBuilder();
             document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
 
-            var doc = OpenApiDocument.Parse(sb.ToString(), format).Document;
+            var settings = new OpenApiReaderSettings();
+            settings.AddYamlReader();
+
+            var doc = OpenApiDocument.Parse(sb.ToString(), format, settings).Document;
 
             return doc;
         }
@@ -557,10 +561,10 @@ namespace Microsoft.OpenApi.Hidi
         /// <param name="input"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        private static OpenApiFormat GetOpenApiFormat(string input, ILogger logger)
+        private static string GetOpenApiFormat(string input, ILogger logger)
         {
             logger.LogTrace("Getting the OpenApi format");
-            return !input.StartsWith("http", StringComparison.OrdinalIgnoreCase) && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
+            return !input.StartsWith("http", StringComparison.OrdinalIgnoreCase) && Path.GetExtension(input) == ".json" ? OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
 
         private static string GetInputPathExtension(string? openapi = null, string? csdl = null)
@@ -587,8 +591,8 @@ namespace Microsoft.OpenApi.Hidi
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
-                var document = await GetOpenApiAsync(options, openApiFormat.GetDisplayName(), logger, null, cancellationToken).ConfigureAwait(false);
+                var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiConstants.Yaml);
+                var document = await GetOpenApiAsync(options, openApiFormat, logger, null, cancellationToken).ConfigureAwait(false);
                 if (document is not null)
                 {
                     using (logger.BeginScope("Creating diagram"))
@@ -751,10 +755,10 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) 
-                ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
+                ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiConstants.Yaml);
 
             // Load OpenAPI document
-            var document = await GetOpenApiAsync(options, openApiFormat.GetDisplayName(), logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
+            var document = await GetOpenApiAsync(options, openApiFormat, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -774,7 +778,7 @@ namespace Microsoft.OpenApi.Hidi
             options.TerseOutput = true;
             if (document is not null)
             {
-                await WriteOpenApiAsync(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_1, document, logger, cancellationToken).ConfigureAwait(false);
+                await WriteOpenApiAsync(options, OpenApiConstants.Json, OpenApiSpecVersion.OpenApi3_1, document, logger, cancellationToken).ConfigureAwait(false);
 
                 // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
                 var manifest = new OpenAIPluginManifest(document.Info.Title ?? "Title",
