@@ -869,21 +869,21 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var document = new OpenApiDocument()
             {
-                Tags =
-                [
+                Tags = new HashSet<OpenApiTag>
+                {
                     new() { Name = "one" },
                     new() { Name = "three" }
-                ]
+                }
             };
 
             var operation = new OpenApiOperation()
             {
-                Tags =
-                [
-                    new OpenApiTagReference("one", document),
-                    new OpenApiTagReference("two", document),
-                    new OpenApiTagReference("three", document)
-                ]
+                Tags = new HashSet<OpenApiTagReference>
+                {
+                    new("one", document),
+                    new("two", document),
+                    new("three", document)
+                }
             };
 
             var exception = await Assert.ThrowsAsync<OpenApiException>(() => operation.SerializeAsJsonAsync(version));

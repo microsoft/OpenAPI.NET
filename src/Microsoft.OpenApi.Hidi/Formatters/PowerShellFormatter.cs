@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             // Order matters. Resolve operationId.
             operationId = RemoveHashSuffix(operationId);
             if (operationTypeExtension.IsEquals("action") || operationTypeExtension.IsEquals("function"))
-                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? []);
+                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters ?? new List<IOpenApiParameter>());
             operationId = SingularizeAndDeduplicateOperationId(operationId.SplitByChar('.'));
             operationId = ResolveODataCastOperationId(operationId);
             operationId = ResolveByRefOperationId(operationId);
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return s_hashSuffixRegex.Match(operationId).Value;
         }
 
-        private static string RemoveKeyTypeSegment(string operationId, List<IOpenApiParameter> parameters)
+        private static string RemoveKeyTypeSegment(string operationId, IList<IOpenApiParameter> parameters)
         {
             var segments = operationId.SplitByChar('.');
             foreach (var parameter in parameters)
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return string.Join('.', segments);
         }
 
-        private static void ResolveFunctionParameters(List<IOpenApiParameter> parameters)
+        private static void ResolveFunctionParameters(IList<IOpenApiParameter> parameters)
         {
             foreach (var parameter in parameters.OfType<OpenApiParameter>().Where(static p => p.Content?.Count > 0))
             {

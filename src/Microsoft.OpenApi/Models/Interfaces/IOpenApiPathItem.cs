@@ -19,11 +19,11 @@ public interface IOpenApiPathItem : IOpenApiDescribedElement, IOpenApiSummarized
     /// <summary>
     /// An alternative server array to service all operations in this path.
     /// </summary>
-    public List<OpenApiServer>? Servers { get; }
+    public IList<OpenApiServer>? Servers { get; }
 
     /// <summary>
     /// A list of parameters that are applicable for all the operations described under this path.
     /// These parameters can be overridden at the operation level, but cannot be removed there.
     /// </summary>
-    public List<IOpenApiParameter>? Parameters { get; }
+    public IList<IOpenApiParameter>? Parameters { get; }
 }

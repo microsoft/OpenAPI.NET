@@ -180,19 +180,19 @@ namespace Microsoft.OpenApi.Models
         public bool WriteOnly { get; set; }
 
         /// <inheritdoc />
-        public List<IOpenApiSchema>? AllOf { get; set; }
+        public IList<IOpenApiSchema>? AllOf { get; set; }
 
         /// <inheritdoc />
-        public List<IOpenApiSchema>? OneOf { get; set; }
+        public IList<IOpenApiSchema>? OneOf { get; set; }
 
         /// <inheritdoc />
-        public List<IOpenApiSchema>? AnyOf { get; set; }
+        public IList<IOpenApiSchema>? AnyOf { get; set; }
 
         /// <inheritdoc />
         public IOpenApiSchema? Not { get; set; }
 
         /// <inheritdoc />
-        public HashSet<string>? Required { get; set; }
+        public ISet<string>? Required { get; set; }
 
         /// <inheritdoc />
         public IOpenApiSchema? Items { get; set; }
@@ -231,10 +231,10 @@ namespace Microsoft.OpenApi.Models
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc />
-        public List<JsonNode>? Examples { get; set; }
+        public IList<JsonNode>? Examples { get; set; }
 
         /// <inheritdoc />
-        public List<JsonNode>? Enum { get; set; }
+        public IList<JsonNode>? Enum { get; set; }
 
         /// <inheritdoc />
         public bool UnevaluatedProperties { get; set; }
@@ -305,7 +305,7 @@ namespace Microsoft.OpenApi.Models
             OneOf = schema.OneOf != null ? [.. schema.OneOf] : null;
             AnyOf = schema.AnyOf != null ? [.. schema.AnyOf] : null;
             Not = schema.Not?.CreateShallowCopy();
-            Required = schema.Required != null ? [.. schema.Required] : null;
+            Required = schema.Required != null ? new HashSet<string>(schema.Required) : null;
             Items = schema.Items?.CreateShallowCopy();
             MaxItems = schema.MaxItems ?? MaxItems;
             MinItems = schema.MinItems ?? MinItems;
@@ -625,7 +625,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="propertyName">The property name that will be serialized.</param>
         private void SerializeAsV2(
             IOpenApiWriter writer,
-            HashSet<string>? parentRequiredProperties,
+            ISet<string>? parentRequiredProperties,
             string? propertyName)
         {
             parentRequiredProperties ??= new HashSet<string>();

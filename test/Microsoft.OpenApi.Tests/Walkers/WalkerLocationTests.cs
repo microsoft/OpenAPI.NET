@@ -318,12 +318,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(HashSet<OpenApiTag> openApiTags)
+        public override void Visit(ISet<OpenApiTag> openApiTags)
         {
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(List<OpenApiServer> servers)
+        public override void Visit(IList<OpenApiServer> servers)
         {
             Locations.Add(this.PathString);
         }
@@ -332,7 +332,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add(this.PathString);
         }
-        public override void Visit(HashSet<OpenApiTagReference> openApiTags)
+        public override void Visit(ISet<OpenApiTagReference> openApiTags)
         {
             Locations.Add(this.PathString);
         }

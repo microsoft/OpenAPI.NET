@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiServer"/>
         /// </summary>
-        public virtual void Visit(List<OpenApiServer> servers)
+        public virtual void Visit(IList<OpenApiServer> servers)
         {
         }
 
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        public virtual void Visit(List<IOpenApiParameter> parameters)
+        public virtual void Visit(IList<IOpenApiParameter> parameters)
         {
         }
 
@@ -310,21 +310,21 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/>
         /// </summary>
-        public virtual void Visit(HashSet<OpenApiTag> openApiTags)
+        public virtual void Visit(ISet<OpenApiTag> openApiTags)
         {
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/>
         /// </summary>
-        public virtual void Visit(HashSet<OpenApiTagReference> openApiTags)
+        public virtual void Visit(ISet<OpenApiTagReference> openApiTags)
         {
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiSecurityRequirement"/>
         /// </summary>
-        public virtual void Visit(List<OpenApiSecurityRequirement> openApiSecurityRequirements)
+        public virtual void Visit(IList<OpenApiSecurityRequirement> openApiSecurityRequirements)
         {
         }
 

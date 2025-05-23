@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/> and child objects
         /// </summary>
-        internal void Walk(HashSet<OpenApiTag>? tags)
+        internal void Walk(ISet<OpenApiTag>? tags)
         {
             if (tags == null)
             {
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiTagReference"/> and child objects
         /// </summary>
-        internal void Walk(HashSet<OpenApiTagReference>? tags)
+        internal void Walk(ISet<OpenApiTagReference>? tags)
         {
             if (tags == null)
             {
@@ -306,7 +306,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of  <see cref="OpenApiServer"/> and child objects
         /// </summary>
-        internal void Walk(List<OpenApiServer>? servers)
+        internal void Walk(IList<OpenApiServer>? servers)
         {
             if (servers == null)
             {
@@ -609,7 +609,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiSecurityRequirement"/>
         /// </summary>
-        internal void Walk(List<OpenApiSecurityRequirement>? securityRequirements)
+        internal void Walk(IList<OpenApiSecurityRequirement>? securityRequirements)
         {
             if (securityRequirements == null)
             {
@@ -630,7 +630,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        internal void Walk(List<IOpenApiParameter>? parameters)
+        internal void Walk(IList<IOpenApiParameter>? parameters)
         {
             if (parameters == null)
             {
@@ -1044,7 +1044,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits a list of <see cref="IOpenApiSchema"/> and child objects
         /// </summary>
-        internal void Walk(List<IOpenApiSchema> schemas)
+        internal void Walk(IList<IOpenApiSchema> schemas)
         {
             if (schemas == null)
             {

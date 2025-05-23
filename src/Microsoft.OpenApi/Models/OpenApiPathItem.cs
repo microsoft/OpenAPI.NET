@@ -25,10 +25,10 @@ namespace Microsoft.OpenApi.Models
         public Dictionary<HttpMethod, OpenApiOperation>? Operations { get; set; }
 
         /// <inheritdoc/>
-        public List<OpenApiServer>? Servers { get; set; }
+        public IList<OpenApiServer>? Servers { get; set; }
 
         /// <inheritdoc/>
-        public List<IOpenApiParameter>? Parameters { get; set; }
+        public IList<IOpenApiParameter>? Parameters { get; set; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }

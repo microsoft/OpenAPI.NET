@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public List<OpenApiServer>? Servers { get; set; } = [];
+        public IList<OpenApiServer>? Servers { get; set; } = [];
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
@@ -71,13 +71,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public List<OpenApiSecurityRequirement>? Security { get; set; }
+        public IList<OpenApiSecurityRequirement>? Security { get; set; }
 
-        private HashSet<OpenApiTag>? _tags;
+        private ISet<OpenApiTag>? _tags;
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public HashSet<OpenApiTag>? Tags 
+        public ISet<OpenApiTag>? Tags 
         { 
             get
             {
@@ -414,7 +414,7 @@ namespace Microsoft.OpenApi.Models
             return server.ReplaceServerUrlVariables([]);
         }
 
-        private static void WriteHostInfoV2(IOpenApiWriter writer, List<OpenApiServer>? servers)
+        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer>? servers)
         {
             if (servers == null || !servers.Any())
             {

@@ -145,19 +145,19 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
-    public List<IOpenApiSchema>? AllOf { get; }
+    public IList<IOpenApiSchema>? AllOf { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
-    public List<IOpenApiSchema>? OneOf { get; }
+    public IList<IOpenApiSchema>? OneOf { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
     /// </summary>
-    public List<IOpenApiSchema>? AnyOf { get; }
+    public IList<IOpenApiSchema>? AnyOf { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
@@ -168,7 +168,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
-    public HashSet<string>? Required { get; }
+    public ISet<string>? Required { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
@@ -247,12 +247,12 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// To represent examples that cannot be naturally represented in JSON or YAML, 
     /// a list of values can be used to contain the examples with escaping where necessary.
     /// </summary>
-    public List<JsonNode>? Examples { get; }
+    public IList<JsonNode>? Examples { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
     /// </summary>
-    public List<JsonNode>? Enum { get; }
+    public IList<JsonNode>? Enum { get; }
 
     /// <summary>
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation

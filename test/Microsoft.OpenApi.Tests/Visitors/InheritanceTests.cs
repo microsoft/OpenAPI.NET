@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(license);
             }
 
-            public override void Visit(List<OpenApiServer> servers)
+            public override void Visit(IList<OpenApiServer> servers)
             {
                 EncodeCall();
                 base.Visit(servers);
@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(operation);
             }
 
-            public override void Visit(List<IOpenApiParameter> parameters)
+            public override void Visit(IList<IOpenApiParameter> parameters)
             {
                 EncodeCall();
                 base.Visit(parameters);
@@ -293,13 +293,13 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(example);
             }
 
-            public override void Visit(HashSet<OpenApiTag> openApiTags)
+            public override void Visit(ISet<OpenApiTag> openApiTags)
             {
                 EncodeCall();
                 base.Visit(openApiTags);
             }
 
-            public override void Visit(List<OpenApiSecurityRequirement> openApiSecurityRequirements)
+            public override void Visit(IList<OpenApiSecurityRequirement> openApiSecurityRequirements)
             {
                 EncodeCall();
                 base.Visit(openApiSecurityRequirements);
