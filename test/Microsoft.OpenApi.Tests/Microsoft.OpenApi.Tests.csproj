@@ -39,6 +39,30 @@
 
   <ItemGroup>
       
+    <None Update="Extensions\CollectionExtensionsTests.SortOpenApiDocumentSucceeds_version=OpenApi2_0.verified.txt">
+      <DependentUpon>CollectionExtensionsTests.cs</DependentUpon>
+    </None>
+      
+    <None Update="Extensions\CollectionExtensionsTests.SortOpenApiDocumentSucceeds_version=OpenApi3_0.verified.txt">
+      <DependentUpon>CollectionExtensionsTests.cs</DependentUpon>
+    </None>
+      
+    <None Update="Extensions\CollectionExtensionsTests.SortOpenApiDocumentSucceeds_version=OpenApi3_1.verified.txt">
+      <DependentUpon>CollectionExtensionsTests.cs</DependentUpon>
+    </None>
+      
+    <None Update="Extensions\CollectionExtensionsTests.SortOpenApiDocumentUsingCustomComparerSucceeds_version=OpenApi2_0.verified.txt">
+      <DependentUpon>CollectionExtensionsTests.cs</DependentUpon>
+    </None>
+      
+    <None Update="Extensions\CollectionExtensionsTests.SortOpenApiDocumentUsingCustomComparerSucceeds_version=OpenApi3_0.verified.txt">
+      <DependentUpon>CollectionExtensionsTests.cs</DependentUpon>
+    </None>
+      
+    <None Update="Extensions\CollectionExtensionsTests.SortOpenApiDocumentUsingCustomComparerSucceeds_version=OpenApi3_1.verified.txt">
+      <DependentUpon>CollectionExtensionsTests.cs</DependentUpon>
+    </None>
+      
     <None Update="Models\References\OpenApiCallbackReferenceTests.SerializeReferencedCallbackAsV3JsonWorks_produceTerseOutput=False.verified.txt">
       <DependentUpon>OpenApiCallbackReferenceTests.cs</DependentUpon>
     </None>

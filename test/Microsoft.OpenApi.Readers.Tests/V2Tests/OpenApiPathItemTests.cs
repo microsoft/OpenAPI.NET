@@ -224,10 +224,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Type = JsonSchemaType.String
                                         }
                                     },
-                                    Required =
-                                    [
+                                    Required = new HashSet<string>
+                                    {
                                         "name"
-                                    ]
+                                    }
                                 }
                             }
                         }
