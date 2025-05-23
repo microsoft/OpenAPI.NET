@@ -1,0 +1,22 @@
+openapi: 3.1.0
+info:
+    title: Reference in a subschema of an component schema
+    version: 1.0.0
+paths:
+    /items:
+        get:
+          responses:
+            200:
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/items'
+components:
+    schemas:
+      items:
+        type: array
+        items:
+            $ref: '#/components/schemas/item'
+      item:
+        type: object

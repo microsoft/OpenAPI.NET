@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -73,6 +74,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiDocument? HostDocument { get => hostDocument; init => hostDocument = value; }
 
+        private string? _referenceV3;
         /// <summary>
         /// Gets the full reference string for v3.0.
         /// </summary>
@@ -80,6 +82,11 @@ namespace Microsoft.OpenApi.Models
         {
             get
             {
+                if (!string.IsNullOrEmpty(_referenceV3))
+                {
+                    return _referenceV3;
+                }
+
                 if (IsExternal)
                 {
                     return GetExternalReferenceV3();
@@ -100,7 +107,14 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/components/" + Type.GetDisplayName() + "/" + Id;
+                return $"#/components/{Type.GetDisplayName()}/{Id}";
+            }
+            private set 
+            { 
+                if (value is not null)
+                {
+                    _referenceV3 = value;
+                }               
             }
         }
 
@@ -126,7 +140,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/" + GetReferenceTypeNameAsV2(Type) + "/" + Id;
+                return $"#/{GetReferenceTypeNameAsV2(Type)}/{Id}";
             }
         }
 
@@ -298,6 +312,44 @@ namespace Microsoft.OpenApi.Models
             {
                 Summary = summary;
             }
+        }
+
+        internal void SetJsonPointerPath(string pointer, string nodeLocation)
+        {
+            // Relative reference to internal JSON schema node/resource (e.g. "#/properties/b")
+            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.Contains("/components/schemas"))
+            {
+                ReferenceV3 = ResolveRelativePointer(nodeLocation, pointer);
+            }
+
+            // Absolute reference or anchor (e.g. "#/components/schemas/..." or full URL)
+            else if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase)) 
+                && !string.Equals(ReferenceV3, pointer, StringComparison.OrdinalIgnoreCase))
+            {
+                ReferenceV3 = pointer;
+            }            
+        }
+
+        private static string ResolveRelativePointer(string nodeLocation, string relativeRef)
+        {
+            // Convert nodeLocation to path segments
+            var segments = nodeLocation.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            // Convert relativeRef to dynamic segments
+            var relativeSegments = relativeRef.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+
+            // Locate the first occurrence of relativeRef segments in the full path
+            for (int i = 0; i <= segments.Count - relativeSegments.Length; i++)
+            {
+                if (relativeSegments.SequenceEqual(segments.Skip(i).Take(relativeSegments.Length)))
+                {
+                    // Trim to include just the matching segment chain
+                    segments = [.. segments.Take(i + relativeSegments.Length)];
+                    break;
+                }
+            }
+
+            return $"#/{string.Join("/", segments)}";
         }
     }
 }
