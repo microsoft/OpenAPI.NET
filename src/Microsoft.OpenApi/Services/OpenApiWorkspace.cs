@@ -371,7 +371,7 @@ namespace Microsoft.OpenApi.Services
             return default;          
         }
         
-        private static IOpenApiSchema? ResolveSubSchema(IOpenApiSchema schema, string[] pathSegments)
+        internal static IOpenApiSchema? ResolveSubSchema(IOpenApiSchema schema, string[] pathSegments)
         {
             // Traverse schema object to resolve subschemas
             if (pathSegments.Length == 0)

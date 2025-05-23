@@ -1,9 +1,12 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 
@@ -201,6 +204,84 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             Assert.Equal(JsonSchemaType.Object | JsonSchemaType.Null, schema.Type);
+        }
+
+        [Fact]
+        public void ResolveSubSchema_ShouldTraverseKnownKeywords()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["a"] = new OpenApiSchema
+                    {
+                        Properties = new Dictionary<string, IOpenApiSchema>
+                        {
+                            ["b"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                        }
+                    }
+                }
+            };
+
+            var path = new[] { "properties", "a", "properties", "b" };
+
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, path);
+
+            Assert.NotNull(result);
+            Assert.Equal(JsonSchemaType.String, result!.Type);
+        }
+
+        public static IEnumerable<object[]> SubSchemaKeywordPropertyPaths =>
+            [
+                [new[] { "properties", "properties" }],
+                [new[] { "properties", "allOf" }]
+            ];
+
+
+        [Theory]
+        [MemberData(nameof(SubSchemaKeywordPropertyPaths))]
+        public void ResolveSubSchema_ShouldHandleUserDefinedKeywordNamedProperty(string[] pathSegments)
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["properties"] = new OpenApiSchema { Type = JsonSchemaType.String },
+                    ["allOf"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                }
+            };
+
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, pathSegments);
+
+            Assert.NotNull(result);
+            Assert.Equal(JsonSchemaType.String, result!.Type);
+        }
+
+        [Fact]
+        public void ResolveSubSchema_ShouldRecurseIntoAllOfComposition()
+        {
+            var schema = new OpenApiSchema
+            {
+                AllOf =
+                [
+                    new OpenApiSchema
+                    {
+                        Properties = new Dictionary<string, IOpenApiSchema>
+                        {
+                            ["x"] = new OpenApiSchema { Type = JsonSchemaType.Integer }
+                        }
+                    }
+                ]
+            };
+
+            var path = new[] { "allOf", "0", "properties", "x" };
+
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, path);
+
+            Assert.NotNull(result);
+            Assert.Equal(JsonSchemaType.Integer, result!.Type);
         }
     }
 }

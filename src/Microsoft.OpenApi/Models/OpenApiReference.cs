@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Models
 
                 if (IsExternal)
                 {
-                    return _referenceV3 = GetExternalReferenceV3();
+                    return GetExternalReferenceV3();
                 }
 
                 if (Type == ReferenceType.Tag)
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return _referenceV3 = $"#/components/{Type.GetDisplayName()}/{Id}";
+                return $"#/components/{Type.GetDisplayName()}/{Id}";
             }
             private set 
             { 
