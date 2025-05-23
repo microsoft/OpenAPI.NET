@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Extensions
 {
-    public class DictionaryExtensionsTests
+    public class CollectionExtensionsTests
     {
         public static readonly OpenApiDocument Document = new OpenApiDocument
         {
@@ -137,53 +137,6 @@ namespace Microsoft.OpenApi.Tests.Extensions
             }
         };
 
-        [Fact]
-        public void SortEmptyDictionaryReturnsEmptyDictionary()
-        {
-            // Arrange
-            Document.Components.Headers = new Dictionary<string, IOpenApiHeader>();
-
-            // Act
-            var sortedDictionary = Document.Components.Headers.Sort();
-
-            // Assert
-            Assert.Empty(sortedDictionary);
-        }
-
-        [Fact]
-        public async Task SortOpenApiDocumentLexicographicallySucceeds()
-        {
-            // Arrange
-            var expected = @"required:
-  - id
-  - name
-properties:
-  id:
-    type: integer
-    format: int64
-  name:
-    type: string
-  tag:
-    type: string";
-
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var settings = new OpenApiWriterSettings
-            {
-                EnableSorting = true
-            };
-            var writer = new OpenApiYamlWriter(outputStringWriter, settings);
-
-            // Act
-            var schema = Document.Components.Schemas["pet"];
-
-            schema.SerializeAsV3(writer);
-            await writer.FlushAsync();
-            var actual = outputStringWriter.ToString();
-
-            // Assert
-            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
-        }
-
         [Theory]
         [MemberData(nameof(OpenApiSpecVersions))]
         public async Task SortOpenApiDocumentUsingCustomComparerSucceeds(OpenApiSpecVersion version)
@@ -192,7 +145,7 @@ properties:
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var settings = new OpenApiWriterSettings
             {
-                KeyComparer = StringComparer.OrdinalIgnoreCase
+                Comparer = StringComparer.OrdinalIgnoreCase
             };
             var writer = new OpenApiYamlWriter(outputStringWriter, settings);
 
@@ -202,7 +155,55 @@ properties:
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(version);
-        }        
+        }
+
+        [Fact]
+        public async Task SortHashSetsWorks()
+        {
+            // Arrange
+            var expected = @"required:
+  - id
+  - name
+  - tag";
+            var schema = new OpenApiSchema
+            {
+                Required = new HashSet<string> { "tag", "id", "name" },
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var settings = new OpenApiWriterSettings
+            {
+                Comparer = StringComparer.OrdinalIgnoreCase
+            };
+            var writer = new OpenApiYamlWriter(outputStringWriter, settings);
+
+            // Act
+            schema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+            var sortedString = outputStringWriter.ToString();
+
+            // Assert
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), sortedString.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void SortTagsByNameUsingComparerWorks()
+        {
+            // Arrange
+            var tags = new HashSet<OpenApiTag>
+            {
+                new() { Name = "three" },
+                new() { Name = "two" },
+                new() { Name = "one" }
+            };
+
+            // Act
+            var sortedTags = tags.Sort(new OpenApiTagNameComparer());
+
+            // Assert
+            Assert.Equal(3, sortedTags.Count);
+            Assert.True(sortedTags[0].Name == "one");
+        }
 
         public static TheoryData<OpenApiSpecVersion> OpenApiSpecVersions()
         {
@@ -212,6 +213,14 @@ properties:
                 values.Add(value);
             }
             return values;
+        }
+    }
+
+    public class OpenApiTagNameComparer : IComparer<OpenApiTag>
+    {
+        public int Compare(OpenApiTag tag1, OpenApiTag tag2)
+        {
+            return string.Compare(tag1.Name, tag2.Name, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
