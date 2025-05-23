@@ -7,26 +7,8 @@ namespace Microsoft.OpenApi.Extensions
     /// <summary>
     /// Dictionary extension methods
     /// </summary>
-    public static class DictionaryExtensions
+    public static class CollectionExtensions
     {
-        /// <summary>
-        /// Returns a new dictionary with entries sorted by key using the default comparer.
-        /// </summary>
-        public static IDictionary<TKey, TValue> Sort<TKey, TValue>(
-            this IDictionary<TKey, TValue> source)
-            where TKey : notnull
-        {
-#if NET7_0_OR_GREATER
-            ArgumentNullException.ThrowIfNull(nameof(source));
-#else
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-#endif
-
-            return source.OrderBy(kvp => kvp.Key)
-                               .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
-
         /// <summary>
         /// Returns a new dictionary with entries sorted by key using a custom comparer.
         /// </summary>
@@ -46,6 +28,23 @@ namespace Microsoft.OpenApi.Extensions
 #endif
             return source.OrderBy(kvp => kvp.Key, comparer)
                                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        /// <summary>
+        /// Sorts any IEnumerable<T> using the specified comparer and returns a List</T>.
+        /// </summary>
+        public static List<T> Sort<T>(this IEnumerable<T> source, IComparer<T> comparer)
+        {
+#if NET7_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(comparer);
+#else
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (comparer == null)
+                throw new ArgumentNullException(nameof(comparer));
+#endif
+            return source.OrderBy(item => item, comparer).ToList();
         }
     }
 }

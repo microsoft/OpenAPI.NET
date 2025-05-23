@@ -27,13 +27,8 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>  
-        /// Enables sorting of collections using the default comparer  
-        /// </summary>  
-        public bool EnableSorting { get; set; }
-
-        /// <summary>  
         /// Custom comparer for sorting collections.  
         /// </summary>  
-        public IComparer<string>? KeyComparer { get; set; }
+        public IComparer<string>? Comparer { get; set; }
     }
 }
