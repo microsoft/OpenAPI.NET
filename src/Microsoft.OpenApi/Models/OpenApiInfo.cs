@@ -3,10 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Open API Info Object, it provides the metadata about the Open API.

@@ -13,7 +13,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 

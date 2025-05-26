@@ -2,9 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Exceptions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Exception type representing exceptions in the OpenAPI writer.

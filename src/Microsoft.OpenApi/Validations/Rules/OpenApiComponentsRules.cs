@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {

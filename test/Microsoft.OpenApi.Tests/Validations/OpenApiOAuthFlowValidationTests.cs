@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Xunit;
 

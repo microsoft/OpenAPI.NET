@@ -6,7 +6,6 @@
 using System;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.MicrosoftExtensions;

@@ -3,7 +3,7 @@
 
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Interfaces
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Interface required for implementing any custom extension

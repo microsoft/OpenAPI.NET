@@ -3,12 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
-using Microsoft.OpenApi.Reader.ParseNodes;
 
 
 namespace Microsoft.OpenApi.Reader.V2

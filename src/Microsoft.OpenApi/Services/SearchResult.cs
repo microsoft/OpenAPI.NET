@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Services
 {

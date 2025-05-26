@@ -3,7 +3,6 @@
 
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models

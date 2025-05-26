@@ -2,10 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V2
 {

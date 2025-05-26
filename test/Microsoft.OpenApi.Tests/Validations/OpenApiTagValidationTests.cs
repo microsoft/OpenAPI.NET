@@ -4,9 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests

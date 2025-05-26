@@ -1,6 +1,5 @@
 ﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Hidi.Formatters;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
 

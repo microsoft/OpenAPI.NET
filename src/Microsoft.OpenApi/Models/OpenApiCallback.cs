@@ -4,11 +4,9 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.

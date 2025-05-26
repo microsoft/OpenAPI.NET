@@ -2,11 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Discriminator object.

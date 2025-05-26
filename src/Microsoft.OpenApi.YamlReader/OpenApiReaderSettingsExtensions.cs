@@ -1,5 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.YamlReader;
+﻿using Microsoft.OpenApi.YamlReader;
 
 namespace Microsoft.OpenApi.Reader;
 

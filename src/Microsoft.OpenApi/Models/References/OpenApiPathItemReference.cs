@@ -3,11 +3,9 @@
 
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models.References
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Path Item Object Reference: to describe the operations available on a single path.

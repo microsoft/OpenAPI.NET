@@ -5,9 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Services
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.OpenApi.Attributes;
 using Microsoft.OpenApi.Extensions;
 using Xunit;
 

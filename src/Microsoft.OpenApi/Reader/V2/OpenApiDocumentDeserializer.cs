@@ -6,10 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Reader.V2

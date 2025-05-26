@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models.References
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Callback Object Reference: A reference to a map of possible out-of band callbacks related to the parent operation.

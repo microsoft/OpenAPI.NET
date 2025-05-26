@@ -6,9 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.MicrosoftExtensions;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.OpenApi.Reader

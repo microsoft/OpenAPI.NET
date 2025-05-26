@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;

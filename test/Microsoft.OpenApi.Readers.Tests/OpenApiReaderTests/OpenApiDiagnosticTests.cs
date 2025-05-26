@@ -4,12 +4,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System;
-using Microsoft.OpenApi.Models;
 using Xunit;
 using System.IO;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.YamlReader;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
 {

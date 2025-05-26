@@ -6,7 +6,6 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using Microsoft.OpenApi.Attributes;
 
 namespace Microsoft.OpenApi.Extensions
 {

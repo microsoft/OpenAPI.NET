@@ -2,11 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
-namespace Microsoft.OpenApi.Reader.Services
+namespace Microsoft.OpenApi.Reader
 {
     /// <summary>
     /// Builds a list of all remote references used in an OpenApi document

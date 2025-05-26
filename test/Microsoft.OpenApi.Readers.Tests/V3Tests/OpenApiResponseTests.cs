@@ -4,9 +4,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests

@@ -3,9 +3,6 @@
 
 using System;
 using System.Linq;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {

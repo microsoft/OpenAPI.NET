@@ -1,5 +1,4 @@
 ﻿using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 

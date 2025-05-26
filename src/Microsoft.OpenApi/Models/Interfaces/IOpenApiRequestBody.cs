@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models.Interfaces;
+namespace Microsoft.OpenApi;
 
 /// <summary>
 /// Defines the base properties for the request body object.

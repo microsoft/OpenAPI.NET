@@ -7,9 +7,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Services
 {

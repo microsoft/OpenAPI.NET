@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Writers
 {

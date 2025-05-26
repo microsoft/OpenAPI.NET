@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 using Xunit;

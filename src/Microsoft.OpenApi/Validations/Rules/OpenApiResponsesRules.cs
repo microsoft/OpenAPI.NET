@@ -3,7 +3,6 @@
 
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {

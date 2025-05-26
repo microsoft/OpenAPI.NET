@@ -9,8 +9,6 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;

@@ -6,8 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;

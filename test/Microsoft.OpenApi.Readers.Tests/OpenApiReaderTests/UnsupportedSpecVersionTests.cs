@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests

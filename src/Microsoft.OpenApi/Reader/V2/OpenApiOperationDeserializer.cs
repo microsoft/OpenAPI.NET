@@ -4,10 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Models.Interfaces;
 using System;
 using System.Text.Json.Nodes;
 

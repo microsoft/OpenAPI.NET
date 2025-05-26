@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Net.Http;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Moq;
 using Xunit;

@@ -5,10 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Extensions

@@ -9,11 +9,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Reader.ParseNodes
+namespace Microsoft.OpenApi.Reader
 {
     /// <summary>
     /// Abstraction of a Map to isolate semantic parsing from details of JSON DOM

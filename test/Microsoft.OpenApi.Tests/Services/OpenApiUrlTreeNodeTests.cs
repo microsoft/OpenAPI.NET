@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using VerifyXunit;
 using Xunit;

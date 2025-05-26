@@ -1,5 +1,4 @@
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Services;
+﻿using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Writers
 {

@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Tests.UtilityFiles
 {

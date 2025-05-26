@@ -4,12 +4,10 @@
 using System;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// A simple object to allow referencing other components in the specification, internally and externally.

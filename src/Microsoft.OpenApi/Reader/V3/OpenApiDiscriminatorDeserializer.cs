@@ -2,10 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Linq;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
 {
