@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// The key regex.
         /// </summary>
-        internal static readonly Regex KeyRegex = new(@"^[a-zA-Z0-9\.\-_]+$");
+        internal static readonly Regex KeyRegex = new(@"^[a-zA-Z0-9\.\-_]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
         /// <summary>
         /// All the fixed fields declared above are objects
