@@ -860,34 +860,5 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Assert.NotEqual(baseOperation.Metadata["key1"], actualOperation.Metadata["key1"]);
         }
-
-        [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        public async Task SerializeAsJsonAsyncThrowsIfTagReferenceIsUnresolved(OpenApiSpecVersion version)
-        {
-            var document = new OpenApiDocument()
-            {
-                Tags = new HashSet<OpenApiTag>
-                {
-                    new() { Name = "one" },
-                    new() { Name = "three" }
-                }
-            };
-
-            var operation = new OpenApiOperation()
-            {
-                Tags = new HashSet<OpenApiTagReference>
-                {
-                    new("one", document),
-                    new("two", document),
-                    new("three", document)
-                }
-            };
-
-            var exception = await Assert.ThrowsAsync<OpenApiException>(() => operation.SerializeAsJsonAsync(version));
-            Assert.Equal("The OpenAPI tag reference 'two' does not reference a valid tag.", exception.Message);
-        }
     }
 }

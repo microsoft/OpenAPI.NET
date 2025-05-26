@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Models.References
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public string? Name { get => Target?.Name; }
+        public string? Name { get => Target?.Name ?? Reference?.Id; }
         /// <inheritdoc/>
         public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
         {

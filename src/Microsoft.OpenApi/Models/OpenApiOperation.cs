@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Models
             // tags
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
-                VerifyTagReferences(Tags),
+                Tags,
                 callback);
 
             // summary
@@ -237,7 +237,7 @@ namespace Microsoft.OpenApi.Models
             // tags
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
-                VerifyTagReferences(Tags),
+                Tags,
                 (w, t) => t.SerializeAsV2(w));
 
             // summary
@@ -355,22 +355,6 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
-        }
-
-        private static ISet<OpenApiTagReference>? VerifyTagReferences(ISet<OpenApiTagReference>? tags)
-        {
-            if (tags?.Count > 0)
-            {
-                foreach (var tag in tags)
-                {
-                    if (tag.Target is null)
-                    {
-                        throw new OpenApiException($"The OpenAPI tag reference '{tag.Reference.Id}' does not reference a valid tag.");
-                    }
-                }
-            }
-
-            return tags;
         }
     }
 }
