@@ -1,7 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 using Moq;
 using Xunit;
 

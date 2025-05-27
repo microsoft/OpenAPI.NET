@@ -8,13 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
-using Microsoft.OpenApi.YamlReader;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Workbench
 {

@@ -1,13 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models.References
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Link Object Reference.

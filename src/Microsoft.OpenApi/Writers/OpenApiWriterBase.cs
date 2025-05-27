@@ -5,14 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Writers
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Base class for Open API writer.

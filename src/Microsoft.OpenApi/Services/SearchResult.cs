@@ -2,10 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 
-namespace Microsoft.OpenApi.Services
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Defines a search result model for visited operations.

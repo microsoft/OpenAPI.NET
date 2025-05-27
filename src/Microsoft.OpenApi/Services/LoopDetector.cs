@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Microsoft.OpenApi.Services
+namespace Microsoft.OpenApi
 {
     internal class LoopDetector
     {

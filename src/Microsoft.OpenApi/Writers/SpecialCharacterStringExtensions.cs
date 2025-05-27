@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Microsoft.OpenApi.Writers
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Extensions class for strings to handle special characters.

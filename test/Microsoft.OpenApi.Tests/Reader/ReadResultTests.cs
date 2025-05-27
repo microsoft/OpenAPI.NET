@@ -1,6 +1,5 @@
 ﻿using Xunit;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Tests.Reader;
 

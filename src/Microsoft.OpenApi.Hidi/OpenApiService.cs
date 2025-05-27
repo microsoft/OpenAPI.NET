@@ -23,17 +23,11 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OpenApi.ApiManifest;
 using Microsoft.OpenApi.ApiManifest.OpenAI;
 using Microsoft.OpenApi.ApiManifest.OpenAI.Authentication;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Hidi.Formatters;
 using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.OpenApi.Hidi.Utilities;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.YamlReader;
 using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 
 namespace Microsoft.OpenApi.Hidi
@@ -420,7 +414,8 @@ namespace Microsoft.OpenApi.Hidi
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
             settings ??= SettingsUtilities.GetConfiguration();
 
-            var document = edmModel.ConvertToOpenApi(SettingsUtilities.GetOpenApiConvertSettings(settings, metadataVersion));
+            // TODO: uncomment when namespaces are fixed in OData lib
+            var document = new OpenApiDocument(); //edmModel.ConvertToOpenApi(SettingsUtilities.GetOpenApiConvertSettings(settings, metadataVersion));
             document = FixReferences(document, format);
 
             return document;

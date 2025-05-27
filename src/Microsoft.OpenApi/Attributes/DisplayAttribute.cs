@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.OpenApi.Attributes
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Represents the Open Api Data type metadata attribute.

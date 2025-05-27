@@ -3,10 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
 
-namespace Microsoft.OpenApi.Models.References
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Tag Object Reference
@@ -59,7 +57,7 @@ namespace Microsoft.OpenApi.Models.References
         public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
-        public string? Name { get => Target?.Name; }
+        public string? Name { get => Target?.Name ?? Reference?.Id; }
         /// <inheritdoc/>
         public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
         {

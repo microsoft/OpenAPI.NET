@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Properties {
+namespace Microsoft.OpenApi {
     using System;
     
     

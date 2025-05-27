@@ -4,13 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Operation Object.
@@ -183,7 +178,7 @@ namespace Microsoft.OpenApi.Models
             // tags
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
-                VerifyTagReferences(Tags),
+                Tags,
                 callback);
 
             // summary
@@ -237,7 +232,7 @@ namespace Microsoft.OpenApi.Models
             // tags
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
-                VerifyTagReferences(Tags),
+                Tags,
                 (w, t) => t.SerializeAsV2(w));
 
             // summary
@@ -355,22 +350,6 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
-        }
-
-        private static HashSet<OpenApiTagReference>? VerifyTagReferences(HashSet<OpenApiTagReference>? tags)
-        {
-            if (tags?.Count > 0)
-            {
-                foreach (var tag in tags)
-                {
-                    if (tag.Target is null)
-                    {
-                        throw new OpenApiException($"The OpenAPI tag reference '{tag.Reference.Id}' does not reference a valid tag.");
-                    }
-                }
-            }
-
-            return tags;
         }
     }
 }

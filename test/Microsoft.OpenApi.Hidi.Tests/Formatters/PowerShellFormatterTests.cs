@@ -1,7 +1,4 @@
-﻿using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Hidi.Formatters;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Services;
+﻿using Microsoft.OpenApi.Hidi.Formatters;
 using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests.Formatters

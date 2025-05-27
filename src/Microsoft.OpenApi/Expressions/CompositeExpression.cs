@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.OpenApi.Expressions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// String literal with embedded expressions

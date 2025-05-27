@@ -6,10 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 

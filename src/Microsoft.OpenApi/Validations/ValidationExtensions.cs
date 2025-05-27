@@ -1,7 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-namespace Microsoft.OpenApi.Validations
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Helper methods to simplify creating validation rules

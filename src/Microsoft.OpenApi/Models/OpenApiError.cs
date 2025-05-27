@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using Microsoft.OpenApi.Exceptions;
-
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Error related to the Open API Document.

@@ -2,12 +2,8 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Validations.Rules
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// The validation rules for <see cref="OpenApiSchema"/>.

@@ -4,12 +4,9 @@
 using System.IO;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader.ParseNodes;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Tests;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests

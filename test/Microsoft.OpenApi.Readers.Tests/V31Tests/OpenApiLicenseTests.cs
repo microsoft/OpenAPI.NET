@@ -2,10 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.IO;
-using System.Linq;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Reader.ParseNodes;
 using Microsoft.OpenApi.Reader.V31;
 using Microsoft.OpenApi.YamlReader;
 using SharpYaml.Serialization;

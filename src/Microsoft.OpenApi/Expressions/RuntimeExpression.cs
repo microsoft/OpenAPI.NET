@@ -2,10 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Expressions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Base class for the Open API runtime expression.

@@ -6,9 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Interfaces;
 
-namespace Microsoft.OpenApi.Writers
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Extension methods for writing Open API documentation.

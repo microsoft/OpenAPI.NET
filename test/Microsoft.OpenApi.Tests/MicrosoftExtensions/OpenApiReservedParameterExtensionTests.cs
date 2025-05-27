@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using Microsoft.OpenApi.MicrosoftExtensions;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.MicrosoftExtensions;

@@ -1,7 +1,4 @@
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Services;
-
-namespace Microsoft.OpenApi.Writers
+﻿namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Configuration settings to control how OpenAPI documents are written

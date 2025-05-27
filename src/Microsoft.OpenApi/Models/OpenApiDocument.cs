@@ -9,15 +9,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://spec.openapis.org
@@ -169,7 +163,7 @@ namespace Microsoft.OpenApi.Models
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(version), version, string.Format(Properties.SRResource.OpenApiSpecVersionNotSupported, version));
+                    throw new ArgumentOutOfRangeException(nameof(version), version, string.Format(SRResource.OpenApiSpecVersionNotSupported, version));
             }
         }
 

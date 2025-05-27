@@ -8,14 +8,9 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
-using Microsoft.OpenApi.Writers;
 using Xunit;
-using Microsoft.OpenApi.Exceptions;
 using System;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests

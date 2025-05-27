@@ -3,12 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Workspaces

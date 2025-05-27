@@ -3,10 +3,8 @@
 
 using System;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 
-namespace Microsoft.OpenApi.Reader.ParseNodes
+namespace Microsoft.OpenApi.Reader
 {
     internal class AnyFieldMapParameter<T>
     {

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Constants used in the Open API document.

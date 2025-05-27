@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OpenApi.Writers
+﻿namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Configuration settings to control how OpenAPI Json documents are written

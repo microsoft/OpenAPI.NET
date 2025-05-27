@@ -2,12 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Helpers;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// The wrapper either for <see cref="JsonNode"/> or <see cref="RuntimeExpression"/>

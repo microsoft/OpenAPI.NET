@@ -1,9 +1,5 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Net.Http;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Writers;
 using Moq;
 using Xunit;
 

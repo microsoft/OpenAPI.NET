@@ -6,12 +6,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Validations;
 using System.Linq;
-using Microsoft.OpenApi.Interfaces;
 using System;
 
 namespace Microsoft.OpenApi.Reader

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Represents the type of a JSON schema.
