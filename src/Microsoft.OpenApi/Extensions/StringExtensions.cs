@@ -6,11 +6,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using Microsoft.OpenApi.Attributes;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 
-namespace Microsoft.OpenApi.Extensions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// String extension methods.

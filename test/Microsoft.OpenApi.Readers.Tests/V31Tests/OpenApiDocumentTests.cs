@@ -3,15 +3,10 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 using VerifyXunit;
-using Microsoft.OpenApi.Models.Interfaces;
 using System;
 using System.Net.Http;
 

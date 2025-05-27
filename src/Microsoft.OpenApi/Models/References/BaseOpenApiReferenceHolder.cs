@@ -1,8 +1,6 @@
 ﻿using System;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models.References;
+namespace Microsoft.OpenApi;
 /// <summary>
 /// Base class for OpenApiReferenceHolder.
 /// </summary>

@@ -1,11 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Validations
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Class containing validation rule logic.

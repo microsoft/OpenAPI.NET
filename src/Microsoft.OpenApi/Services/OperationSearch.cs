@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 
-namespace Microsoft.OpenApi.Services
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Visits OpenApi operations and parameters.

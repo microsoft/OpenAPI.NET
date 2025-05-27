@@ -4,7 +4,7 @@
 using System;
 using System.IO;
 
-namespace Microsoft.OpenApi.Writers
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// A custom <see cref="StreamWriter"/> which supports setting a <see cref="IFormatProvider"/>.

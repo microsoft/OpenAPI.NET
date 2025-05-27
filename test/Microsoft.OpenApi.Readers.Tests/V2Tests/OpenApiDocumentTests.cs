@@ -2,17 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 

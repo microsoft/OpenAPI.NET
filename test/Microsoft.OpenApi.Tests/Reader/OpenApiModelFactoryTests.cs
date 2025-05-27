@@ -1,6 +1,5 @@
 ﻿using Xunit;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using System.IO;
 using System;

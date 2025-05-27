@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Properties;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Writers

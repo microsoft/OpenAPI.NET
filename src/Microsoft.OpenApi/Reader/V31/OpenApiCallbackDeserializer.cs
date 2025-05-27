@@ -1,10 +1,4 @@
-﻿using Microsoft.OpenApi.Expressions;
-using System;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Models.Interfaces;
+﻿using System;
 
 namespace Microsoft.OpenApi.Reader.V31
 {

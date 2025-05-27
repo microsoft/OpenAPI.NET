@@ -3,11 +3,6 @@
 
 using System;
 using System.Globalization;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Reader.ParseNodes;
-using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {

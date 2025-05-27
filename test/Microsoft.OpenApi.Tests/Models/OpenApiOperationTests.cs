@@ -4,11 +4,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models

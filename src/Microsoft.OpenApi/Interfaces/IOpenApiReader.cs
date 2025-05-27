@@ -5,10 +5,9 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 
-namespace Microsoft.OpenApi.Interfaces
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Interface for Open API readers.

@@ -8,10 +8,7 @@ using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests

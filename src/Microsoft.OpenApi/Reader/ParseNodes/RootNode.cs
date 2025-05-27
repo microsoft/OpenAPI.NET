@@ -3,7 +3,7 @@
 
 using System.Text.Json.Nodes;
 
-namespace Microsoft.OpenApi.Reader.ParseNodes
+namespace Microsoft.OpenApi.Reader
 {
     /// <summary>
     /// Wrapper class around JsonDocument to isolate semantic parsing from details of Json DOM.

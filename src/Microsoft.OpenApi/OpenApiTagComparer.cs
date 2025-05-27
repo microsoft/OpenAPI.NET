@@ -1,7 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi;
 

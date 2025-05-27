@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 
 namespace Microsoft.OpenApi.Tests.Mocks
 {

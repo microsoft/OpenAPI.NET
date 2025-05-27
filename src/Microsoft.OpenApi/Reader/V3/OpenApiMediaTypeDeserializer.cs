@@ -2,10 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Reader.ParseNodes;
 
 namespace Microsoft.OpenApi.Reader.V3
 {

@@ -4,13 +4,10 @@
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Reader.Services
+namespace Microsoft.OpenApi.Reader
 {
     /// <summary>
     /// Implementation of IInputLoader that loads streams from URIs

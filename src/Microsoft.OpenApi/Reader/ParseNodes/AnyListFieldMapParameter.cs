@@ -4,9 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Reader.ParseNodes
+namespace Microsoft.OpenApi.Reader
 {
     internal class AnyListFieldMapParameter<T>
     {

@@ -3,9 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Reader.ParseNodes
+namespace Microsoft.OpenApi.Reader
 {
     internal class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument>>
     {

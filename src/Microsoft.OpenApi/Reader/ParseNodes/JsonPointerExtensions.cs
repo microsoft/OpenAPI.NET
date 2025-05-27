@@ -4,7 +4,7 @@
 using System;
 using System.Text.Json.Nodes;
 
-namespace Microsoft.OpenApi.Reader.ParseNodes
+namespace Microsoft.OpenApi.Reader
 {
     /// <summary>
     /// Extensions for JSON pointers.

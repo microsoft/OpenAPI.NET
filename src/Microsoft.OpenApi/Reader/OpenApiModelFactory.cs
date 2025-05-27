@@ -8,10 +8,6 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader.Services;
-using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Reader
 {

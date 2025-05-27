@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OpenApi.Interfaces;
+﻿namespace Microsoft.OpenApi;
 /// <summary>
 /// Interface for shallow copyable objects.
 /// </summary>

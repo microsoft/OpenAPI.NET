@@ -7,14 +7,9 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 using VerifyXunit;
-using Microsoft.OpenApi.Models.References;
 using Xunit;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Models.Interfaces;
 
 namespace Microsoft.OpenApi.Tests.Models
 {

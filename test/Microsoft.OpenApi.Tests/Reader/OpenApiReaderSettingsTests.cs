@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using Microsoft.OpenApi.MicrosoftExtensions;
-using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Reader.Tests;

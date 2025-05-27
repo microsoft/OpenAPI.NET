@@ -6,14 +6,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
-using Microsoft.OpenApi.Validations.Rules;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services

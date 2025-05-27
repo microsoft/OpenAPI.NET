@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Validations.Rules
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// The validation rules for <see cref="OpenApiPaths"/>.
