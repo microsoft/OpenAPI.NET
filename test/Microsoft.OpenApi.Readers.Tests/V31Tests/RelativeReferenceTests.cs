@@ -3,11 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
