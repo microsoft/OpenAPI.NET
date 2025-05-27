@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Reader.V31
 {

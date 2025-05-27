@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.OpenApi.Services
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// A service that slices an OpenApiDocument into a subset document

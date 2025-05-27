@@ -1,6 +1,5 @@
 ﻿
 using System.Collections.Generic;
-using Microsoft.OpenApi.Expressions;
 
 namespace Microsoft.OpenApi;
 

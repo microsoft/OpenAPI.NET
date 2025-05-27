@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
 

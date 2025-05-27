@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Reader.V31
 {

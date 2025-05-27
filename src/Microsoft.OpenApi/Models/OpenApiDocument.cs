@@ -9,10 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
 {

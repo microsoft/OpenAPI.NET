@@ -4,9 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.OpenApi.Extensions;
 
-namespace Microsoft.OpenApi.Services
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Contains a set of OpenApi documents and document fragments that reference each other

@@ -3,7 +3,6 @@
 
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests

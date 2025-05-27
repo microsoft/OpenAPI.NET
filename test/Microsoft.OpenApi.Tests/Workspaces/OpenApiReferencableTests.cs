@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Extensions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Workspaces

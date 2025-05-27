@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Extensions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models

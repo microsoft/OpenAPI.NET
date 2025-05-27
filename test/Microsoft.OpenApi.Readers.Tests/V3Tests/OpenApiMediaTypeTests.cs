@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Tests;

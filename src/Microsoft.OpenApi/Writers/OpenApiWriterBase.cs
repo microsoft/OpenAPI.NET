@@ -8,7 +8,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.OpenApi.Writers
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Base class for Open API writer.

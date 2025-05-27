@@ -4,7 +4,6 @@
 using System.IO;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
 using Xunit;

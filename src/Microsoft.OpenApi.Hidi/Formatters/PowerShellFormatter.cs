@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using Humanizer;
 using Humanizer.Inflections;
 using Microsoft.OpenApi.Hidi.Extensions;
-using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Hidi.Formatters
 {

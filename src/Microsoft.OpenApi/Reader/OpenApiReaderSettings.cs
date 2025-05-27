@@ -7,7 +7,6 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.MicrosoftExtensions;
-using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.OpenApi.Reader
 {

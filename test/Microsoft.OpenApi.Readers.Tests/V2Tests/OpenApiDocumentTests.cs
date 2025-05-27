@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 

@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 """;
             var result = OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("//www.foo.com", server.Url);
         }
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("http://www.foo.com", server.Url);
         }
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 """;
             var result = OpenApiDocument.Parse(input, "yaml", SettingsFixture.ReaderSettings);
 
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("/baz", server.Url);
         }
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("http://bing.com/foo", server.Url);
         }
@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("http://bing.com", server.Url);
         }
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("https://bing.com/api", server.Url);
         }
@@ -202,7 +202,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("https://www.example.com", server.Url);
         }
@@ -227,7 +227,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("https://prod.bing.com", server.Url);
         }
@@ -254,7 +254,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             settings.AddYamlReader();
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Equal(2, result.Document.Servers.Count);
             Assert.Equal("http://dev.bing.com/api", server.Url);
             Assert.Equal("https://dev.bing.com/api", result.Document.Servers.Last().Url);
@@ -281,7 +281,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var result = OpenApiDocument.Parse(input, "yaml", settings);
 
-            var server = result.Document.Servers.First();
+            var server = result.Document.Servers[0];
             Assert.Single(result.Document.Servers);
             Assert.Equal("https://localhost:23232", server.Url);
         }

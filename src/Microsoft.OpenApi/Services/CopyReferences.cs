@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-namespace Microsoft.OpenApi.Services;
+namespace Microsoft.OpenApi;
 internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 {
     private readonly OpenApiDocument _target = target;

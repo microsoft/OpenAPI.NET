@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.OpenApi.Reader;
 
-namespace Microsoft.OpenApi.Extensions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// String extension methods.

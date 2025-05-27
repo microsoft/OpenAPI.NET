@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Reader.V3
 {

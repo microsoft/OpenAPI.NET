@@ -6,8 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
 

@@ -10,7 +10,6 @@ using Microsoft.OpenApi.ApiManifest.OpenAI;
 using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.OData;
-using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests

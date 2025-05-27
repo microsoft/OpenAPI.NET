@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi;
 /// <summary>

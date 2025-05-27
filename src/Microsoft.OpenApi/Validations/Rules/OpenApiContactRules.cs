@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.OpenApi.Validations.Rules
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// The validation rules for <see cref="OpenApiContact"/>.

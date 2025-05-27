@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
-namespace Microsoft.OpenApi.Extensions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Enumeration type extension methods.

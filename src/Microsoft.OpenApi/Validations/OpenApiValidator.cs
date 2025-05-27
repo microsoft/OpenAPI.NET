@@ -5,9 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.OpenApi.Services;
 
-namespace Microsoft.OpenApi.Validations
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Class containing dispatchers to execute validation rules on for Open API document.

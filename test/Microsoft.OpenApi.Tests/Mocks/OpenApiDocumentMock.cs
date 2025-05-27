@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Expressions;
 
 namespace Microsoft.OpenApi.Tests.Mocks
 {

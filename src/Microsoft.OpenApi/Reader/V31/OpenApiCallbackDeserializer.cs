@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi.Expressions;
-using System;
-using Microsoft.OpenApi.Extensions;
+﻿using System;
 
 namespace Microsoft.OpenApi.Reader.V31
 {

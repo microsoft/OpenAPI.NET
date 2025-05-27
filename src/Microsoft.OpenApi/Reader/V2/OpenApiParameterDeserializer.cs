@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Reader.V2
 {

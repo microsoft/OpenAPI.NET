@@ -4,8 +4,6 @@
 using System;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Reader.V31
 {

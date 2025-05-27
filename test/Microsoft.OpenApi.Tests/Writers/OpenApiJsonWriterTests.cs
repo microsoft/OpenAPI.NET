@@ -12,8 +12,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Writers

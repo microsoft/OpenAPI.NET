@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Microsoft.OpenApi.Services
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// A directory structure representing the paths of an OpenAPI document.

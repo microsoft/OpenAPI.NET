@@ -5,9 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Extensions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Extension methods for <see cref="IOpenApiSerializable"/> serialization.

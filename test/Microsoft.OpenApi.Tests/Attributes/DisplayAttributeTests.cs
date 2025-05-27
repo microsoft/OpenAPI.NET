@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.OpenApi.Extensions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Attributes

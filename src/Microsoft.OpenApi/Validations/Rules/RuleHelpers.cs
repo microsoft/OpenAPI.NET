@@ -4,9 +4,8 @@
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Extensions;
 
-namespace Microsoft.OpenApi.Validations.Rules
+namespace Microsoft.OpenApi
 {
     internal static class RuleHelpers
     {

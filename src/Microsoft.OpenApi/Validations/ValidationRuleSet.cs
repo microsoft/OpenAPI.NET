@@ -5,9 +5,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Validations.Rules;
 
-namespace Microsoft.OpenApi.Validations
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// The rule set of the validation.

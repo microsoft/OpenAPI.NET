@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Microsoft.OpenApi.Extensions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Extension methods for resolving references on <see cref="IOpenApiReferenceable"/> elements.

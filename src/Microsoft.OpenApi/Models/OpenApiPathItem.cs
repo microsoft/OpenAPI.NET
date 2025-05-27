@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
 {

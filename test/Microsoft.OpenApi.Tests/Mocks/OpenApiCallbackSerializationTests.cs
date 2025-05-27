@@ -1,7 +1,5 @@
 ﻿using System.IO;
 using System.Net.Http;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.OpenApi.Writers;
 using Moq;
 using Xunit;
 

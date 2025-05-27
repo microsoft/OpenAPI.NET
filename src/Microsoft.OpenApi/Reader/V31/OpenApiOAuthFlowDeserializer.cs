@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Reader.V31
 {

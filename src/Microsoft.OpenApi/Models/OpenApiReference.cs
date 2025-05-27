@@ -3,9 +3,7 @@
 
 using System;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
 {

@@ -23,15 +23,11 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OpenApi.ApiManifest;
 using Microsoft.OpenApi.ApiManifest.OpenAI;
 using Microsoft.OpenApi.ApiManifest.OpenAI.Authentication;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Hidi.Formatters;
 using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.OpenApi.Hidi.Utilities;
-using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Writers;
 using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 
 namespace Microsoft.OpenApi.Hidi

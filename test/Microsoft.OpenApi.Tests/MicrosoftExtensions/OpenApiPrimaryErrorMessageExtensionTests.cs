@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using System.IO;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.OData.OpenApiExtensions.Tests;

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.OpenApi.Validations.Rules
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// The validation rules for <see cref="OpenApiComponents"/>.

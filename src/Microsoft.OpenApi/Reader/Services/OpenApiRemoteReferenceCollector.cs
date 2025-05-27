@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Reader
 {

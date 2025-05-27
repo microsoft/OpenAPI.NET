@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
 {

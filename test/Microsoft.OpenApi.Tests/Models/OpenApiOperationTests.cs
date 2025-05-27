@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Extensions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models

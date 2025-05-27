@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.OpenApi.Validations
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Class containing validation rule logic.

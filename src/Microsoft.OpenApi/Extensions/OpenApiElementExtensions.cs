@@ -3,10 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
 
-namespace Microsoft.OpenApi.Extensions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Extension methods that apply across all OpenAPIElements

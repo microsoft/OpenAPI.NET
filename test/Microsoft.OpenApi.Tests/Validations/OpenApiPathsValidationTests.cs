@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.OpenApi.Extensions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests

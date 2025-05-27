@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-namespace Microsoft.OpenApi.Expressions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// $request. expression.

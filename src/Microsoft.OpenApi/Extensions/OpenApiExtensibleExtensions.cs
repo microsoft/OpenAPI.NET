@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.OpenApi.Extensions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Extension methods to verify validity and add an extension to Extensions property.

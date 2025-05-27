@@ -4,8 +4,6 @@
 // ------------------------------------------------------------
 
 using System;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Writers;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.MicrosoftExtensions;

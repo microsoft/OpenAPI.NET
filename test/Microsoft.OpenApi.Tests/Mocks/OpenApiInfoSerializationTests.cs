@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Microsoft.OpenApi.Writers;
 using Moq;
 using Xunit;
 

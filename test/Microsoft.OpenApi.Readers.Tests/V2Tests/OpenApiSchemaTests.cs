@@ -6,11 +6,9 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Tests;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests

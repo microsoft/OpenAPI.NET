@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Reader.V2
 {

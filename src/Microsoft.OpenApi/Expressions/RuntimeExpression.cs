@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.OpenApi.Expressions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Base class for the Open API runtime expression.

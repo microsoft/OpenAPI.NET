@@ -4,9 +4,7 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
-using Microsoft.OpenApi.Writers;
 using Moq;
 using Xunit;
 

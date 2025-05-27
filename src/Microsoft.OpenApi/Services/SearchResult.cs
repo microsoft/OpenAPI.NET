@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.OpenApi.Services
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Defines a search result model for visited operations.

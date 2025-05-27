@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.OpenApi.Extensions;
 using System;
 using System.Linq;
 

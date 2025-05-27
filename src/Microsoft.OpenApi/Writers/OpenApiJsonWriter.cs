@@ -3,7 +3,7 @@
 
 using System.IO;
 
-namespace Microsoft.OpenApi.Writers
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// JSON Writer.

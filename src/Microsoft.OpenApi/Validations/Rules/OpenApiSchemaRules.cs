@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.OpenApi.Validations.Rules
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// The validation rules for <see cref="OpenApiSchema"/>.

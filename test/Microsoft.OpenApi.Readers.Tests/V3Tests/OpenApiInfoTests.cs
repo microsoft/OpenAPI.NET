@@ -7,7 +7,6 @@ using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 

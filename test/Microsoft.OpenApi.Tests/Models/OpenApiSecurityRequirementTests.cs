@@ -7,8 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
 using System.Text.Json.Nodes;

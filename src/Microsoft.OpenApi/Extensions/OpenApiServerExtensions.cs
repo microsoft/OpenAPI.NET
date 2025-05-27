@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Microsoft.OpenApi.Extensions;
+namespace Microsoft.OpenApi;
 
 /// <summary>
 /// Extension methods for <see cref="OpenApiServer"/> serialization.
