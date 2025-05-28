@@ -1,7 +1,6 @@
 ﻿using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Interfaces;
 
-namespace Microsoft.OpenApi.Models.Interfaces;
+namespace Microsoft.OpenApi;
 
 /// <summary>
 /// Defines the base properties for the example object.

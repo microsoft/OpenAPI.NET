@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests

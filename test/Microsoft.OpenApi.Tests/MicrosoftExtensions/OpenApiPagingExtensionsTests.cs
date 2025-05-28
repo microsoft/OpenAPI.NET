@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
 using Microsoft.OpenApi.MicrosoftExtensions;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Tests.MicrosoftExtensions;
 

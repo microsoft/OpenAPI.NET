@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
-
-namespace Microsoft.OpenApi.Validations
+﻿namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Warnings detected when validating an OpenAPI Element

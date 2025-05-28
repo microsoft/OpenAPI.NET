@@ -4,10 +4,8 @@
 using System;
 using System.Globalization;
 using System.Text.Json.Nodes;
-using System.Xml.Linq;
-using Microsoft.OpenApi.Exceptions;
 
-namespace Microsoft.OpenApi.Reader.ParseNodes
+namespace Microsoft.OpenApi.Reader
 {
     internal class ValueNode : ParseNode
     {

@@ -5,9 +5,8 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Interfaces
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Interface for service that translates a URI into a stream that can be loaded by a Reader

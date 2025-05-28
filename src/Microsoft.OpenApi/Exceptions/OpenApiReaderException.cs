@@ -2,10 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 
-namespace Microsoft.OpenApi.Exceptions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Defines an exception indicating OpenAPI Reader encountered an issue while reading.

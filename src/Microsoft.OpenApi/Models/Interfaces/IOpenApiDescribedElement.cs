@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi.Interfaces;
-
-namespace Microsoft.OpenApi.Models.Interfaces;
+﻿namespace Microsoft.OpenApi;
 
 /// <summary>
 /// Describes an element that has a description.

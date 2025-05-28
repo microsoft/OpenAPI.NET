@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.OpenApi.Interfaces
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Represents an Extensible Open API element.

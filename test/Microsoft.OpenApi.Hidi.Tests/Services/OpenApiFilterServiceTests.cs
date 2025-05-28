@@ -3,14 +3,8 @@
 
 using System.Globalization;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
-using Microsoft.OpenApi.Writers;
 using Moq;
 using Xunit;
 

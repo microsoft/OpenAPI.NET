@@ -4,13 +4,10 @@
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
 using System.Net.Http;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests

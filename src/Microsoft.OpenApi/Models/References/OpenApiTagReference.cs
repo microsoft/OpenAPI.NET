@@ -3,10 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models.Interfaces;
 
-namespace Microsoft.OpenApi.Models.References
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Tag Object Reference

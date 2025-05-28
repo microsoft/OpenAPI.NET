@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Reader.ParseNodes;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Reader;

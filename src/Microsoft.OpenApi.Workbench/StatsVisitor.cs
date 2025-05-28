@@ -3,9 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Workbench
 {

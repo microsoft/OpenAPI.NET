@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Extensions;

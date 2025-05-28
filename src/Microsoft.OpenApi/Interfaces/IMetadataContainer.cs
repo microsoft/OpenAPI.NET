@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.OpenApi.Interfaces;
+namespace Microsoft.OpenApi;
 /// <summary>
 /// Represents an Open API element that can be annotated with
 /// non-serializable properties in a property bag. 

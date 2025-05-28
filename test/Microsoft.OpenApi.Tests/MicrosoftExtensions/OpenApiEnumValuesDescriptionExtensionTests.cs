@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.MicrosoftExtensions;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.MicrosoftExtensions;

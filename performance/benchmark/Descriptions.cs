@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using Microsoft.OpenApi;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 
 namespace performance;

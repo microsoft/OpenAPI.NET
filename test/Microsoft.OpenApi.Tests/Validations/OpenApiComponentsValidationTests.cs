@@ -3,11 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Properties;
-using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests

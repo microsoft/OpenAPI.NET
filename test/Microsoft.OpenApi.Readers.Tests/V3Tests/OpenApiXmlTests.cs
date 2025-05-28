@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 

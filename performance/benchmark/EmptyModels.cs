@@ -1,7 +1,5 @@
-﻿using System;
-using BenchmarkDotNet;
-using BenchmarkDotNet.Attributes;
-using Microsoft.OpenApi.Models;
+﻿using BenchmarkDotNet.Attributes;
+using Microsoft.OpenApi;
 
 namespace performance;
 [MemoryDiagnoser]

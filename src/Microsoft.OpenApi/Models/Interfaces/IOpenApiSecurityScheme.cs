@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using Microsoft.OpenApi.Interfaces;
 
-namespace Microsoft.OpenApi.Models.Interfaces;
+namespace Microsoft.OpenApi;
 
 /// <summary>
 /// Defines the base properties for the security scheme object.

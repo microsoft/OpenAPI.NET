@@ -3,7 +3,7 @@
 
 using System.Text.Json.Nodes;
 
-namespace Microsoft.OpenApi.Helpers
+namespace Microsoft.OpenApi
 {
     internal static class JsonNodeCloneHelper
     {

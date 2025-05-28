@@ -1,9 +1,8 @@
 ﻿
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.OpenApi.Interfaces;
 
-namespace Microsoft.OpenApi.Models.Interfaces;
+namespace Microsoft.OpenApi;
 
 /// <summary>
 /// Defines the base properties for the path item object.

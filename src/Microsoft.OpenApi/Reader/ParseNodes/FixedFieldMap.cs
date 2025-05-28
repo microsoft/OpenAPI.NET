@@ -3,9 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Reader.ParseNodes
+namespace Microsoft.OpenApi.Reader
 {
     internal class FixedFieldMap<T> : Dictionary<string, Action<T, ParseNode, OpenApiDocument>>
     {

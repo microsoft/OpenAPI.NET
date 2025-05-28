@@ -4,7 +4,7 @@
 using System;
 using System.Globalization;
 
-namespace Microsoft.OpenApi.Exceptions
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Defines an exception indicating OpenAPI Reader encountered an unsupported specification version while reading.

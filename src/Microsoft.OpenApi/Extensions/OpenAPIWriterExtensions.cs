@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi.Writers;
-
-namespace Microsoft.OpenApi
+﻿namespace Microsoft.OpenApi
 {
     internal static class OpenAPIWriterExtensions
     {
