@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Reader.V2
 {

@@ -1,4 +1,6 @@
-﻿namespace Microsoft.OpenApi
+﻿using System.Collections.Generic;
+
+namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Configuration settings to control how OpenAPI documents are written
