@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var settings = new OpenApiWriterSettings
             {
-                Comparer = StringComparer.OrdinalIgnoreCase
+                KeyComparer = StringComparer.OrdinalIgnoreCase
             };
             var writer = new OpenApiYamlWriter(outputStringWriter, settings);
 
@@ -168,7 +168,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var settings = new OpenApiWriterSettings
             {
-                Comparer = StringComparer.OrdinalIgnoreCase
+                KeyComparer = StringComparer.OrdinalIgnoreCase
             };
             var writer = new OpenApiYamlWriter(outputStringWriter, settings);
 

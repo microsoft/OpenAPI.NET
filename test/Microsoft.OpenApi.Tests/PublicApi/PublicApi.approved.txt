@@ -29,12 +29,6 @@ namespace Microsoft.OpenApi
         public override string Expression { get; }
         public string? Fragment { get; }
     }
-    public static class CollectionExtensions
-    {
-        public static System.Collections.Generic.List<T> Sort<T>(this System.Collections.Generic.IEnumerable<T> source, System.Collections.Generic.IComparer<T> comparer) { }
-        public static System.Collections.Generic.IDictionary<TKey, TValue> Sort<TKey, TValue>(this System.Collections.Generic.IDictionary<TKey, TValue> source, System.Collections.Generic.IComparer<TKey> comparer)
-            where TKey :  notnull { }
-    }
     public class CompositeExpression : Microsoft.OpenApi.RuntimeExpression
     {
         public System.Collections.Generic.List<Microsoft.OpenApi.RuntimeExpression> ContainedExpressions;
@@ -1598,9 +1592,9 @@ namespace Microsoft.OpenApi
     public class OpenApiWriterSettings
     {
         public OpenApiWriterSettings() { }
-        public System.Collections.Generic.IComparer<string>? Comparer { get; set; }
         public bool InlineExternalReferences { get; set; }
         public bool InlineLocalReferences { get; set; }
+        public System.Collections.Generic.IComparer<string>? KeyComparer { get; set; }
     }
     public class OpenApiXml : Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiSerializable
     {

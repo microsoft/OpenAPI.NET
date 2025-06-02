@@ -421,7 +421,7 @@ namespace Microsoft.OpenApi
             {
                 var settings = writer.GetSettings();
 
-                if (settings?.Comparer is IComparer<T> typedComparer)
+                if (settings?.KeyComparer is IComparer<T> typedComparer)
                 {
                     elements = elements.Sort(typedComparer);
                 }
@@ -465,9 +465,9 @@ namespace Microsoft.OpenApi
             if (elements != null)
             {
                 var settings = writer.GetSettings();
-                if (settings?.Comparer != null)
+                if (settings?.KeyComparer != null)
                 {
-                    elements = elements.Sort(settings.Comparer); // sort using custom comparer
+                    elements = elements.Sort(settings.KeyComparer); // sort using custom comparer
                 }
 
                 foreach (var item in elements)

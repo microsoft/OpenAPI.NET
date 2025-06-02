@@ -25,8 +25,8 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>  
-        /// Custom comparer for sorting collections.  
+        /// Specifies a comparer used to sort string-based collection keys, such as components or tags.
         /// </summary>  
-        public IComparer<string>? Comparer { get; set; }
+        public IComparer<string>? KeyComparer { get; set; }
     }
 }
