@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-preview.22](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.21...v2.0.0-preview.22) (2025-06-02)
+
+
+### Features
+
+* Add writer settings to enable collection sorting using a comparer ([d7eaf47](https://github.com/microsoft/OpenAPI.NET/commit/d7eaf4707c26351cff4e4ec798b64967d9dd932f))
+
+
+### Bug Fixes
+
+* rename class; add logic for sorting IEnumerable collections ([58cb4ac](https://github.com/microsoft/OpenAPI.NET/commit/58cb4ac718a840a8dfb5c8821a3c0a484c29befd))
+
 ## [2.0.0-preview.21](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.20...v2.0.0-preview.21) (2025-05-21)
 
 
