@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Microsoft.OpenApi
 {
@@ -324,6 +325,90 @@ namespace Microsoft.OpenApi
             }            
 
             return default;
+        }
+
+        /// <summary>
+        /// Recursively resolves a schema from a URI fragment.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        internal IOpenApiSchema? ResolveJsonSchemaReference(string location)
+        {
+            /* Enables resolving references for nested subschemas
+             * Examples:
+             * #/components/schemas/person/properties/address"
+             * #/components/schemas/human/allOf/0
+             */
+
+            if (string.IsNullOrEmpty(location)) return default;
+
+            var uri = ToLocationUrl(location);
+            string[] pathSegments;
+
+            if (uri is not null)
+            {
+                pathSegments = uri.Fragment.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+
+                // Build the base path for the root schema: "#/components/schemas/person"
+                var fragment = OpenApiConstants.ComponentsSegment + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + pathSegments[3];
+                var uriBuilder = new UriBuilder(uri)
+                {
+                    Fragment = fragment
+                }; // to avoid escaping the # character in the resulting Uri
+
+                if (_IOpenApiReferenceableRegistry.TryGetValue(uriBuilder.Uri, out var schema) && schema is IOpenApiSchema targetSchema)
+                {
+                    // traverse remaining segments after fetching the base schema
+                    var remainingSegments = pathSegments.Skip(4).ToArray();
+                    return ResolveSubSchema(targetSchema, remainingSegments);
+                }
+            }            
+
+            return default;          
+        }
+        
+        internal static IOpenApiSchema? ResolveSubSchema(IOpenApiSchema schema, string[] pathSegments)
+        {
+            // Traverse schema object to resolve subschemas
+            if (pathSegments.Length == 0)
+            {
+                return schema;
+            }
+            var currentSegment = pathSegments[0];
+            pathSegments = [.. pathSegments.Skip(1)]; // skip one segment for the next recursive call
+
+            switch (currentSegment)
+            {
+                case OpenApiConstants.Properties:
+                    var propName = pathSegments[0];
+                    if (schema.Properties != null && schema.Properties.TryGetValue(propName, out var propSchema))
+                        return ResolveSubSchema(propSchema, [.. pathSegments.Skip(1)]);
+                    break;
+                case OpenApiConstants.Items:
+                    return schema.Items is OpenApiSchema itemsSchema ? ResolveSubSchema(itemsSchema, pathSegments) : null;
+
+                case OpenApiConstants.AdditionalProperties:
+                    return schema.AdditionalProperties is OpenApiSchema additionalSchema ? ResolveSubSchema(additionalSchema, pathSegments) : null;
+                case OpenApiConstants.AllOf:
+                case OpenApiConstants.AnyOf:
+                case OpenApiConstants.OneOf:
+                    if (!int.TryParse(pathSegments[0], out var index)) return null;
+
+                    var list = currentSegment switch
+                    {
+                        OpenApiConstants.AllOf => schema.AllOf,
+                        OpenApiConstants.AnyOf => schema.AnyOf,
+                        OpenApiConstants.OneOf => schema.OneOf,
+                        _ => null
+                    };
+
+                    // recurse into the indexed subschema if valid
+                    if (list != null && index < list.Count)
+                        return ResolveSubSchema(list[index], [.. pathSegments.Skip(1)]);
+                    break;
+            }
+
+            return null;
         }
 
         private Uri? ToLocationUrl(string location)

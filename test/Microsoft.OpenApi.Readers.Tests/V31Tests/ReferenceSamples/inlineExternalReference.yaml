@@ -1,0 +1,15 @@
+openapi: 3.1.0
+info:
+  title: Example of reference object pointing to an example object in an OpenAPI document
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      responses:
+        '200':
+          description: sample description
+          content:
+            application/json:
+              examples:
+                item-list:
+                  $ref: './examples.yaml#/components/examples/item-list'

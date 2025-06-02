@@ -581,7 +581,27 @@ namespace Microsoft.OpenApi
             }
             else
             {
-                string relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
+                string relativePath;
+                var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
+
+                if (!string.IsNullOrEmpty(referenceV3) && IsSubComponent(referenceV3))
+                {
+                    // Enables setting the complete JSON path for nested subschemas e.g. #/components/schemas/person/properties/address
+                    if (useExternal)
+                    {
+                        var relPathSegment = referenceV3.Split(['#'], StringSplitOptions.RemoveEmptyEntries)[1];
+                        relativePath = $"#{relPathSegment}";
+                    }
+                    else
+                    {
+                        relativePath = referenceV3;
+                    }
+                }
+                else
+                {
+                    relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
+                }
+
                 Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource) : null;
 
                 uriLocation = useExternal && externalResourceUri is not null
@@ -589,7 +609,30 @@ namespace Microsoft.OpenApi
                     : BaseUri + relativePath;
             }
 
+            if (reference.Type is ReferenceType.Schema && uriLocation.Contains('#'))
+            {
+                return Workspace?.ResolveJsonSchemaReference(new Uri(uriLocation).AbsoluteUri);
+            }
+
             return Workspace?.ResolveReference<IOpenApiReferenceable>(new Uri(uriLocation).AbsoluteUri);
+        }
+
+        private static bool IsSubComponent(string reference)
+        {
+            // Normalize fragment part only
+            var parts = reference.Split('#');
+            var fragment = parts.Length > 1 ? parts[1] : string.Empty;
+
+            if (fragment.StartsWith("/components/schemas/", StringComparison.OrdinalIgnoreCase))
+            {
+                var segments = fragment.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+
+                // Expect exactly 3 segments for root-level schema: ["components", "schemas", "person"]
+                // Anything longer means it's a subcomponent.
+                return segments.Length > 3;
+            }
+
+            return false;
         }
 
         /// <summary>
