@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
@@ -67,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 new OpenApiResponse
                 {
                     Description = "Entity not found.",
-                    Content = new()
+                    Content = new Dictionary<string, OpenApiMediaType>()
                     {
                         ["application/json"] = new()
                     }
@@ -84,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var expected = new OpenApiResponse
                 {
                     Description = "General Error",
-                    Content = new()
+                    Content = new Dictionary<string, OpenApiMediaType>()
                     {
                         ["application/json"] = new()
                         {

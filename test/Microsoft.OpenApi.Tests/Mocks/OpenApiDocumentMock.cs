@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new()
+                                        Content = new Dictionary<string, OpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -281,7 +281,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                 ["name"] = new OpenApiSchema { Type = JsonSchemaType.String },
                                 ["tag"] = new OpenApiSchema { Type = JsonSchemaType.String }
                             },
-                            Required = ["id", "name"]
+                            Required = new HashSet<string> { "id", "name" }
                         }
                     },
                     Parameters = new Dictionary<string, IOpenApiParameter>
@@ -436,14 +436,13 @@ namespace Microsoft.OpenApi.Tests.Mocks
                         }
                     }
                 ],
-                Tags =
-                [
-                    new OpenApiTag
-                    {
+                Tags = new HashSet<OpenApiTag>
+                {
+                    new() {
                         Name = "pets",
                         Description = "Operations related to pets"
                     }
-                ],
+                },
                 ExternalDocs = new OpenApiExternalDocs
                 {
                     Description = "Find out more",

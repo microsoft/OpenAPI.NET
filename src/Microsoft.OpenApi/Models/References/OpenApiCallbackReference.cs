@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi
         public Dictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get => Target?.PathItems; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiCallback CopyReferenceAsTargetElementWithOverrides(IOpenApiCallback source)

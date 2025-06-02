@@ -76,7 +76,7 @@ public class OpenApiTagComparerTests
     {
         var document = new OpenApiDocument
         {
-            Tags = [new() { Name = "tag" }]
+            Tags = new HashSet<OpenApiTag> { new() { Name = "tag" } }
         };
 
         var openApiTag1 = new OpenApiTagReference("tag", document);
@@ -89,11 +89,11 @@ public class OpenApiTagComparerTests
     {
         var document = new OpenApiDocument
         {
-            Tags =
-            [
+            Tags = new HashSet<OpenApiTag>
+            {
                 new() { Name = "one" },
                 new() { Name = "two" },
-            ]
+            }
         };
 
         var openApiTag1 = new OpenApiTagReference("one", document);
@@ -131,12 +131,12 @@ public class OpenApiTagComparerTests
     {
         var document = new OpenApiDocument
         {
-            Tags =
-            [
+            Tags = new HashSet<OpenApiTag>
+            {
                 new() { Name = "one" },
                 new() { Name = "two" },
                 new() { Name = "three" }
-            ]
+            }
         };
 
         var tags = new HashSet<OpenApiTagReference>(_comparer)

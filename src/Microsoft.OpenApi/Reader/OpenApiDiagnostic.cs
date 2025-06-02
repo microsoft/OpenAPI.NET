@@ -13,12 +13,12 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// List of all errors.
         /// </summary>
-        public List<OpenApiError> Errors { get; set; } = [];
+        public IList<OpenApiError> Errors { get; set; } = [];
 
         /// <summary>
         /// List of all warnings
         /// </summary>
-        public List<OpenApiError> Warnings { get; set; } = [];
+        public IList<OpenApiError> Warnings { get; set; } = [];
 
         /// <summary>
         /// Open API specification version of the document parsed.

@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi
         public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public string? Name { get => Target?.Name ?? Reference?.Id; }

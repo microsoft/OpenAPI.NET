@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi
         public IOpenApiSchema? Schema { get => Target?.Schema; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
+        public IDictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
 
         /// <inheritdoc/>
         public JsonNode? Example { get => Target?.Example; }
@@ -74,10 +74,10 @@ namespace Microsoft.OpenApi
         public bool Explode { get => Target?.Explode ?? default; }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
         
         /// <inheritdoc/>
         public override IOpenApiParameter CopyReferenceAsTargetElementWithOverrides(IOpenApiParameter  source)

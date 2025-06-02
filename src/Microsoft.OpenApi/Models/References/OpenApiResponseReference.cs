@@ -40,16 +40,16 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiHeader>? Headers { get => Target?.Headers; }
+        public IDictionary<string, IOpenApiHeader>? Headers { get => Target?.Headers; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiLink>? Links { get => Target?.Links; }
+        public IDictionary<string, IOpenApiLink>? Links { get => Target?.Links; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiResponse CopyReferenceAsTargetElementWithOverrides(IOpenApiResponse source)

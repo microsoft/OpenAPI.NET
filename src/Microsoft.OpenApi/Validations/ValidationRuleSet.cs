@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Gets the rules in this rule set.
         /// </summary>
-        public List<ValidationRule> Rules => _rulesDictionary.Values.SelectMany(v => v).ToList();
+        public IList<ValidationRule> Rules => _rulesDictionary.Values.SelectMany(v => v).ToList();
 
         /// <summary>
         /// Gets the number of elements contained in this rule set.
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         /// <param name="type">The type that is to be validated</param>
         /// <returns>Either the rules related to the type, or an empty list.</returns>
-        public List<ValidationRule> FindRules(Type type)
+        public IList<ValidationRule> FindRules(Type type)
         {
             _rulesDictionary.TryGetValue(type, out var results);
             return results ?? _emptyRules;

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Name = "Apache 2.0",
             Url = new("http://www.apache.org/licenses/LICENSE-2.0.html"),
-            Extensions = new()
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 {"x-copyright", new JsonNodeExtension("Abc")}
             }

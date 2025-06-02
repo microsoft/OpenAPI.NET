@@ -23,6 +23,6 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Parameters object
         /// </summary>
-        public List<IOpenApiParameter>? Parameters { get; set; }
+        public IList<IOpenApiParameter>? Parameters { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Hidi
 
         public int HeaderCount { get; set; }
 
-        public override void Visit(Dictionary<string, IOpenApiHeader> headers)
+        public override void Visit(IDictionary<string, IOpenApiHeader> headers)
         {
             HeaderCount++;
         }

@@ -31,12 +31,12 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// REQUIRED. A map between the scope name and a short description for it.
         /// </summary>
-        public Dictionary<string, string>? Scopes { get; set; }
+        public IDictionary<string, string>? Scopes { get; set; }
 
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

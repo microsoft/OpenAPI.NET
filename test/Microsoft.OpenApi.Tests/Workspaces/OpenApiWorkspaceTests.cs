@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                        Content = new()
+                                        Content = new Dictionary<string, OpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new OpenApiComponents()
                 {
-                    Schemas = new()
+                    Schemas = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["test"] = testSchema
                     }
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new()
                 {
-                    Schemas = new()
+                    Schemas = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["test"] = new OpenApiSchema()
                         {

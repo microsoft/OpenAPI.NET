@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// A map allowing additional information to be provided as headers.
         /// </summary>
-        public Dictionary<string, IOpenApiHeader>? Headers { get; set; }
+        public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <summary>
         /// Describes how a specific property value will be serialized depending on its type.
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

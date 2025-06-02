@@ -13,11 +13,11 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiComponents AdvancedComponents = new()
         {
-            Schemas = new()
+            Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -62,11 +62,11 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents AdvancedComponentsWithReference = new()
         {
-            Schemas = new()
+            Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
                 ["schema2"] = new OpenApiSchema()
                 {
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents BrokenComponents = new()
         {
-            Schemas = new()
+            Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
@@ -147,13 +147,13 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelReferencingComponents = new()
         {
-            Schemas = new()
+            Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 ["schema1"] = new OpenApiSchemaReference("schema2", null),
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -166,12 +166,12 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new()
         {
-            Schemas = new()
+            Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema2"] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.Object,
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property1"] = new OpenApiSchema()
                         {
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelSelfReferencingComponents = new()
         {
-            Schemas = new()
+            Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 ["schema1"] = new OpenApiSchemaReference("schema1", null)
             }
@@ -203,11 +203,11 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents ComponentsWithPathItem = new OpenApiComponents
         {
-            Schemas = new()
+            Schemas = new Dictionary<string, IOpenApiSchema>()
             {
                 ["schema1"] = new OpenApiSchema()
                 {
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
                 ["schema2"] = new OpenApiSchema()
                 {
-                    Properties = new()
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["property2"] = new OpenApiSchema()
                         {
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             RequestBody = new OpenApiRequestBody
                             {
                                 Description = "Information about a new pet in the system",
-                                Content = new()
+                                Content = new Dictionary<string, OpenApiMediaType>()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {

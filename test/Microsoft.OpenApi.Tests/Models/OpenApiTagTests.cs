@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new()
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 {"x-tag-extension", null}
             }

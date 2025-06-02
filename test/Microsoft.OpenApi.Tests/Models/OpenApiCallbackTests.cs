@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             RequestBody = new OpenApiRequestBody()
                             {
-                                Content = new()
+                                Content = new Dictionary<string, OpenApiMediaType>()
                                 {
                                     ["application/json"] = new()
                                     {
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             RequestBody = new OpenApiRequestBody()
                             {
-                                Content = new()
+                                Content = new Dictionary<string, OpenApiMediaType>()
                                 {
                                     ["application/json"] = new()
                                     {

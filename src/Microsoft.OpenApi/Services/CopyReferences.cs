@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+
 namespace Microsoft.OpenApi;
 internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
 {
@@ -85,7 +87,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureSchemasExist();
         if (referenceId is not null && schema is not null && !(Components.Schemas?.ContainsKey(referenceId) ?? false))
         {
-            Components.Schemas ??= [];
+            Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
             Components.Schemas.Add(referenceId, schema);
         }
     }
@@ -96,7 +98,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureParametersExist();
         if (parameter is not null && referenceId is not null && !(Components.Parameters?.ContainsKey(referenceId) ?? false))
         {
-            Components.Parameters ??= [];
+            Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
             Components.Parameters.Add(referenceId, parameter);
         }
     }
@@ -107,7 +109,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureResponsesExist();
         if (referenceId is not null && response is not null && !(Components.Responses?.ContainsKey(referenceId) ?? false))
         {
-            Components.Responses ??= [];
+            Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
             Components.Responses.Add(referenceId, response);
         }
     }
@@ -117,7 +119,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureRequestBodiesExist();
         if (requestBody is not null && referenceId is not null && !(Components.RequestBodies?.ContainsKey(referenceId) ?? false))
         {
-            Components.RequestBodies ??= [];
+            Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
             Components.RequestBodies.Add(referenceId, requestBody);
         }
     }
@@ -127,7 +129,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureLinksExist();
         if (link is not null && referenceId is not null && !(Components.Links?.ContainsKey(referenceId) ?? false))
         {
-            Components.Links ??= [];
+            Components.Links ??= new Dictionary<string, IOpenApiLink>();
             Components.Links.Add(referenceId, link);
         }
     }
@@ -137,7 +139,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureCallbacksExist();
         if (callback is not null && referenceId is not null && !(Components.Callbacks?.ContainsKey(referenceId) ?? false))
         {
-            Components.Callbacks ??= [];
+            Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
             Components.Callbacks.Add(referenceId, callback);
         }
     }
@@ -147,7 +149,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureHeadersExist();
         if (header is not null && referenceId is not null && !(Components.Headers?.ContainsKey(referenceId) ?? false))
         {
-            Components.Headers ??= [];
+            Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
             Components.Headers.Add(referenceId, header);
         }
     }
@@ -157,7 +159,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureExamplesExist();
         if (example is not null && referenceId is not null && !(Components.Examples?.ContainsKey(referenceId) ?? false))
         {
-            Components.Examples ??= [];
+            Components.Examples ??= new Dictionary<string, IOpenApiExample>();
             Components.Examples.Add(referenceId, example);
         }
     }
@@ -167,7 +169,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsurePathItemsExist();
         if (pathItem is not null && referenceId is not null && !(Components.PathItems?.ContainsKey(referenceId) ?? false))
         {
-            Components.PathItems ??= [];
+            Components.PathItems ??= new Dictionary<string, IOpenApiPathItem>();
             Components.PathItems.Add(referenceId, pathItem);
         }
     }
@@ -177,7 +179,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
         EnsureSecuritySchemesExist();
         if (securityScheme is not null && referenceId is not null && !(Components.SecuritySchemes?.ContainsKey(referenceId) ?? false))
         {
-            Components.SecuritySchemes ??= [];
+            Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
             Components.SecuritySchemes.Add(referenceId, securityScheme);
         }
     }
@@ -202,7 +204,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.Schemas ??= [];
+            _target.Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
         }
     }
 
@@ -210,7 +212,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.Parameters ??= [];
+            _target.Components.Parameters ??= new Dictionary<string, IOpenApiParameter>();
         }
     }
 
@@ -218,7 +220,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.Responses ??= [];
+            _target.Components.Responses ??= new Dictionary<string, IOpenApiResponse>();
         }
     }
 
@@ -226,7 +228,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.RequestBodies ??= [];
+            _target.Components.RequestBodies ??= new Dictionary<string, IOpenApiRequestBody>();
         }
     }
 
@@ -234,7 +236,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.Examples ??= [];
+            _target.Components.Examples ??= new Dictionary<string, IOpenApiExample>();
         }
     }
 
@@ -242,7 +244,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.Headers ??= [];
+            _target.Components.Headers ??= new Dictionary<string, IOpenApiHeader>();
         }
     }
 
@@ -250,7 +252,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.Callbacks ??= [];
+            _target.Components.Callbacks ??= new Dictionary<string, IOpenApiCallback>();
         }
     }
 
@@ -258,7 +260,7 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.Links ??= [];
+            _target.Components.Links ??= new Dictionary<string, IOpenApiLink>();
         }
     }
 
@@ -266,14 +268,14 @@ internal class CopyReferences(OpenApiDocument target) : OpenApiVisitorBase
     {
         if (_target.Components is not null)
         {
-            _target.Components.SecuritySchemes ??= [];
+            _target.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
         }
     }
     private void EnsurePathItemsExist()
     {
         if (_target.Components is not null)
         {
-            _target.Components.PathItems = [];
+            _target.Components.PathItems = new Dictionary<string, IOpenApiPathItem>();
         }
     }
 }

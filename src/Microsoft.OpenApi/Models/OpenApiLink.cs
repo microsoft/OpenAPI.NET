@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi
         public string? OperationId { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; }
+        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get; set; }
 
         /// <inheritdoc/>
         public RuntimeExpressionAnyWrapper? RequestBody { get; set; }
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi
         public OpenApiServer? Server { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

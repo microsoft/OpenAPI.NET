@@ -17,12 +17,12 @@ namespace Microsoft.OpenApi
         /// </summary>
         public const bool DeprecatedDefault = false;
 
-        private HashSet<OpenApiTagReference>? _tags;
+        private ISet<OpenApiTagReference>? _tags;
         /// <summary>
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public HashSet<OpenApiTagReference>? Tags 
+        public ISet<OpenApiTagReference>? Tags 
         { 
             get
             {
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi
         /// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
         /// The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
         /// </summary>
-        public List<IOpenApiParameter>? Parameters { get; set; }
+        public IList<IOpenApiParameter>? Parameters { get; set; }
 
         /// <summary>
         /// The request body applicable for this operation.
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public Dictionary<string, IOpenApiCallback>? Callbacks { get; set; }
+        public IDictionary<string, IOpenApiCallback>? Callbacks { get; set; }
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -106,22 +106,22 @@ namespace Microsoft.OpenApi
         /// This definition overrides any declared top-level security.
         /// To remove a top-level security declaration, an empty array can be used.
         /// </summary>
-        public List<OpenApiSecurityRequirement>? Security { get; set; }
+        public IList<OpenApiSecurityRequirement>? Security { get; set; }
 
         /// <summary>
         /// An alternative server array to service this operation.
         /// If an alternative server object is specified at the Path Item Object or Root level,
         /// it will be overridden by this value.
         /// </summary>
-        public List<OpenApiServer>? Servers { get; set; }
+        public IList<OpenApiServer>? Servers { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, object>? Metadata { get; set; }
+        public IDictionary<string, object>? Metadata { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? [.. operation.Tags] : null;
+            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;

@@ -227,7 +227,7 @@ namespace Microsoft.OpenApi
             return operations;
         }
 
-        private static List<SearchResult> FindOperations(OpenApiDocument sourceDocument, Func<string, HttpMethod, OpenApiOperation, bool> predicate)
+        private static IList<SearchResult> FindOperations(OpenApiDocument sourceDocument, Func<string, HttpMethod, OpenApiOperation, bool> predicate)
         {
             var search = new OperationSearch(predicate);
             var walker = new OpenApiWalker(search);
@@ -351,7 +351,7 @@ namespace Microsoft.OpenApi
             return moreStuff;
         }
 
-        private static string ExtractPath(string url, List<OpenApiServer>? serverList)
+        private static string ExtractPath(string url, IList<OpenApiServer>? serverList)
         {
             // if OpenAPI has servers, then see if the url matches one of them
             var baseUrl = serverList?.Select(s => s.Url?.TrimEnd('/'))

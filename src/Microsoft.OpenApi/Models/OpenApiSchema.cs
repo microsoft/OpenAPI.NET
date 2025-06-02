@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi
         public string? Comment { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, bool>? Vocabulary { get; set; }
+        public IDictionary<string, bool>? Vocabulary { get; set; }
 
         /// <inheritdoc />
         public string? DynamicRef { get; set; }
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi
         public string? DynamicAnchor { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiSchema>? Definitions { get; set; }
+        public IDictionary<string, IOpenApiSchema>? Definitions { get; set; }
 
         private string? _exclusiveMaximum;
         /// <inheritdoc />
@@ -175,19 +175,19 @@ namespace Microsoft.OpenApi
         public bool WriteOnly { get; set; }
 
         /// <inheritdoc />
-        public List<IOpenApiSchema>? AllOf { get; set; }
+        public IList<IOpenApiSchema>? AllOf { get; set; }
 
         /// <inheritdoc />
-        public List<IOpenApiSchema>? OneOf { get; set; }
+        public IList<IOpenApiSchema>? OneOf { get; set; }
 
         /// <inheritdoc />
-        public List<IOpenApiSchema>? AnyOf { get; set; }
+        public IList<IOpenApiSchema>? AnyOf { get; set; }
 
         /// <inheritdoc />
         public IOpenApiSchema? Not { get; set; }
 
         /// <inheritdoc />
-        public HashSet<string>? Required { get; set; }
+        public ISet<string>? Required { get; set; }
 
         /// <inheritdoc />
         public IOpenApiSchema? Items { get; set; }
@@ -202,10 +202,10 @@ namespace Microsoft.OpenApi
         public bool? UniqueItems { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiSchema>? Properties { get; set; }
+        public IDictionary<string, IOpenApiSchema>? Properties { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiSchema>? PatternProperties { get; set; }
+        public IDictionary<string, IOpenApiSchema>? PatternProperties { get; set; }
 
         /// <inheritdoc />
         public int? MaxProperties { get; set; }
@@ -226,10 +226,10 @@ namespace Microsoft.OpenApi
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc />
-        public List<JsonNode>? Examples { get; set; }
+        public IList<JsonNode>? Examples { get; set; }
 
         /// <inheritdoc />
-        public List<JsonNode>? Enum { get; set; }
+        public IList<JsonNode>? Enum { get; set; }
 
         /// <inheritdoc />
         public bool UnevaluatedProperties { get; set; }
@@ -244,16 +244,16 @@ namespace Microsoft.OpenApi
         public OpenApiXml? Xml { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
+        public IDictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, object>? Metadata { get; set; }
+        public IDictionary<string, object>? Metadata { get; set; }
 
         /// <inheritdoc />
-        public Dictionary<string, HashSet<string>>? DependentRequired { get; set; }
+        public IDictionary<string, HashSet<string>>? DependentRequired { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -300,7 +300,7 @@ namespace Microsoft.OpenApi
             OneOf = schema.OneOf != null ? [.. schema.OneOf] : null;
             AnyOf = schema.AnyOf != null ? [.. schema.AnyOf] : null;
             Not = schema.Not?.CreateShallowCopy();
-            Required = schema.Required != null ? [.. schema.Required] : null;
+            Required = schema.Required != null ? new HashSet<string>(schema.Required) : null;
             Items = schema.Items?.CreateShallowCopy();
             MaxItems = schema.MaxItems ?? MaxItems;
             MinItems = schema.MinItems ?? MinItems;
@@ -620,7 +620,7 @@ namespace Microsoft.OpenApi
         /// <param name="propertyName">The property name that will be serialized.</param>
         private void SerializeAsV2(
             IOpenApiWriter writer,
-            HashSet<string>? parentRequiredProperties,
+            ISet<string>? parentRequiredProperties,
             string? propertyName)
         {
             parentRequiredProperties ??= new HashSet<string>();

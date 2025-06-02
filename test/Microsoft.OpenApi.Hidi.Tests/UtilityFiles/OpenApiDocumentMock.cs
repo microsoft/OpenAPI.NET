@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entities",
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -211,7 +211,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                             {
                                                                 Title = "Collection of user",
                                                                 Type = JsonSchemaType.Object,
-                                                                Properties = new()
+                                                                Properties = new Dictionary<string, IOpenApiSchema>()
                                                                 {
                                                                     {
                                                                         "value",
@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entity",
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -310,7 +310,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved navigation property",
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -357,7 +357,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -414,7 +414,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved navigation property",
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -424,7 +424,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                             {
                                                                 Title = "Collection of hostSecurityProfile",
                                                                 Type = JsonSchemaType.Object,
-                                                                Properties = new()
+                                                                Properties = new Dictionary<string, IOpenApiSchema>()
                                                                 {
                                                                     {
                                                                         "value",
@@ -466,7 +466,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = JsonSchemaType.String
                                             },
-                                            Extensions = new()
+                                            Extensions = new Dictionary<string, IOpenApiExtension>()
                                             {
                                                 {
                                                     "x-ms-docs-key-type", new JsonNodeExtension("call")
@@ -483,7 +483,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Extensions = new()
+                                    Extensions = new Dictionary<string, IOpenApiExtension>()
                                     {
                                         {
                                             "x-ms-docs-operation-type", new JsonNodeExtension("action")
@@ -514,7 +514,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = JsonSchemaType.String
                                             },
-                                            Extensions = new()
+                                            Extensions = new Dictionary<string, IOpenApiExtension>()
                                             {
                                                 {
                                                     "x-ms-docs-key-type", new JsonNodeExtension("group")
@@ -531,7 +531,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = JsonSchemaType.String
                                             },
-                                            Extensions = new()
+                                            Extensions = new Dictionary<string, IOpenApiExtension>()
                                             {
                                                 {
                                                     "x-ms-docs-key-type", new JsonNodeExtension("event")
@@ -545,7 +545,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new()
+                                                Content = new Dictionary<string, OpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -553,7 +553,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         {
                                                             Schema = new OpenApiSchema()
                                                             {
-                                                                Properties = new()
+                                                                Properties = new Dictionary<string, IOpenApiSchema>()
                                                                 {
                                                                     {
                                                                         "value",
@@ -570,7 +570,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Extensions = new()
+                                    Extensions = new Dictionary<string, IOpenApiExtension>()
                                     {
                                         {
                                             "x-ms-docs-operation-type", new JsonNodeExtension("function")
@@ -596,14 +596,14 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                 },
                 Components = new()
                 {
-                    Schemas = new()
+                    Schemas = new Dictionary<string, IOpenApiSchema>()
                     {
                         {
                             "microsoft.graph.networkInterface", new OpenApiSchema
                             {
                                 Title = "networkInterface",
                                 Type = JsonSchemaType.Object,
-                                Properties = new()
+                                Properties = new Dictionary<string, IOpenApiSchema>()
                                 {
                                     {
                                         "description", new OpenApiSchema

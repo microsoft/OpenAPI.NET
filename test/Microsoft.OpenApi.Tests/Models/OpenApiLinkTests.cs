@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var link = new OpenApiLink()
             {
-                Extensions = new()
+                Extensions = new Dictionary<string, IOpenApiExtension>()
                 {
                     { "x-display", new JsonNodeExtension("Abc") 
                 }

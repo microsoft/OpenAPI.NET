@@ -461,7 +461,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                                     ["200"] = new OpenApiResponse()
                                     {
                                         Description = "OK",
-                                        Content = new()
+                                        Content = new Dictionary<string, OpenApiMediaType>()
                                         {
                                             ["application/json"] = new()
                                             {
@@ -476,7 +476,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 },
                 Components = new()
                 {
-                    Schemas = new()
+                    Schemas = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["thing"] = thingSchema
                     }

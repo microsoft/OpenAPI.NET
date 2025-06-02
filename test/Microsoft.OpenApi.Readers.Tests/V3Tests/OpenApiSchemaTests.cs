@@ -190,7 +190,7 @@ get:
             new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new()
+                Properties = new Dictionary<string, IOpenApiSchema>()
                 {
                         ["id"] = new OpenApiSchema()
                         {
@@ -236,12 +236,12 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas = new()
+                Schemas = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["ErrorModel"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
-                        Properties = new()
+                        Properties = new Dictionary<string, IOpenApiSchema>()
                         {
                             ["code"] = new OpenApiSchema()
                             {
@@ -269,7 +269,7 @@ get:
                             {
                                 Type = JsonSchemaType.Object,
                                 Required = new HashSet<string> {"rootCause"},
-                                Properties = new()
+                                Properties = new Dictionary<string, IOpenApiSchema>()
                                 {
                                     ["rootCause"] = new OpenApiSchema()
                                     {
@@ -293,7 +293,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas = new()
+                Schemas = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["Pet"] = new OpenApiSchema()
                     {
@@ -302,7 +302,7 @@ get:
                         {
                             PropertyName = "petType"
                         },
-                        Properties = new()
+                        Properties = new Dictionary<string, IOpenApiSchema>()
                         {
                             ["name"] = new OpenApiSchema()
                             {
@@ -329,7 +329,7 @@ get:
                             {
                                 Type = JsonSchemaType.Object,
                                 Required = new HashSet<string>{"huntingSkill"},
-                                Properties = new()
+                                Properties = new Dictionary<string, IOpenApiSchema>()
                                 {
                                     ["huntingSkill"] = new OpenApiSchema()
                                     {
@@ -357,7 +357,7 @@ get:
                             {
                                 Type = JsonSchemaType.Object,
                                 Required = new HashSet<string>{"packSize"},
-                                Properties = new()
+                                Properties = new Dictionary<string, IOpenApiSchema>()
                                 {
                                     ["packSize"] = new OpenApiSchema()
                                     {
@@ -399,7 +399,7 @@ get:
 
             var expectedComponents = new OpenApiComponents
             {
-                Schemas = new()
+                Schemas = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["RelativePathModel"] = new OpenApiSchema()
                     {

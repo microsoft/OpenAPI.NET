@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi
         /// between other schemas which may satisfy the payload description.</param>
         /// <param name="childSchema">The child schema.</param>
         /// <returns></returns>
-        public static bool TraverseSchemaElements(string discriminatorName, List<IOpenApiSchema>? childSchema)
+        public static bool TraverseSchemaElements(string discriminatorName, IList<IOpenApiSchema>? childSchema)
         {
             if (childSchema is not null)
             {

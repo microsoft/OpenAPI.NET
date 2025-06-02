@@ -48,13 +48,13 @@ namespace Microsoft.OpenApi
         public OpenApiServer? Server { get => Target?.Server; }
 
         /// <inheritdoc/>
-        public Dictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get => Target?.Parameters; }
+        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
         public RuntimeExpressionAnyWrapper? RequestBody { get => Target?.RequestBody; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)

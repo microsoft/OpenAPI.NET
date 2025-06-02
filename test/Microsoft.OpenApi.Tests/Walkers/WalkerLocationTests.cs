@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                         {
                             ["200"] = new OpenApiResponse()
                             {
-                                Content = new()
+                                Content = new Dictionary<string, OpenApiMediaType>()
                                 {
                                     ["application/json"] = new()
                                     {
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var loopySchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new()
+                Properties = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["name"] = new OpenApiSchema() { Type = JsonSchemaType.String }
                 }
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             {
                 Components = new()
                 {
-                    Schemas = new()
+                    Schemas = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["loopy"] = loopySchema
                     }
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var baseSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
-                Properties = new()
+                Properties = new Dictionary<string, IOpenApiSchema>()
                 {
                     ["type"] = new OpenApiSchema() { Type = JsonSchemaType.String }
                 },
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                        Content = new()
+                                        Content = new Dictionary<string, OpenApiMediaType>()
                                         {
                                             ["application/json"] = new()
                                             {
@@ -215,7 +215,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 },
                 Components = new()
                 {
-                    Schemas = new()
+                    Schemas = new Dictionary<string, IOpenApiSchema>()
                     {
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
@@ -297,7 +297,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add("referenceAt: " + this.PathString);
         }
-        public override void Visit(Dictionary<string, OpenApiMediaType> content)
+        public override void Visit(IDictionary<string, OpenApiMediaType> content)
         {
             Locations.Add(this.PathString);
         }
@@ -313,12 +313,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(HashSet<OpenApiTag> openApiTags)
+        public override void Visit(ISet<OpenApiTag> openApiTags)
         {
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(List<OpenApiServer> servers)
+        public override void Visit(IList<OpenApiServer> servers)
         {
             Locations.Add(this.PathString);
         }
@@ -327,7 +327,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add(this.PathString);
         }
-        public override void Visit(HashSet<OpenApiTagReference> openApiTags)
+        public override void Visit(ISet<OpenApiTagReference> openApiTags)
         {
             Locations.Add(this.PathString);
         }

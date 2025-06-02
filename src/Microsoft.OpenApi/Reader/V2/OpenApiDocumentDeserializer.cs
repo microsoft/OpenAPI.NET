@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        private static void MakeServers(List<OpenApiServer> servers, ParsingContext context, RootNode rootNode)
+        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, RootNode rootNode)
         {
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
@@ -307,8 +307,8 @@ namespace Microsoft.OpenApi.Reader.V2
 
     internal class RequestBodyReferenceFixer : OpenApiVisitorBase
     {
-        private readonly Dictionary<string, IOpenApiRequestBody> _requestBodies;
-        public RequestBodyReferenceFixer(Dictionary<string, IOpenApiRequestBody> requestBodies)
+        private readonly IDictionary<string, IOpenApiRequestBody> _requestBodies;
+        public RequestBodyReferenceFixer(IDictionary<string, IOpenApiRequestBody> requestBodies)
         {
             _requestBodies = requestBodies;
         }

@@ -53,13 +53,13 @@ namespace Microsoft.OpenApi
         public Dictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
 
         /// <inheritdoc/>
-        public List<OpenApiServer>? Servers { get => Target?.Servers; }
+        public IList<OpenApiServer>? Servers { get => Target?.Servers; }
 
         /// <inheritdoc/>
-        public List<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
+        public IList<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
         public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)

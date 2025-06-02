@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi
         /// Examples of the media type.
         /// Each example object SHOULD match the media type and specified schema if present.
         /// </summary>
-        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
+        public IDictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <summary>
         /// A map between a property name and its encoding information.
@@ -36,12 +36,12 @@ namespace Microsoft.OpenApi
         /// The encoding object SHALL only apply to requestBody objects
         /// when the media type is multipart or application/x-www-form-urlencoded.
         /// </summary>
-        public Dictionary<string, OpenApiEncoding>? Encoding { get; set; }
+        public IDictionary<string, OpenApiEncoding>? Encoding { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi
             // Media type does not exist in V2.
         }
 
-        private static void SerializeExamples(IOpenApiWriter writer, Dictionary<string, IOpenApiExample> examples, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        private static void SerializeExamples(IOpenApiWriter writer, IDictionary<string, IOpenApiExample> examples, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             /* Special case for writing out empty arrays as valid response examples
             * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true

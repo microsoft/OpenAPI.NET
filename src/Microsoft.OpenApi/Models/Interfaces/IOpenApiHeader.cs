@@ -54,11 +54,11 @@ public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// Examples of the media type.
     /// </summary>
-    public Dictionary<string, IOpenApiExample>? Examples { get; }
+    public IDictionary<string, IOpenApiExample>? Examples { get; }
 
     /// <summary>
     /// A map containing the representations for the header.
     /// </summary>
-    public Dictionary<string, OpenApiMediaType>? Content { get; }
+    public IDictionary<string, OpenApiMediaType>? Content { get; }
 
 }

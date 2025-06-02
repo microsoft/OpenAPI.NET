@@ -41,13 +41,13 @@ namespace Microsoft.OpenApi
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExample>? Examples { get; set; }
+        public IDictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
-        public Dictionary<string, IOpenApiExtension>? Extensions { get; set; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
