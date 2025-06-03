@@ -643,6 +643,44 @@ namespace Microsoft.OpenApi.Tests.Models
             """;
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
+        [Fact]
+        public async Task SerializeConstAsEnumV30()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Const = "foo"
+            };
+
+
+            // Act
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            var v3Node = JsonNode.Parse(actual);
+            Assert.True(v3Node!["enum"] is JsonArray singleEnum && singleEnum.Count == 1 && singleEnum[0]?.ToString() == "foo");
+            Assert.False(v3Node.AsObject().ContainsKey("const"));
+        }
+
+        [Fact]
+        public async Task SerializeConstAsEnumV20()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Const = "foo"
+            };
+
+            // Act
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            var v2Node = JsonNode.Parse(actual);
+            Assert.True(v2Node!["enum"] is JsonArray singleEnum && singleEnum.Count == 1 && singleEnum[0]?.ToString() == "foo");
+            Assert.False(v2Node.AsObject().ContainsKey("const"));
+        }
 
 
         internal class SchemaVisitor : OpenApiVisitorBase

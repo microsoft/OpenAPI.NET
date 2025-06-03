@@ -437,7 +437,10 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
+            var enumValue = !string.IsNullOrEmpty(Const) && version != OpenApiSpecVersion.OpenApi3_1
+                ? new List<JsonNode> { JsonValue.Create(Const)! }
+                : Enum;
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
             SerializeTypeProperty(writer, version);
@@ -687,7 +690,10 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
+            var enumValue = !string.IsNullOrEmpty(Const)
+                ? new List<JsonNode> { JsonValue.Create(Const)! }
+                : Enum;
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
