@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview.23](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.22...v2.0.0-preview.23) (2025-06-03)
+
+
+### Features
+
+* upgrades OData lib in Hidi to preview15 ([540240a](https://github.com/microsoft/OpenAPI.NET/commit/540240aba9f96b598459cd49b67cd02adc82713d))
+* upgrades OData lib to preview15 ([b300265](https://github.com/microsoft/OpenAPI.NET/commit/b3002652805ff2a36e55531178d4fe579b196c56))
+
 ## [2.0.0-preview.22](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.21...v2.0.0-preview.22) (2025-06-02)
 
 
