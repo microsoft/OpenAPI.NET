@@ -27,6 +27,7 @@ using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Hidi.Formatters;
 using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.OpenApi.Hidi.Utilities;
+using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Reader;
 using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 
@@ -414,8 +415,7 @@ namespace Microsoft.OpenApi.Hidi
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
             settings ??= SettingsUtilities.GetConfiguration();
 
-            // TODO: uncomment when namespaces are fixed in OData lib
-            var document = new OpenApiDocument(); //edmModel.ConvertToOpenApi(SettingsUtilities.GetOpenApiConvertSettings(settings, metadataVersion));
+            var document = edmModel.ConvertToOpenApi(SettingsUtilities.GetOpenApiConvertSettings(settings, metadataVersion));
             document = FixReferences(document, format);
 
             return document;
