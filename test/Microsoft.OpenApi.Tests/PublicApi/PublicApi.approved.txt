@@ -1594,7 +1594,6 @@ namespace Microsoft.OpenApi
         public OpenApiWriterSettings() { }
         public bool InlineExternalReferences { get; set; }
         public bool InlineLocalReferences { get; set; }
-        public System.Collections.Generic.IComparer<string>? KeyComparer { get; set; }
     }
     public class OpenApiXml : Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiSerializable
     {
