@@ -437,7 +437,7 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            var enumValue = (Enum == null || Enum.Count == 0)
+            var enumValue = Enum is not { Count: > 0 }
                 && !string.IsNullOrEmpty(Const) 
                 && version < OpenApiSpecVersion.OpenApi3_1
                 ? new List<JsonNode> { JsonValue.Create(Const)! }
@@ -692,7 +692,7 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            var enumValue = (Enum == null || Enum.Count == 0) && !string.IsNullOrEmpty(Const)
+            var enumValue = Enum is not { Count: > 0 } && !string.IsNullOrEmpty(Const)
                 ? new List<JsonNode> { JsonValue.Create(Const)! }
                 : Enum;
             writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
