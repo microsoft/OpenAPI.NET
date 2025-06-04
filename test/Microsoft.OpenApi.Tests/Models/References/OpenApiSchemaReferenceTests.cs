@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using VerifyXunit;
@@ -177,6 +178,89 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public void ParseSchemaReferenceWithAnnotationsWorks()
+        {
+            // Arrange
+            var jsonContent = @"{
+  ""openapi"": ""3.1.0"",
+  ""info"": {
+    ""title"": ""Test API"",
+    ""version"": ""1.0.0""
+  },
+  ""paths"": {
+    ""/test"": {
+      ""get"": {
+        ""responses"": {
+          ""200"": {
+            ""description"": ""OK"",
+            ""content"": {
+              ""application/json"": {
+                ""schema"": {
+                  ""$ref"": ""#/components/schemas/Pet"",
+                  ""title"": ""Pet Response Schema"",
+                  ""description"": ""A pet object returned from the API"",
+                  ""summary"": ""Pet Response"",
+                  ""deprecated"": true,
+                  ""readOnly"": true,
+                  ""writeOnly"": false,
+                  ""default"": {""name"": ""default pet""},
+                  ""examples"": [{""name"": ""example pet""}]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  ""components"": {
+    ""schemas"": {
+      ""Pet"": {
+        ""type"": ""object"",
+        ""title"": ""Original Pet Title"",
+        ""description"": ""Original Pet Description"",
+        ""properties"": {
+          ""name"": {
+            ""type"": ""string""
+          }
+        }
+      }
+    }
+  }
+}";
+
+            // Act
+            var readResult = OpenApiDocument.Parse(jsonContent, "json");
+            var document = readResult.Document;
+
+            // Assert
+            Assert.NotNull(document);
+            Assert.Empty(readResult.Diagnostic.Errors);
+            
+            var schema = document.Paths["/test"].Operations[HttpMethod.Get]
+                .Responses["200"].Content["application/json"].Schema;
+            
+            Assert.IsType<OpenApiSchemaReference>(schema);
+            var schemaRef = (OpenApiSchemaReference)schema;
+            
+            // Test that reference annotations override target values
+            Assert.Equal("Pet Response Schema", schemaRef.Title);
+            Assert.Equal("A pet object returned from the API", schemaRef.Description);
+            Assert.Equal("Pet Response", schemaRef.Summary);
+            Assert.True(schemaRef.Deprecated);
+            Assert.True(schemaRef.ReadOnly);
+            Assert.False(schemaRef.WriteOnly);
+            Assert.NotNull(schemaRef.Default);
+            Assert.Single(schemaRef.Examples);
+            
+            // Test that target schema still has original values
+            var targetSchema = schemaRef.Target;
+            Assert.NotNull(targetSchema);
+            Assert.Equal("Original Pet Title", targetSchema.Title);
+            Assert.Equal("Original Pet Description", targetSchema.Description);
         }
     }
 }
