@@ -28,12 +28,12 @@
 
     <ItemGroup>
 
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.61">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
 
-        <PackageReference Include="SharpYaml" Version="2.1.1" />
+        <PackageReference Include="SharpYaml" Version="2.1.2" />
         <PackageReference Include="System.Text.Json" Version="[8.0.5,)" />
         <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-hh2w-p6rv-4g7w" />
         <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-8g4q-xg66-9fp4" />
