@@ -419,13 +419,6 @@ namespace Microsoft.OpenApi
             writer.WriteStartArray();
             if (elements != null)
             {
-                var settings = writer.GetSettings();
-
-                if (settings?.KeyComparer is IComparer<T> typedComparer)
-                {
-                    elements = elements.Sort(typedComparer);
-                }
-
                 foreach (var item in elements)
                 {
                     if (item != null)
@@ -464,12 +457,6 @@ namespace Microsoft.OpenApi
 
             if (elements != null)
             {
-                var settings = writer.GetSettings();
-                if (settings?.KeyComparer != null)
-                {
-                    elements = elements.Sort(settings.KeyComparer); // sort using custom comparer
-                }
-
                 foreach (var item in elements)
                 {
                     writer.WritePropertyName(item.Key);

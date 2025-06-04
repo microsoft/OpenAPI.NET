@@ -132,74 +132,6 @@ namespace Microsoft.OpenApi.Tests.Extensions
             }
         };
 
-        [Theory]
-        [MemberData(nameof(OpenApiSpecVersions))]
-        public async Task SortOpenApiDocumentUsingCustomComparerSucceeds(OpenApiSpecVersion version)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var settings = new OpenApiWriterSettings
-            {
-                KeyComparer = StringComparer.OrdinalIgnoreCase
-            };
-            var writer = new OpenApiYamlWriter(outputStringWriter, settings);
-
-            // Act
-            Document.SerializeAs(version, writer);
-            await writer.FlushAsync();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(version);
-        }
-
-        [Fact]
-        public async Task SortHashSetsWorks()
-        {
-            // Arrange
-            var expected = @"required:
-  - id
-  - name
-  - tag";
-            var schema = new OpenApiSchema
-            {
-                Required = new HashSet<string> { "tag", "id", "name" },
-            };
-
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var settings = new OpenApiWriterSettings
-            {
-                KeyComparer = StringComparer.OrdinalIgnoreCase
-            };
-            var writer = new OpenApiYamlWriter(outputStringWriter, settings);
-
-            // Act
-            schema.SerializeAsV3(writer);
-            await writer.FlushAsync();
-            var sortedString = outputStringWriter.ToString();
-
-            // Assert
-            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), sortedString.MakeLineBreaksEnvironmentNeutral());
-        }
-
-        [Fact]
-        public void SortTagsByNameUsingComparerWorks()
-        {
-            // Arrange
-            var tags = new HashSet<OpenApiTag>
-            {
-                new() { Name = "three" },
-                new() { Name = "two" },
-                new() { Name = "one" }
-            };
-
-            // Act
-            var sortedTags = tags.Sort(new OpenApiTagNameComparer());
-
-            // Assert
-            Assert.Equal(3, sortedTags.Count);
-            Assert.True(sortedTags[0].Name == "one");
-        }
-
         public static TheoryData<OpenApiSpecVersion> OpenApiSpecVersions()
         {
             var values = new TheoryData<OpenApiSpecVersion>();
@@ -208,14 +140,6 @@ namespace Microsoft.OpenApi.Tests.Extensions
                 values.Add(value);
             }
             return values;
-        }
-    }
-
-    public class OpenApiTagNameComparer : IComparer<OpenApiTag>
-    {
-        public int Compare(OpenApiTag tag1, OpenApiTag tag2)
-        {
-            return string.Compare(tag1.Name, tag2.Name, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
