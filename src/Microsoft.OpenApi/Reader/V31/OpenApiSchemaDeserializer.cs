@@ -368,7 +368,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
-                result.Reference.SetSummaryAndDescriptionFromMapNode(mapNode);
+                result.Reference.SetMetadataFromMapNode(mapNode);
                 result.Reference.SetJsonPointerPath(pointer, nodeLocation);
                 return result;
             }            

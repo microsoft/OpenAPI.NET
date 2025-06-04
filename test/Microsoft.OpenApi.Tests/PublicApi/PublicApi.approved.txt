@@ -1002,17 +1002,23 @@ namespace Microsoft.OpenApi
     {
         public OpenApiReference() { }
         public OpenApiReference(Microsoft.OpenApi.OpenApiReference reference) { }
+        public System.Text.Json.Nodes.JsonNode? Default { get; set; }
+        public bool? Deprecated { get; set; }
         public string? Description { get; set; }
+        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Examples { get; set; }
         public string? ExternalResource { get; init; }
         public Microsoft.OpenApi.OpenApiDocument? HostDocument { get; init; }
         public string? Id { get; init; }
         public bool IsExternal { get; }
         public bool IsFragment { get; init; }
         public bool IsLocal { get; }
+        public bool? ReadOnly { get; set; }
         public string? ReferenceV2 { get; }
         public string? ReferenceV3 { get; }
         public string? Summary { get; set; }
+        public string? Title { get; set; }
         public Microsoft.OpenApi.ReferenceType Type { get; init; }
+        public bool? WriteOnly { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
@@ -1166,17 +1172,17 @@ namespace Microsoft.OpenApi
         public System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema>? AnyOf { get; }
         public string? Comment { get; }
         public string? Const { get; }
-        public System.Text.Json.Nodes.JsonNode? Default { get; }
+        public System.Text.Json.Nodes.JsonNode? Default { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiSchema>? Definitions { get; }
         public System.Collections.Generic.IDictionary<string, System.Collections.Generic.HashSet<string>>? DependentRequired { get; }
-        public bool Deprecated { get; }
+        public bool Deprecated { get; set; }
         public string? Description { get; set; }
         public Microsoft.OpenApi.OpenApiDiscriminator? Discriminator { get; }
         public string? DynamicAnchor { get; }
         public string? DynamicRef { get; }
         public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Enum { get; }
         public System.Text.Json.Nodes.JsonNode? Example { get; }
-        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Examples { get; }
+        public System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode>? Examples { get; set; }
         public string? ExclusiveMaximum { get; }
         public string? ExclusiveMinimum { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
@@ -1198,16 +1204,17 @@ namespace Microsoft.OpenApi
         public string? Pattern { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiSchema>? PatternProperties { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiSchema>? Properties { get; }
-        public bool ReadOnly { get; }
+        public bool ReadOnly { get; set; }
         public System.Collections.Generic.ISet<string>? Required { get; }
         public System.Uri? Schema { get; }
-        public string? Title { get; }
+        public string? Summary { get; set; }
+        public string? Title { get; set; }
         public Microsoft.OpenApi.JsonSchemaType? Type { get; }
         public bool UnevaluatedProperties { get; }
         public bool? UniqueItems { get; }
         public System.Collections.Generic.IDictionary<string, System.Text.Json.Nodes.JsonNode>? UnrecognizedKeywords { get; }
         public System.Collections.Generic.IDictionary<string, bool>? Vocabulary { get; }
-        public bool WriteOnly { get; }
+        public bool WriteOnly { get; set; }
         public Microsoft.OpenApi.OpenApiXml? Xml { get; }
         public override Microsoft.OpenApi.IOpenApiSchema CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiSchema source) { }
         public Microsoft.OpenApi.IOpenApiSchema CreateShallowCopy() { }

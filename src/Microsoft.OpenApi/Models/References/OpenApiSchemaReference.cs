@@ -40,8 +40,21 @@ namespace Microsoft.OpenApi
             set => Reference.Description = value;
         }
 
+        /// <summary>
+        /// A short summary which by default SHOULD override that of the referenced component.
+        /// </summary>
+        public string? Summary
+        {
+            get => string.IsNullOrEmpty(Reference.Summary) ? null : Reference.Summary;
+            set => Reference.Summary = value;
+        }
+
         /// <inheritdoc/>
-        public string? Title { get => Target?.Title; }
+        public string? Title
+        {
+            get => string.IsNullOrEmpty(Reference.Title) ? Target?.Title : Reference.Title;
+            set => Reference.Title = value;
+        }
         /// <inheritdoc/>
         public Uri? Schema { get => Target?.Schema; }
         /// <inheritdoc/>
@@ -79,11 +92,23 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public decimal? MultipleOf { get => Target?.MultipleOf; }
         /// <inheritdoc/>
-        public JsonNode? Default { get => Target?.Default; }
+        public JsonNode? Default
+        {
+            get => Reference.Default ?? Target?.Default;
+            set => Reference.Default = value;
+        }
         /// <inheritdoc/>
-        public bool ReadOnly { get => Target?.ReadOnly ?? false; }
+        public bool ReadOnly
+        {
+            get => Reference.ReadOnly ?? Target?.ReadOnly ?? false;
+            set => Reference.ReadOnly = value;
+        }
         /// <inheritdoc/>
-        public bool WriteOnly { get => Target?.WriteOnly ?? false; }
+        public bool WriteOnly
+        {
+            get => Reference.WriteOnly ?? Target?.WriteOnly ?? false;
+            set => Reference.WriteOnly = value;
+        }
         /// <inheritdoc/>
         public IList<IOpenApiSchema>? AllOf { get => Target?.AllOf; }
         /// <inheritdoc/>
@@ -119,7 +144,11 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public JsonNode? Example { get => Target?.Example; }
         /// <inheritdoc/>
-        public IList<JsonNode>? Examples { get => Target?.Examples; }
+        public IList<JsonNode>? Examples
+        {
+            get => Reference.Examples ?? Target?.Examples;
+            set => Reference.Examples = value;
+        }
         /// <inheritdoc/>
         public IList<JsonNode>? Enum { get => Target?.Enum; }
         /// <inheritdoc/>
@@ -127,7 +156,11 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
         /// <inheritdoc/>
-        public bool Deprecated { get => Target?.Deprecated ?? false; }
+        public bool Deprecated
+        {
+            get => Reference.Deprecated ?? Target?.Deprecated ?? false;
+            set => Reference.Deprecated = value;
+        }
         /// <inheritdoc/>
         public OpenApiXml? Xml { get => Target?.Xml; }
         /// <inheritdoc/>
