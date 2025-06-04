@@ -27,41 +27,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         public string? Description { get; set; }
 
-        /// <summary>
-        /// A default value which by default SHOULD override that of the referenced component.
-        /// If the referenced object-type does not allow a default field, then this field has no effect.
-        /// </summary>
-        public JsonNode? Default { get; set; }
 
-        /// <summary>
-        /// A title which by default SHOULD override that of the referenced component.
-        /// If the referenced object-type does not allow a title field, then this field has no effect.
-        /// </summary>
-        public string? Title { get; set; }
-
-        /// <summary>
-        /// Indicates whether the referenced component is deprecated.
-        /// If the referenced object-type does not allow a deprecated field, then this field has no effect.
-        /// </summary>
-        public bool? Deprecated { get; set; }
-
-        /// <summary>
-        /// Indicates whether the referenced component is read-only.
-        /// If the referenced object-type does not allow a readOnly field, then this field has no effect.
-        /// </summary>
-        public bool? ReadOnly { get; set; }
-
-        /// <summary>
-        /// Indicates whether the referenced component is write-only.
-        /// If the referenced object-type does not allow a writeOnly field, then this field has no effect.
-        /// </summary>
-        public bool? WriteOnly { get; set; }
-
-        /// <summary>
-        /// Example values which by default SHOULD override those of the referenced component.
-        /// If the referenced object-type does not allow examples, then this field has no effect.
-        /// </summary>
-        public IList<JsonNode>? Examples { get; set; }
 
         /// <summary>
         /// External resource in the reference.
@@ -190,12 +156,6 @@ namespace Microsoft.OpenApi
             Utils.CheckArgumentNull(reference);
             Summary = reference.Summary;
             Description = reference.Description;
-            Default = reference.Default;
-            Title = reference.Title;
-            Deprecated = reference.Deprecated;
-            ReadOnly = reference.ReadOnly;
-            WriteOnly = reference.WriteOnly;
-            Examples = reference.Examples;
             ExternalResource = reference.ExternalResource;
             Type = reference.Type;
             Id = reference.Id;
@@ -212,17 +172,6 @@ namespace Microsoft.OpenApi
                 // summary and description are in 3.1 but not in 3.0
                 w.WriteProperty(OpenApiConstants.Summary, Summary);
                 w.WriteProperty(OpenApiConstants.Description, Description);
-                
-                // Additional schema metadata annotations in 3.1
-                w.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
-                w.WriteProperty(OpenApiConstants.Title, Title);
-                w.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
-                w.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
-                w.WriteProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
-                if (Examples != null && Examples.Any())
-                {
-                    w.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => w.WriteAny(e));
-                }
             });
         }
 
@@ -354,7 +303,6 @@ namespace Microsoft.OpenApi
             // Summary and Description
             var description = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Description);
             var summary = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Summary);
-            var title = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Title);
 
             if (!string.IsNullOrEmpty(description))
             {
@@ -363,54 +311,6 @@ namespace Microsoft.OpenApi
             if (!string.IsNullOrEmpty(summary))
             {
                 Summary = summary;
-            }
-            if (!string.IsNullOrEmpty(title))
-            {
-                Title = title;
-            }
-
-            // Boolean properties
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Deprecated, out var deprecatedNode) && deprecatedNode is JsonValue deprecatedValue)
-            {
-                if (deprecatedValue.TryGetValue<bool>(out var deprecated))
-                {
-                    Deprecated = deprecated;
-                }
-            }
-
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.ReadOnly, out var readOnlyNode) && readOnlyNode is JsonValue readOnlyValue)
-            {
-                if (readOnlyValue.TryGetValue<bool>(out var readOnly))
-                {
-                    ReadOnly = readOnly;
-                }
-            }
-
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.WriteOnly, out var writeOnlyNode) && writeOnlyNode is JsonValue writeOnlyValue)
-            {
-                if (writeOnlyValue.TryGetValue<bool>(out var writeOnly))
-                {
-                    WriteOnly = writeOnly;
-                }
-            }
-
-            // Default value
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Default, out var defaultNode))
-            {
-                Default = defaultNode;
-            }
-
-            // Examples
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Examples, out var examplesNode) && examplesNode is JsonArray examplesArray)
-            {
-                Examples = new List<JsonNode>();
-                foreach (var example in examplesArray)
-                {
-                    if (example != null)
-                    {
-                        Examples.Add(example);
-                    }
-                }
             }
         }
 
