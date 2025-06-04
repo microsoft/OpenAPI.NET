@@ -437,7 +437,9 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            var enumValue = !string.IsNullOrEmpty(Const) && version < OpenApiSpecVersion.OpenApi3_1
+            var enumValue = (Enum == null || Enum.Count == 0)
+                && !string.IsNullOrEmpty(Const) 
+                && version < OpenApiSpecVersion.OpenApi3_1
                 ? new List<JsonNode> { JsonValue.Create(Const)! }
                 : Enum;
             writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
@@ -690,7 +692,7 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            var enumValue = !string.IsNullOrEmpty(Const)
+            var enumValue = (Enum == null || Enum.Count == 0) && !string.IsNullOrEmpty(Const)
                 ? new List<JsonNode> { JsonValue.Create(Const)! }
                 : Enum;
             writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));

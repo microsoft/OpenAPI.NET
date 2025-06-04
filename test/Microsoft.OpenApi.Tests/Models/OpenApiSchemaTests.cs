@@ -659,7 +659,8 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             var v3Node = JsonNode.Parse(actual);
-            Assert.True(v3Node!["enum"] is JsonArray singleEnum && singleEnum.Count == 1 && singleEnum[0]?.ToString() == "foo");
+            Assert.NotNull(v3Node);
+            Assert.True(v3Node["enum"] is JsonArray singleEnum && singleEnum.Count == 1 && singleEnum[0]?.ToString() == "foo");
             Assert.False(v3Node.AsObject().ContainsKey("const"));
         }
 
@@ -678,7 +679,8 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             var v2Node = JsonNode.Parse(actual);
-            Assert.True(v2Node!["enum"] is JsonArray singleEnum && singleEnum.Count == 1 && singleEnum[0]?.ToString() == "foo");
+            Assert.NotNull(v2Node);
+            Assert.True(v2Node["enum"] is JsonArray singleEnum && singleEnum.Count == 1 && singleEnum[0]?.ToString() == "foo");
             Assert.False(v2Node.AsObject().ContainsKey("const"));
         }
 
