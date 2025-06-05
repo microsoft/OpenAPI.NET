@@ -8,8 +8,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Response Object Reference.
     /// </summary>
-    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse>, IOpenApiResponse
-    {
+    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, OpenApiReference>, IOpenApiResponse
+    {//TODO switch to the non summary version
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>

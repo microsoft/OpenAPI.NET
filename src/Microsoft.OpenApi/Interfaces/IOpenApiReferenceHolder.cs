@@ -8,7 +8,8 @@ namespace Microsoft.OpenApi
     /// </summary>
     /// <typeparam name="T">The type of the target being referenced</typeparam>
     /// <typeparam name="V">The type of the interface implemented by both the target and the reference type</typeparam>
-    public interface IOpenApiReferenceHolder<out T, V> : IOpenApiReferenceHolder where T : IOpenApiReferenceable, V
+    /// <typeparam name="U">The type for the reference holding the additional fields and annotations</typeparam>
+    public interface IOpenApiReferenceHolder<out T, V, U> : IOpenApiReferenceHolder<U> where T : IOpenApiReferenceable, V where U : OpenApiReference
     {
         /// <summary>
         /// Gets the resolved target object.
@@ -28,7 +29,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// A generic interface for OpenApiReferenceable objects that have a target.
     /// </summary>
-    public interface IOpenApiReferenceHolder : IOpenApiSerializable
+    public interface IOpenApiReferenceHolder<U> : IOpenApiSerializable where U : OpenApiReference
     {
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -38,6 +39,6 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Reference object.
         /// </summary>
-        OpenApiReference Reference { get; init; }
+        U Reference { get; init; }
     }
 }

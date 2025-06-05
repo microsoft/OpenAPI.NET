@@ -9,8 +9,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Request Body Object Reference.
     /// </summary>
-    public class OpenApiRequestBodyReference : BaseOpenApiReferenceHolder<OpenApiRequestBody, IOpenApiRequestBody>, IOpenApiRequestBody
-    {
+    public class OpenApiRequestBodyReference : BaseOpenApiReferenceHolder<OpenApiRequestBody, IOpenApiRequestBody, OpenApiReference>, IOpenApiRequestBody
+    {//TODO switch to the non summary version
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>

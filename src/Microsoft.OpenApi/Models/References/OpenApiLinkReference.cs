@@ -8,8 +8,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Link Object Reference.
     /// </summary>
-    public class OpenApiLinkReference : BaseOpenApiReferenceHolder<OpenApiLink, IOpenApiLink>, IOpenApiLink
-    {
+    public class OpenApiLinkReference : BaseOpenApiReferenceHolder<OpenApiLink, IOpenApiLink, OpenApiReference>, IOpenApiLink
+    {//TODO switch to the non summary version
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>

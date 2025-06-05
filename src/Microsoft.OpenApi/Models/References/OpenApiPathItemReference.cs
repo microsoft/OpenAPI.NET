@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Path Item Object Reference: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem>, IOpenApiPathItem
+    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem, OpenApiReference>, IOpenApiPathItem
     {
 
         /// <summary>

@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi
     /// Schema reference information that includes metadata annotations from JSON Schema 2020-12.
     /// This class extends OpenApiReference to provide schema-specific metadata override capabilities.
     /// </summary>
-    public class OpenApiSchemaReferenceInformation : OpenApiReference
+    public class JsonSchemaReference : OpenApiReference
     {
         /// <summary>
         /// A default value which by default SHOULD override that of the referenced component.
@@ -53,12 +53,12 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiSchemaReferenceInformation() { }
+        public JsonSchemaReference() { }
 
         /// <summary>
-        /// Initializes a copy instance of the <see cref="OpenApiSchemaReferenceInformation"/> object
+        /// Initializes a copy instance of the <see cref="JsonSchemaReference"/> object
         /// </summary>
-        public OpenApiSchemaReferenceInformation(OpenApiSchemaReferenceInformation reference) : base(reference)
+        public JsonSchemaReference(JsonSchemaReference reference) : base(reference)
         {
             Utils.CheckArgumentNull(reference);
             Default = reference.Default;
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiSchemaReferenceInformation"/> to Open Api v3.1.
+        /// Serialize <see cref="JsonSchemaReference"/> to Open Api v3.1.
         /// </summary>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {

@@ -9,8 +9,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Tag Object Reference
     /// </summary>
-    public class OpenApiTagReference : BaseOpenApiReferenceHolder<OpenApiTag, IOpenApiTag>, IOpenApiTag
-    {
+    public class OpenApiTagReference : BaseOpenApiReferenceHolder<OpenApiTag, IOpenApiTag, OpenApiReference>, IOpenApiTag
+    {//TODO switch to a reference kind that does not support additional fields
         /// <summary>
         /// Resolved target of the reference.
         /// </summary>

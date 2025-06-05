@@ -9,8 +9,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Security Scheme Object Reference.
     /// </summary>
-    public class OpenApiSecuritySchemeReference : BaseOpenApiReferenceHolder<OpenApiSecurityScheme, IOpenApiSecurityScheme>, IOpenApiSecurityScheme
-    {
+    public class OpenApiSecuritySchemeReference : BaseOpenApiReferenceHolder<OpenApiSecurityScheme, IOpenApiSecurityScheme, OpenApiReference>, IOpenApiSecurityScheme
+    { //TODO switch to the non summary version
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>

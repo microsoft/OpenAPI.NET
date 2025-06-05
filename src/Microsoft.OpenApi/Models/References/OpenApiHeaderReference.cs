@@ -9,8 +9,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Header Object Reference.
     /// </summary>
-    public class OpenApiHeaderReference : BaseOpenApiReferenceHolder<OpenApiHeader, IOpenApiHeader>, IOpenApiHeader
-    {
+    public class OpenApiHeaderReference : BaseOpenApiReferenceHolder<OpenApiHeader, IOpenApiHeader, OpenApiReference>, IOpenApiHeader
+    { //TODO switch to the non summary version
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>

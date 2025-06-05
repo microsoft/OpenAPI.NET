@@ -10,14 +10,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema>, IOpenApiSchema
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema
     {
-        private readonly OpenApiSchemaReferenceInformation _schemaReferenceInfo;
-
-        /// <summary>
-        /// The schema reference information containing metadata annotations
-        /// </summary>
-        public new OpenApiSchemaReferenceInformation Reference => _schemaReferenceInfo;
 
         /// <summary>
         /// Constructor initializing the reference object.
@@ -31,13 +25,6 @@ namespace Microsoft.OpenApi
         /// </param>
         public OpenApiSchemaReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null) : base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
         {
-            _schemaReferenceInfo = new OpenApiSchemaReferenceInformation
-            {
-                Id = referenceId,
-                HostDocument = hostDocument,
-                Type = ReferenceType.Schema,
-                ExternalResource = externalResource
-            };
         }
         /// <summary>
         /// Copy constructor
@@ -45,30 +32,20 @@ namespace Microsoft.OpenApi
         /// <param name="schema">The schema reference to copy</param>
         private OpenApiSchemaReference(OpenApiSchemaReference schema) : base(schema)
         {
-            _schemaReferenceInfo = new OpenApiSchemaReferenceInformation(schema._schemaReferenceInfo);
         }
 
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(_schemaReferenceInfo.Description) ? Target?.Description : _schemaReferenceInfo.Description;
-            set => _schemaReferenceInfo.Description = value;
-        }
-
-        /// <summary>
-        /// A short summary which by default SHOULD override that of the referenced component.
-        /// </summary>
-        public string? Summary
-        {
-            get => string.IsNullOrEmpty(_schemaReferenceInfo.Summary) ? null : _schemaReferenceInfo.Summary;
-            set => _schemaReferenceInfo.Summary = value;
+            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
         public string? Title
         {
-            get => string.IsNullOrEmpty(_schemaReferenceInfo.Title) ? Target?.Title : _schemaReferenceInfo.Title;
-            set => _schemaReferenceInfo.Title = value;
+            get => string.IsNullOrEmpty(Reference.Title) ? Target?.Title : Reference.Title;
+            set => Reference.Title = value;
         }
         /// <inheritdoc/>
         public Uri? Schema { get => Target?.Schema; }
@@ -109,20 +86,20 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public JsonNode? Default
         {
-            get => _schemaReferenceInfo.Default ?? Target?.Default;
-            set => _schemaReferenceInfo.Default = value;
+            get => Reference.Default ?? Target?.Default;
+            set => Reference.Default = value;
         }
         /// <inheritdoc/>
         public bool ReadOnly
         {
-            get => _schemaReferenceInfo.ReadOnly ?? Target?.ReadOnly ?? false;
-            set => _schemaReferenceInfo.ReadOnly = value;
+            get => Reference.ReadOnly ?? Target?.ReadOnly ?? false;
+            set => Reference.ReadOnly = value;
         }
         /// <inheritdoc/>
         public bool WriteOnly
         {
-            get => _schemaReferenceInfo.WriteOnly ?? Target?.WriteOnly ?? false;
-            set => _schemaReferenceInfo.WriteOnly = value;
+            get => Reference.WriteOnly ?? Target?.WriteOnly ?? false;
+            set => Reference.WriteOnly = value;
         }
         /// <inheritdoc/>
         public IList<IOpenApiSchema>? AllOf { get => Target?.AllOf; }
@@ -161,8 +138,8 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public IList<JsonNode>? Examples
         {
-            get => _schemaReferenceInfo.Examples ?? Target?.Examples;
-            set => _schemaReferenceInfo.Examples = value;
+            get => Reference.Examples ?? Target?.Examples;
+            set => Reference.Examples = value;
         }
         /// <inheritdoc/>
         public IList<JsonNode>? Enum { get => Target?.Enum; }
@@ -173,8 +150,8 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public bool Deprecated
         {
-            get => _schemaReferenceInfo.Deprecated ?? Target?.Deprecated ?? false;
-            set => _schemaReferenceInfo.Deprecated = value;
+            get => Reference.Deprecated ?? Target?.Deprecated ?? false;
+            set => Reference.Deprecated = value;
         }
         /// <inheritdoc/>
         public OpenApiXml? Xml { get => Target?.Xml; }
@@ -196,7 +173,7 @@ namespace Microsoft.OpenApi
                 {
                     CopyReferenceAsTargetElementWithOverrides(s).SerializeAsV31(w);
                 }
-                else if (element is OpenApiSchemaReferenceInformation schemaRefInfo)
+                else if (element is JsonSchemaReference schemaRefInfo)
                 {
                     schemaRefInfo.SerializeAsV31(w);
                 }
@@ -219,15 +196,15 @@ namespace Microsoft.OpenApi
         }
         private void SerializeAsWithoutLoops(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> action)
         {
-            if (!writer.GetSettings().ShouldInlineReference(_schemaReferenceInfo))
+            if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
-                action(writer, _schemaReferenceInfo);
+                action(writer, Reference);
             }
             // If Loop is detected then just Serialize as a reference.
             else if (!writer.GetSettings().LoopDetector.PushLoop<IOpenApiSchema>(this))
             {
                 writer.GetSettings().LoopDetector.SaveLoop<IOpenApiSchema>(this);
-                action(writer, _schemaReferenceInfo);
+                action(writer, Reference);
             }
             else
             {

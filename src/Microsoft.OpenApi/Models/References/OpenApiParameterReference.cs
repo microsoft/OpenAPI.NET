@@ -9,8 +9,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter>, IOpenApiParameter
-    {
+    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter, OpenApiReference>, IOpenApiParameter
+    {//TODO switch to the non summary version
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>

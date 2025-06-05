@@ -6,7 +6,8 @@ namespace Microsoft.OpenApi;
 /// </summary>
 /// <typeparam name="T">The concrete class implementation type for the model.</typeparam>
 /// <typeparam name="V">The interface type for the model.</typeparam>
-public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiReferenceable, IOpenApiSerializable
+/// <typeparam name="U">The type for the reference holding the additional fields and annotations</typeparam>
+public abstract class BaseOpenApiReferenceHolder<T, V, U> : IOpenApiReferenceHolder<T, V, U> where T : class, IOpenApiReferenceable, V where V : IOpenApiReferenceable, IOpenApiSerializable where U : OpenApiReference, new()
 {
     /// <inheritdoc/>
     public virtual V? Target
@@ -23,7 +24,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         get
         {
             return Target switch {
-                BaseOpenApiReferenceHolder<T, V> recursiveTarget => recursiveTarget.RecursiveTarget,
+                BaseOpenApiReferenceHolder<T, V, U> recursiveTarget => recursiveTarget.RecursiveTarget,
                 T concrete => concrete,
                 _ => null
             };
@@ -34,7 +35,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// Copy constructor
     /// </summary>
     /// <param name="source">The parameter reference to copy</param>
-    protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, V> source)
+    protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, V, U> source)
     {
         Utils.CheckArgumentNull(source);
         Reference = new(source.Reference);
@@ -58,7 +59,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         // we're not checking for null hostDocument as it's optional and can be set via additional methods by a walker
         // this way object initialization of a whole document is supported
 
-        Reference = new OpenApiReference()
+        Reference = new U()
         {
             Id = referenceId,
             HostDocument = hostDocument,
@@ -71,10 +72,10 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
 
 #if NETSTANDARD2_1_OR_GREATER
     /// <inheritdoc/>
-    public required OpenApiReference Reference { get; init; }
+    public required U Reference { get; init; }
 #else
     /// <inheritdoc/>
-    public OpenApiReference Reference { get; init; }
+    public U Reference { get; init; }
 #endif
     /// <inheritdoc/>
     public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
