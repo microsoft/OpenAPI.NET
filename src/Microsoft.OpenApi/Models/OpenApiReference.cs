@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
@@ -165,7 +164,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.1.
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, w =>
             {
@@ -178,7 +177,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer);
         }
@@ -212,7 +211,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -296,7 +295,7 @@ namespace Microsoft.OpenApi
         }
         private static string? GetPropertyValueFromNode(JsonObject jsonObject, string key) =>
         jsonObject.TryGetPropertyValue(key, out var valueNode) && valueNode is JsonValue valueCast && valueCast.TryGetValue<string>(out var strValue) ? strValue : null;
-        internal void SetMetadataFromMapNode(MapNode mapNode)
+        internal virtual void SetMetadataFromMapNode(MapNode mapNode)
         {
             if (mapNode.JsonNode is not JsonObject jsonObject) return;
 

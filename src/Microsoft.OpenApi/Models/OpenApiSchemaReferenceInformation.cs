@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Serialize <see cref="OpenApiSchemaReferenceInformation"/> to Open Api v3.1.
         /// </summary>
-        public new void SerializeAsV31(IOpenApiWriter writer)
+        public override void SerializeAsV31(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Sets metadata fields from a JSON node during parsing
         /// </summary>
-        internal new void SetMetadataFromMapNode(MapNode mapNode)
+        internal override void SetMetadataFromMapNode(MapNode mapNode)
         {
             base.SetMetadataFromMapNode(mapNode);
             
@@ -131,28 +131,19 @@ namespace Microsoft.OpenApi
             }
 
             // Boolean properties
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Deprecated, out var deprecatedNode) && deprecatedNode is JsonValue deprecatedValue)
+            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Deprecated, out var deprecatedNode) && deprecatedNode is JsonValue deprecatedValue && deprecatedValue.TryGetValue<bool>(out var deprecated))
             {
-                if (deprecatedValue.TryGetValue<bool>(out var deprecated))
-                {
-                    Deprecated = deprecated;
-                }
+                Deprecated = deprecated;
             }
 
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.ReadOnly, out var readOnlyNode) && readOnlyNode is JsonValue readOnlyValue)
+            if (jsonObject.TryGetPropertyValue(OpenApiConstants.ReadOnly, out var readOnlyNode) && readOnlyNode is JsonValue readOnlyValue && readOnlyValue.TryGetValue<bool>(out var readOnly))
             {
-                if (readOnlyValue.TryGetValue<bool>(out var readOnly))
-                {
-                    ReadOnly = readOnly;
-                }
+                ReadOnly = readOnly;
             }
 
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.WriteOnly, out var writeOnlyNode) && writeOnlyNode is JsonValue writeOnlyValue)
+            if (jsonObject.TryGetPropertyValue(OpenApiConstants.WriteOnly, out var writeOnlyNode) && writeOnlyNode is JsonValue writeOnlyValue && writeOnlyValue.TryGetValue<bool>(out var writeOnly))
             {
-                if (writeOnlyValue.TryGetValue<bool>(out var writeOnly))
-                {
-                    WriteOnly = writeOnly;
-                }
+                WriteOnly = writeOnly;
             }
 
             // Default value
