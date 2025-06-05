@@ -589,7 +589,7 @@ namespace Microsoft.OpenApi
                     // Enables setting the complete JSON path for nested subschemas e.g. #/components/schemas/person/properties/address
                     if (useExternal)
                     {
-                        var relPathSegment = referenceV3.Split(new char[] {'#'}, StringSplitOptions.RemoveEmptyEntries)[1];
+                        var relPathSegment = referenceV3.Split(['#'], StringSplitOptions.RemoveEmptyEntries)[1];
                         relativePath = $"#{relPathSegment}";
                     }
                     else
@@ -625,7 +625,7 @@ namespace Microsoft.OpenApi
 
             if (fragment.StartsWith("/components/schemas/", StringComparison.OrdinalIgnoreCase))
             {
-                var segments = fragment.Split(new char[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+                var segments = fragment.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
 
                 // Expect exactly 3 segments for root-level schema: ["components", "schemas", "person"]
                 // Anything longer means it's a subcomponent.
