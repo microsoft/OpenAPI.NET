@@ -18,13 +18,17 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            if (referenceHolder is IOpenApiReferenceHolder<OpenApiReference> { Reference: OpenApiReference reference })
+            if (referenceHolder is IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference reference })
             {
                 reference.EnsureHostDocumentIsSet(_currentDocument);
             }
             else if (referenceHolder is IOpenApiReferenceHolder<JsonSchemaReference> { Reference: JsonSchemaReference jsonSchemaReference })
             {
                 jsonSchemaReference.EnsureHostDocumentIsSet(_currentDocument);
+            }
+            else if (referenceHolder is IOpenApiReferenceHolder<OpenApiReferenceWithSummary> { Reference: OpenApiReferenceWithSummary withSummaryReference })
+            {
+                withSummaryReference.EnsureHostDocumentIsSet(_currentDocument);
             }
         }
     }

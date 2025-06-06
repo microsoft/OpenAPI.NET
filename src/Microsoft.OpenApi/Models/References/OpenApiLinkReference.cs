@@ -8,8 +8,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Link Object Reference.
     /// </summary>
-    public class OpenApiLinkReference : BaseOpenApiReferenceHolder<OpenApiLink, IOpenApiLink, OpenApiReference>, IOpenApiLink
-    {//TODO switch to the non summary version
+    public class OpenApiLinkReference : BaseOpenApiReferenceHolder<OpenApiLink, IOpenApiLink, BaseOpenApiReference>, IOpenApiLink
+    {
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -74,9 +74,9 @@ namespace Microsoft.OpenApi
             return new OpenApiLinkReference(this);
         }
         /// <inheritdoc/>
-        protected override OpenApiReference CopyReference(OpenApiReference sourceReference)
+        protected override BaseOpenApiReference CopyReference(BaseOpenApiReference sourceReference)
         {
-            return new OpenApiReference(sourceReference);
+            return new BaseOpenApiReference(sourceReference);
         }
     }
 }

@@ -9,8 +9,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter, OpenApiReference>, IOpenApiParameter
-    {//TODO switch to the non summary version
+    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter, BaseOpenApiReference>, IOpenApiParameter
+    {
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -92,9 +92,9 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
-        protected override OpenApiReference CopyReference(OpenApiReference sourceReference)
+        protected override BaseOpenApiReference CopyReference(BaseOpenApiReference sourceReference)
         {
-            return new OpenApiReference(sourceReference);
+            return new BaseOpenApiReference(sourceReference);
         }
     }
 }

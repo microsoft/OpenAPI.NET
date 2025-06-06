@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models
             string id)
         {
             // Arrange & Act
-            var reference = new OpenApiReference
+            var reference = new BaseOpenApiReference
             {
                 Type = type,
                 Id = id
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SettingExternalReferenceV3ShouldSucceed(string expected, string externalResource, string id, ReferenceType type)
         {
             // Arrange & Act
-            var reference = new OpenApiReference
+            var reference = new BaseOpenApiReference
             {
                 ExternalResource = externalResource,
                 Type = type,
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SettingExternalReferenceV2ShouldSucceed(string expected, string externalResource, string id, ReferenceType type)
         {
             // Arrange & Act
-            var reference = new OpenApiReference
+            var reference = new BaseOpenApiReference
             {
                 ExternalResource = externalResource,
                 Type = type,
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeSchemaReferenceAsJsonV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference { Type = ReferenceType.Schema, Id = "Pet" };
+            var reference = new BaseOpenApiReference { Type = ReferenceType.Schema, Id = "Pet" };
             var expected =
                 """
                 {
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeHttpSchemaReferenceAsJsonV31Works(string id, string referenceV3)
         {
             // Arrange
-            var reference = new OpenApiReference { Type = ReferenceType.Schema, Id = id };
+            var reference = new BaseOpenApiReference { Type = ReferenceType.Schema, Id = id };
             var expected =
                 $$"""
                 {
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeSchemaReferenceAsYamlV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference
+            var reference = new BaseOpenApiReference
             {
                 Type = ReferenceType.Schema,
                 Id = "Pet"
@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeSchemaReferenceAsJsonV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference
+            var reference = new BaseOpenApiReference
             {
                 Type = ReferenceType.Schema,
                 Id = "Pet"
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeSchemaReferenceAsYamlV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference
+            var reference = new BaseOpenApiReference
             {
                 Type = ReferenceType.Schema,
                 Id = "Pet"
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeExternalReferenceAsJsonV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference
+            var reference = new BaseOpenApiReference
             {
                 ExternalResource = "main.json",
                 Type = ReferenceType.Schema,
@@ -221,7 +221,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeExternalReferenceAsYamlV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference
+            var reference = new BaseOpenApiReference
             {
                 ExternalResource = "main.json",
                 Type = ReferenceType.Schema,
@@ -240,7 +240,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeExternalReferenceAsJsonV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference { ExternalResource = "main.json", Type = ReferenceType.Schema, Id = "Pets" };
+            var reference = new BaseOpenApiReference { ExternalResource = "main.json", Type = ReferenceType.Schema, Id = "Pets" };
 
             var expected =
                 """
@@ -262,7 +262,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeExternalReferenceAsYamlV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference { ExternalResource = "main.json", Type = ReferenceType.Schema, Id = "Pets" };
+            var reference = new BaseOpenApiReference { ExternalResource = "main.json", Type = ReferenceType.Schema, Id = "Pets" };
             var expected = @"$ref: main.json#/components/schemas/Pets";
 
             // Act

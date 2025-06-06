@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <typeparam name="T">The type of the target being referenced</typeparam>
     /// <typeparam name="U">The type of the interface implemented by both the target and the reference type</typeparam>
     /// <typeparam name="V">The type for the reference holding the additional fields and annotations</typeparam>
-    public interface IOpenApiReferenceHolder<out T, U, V> : IOpenApiReferenceHolder<V> where T : IOpenApiReferenceable, U where V : OpenApiReference, new()
+    public interface IOpenApiReferenceHolder<out T, U, V> : IOpenApiReferenceHolder<V> where T : IOpenApiReferenceable, U where V : BaseOpenApiReference, new()
     {
         /// <summary>
         /// Gets the resolved target object.
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi
     /// A generic interface for OpenApiReferenceable objects that have a target.
     /// </summary>
     /// <typeparam name="V">The type for the reference holding the additional fields and annotations</typeparam>
-    public interface IOpenApiReferenceHolder<V> : IOpenApiReferenceHolder where V : OpenApiReference, new()
+    public interface IOpenApiReferenceHolder<V> : IOpenApiReferenceHolder where V : BaseOpenApiReference, new()
     {
         /// <summary>
         /// Reference object.

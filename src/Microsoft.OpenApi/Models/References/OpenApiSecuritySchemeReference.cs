@@ -9,8 +9,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Security Scheme Object Reference.
     /// </summary>
-    public class OpenApiSecuritySchemeReference : BaseOpenApiReferenceHolder<OpenApiSecurityScheme, IOpenApiSecurityScheme, OpenApiReference>, IOpenApiSecurityScheme
-    { //TODO switch to the non summary version
+    public class OpenApiSecuritySchemeReference : BaseOpenApiReferenceHolder<OpenApiSecurityScheme, IOpenApiSecurityScheme, BaseOpenApiReference>, IOpenApiSecurityScheme
+    {
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -72,9 +72,9 @@ namespace Microsoft.OpenApi
             return new OpenApiSecuritySchemeReference(this);
         }
         /// <inheritdoc/>
-        protected override OpenApiReference CopyReference(OpenApiReference sourceReference)
+        protected override BaseOpenApiReference CopyReference(BaseOpenApiReference sourceReference)
         {
-            return new OpenApiReference(sourceReference);
+            return new BaseOpenApiReference(sourceReference);
         }
     }
 }

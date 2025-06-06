@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Callback Object Reference: A reference to a map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallbackReference : BaseOpenApiReferenceHolder<OpenApiCallback, IOpenApiCallback, OpenApiReference>, IOpenApiCallback
+    public class OpenApiCallbackReference : BaseOpenApiReferenceHolder<OpenApiCallback, IOpenApiCallback, BaseOpenApiReference>, IOpenApiCallback
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -57,9 +57,9 @@ namespace Microsoft.OpenApi
             return new OpenApiCallbackReference(this);
         }
         /// <inheritdoc/>
-        protected override OpenApiReference CopyReference(OpenApiReference sourceReference)
+        protected override BaseOpenApiReference CopyReference(BaseOpenApiReference sourceReference)
         {
-            return new OpenApiReference(sourceReference);
+            return new BaseOpenApiReference(sourceReference);
         }
     }
 }

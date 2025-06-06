@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi;
 /// <typeparam name="T">The concrete class implementation type for the model.</typeparam>
 /// <typeparam name="U">The interface type for the model.</typeparam>
 /// <typeparam name="V">The type for the reference holding the additional fields and annotations</typeparam>
-public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHolder<T, U, V> where T : class, IOpenApiReferenceable, U where U : IOpenApiReferenceable, IOpenApiSerializable where V : OpenApiReference, new()
+public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHolder<T, U, V> where T : class, IOpenApiReferenceable, U where U : IOpenApiReferenceable, IOpenApiSerializable where V : BaseOpenApiReference, new()
 {
     /// <inheritdoc/>
     public virtual U? Target

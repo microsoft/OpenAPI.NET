@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         public bool InlineExternalReferences { get; set; }
 
-        internal bool ShouldInlineReference(OpenApiReference reference)
+        internal bool ShouldInlineReference(BaseOpenApiReference reference)
         {
             return (reference.IsLocal && InlineLocalReferences)
                              || (reference.IsExternal && InlineExternalReferences);

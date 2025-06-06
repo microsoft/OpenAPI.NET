@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Path Item Object Reference: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem, OpenApiReference>, IOpenApiPathItem
+    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem, OpenApiReferenceWithSummary>, IOpenApiPathItem
     {
 
         /// <summary>
@@ -79,9 +79,9 @@ namespace Microsoft.OpenApi
             Reference.SerializeAsV2(writer);
         }
         /// <inheritdoc/>
-        protected override OpenApiReference CopyReference(OpenApiReference sourceReference)
+        protected override OpenApiReferenceWithSummary CopyReference(OpenApiReferenceWithSummary sourceReference)
         {
-            return new OpenApiReference(sourceReference);
+            return new OpenApiReferenceWithSummary(sourceReference);
         }
     }
 }

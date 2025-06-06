@@ -10,12 +10,12 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     internal class OpenApiRemoteReferenceCollector : OpenApiVisitorBase
     {
-        private readonly Dictionary<string, OpenApiReference> _references = new();
+        private readonly Dictionary<string, BaseOpenApiReference> _references = new();
 
         /// <summary>
         /// List of all external references collected from OpenApiDocument
         /// </summary>
-        public IEnumerable<OpenApiReference> References
+        public IEnumerable<BaseOpenApiReference> References
         {
             get
             {
@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            if (referenceHolder is IOpenApiReferenceHolder<OpenApiReference> { Reference: OpenApiReference reference })
+            if (referenceHolder is IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference reference })
             {
                 AddExternalReferences(reference);
             }
@@ -34,12 +34,16 @@ namespace Microsoft.OpenApi.Reader
             {
                 AddExternalReferences(jsonSchemaReference);
             }
+            else if (referenceHolder is IOpenApiReferenceHolder<OpenApiReferenceWithSummary> { Reference: OpenApiReferenceWithSummary withSummaryReference })
+            {
+                AddExternalReferences(withSummaryReference);
+            }
         }
 
         /// <summary>
         /// Collect external references
         /// </summary>
-        private void AddExternalReferences(OpenApiReference? reference)
+        private void AddExternalReferences(BaseOpenApiReference? reference)
         {
             if (reference is {IsExternal: true} && reference.ExternalResource is {} externalResource&&
                 !_references.ContainsKey(externalResource))
