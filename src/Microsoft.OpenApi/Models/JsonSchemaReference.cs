@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi;
 /// Schema reference information that includes metadata annotations from JSON Schema 2020-12.
 /// This class extends OpenApiReference to provide schema-specific metadata override capabilities.
 /// </summary>
-public class JsonSchemaReference : BaseOpenApiReference
+public class JsonSchemaReference : OpenApiReferenceWithDescription
 {
     /// <summary>
     /// A default value which by default SHOULD override that of the referenced component.

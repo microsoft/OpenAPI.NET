@@ -11,17 +11,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// A simple object to allow referencing other components in the specification, internally and externally.
     /// </summary>
-    public class BaseOpenApiReference : IOpenApiSerializable, IOpenApiDescribedElement
+    public class BaseOpenApiReference : IOpenApiSerializable
     {
-        /// <summary>
-        /// A description which by default SHOULD override that of the referenced component.
-        /// CommonMark syntax MAY be used for rich text representation.
-        /// If the referenced object-type does not allow a description field, then this field has no effect.
-        /// </summary>
-        public string? Description { get; set; }
-
-
-
         /// <summary>
         /// External resource in the reference.
         /// It maybe:
@@ -147,7 +138,6 @@ namespace Microsoft.OpenApi
         public BaseOpenApiReference(BaseOpenApiReference reference)
         {
             Utils.CheckArgumentNull(reference);
-            Description = reference.Description;
             ExternalResource = reference.ExternalResource;
             Type = reference.Type;
             Id = reference.Id;
@@ -166,8 +156,7 @@ namespace Microsoft.OpenApi
         /// <param name="writer"></param>
         protected virtual void SerializeAdditionalV31Properties(IOpenApiWriter writer)
         {
-            // summary and description are in 3.1 but not in 3.0
-            writer.WriteProperty(OpenApiConstants.Description, Description);
+            // noop for the base type
         }
 
         /// <inheritdoc/>
@@ -305,13 +294,7 @@ namespace Microsoft.OpenApi
         /// <param name="jsonObject">The object to get the data from</param>
         protected virtual void SetAdditional31MetadataFromMapNode(JsonObject jsonObject)
         {
-            // Summary and Description
-            var description = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Description);
-
-            if (!string.IsNullOrEmpty(description))
-            {
-                Description = description;
-            }
+            // noop for the base type
         }
 
         internal void SetJsonPointerPath(string pointer, string nodeLocation)

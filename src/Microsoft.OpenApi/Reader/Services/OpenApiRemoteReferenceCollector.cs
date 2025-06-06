@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Reader
             {
                 AddExternalReferences(jsonSchemaReference);
             }
-            else if (referenceHolder is IOpenApiReferenceHolder<OpenApiReferenceWithSummary> { Reference: OpenApiReferenceWithSummary withSummaryReference })
+            else if (referenceHolder is IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummaryReference })
             {
                 AddExternalReferences(withSummaryReference);
             }

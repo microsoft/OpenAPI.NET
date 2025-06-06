@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// Tag Object Reference
     /// </summary>
     public class OpenApiTagReference : BaseOpenApiReferenceHolder<OpenApiTag, IOpenApiTag, BaseOpenApiReference>, IOpenApiTag
-    {//TODO switch to a reference kind that does not support additional fields
+    {
         /// <summary>
         /// Resolved target of the reference.
         /// </summary>
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            get => Target?.Description;
         }
 
         /// <inheritdoc/>

@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Response Object Reference.
     /// </summary>
-    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, BaseOpenApiReference>, IOpenApiResponse
+    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, OpenApiReferenceWithDescription>, IOpenApiResponse
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -63,9 +63,9 @@ namespace Microsoft.OpenApi
             return new OpenApiResponseReference(this);
         }
         /// <inheritdoc/>
-        protected override BaseOpenApiReference CopyReference(BaseOpenApiReference sourceReference)
+        protected override OpenApiReferenceWithDescription CopyReference(OpenApiReferenceWithDescription sourceReference)
         {
-            return new BaseOpenApiReference(sourceReference);
+            return new OpenApiReferenceWithDescription(sourceReference);
         }
     }
 }

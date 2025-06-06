@@ -1,17 +1,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Reader;
 
 namespace Microsoft.OpenApi;
 
 /// <summary>
 /// OpenApiReferenceWithSummary is a reference to an OpenAPI component that includes a summary.
 /// </summary>
-public class OpenApiReferenceWithSummary : BaseOpenApiReference, IOpenApiSummarizedElement
+public class OpenApiReferenceWithDescriptionAndSummary : OpenApiReferenceWithDescription, IOpenApiSummarizedElement
 {
     /// <summary>
     /// A short summary which by default SHOULD override that of the referenced component.
@@ -22,12 +19,12 @@ public class OpenApiReferenceWithSummary : BaseOpenApiReference, IOpenApiSummari
     /// <summary>
     /// Parameterless constructor
     /// </summary>
-    public OpenApiReferenceWithSummary() : base() { }
+    public OpenApiReferenceWithDescriptionAndSummary() : base() { }
 
     /// <summary>
-    /// Initializes a copy instance of the <see cref="OpenApiReferenceWithSummary"/> object
+    /// Initializes a copy instance of the <see cref="OpenApiReferenceWithDescriptionAndSummary"/> object
     /// </summary>
-    public OpenApiReferenceWithSummary(OpenApiReferenceWithSummary reference) : base(reference)
+    public OpenApiReferenceWithDescriptionAndSummary(OpenApiReferenceWithDescriptionAndSummary reference) : base(reference)
     {
         Utils.CheckArgumentNull(reference);
         Summary = reference.Summary;
@@ -43,7 +40,7 @@ public class OpenApiReferenceWithSummary : BaseOpenApiReference, IOpenApiSummari
     protected override void SetAdditional31MetadataFromMapNode(JsonObject jsonObject)
     {
         base.SetAdditional31MetadataFromMapNode(jsonObject);
-        // Summary and Description
+        // Summary
         var summary = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Summary);
 
         if (!string.IsNullOrEmpty(summary))

@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Request Body Object Reference.
     /// </summary>
-    public class OpenApiRequestBodyReference : BaseOpenApiReferenceHolder<OpenApiRequestBody, IOpenApiRequestBody, BaseOpenApiReference>, IOpenApiRequestBody
+    public class OpenApiRequestBodyReference : BaseOpenApiReferenceHolder<OpenApiRequestBody, IOpenApiRequestBody, OpenApiReferenceWithDescription>, IOpenApiRequestBody
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -89,9 +89,9 @@ namespace Microsoft.OpenApi
             return new OpenApiRequestBodyReference(this);
         }
         /// <inheritdoc/>
-        protected override BaseOpenApiReference CopyReference(BaseOpenApiReference sourceReference)
+        protected override OpenApiReferenceWithDescription CopyReference(OpenApiReferenceWithDescription sourceReference)
         {
-            return new BaseOpenApiReference(sourceReference);
+            return new OpenApiReferenceWithDescription(sourceReference);
         }
     }
 }

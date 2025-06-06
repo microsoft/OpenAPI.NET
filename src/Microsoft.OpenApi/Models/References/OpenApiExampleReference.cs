@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Example Object Reference.
     /// </summary>
-    public class OpenApiExampleReference : BaseOpenApiReferenceHolder<OpenApiExample, IOpenApiExample, OpenApiReferenceWithSummary>, IOpenApiExample
+    public class OpenApiExampleReference : BaseOpenApiReferenceHolder<OpenApiExample, IOpenApiExample, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiExample
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -74,9 +74,9 @@ namespace Microsoft.OpenApi
             return new OpenApiExampleReference(this);
         }
         /// <inheritdoc/>
-        protected override OpenApiReferenceWithSummary CopyReference(OpenApiReferenceWithSummary sourceReference)
+        protected override OpenApiReferenceWithDescriptionAndSummary CopyReference(OpenApiReferenceWithDescriptionAndSummary sourceReference)
         {
-            return new OpenApiReferenceWithSummary(sourceReference);
+            return new OpenApiReferenceWithDescriptionAndSummary(sourceReference);
         }
     }
 }

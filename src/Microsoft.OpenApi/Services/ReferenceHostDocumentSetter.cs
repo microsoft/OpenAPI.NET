@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi
             {
                 jsonSchemaReference.EnsureHostDocumentIsSet(_currentDocument);
             }
-            else if (referenceHolder is IOpenApiReferenceHolder<OpenApiReferenceWithSummary> { Reference: OpenApiReferenceWithSummary withSummaryReference })
+            else if (referenceHolder is IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummaryReference })
             {
                 withSummaryReference.EnsureHostDocumentIsSet(_currentDocument);
             }
