@@ -167,21 +167,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeAsWithoutLoops(writer, (w, element) =>
-            {
-                if (element is IOpenApiSchema s)
-                {
-                    CopyReferenceAsTargetElementWithOverrides(s).SerializeAsV31(w);
-                }
-                else if (element is JsonSchemaReference schemaRefInfo)
-                {
-                    schemaRefInfo.SerializeAsV31(w);
-                }
-                else
-                {
-                    element.SerializeAsV31(w);
-                }
-            });
+            SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV31(w));
         }
 
         /// <inheritdoc/>
