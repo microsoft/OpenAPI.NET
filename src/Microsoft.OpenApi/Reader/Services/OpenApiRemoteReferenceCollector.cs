@@ -26,7 +26,14 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            AddExternalReferences(referenceHolder.Reference);
+            if (referenceHolder is IOpenApiReferenceHolder<OpenApiReference> { Reference: OpenApiReference reference })
+            {
+                AddExternalReferences(reference);
+            }
+            else if (referenceHolder is IOpenApiReferenceHolder<JsonSchemaReference> { Reference: JsonSchemaReference jsonSchemaReference })
+            {
+                AddExternalReferences(jsonSchemaReference);
+            }
         }
 
         /// <summary>

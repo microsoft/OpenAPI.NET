@@ -5,17 +5,17 @@ namespace Microsoft.OpenApi;
 /// Base class for OpenApiReferenceHolder.
 /// </summary>
 /// <typeparam name="T">The concrete class implementation type for the model.</typeparam>
-/// <typeparam name="V">The interface type for the model.</typeparam>
-/// <typeparam name="U">The type for the reference holding the additional fields and annotations</typeparam>
-public abstract class BaseOpenApiReferenceHolder<T, V, U> : IOpenApiReferenceHolder<T, V, U> where T : class, IOpenApiReferenceable, V where V : IOpenApiReferenceable, IOpenApiSerializable where U : OpenApiReference, new()
+/// <typeparam name="U">The interface type for the model.</typeparam>
+/// <typeparam name="V">The type for the reference holding the additional fields and annotations</typeparam>
+public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHolder<T, U, V> where T : class, IOpenApiReferenceable, U where U : IOpenApiReferenceable, IOpenApiSerializable where V : OpenApiReference, new()
 {
     /// <inheritdoc/>
-    public virtual V? Target
+    public virtual U? Target
     {
         get
         {
             if (Reference.HostDocument is null) return default;
-            return Reference.HostDocument.ResolveReferenceTo<V>(Reference);
+            return Reference.HostDocument.ResolveReferenceTo<U>(Reference);
         }
     }
     /// <inheritdoc/>
@@ -24,7 +24,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V, U> : IOpenApiReferenceHol
         get
         {
             return Target switch {
-                BaseOpenApiReferenceHolder<T, V, U> recursiveTarget => recursiveTarget.RecursiveTarget,
+                BaseOpenApiReferenceHolder<T, U, V> recursiveTarget => recursiveTarget.RecursiveTarget,
                 T concrete => concrete,
                 _ => null
             };
@@ -35,7 +35,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V, U> : IOpenApiReferenceHol
     /// Copy constructor
     /// </summary>
     /// <param name="source">The parameter reference to copy</param>
-    protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, V, U> source)
+    protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, U, V> source)
     {
         Utils.CheckArgumentNull(source);
         Reference = new(source.Reference);
@@ -59,7 +59,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V, U> : IOpenApiReferenceHol
         // we're not checking for null hostDocument as it's optional and can be set via additional methods by a walker
         // this way object initialization of a whole document is supported
 
-        Reference = new U()
+        Reference = new V()
         {
             Id = referenceId,
             HostDocument = hostDocument,
@@ -75,10 +75,10 @@ public abstract class BaseOpenApiReferenceHolder<T, V, U> : IOpenApiReferenceHol
     public required U Reference { get; init; }
 #else
     /// <inheritdoc/>
-    public U Reference { get; init; }
+    public V Reference { get; init; }
 #endif
     /// <inheritdoc/>
-    public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
+    public abstract U CopyReferenceAsTargetElementWithOverrides(U source);
     /// <inheritdoc/>
     public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
@@ -126,7 +126,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V, U> : IOpenApiReferenceHol
     /// <param name="writer">The OpenApiWriter.</param>
     /// <param name="action">The action to serialize the target object.</param>
     private protected void SerializeInternal(IOpenApiWriter writer,
-        Action<IOpenApiWriter, V> action)
+        Action<IOpenApiWriter, U> action)
     {
         Utils.CheckArgumentNull(writer);
         if (Target is not null)
