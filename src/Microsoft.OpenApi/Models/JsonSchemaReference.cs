@@ -133,7 +133,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         // Examples
         if (jsonObject.TryGetPropertyValue(OpenApiConstants.Examples, out var examplesNode) && examplesNode is JsonArray examplesArray)
         {
-            Examples = examplesArray.Where(example => example != null).ToList();
+            Examples = examplesArray.OfType<JsonNode>().ToList();
         }
     }
 }
