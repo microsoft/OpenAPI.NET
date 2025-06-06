@@ -18,18 +18,15 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            if (referenceHolder is IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference reference })
+            var reference = referenceHolder switch
             {
-                reference.EnsureHostDocumentIsSet(_currentDocument);
-            }
-            else if (referenceHolder is IOpenApiReferenceHolder<JsonSchemaReference> { Reference: JsonSchemaReference jsonSchemaReference })
-            {
-                jsonSchemaReference.EnsureHostDocumentIsSet(_currentDocument);
-            }
-            else if (referenceHolder is IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummaryReference })
-            {
-                withSummaryReference.EnsureHostDocumentIsSet(_currentDocument);
-            }
+                IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummary } => withSummary,
+                IOpenApiReferenceHolder<OpenApiReferenceWithDescription> { Reference: OpenApiReferenceWithDescription withDescription } => withDescription,
+                IOpenApiReferenceHolder<JsonSchemaReference> { Reference: JsonSchemaReference jsonSchemaReference } => jsonSchemaReference,
+                IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference baseReference } => baseReference,
+                _ => throw new OpenApiException($"Unsupported reference holder type: {referenceHolder.GetType().FullName}")
+            };
+            reference.EnsureHostDocumentIsSet(_currentDocument);
         }
     }
 }

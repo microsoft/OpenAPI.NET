@@ -26,18 +26,15 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            if (referenceHolder is IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference reference })
+            var reference = referenceHolder switch
             {
-                AddExternalReferences(reference);
-            }
-            else if (referenceHolder is IOpenApiReferenceHolder<JsonSchemaReference> { Reference: JsonSchemaReference jsonSchemaReference })
-            {
-                AddExternalReferences(jsonSchemaReference);
-            }
-            else if (referenceHolder is IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummaryReference })
-            {
-                AddExternalReferences(withSummaryReference);
-            }
+                IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummary } => withSummary,
+                IOpenApiReferenceHolder<OpenApiReferenceWithDescription> { Reference: OpenApiReferenceWithDescription withDescription } => withDescription,
+                IOpenApiReferenceHolder<JsonSchemaReference> { Reference: JsonSchemaReference jsonSchemaReference } => jsonSchemaReference,
+                IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference baseReference } => baseReference,
+                _ => throw new OpenApiException($"Unsupported reference holder type: {referenceHolder.GetType().FullName}")
+            };
+            AddExternalReferences(reference);
         }
 
         /// <summary>
