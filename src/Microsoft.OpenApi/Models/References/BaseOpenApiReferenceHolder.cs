@@ -72,7 +72,7 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
 
 #if NETSTANDARD2_1_OR_GREATER
     /// <inheritdoc/>
-    public required U Reference { get; init; }
+    public required V Reference { get; init; }
 #else
     /// <inheritdoc/>
     public V Reference { get; init; }
