@@ -20,16 +20,16 @@ namespace Microsoft.OpenApi
         /// 1. an absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiCallbackReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Callback, externalResource)
+        public OpenApiCallbackReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null) : base(referenceId, hostDocument, ReferenceType.Callback, externalResource)
         {
         }
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="callback">The reference to copy</param>
-        private OpenApiCallbackReference(OpenApiCallbackReference callback):base(callback)
+        private OpenApiCallbackReference(OpenApiCallbackReference callback) : base(callback)
         {
-            
+
         }
 
         /// <inheritdoc/>
@@ -55,6 +55,11 @@ namespace Microsoft.OpenApi
         public IOpenApiCallback CreateShallowCopy()
         {
             return new OpenApiCallbackReference(this);
+        }
+        /// <inheritdoc/>
+        protected override OpenApiReference CopyReference(OpenApiReference sourceReference)
+        {
+            return new OpenApiReference(sourceReference);
         }
     }
 }

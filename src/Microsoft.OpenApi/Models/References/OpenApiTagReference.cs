@@ -32,16 +32,16 @@ namespace Microsoft.OpenApi
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiTagReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Tag, externalResource)
+        public OpenApiTagReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null) : base(referenceId, hostDocument, ReferenceType.Tag, externalResource)
         {
         }
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="openApiTagReference">The reference to copy</param>
-        private OpenApiTagReference(OpenApiTagReference openApiTagReference):base(openApiTagReference)
+        private OpenApiTagReference(OpenApiTagReference openApiTagReference) : base(openApiTagReference)
         {
-            
+
         }
 
         /// <inheritdoc/>
@@ -68,6 +68,11 @@ namespace Microsoft.OpenApi
         public IOpenApiTag CreateShallowCopy()
         {
             return new OpenApiTagReference(this);
+        }
+        /// <inheritdoc/>
+        protected override OpenApiReference CopyReference(OpenApiReference sourceReference)
+        {
+            return new OpenApiReference(sourceReference);
         }
     }
 }

@@ -59,7 +59,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
                 Deprecated = true,
                 Default = JsonValue.Create("override default"),
                 Examples = new List<JsonNode> { JsonValue.Create("override example") },
-                Summary = "Reference Summary"
             };
 
             // Assert
@@ -71,7 +70,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
             Assert.Equal("override default", schemaReference.Default?.GetValue<string>());
             Assert.Single(schemaReference.Examples);
             Assert.Equal("override example", schemaReference.Examples.First()?.GetValue<string>());
-            Assert.Equal("Reference Summary", schemaReference.Summary);
         }
 
         [Fact]
@@ -119,7 +117,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
             Assert.Equal("target default", schemaReference.Default?.GetValue<string>());
             Assert.Single(schemaReference.Examples);
             Assert.Equal("target example", schemaReference.Examples.First()?.GetValue<string>());
-            Assert.Null(schemaReference.Summary); // Summary has no target fallback
         }
 
         [Theory]
@@ -132,7 +129,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
             {
                 Title = "Reference Title",
                 Description = "Reference Description",
-                Summary = "Reference Summary",
                 ReadOnly = true,
                 WriteOnly = false,
                 Deprecated = true,
@@ -161,7 +157,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
             {
                 Title = "Reference Title",
                 Description = "Reference Description",
-                Summary = "Reference Summary",
                 ReadOnly = true,
                 WriteOnly = false,
                 Deprecated = true,
@@ -249,7 +244,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
             // Test that reference annotations override target values
             Assert.Equal("Pet Response Schema", schemaRef.Title);
             Assert.Equal("A pet object returned from the API", schemaRef.Description);
-            Assert.Equal("Pet Response", schemaRef.Summary);
             Assert.True(schemaRef.Deprecated);
             Assert.True(schemaRef.ReadOnly);
             Assert.False(schemaRef.WriteOnly);

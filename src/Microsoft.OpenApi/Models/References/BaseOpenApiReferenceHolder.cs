@@ -30,6 +30,12 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
             };
         }
     }
+    /// <summary>
+    /// Copy the reference as a target element with overrides.
+    /// </summary>
+    /// <param name="sourceReference">The source reference to copy</param>
+    /// <returns>The copy of the reference</returns>
+    protected abstract V CopyReference(V sourceReference);
 
     /// <summary>
     /// Copy constructor
@@ -38,7 +44,7 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
     protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, U, V> source)
     {
         Utils.CheckArgumentNull(source);
-        Reference = new(source.Reference);
+        Reference = CopyReference(source.Reference);
         //no need to copy summary and description as if they are not overridden, they will be fetched from the target
         //if they are, the reference copy will handle it
     }

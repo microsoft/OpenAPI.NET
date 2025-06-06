@@ -90,5 +90,11 @@ namespace Microsoft.OpenApi
         {
             return new OpenApiParameterReference(this);
         }
+
+        /// <inheritdoc/>
+        protected override OpenApiReference CopyReference(OpenApiReference sourceReference)
+        {
+            return new OpenApiReference(sourceReference);
+        }
     }
 }

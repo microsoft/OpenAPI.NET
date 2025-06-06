@@ -167,7 +167,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeAsWithoutLoops(writer, (w, element) => 
+            SerializeAsWithoutLoops(writer, (w, element) =>
             {
                 if (element is IOpenApiSchema s)
                 {
@@ -222,6 +222,11 @@ namespace Microsoft.OpenApi
         public IOpenApiSchema CreateShallowCopy()
         {
             return new OpenApiSchemaReference(this);
+        }
+        /// <inheritdoc/>
+        protected override JsonSchemaReference CopyReference(JsonSchemaReference sourceReference)
+        {
+            return new JsonSchemaReference(sourceReference);
         }
     }
 }
