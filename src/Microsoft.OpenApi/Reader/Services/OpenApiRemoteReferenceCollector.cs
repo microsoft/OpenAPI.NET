@@ -10,12 +10,12 @@ namespace Microsoft.OpenApi.Reader
     /// </summary>
     internal class OpenApiRemoteReferenceCollector : OpenApiVisitorBase
     {
-        private readonly Dictionary<string, OpenApiReference> _references = new();
+        private readonly Dictionary<string, BaseOpenApiReference> _references = new();
 
         /// <summary>
         /// List of all external references collected from OpenApiDocument
         /// </summary>
-        public IEnumerable<OpenApiReference> References
+        public IEnumerable<BaseOpenApiReference> References
         {
             get
             {
@@ -26,13 +26,21 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            AddExternalReferences(referenceHolder.Reference);
+            var reference = referenceHolder switch
+            {
+                IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummary } => withSummary,
+                IOpenApiReferenceHolder<OpenApiReferenceWithDescription> { Reference: OpenApiReferenceWithDescription withDescription } => withDescription,
+                IOpenApiReferenceHolder<JsonSchemaReference> { Reference: JsonSchemaReference jsonSchemaReference } => jsonSchemaReference,
+                IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference baseReference } => baseReference,
+                _ => throw new OpenApiException($"Unsupported reference holder type: {referenceHolder.GetType().FullName}")
+            };
+            AddExternalReferences(reference);
         }
 
         /// <summary>
         /// Collect external references
         /// </summary>
-        private void AddExternalReferences(OpenApiReference? reference)
+        private void AddExternalReferences(BaseOpenApiReference? reference)
         {
             if (reference is {IsExternal: true} && reference.ExternalResource is {} externalResource&&
                 !_references.ContainsKey(externalResource))

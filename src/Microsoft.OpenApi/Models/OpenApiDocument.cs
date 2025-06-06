@@ -496,9 +496,9 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="BaseOpenApiReference"/> object
         /// </summary>
-        internal T? ResolveReferenceTo<T>(OpenApiReference reference) where T : IOpenApiReferenceable
+        internal T? ResolveReferenceTo<T>(BaseOpenApiReference reference) where T : IOpenApiReferenceable
         {
 
             if (ResolveReference(reference, reference.IsExternal) is T result)
@@ -564,9 +564,9 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="BaseOpenApiReference"/> object
         /// </summary>
-        internal IOpenApiReferenceable? ResolveReference(OpenApiReference? reference, bool useExternal)
+        internal IOpenApiReferenceable? ResolveReference(BaseOpenApiReference? reference, bool useExternal)
         {
             if (reference == null)
             {

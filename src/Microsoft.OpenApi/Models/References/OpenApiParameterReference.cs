@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter>, IOpenApiParameter
+    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter, OpenApiReferenceWithDescription>, IOpenApiParameter
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -89,6 +89,12 @@ namespace Microsoft.OpenApi
         public IOpenApiParameter CreateShallowCopy()
         {
             return new OpenApiParameterReference(this);
+        }
+
+        /// <inheritdoc/>
+        protected override OpenApiReferenceWithDescription CopyReference(OpenApiReferenceWithDescription sourceReference)
+        {
+            return new OpenApiReferenceWithDescription(sourceReference);
         }
     }
 }

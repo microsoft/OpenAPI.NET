@@ -11,21 +11,8 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// A simple object to allow referencing other components in the specification, internally and externally.
     /// </summary>
-    public class OpenApiReference : IOpenApiSerializable, IOpenApiDescribedElement, IOpenApiSummarizedElement
+    public class BaseOpenApiReference : IOpenApiSerializable
     {
-        /// <summary>
-        /// A short summary which by default SHOULD override that of the referenced component.
-        /// If the referenced object-type does not allow a summary field, then this field has no effect.
-        /// </summary>
-        public string? Summary { get; set; }
-
-        /// <summary>
-        /// A description which by default SHOULD override that of the referenced component.
-        /// CommonMark syntax MAY be used for rich text representation.
-        /// If the referenced object-type does not allow a description field, then this field has no effect.
-        /// </summary>
-        public string? Description { get; set; }
-
         /// <summary>
         /// External resource in the reference.
         /// It maybe:
@@ -143,45 +130,43 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiReference() { }
+        public BaseOpenApiReference() { }
 
         /// <summary>
-        /// Initializes a copy instance of the <see cref="OpenApiReference"/> object
+        /// Initializes a copy instance of the <see cref="BaseOpenApiReference"/> object
         /// </summary>
-        public OpenApiReference(OpenApiReference reference)
+        public BaseOpenApiReference(BaseOpenApiReference reference)
         {
             Utils.CheckArgumentNull(reference);
-            Summary = reference.Summary;
-            Description = reference.Description;
             ExternalResource = reference.ExternalResource;
             Type = reference.Type;
             Id = reference.Id;
             HostDocument = reference.HostDocument;
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.1.
-        /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        /// <inheritdoc/>
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, w =>
-            {
-                // summary and description are in 3.1 but not in 3.0
-                w.WriteProperty(OpenApiConstants.Summary, Summary);
-                w.WriteProperty(OpenApiConstants.Description, Description);
-            });
+            SerializeInternal(writer, SerializeAdditionalV31Properties);
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
+        /// Serialize additional properties for Open Api v3.1.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        /// <param name="writer"></param>
+        protected virtual void SerializeAdditionalV31Properties(IOpenApiWriter writer)
+        {
+            // noop for the base type
+        }
+
+        /// <inheritdoc/>
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer);
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiReference"/>
+        /// Serialize <see cref="BaseOpenApiReference"/>
         /// </summary>
         private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter>? callback = null)
         {
@@ -206,10 +191,8 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        /// <inheritdoc/>
+        public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -291,23 +274,27 @@ namespace Microsoft.OpenApi
             Utils.CheckArgumentNull(currentDocument);
             hostDocument ??= currentDocument;
         }
-        private static string? GetPropertyValueFromNode(JsonObject jsonObject, string key) =>
+        /// <summary>
+        /// Gets the property value from a JsonObject node.
+        /// </summary>
+        /// <param name="jsonObject">The object to get the value from</param>
+        /// <param name="key">The key of the property</param>
+        /// <returns>The property value</returns>
+        protected internal static string? GetPropertyValueFromNode(JsonObject jsonObject, string key) =>
         jsonObject.TryGetPropertyValue(key, out var valueNode) && valueNode is JsonValue valueCast && valueCast.TryGetValue<string>(out var strValue) ? strValue : null;
-        internal void SetSummaryAndDescriptionFromMapNode(MapNode mapNode)
+        internal virtual void SetMetadataFromMapNode(MapNode mapNode)
         {
-            var (description, summary) = mapNode.JsonNode switch {
-                JsonObject jsonObject => (GetPropertyValueFromNode(jsonObject, OpenApiConstants.Description),
-                                            GetPropertyValueFromNode(jsonObject, OpenApiConstants.Summary)),
-                _ => (null, null)
-            };
-            if (!string.IsNullOrEmpty(description))
-            {
-                Description = description;
-            }
-            if (!string.IsNullOrEmpty(summary))
-            {
-                Summary = summary;
-            }
+            if (mapNode.JsonNode is not JsonObject jsonObject) return;
+            SetAdditional31MetadataFromMapNode(jsonObject);
+        }
+
+        /// <summary>
+        /// Sets additional metadata from the map node.
+        /// </summary>
+        /// <param name="jsonObject">The object to get the data from</param>
+        protected virtual void SetAdditional31MetadataFromMapNode(JsonObject jsonObject)
+        {
+            // noop for the base type
         }
 
         internal void SetJsonPointerPath(string pointer, string nodeLocation)
@@ -319,11 +306,11 @@ namespace Microsoft.OpenApi
             }
 
             // Absolute reference or anchor (e.g. "#/components/schemas/..." or full URL)
-            else if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase)) 
+            else if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 && !string.Equals(ReferenceV3, pointer, StringComparison.OrdinalIgnoreCase))
             {
                 ReferenceV3 = pointer;
-            }            
+            }
         }
 
         private static string ResolveRelativePointer(string nodeLocation, string relativeRef)

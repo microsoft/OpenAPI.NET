@@ -51,7 +51,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiExampleReference(reference.Item1, hostDocument, reference.Item2);
+                var exampleReference = new OpenApiExampleReference(reference.Item1, hostDocument, reference.Item2);
+                exampleReference.Reference.SetMetadataFromMapNode(mapNode);
+                return exampleReference;
             }
 
             var example = new OpenApiExample();

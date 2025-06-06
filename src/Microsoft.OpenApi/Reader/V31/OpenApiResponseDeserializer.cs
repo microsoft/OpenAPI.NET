@@ -50,7 +50,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiResponseReference(reference.Item1, hostDocument, reference.Item2);
+                var responseReference = new OpenApiResponseReference(reference.Item1, hostDocument, reference.Item2);
+                responseReference.Reference.SetMetadataFromMapNode(mapNode);
+                return responseReference;
             }
 
             var response = new OpenApiResponse();

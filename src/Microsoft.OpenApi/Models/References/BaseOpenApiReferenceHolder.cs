@@ -5,16 +5,17 @@ namespace Microsoft.OpenApi;
 /// Base class for OpenApiReferenceHolder.
 /// </summary>
 /// <typeparam name="T">The concrete class implementation type for the model.</typeparam>
-/// <typeparam name="V">The interface type for the model.</typeparam>
-public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder<T, V> where T : class, IOpenApiReferenceable, V where V : IOpenApiReferenceable, IOpenApiSerializable
+/// <typeparam name="U">The interface type for the model.</typeparam>
+/// <typeparam name="V">The type for the reference holding the additional fields and annotations</typeparam>
+public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHolder<T, U, V> where T : class, IOpenApiReferenceable, U where U : IOpenApiReferenceable, IOpenApiSerializable where V : BaseOpenApiReference, new()
 {
     /// <inheritdoc/>
-    public virtual V? Target
+    public virtual U? Target
     {
         get
         {
             if (Reference.HostDocument is null) return default;
-            return Reference.HostDocument.ResolveReferenceTo<V>(Reference);
+            return Reference.HostDocument.ResolveReferenceTo<U>(Reference);
         }
     }
     /// <inheritdoc/>
@@ -23,21 +24,27 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         get
         {
             return Target switch {
-                BaseOpenApiReferenceHolder<T, V> recursiveTarget => recursiveTarget.RecursiveTarget,
+                BaseOpenApiReferenceHolder<T, U, V> recursiveTarget => recursiveTarget.RecursiveTarget,
                 T concrete => concrete,
                 _ => null
             };
         }
     }
+    /// <summary>
+    /// Copy the reference as a target element with overrides.
+    /// </summary>
+    /// <param name="sourceReference">The source reference to copy</param>
+    /// <returns>The copy of the reference</returns>
+    protected abstract V CopyReference(V sourceReference);
 
     /// <summary>
     /// Copy constructor
     /// </summary>
     /// <param name="source">The parameter reference to copy</param>
-    protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, V> source)
+    protected BaseOpenApiReferenceHolder(BaseOpenApiReferenceHolder<T, U, V> source)
     {
         Utils.CheckArgumentNull(source);
-        Reference = new(source.Reference);
+        Reference = CopyReference(source.Reference);
         //no need to copy summary and description as if they are not overridden, they will be fetched from the target
         //if they are, the reference copy will handle it
     }
@@ -58,7 +65,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
         // we're not checking for null hostDocument as it's optional and can be set via additional methods by a walker
         // this way object initialization of a whole document is supported
 
-        Reference = new OpenApiReference()
+        Reference = new V()
         {
             Id = referenceId,
             HostDocument = hostDocument,
@@ -71,13 +78,13 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
 
 #if NETSTANDARD2_1_OR_GREATER
     /// <inheritdoc/>
-    public required OpenApiReference Reference { get; init; }
+    public required V Reference { get; init; }
 #else
     /// <inheritdoc/>
-    public OpenApiReference Reference { get; init; }
+    public V Reference { get; init; }
 #endif
     /// <inheritdoc/>
-    public abstract V CopyReferenceAsTargetElementWithOverrides(V source);
+    public abstract U CopyReferenceAsTargetElementWithOverrides(U source);
     /// <inheritdoc/>
     public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
@@ -125,7 +132,7 @@ public abstract class BaseOpenApiReferenceHolder<T, V> : IOpenApiReferenceHolder
     /// <param name="writer">The OpenApiWriter.</param>
     /// <param name="action">The action to serialize the target object.</param>
     private protected void SerializeInternal(IOpenApiWriter writer,
-        Action<IOpenApiWriter, V> action)
+        Action<IOpenApiWriter, U> action)
     {
         Utils.CheckArgumentNull(writer);
         if (Target is not null)

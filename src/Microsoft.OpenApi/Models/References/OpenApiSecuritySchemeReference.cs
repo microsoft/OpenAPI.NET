@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Security Scheme Object Reference.
     /// </summary>
-    public class OpenApiSecuritySchemeReference : BaseOpenApiReferenceHolder<OpenApiSecurityScheme, IOpenApiSecurityScheme>, IOpenApiSecurityScheme
+    public class OpenApiSecuritySchemeReference : BaseOpenApiReferenceHolder<OpenApiSecurityScheme, IOpenApiSecurityScheme, OpenApiReferenceWithDescription>, IOpenApiSecurityScheme
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -17,16 +17,16 @@ namespace Microsoft.OpenApi
         /// <param name="referenceId">The reference Id.</param>
         /// <param name="hostDocument">The host OpenAPI document.</param>
         /// <param name="externalResource">The externally referenced file.</param>
-        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.SecurityScheme, externalResource)
+        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null) : base(referenceId, hostDocument, ReferenceType.SecurityScheme, externalResource)
         {
         }
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="openApiSecuritySchemeReference">The reference to copy</param>
-        private OpenApiSecuritySchemeReference(OpenApiSecuritySchemeReference openApiSecuritySchemeReference):base(openApiSecuritySchemeReference)
+        private OpenApiSecuritySchemeReference(OpenApiSecuritySchemeReference openApiSecuritySchemeReference) : base(openApiSecuritySchemeReference)
         {
-            
+
         }
 
         /// <inheritdoc/>
@@ -70,6 +70,11 @@ namespace Microsoft.OpenApi
         public IOpenApiSecurityScheme CreateShallowCopy()
         {
             return new OpenApiSecuritySchemeReference(this);
+        }
+        /// <inheritdoc/>
+        protected override OpenApiReferenceWithDescription CopyReference(OpenApiReferenceWithDescription sourceReference)
+        {
+            return new OpenApiReferenceWithDescription(sourceReference);
         }
     }
 }

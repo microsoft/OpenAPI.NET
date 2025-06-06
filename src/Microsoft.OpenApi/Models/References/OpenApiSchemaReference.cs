@@ -10,8 +10,9 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema>, IOpenApiSchema
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema
     {
+
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
@@ -22,14 +23,14 @@ namespace Microsoft.OpenApi
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiSchemaReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
+        public OpenApiSchemaReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null) : base(referenceId, hostDocument, ReferenceType.Schema, externalResource)
         {
         }
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="schema">The schema reference to copy</param>
-        private OpenApiSchemaReference(OpenApiSchemaReference schema):base(schema)
+        private OpenApiSchemaReference(OpenApiSchemaReference schema) : base(schema)
         {
         }
 
@@ -41,7 +42,11 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
-        public string? Title { get => Target?.Title; }
+        public string? Title
+        {
+            get => string.IsNullOrEmpty(Reference.Title) ? Target?.Title : Reference.Title;
+            set => Reference.Title = value;
+        }
         /// <inheritdoc/>
         public Uri? Schema { get => Target?.Schema; }
         /// <inheritdoc/>
@@ -79,11 +84,23 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public decimal? MultipleOf { get => Target?.MultipleOf; }
         /// <inheritdoc/>
-        public JsonNode? Default { get => Target?.Default; }
+        public JsonNode? Default
+        {
+            get => Reference.Default ?? Target?.Default;
+            set => Reference.Default = value;
+        }
         /// <inheritdoc/>
-        public bool ReadOnly { get => Target?.ReadOnly ?? false; }
+        public bool ReadOnly
+        {
+            get => Reference.ReadOnly ?? Target?.ReadOnly ?? false;
+            set => Reference.ReadOnly = value;
+        }
         /// <inheritdoc/>
-        public bool WriteOnly { get => Target?.WriteOnly ?? false; }
+        public bool WriteOnly
+        {
+            get => Reference.WriteOnly ?? Target?.WriteOnly ?? false;
+            set => Reference.WriteOnly = value;
+        }
         /// <inheritdoc/>
         public IList<IOpenApiSchema>? AllOf { get => Target?.AllOf; }
         /// <inheritdoc/>
@@ -119,7 +136,11 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public JsonNode? Example { get => Target?.Example; }
         /// <inheritdoc/>
-        public IList<JsonNode>? Examples { get => Target?.Examples; }
+        public IList<JsonNode>? Examples
+        {
+            get => Reference.Examples ?? Target?.Examples;
+            set => Reference.Examples = value;
+        }
         /// <inheritdoc/>
         public IList<JsonNode>? Enum { get => Target?.Enum; }
         /// <inheritdoc/>
@@ -127,7 +148,11 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
         /// <inheritdoc/>
-        public bool Deprecated { get => Target?.Deprecated ?? false; }
+        public bool Deprecated
+        {
+            get => Reference.Deprecated ?? Target?.Deprecated ?? false;
+            set => Reference.Deprecated = value;
+        }
         /// <inheritdoc/>
         public OpenApiXml? Xml { get => Target?.Xml; }
         /// <inheritdoc/>
@@ -183,6 +208,11 @@ namespace Microsoft.OpenApi
         public IOpenApiSchema CreateShallowCopy()
         {
             return new OpenApiSchemaReference(this);
+        }
+        /// <inheritdoc/>
+        protected override JsonSchemaReference CopyReference(JsonSchemaReference sourceReference)
+        {
+            return new JsonSchemaReference(sourceReference);
         }
     }
 }

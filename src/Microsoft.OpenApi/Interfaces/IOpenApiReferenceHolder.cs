@@ -7,23 +7,35 @@ namespace Microsoft.OpenApi
     /// A generic interface for OpenApiReferenceable objects that have a target.
     /// </summary>
     /// <typeparam name="T">The type of the target being referenced</typeparam>
-    /// <typeparam name="V">The type of the interface implemented by both the target and the reference type</typeparam>
-    public interface IOpenApiReferenceHolder<out T, V> : IOpenApiReferenceHolder where T : IOpenApiReferenceable, V
+    /// <typeparam name="U">The type of the interface implemented by both the target and the reference type</typeparam>
+    /// <typeparam name="V">The type for the reference holding the additional fields and annotations</typeparam>
+    public interface IOpenApiReferenceHolder<out T, U, V> : IOpenApiReferenceHolder<V> where T : IOpenApiReferenceable, U where V : BaseOpenApiReference, new()
     {
         /// <summary>
         /// Gets the resolved target object.
         /// </summary>
-        V? Target { get; }
-        
+        U? Target { get; }
+
         /// <summary>
         /// Gets the recursively resolved target object.
         /// </summary>
         T? RecursiveTarget { get; }
-        
+
         /// <summary>
         /// Copy the reference as a target element with overrides.
         /// </summary>
-        V CopyReferenceAsTargetElementWithOverrides(V source);
+        U CopyReferenceAsTargetElementWithOverrides(U source);
+    }
+    /// <summary>
+    /// A generic interface for OpenApiReferenceable objects that have a target.
+    /// </summary>
+    /// <typeparam name="V">The type for the reference holding the additional fields and annotations</typeparam>
+    public interface IOpenApiReferenceHolder<V> : IOpenApiReferenceHolder where V : BaseOpenApiReference, new()
+    {
+        /// <summary>
+        /// Reference object.
+        /// </summary>
+        V Reference { get; init; }
     }
     /// <summary>
     /// A generic interface for OpenApiReferenceable objects that have a target.
@@ -34,10 +46,5 @@ namespace Microsoft.OpenApi
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
         bool UnresolvedReference { get; }
-
-        /// <summary>
-        /// Reference object.
-        /// </summary>
-        OpenApiReference Reference { get; init; }
     }
 }

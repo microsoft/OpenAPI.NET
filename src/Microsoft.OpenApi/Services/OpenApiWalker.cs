@@ -1262,8 +1262,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         private bool ProcessAsReference(IOpenApiReferenceHolder referenceableHolder, bool isComponent = false)
         {
-            var isReference = referenceableHolder.Reference != null &&
-                              (!isComponent || referenceableHolder.UnresolvedReference);
+            var isReference = !isComponent || referenceableHolder.UnresolvedReference;
             if (isReference)
             {
                 Walk(referenceableHolder);

@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Reader
             _readerSettings = readerSettings;
         }
 
-        internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference,
+        internal async Task<OpenApiDiagnostic> LoadAsync(BaseOpenApiReference reference,
                                                          OpenApiDocument? document,
                                                          string? format = null,
                                                          OpenApiDiagnostic? diagnostic = null,
