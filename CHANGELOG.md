@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0-preview.24](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.23...v2.0.0-preview.24) (2025-06-09)
+
+
+### Bug Fixes
+
+* callback reference annotations parsing ([86892b3](https://github.com/microsoft/OpenAPI.NET/commit/86892b361c7dcbe445ddfe10fd57fd9ab2d8a5a9))
+* example reference annotation parsing ([8bf012b](https://github.com/microsoft/OpenAPI.NET/commit/8bf012b7d576f5efd6d0953859b98494958c2c4e))
+* link reference annotations parsing ([2a62c5a](https://github.com/microsoft/OpenAPI.NET/commit/2a62c5a2874d935aba09c1995d022988ac793609))
+* loading of header reference description ([9248560](https://github.com/microsoft/OpenAPI.NET/commit/9248560d0bac2c3e2d635b653a26d4bfa14e51f4))
+* makes reference serialization object generic ([f0802e5](https://github.com/microsoft/OpenAPI.NET/commit/f0802e5cb1974b6b2d4dc7100b2e3f808ab3538b))
+* parameter reference annoation parsing ([b1578f3](https://github.com/microsoft/OpenAPI.NET/commit/b1578f3fdc8bdbdeab3063ae3d3e6a554800f6d6))
+* path item reference annoations parsing ([d31ed4c](https://github.com/microsoft/OpenAPI.NET/commit/d31ed4c9e0a095eb247de450b3122f0b1dd675d6))
+* removes description field from references that do not support it ([03659f7](https://github.com/microsoft/OpenAPI.NET/commit/03659f7d055e6b339e15ac4434ae4037abb3a546))
+* request body reference annotations parsing ([d9a78dc](https://github.com/microsoft/OpenAPI.NET/commit/d9a78dc5e5433d0f1b628569f4124d4de575cba1))
+* response reference annotations parsing ([e455f52](https://github.com/microsoft/OpenAPI.NET/commit/e455f52f30fdb4937c27132b9596f89f17997663))
+* security scheme reference annoations parsing ([ccc3733](https://github.com/microsoft/OpenAPI.NET/commit/ccc3733a2700d087aac289bb31a6107e9e6d743f))
+
 ## [2.0.0-preview.23](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.22...v2.0.0-preview.23) (2025-06-03)
 
 
