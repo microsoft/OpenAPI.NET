@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Example Object Reference.
     /// </summary>
-    public class OpenApiExampleReference : BaseOpenApiReferenceHolder<OpenApiExample, IOpenApiExample>, IOpenApiExample
+    public class OpenApiExampleReference : BaseOpenApiReferenceHolder<OpenApiExample, IOpenApiExample, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiExample
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -21,14 +21,14 @@ namespace Microsoft.OpenApi
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiExampleReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null):base(referenceId, hostDocument, ReferenceType.Example, externalResource)
+        public OpenApiExampleReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null) : base(referenceId, hostDocument, ReferenceType.Example, externalResource)
         {
         }
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="example">The example reference to copy</param>
-        private OpenApiExampleReference(OpenApiExampleReference example):base(example)
+        private OpenApiExampleReference(OpenApiExampleReference example) : base(example)
         {
         }
 
@@ -72,6 +72,11 @@ namespace Microsoft.OpenApi
         public IOpenApiExample CreateShallowCopy()
         {
             return new OpenApiExampleReference(this);
+        }
+        /// <inheritdoc/>
+        protected override OpenApiReferenceWithDescriptionAndSummary CopyReference(OpenApiReferenceWithDescriptionAndSummary sourceReference)
+        {
+            return new OpenApiReferenceWithDescriptionAndSummary(sourceReference);
         }
     }
 }

@@ -1,0 +1,11 @@
+﻿{
+  "description": "Reference Description",
+  "default": "reference default",
+  "title": "Reference Title",
+  "deprecated": true,
+  "readOnly": true,
+  "examples": [
+    "reference example"
+  ],
+  "$ref": "#/components/schemas/Pet"
+}

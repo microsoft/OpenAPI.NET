@@ -22,10 +22,12 @@ namespace Microsoft.OpenApi.Reader.V31
         {
             var mapNode = node.CheckMapNode("callback");
 
-            if (mapNode.GetReferencePointer() is {} pointer)
+            if (mapNode.GetReferencePointer() is { } pointer)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
+                var callbackReference = new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
+                callbackReference.Reference.SetMetadataFromMapNode(mapNode);
+                return callbackReference;
             }
 
             var domainObject = new OpenApiCallback();

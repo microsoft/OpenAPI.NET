@@ -90,7 +90,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiSecuritySchemeReference(reference.Item1, hostDocument, reference.Item2);
+                var securitySchemeReference = new OpenApiSecuritySchemeReference(reference.Item1, hostDocument, reference.Item2);
+                securitySchemeReference.Reference.SetMetadataFromMapNode(mapNode);
+                return securitySchemeReference;
             }
 
             var securityScheme = new OpenApiSecurityScheme();

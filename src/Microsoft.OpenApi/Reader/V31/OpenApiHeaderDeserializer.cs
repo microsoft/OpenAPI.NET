@@ -114,7 +114,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiHeaderReference(reference.Item1, hostDocument, reference.Item2);
+                var headerReference = new OpenApiHeaderReference(reference.Item1, hostDocument, reference.Item2);
+                headerReference.Reference.SetMetadataFromMapNode(mapNode);
+                return headerReference;
             }
 
             var header = new OpenApiHeader();

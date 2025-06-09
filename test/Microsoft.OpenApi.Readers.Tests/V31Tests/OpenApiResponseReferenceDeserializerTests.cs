@@ -1,0 +1,38 @@
+using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.V31;
+using Xunit;
+
+namespace Microsoft.OpenApi.Readers.Tests.V31Tests;
+
+public class OpenApiResponseReferenceDeserializerTests
+{
+    [Fact]
+    public void ShouldDeserializeResponseReferenceAnnotations()
+    {
+        var json =
+        """
+        {
+            "$ref": "#/components/responses/MyResponse",
+            "description": "This is a response reference"
+        }
+        """;
+
+        var hostDocument = new OpenApiDocument();
+        hostDocument.AddComponent("MyResponse", new OpenApiResponse
+        {
+            Description = "This is a response description",
+        });
+        var jsonNode = JsonNode.Parse(json);
+        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+
+        var result = OpenApiV31Deserializer.LoadResponse(parseNode, hostDocument);
+
+        Assert.NotNull(result);
+        var resultReference = Assert.IsType<OpenApiResponseReference>(result);
+
+        Assert.Equal("MyResponse", resultReference.Reference.Id);
+        Assert.Equal("This is a response reference", resultReference.Description);
+        Assert.NotNull(resultReference.Target);
+    }
+}

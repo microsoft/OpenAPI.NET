@@ -57,7 +57,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
+                var linkReference = new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
+                linkReference.Reference.SetMetadataFromMapNode(mapNode);
+                return linkReference;
             }
 
             ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields, hostDocument);

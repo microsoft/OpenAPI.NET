@@ -49,7 +49,9 @@ namespace Microsoft.OpenApi.Reader.V31
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiRequestBodyReference(reference.Item1, hostDocument, reference.Item2);
+                var requestBodyReference = new OpenApiRequestBodyReference(reference.Item1, hostDocument, reference.Item2);
+                requestBodyReference.Reference.SetMetadataFromMapNode(mapNode);
+                return requestBodyReference;
             }
 
             var requestBody = new OpenApiRequestBody();

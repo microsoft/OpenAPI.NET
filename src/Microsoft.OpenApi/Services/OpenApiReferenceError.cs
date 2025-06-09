@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// The reference that caused the error.
         /// </summary>
-        public readonly OpenApiReference? Reference;
+        public readonly BaseOpenApiReference? Reference;
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class using the message and pointer from the given exception.
         /// </summary>
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="message"></param>
-        public OpenApiReferenceError(OpenApiReference reference, string message) : base("", message)
+        public OpenApiReferenceError(BaseOpenApiReference reference, string message) : base("", message)
         {
             Reference = reference;
         }

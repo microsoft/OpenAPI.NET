@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Path Item Object Reference: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem>, IOpenApiPathItem
+    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiPathItem
     {
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </param>
-        public OpenApiPathItemReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null): base(referenceId, hostDocument, ReferenceType.PathItem, externalResource)
+        public OpenApiPathItemReference(string referenceId, OpenApiDocument? hostDocument = null, string? externalResource = null) : base(referenceId, hostDocument, ReferenceType.PathItem, externalResource)
         {
         }
 
@@ -30,9 +30,9 @@ namespace Microsoft.OpenApi
         /// Copy constructor
         /// </summary>
         /// <param name="pathItem">The reference to copy</param>
-        private OpenApiPathItemReference(OpenApiPathItemReference pathItem):base(pathItem)
+        private OpenApiPathItemReference(OpenApiPathItemReference pathItem) : base(pathItem)
         {
-            
+
         }
 
         /// <inheritdoc/>
@@ -77,6 +77,11 @@ namespace Microsoft.OpenApi
         public override void SerializeAsV2(IOpenApiWriter writer)
         {
             Reference.SerializeAsV2(writer);
+        }
+        /// <inheritdoc/>
+        protected override OpenApiReferenceWithDescriptionAndSummary CopyReference(OpenApiReferenceWithDescriptionAndSummary sourceReference)
+        {
+            return new OpenApiReferenceWithDescriptionAndSummary(sourceReference);
         }
     }
 }
