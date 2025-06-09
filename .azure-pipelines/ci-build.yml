@@ -49,6 +49,10 @@ extends:
             displayName: 'Publish Artifact: Nugets'
             artifactName: Nugets
             targetPath: '$(Build.ArtifactStagingDirectory)/Nugets'
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact: RepoFiles'
+            artifactName: RepoFiles
+            targetPath: '$(Build.ArtifactStagingDirectory)/RepoFiles'
         steps:
         - task: UseDotNet@2
           displayName: 'Use .NET 6'
@@ -198,12 +202,29 @@ extends:
             targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
             sourceFolder: $(Build.ArtifactStagingDirectory)
             content: '*.nupkg'
-            
+
+        # Copy repository files to be used in the deploy stage
+        - task: CopyFiles@2
+          displayName: 'Copy repository files for deploy stage'
+          inputs:
+            SourceFolder: '$(Build.SourcesDirectory)'
+            Contents: |
+              **/*
+              !**/bin/**
+              !**/obj/**
+              !**/.git/**
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/RepoFiles'
+
     - stage: deploy
-      condition: and(contains(variables['build.sourceBranch'], 'refs/tags/v'), succeeded())
+      condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
       dependsOn: build
+      pool:
+        name: Azure-Pipelines-1ESPT-ExDShared
+        os: linux
+        image: ubuntu-latest
       jobs:
       - deployment: deploy_hidi
+        condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
         templateContext:
           type: releaseJob
           isProduction: true
@@ -228,6 +249,7 @@ extends:
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
 
       - deployment: deploy_lib
+        condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
         templateContext:
           type: releaseJob
           isProduction: true
@@ -260,6 +282,7 @@ extends:
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
 
       - deployment: deploy_yaml_reader
+        condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
         templateContext:
           type: releaseJob
           isProduction: true
@@ -318,119 +341,132 @@ extends:
                   assets: '$(Pipeline.Workspace)\**\*.exe'
                   addChangeLog: false
 
-    - stage: Build_and_deploy_docker_images
-      displayName: 'Build and deploy docker images'
-      condition: or(eq(variables['build.sourceBranch'], 'refs/tags/v'), eq(variables['build.sourceBranch'], variables['PREVIEW_BRANCH']))
-      dependsOn: build
-      pool:
-        name: Azure-Pipelines-1ESPT-ExDShared
-        image: ubuntu-latest
-        os: linux
-      jobs:
-        - job: buildAndPush
-          steps:
-            - task: AzureCLI@2
-              displayName: 'Login to Azure Container Registry'
-              inputs:
-                azureSubscription: 'ACR Images Push Service Connection'
-                scriptType: bash
-                scriptLocation: inlineScript
-                inlineScript: |
-                  az acr login --name msgraphprodregistry
-            
-            - powershell: |
-                $content = [XML](Get-Content ./Directory.Build.props)
-                Write-Host "XML loaded, finding version..."
-                
-                # Handle PropertyGroup as either a single element or array
-                $version = $null
-                if ($content.Project.PropertyGroup -is [array]) {
-                  Write-Host "PropertyGroup is an array, checking each entry..."
-                  foreach ($pg in $content.Project.PropertyGroup) {
-                    if ($pg.Version) {
-                      $version = $pg.Version.ToString().Trim()
-                      Write-Host "Found version in PropertyGroup array: $version"
-                      break
+      - deployment: deploy_docker_image
+        environment: docker-images-deploy
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: RepoFiles
+            targetPath: '$(Pipeline.Workspace)'
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: 'ubuntu-latest'
+              steps:
+                - task: AzureCLI@2
+                  displayName: 'Login to Azure Container Registry'
+                  inputs:
+                    azureSubscription: 'ACR Images Push Service Connection'
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      az acr login --name $(REGISTRY)
+              
+                - powershell: |
+                    $content = [XML](Get-Content $(Pipeline.Workspace)/Directory.Build.props)
+                    Write-Host "XML loaded, finding version..."
+                    
+                    # Handle PropertyGroup as either a single element or array
+                    $version = $null
+                    if ($content.Project.PropertyGroup -is [array]) {
+                      Write-Host "PropertyGroup is an array, checking each entry..."
+                      foreach ($pg in $content.Project.PropertyGroup) {
+                        if ($pg.Version) {
+                          $version = $pg.Version.ToString().Trim()
+                          Write-Host "Found version in PropertyGroup array: $version"
+                          break
+                        }
+                      }
+                    } else {
+                      # Single PropertyGroup
+                      $version = $content.Project.PropertyGroup.Version
+                      if ($version) {
+                        $version = $version.ToString().Trim()
+                        Write-Host "Found version in PropertyGroup: $version"
+                      }
                     }
-                  }
-                } else {
-                  # Single PropertyGroup
-                  $version = $content.Project.PropertyGroup.Version
-                  if ($version) {
-                    $version = $version.ToString().Trim()
-                    Write-Host "Found version in PropertyGroup: $version"
-                  }
-                }
+                    
+                    if (-not $version) {
+                      Write-Host "##vso[task.logissue type=error]Version not found in Directory.Build.props"
+                      exit 1
+                    }
+                    
+                    Write-Host "Version found: $version" 
+                    Write-Host "##vso[task.setvariable variable=version;isoutput=true]$version"
+                    Write-Host "##vso[task.setvariable variable=VERSION]$version"
+                  displayName: 'Get version from csproj'
+                  name: getversion
                 
-                if (-not $version) {
-                  Write-Host "##vso[task.logissue type=error]Version not found in Directory.Build.props"
-                  exit 1
-                }
+                - bash: |
+                    # Debug output to verify version variable
+                    echo "Version from previous step: $VERSION"
+                  displayName: 'Verify version variable'
                 
-                Write-Host "Version found: $version" 
-                Write-Host "##vso[task.setvariable variable=version;isoutput=true]$version"
-                Write-Host "##vso[task.setvariable variable=VERSION]$version"
-              displayName: 'Get version from csproj'
-              name: getversion
-            
-            - bash: |
-                # Debug output to verify version variable
-                echo "Version from previous step: $VERSION"
-              displayName: 'Verify version variable'
-            
-            - bash: |
-                echo "Build Number: $(Build.BuildNumber)"
-                # Extract the last 3 characters for the run number
-                runnumber=$(echo "$(Build.BuildNumber)" | grep -o '[0-9]\+$')
-                echo "Extracted Run Number: $runnumber"
+                - bash: |
+                    echo "Build Number: $(Build.BuildNumber)"
+                    # Extract the last 3 characters for the run number
+                    runnumber=$(echo "$(Build.BuildNumber)" | grep -o '[0-9]\+$')
+                    echo "Extracted Run Number: $runnumber"
+                    
+                    # If extraction fails, set a default
+                    if [ -z "$runnumber" ]; then
+                      echo "Extraction failed, using default value"
+                      runnumber=$(date +"%S%N" | cut -c1-3)
+                      echo "Generated fallback run number: $runnumber"
+                    fi
+                    
+                    # Set the variable for later steps
+                    echo "##vso[task.setvariable variable=RUNNUMBER]$runnumber"
+                    echo "##vso[task.setvariable variable=RUNNUMBER;isOutput=true]$runnumber"
+                  displayName: 'Get truncated run number'
+                  name: getrunnumber
+                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+                  
+                - bash: |
+                    date=$(date +'%Y%m%d')
+                    echo "Date value: $date"
+                    echo "##vso[task.setvariable variable=BUILDDATE;isOutput=true]$date"
+                    echo "##vso[task.setvariable variable=BUILDDATE]$date"
+                  displayName: 'Get current date'
+                  name: setdate
+                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
                 
-                # If extraction fails, set a default
-                if [ -z "$runnumber" ]; then
-                  echo "Extraction failed, using default value"
-                  runnumber=$(date +"%S%N" | cut -c1-3)
-                  echo "Generated fallback run number: $runnumber"
-                fi
+                - script: |
+                    docker run --privileged --rm tonistiigi/binfmt --install all
+                  displayName: "Enable multi-platform builds"
+
+                - script: |
+                    docker buildx create --use --name mybuilder
+                  displayName: "Set up Docker BuildX"
+
+                - script: |
+                    docker buildx inspect --bootstrap
+                  displayName: "Ensure BuildX is working"
                 
-                # Set the variable for later steps
-                echo "##vso[task.setvariable variable=RUNNUMBER]$runnumber"
-                echo "##vso[task.setvariable variable=RUNNUMBER;isOutput=true]$runnumber"
-              displayName: 'Get truncated run number'
-              name: getrunnumber
-              condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-            
-            - bash: |
-                date=$(date +'%Y%m%d')
-                echo "Date value: $date"
-                echo "##vso[task.setvariable variable=BUILDDATE;isOutput=true]$date"
-                echo "##vso[task.setvariable variable=BUILDDATE]$date"
-              displayName: 'Get current date'
-              name: setdate
-              condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-            
-            - bash: |
-                echo "Building Docker image..."
-                echo "Using build date: ${BUILDDATE}"
-                # Using quotes around tags to prevent flag interpretation
-                docker build \
-                  -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
-                  -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-                  "$(Build.SourcesDirectory)"
+                - bash: |
+                    echo "Building Docker image..."
+                    echo "Using build date: ${BUILDDATE}"
+                    # Using quotes around tags to prevent flag interpretation
+                    docker buildx build \
+                      --platform linux/amd64,linux/arm64/v8 \
+                      --push \
+                      -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
+                      -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
+                      "$(Pipeline.Workspace)"
+
+                  displayName: 'Build and Push Nightly Image'
+                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
                 
-                echo "Pushing Docker image with nightly tag..."
-                docker push "$(REGISTRY)/$(IMAGE_NAME):nightly"
-                docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}"
-              displayName: 'Build and Push Nightly Image'
-              condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-            
-            - bash: |
-                echo "Building Docker image for release..."
-                docker build \
-                  -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
-                  -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-                  "$(Build.SourcesDirectory)"
-                
-                echo "Pushing Docker image with latest and version tags..."
-                docker push "$(REGISTRY)/$(IMAGE_NAME):latest"
-                docker push "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}"
-              displayName: 'Build and Push Release Image'
-              condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+                - bash: |
+                    echo "Building Docker image for release..."
+                    docker buildx build\
+                      --platform linux/amd64,linux/arm64/v8 \
+                      --push \
+                      -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
+                      -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
+                      "$(Pipeline.Workspace)"
+                  displayName: 'Build and Push Release Image'
+                  condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
