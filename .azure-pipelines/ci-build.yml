@@ -466,7 +466,7 @@ extends:
                       --platform linux/amd64,linux/arm64/v8 \
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
-                      -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
+                      -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}" \
                       "$(Pipeline.Workspace)"
                   displayName: 'Build and Push Release Image'
                   condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
