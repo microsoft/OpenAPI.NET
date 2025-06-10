@@ -265,11 +265,11 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - powershell: |
+              - pwsh: |
                   $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
                   foreach($fileName in $fileNames) {
                     if(Test-Path $fileName) {
-                      rm $fileName -Verbose
+                      Remove-Item $fileName -Verbose
                     }
                   }
                 displayName: remove other nupkgs to avoid duplication
@@ -365,7 +365,7 @@ extends:
                     inlineScript: |
                       az acr login --name $(REGISTRY)
               
-                - powershell: |
+                - pwsh: |
                     $content = [XML](Get-Content $(Pipeline.Workspace)/Directory.Build.props)
                     Write-Host "XML loaded, finding version..."
                     
@@ -435,7 +435,7 @@ extends:
                   condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
                 
                 - script: |
-                    docker run --privileged --rm tonistiigi/binfmt --install all
+                    docker run --privileged --rm msgraphprodregistry.azurecr.io/tonistiigi/binfmt --install all
                   displayName: "Enable multi-platform builds"
 
                 - script: |
