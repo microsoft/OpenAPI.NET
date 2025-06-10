@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview.25](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.24...v2.0.0-preview.25) (2025-06-10)
+
+
+### Bug Fixes
+
+* ci configuration ([e7f76f7](https://github.com/microsoft/OpenAPI.NET/commit/e7f76f753649d5747a720b55babe2c59bbedfd49))
+* ci configuration ([a8fd917](https://github.com/microsoft/OpenAPI.NET/commit/a8fd91728bc57102d36bfdb6442e3c273b2818e6))
+
 ## [2.0.0-preview.24](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.23...v2.0.0-preview.24) (2025-06-09)
 
 
