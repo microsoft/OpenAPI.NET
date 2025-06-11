@@ -12,7 +12,7 @@ using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.YamlReader;
-using SharpYaml.Serialization;
+using YamlDotNet.RepresentationModel;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests

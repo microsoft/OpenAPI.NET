@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json.Nodes;
-using SharpYaml;
-using SharpYaml.Serialization;
+using YamlDotNet.RepresentationModel;
+using YamlDotNet.Core;
 
 namespace Microsoft.OpenApi.YamlReader
 {
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.YamlReader
         public static JsonObject ToJsonObject(this YamlMappingNode yaml)
         {
             var node = new JsonObject();
-            foreach (var keyValuePair in yaml)
+            foreach (var keyValuePair in yaml.Children)
             {
                 var key = ((YamlScalarNode)keyValuePair.Key).Value!;
                 node[key] = keyValuePair.Value.ToJsonNode();
@@ -86,7 +86,8 @@ namespace Microsoft.OpenApi.YamlReader
 
         private static YamlMappingNode ToYamlMapping(this JsonObject obj)
         {
-            return new YamlMappingNode(obj.ToDictionary(x => (YamlNode)new YamlScalarNode(x.Key), x => x.Value!.ToYamlNode()));
+            var children = obj.ToDictionary(x => (YamlNode)new YamlScalarNode(x.Key), x => x.Value!.ToYamlNode());
+            return new YamlMappingNode(children);
         }
 
         /// <summary>
@@ -97,7 +98,7 @@ namespace Microsoft.OpenApi.YamlReader
         public static JsonArray ToJsonArray(this YamlSequenceNode yaml)
         {
             var node = new JsonArray();
-            foreach (var value in yaml)
+            foreach (var value in yaml.Children)
             {
                 node.Add(value.ToJsonNode());
             }
@@ -107,7 +108,8 @@ namespace Microsoft.OpenApi.YamlReader
 
         private static YamlSequenceNode ToYamlSequence(this JsonArray arr)
         {
-            return new YamlSequenceNode(arr.Select(x => x!.ToYamlNode()));
+            var children = arr.Select(x => x!.ToYamlNode()).ToList();
+            return new YamlSequenceNode(children);
         }
 
         private static JsonValue ToJsonValue(this YamlScalarNode yaml)

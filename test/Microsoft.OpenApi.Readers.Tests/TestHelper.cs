@@ -4,7 +4,7 @@
 using System.IO;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.YamlReader;
-using SharpYaml.Serialization;
+using YamlDotNet.RepresentationModel;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {

@@ -7,7 +7,7 @@ using System.IO;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.YamlReader;
-using SharpYaml.Serialization;
+using YamlDotNet.RepresentationModel;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
