@@ -347,7 +347,7 @@ namespace Microsoft.OpenApi
 
             if (uri is not null)
             {
-                pathSegments = uri.Fragment.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                pathSegments = uri.Fragment.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
 
                 // Build the base path for the root schema: "#/components/schemas/person"
                 var fragment = OpenApiConstants.ComponentsSegment + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + pathSegments[3];

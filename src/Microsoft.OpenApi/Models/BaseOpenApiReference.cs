@@ -316,10 +316,10 @@ namespace Microsoft.OpenApi
         private static string ResolveRelativePointer(string nodeLocation, string relativeRef)
         {
             // Convert nodeLocation to path segments
-            var segments = nodeLocation.TrimStart('#').Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var segments = nodeLocation.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries).ToList();
 
             // Convert relativeRef to dynamic segments
-            var relativeSegments = relativeRef.TrimStart('#').Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            var relativeSegments = relativeRef.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries);
 
             // Locate the first occurrence of relativeRef segments in the full path
             for (int i = 0; i <= segments.Count - relativeSegments.Length; i++)
