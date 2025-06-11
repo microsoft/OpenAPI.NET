@@ -300,7 +300,11 @@ namespace Microsoft.OpenApi
         internal void SetJsonPointerPath(string pointer, string nodeLocation)
         {
             // Relative reference to internal JSON schema node/resource (e.g. "#/properties/b")
-            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.Contains("/components/schemas"))
+#if NETSTANDARD2_1 || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
+            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.Contains("/components/schemas", StringComparison.OrdinalIgnoreCase))
+#else
+            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.ToLowerInvariant().Contains("/components/schemas"))
+#endif
             {
                 ReferenceV3 = ResolveRelativePointer(nodeLocation, pointer);
             }
@@ -316,23 +320,28 @@ namespace Microsoft.OpenApi
         private static string ResolveRelativePointer(string nodeLocation, string relativeRef)
         {
             // Convert nodeLocation to path segments
-            var segments = nodeLocation.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries).ToList();
+            var nodeLocationSegments = nodeLocation.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries).ToList();
 
             // Convert relativeRef to dynamic segments
             var relativeSegments = relativeRef.TrimStart('#').Split(['/'], StringSplitOptions.RemoveEmptyEntries);
 
             // Locate the first occurrence of relativeRef segments in the full path
-            for (int i = 0; i <= segments.Count - relativeSegments.Length; i++)
+            for (int i = 0; i <= nodeLocationSegments.Count - relativeSegments.Length; i++)
             {
-                if (relativeSegments.SequenceEqual(segments.Skip(i).Take(relativeSegments.Length)))
+                if (relativeSegments.SequenceEqual(nodeLocationSegments.Skip(i).Take(relativeSegments.Length), StringComparer.Ordinal) &&
+                    nodeLocationSegments.Take(i + relativeSegments.Length).ToArray() is {Length: > 0} matchingSegments)
                 {
                     // Trim to include just the matching segment chain
-                    segments = [.. segments.Take(i + relativeSegments.Length)];
-                    break;
+                    return $"#/{string.Join("/", matchingSegments)}";
                 }
             }
 
-            return $"#/{string.Join("/", segments)}";
+            // Fallback on building a full path
+#if NETSTANDARD2_1 || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
+            return $"#/{string.Join("/", nodeLocationSegments.SkipLast(relativeSegments.Length).Union(relativeSegments))}";
+#else
+            return $"#/{string.Join("/", nodeLocationSegments.Take(nodeLocationSegments.Count - relativeSegments.Length).Union(relativeSegments))}";
+#endif
         }
     }
 }
