@@ -328,10 +328,11 @@ namespace Microsoft.OpenApi
             // Locate the first occurrence of relativeRef segments in the full path
             for (int i = 0; i <= nodeLocationSegments.Count - relativeSegments.Length; i++)
             {
-                if (relativeSegments.SequenceEqual(nodeLocationSegments.Skip(i).Take(relativeSegments.Length), StringComparer.Ordinal))
+                if (relativeSegments.SequenceEqual(nodeLocationSegments.Skip(i).Take(relativeSegments.Length), StringComparer.Ordinal) &&
+                    nodeLocationSegments.Take(i + relativeSegments.Length).ToArray() is {Length: > 0} matchingSegments)
                 {
                     // Trim to include just the matching segment chain
-                    return $"#/{string.Join("/", [.. nodeLocationSegments.Take(i + relativeSegments.Length)])}";
+                    return $"#/{string.Join("/", matchingSegments)}";
                 }
             }
 
