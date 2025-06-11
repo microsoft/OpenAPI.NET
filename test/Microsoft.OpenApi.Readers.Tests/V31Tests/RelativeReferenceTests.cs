@@ -279,5 +279,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.NotNull(result);
             Assert.Equal(JsonSchemaType.Integer, result!.Type);
         }
+        [Fact]
+        public async Task SHouldResolveRelativeSubReference()
+        {
+            // Arrange
+            var filePath = Path.Combine(SampleFolderPath, "relativeSubschemaReference.json");
+
+            // Act
+            var (actual, _) = await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings);
+
+            var fooComponentSchema = actual.Components.Schemas["Foo"];
+            var seq1Property = fooComponentSchema.Properties["seq1"];
+            Assert.NotNull(seq1Property);
+            var seq2Property = fooComponentSchema.Properties["seq2"];
+            Assert.NotNull(seq2Property);
+            Assert.Equal(JsonSchemaType.Array, seq2Property.Items.Type);
+            Assert.Equal(JsonSchemaType.String, seq2Property.Items.Items.Type);
+        }
     }
 }
