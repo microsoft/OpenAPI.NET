@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-preview.26](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.25...v2.0.0-preview.26) (2025-06-12)
+
+
+### Bug Fixes
+
+* a bug where relative relative and sub-component JSON references would not resolve properly ([b7bc6be](https://github.com/microsoft/OpenAPI.NET/commit/b7bc6be4a05f1001130efb9af0b677dbec3055bc))
+* a bug where relative relative and sub-component JSON references would not resolve properly ([c53165c](https://github.com/microsoft/OpenAPI.NET/commit/c53165c72fae25ba0864a9f3c52d42e4ee05184d))
+* recursive relative reference resolution ([873acd4](https://github.com/microsoft/OpenAPI.NET/commit/873acd45eb6adecdc4219a08b028ddf35a568f01))
+* recursive relative reference resolution ([f296505](https://github.com/microsoft/OpenAPI.NET/commit/f296505b7123f35b2e45eedc9118c59b8f925cbd))
+* upgrades sharp yaml to avodi signing issues on netfx ([5dc7e81](https://github.com/microsoft/OpenAPI.NET/commit/5dc7e81fa7fad856edd96640ea7ee0e23e25a7f2))
+* upgrades sharp yaml to avodi signing issues on netfx ([4db5c1a](https://github.com/microsoft/OpenAPI.NET/commit/4db5c1ae39d4bc6c5138fda5d9d14904f069fa3e))
+
 ## [2.0.0-preview.25](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.24...v2.0.0-preview.25) (2025-06-10)
 
 
