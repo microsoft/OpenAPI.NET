@@ -337,10 +337,14 @@ namespace Microsoft.OpenApi
             }
 
             // Fallback on building a full path
+            if (nodeLocation.StartsWith("#/components/schemas/", StringComparison.OrdinalIgnoreCase))
+            { // If the nodeLocation is a schema, we only want to keep the first three segments which are components/schemas/{schemaName}
+                return $"#/{string.Join("/", nodeLocationSegments.Take(3).Concat(relativeSegments))}";
+            }
 #if NETSTANDARD2_1 || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-            return $"#/{string.Join("/", nodeLocationSegments.SkipLast(relativeSegments.Length).Union(relativeSegments))}";
+            return $"#/{string.Join("/", nodeLocationSegments.SkipLast(relativeSegments.Length).Concat(relativeSegments))}";
 #else
-            return $"#/{string.Join("/", nodeLocationSegments.Take(nodeLocationSegments.Count - relativeSegments.Length).Union(relativeSegments))}";
+            return $"#/{string.Join("/", nodeLocationSegments.Take(nodeLocationSegments.Count - relativeSegments.Length).Concat(relativeSegments))}";
 #endif
         }
     }

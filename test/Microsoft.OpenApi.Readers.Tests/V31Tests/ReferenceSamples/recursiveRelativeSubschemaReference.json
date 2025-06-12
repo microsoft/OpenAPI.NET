@@ -1,0 +1,96 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Recursive relative reference in a subschema of an component schema",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/items": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Foo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Foo": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": null,
+                        "x-schema-id": null
+                    },
+                    "parent": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": null,
+                                "x-schema-id": null
+                            },
+                            "parent": {
+                                "$ref": "#/properties/parent",
+                                "x-schema-id": "Category"
+                            },
+                            "tags": {
+                                "type": [
+                                    "array",
+                                    "null"
+                                ],
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ],
+                                            "format": null,
+                                            "x-schema-id": null
+                                        }
+                                    },
+                                    "required": [
+                                        "name"
+                                    ],
+                                    "x-schema-id": "Tag"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ],
+                        "x-schema-id": "Category"
+                    },
+                    "tags": {
+                        "$ref": "#/properties/parent/properties/tags"
+                    }
+                },
+                "required": [
+                    "name"
+                ],
+                "x-schema-id": "Category"
+            }
+        }
+    }
+}
