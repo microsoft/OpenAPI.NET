@@ -280,7 +280,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.Equal(JsonSchemaType.Integer, result!.Type);
         }
         [Fact]
-        public async Task SHouldResolveRelativeSubReference()
+        public async Task ShouldResolveRelativeSubReference()
         {
             // Arrange
             var filePath = Path.Combine(SampleFolderPath, "relativeSubschemaReference.json");
@@ -295,6 +295,28 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.NotNull(seq2Property);
             Assert.Equal(JsonSchemaType.Array, seq2Property.Items.Type);
             Assert.Equal(JsonSchemaType.String, seq2Property.Items.Items.Type);
+        }
+        [Fact]
+        public async Task ShouldResolveRecursiveRelativeSubReference()
+        {
+            // Arrange
+            var filePath = Path.Combine(SampleFolderPath, "recursiveRelativeSubschemaReference.json");
+
+            // Act
+            var (actual, _) = await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings);
+
+            var fooComponentSchema = actual.Components.Schemas["Foo"];
+            var fooSchemaParentProperty = fooComponentSchema.Properties["parent"];
+            Assert.NotNull(fooSchemaParentProperty);
+            var fooSchemaParentPropertyTagsProperty = fooSchemaParentProperty.Properties["tags"];
+            Assert.NotNull(fooSchemaParentPropertyTagsProperty);
+            Assert.Equal(JsonSchemaType.Array | JsonSchemaType.Null, fooSchemaParentPropertyTagsProperty.Type);
+            Assert.Equal(JsonSchemaType.Object, fooSchemaParentPropertyTagsProperty.Items.Type);
+
+            var fooSchemaTagsProperty = fooComponentSchema.Properties["tags"];
+            Assert.NotNull(fooSchemaTagsProperty);
+            Assert.Equal(JsonSchemaType.Array | JsonSchemaType.Null, fooSchemaTagsProperty.Type);
+            Assert.Equal(JsonSchemaType.Object, fooSchemaTagsProperty.Items.Type);
         }
     }
 }
