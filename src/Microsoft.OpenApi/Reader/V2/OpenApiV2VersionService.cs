@@ -10,17 +10,14 @@ namespace Microsoft.OpenApi.Reader.V2
     /// <summary>
     /// The version specific implementations for OpenAPI V2.0.
     /// </summary>
-    internal class OpenApiV2VersionService : IOpenApiVersionService
+    internal class OpenApiV2VersionService : BaseOpenApiVersionService
     {
-        public OpenApiDiagnostic Diagnostic { get; }
-
         /// <summary>
         /// Create Parsing Context
         /// </summary>
         /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
-        public OpenApiV2VersionService(OpenApiDiagnostic diagnostic)
+        public OpenApiV2VersionService(OpenApiDiagnostic diagnostic): base(diagnostic)
         {
-            Diagnostic = diagnostic;
         }
 
         private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new()
@@ -44,22 +41,13 @@ namespace Microsoft.OpenApi.Reader.V2
             [typeof(OpenApiXml)] = OpenApiV2Deserializer.LoadXml
         };
 
-        public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
+        public override OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
             return OpenApiV2Deserializer.LoadOpenApi(rootNode, location);
         }
+        internal override Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> Loaders => _loaders;
 
-        public T? LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
-        {
-            if (_loaders.TryGetValue(typeof(T), out var loader) && loader(node, doc) is T result)
-            {
-                return result;
-            }
-            return default;
-        }
-
-        /// <inheritdoc />
-        public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
+        public override string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
             throw new InvalidOperationException();
         }

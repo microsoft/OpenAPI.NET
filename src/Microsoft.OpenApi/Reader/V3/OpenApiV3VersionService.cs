@@ -3,29 +3,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Microsoft.OpenApi.Reader.V3
 {
     /// <summary>
     /// The version service for the Open API V3.0.
     /// </summary>
-    internal class OpenApiV3VersionService : IOpenApiVersionService
+    internal class OpenApiV3VersionService : BaseOpenApiVersionService
     {
-        public OpenApiDiagnostic Diagnostic { get; }
-
-        private static readonly char[] _pathSeparator = new char[] { '/' };
 
         /// <summary>
         /// Create Parsing Context
         /// </summary>
         /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
-        public OpenApiV3VersionService(OpenApiDiagnostic diagnostic)
+        public OpenApiV3VersionService(OpenApiDiagnostic diagnostic):base(diagnostic)
         {
-            Diagnostic = diagnostic;
         }
 
-        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new()
+        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new()
         {
             [typeof(JsonNodeExtension)] = OpenApiV3Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
@@ -59,29 +54,11 @@ namespace Microsoft.OpenApi.Reader.V3
             [typeof(OpenApiSchemaReference)] = OpenApiV3Deserializer.LoadMapping
         };
 
-        public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
+        internal override Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> Loaders => _loaders;
+
+        public override OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
             return OpenApiV3Deserializer.LoadOpenApi(rootNode, location);
         }
-
-        public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
-        {
-            return (T)_loaders[typeof(T)](node, doc);
-        }
-
-        /// <inheritdoc />
-        public string? GetReferenceScalarValues(MapNode mapNode, string scalarValue)
-        {
-            if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)) &&
-                mapNode
-                .Where(x => x.Name.Equals(scalarValue))
-                .Select(static x => x.Value)
-                .OfType<ValueNode>().FirstOrDefault() is {} valueNode)
-            {
-                return valueNode.GetScalarValue();
-            }
-
-            return null;
-        }        
     }
 }
