@@ -3,34 +3,30 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OpenApi.Reader.V3;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
     /// <summary>
     /// The version service for the Open API V3.1.
     /// </summary>
-    internal class OpenApiV31VersionService : IOpenApiVersionService
+    internal class OpenApiV31VersionService : BaseOpenApiVersionService
     {
-        public OpenApiDiagnostic Diagnostic { get; }
 
         /// <summary>
         /// Create Parsing Context
         /// </summary>
         /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
-        public OpenApiV31VersionService(OpenApiDiagnostic diagnostic)
+        public OpenApiV31VersionService(OpenApiDiagnostic diagnostic):base(diagnostic)
         {
-            Diagnostic = diagnostic;
         }
 
-        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object>> _loaders = new Dictionary<Type, Func<ParseNode, OpenApiDocument, object>>
+        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>>
         {
             [typeof(JsonNodeExtension)] = OpenApiV31Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV31Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV31Deserializer.LoadComponents,
             [typeof(OpenApiContact)] = OpenApiV31Deserializer.LoadContact,
-            [typeof(OpenApiDiscriminator)] = OpenApiV3Deserializer.LoadDiscriminator,
+            [typeof(OpenApiDiscriminator)] = OpenApiV31Deserializer.LoadDiscriminator,
             [typeof(OpenApiEncoding)] = OpenApiV31Deserializer.LoadEncoding,
             [typeof(OpenApiExample)] = OpenApiV31Deserializer.LoadExample,
             [typeof(OpenApiExternalDocs)] = OpenApiV31Deserializer.LoadExternalDocs,
@@ -58,28 +54,11 @@ namespace Microsoft.OpenApi.Reader.V31
             [typeof(OpenApiSchemaReference)] = OpenApiV31Deserializer.LoadMapping
         };
 
-        public OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
+        public override OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
         {
             return OpenApiV31Deserializer.LoadOpenApi(rootNode, location);
         }
+        internal override Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> Loaders => _loaders;
 
-        public T LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
-        {
-            return (T)_loaders[typeof(T)](node, doc);
-        }
-
-        /// <inheritdoc />
-        public string? GetReferenceScalarValues(MapNode mapNode, string scalarValue)
-        {
-            if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)))
-            {
-                var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
-                .Select(static x => x.Value).OfType<ValueNode>().FirstOrDefault();
-
-                return valueNode?.GetScalarValue();
-            }
-
-            return null;
-        }
     }
 }
