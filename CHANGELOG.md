@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-preview.27](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.26...v2.0.0-preview.27) (2025-06-13)
+
+
+### Bug Fixes
+
+* implementation drift between the different version services ([1ed02e3](https://github.com/microsoft/OpenAPI.NET/commit/1ed02e3cbe7a6b484ee7db224e056ae2f0244a30))
+* implementation drift between the different version services ([2514526](https://github.com/microsoft/OpenAPI.NET/commit/25145266a70a961e6899368951d95ce41fe55f5b))
+* relative uri in json schema references would not parse appropriately or provide feedback to the user ([940945d](https://github.com/microsoft/OpenAPI.NET/commit/940945df29bea338a22553a3ddfb7e61853cb4e7))
+* relative uri in json schema references would not parse appropriately or provide feedback to the user ([e0bceaa](https://github.com/microsoft/OpenAPI.NET/commit/e0bceaaa39e8e475652b390324254149e867f39f))
+* warn instead of error out when $schema is present in the document ([388d6f7](https://github.com/microsoft/OpenAPI.NET/commit/388d6f79b4b45d1c30bddbff66dd79eef2d4e4b7))
+* warn instead of error out when $schema is present in the document ([7c7b053](https://github.com/microsoft/OpenAPI.NET/commit/7c7b053b543ebdedf05b0357175fea3dc9d345db))
+
 ## [2.0.0-preview.26](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.25...v2.0.0-preview.26) (2025-06-12)
 
 
