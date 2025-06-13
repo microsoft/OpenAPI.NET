@@ -340,29 +340,30 @@ namespace Microsoft.OpenApi
              * #/components/schemas/human/allOf/0
              */
 
-            if (string.IsNullOrEmpty(location)) return default;
+            if (string.IsNullOrEmpty(location) || ToLocationUrl(location) is not Uri uri) return default;
 
-            var uri = ToLocationUrl(location);
-            string[] pathSegments;
+#if NETSTANDARD2_1 || NETCOREAPP || NET5_0_OR_GREATER
+            if (!location.Contains("#/components/schemas/", StringComparison.OrdinalIgnoreCase))
+#else
+            if (!location.Contains("#/components/schemas/"))
+#endif
+                throw new ArgumentException($"Invalid schema reference location: {location}. It should contain '#/components/schemas/'");
 
-            if (uri is not null)
+            var pathSegments = uri.Fragment.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+
+            // Build the base path for the root schema: "#/components/schemas/person"
+            var fragment = OpenApiConstants.ComponentsSegment + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + pathSegments[3];
+            var uriBuilder = new UriBuilder(uri)
             {
-                pathSegments = uri.Fragment.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+                Fragment = fragment
+            }; // to avoid escaping the # character in the resulting Uri
 
-                // Build the base path for the root schema: "#/components/schemas/person"
-                var fragment = OpenApiConstants.ComponentsSegment + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + pathSegments[3];
-                var uriBuilder = new UriBuilder(uri)
-                {
-                    Fragment = fragment
-                }; // to avoid escaping the # character in the resulting Uri
-
-                if (_IOpenApiReferenceableRegistry.TryGetValue(uriBuilder.Uri, out var schema) && schema is IOpenApiSchema targetSchema)
-                {
-                    // traverse remaining segments after fetching the base schema
-                    var remainingSegments = pathSegments.Skip(4).ToArray();
-                    return ResolveSubSchema(targetSchema, remainingSegments);
-                }
-            }            
+            if (_IOpenApiReferenceableRegistry.TryGetValue(uriBuilder.Uri, out var schema) && schema is IOpenApiSchema targetSchema)
+            {
+                // traverse remaining segments after fetching the base schema
+                var remainingSegments = pathSegments.Skip(4).ToArray();
+                return ResolveSubSchema(targetSchema, remainingSegments);
+            }
 
             return default;          
         }

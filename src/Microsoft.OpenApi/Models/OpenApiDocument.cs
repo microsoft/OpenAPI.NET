@@ -575,9 +575,9 @@ namespace Microsoft.OpenApi
 
             string uriLocation;
             var id = reference.Id;
-            if (!string.IsNullOrEmpty(id) && id!.Contains("/")) // this means its a URL reference
+            if (!string.IsNullOrEmpty(id) && id!.Contains('/')) // this means its a URL reference
             {
-                uriLocation = id;
+                uriLocation = id!;
             }
             else
             {
@@ -609,12 +609,24 @@ namespace Microsoft.OpenApi
                     : BaseUri + relativePath;
             }
 
-            if (reference.Type is ReferenceType.Schema && uriLocation.Contains('#'))
+            var absoluteUri =
+#if NETSTANDARD2_1 || NETCOREAPP || NET5_0_OR_GREATER
+            uriLocation.StartsWith('#')
+#else
+            uriLocation.StartsWith("#", StringComparison.OrdinalIgnoreCase)
+#endif
+            switch
             {
-                return Workspace?.ResolveJsonSchemaReference(new Uri(uriLocation).AbsoluteUri);
+                true => new Uri(BaseUri, uriLocation).AbsoluteUri,
+                false => new Uri(uriLocation).AbsoluteUri
+            };
+
+            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains('#'))
+            {
+                return Workspace?.ResolveJsonSchemaReference(absoluteUri);
             }
 
-            return Workspace?.ResolveReference<IOpenApiReferenceable>(new Uri(uriLocation).AbsoluteUri);
+            return Workspace?.ResolveReference<IOpenApiReferenceable>(absoluteUri);
         }
 
         private static bool IsSubComponent(string reference)
