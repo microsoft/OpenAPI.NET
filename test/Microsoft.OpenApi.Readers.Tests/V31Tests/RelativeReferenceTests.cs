@@ -298,6 +298,32 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.Equal(JsonSchemaType.String, seq2Property.Items.Items.Type);
         }
         [Fact]
+        public async Task ShouldResolveRelativeSubReferenceUsingParsingContext()
+        {
+            // Arrange
+            var filePath = Path.Combine(SampleFolderPath, "relativeSubschemaReference.json");
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            var jsonNode = await JsonNode.ParseAsync(fs);
+            var schemaJsonNode = jsonNode["components"]?["schemas"]?["Foo"];
+            Assert.NotNull(schemaJsonNode);
+            var diagnostic = new OpenApiDiagnostic();
+            var parsingContext = new ParsingContext(diagnostic);
+            parsingContext.StartObject("components");
+            parsingContext.StartObject("schemas");
+            parsingContext.StartObject("Foo");
+            var document = new OpenApiDocument();
+            
+            // Act
+            var fooComponentSchema = parsingContext.ParseFragment<OpenApiSchema>(schemaJsonNode, OpenApiSpecVersion.OpenApi3_1, document);
+            document.AddComponent("Foo", fooComponentSchema);
+            var seq1Property = fooComponentSchema.Properties["seq1"];
+            Assert.NotNull(seq1Property);
+            var seq2Property = fooComponentSchema.Properties["seq2"];
+            Assert.NotNull(seq2Property);
+            Assert.Equal(JsonSchemaType.Array, seq2Property.Items.Type);
+            Assert.Equal(JsonSchemaType.String, seq2Property.Items.Items.Type);
+        }
+        [Fact]
         public void ShouldFailToResolveRelativeSubReferenceFromTheObjectModel()
         {
             var document = new OpenApiDocument
