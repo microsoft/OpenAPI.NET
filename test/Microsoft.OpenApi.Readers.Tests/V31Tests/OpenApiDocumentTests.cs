@@ -579,6 +579,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             doc.Paths["/groups"].Operations[HttpMethod.Get].Tags.Should().BeNull("Empty tags are ignored, so we should not have any tags");
         }
+        [Fact]
+        public async Task DocumentWithSchemaResultsInWarning()
+        {
+            var path = Path.Combine(SampleFolderPath, "documentWithSchema.json");
+            var (doc, diag) = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
+            Assert.NotNull(doc);
+            Assert.NotNull(diag);
+            Assert.Empty(diag.Errors);
+            Assert.Single(diag.Warnings);
+            Assert.StartsWith("$schema is not a valid property", diag.Warnings[0].Message);
+        }
 
         [Fact]
         public void ParseEmptyMemoryStreamThrowsAnArgumentException()
