@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview.28](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.27...v2.0.0-preview.28) (2025-06-16)
+
+
+### Bug Fixes
+
+* sub-schema references are invalid ([92db49b](https://github.com/microsoft/OpenAPI.NET/commit/92db49b98ade782de3dec229936c100a1339b491))
+* sub-schema references are invalid ([75d1d2b](https://github.com/microsoft/OpenAPI.NET/commit/75d1d2b62a6fab3727047be5c0e10b9987ad9f37))
+
 ## [2.0.0-preview.27](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.26...v2.0.0-preview.27) (2025-06-13)
 
 
