@@ -434,6 +434,39 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var updatedTagsProperty = Assert.IsType<OpenApiSchemaReference>(schema.Properties["tags"]);
             Assert.Equal(absoluteReferenceId, updatedTagsProperty.Reference.ReferenceV3);
             Assert.Equal(JsonSchemaType.Array | JsonSchemaType.Null, updatedTagsProperty.Type);
+            Assert.Equal(JsonSchemaType.Object, updatedTagsProperty.Items.Type);
+
+            var pathItem = new OpenApiPathItem
+            {
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                {
+                    [HttpMethod.Post] = new OpenApiOperation
+                    {
+                        Responses = new OpenApiResponses
+                        {
+                            ["200"] = new OpenApiResponse
+                            {
+                            }
+                        },
+                        RequestBody = new OpenApiRequestBody
+                        {
+                            Content = new Dictionary<string, OpenApiMediaType>
+                            {
+                                ["application/json"] = new OpenApiMediaType
+                                {
+                                    Schema = new OpenApiSchemaReference("#/components/schemas/Foo", document)
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            document.Paths.Add("/", pathItem);
+
+            var requestBodySchema = pathItem.Operations[HttpMethod.Post].RequestBody.Content["application/json"].Schema;
+            Assert.NotNull(requestBodySchema);
+            var requestBodyTagsProperty = Assert.IsType<OpenApiSchemaReference>(requestBodySchema.Properties["tags"]);
+            Assert.Equal(JsonSchemaType.Object, requestBodyTagsProperty.Items.Type);
         }
     }
 }
