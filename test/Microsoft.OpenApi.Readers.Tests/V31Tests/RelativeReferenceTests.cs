@@ -436,6 +436,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.Equal(JsonSchemaType.Array | JsonSchemaType.Null, updatedTagsProperty.Type);
             Assert.Equal(JsonSchemaType.Object, updatedTagsProperty.Items.Type);
 
+
+            // doing the same for the parent property
+
+            var parentProperty = Assert.IsType<OpenApiSchema>(schema.Properties["parent"]);
+            var parentSubProperty = Assert.IsType<OpenApiSchemaReference>(parentProperty.Properties["parent"]);
+            Assert.Equal("#/properties/parent", parentSubProperty.Reference.ReferenceV3);
+            parentProperty.Properties["parent"] = new OpenApiSchemaReference($"#/components/schemas/Foo{parentSubProperty.Reference.ReferenceV3.Replace("#", string.Empty)}", document);
+            var updatedParentSubProperty = Assert.IsType<OpenApiSchemaReference>(parentProperty.Properties["parent"]);
+            Assert.Equal(JsonSchemaType.Object | JsonSchemaType.Null, updatedParentSubProperty.Type);
+
             var pathItem = new OpenApiPathItem
             {
                 Operations = new Dictionary<HttpMethod, OpenApiOperation>
