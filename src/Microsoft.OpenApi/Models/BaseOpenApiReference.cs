@@ -84,8 +84,14 @@ namespace Microsoft.OpenApi
                 {
                     return Id;
                 }
-                if (!string.IsNullOrEmpty(Id) && Id is not null && Id.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                    !string.IsNullOrEmpty(Id) && Id is not null && Id.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(Id) && Id is not null &&
+                    (Id.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                     Id.StartsWith("https://", StringComparison.OrdinalIgnoreCase) ||
+#if NETSTANDARD2_1 || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
+                     Id.Contains("#/components", StringComparison.OrdinalIgnoreCase)))
+#else
+                     Id.Contains("#/components")))
+#endif
                 {
                     return Id;
                 }
