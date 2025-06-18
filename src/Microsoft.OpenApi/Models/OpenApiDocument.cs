@@ -498,10 +498,10 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="BaseOpenApiReference"/> object
         /// </summary>
-        internal T? ResolveReferenceTo<T>(BaseOpenApiReference reference) where T : IOpenApiReferenceable
+        internal T? ResolveReferenceTo<T>(BaseOpenApiReference reference, IOpenApiSchema? parentSchema) where T : IOpenApiReferenceable
         {
 
-            if (ResolveReference(reference, reference.IsExternal) is T result)
+            if (ResolveReference(reference, reference.IsExternal, parentSchema) is T result)
             {
                 return result;
             }
@@ -566,7 +566,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="BaseOpenApiReference"/> object
         /// </summary>
-        internal IOpenApiReferenceable? ResolveReference(BaseOpenApiReference? reference, bool useExternal)
+        internal IOpenApiReferenceable? ResolveReference(BaseOpenApiReference? reference, bool useExternal, IOpenApiSchema? parentSchema)
         {
             if (reference == null)
             {
@@ -621,9 +621,9 @@ namespace Microsoft.OpenApi
                 false => new Uri(uriLocation).AbsoluteUri
             };
 
-            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains('#'))
+            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains('#') && parentSchema is not null)
             {
-                return Workspace?.ResolveJsonSchemaReference(absoluteUri);
+                return Workspace?.ResolveJsonSchemaReference(absoluteUri, parentSchema);
             }
 
             return Workspace?.ResolveReference<IOpenApiReferenceable>(absoluteUri);

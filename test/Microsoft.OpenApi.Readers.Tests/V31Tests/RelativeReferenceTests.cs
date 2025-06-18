@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var path = new[] { "properties", "a", "properties", "b" };
 
-            var result = OpenApiWorkspace.ResolveSubSchema(schema, path);
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, path, []);
 
             Assert.NotNull(result);
             Assert.Equal(JsonSchemaType.String, result!.Type);
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 }
             };
 
-            var result = OpenApiWorkspace.ResolveSubSchema(schema, pathSegments);
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, pathSegments, []);
 
             Assert.NotNull(result);
             Assert.Equal(JsonSchemaType.String, result!.Type);
@@ -275,7 +275,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var path = new[] { "allOf", "0", "properties", "x" };
 
-            var result = OpenApiWorkspace.ResolveSubSchema(schema, path);
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, path, []);
 
             Assert.NotNull(result);
             Assert.Equal(JsonSchemaType.Integer, result!.Type);
@@ -477,6 +477,31 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.NotNull(requestBodySchema);
             var requestBodyTagsProperty = Assert.IsType<OpenApiSchemaReference>(requestBodySchema.Properties["tags"]);
             Assert.Equal(JsonSchemaType.Object, requestBodyTagsProperty.Items.Type);
+        }
+
+        [Fact]
+        public void ExitsEarlyOnCyclicalReferences()
+        {
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test API", Version = "1.0.0" },
+            };
+            var categorySchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["name"] = new OpenApiSchema { Type = JsonSchemaType.String },
+                    ["parent"] = new OpenApiSchemaReference("#/components/schemas/Category", document),
+                    // this is intentionally wrong and cyclical reference
+                    // it tests whether we're going in an infinite resolution loop
+                    ["tags"] = new OpenApiSchemaReference("#/components/schemas/Category/properties/parent/properties/tags", document)
+                }
+            };
+            document.AddComponent("Category", categorySchema);
+            document.RegisterComponents();
+
+            Assert.Null(categorySchema.Properties["tags"].Items);
         }
     }
 }

@@ -331,8 +331,9 @@ namespace Microsoft.OpenApi
         /// Recursively resolves a schema from a URI fragment.
         /// </summary>
         /// <param name="location"></param>
+        /// <param name="parentSchema">The parent schema to resolve against.</param>
         /// <returns></returns>
-        internal IOpenApiSchema? ResolveJsonSchemaReference(string location)
+        internal IOpenApiSchema? ResolveJsonSchemaReference(string location, IOpenApiSchema parentSchema)
         {
             /* Enables resolving references for nested subschemas
              * Examples:
@@ -362,14 +363,22 @@ namespace Microsoft.OpenApi
             {
                 // traverse remaining segments after fetching the base schema
                 var remainingSegments = pathSegments.Skip(4).ToArray();
-                return ResolveSubSchema(targetSchema, remainingSegments);
+                var stack = new Stack<IOpenApiSchema>();
+                stack.Push(parentSchema);
+                return ResolveSubSchema(targetSchema, remainingSegments, stack);
             }
 
             return default;          
         }
         
-        internal static IOpenApiSchema? ResolveSubSchema(IOpenApiSchema schema, string[] pathSegments)
+        internal static IOpenApiSchema? ResolveSubSchema(IOpenApiSchema schema, string[] pathSegments, Stack<IOpenApiSchema> visitedSchemas)
         {
+            // Prevent infinite recursion in case of circular references
+            if (visitedSchemas.Contains(schema))
+            {
+                return null;
+            }
+            visitedSchemas.Push(schema);
             // Traverse schema object to resolve subschemas
             if (pathSegments.Length == 0)
             {
@@ -383,13 +392,13 @@ namespace Microsoft.OpenApi
                 case OpenApiConstants.Properties:
                     var propName = pathSegments[0];
                     if (schema.Properties != null && schema.Properties.TryGetValue(propName, out var propSchema))
-                        return ResolveSubSchema(propSchema, [.. pathSegments.Skip(1)]);
+                        return ResolveSubSchema(propSchema, [.. pathSegments.Skip(1)], visitedSchemas);
                     break;
                 case OpenApiConstants.Items:
-                    return schema.Items is OpenApiSchema itemsSchema ? ResolveSubSchema(itemsSchema, pathSegments) : null;
+                    return schema.Items is OpenApiSchema itemsSchema ? ResolveSubSchema(itemsSchema, pathSegments, visitedSchemas) : null;
 
                 case OpenApiConstants.AdditionalProperties:
-                    return schema.AdditionalProperties is OpenApiSchema additionalSchema ? ResolveSubSchema(additionalSchema, pathSegments) : null;
+                    return schema.AdditionalProperties is OpenApiSchema additionalSchema ? ResolveSubSchema(additionalSchema, pathSegments, visitedSchemas) : null;
                 case OpenApiConstants.AllOf:
                 case OpenApiConstants.AnyOf:
                 case OpenApiConstants.OneOf:
@@ -405,7 +414,7 @@ namespace Microsoft.OpenApi
 
                     // recurse into the indexed subschema if valid
                     if (list != null && index < list.Count)
-                        return ResolveSubSchema(list[index], [.. pathSegments.Skip(1)]);
+                        return ResolveSubSchema(list[index], [.. pathSegments.Skip(1)], visitedSchemas);
                     break;
             }
 
