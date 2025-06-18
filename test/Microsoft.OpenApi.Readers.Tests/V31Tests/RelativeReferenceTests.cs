@@ -505,6 +505,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.Null(tagsSchemaRef.Items);
             Assert.Equal("#/components/schemas/Category/properties/parent/properties/tags", tagsSchemaRef.Reference.ReferenceV3);
             Assert.Null(tagsSchemaRef.Target);
+
+            var parentSchemaRef = Assert.IsType<OpenApiSchemaReference>(categorySchema.Properties["parent"]);
+            Assert.Equal("#/components/schemas/Category", parentSchemaRef.Reference.ReferenceV3);
+            Assert.NotNull(parentSchemaRef.Target);
         }
     }
 }
