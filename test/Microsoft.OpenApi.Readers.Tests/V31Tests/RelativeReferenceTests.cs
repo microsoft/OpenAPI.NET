@@ -501,7 +501,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             document.AddComponent("Category", categorySchema);
             document.RegisterComponents();
 
-            Assert.Null(categorySchema.Properties["tags"].Items);
+            var tagsSchemaRef = Assert.IsType<OpenApiSchemaReference>(categorySchema.Properties["tags"]);
+            Assert.Null(tagsSchemaRef.Items);
+            Assert.Equal("#/components/schemas/Category/properties/parent/properties/tags", tagsSchemaRef.Reference.ReferenceV3);
+            Assert.Null(tagsSchemaRef.Target);
         }
     }
 }
