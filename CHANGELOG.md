@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-preview.29](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.28...v2.0.0-preview.29) (2025-06-18)
+
+
+### Bug Fixes
+
+* avoid stack overflow on cyclical references ([06cc025](https://github.com/microsoft/OpenAPI.NET/commit/06cc025dca43d24955bcd205facefa4347d3f0c7))
+
 ## [2.0.0-preview.28](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.27...v2.0.0-preview.28) (2025-06-16)
 
 
