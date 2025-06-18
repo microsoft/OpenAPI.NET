@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var path = new[] { "properties", "a", "properties", "b" };
 
-            var result = OpenApiWorkspace.ResolveSubSchema(schema, path);
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, path, []);
 
             Assert.NotNull(result);
             Assert.Equal(JsonSchemaType.String, result!.Type);
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 }
             };
 
-            var result = OpenApiWorkspace.ResolveSubSchema(schema, pathSegments);
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, pathSegments, []);
 
             Assert.NotNull(result);
             Assert.Equal(JsonSchemaType.String, result!.Type);
@@ -275,7 +275,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var path = new[] { "allOf", "0", "properties", "x" };
 
-            var result = OpenApiWorkspace.ResolveSubSchema(schema, path);
+            var result = OpenApiWorkspace.ResolveSubSchema(schema, path, []);
 
             Assert.NotNull(result);
             Assert.Equal(JsonSchemaType.Integer, result!.Type);
@@ -434,6 +434,81 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var updatedTagsProperty = Assert.IsType<OpenApiSchemaReference>(schema.Properties["tags"]);
             Assert.Equal(absoluteReferenceId, updatedTagsProperty.Reference.ReferenceV3);
             Assert.Equal(JsonSchemaType.Array | JsonSchemaType.Null, updatedTagsProperty.Type);
+            Assert.Equal(JsonSchemaType.Object, updatedTagsProperty.Items.Type);
+
+
+            // doing the same for the parent property
+
+            var parentProperty = Assert.IsType<OpenApiSchema>(schema.Properties["parent"]);
+            var parentSubProperty = Assert.IsType<OpenApiSchemaReference>(parentProperty.Properties["parent"]);
+            Assert.Equal("#/properties/parent", parentSubProperty.Reference.ReferenceV3);
+            parentProperty.Properties["parent"] = new OpenApiSchemaReference($"#/components/schemas/Foo{parentSubProperty.Reference.ReferenceV3.Replace("#", string.Empty)}", document);
+            var updatedParentSubProperty = Assert.IsType<OpenApiSchemaReference>(parentProperty.Properties["parent"]);
+            Assert.Equal(JsonSchemaType.Object | JsonSchemaType.Null, updatedParentSubProperty.Type);
+
+            var pathItem = new OpenApiPathItem
+            {
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                {
+                    [HttpMethod.Post] = new OpenApiOperation
+                    {
+                        Responses = new OpenApiResponses
+                        {
+                            ["200"] = new OpenApiResponse
+                            {
+                            }
+                        },
+                        RequestBody = new OpenApiRequestBody
+                        {
+                            Content = new Dictionary<string, OpenApiMediaType>
+                            {
+                                ["application/json"] = new OpenApiMediaType
+                                {
+                                    Schema = new OpenApiSchemaReference("#/components/schemas/Foo", document)
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            document.Paths.Add("/", pathItem);
+
+            var requestBodySchema = pathItem.Operations[HttpMethod.Post].RequestBody.Content["application/json"].Schema;
+            Assert.NotNull(requestBodySchema);
+            var requestBodyTagsProperty = Assert.IsType<OpenApiSchemaReference>(requestBodySchema.Properties["tags"]);
+            Assert.Equal(JsonSchemaType.Object, requestBodyTagsProperty.Items.Type);
+        }
+
+        [Fact]
+        public void ExitsEarlyOnCyclicalReferences()
+        {
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test API", Version = "1.0.0" },
+            };
+            var categorySchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["name"] = new OpenApiSchema { Type = JsonSchemaType.String },
+                    ["parent"] = new OpenApiSchemaReference("#/components/schemas/Category", document),
+                    // this is intentionally wrong and cyclical reference
+                    // it tests whether we're going in an infinite resolution loop
+                    ["tags"] = new OpenApiSchemaReference("#/components/schemas/Category/properties/parent/properties/tags", document)
+                }
+            };
+            document.AddComponent("Category", categorySchema);
+            document.RegisterComponents();
+
+            var tagsSchemaRef = Assert.IsType<OpenApiSchemaReference>(categorySchema.Properties["tags"]);
+            Assert.Null(tagsSchemaRef.Items);
+            Assert.Equal("#/components/schemas/Category/properties/parent/properties/tags", tagsSchemaRef.Reference.ReferenceV3);
+            Assert.Null(tagsSchemaRef.Target);
+
+            var parentSchemaRef = Assert.IsType<OpenApiSchemaReference>(categorySchema.Properties["parent"]);
+            Assert.Equal("#/components/schemas/Category", parentSchemaRef.Reference.ReferenceV3);
+            Assert.NotNull(parentSchemaRef.Target);
         }
     }
 }

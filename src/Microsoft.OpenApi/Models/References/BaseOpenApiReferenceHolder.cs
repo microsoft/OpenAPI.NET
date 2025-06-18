@@ -15,7 +15,7 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
         get
         {
             if (Reference.HostDocument is null) return default;
-            return Reference.HostDocument.ResolveReferenceTo<U>(Reference);
+            return Reference.HostDocument.ResolveReferenceTo<U>(Reference, this as IOpenApiSchema);
         }
     }
     /// <inheritdoc/>

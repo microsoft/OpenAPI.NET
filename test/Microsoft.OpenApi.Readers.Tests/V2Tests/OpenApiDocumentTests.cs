@@ -261,7 +261,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema1 = actual.Components.Schemas["AllPets"];
             var schema1Reference = Assert.IsType<OpenApiSchemaReference>(schema1);
             Assert.False(schema1Reference.UnresolvedReference);
-            var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1Reference.Reference);
+            var schema2 = actual.ResolveReferenceTo<OpenApiSchema>(schema1Reference.Reference, schema1Reference);
             Assert.IsType<OpenApiSchema>(schema2);
             if (string.IsNullOrEmpty(schema1Reference.Reference.Id) || schema1Reference.UnresolvedReference)
             {
