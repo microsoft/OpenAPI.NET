@@ -376,7 +376,10 @@ namespace Microsoft.OpenApi
             // Prevent infinite recursion in case of circular references
             if (visitedSchemas.Contains(schema))
             {
-                return null;
+                if (schema is OpenApiSchemaReference openApiSchemaReference)
+                    throw new InvalidOperationException($"Circular reference detected while resolving schema: {openApiSchemaReference.Reference.ReferenceV3}");
+                else
+                    throw new InvalidOperationException($"Circular reference detected while resolving schema");
             }
             visitedSchemas.Push(schema);
             // Traverse schema object to resolve subschemas
