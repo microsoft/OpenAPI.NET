@@ -502,9 +502,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             document.RegisterComponents();
 
             var tagsSchemaRef = Assert.IsType<OpenApiSchemaReference>(categorySchema.Properties["tags"]);
-            Assert.Null(tagsSchemaRef.Items);
+            Assert.Throws<InvalidOperationException>(() => tagsSchemaRef.Items);
             Assert.Equal("#/components/schemas/Category/properties/parent/properties/tags", tagsSchemaRef.Reference.ReferenceV3);
-            Assert.Null(tagsSchemaRef.Target);
+            Assert.Throws<InvalidOperationException>(() => tagsSchemaRef.Target);
 
             var parentSchemaRef = Assert.IsType<OpenApiSchemaReference>(categorySchema.Properties["parent"]);
             Assert.Equal("#/components/schemas/Category", parentSchemaRef.Reference.ReferenceV3);
