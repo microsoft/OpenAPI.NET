@@ -6,12 +6,20 @@ updates:
     open-pull-requests-limit: 10
     schedule:
       interval: "weekly"
-
   - package-ecosystem: "nuget"
     # location of package manifests
     directory: "/"
     open-pull-requests-limit: 10
     schedule:
       interval: "daily"
-
+  - package-ecosystem: dotnet-sdk
+    directory: /
+    schedule:
+      interval: weekly
+      day: wednesday
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
