@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi
                     {
                         context.Enter(key);
 
-                        if (key != "default" && !StatusCodeRegex
+                        if (!"default".Equals(key, StringComparison.OrdinalIgnoreCase) && !StatusCodeRegex
 #if NET8_0_OR_GREATER
                             ().IsMatch(key)
 #else
