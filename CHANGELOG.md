@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.0-preview.30](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.29...v2.0.0-preview.30) (2025-06-25)
+
+
+### Bug Fixes
+
+* throw on circular reference ([e14258d](https://github.com/microsoft/OpenAPI.NET/commit/e14258dd2a8639702c8e0bc81a643874d207facb))
+* throw on circular reference ([caea292](https://github.com/microsoft/OpenAPI.NET/commit/caea292b39d2c754bd2e2d214280add53a0a47ea))
+* validation to accept lowercase status code ranges (4xx, 5xx) in OpenAPI responses ([09f661f](https://github.com/microsoft/OpenAPI.NET/commit/09f661f0ff0511d5937fad49ae8a6182b1ea1aff))
+
 ## [2.0.0-preview.29](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.28...v2.0.0-preview.29) (2025-06-18)
 
 
