@@ -312,10 +312,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openapi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
             var args = new[] { "transform", "-d", openapi, "-o", "sample.json", "--co" };
             var parseResult = rootCommand.Parse(args);
-            var handler = rootCommand.Subcommands.First(c => c.Name == "transform").Handler;
-            var context = new InvocationContext(parseResult);
+            var handler = Assert.IsType<AsynchronousCommandLineAction>(rootCommand.Subcommands.First(c => c.Name == "transform").Action, exactMatch: false);
 
-            await handler!.InvokeAsync(context);
+            await handler.InvokeAsync(parseResult);
 
             var output = await File.ReadAllTextAsync("sample.json");
             Assert.NotEmpty(output);
@@ -329,10 +328,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var openApi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
             var args = new[] { "show", "-d", openApi, "-o", "sample.md" };
             var parseResult = rootCommand.Parse(args);
-            var handler = rootCommand.Subcommands.First(c => c.Name == "show").Handler;
-            var context = new InvocationContext(parseResult);
+            var handler = Assert.IsType<AsynchronousCommandLineAction>(rootCommand.Subcommands.First(c => c.Name == "show").Action, exactMatch: false);
 
-            await handler!.InvokeAsync(context);
+            await handler.InvokeAsync(parseResult);
 
             var output = await File.ReadAllTextAsync("sample.md");
             Assert.Contains("graph LR", output, StringComparison.Ordinal);
@@ -345,10 +343,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var manifest = Path.Combine(".", "UtilityFiles", "exampleapimanifest.json");
             var args = new[] { "plugin", "-m", manifest, "--of", AppDomain.CurrentDomain.BaseDirectory };
             var parseResult = rootCommand.Parse(args);
-            var handler = rootCommand.Subcommands.First(c => c.Name == "plugin").Handler;
-            var context = new InvocationContext(parseResult);
+            var handler = Assert.IsType<AsynchronousCommandLineAction>(rootCommand.Subcommands.First(c => c.Name == "plugin").Action, exactMatch: false);
 
-            await handler!.InvokeAsync(context);
+            await handler.InvokeAsync(parseResult);
 
             using var jsDoc = JsonDocument.Parse(await File.ReadAllTextAsync("ai-plugin.json"));
             var openAiManifest = OpenAIPluginManifest.Load(jsDoc.RootElement);

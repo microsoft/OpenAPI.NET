@@ -16,7 +16,8 @@ namespace Microsoft.OpenApi.Hidi
             var rootCommand = CreateRootCommand();
 
             // Parse the incoming args and invoke the handler
-            return rootCommand.InvokeAsync(args);
+            var parseResult = rootCommand.Parse(args);
+            return parseResult.InvokeAsync();
         }
 
         internal static RootCommand CreateRootCommand()
@@ -28,22 +29,26 @@ namespace Microsoft.OpenApi.Hidi
             var validateCommand = new Command("validate");
             validateCommand.Description = "Validate an OpenAPI document.";
             validateCommand.AddOptions(commandOptions.GetValidateCommandOptions());
-            validateCommand.Handler = new ValidateCommandHandler(commandOptions);
+            var validateCommandHandler = new ValidateCommandHandler(commandOptions);
+            validateCommand.SetAction(validateCommandHandler.InvokeAsync);
 
             var transformCommand = new Command("transform");
             transformCommand.Description = "Transform an OpenAPI or CSDL document into a JSON/YAML OpenAPI v2/v3 document.";
             transformCommand.AddOptions(commandOptions.GetAllCommandOptions());
-            transformCommand.Handler = new TransformCommandHandler(commandOptions);
+            var transformCommandHandler = new TransformCommandHandler(commandOptions);
+            transformCommand.SetAction(transformCommandHandler.InvokeAsync);
 
             var showCommand = new Command("show");
             showCommand.Description = "Create a visual representation of the paths in an OpenAPI document.";
             showCommand.AddOptions(commandOptions.GetShowCommandOptions());
-            showCommand.Handler = new ShowCommandHandler(commandOptions);
+            var showCommandHandler = new ShowCommandHandler(commandOptions);
+            showCommand.SetAction(showCommandHandler.InvokeAsync);
 
             var pluginCommand = new Command("plugin");
             pluginCommand.Description = "Create manifest files for an OpenAI plugin [preview]";
             pluginCommand.AddOptions(commandOptions.GetPluginCommandOptions());
-            pluginCommand.Handler = new PluginCommandHandler(commandOptions);
+            var pluginCommandHandler = new PluginCommandHandler(commandOptions);
+            pluginCommand.SetAction(pluginCommandHandler.InvokeAsync);
 
             rootCommand.Add(showCommand);
             rootCommand.Add(transformCommand);

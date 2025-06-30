@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.CommandLine.Parsing;
+using System.CommandLine;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -39,26 +39,26 @@ namespace Microsoft.OpenApi.Hidi.Options
 
         private void ParseHidiOptions(ParseResult parseResult, CommandOptions options)
         {
-            OpenApi = parseResult.GetValueForOption(options.OpenApiDescriptionOption);
-            CsdlFilter = parseResult.GetValueForOption(options.CsdlFilterOption);
-            Csdl = parseResult.GetValueForOption(options.CsdlOption);
-            Output = parseResult.GetValueForOption(options.OutputOption);
-            OutputFolder = parseResult.GetValueForOption(options.OutputFolderOption) is string outputFolderOptionValue && !string.IsNullOrEmpty(outputFolderOptionValue) ? outputFolderOptionValue : defaultOutputFolderValue;
-            CleanOutput = parseResult.GetValueForOption(options.CleanOutputOption);
-            Version = parseResult.GetValueForOption(options.VersionOption);
-            MetadataVersion = parseResult.GetValueForOption(options.MetadataVersionOption);
-            OpenApiFormat = parseResult.GetValueForOption(options.FormatOption);
-            TerseOutput = parseResult.GetValueForOption(options.TerseOutputOption);
-            SettingsConfig = parseResult.GetValueForOption(options.SettingsFileOption) is string configOptionValue && !string.IsNullOrEmpty(configOptionValue) ? SettingsUtilities.GetConfiguration(configOptionValue) : null;
-            LogLevel = parseResult.GetValueForOption(options.LogLevelOption);
-            InlineLocal = parseResult.GetValueForOption(options.InlineLocalOption);
-            InlineExternal = parseResult.GetValueForOption(options.InlineExternalOption);
+            OpenApi = parseResult.GetValue(options.OpenApiDescriptionOption);
+            CsdlFilter = parseResult.GetValue(options.CsdlFilterOption);
+            Csdl = parseResult.GetValue(options.CsdlOption);
+            Output = parseResult.GetValue(options.OutputOption);
+            OutputFolder = parseResult.GetValue(options.OutputFolderOption) is string outputFolderOptionValue && !string.IsNullOrEmpty(outputFolderOptionValue) ? outputFolderOptionValue : defaultOutputFolderValue;
+            CleanOutput = parseResult.GetValue(options.CleanOutputOption);
+            Version = parseResult.GetValue(options.VersionOption);
+            MetadataVersion = parseResult.GetValue(options.MetadataVersionOption);
+            OpenApiFormat = parseResult.GetValue(options.FormatOption);
+            TerseOutput = parseResult.GetValue(options.TerseOutputOption);
+            SettingsConfig = parseResult.GetValue(options.SettingsFileOption) is string configOptionValue && !string.IsNullOrEmpty(configOptionValue) ? SettingsUtilities.GetConfiguration(configOptionValue) : null;
+            LogLevel = parseResult.GetValue(options.LogLevelOption);
+            InlineLocal = parseResult.GetValue(options.InlineLocalOption);
+            InlineExternal = parseResult.GetValue(options.InlineExternalOption);
             FilterOptions = new()
             {
-                FilterByOperationIds = parseResult.GetValueForOption(options.FilterByOperationIdsOption),
-                FilterByTags = parseResult.GetValueForOption(options.FilterByTagsOption),
-                FilterByCollection = parseResult.GetValueForOption(options.FilterByCollectionOption),
-                FilterByApiManifest = parseResult.GetValueForOption(options.ManifestOption)
+                FilterByOperationIds = parseResult.GetValue(options.FilterByOperationIdsOption),
+                FilterByTags = parseResult.GetValue(options.FilterByTagsOption),
+                FilterByCollection = parseResult.GetValue(options.FilterByCollectionOption),
+                FilterByApiManifest = parseResult.GetValue(options.ManifestOption)
             };
         }
     }
