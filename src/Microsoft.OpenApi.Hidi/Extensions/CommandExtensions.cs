@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Hidi.Extensions
         {
             foreach (var option in options)
             {
-                command.AddOption(option);
+                command.Options.Add(option);
             }
         }
     }

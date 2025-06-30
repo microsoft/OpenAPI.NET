@@ -2,16 +2,16 @@
 // Licensed under the MIT license.
 
 using System;
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Options;
 
 namespace Microsoft.OpenApi.Hidi.Handlers
 {
-    internal class ValidateCommandHandler : AsyncCommandHandler
+    internal class ValidateCommandHandler : AsynchronousCommandLineAction
     {
         public CommandOptions CommandOptions { get; }
 
@@ -19,10 +19,9 @@ namespace Microsoft.OpenApi.Hidi.Handlers
         {
             CommandOptions = commandOptions;
         }
-        public override async Task<int> InvokeAsync(InvocationContext context)
+        public override async Task<int> InvokeAsync(ParseResult parseResult, CancellationToken cancellationToken = default)
         {
-            var hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
-            var cancellationToken = (CancellationToken)context.BindingContext.GetRequiredService(typeof(CancellationToken));
+            var hidiOptions = new HidiOptions(parseResult, CommandOptions);
             using var loggerFactory = Logger.ConfigureLogger(hidiOptions.LogLevel);
             var logger = loggerFactory.CreateLogger<ValidateCommandHandler>();
             try
