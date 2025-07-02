@@ -29,10 +29,10 @@ Project Objectives:
 > Note: version 2 of this library, which brings support for OpenAPI 3.1, is currently in preview. Due to early versioning issues with the preview, and package renaming, the installation must be done with a specific version number to get the latest version:
 > ```bash
 > # x-release-please-start-version
-> dotnet add package Microsoft.OpenAPI --version 2.0.0-preview.30
+> dotnet add package Microsoft.OpenAPI --version 2.0.0-preview.31
 > # x-release-please-end
 > # x-release-please-start-version
-> dotnet add package Microsoft.OpenAPI.YamlReader --version 2.0.0-preview.30
+> dotnet add package Microsoft.OpenAPI.YamlReader --version 2.0.0-preview.31
 > # x-release-please-end
 > ```
 > Until this new version is generally available, dependabot will periodically create pull requests which **downgrade** to preview 9, they should be ignored.

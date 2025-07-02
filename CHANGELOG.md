@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0-preview.31](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.30...v2.0.0-preview.31) (2025-07-02)
+
+
+### Bug Fixes
+
+* bumps openapi.net.odata to fix two critical bugs in hidi ([00c3018](https://github.com/microsoft/OpenAPI.NET/commit/00c30181214b35f4817be0cbd3827d765efd04d9))
+* bumps openapi.net.odata to fix two critical bugs in hidi ([cf41355](https://github.com/microsoft/OpenAPI.NET/commit/cf41355aac3326c1cb9337078de989179f1b3b67))
+
 ## [2.0.0-preview.30](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.29...v2.0.0-preview.30) (2025-07-02)
 
 
