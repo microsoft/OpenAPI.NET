@@ -1,7 +1,7 @@
 <!-- using the raw image URL so it displays correctly on nuget.org -->
 ![Category overview screenshot](https://raw.githubusercontent.com/microsoft/OpenAPI.NET/main/docs/images/oainet.png "Microsoft + OpenAPI = Love")
 
-# OpenAPI.NET 
+# OpenAPI.NET
 
 |Package|Nuget|
 |--|--|
@@ -14,7 +14,7 @@ The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in 
 
 **See more information on the OpenAPI specification and its history here: <a href="https://www.openapis.org">OpenAPI Initiative</a>**
 
-Project Objectives 
+Project Objectives:
 
 - Provide a single shared object model in .NET for OpenAPI descriptions.
 - Include the most primitive Reader for ingesting OpenAPI JSON and YAML documents in both V2 and V3 formats.
@@ -25,6 +25,18 @@ Project Objectives
 
 - Install core Nuget package [**Microsoft.OpenApi**](https://www.nuget.org/packages/Microsoft.OpenApi)
 - Install readers Nuget package [**Microsoft.OpenApi.Readers**](https://www.nuget.org/packages/Microsoft.OpenApi.Readers)
+
+> Note: version 2 of this library, which brings support for OpenAPI 3.1, is currently in preview. Due to early versioning issues with the preview, and package renaming, the installation must be done with a specific version number to get the latest version:
+> ```bash
+> # x-release-please-start-version
+> dotnet add package Microsoft.OpenAPI --version 2.0.0-preview.29
+> # x-release-please-end
+> # x-release-please-start-version
+> dotnet add package Microsoft.OpenAPI.YamlReader --version 2.0.0-preview.29
+> # x-release-please-end
+> ```
+> Until this new version is generally available, dependabot will periodically create pull requests which **downgrade** to preview 9, they should be ignored.
+> You can read more about the changes of this upcoming version [in the upgrade guide](./docs/upgrade-guide-2.md).
 
 # Processors
 The OpenAPI.NET project holds the base object model for representing OpenAPI documents as .NET objects. Some developers have found the need to write processors that convert other data formats into this OpenAPI.NET object model. We'd like to curate that list of processors in this section of the readme. 
