@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-preview.30](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.29...v2.0.0-preview.30) (2025-07-02)
+
+
+### Bug Fixes
+
+* migration of hidi to the latest version of system.commandline ([a5f8721](https://github.com/microsoft/OpenAPI.NET/commit/a5f8721a18e93ee881cfee371ba6d23ce0c55ae4))
+* throw on circular reference ([e14258d](https://github.com/microsoft/OpenAPI.NET/commit/e14258dd2a8639702c8e0bc81a643874d207facb))
+* throw on circular reference ([caea292](https://github.com/microsoft/OpenAPI.NET/commit/caea292b39d2c754bd2e2d214280add53a0a47ea))
+* upgrades openapi.odata to avoid hidi failing to load ([0bea5ed](https://github.com/microsoft/OpenAPI.NET/commit/0bea5ed3cbb10230bf026288e118ce0e5025e55a))
+* upgrades openapi.odata to avoid hidi failing to load ([6735397](https://github.com/microsoft/OpenAPI.NET/commit/67353976b8a17dcb6760223d06c097469fa6f794))
+* validation to accept lowercase status code ranges (4xx, 5xx) in OpenAPI responses ([09f661f](https://github.com/microsoft/OpenAPI.NET/commit/09f661f0ff0511d5937fad49ae8a6182b1ea1aff))
+
 ## [2.0.0-preview.29](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.28...v2.0.0-preview.29) (2025-06-18)
 
 
