@@ -19,7 +19,6 @@ namespace Microsoft.OpenApi.Reader
         private readonly Stack<string> _currentLocation = new();
         private readonly Dictionary<string, object> _tempStorage = new();
         private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new();
-        private readonly Dictionary<string, Stack<string>> _loopStacks = new();
 
         /// <summary>
         /// Extension parsers
@@ -219,53 +218,6 @@ namespace Microsoft.OpenApi.Reader
         {
             _currentLocation.Push(objectName);
         }
-
-        /// <summary>
-        /// Maintain history of traversals to avoid stack overflows from cycles
-        /// </summary>
-        /// <param name="loopId">Any unique identifier for a stack.</param>
-        /// <param name="key">Identifier used for current context.</param>
-        /// <returns>If method returns false a loop was detected and the key is not added.</returns>
-        public bool PushLoop(string loopId, string key)
-        {
-            if (!_loopStacks.TryGetValue(loopId, out var stack))
-            {
-                stack = new();
-                _loopStacks.Add(loopId, stack);
-            }
-
-            if (!stack.Contains(key))
-            {
-                stack.Push(key);
-                return true;
-            }
-            else
-            {
-                return false;  // Loop detected
-            }
-        }
-
-        /// <summary>
-        /// Reset loop tracking stack
-        /// </summary>
-        /// <param name="loopid">Identifier of loop to clear</param>
-        internal void ClearLoop(string loopid)
-        {
-            _loopStacks[loopid].Clear();
-        }
-
-        /// <summary>
-        /// Exit from the context in cycle detection
-        /// </summary>
-        /// <param name="loopid">Identifier of loop</param>
-        public void PopLoop(string loopid)
-        {
-            if (_loopStacks[loopid].Count > 0)
-            {
-                _loopStacks[loopid].Pop();
-            }
-        }
-
         private void ValidateRequiredFields(OpenApiDocument doc, string version)
         {
             if ((version.is2_0() || version.is3_0()) && (doc.Paths == null) && RootNode is not null)

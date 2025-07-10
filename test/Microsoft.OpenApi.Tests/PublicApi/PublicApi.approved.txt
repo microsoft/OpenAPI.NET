@@ -1993,8 +1993,6 @@ namespace Microsoft.OpenApi.Reader
         public Microsoft.OpenApi.OpenApiDocument Parse(System.Text.Json.Nodes.JsonNode jsonNode, System.Uri location) { }
         public T? ParseFragment<T>(System.Text.Json.Nodes.JsonNode jsonNode, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument openApiDocument)
             where T : Microsoft.OpenApi.IOpenApiElement { }
-        public void PopLoop(string loopid) { }
-        public bool PushLoop(string loopId, string key) { }
         public void SetTempStorage(string key, object? value, object? scope = null) { }
         public void StartObject(string objectName) { }
     }
