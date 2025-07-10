@@ -13,12 +13,12 @@ namespace Microsoft.OpenApi
     public class CompositeExpression : RuntimeExpression
     {
         private readonly string template;
-        private Regex expressionPattern = new(@"{(?<exp>\$[^}]*)");
+        private readonly Regex expressionPattern = new(@"{(?<exp>\$[^}]*)");
 
         /// <summary>
         /// Expressions embedded into string literal
         /// </summary>
-        public List<RuntimeExpression> ContainedExpressions = new();
+        public List<RuntimeExpression> ContainedExpressions { get; } = new();
 
         /// <summary>
         /// Create a composite expression from a string literal with an embedded expression
