@@ -6,9 +6,8 @@
 |Package|Nuget|
 |--|--|
 |Models and Writers|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi/) |
-|Readers | [![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.Readers.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.Readers/) |
+|YamlReader | [![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.YamlReader.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) |
 |Hidi|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.Hidi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi/)
-
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
@@ -19,23 +18,14 @@ Project Objectives:
 - Provide a single shared object model in .NET for OpenAPI descriptions.
 - Include the most primitive Reader for ingesting OpenAPI JSON and YAML documents in both V2 and V3 formats.
 - Provide OpenAPI description writers for both V2 and V3 specification formats.
-- Enable developers to create Readers that translate different data formats into OpenAPI descriptions. 
+- Enable developers to create Readers that translate different data formats into OpenAPI descriptions.
 
 # Installation
 
 - Install core Nuget package [**Microsoft.OpenApi**](https://www.nuget.org/packages/Microsoft.OpenApi)
-- Install readers Nuget package [**Microsoft.OpenApi.Readers**](https://www.nuget.org/packages/Microsoft.OpenApi.Readers)
+- Install Yaml Reader Nuget package [**Microsoft.OpenApi.YamlReader**](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader)
 
-> Note: version 2 of this library, which brings support for OpenAPI 3.1, is currently in preview. Due to early versioning issues with the preview, and package renaming, the installation must be done with a specific version number to get the latest version:
-> ```bash
-> # x-release-please-start-version
-> dotnet add package Microsoft.OpenAPI --version 2.0.0-preview.31
-> # x-release-please-end
-> # x-release-please-start-version
-> dotnet add package Microsoft.OpenAPI.YamlReader --version 2.0.0-preview.31
-> # x-release-please-end
-> ```
-> Until this new version is generally available, dependabot will periodically create pull requests which **downgrade** to preview 9, they should be ignored.
+> Note: we just released a new major version of the library, which brings support for OpenAPI 3.1!
 > You can read more about the changes of this upcoming version [in the upgrade guide](./docs/upgrade-guide-2.md).
 
 # Processors
@@ -89,19 +79,10 @@ var document = new OpenApiDocument
 Reading and writing an OpenAPI description
 
 ```C#
-var httpClient = new HttpClient
-{
-    BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/")
-};
-
-var stream = await httpClient.GetStreamAsync("main/examples/v3.0/petstore.yaml");
-
-// Read V3 as YAML
-var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic);
+var (openApiDocument, _) = await OpenApiDocument.LoadAsync("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/refs/heads/main/_archive_/schemas/v3.0/pass/petstore.yaml");
 
 // Write V2 as JSON
-var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
-
+var outputString = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 ```
 
 # Validating/Testing OpenAPI descriptions
