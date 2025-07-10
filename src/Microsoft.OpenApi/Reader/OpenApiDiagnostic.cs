@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Reader
     /// <summary>
     /// Object containing all diagnostic information related to Open API parsing.
     /// </summary>
-    public class OpenApiDiagnostic : IDiagnostic
+    public class OpenApiDiagnostic
     {
         /// <summary>
         /// List of all errors.
