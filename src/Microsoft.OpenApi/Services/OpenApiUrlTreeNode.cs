@@ -251,7 +251,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, upper-cased, concatenated HTTP methods.
         /// </summary>
-        public readonly static IReadOnlyDictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>(StringComparer.OrdinalIgnoreCase)
+        internal static readonly IReadOnlyDictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>(StringComparer.OrdinalIgnoreCase)
         {
             { "GET", new MermaidNodeStyle("lightSteelBlue", MermaidNodeShape.SquareCornerRectangle) },
             { "POST", new MermaidNodeStyle("Lightcoral", MermaidNodeShape.OddShape) },
@@ -334,7 +334,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Defines the color and shape of a node in a Mermaid graph diagram
     /// </summary>
-    public class MermaidNodeStyle
+    internal class MermaidNodeStyle
     {
         /// <summary>
         /// Create a style that defines the color and shape of a diagram element
@@ -361,7 +361,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Shapes supported by Mermaid diagrams
     /// </summary>
-    public enum MermaidNodeShape
+    internal enum MermaidNodeShape
     {
         /// <summary>
         /// Rectangle with square corners

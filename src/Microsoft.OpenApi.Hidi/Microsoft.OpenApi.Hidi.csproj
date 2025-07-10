@@ -16,6 +16,7 @@
     <NoWarn>$(NoWarn);NU5048;NU5104;CA1848;</NoWarn>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <AnalysisMode>All</AnalysisMode>
+    <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
