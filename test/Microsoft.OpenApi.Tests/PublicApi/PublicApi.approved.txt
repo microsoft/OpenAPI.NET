@@ -60,16 +60,16 @@ namespace Microsoft.OpenApi
     public class CurrentKeys
     {
         public CurrentKeys() { }
-        public string? Callback { get; set; }
-        public string? Content { get; set; }
+        public string? Callback { get; }
+        public string? Content { get; }
         public string? Encoding { get; }
         public string? Example { get; }
         public string? Extension { get; }
         public string? Header { get; }
-        public string? Link { get; set; }
-        public System.Net.Http.HttpMethod? Operation { get; set; }
-        public string? Path { get; set; }
-        public string? Response { get; set; }
+        public string? Link { get; }
+        public System.Net.Http.HttpMethod? Operation { get; }
+        public string? Path { get; }
+        public string? Response { get; }
         public string? ServerVariable { get; }
     }
     [System.AttributeUsage(System.AttributeTargets.Property | System.AttributeTargets.Field)]
