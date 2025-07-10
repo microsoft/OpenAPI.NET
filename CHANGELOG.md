@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.0.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.31...v2.0.0) (2025-07-10)
+
+
+### Features
+
+* General availability of version 2 with support for OpenAPI 3.1!!! 🎉🎉🎉 ([a02d74c](https://github.com/microsoft/OpenAPI.NET/commit/a02d74c2467d591a7c4d8fa89b3b18e2452be0a5))
+* General availability of version 2 with support for OpenAPI 3.1!!! 🎉🎉🎉 ([97824e5](https://github.com/microsoft/OpenAPI.NET/commit/97824e5a9dc36b0c2ac56bbceef3439b9e8dfcf3))
+
+
+### Bug Fixes
+
+* inconsistent visibility of properties in current keys class ([cb9772f](https://github.com/microsoft/OpenAPI.NET/commit/cb9772fd4eb2a6fa36b65f0388f471eb66653aa2))
+* removes extraneous default value constant ([bf8d0b6](https://github.com/microsoft/OpenAPI.NET/commit/bf8d0b63adc16013fdb22f38715f167ce6e21c98))
+* removes extraneous default value constant ([b6eb46e](https://github.com/microsoft/OpenAPI.NET/commit/b6eb46ebb46ccd7314e00b5698fa7f6b9b6ae0da))
+* removes loop methods from parsing context as its available in loop detector instead ([de3531b](https://github.com/microsoft/OpenAPI.NET/commit/de3531bc944bcb2bbc55e278e28f1a05d6d0a29f))
+* removes loop methods from parsing context as its available in loop detector instead ([18a8cbe](https://github.com/microsoft/OpenAPI.NET/commit/18a8cbeeb00ee39e5bbdaabdde097ee9f8a75668))
+* removes public mermaid types that were not usuable ([ef7ae33](https://github.com/microsoft/OpenAPI.NET/commit/ef7ae338dc6122a9ffc58c7661b161b319d307d9))
+* removes public mermaid types that were not usuable ([a26096c](https://github.com/microsoft/OpenAPI.NET/commit/a26096c8cf9c3e53a547235a446296eaff3f413d))
+* removes redundant marker interface ([5a055f9](https://github.com/microsoft/OpenAPI.NET/commit/5a055f9f616028116f1d035ee744820f37a85464))
+* removes redundant marker interface ([74a9f08](https://github.com/microsoft/OpenAPI.NET/commit/74a9f083674134482b1349bce1643d9f4636ed82))
+* switches to a getter for API consistency ([7975082](https://github.com/microsoft/OpenAPI.NET/commit/797508257501c8b4a336310c84030d0e128caf14))
+* switches to a getter for API consistency ([0091f1c](https://github.com/microsoft/OpenAPI.NET/commit/0091f1cbf5f430fe9f54cfb5e2b66279663de632))
+* unconsistent visibility of properties in current keys class ([d0c20ab](https://github.com/microsoft/OpenAPI.NET/commit/d0c20ab2209b3e7ed57cb89dbd4107d915975302))
+* visibility of extension methods ([1e9112a](https://github.com/microsoft/OpenAPI.NET/commit/1e9112a4cfc01a54f265858c81b0effb8a897976))
+* visibility of extension methods ([50c8e34](https://github.com/microsoft/OpenAPI.NET/commit/50c8e3459d9849d0f9acfc1e7efc99668828e8a4))
+
 ## [2.0.0-preview.31](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.30...v2.0.0-preview.31) (2025-07-02)
 
 
