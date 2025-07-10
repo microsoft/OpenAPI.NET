@@ -925,7 +925,6 @@ namespace Microsoft.OpenApi
     }
     public class OpenApiOperation : Microsoft.OpenApi.IMetadataContainer, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiSerializable
     {
-        public const bool DeprecatedDefault = false;
         public OpenApiOperation() { }
         public OpenApiOperation(Microsoft.OpenApi.OpenApiOperation operation) { }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiCallback>? Callbacks { get; set; }
