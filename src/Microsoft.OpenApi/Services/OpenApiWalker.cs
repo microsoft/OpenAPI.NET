@@ -1279,32 +1279,32 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Current Path key
         /// </summary>
-        public string? Path { get; set; }
+        public string? Path { get; internal set; }
 
         /// <summary>
         /// Current Operation Type
         /// </summary>
-        public HttpMethod? Operation { get; set; }
+        public HttpMethod? Operation { get; internal set; }
 
         /// <summary>
         /// Current Response Status Code
         /// </summary>
-        public string? Response { get; set; }
+        public string? Response { get; internal set; }
 
         /// <summary>
         /// Current Content Media Type
         /// </summary>
-        public string? Content { get; set; }
+        public string? Content { get; internal set; }
 
         /// <summary>
         /// Current Callback Key
         /// </summary>
-        public string? Callback { get; set; }
+        public string? Callback { get; internal set; }
 
         /// <summary>
         /// Current Link Key
         /// </summary>
-        public string? Link { get; set; }
+        public string? Link { get; internal set; }
 
         /// <summary>
         /// Current Header Key
