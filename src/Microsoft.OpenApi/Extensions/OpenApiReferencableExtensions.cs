@@ -10,12 +10,12 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Extension methods for resolving references on <see cref="IOpenApiReferenceable"/> elements.
     /// </summary>
-    public static class OpenApiReferenceableExtensions
+    internal static class OpenApiReferenceableExtensions
     {
         /// <summary>
         /// Resolves a JSON Pointer with respect to an element, returning the referenced element.
         /// </summary>
-        /// <param name="element">The referencable Open API element on which to apply the JSON pointer</param>
+        /// <param name="element">The referenceable Open API element on which to apply the JSON pointer</param>
         /// <param name="pointer">a JSON Pointer [RFC 6901](https://tools.ietf.org/html/rfc6901).</param>
         /// <returns>The element pointed to by the JSON pointer.</returns>
         public static IOpenApiReferenceable ResolveReference(this IOpenApiReferenceable element, JsonPointer pointer)

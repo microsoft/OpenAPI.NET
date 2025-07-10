@@ -1065,10 +1065,6 @@ namespace Microsoft.OpenApi
         protected override void SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
         protected override void SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject jsonObject) { }
     }
-    public static class OpenApiReferenceableExtensions
-    {
-        public static Microsoft.OpenApi.IOpenApiReferenceable ResolveReference(this Microsoft.OpenApi.IOpenApiReferenceable element, Microsoft.OpenApi.JsonPointer pointer) { }
-    }
     public class OpenApiRequestBody : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiRequestBody, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiRequestBody>
     {
         public OpenApiRequestBody() { }
