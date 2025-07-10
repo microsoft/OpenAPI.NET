@@ -12,11 +12,6 @@ namespace Microsoft.OpenApi
     /// </summary>
     public class OpenApiOperation : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
     {
-        /// <summary>
-        /// Default value for <see cref="Deprecated"/>.
-        /// </summary>
-        public const bool DeprecatedDefault = false;
-
         private ISet<OpenApiTagReference>? _tags;
         /// <summary>
         /// A list of tags for API documentation control.
@@ -97,7 +92,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
         /// </summary>
-        public bool Deprecated { get; set; } = DeprecatedDefault;
+        public bool Deprecated { get; set; }
 
         /// <summary>
         /// A declaration of which security mechanisms can be used for this operation.
