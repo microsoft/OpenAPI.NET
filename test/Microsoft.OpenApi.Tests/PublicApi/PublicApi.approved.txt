@@ -54,8 +54,8 @@ namespace Microsoft.OpenApi
     }
     public class CompositeExpression : Microsoft.OpenApi.RuntimeExpression
     {
-        public System.Collections.Generic.List<Microsoft.OpenApi.RuntimeExpression> ContainedExpressions;
         public CompositeExpression(string expression) { }
+        public System.Collections.Generic.List<Microsoft.OpenApi.RuntimeExpression> ContainedExpressions { get; }
         public override string Expression { get; }
     }
     public class CurrentKeys
