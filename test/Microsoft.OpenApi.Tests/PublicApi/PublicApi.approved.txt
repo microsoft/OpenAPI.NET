@@ -97,7 +97,6 @@ namespace Microsoft.OpenApi
         public override string Expression { get; }
         public string? Token { get; }
     }
-    public interface IDiagnostic { }
     public interface IMetadataContainer
     {
         System.Collections.Generic.IDictionary<string, object>? Metadata { get; set; }
@@ -1942,7 +1941,7 @@ namespace Microsoft.OpenApi.Reader
     {
         public static System.Text.Json.Nodes.JsonNode? Find(this Microsoft.OpenApi.JsonPointer currentPointer, System.Text.Json.Nodes.JsonNode baseJsonNode) { }
     }
-    public class OpenApiDiagnostic : Microsoft.OpenApi.IDiagnostic
+    public class OpenApiDiagnostic
     {
         public OpenApiDiagnostic() { }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiError> Errors { get; set; }
