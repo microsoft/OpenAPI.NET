@@ -86,11 +86,11 @@ var mySchema = new OpenApiSchema();
 mySchema.AnyOf.Add(otherSchema);
 
 // one solution
-mySchema.AnyOf ??= [];
+mySchema.AnyOf ??= new List<IOpenApiSchema>();
 mySchema.AnyOf.Add(otherSchema);
 
 // alternative
-mySchema.AnyOf = [otherSchema];
+mySchema.AnyOf = new List<IOpenApiSchema> { otherSchema };
 ```
 
 ## Reduced Dependencies
@@ -266,19 +266,6 @@ var document = new OpenApiDocument
 var componentA = document.Components["A"];
 ```
 
-### Collections are implementations
-
-Any collection used by the model now documents using the implementation type instead of the interface. This facilitates the usage of new language features such as collections initialization.
-
-```csharp
-var schema = new OpenApiSchema();
-
-// 1.X: does not compile due to the lack of implementation type
-// 2.X: compiles successfully
-schema.AnyOf = [];
-// now a List<OpenApiSchema> instead of IList<OpenApiSchema>
-```
-
 ### Ephemeral object properties are now in Metadata
 
 In version 1.X applications could add ephemeral properties to some of the models from the libraries. These properties would be carried along in an "Annotations" property, but not serialized. This is especially helpful when building integrations that build document in multiple phases and need additional context to complete the work. The property is now named metadata to avoid any confusion with other terms. The parent interface has also been renamed from `IOpenApiAnnotatable` to `IMetadataContainer`.
@@ -432,7 +419,7 @@ public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     /// <summary>
     /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
     /// </summary>
-    public IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+    public IDictionary<string, OpenApiPathItem>? PathItems { get; set; }
 }
 ```
 
@@ -441,7 +428,7 @@ public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
 Through the use of proxy objects in order to represent references, it is now possible to set the Summary and Description property on an object that is a reference. This was previously not possible.
 
 ```csharp
-var parameter = new OpenApiParameterReference("id", hostdocument)
+var parameter = new OpenApiParameterReference("id", hostDocument)
 {
     Description = "Customer Id"
 };
@@ -511,7 +498,7 @@ The `SerializeAs()` method simplifies serialization scenarios, making it easier 
 
 ```csharp
 OpenApiDocument document = new OpenApiDocument();
-string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json);
+string json = await document.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json);
 
 ```
 
@@ -526,7 +513,7 @@ string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiConstan
 var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json); 
 
 // After (2.0)
-var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
+var outputString = await openApiDocument.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
 ```
 
 ### OpenApiSchema's Type property is now a flaggable enum
