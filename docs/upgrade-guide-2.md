@@ -8,7 +8,7 @@ ms.topic: conceptual
 
 # Introduction
 
-We are excited to announce the preview of a new version of the OpenAPI.NET library!  
+We are excited to announce the new version of the OpenAPI.NET library!  
 OpenAPI.NET v2 is a major update to the OpenAPI.NET library. This release includes a number of performance improvements, API enhancements, and support for OpenAPI v3.1.
 
 ## The biggest update ever
@@ -251,7 +251,7 @@ parameter.Extensions.Add("x-foo", new JsonNodeExtension(openApiObject));
 
 ### Enable Null Reference Type Support
 
-Version 2.0 preview 13 introduces support for null reference types, which improves type safety and reduces the likelihood of null reference exceptions.
+Version 2.0 introduces support for null reference types, which improves type safety and reduces the likelihood of null reference exceptions.
 
 **Example:**
 
