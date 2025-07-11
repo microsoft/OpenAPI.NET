@@ -8,7 +8,7 @@ ms.topic: conceptual
 
 # Introduction
 
-We are excited to announce the preview of a new version of the OpenAPI.NET library!  
+We are excited to announce the new version of the OpenAPI.NET library!  
 OpenAPI.NET v2 is a major update to the OpenAPI.NET library. This release includes a number of performance improvements, API enhancements, and support for OpenAPI v3.1.
 
 ## The biggest update ever
@@ -86,11 +86,11 @@ var mySchema = new OpenApiSchema();
 mySchema.AnyOf.Add(otherSchema);
 
 // one solution
-mySchema.AnyOf ??= [];
+mySchema.AnyOf ??= new List<IOpenApiSchema>();
 mySchema.AnyOf.Add(otherSchema);
 
 // alternative
-mySchema.AnyOf = [otherSchema];
+mySchema.AnyOf = new List<IOpenApiSchema> { otherSchema };
 ```
 
 ## Reduced Dependencies
@@ -251,7 +251,7 @@ parameter.Extensions.Add("x-foo", new JsonNodeExtension(openApiObject));
 
 ### Enable Null Reference Type Support
 
-Version 2.0 preview 13 introduces support for null reference types, which improves type safety and reduces the likelihood of null reference exceptions.
+Version 2.0 introduces support for null reference types, which improves type safety and reduces the likelihood of null reference exceptions.
 
 **Example:**
 
@@ -264,19 +264,6 @@ var document = new OpenApiDocument
 // 1.X: no compilation error or warning, but fails with a null reference exception at runtime
 // 2.X: compilation error or warning depending on the project configuration
 var componentA = document.Components["A"];
-```
-
-### Collections are implementations
-
-Any collection used by the model now documents using the implementation type instead of the interface. This facilitates the usage of new language features such as collections initialization.
-
-```csharp
-var schema = new OpenApiSchema();
-
-// 1.X: does not compile due to the lack of implementation type
-// 2.X: compiles successfully
-schema.AnyOf = [];
-// now a List<OpenApiSchema> instead of IList<OpenApiSchema>
 ```
 
 ### Ephemeral object properties are now in Metadata
@@ -432,7 +419,7 @@ public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     /// <summary>
     /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
     /// </summary>
-    public IDictionary<string, OpenApiPathItem>? PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+    public IDictionary<string, OpenApiPathItem>? PathItems { get; set; }
 }
 ```
 
@@ -441,7 +428,7 @@ public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
 Through the use of proxy objects in order to represent references, it is now possible to set the Summary and Description property on an object that is a reference. This was previously not possible.
 
 ```csharp
-var parameter = new OpenApiParameterReference("id", hostdocument)
+var parameter = new OpenApiParameterReference("id", hostDocument)
 {
     Description = "Customer Id"
 };
@@ -511,7 +498,7 @@ The `SerializeAs()` method simplifies serialization scenarios, making it easier 
 
 ```csharp
 OpenApiDocument document = new OpenApiDocument();
-string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json);
+string json = await document.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json);
 
 ```
 
@@ -526,7 +513,7 @@ string json = document.SerializeAs(OpenApiSpecVersion.OpenApi3_0, OpenApiConstan
 var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json); 
 
 // After (2.0)
-var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
+var outputString = await openApiDocument.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
 ```
 
 ### OpenApiSchema's Type property is now a flaggable enum
