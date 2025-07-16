@@ -13,6 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="9.0.7" />
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
     <TrimmerRootAssembly Include="Microsoft.OpenApi" />
     <ProjectReference Include="..\..\src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj" />
