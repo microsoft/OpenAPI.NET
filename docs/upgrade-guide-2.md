@@ -98,13 +98,13 @@ mySchema.AnyOf = new List<IOpenApiSchema> { otherSchema };
 
 ## Reduced Dependencies
 
-In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library to be able to read OpenAPI descriptions in either YAML or JSON.  In OpenAPI.NET v2, the core Microsoft.OpenAPI library can both read and write JSON.  It is only necessary to use the newly renamed [Microsoft.OpenApi.YamlReader](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) library if you need YAML support. This allows teams who are only working in JSON to avoid the additional dependency and therefore eliminate all non-.NET library references.
+In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library to be able to read OpenAPI descriptions in either YAML or JSON. In OpenAPI.NET v2, the core Microsoft.OpenAPI library can both read and write JSON. It is only necessary to use the newly renamed [Microsoft.OpenApi.YamlReader](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) library if you need YAML support. This allows teams who are only working in JSON to avoid the additional dependency and therefore eliminate all non-.NET library references.
 
 Once the dependency is added, the reader needs to be added to the reader settings as demonstrated below
 
 ```csharp
 var settings = new OpenApiReaderSettings();
-settings.AddYamlReader();  
+settings.AddYamlReader();
 
 var result = OpenApiDocument.LoadAsync(openApiString, settings: settings);
 ```
@@ -120,7 +120,7 @@ var reader = new OpenApiStringReader();
 var openApiDoc = reader.Read(stringOpenApiDoc, out var diagnostic);
 ```
 
-The same pattern can be used for `OpenApiStreamReader` and `OpenApiTextReader`.  When we introduced the `ReadAsync` methods we eliminated the use of the `out` parameter. To improve code readability, we've added deconstruction support to `ReadResult`. The properties also have been renamed to avoid confusion with their types.
+The same pattern can be used for `OpenApiStreamReader` and `OpenApiTextReader`. When we introduced the `ReadAsync` methods we eliminated the use of the `out` parameter. To improve code readability, we've added deconstruction support to `ReadResult`. The properties also have been renamed to avoid confusion with their types.
 
 ```csharp
 var reader = new OpenApiStreamReader();
@@ -146,11 +146,11 @@ public class OpenApiDocument {
 }
 ```
 
-This API design allows a developer to use IDE autocomplete to present all the loading options by simply knowing the name of the `OpenApiDocument` class.  Each of these methods are layered on top of the more primitive methods to ensure consistent behavior.
+This API design allows a developer to use IDE autocomplete to present all the loading options by simply knowing the name of the `OpenApiDocument` class. Each of these methods are layered on top of the more primitive methods to ensure consistent behavior.
 
-As the YAML format is only supported when including the `Microsoft.OpenApi.YamlReader` library it was decided not to use an enum for the `format` parameter.  We are considering implementing a more [strongly typed solution](https://github.com/microsoft/OpenAPI.NET/issues/1952) similar to the way that `HttpMethod` is implemented so that we have a strongly typed experience that is also extensible.
+As the YAML format is only supported when including the `Microsoft.OpenApi.YamlReader` library it was decided not to use an enum for the `format` parameter. We are considering implementing a more [strongly typed solution](https://github.com/microsoft/OpenAPI.NET/issues/1952) similar to the way that `HttpMethod` is implemented so that we have a strongly typed experience that is also extensible.
 
-When the loading methods are used without a format parameter, we will attempt to parse the document using the default JSON reader.  If that fails and the YAML reader is registered, then we will attempt to read as YAML. The goal is always to provide the fastest path with JSON but still maintain the convenience of not having to care whether a URL points to YAML or JSON if you need that flexibility.
+When the loading methods are used without a format parameter, we will attempt to parse the document using the default JSON reader. If that fails and the YAML reader is registered, then we will attempt to read as YAML. The goal is always to provide the fastest path with JSON but still maintain the convenience of not having to care whether a URL points to YAML or JSON if you need that flexibility.
 
 ### Additional exceptions
 
@@ -284,7 +284,7 @@ var info = schema.Metadata["foo"];
 
 ### Updates to OpenApiSchema
 
-The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema.  In 3.0 and earlier, OpenAPI used a "subset, superset" of JSON Schema draft-4. This caused many problems for developers trying to use JSON Schema validation libraries with the JSON Schema in their OpenAPI descriptions.  In OpenAPI 3.1, the 2020-12 draft version of JSON Schema was adopted and a new JSON Schema vocabulary was adopted to support OpenAPI specific keywords.  All attempts to constrain what JSON Schema keywords could be used in OpenAPI were removed.
+The OpenAPI 3.1 specification changes significantly how it leverages JSON Schema. In 3.0 and earlier, OpenAPI used a "subset, superset" of JSON Schema draft-4. This caused many problems for developers trying to use JSON Schema validation libraries with the JSON Schema in their OpenAPI descriptions. In OpenAPI 3.1, the 2020-12 draft version of JSON Schema was adopted and a new JSON Schema vocabulary was adopted to support OpenAPI specific keywords. All attempts to constrain what JSON Schema keywords could be used in OpenAPI were removed.
 
 #### New keywords introduced in 2020-12
 
@@ -311,24 +311,24 @@ public bool UnevaluatedProperties { get; set;}
 #### Changes to existing keywords
 
 ```csharp
-public string? ExclusiveMaximum { get; set; }  // type changed to reflect the new version of JSON schema
+public string? ExclusiveMaximum { get; set; } // type changed to reflect the new version of JSON schema
 public string? ExclusiveMinimum { get; set; } // type changed to reflect the new version of JSON schema
-public JsonSchemaType? Type { get; set; }  // Was string, now flagged enum
+public JsonSchemaType? Type { get; set; } // Was string, now flagged enum
 public string? Maximum { get; set; }      // type changed to overcome double vs decimal issues
 public string? Minimum { get; set; }       // type changed to overcome double vs decimal issues
 
-public JsonNode Default { get; set; }  // Type matching no longer enforced. Was IOpenApiAny
-public bool ReadOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
-public bool WriteOnly { get; set; }  // No longer has defined semantics in OpenAPI 3.1
+public JsonNode Default { get; set; } // Type matching no longer enforced. Was IOpenApiAny
+public bool ReadOnly { get; set; } // No longer has defined semantics in OpenAPI 3.1
+public bool WriteOnly { get; set; } // No longer has defined semantics in OpenAPI 3.1
 
-public JsonNode Example { get; set; }  // No longer IOpenApiAny
+public JsonNode Example { get; set; } // No longer IOpenApiAny
 public IList<JsonNode> Examples { get; set; }
 public IList<JsonNode> Enum { get; set; }
-public OpenApiExternalDocs ExternalDocs { get; set; }  // OpenApi Vocab
-public bool Deprecated { get; set; }  // OpenApi Vocab
-public OpenApiXml Xml { get; set; }  // OpenApi Vocab
+public OpenApiExternalDocs ExternalDocs { get; set; } // OpenApi Vocab
+public bool Deprecated { get; set; } // OpenApi Vocab
+public OpenApiXml Xml { get; set; } // OpenApi Vocab
 
-public IDictionary<string, object> Metadata { get; set; }  // Custom property bag to be used by the application, used to be named annotations
+public IDictionary<string, object> Metadata { get; set; } // Custom property bag to be used by the application, used to be named annotations
 ```
 
 #### OpenApiSchema methods
@@ -353,7 +353,7 @@ There are a number of new features in OpenAPI v3.1 that are now supported in Ope
 
 ### JsonSchema Dialect and BaseUri in OpenApiDocument
 
-To enable full compatibility with JSON Schema, the `OpenApiDocument` class now supports a `JsonSchemaDialect` property. This property specifies the JSON Schema dialect used throughout the document, using a URI. By explicitly declaring the dialect, tooling can be directed to use a JSON Schema version other than the default [2020-12 draft](https://json-schema.org/draft/2020-12/json-schema-core.html).  However, OpenAPI.NET does not guarantee compatibility with versions other than 2020-12.
+To enable full compatibility with JSON Schema, the `OpenApiDocument` class now supports a `JsonSchemaDialect` property. This property specifies the JSON Schema dialect used throughout the document, using a URI. By explicitly declaring the dialect, tooling can be directed to use a JSON Schema version other than the default [2020-12 draft](https://json-schema.org/draft/2020-12/json-schema-core.html). However, OpenAPI.NET does not guarantee compatibility with versions other than 2020-12.
 
 In addition, a `BaseUri` property has been added to represent the identity of the OpenAPI document. If the document’s identity is not provided or cannot be determined at based on its location, this property will be set to a generated placeholder URI.
 
@@ -379,7 +379,7 @@ public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IMetada
 
 ```csharp
 
-public class OpenApiDocument  : IOpenApiSerializable, IOpenApiExtensible, IOpenApiMetadataContainer
+public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiMetadataContainer
 {
     public IDictionary<string, OpenApiPathItem>? Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
 }
