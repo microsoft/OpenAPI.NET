@@ -1,6 +1,6 @@
 ---
-title: Upgrade guide to OpenAPI.NET 2.1 
-description: Learn how to upgrade your OpenAPI.NET version from 1.6 to 2.0 
+title: Upgrade guide to OpenAPI.NET 2.0
+description: Learn how to upgrade your OpenAPI.NET version from 1.6 to 2.0
 author: rachit.malik
 ms.author: malikrachit
 ms.topic: conceptual
@@ -8,12 +8,15 @@ ms.topic: conceptual
 
 # Introduction
 
-We are excited to announce the new version of the OpenAPI.NET library!  
+We are excited to announce the new version of the OpenAPI.NET library!
 OpenAPI.NET v2 is a major update to the OpenAPI.NET library. This release includes a number of performance improvements, API enhancements, and support for OpenAPI v3.1.
+
+> [!WARNING]
+> If you are using this library with ASP.NET Core version `< 10.0` then you must remain on version `1.x` as it's not compatible.
 
 ## The biggest update ever
 
-Since the release of the first version of the OpenAPI.NET library in 2018, there has not been a major version update to the library. With the addition of support for OpenAPI v3.1 it was necessary to make some breaking changes. With this opportunity, we have taken the time to make some other improvements to the library, based on the experience we have gained supporting a large community of users for the last six years .
+Since the release of the first version of the OpenAPI.NET library in 2018, there has not been a major version update to the library. With the addition of support for OpenAPI v3.1 it was necessary to make some breaking changes. With this opportunity, we have taken the time to make some other improvements to the library, based on the experience we have gained supporting a large community of users for the last six years.
 
 ## Performance Improvements
 
@@ -21,7 +24,7 @@ One of the key features of OpenAPI.NET is its performance. This version makes it
 
 In v1, instances of `$ref` were resolved in a second pass of the document to ensure the target of the reference has been parsed before attempting to resolve it. In v2, reference targets are lazily resolved when reference objects are accessed. This improves load time performance for documents that make heavy use of references.
 
-[How does this change the behaviour of external references?]
+[How does this change the behavior of external references?]
 
 ### Results
 
@@ -100,10 +103,10 @@ In OpenAPI v1, it was necessary to include the Microsoft.OpenApi.Readers library
 Once the dependency is added, the reader needs to be added to the reader settings as demonstrated below
 
 ```csharp
-var settings = new OpenApiReaderSettings();  
+var settings = new OpenApiReaderSettings();
 settings.AddYamlReader();  
 
-var result = OpenApiDocument.LoadAsync(openApiString, settings: settings); 
+var result = OpenApiDocument.LoadAsync(openApiString, settings: settings);
 ```
 
 ## API Enhancements
@@ -130,7 +133,7 @@ var diagnostics = result.Diagnostics;
 
 A `ReadResult` object acts as a tuple of `OpenApiDocument` and `OpenApiDiagnostic`.
 
-The challenge with this approach is that the reader classes are not very discoverable and the behaviour is not actually consistent with the `*TextReader` pattern that allows incrementally reading the document. This library does not support incrementally reading the OpenAPI Document. It only reads a complete document and returns an `OpenApiDocument` instance.
+The challenge with this approach is that the reader classes are not very discoverable and the behavior is not actually consistent with the `*TextReader` pattern that allows incrementally reading the document. This library does not support incrementally reading the OpenAPI Document. It only reads a complete document and returns an `OpenApiDocument` instance.
 
 In the v2 library we are moving to the pattern used by classes like `XDocument` where a set of static `Load` and `Parse` methods are used as factory methods.
 
@@ -143,11 +146,11 @@ public class OpenApiDocument {
 }
 ```
 
-This API design allows a developer to use IDE autocomplete to present all the loading options by simply knowing the name of the `OpenApiDocument` class.  Each of these methods are layered on top of the more primitive methods to ensure consistent behaviour.
+This API design allows a developer to use IDE autocomplete to present all the loading options by simply knowing the name of the `OpenApiDocument` class.  Each of these methods are layered on top of the more primitive methods to ensure consistent behavior.
 
 As the YAML format is only supported when including the `Microsoft.OpenApi.YamlReader` library it was decided not to use an enum for the `format` parameter.  We are considering implementing a more [strongly typed solution](https://github.com/microsoft/OpenAPI.NET/issues/1952) similar to the way that `HttpMethod` is implemented so that we have a strongly typed experience that is also extensible.
 
-When the loading methods are used without a format parameter, we will attempt to parse the document using the default JSON reader.  If that fails and the YAML reader is registered, then we will attempt to read as YAML.  The goal is always to provide the fastest path with JSON but still maintain the convenience of not having to care whether a URL points to YAML or JSON if you need that flexibility.
+When the loading methods are used without a format parameter, we will attempt to parse the document using the default JSON reader.  If that fails and the YAML reader is registered, then we will attempt to read as YAML. The goal is always to provide the fastest path with JSON but still maintain the convenience of not having to care whether a URL points to YAML or JSON if you need that flexibility.
 
 ### Additional exceptions
 
@@ -349,6 +352,7 @@ public class OpenApiSchema : IMetadataContainer, IOpenApiExtensible, IOpenApiRef
 There are a number of new features in OpenAPI v3.1 that are now supported in OpenAPI.NET.
 
 ### JsonSchema Dialect and BaseUri in OpenApiDocument
+
 To enable full compatibility with JSON Schema, the `OpenApiDocument` class now supports a `JsonSchemaDialect` property. This property specifies the JSON Schema dialect used throughout the document, using a URI. By explicitly declaring the dialect, tooling can be directed to use a JSON Schema version other than the default [2020-12 draft](https://json-schema.org/draft/2020-12/json-schema-core.html).  However, OpenAPI.NET does not guarantee compatibility with versions other than 2020-12.
 
 In addition, a `BaseUri` property has been added to represent the identity of the OpenAPI document. If the document’s identity is not provided or cannot be determined at based on its location, this property will be set to a generated placeholder URI.
@@ -510,7 +514,7 @@ string json = await document.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenA
 
 ```csharp
 // Before (1.6)
-var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json); 
+var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
 
 // After (2.0)
 var outputString = await openApiDocument.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
@@ -521,6 +525,7 @@ var outputString = await openApiDocument.SerializeAsync(OpenApiSpecVersion.OpenA
 In v2.0, the Type property in `OpenApiSchema` is now defined as a flaggable enum, allowing consumers to swap nullable for type arrays.
 
 **Example:**
+
 ```csharp
 // v1.6.x
 var schema = new OpenApiSchema
@@ -533,7 +538,7 @@ var schema = new OpenApiSchema
 // bitwise OR(|) - combines flags to allow multiple types
 var schema = new OpenApiSchema
 {
-    Type = JsonSchemaType.String | JsonSchemaType.Null 
+    Type = JsonSchemaType.String | JsonSchemaType.Null
 }
 
 // bitwise NOT(~) - inverts bits; filters out null flag
@@ -545,7 +550,7 @@ var schema = new OpenApiSchema
 // bitwise AND(&) - intersects flags to check for a specific type
 var schema = new OpenApiSchema
 {
-    Type = (JsonSchemaType.String & JsonSchemaType.Null) == JsonSchemaType.Null 
+    Type = (JsonSchemaType.String & JsonSchemaType.Null) == JsonSchemaType.Null
 }
 
 ```
@@ -588,6 +593,7 @@ This resolver class has been removed in favor of a more streamlined resolution m
 ### Visitor and Validator now pass an interface model
 
 **Example:**
+
 ```csharp
 //v1.6.x
 public override void Visit(OpenApiParameter parameter){}
@@ -605,6 +611,7 @@ All the `IEffective` and `GetEffective` infrastructure in the models have been r
 Copy constructors for referenceable components have been made internal, a new `CreateShallowCopy()` method has been exposed on these models to facilitate cloning.
 
 **Example:**
+
 ```csharp
 var schema = new OpenApiSchema();
 var schemaCopy = schema.CreateShallowCopy();
@@ -619,6 +626,7 @@ The redundant _style property on the Parameter model has been removed to simplif
 Discriminator mappings have been updated from using a `Dictionary<string, string>` to a `Dictionary<string, OpenApiSchemaReference>`. This change improves the handling of discriminator mappings by referencing OpenAPI schema components more explicitly, which enhances schema resolution.
 
 **Example:**
+
 ```csharp
 // v1.6.x
 Discriminator = new()
@@ -660,5 +668,5 @@ OpenApiSchemaReference schemaRef = new OpenApiSchemaReference("MySchema")
 
 ## Feedback
 
-If you have any feedback please file a GitHub issue [here](https://github.com/microsoft/OpenAPI.NET/issues)
+If you have any feedback please file [a new GitHub issue](https://github.com/microsoft/OpenAPI.NET/issues)
 The team is looking forward to hear your experience trying the new version and we hope you have fun busting out your OpenAPI 3.1 descriptions.
