@@ -80,6 +80,12 @@ namespace Microsoft.OpenApi
 
             private void ValidateSchemaReference(OpenApiSchemaReference reference)
             {
+                if (reference.RecursiveTarget is not null)
+                {
+                    // The reference was followed to a valid schema somewhere in the document
+                    return;
+                }
+
                 var id = reference.Reference.ReferenceV3;
 
                 if (id is { Length: > 0 } && !IsValidSchemaReference(id, document))
