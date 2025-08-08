@@ -131,4 +131,65 @@ public static class OpenApiDocumentValidationTests
         Assert.Equal("The schema reference '#/components/schemas/Pet' does not point to an existing schema.", error.Message);
         Assert.Equal("#/paths/~1pets/get/responses/200/content/application~1json/schema/$ref", error.Pointer);
     }
+
+    [Fact]
+    public static void ValidateCircularSchemaReferencesAreDetected()
+    {
+        // Arrange
+        var document = new OpenApiDocument
+        {
+            Components = new OpenApiComponents(),
+            Info = new OpenApiInfo
+            {
+                Title = "Infinite Document",
+                Version = "1.0.0"
+            },
+            Paths = [],
+            Workspace = new()
+        };
+
+        document.AddComponent("Cycle", new OpenApiSchema
+        {
+            Type = JsonSchemaType.Object,
+            Properties = new Dictionary<string, IOpenApiSchema>()
+            {
+                ["self"] = new OpenApiSchemaReference("#/components/schemas/Cycle/properties/self", document)
+            }
+        });
+
+        document.Paths.Add("/cycle", new OpenApiPathItem
+        {
+            Operations = new Dictionary<HttpMethod, OpenApiOperation>()
+            {
+                [HttpMethod.Get] = new OpenApiOperation
+                {
+                    Responses = new()
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "OK",
+                            Content = new Dictionary<string, OpenApiMediaType>()
+                            {
+                                ["application/json"] = new OpenApiMediaType
+                                {
+                                    Schema = new OpenApiSchemaReference("Cycle", document)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Act
+        var errors = document.Validate(ValidationRuleSet.GetDefaultRuleSet());
+        var result = !errors.Any();
+
+        // Assert
+        Assert.False(result);
+        Assert.NotNull(errors);
+        var error = Assert.Single(errors);
+        Assert.Equal("Circular reference detected while resolving schema: #/components/schemas/Cycle/properties/self", error.Message);
+        Assert.Equal("#/components/schemas/Cycle/properties/self/$ref", error.Pointer);
+    }
 }
