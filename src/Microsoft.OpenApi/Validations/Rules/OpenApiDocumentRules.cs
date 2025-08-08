@@ -93,12 +93,12 @@ namespace Microsoft.OpenApi
                 {
                     if (reference.RecursiveTarget is not null)
                     {
+                        // The reference was followed to a valid schema somewhere in the document
                         return;
                     }
                 }
                 catch (InvalidOperationException ex)
                 {
-                    // The reference was followed to a valid schema somewhere in the document
                     context.Enter(segment);
                     context.CreateWarning(ruleName, ex.Message);
                     context.Exit();
