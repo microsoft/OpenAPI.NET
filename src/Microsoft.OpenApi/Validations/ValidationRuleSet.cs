@@ -2,9 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
@@ -150,12 +150,12 @@ namespace Microsoft.OpenApi
         /// <exception cref="OpenApiException">Exception thrown when rule already exists.</exception>
         public void Add(Type key, ValidationRule rule)
         {
-            if (!_rulesDictionary.ContainsKey(key))
+            if (!_rulesDictionary.TryGetValue(key, out var rules))
             {
-                _rulesDictionary[key] = [];
+                _rulesDictionary[key] = rules = [];
             }
 
-            if (_rulesDictionary[key].Contains(rule))
+            if (rules.Contains(rule))
             {
                 throw new OpenApiException(SRResource.Validation_RuleAddTwice);
             }
@@ -202,7 +202,7 @@ namespace Microsoft.OpenApi
             }
 
             // Remove types with no rule
-            _rulesDictionary = _rulesDictionary.Where(r => r.Value.Any()).ToDictionary(r => r.Key, r => r.Value);
+            _rulesDictionary = _rulesDictionary.Where(r => r.Value.Count > 0).ToDictionary(r => r.Key, r => r.Value);
         }
 
         /// <summary>
