@@ -129,6 +129,6 @@ public static class OpenApiDocumentValidationTests
         Assert.NotNull(errors);
         var error = Assert.Single(errors);
         Assert.Equal("The schema reference '#/components/schemas/Pet' does not point to an existing schema.", error.Message);
-        Assert.Equal("#/paths/~1pets/get/responses/200/content/application~1json/schema", error.Pointer);
+        Assert.Equal("#/paths/~1pets/get/responses/200/content/application~1json/schema/$ref", error.Pointer);
     }
 }

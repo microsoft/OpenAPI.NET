@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 
@@ -80,9 +81,28 @@ namespace Microsoft.OpenApi
 
             private void ValidateSchemaReference(OpenApiSchemaReference reference)
             {
-                if (reference.RecursiveTarget is not null)
+                // Trim off the leading "#/" as the context is already at the root of the document
+                var segment =
+#if NET8_0_OR_GREATER
+                    $"{PathString[2..]}/$ref";
+#else
+                    PathString.Substring(2) + "/$ref";
+#endif
+
+                try
+                {
+                    if (reference.RecursiveTarget is not null)
+                    {
+                        return;
+                    }
+                }
+                catch (InvalidOperationException ex)
                 {
                     // The reference was followed to a valid schema somewhere in the document
+                    context.Enter(segment);
+                    context.CreateWarning(ruleName, ex.Message);
+                    context.Exit();
+
                     return;
                 }
 
@@ -109,14 +129,6 @@ namespace Microsoft.OpenApi
 
                     if (!isValid)
                     {
-                        // Trim off the leading "#/" as the context is already at the root of the document
-                        var segment =
-#if NET8_0_OR_GREATER
-                            PathString[2..];
-#else
-                            PathString.Substring(2);
-#endif
-
                         context.Enter(segment);
                         context.CreateWarning(ruleName, string.Format(SRResource.Validation_SchemaReferenceDoesNotExist, id));
                         context.Exit();
