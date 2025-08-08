@@ -53,8 +53,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.Empty(ruleSet_4.Rules);
 
             // Update the number if you add new default rule(s).
-            Assert.Equal(19, ruleSet_1.Rules.Count);
-            Assert.Equal(19, ruleSet_2.Rules.Count);
+            Assert.Equal(20, ruleSet_1.Rules.Count);
+            Assert.Equal(20, ruleSet_2.Rules.Count);
             Assert.Equal(3, ruleSet_3.Rules.Count);
         }
 

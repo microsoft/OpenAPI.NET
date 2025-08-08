@@ -231,6 +231,9 @@
   <data name="ParseServerUrlValueNotValid" xml:space="preserve">
     <value>Value '{0}' is not a valid value for variable '{1}'. If an enum is provided, it should not be empty and the value provided should exist in the enum</value>
   </data>
+  <data name="Validation_SchemaReferenceDoesNotExist" xml:space="preserve">
+    <value>The schema reference '{0}' does not point to an existing schema.</value>
+  </data>
   <data name="ArgumentNull" xml:space="preserve">
     <value>The argument '{0}' is null.</value>
   </data>

@@ -627,6 +627,7 @@ namespace Microsoft.OpenApi
     public static class OpenApiDocumentRules
     {
         public static Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiDocument> OpenApiDocumentFieldIsMissing { get; }
+        public static Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiDocument> OpenApiDocumentReferencesAreValid { get; }
     }
     public static class OpenApiElementExtensions
     {
