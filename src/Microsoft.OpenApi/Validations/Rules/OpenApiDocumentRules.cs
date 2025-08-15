@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi
 
                     JsonNode document;
 
-                    using (var textWriter = new System.IO.StringWriter())
+                    using (var textWriter = new System.IO.StringWriter(System.Globalization.CultureInfo.InvariantCulture))
                     {
                         var writer = new OpenApiJsonWriter(textWriter);
 
