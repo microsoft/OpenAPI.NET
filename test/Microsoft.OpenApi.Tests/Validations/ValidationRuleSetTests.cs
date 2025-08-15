@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
-        public void RemoveValidatioRuleGivenTheValidationRuleWorks()
+        public void RemoveValidationRuleGivenTheValidationRuleWorks()
         {
             // Arrange
             var ruleSet = new ValidationRuleSet(_rulesDictionary);
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             ruleSet.TryGetValue(typeof(OpenApiContact), out var validationRules);
 
             // Assert
-            Assert.True(validationRules.Any());
+            Assert.True(validationRules.Count > 0);
             Assert.Contains(_contactValidationRule, validationRules);
         }
 
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var declaredRuleTypeProperties = typeof(ValidationRuleSet).Assembly.GetTypes()
                 .Where(t => t.IsClass
                             && t != typeof(object)
-                            && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
+                            && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Length != 0)
                 .SelectMany(t2 => t2.GetProperties(BindingFlags.Static | BindingFlags.Public))
                 .ToList();
             
