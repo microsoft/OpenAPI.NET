@@ -81,14 +81,6 @@ namespace Microsoft.OpenApi
 
             private void ValidateSchemaReference(OpenApiSchemaReference reference)
             {
-                // Trim off the leading "#/" as the context is already at the root of the document
-                var segment =
-#if NET8_0_OR_GREATER
-                    $"{PathString[2..]}/$ref";
-#else
-                    PathString.Substring(2) + "/$ref";
-#endif
-
                 try
                 {
                     if (reference.RecursiveTarget is not null)
@@ -99,7 +91,7 @@ namespace Microsoft.OpenApi
                 }
                 catch (InvalidOperationException ex)
                 {
-                    context.Enter(segment);
+                    context.Enter(GetSegment());
                     context.CreateWarning(ruleName, ex.Message);
                     context.Exit();
 
@@ -129,7 +121,7 @@ namespace Microsoft.OpenApi
 
                     if (!isValid)
                     {
-                        context.Enter(segment);
+                        context.Enter(GetSegment());
                         context.CreateWarning(ruleName, string.Format(SRResource.Validation_SchemaReferenceDoesNotExist, id));
                         context.Exit();
                     }
@@ -142,6 +134,17 @@ namespace Microsoft.OpenApi
                 {
                     var pointer = new JsonPointer(id.Replace("#/", "/"));
                     return pointer.Find(baseNode);
+                }
+
+                string GetSegment()
+                {
+                    // Trim off the leading "#/" as the context is already at the root of the document
+                    return
+#if NET8_0_OR_GREATER
+                        $"{PathString[2..]}/$ref";
+#else
+                        PathString.Substring(2) + "/$ref";
+#endif
                 }
             }
         }
