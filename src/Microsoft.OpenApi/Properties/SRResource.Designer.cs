@@ -385,6 +385,15 @@ namespace Microsoft.OpenApi {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The schema reference &apos;{0}&apos; does not point to an existing schema..
+        /// </summary>
+        internal static string Validation_SchemaReferenceDoesNotExist {
+            get {
+                return ResourceManager.GetString("Validation_SchemaReferenceDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Schema {0} must contain property specified in the discriminator {1} in the required field list..
         /// </summary>
         internal static string Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator {
