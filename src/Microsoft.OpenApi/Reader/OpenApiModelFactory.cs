@@ -76,7 +76,10 @@ namespace Microsoft.OpenApi.Reader
         {
             settings ??= DefaultReaderSettings.Value;
             var (stream, format) = await RetrieveStreamAndFormatAsync(url, settings, token).ConfigureAwait(false);
-            return await LoadAsync(stream, format, settings, token).ConfigureAwait(false);
+            using (stream)
+            {
+                return await LoadAsync(stream, format, settings, token).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -94,7 +97,10 @@ namespace Microsoft.OpenApi.Reader
         {
             settings ??= DefaultReaderSettings.Value;
             var (stream, format) = await RetrieveStreamAndFormatAsync(url, settings, token).ConfigureAwait(false);
-            return await LoadAsync<T>(stream, version, openApiDocument, format, settings, token);
+            using (stream)
+            {
+                return await LoadAsync<T>(stream, version, openApiDocument, format, settings, token);
+            }
         }
 
         /// <summary>
