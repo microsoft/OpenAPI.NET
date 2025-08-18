@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/microsoft/openapi.net/compare/v2.0.0...v2.0.1) (2025-08-18)
+
+
+### Bug Fixes
+
+* add missing disposable for stream ([9318c00](https://github.com/microsoft/openapi.net/commit/9318c00c31466bf67d2e9701659a4cda3d82d1dd))
+* add missing disposable for stream ([0c1ccbd](https://github.com/microsoft/openapi.net/commit/0c1ccbdc1ba4c53662ff6c7132366ae435d8fedb))
+
 ## [2.0.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.0-preview.31...v2.0.0) (2025-07-10)
 
 
