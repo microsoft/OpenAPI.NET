@@ -94,28 +94,7 @@ namespace Microsoft.OpenApi
 
             _visitor.Visit(tags);
 
-            // Visit tags
-            if (tags is HashSet<OpenApiTag> { Count: 1 } hashSet && hashSet.First() is { } only)
-            {
-                WalkItem("0", only, Walk);
-            }
-            else
-            {
-                int index = 0;
-                foreach (var tag in tags)
-                {
-                    if (tag is null)
-                    {
-                        continue;
-                    }
-
-                    var context = index.ToString();
-                    WalkItem(context, tag, Walk);
-                    index++;
-                }
-            }
-
-            static void Walk(OpenApiWalker self, OpenApiTag tag) => self.Walk(tag);
+            WalkTags(tags, static (self, tag) => self.Walk(tag));
         }
 
         /// <summary>
@@ -131,27 +110,7 @@ namespace Microsoft.OpenApi
             _visitor.Visit(tags);
 
             // Visit tags
-            if (tags is HashSet<OpenApiTagReference> { Count: 1 } hashSet && hashSet.First() is { } only)
-            {
-                WalkItem("0", only, Walk);
-            }
-            else
-            {
-                int index = 0;
-                foreach (var tag in tags)
-                {
-                    if (tag is null)
-                    {
-                        continue;
-                    }
-
-                    var context = index.ToString();
-                    WalkItem(context, tag, Walk);
-                    index++;
-                }
-            }
-
-            static void Walk(OpenApiWalker self, OpenApiTagReference tag) => self.Walk(tag);
+            WalkTags(tags, static (self, tag) => self.Walk(tag));
         }
 
         /// <summary>
@@ -1393,6 +1352,31 @@ namespace Microsoft.OpenApi
                 Walk(referenceableHolder);
             }
             return isReference;
+        }
+
+        private void WalkTags<T>(ISet<T> tags, Action<OpenApiWalker, T> walk)
+            where T : IOpenApiTag
+        {
+            // Visit tags
+            if (tags is HashSet<T> { Count: 1 } hashSet && hashSet.First() is { } only)
+            {
+                WalkItem("0", only, walk);
+            }
+            else
+            {
+                int index = 0;
+                foreach (var tag in tags)
+                {
+                    if (tag is null)
+                    {
+                        continue;
+                    }
+
+                    var context = index.ToString();
+                    WalkItem(context, tag, walk);
+                    index++;
+                }
+            }
         }
     }
 
