@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi
             // Visit tags
             if (tags is HashSet<OpenApiTag> { Count: 1 } hashSet && hashSet.First() is { } only)
             {
-                WalkItem("0", only, static (self, item) => self.Walk(item));
+                WalkItem("0", only, Walk);
             }
             else
             {
@@ -110,10 +110,12 @@ namespace Microsoft.OpenApi
                     }
 
                     var context = index.ToString();
-                    WalkItem(context, tag, static (self, item) => self.Walk(item));
+                    WalkItem(context, tag, Walk);
                     index++;
                 }
             }
+
+            static void Walk(OpenApiWalker self, OpenApiTag tag) => self.Walk(tag);
         }
 
         /// <summary>
@@ -131,7 +133,7 @@ namespace Microsoft.OpenApi
             // Visit tags
             if (tags is HashSet<OpenApiTagReference> { Count: 1 } hashSet && hashSet.First() is { } only)
             {
-                WalkItem("0", only, static (self, item) => self.Walk(item));
+                WalkItem("0", only, Walk);
             }
             else
             {
@@ -144,10 +146,12 @@ namespace Microsoft.OpenApi
                     }
 
                     var context = index.ToString();
-                    WalkItem(context, tag, static (self, item) => self.Walk(item));
+                    WalkItem(context, tag, Walk);
                     index++;
                 }
             }
+
+            static void Walk(OpenApiWalker self, OpenApiTagReference tag) => self.Walk(tag);
         }
 
         /// <summary>
@@ -1313,16 +1317,13 @@ namespace Microsoft.OpenApi
             }
         }
 
-        /// <summary>
-        /// Adds a segment to the context path to enable pointing to the current location in the document
-        /// </summary>
-        /// <param name="context">An identifier for the context.</param>
-        /// <param name="walk">An action that walks objects within the context.</param>
-        private void Walk(string context, Action walk)
+        private static string ReplaceSlashes(string value)
         {
-            _visitor.Enter(context.Replace("/", "~1"));
-            walk();
-            _visitor.Exit();
+#if NET8_0_OR_GREATER
+            return value.Replace("/", "~1", StringComparison.Ordinal);
+#else
+            return value.Replace("/", "~1");
+#endif
         }
 
         /// <summary>
@@ -1334,7 +1335,7 @@ namespace Microsoft.OpenApi
         /// <param name="walk">An action that walks objects within the context.</param>
         private void WalkItem<T>(string context, T state, Action<OpenApiWalker, T> walk)
         {
-            _visitor.Enter(context.Replace("/", "~1"));
+            _visitor.Enter(ReplaceSlashes(context));
             walk(this, state);
             _visitor.Exit();
         }
@@ -1349,7 +1350,7 @@ namespace Microsoft.OpenApi
         /// <param name="walk">An action that walks objects within the context.</param>
         private void WalkItem<T>(string context, T state, Action<OpenApiWalker, T, bool> walk, bool isComponent)
         {
-            _visitor.Enter(context.Replace("/", "~1"));
+            _visitor.Enter(ReplaceSlashes(context));
             walk(this, state, isComponent);
             _visitor.Exit();
         }
@@ -1370,7 +1371,7 @@ namespace Microsoft.OpenApi
         {
             if (state != null && state.Count > 0)
             {
-                _visitor.Enter(context.Replace("/", "~1"));
+                _visitor.Enter(ReplaceSlashes(context));
 
                 foreach (var item in state)
                 {
