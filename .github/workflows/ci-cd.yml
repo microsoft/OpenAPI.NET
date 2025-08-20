@@ -75,6 +75,13 @@ jobs:
           dotnet run -c Release
         working-directory: ./performance/benchmark
 
+      - name: Publish benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          if-no-files-found: error
+          name: benchmark-results
+          path: "${{ github.workspace }}/performance/benchmark/BenchmarkDotNet.Artifacts/results"
+
       - name: Run comparison tool for empty models
         run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT -p IdenticalMemoryUsage
         shell: bash
