@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.1...v2.1.0) (2025-08-20)
+
+
+### Features
+
+* adds a default validation rule for unresolved references ([90b3966](https://github.com/microsoft/OpenAPI.NET/commit/90b3966e5e071e26570050733482660f41f944b0))
+
+
+### Bug Fixes
+
+* Improve OpenApiWalker performance ([a007c03](https://github.com/microsoft/OpenAPI.NET/commit/a007c039eb2a9190d4adeafd865f6d42df4221aa))
+* Validate schema property is not null ([3326022](https://github.com/microsoft/OpenAPI.NET/commit/3326022b016fd3fc795f45926a55895b02557a09))
+
 ## [2.0.1](https://github.com/microsoft/openapi.net/compare/v2.0.0...v2.0.1) (2025-08-18)
 
 
