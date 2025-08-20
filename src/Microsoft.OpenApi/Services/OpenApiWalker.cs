@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi
 
             if (doc.Info is { } info)
             {
-                WalkItem(OpenApiConstants.Info, doc.Info, static (self, item) => self.Walk(item));
+                WalkItem(OpenApiConstants.Info, info, static (self, item) => self.Walk(item));
             }
 
             if (doc.Servers is { } servers)
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi
 
             if (doc.Paths is { } paths)
             {
-                WalkItem(OpenApiConstants.Paths, doc.Paths, static (self, item) => self.Walk(item));
+                WalkItem(OpenApiConstants.Paths, paths, static (self, item) => self.Walk(item));
             }
             
             WalkDictionary(OpenApiConstants.Webhooks, doc.Webhooks, static (self, item, isComponent) => self.Walk(item, isComponent));
