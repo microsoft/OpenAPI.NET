@@ -88,6 +88,7 @@ ipch/
 *.VC.VC.opendb
 
 # Visual Studio profiler
+*.diagsession
 *.psess
 *.vsp
 *.vspx
@@ -286,3 +287,7 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+
+# BenchmarkDotNet profiler files
+*.nettrace
+*.speedscope.json
