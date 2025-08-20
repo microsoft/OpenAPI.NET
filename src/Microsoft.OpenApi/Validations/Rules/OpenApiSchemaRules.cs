@@ -5,12 +5,37 @@ using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
+    using System.Linq;
+
     /// <summary>
     /// The validation rules for <see cref="OpenApiSchema"/>.
     /// </summary>
     [OpenApiRule]
     public static class OpenApiSchemaRules
     {
+        /// <summary>
+        /// Validates Schema Property has value
+        /// </summary>
+        public static ValidationRule<IOpenApiSchema> ValidateSchemaPropertyHasValue =>
+            new(nameof(ValidateSchemaPropertyHasValue),
+                (context, schema) =>
+                {
+                    if (schema.Properties is not null)
+                    {
+                        foreach (var property in schema.Properties
+                                     .Where(entry => entry.Value is null))
+                        {
+                            context.Enter(property.Key);
+                            context.CreateError(nameof(ValidateSchemaPropertyHasValue),
+                                string.Format(SRResource.Validation_SchemaPropertyObjectRequired,
+                                    schema is OpenApiSchemaReference { Reference: not null } schemaReference
+                                        ? schemaReference.Reference.Id
+                                        : string.Empty, property.Key));
+                            context.Exit();
+                        }
+                    }
+                });
+        
         /// <summary>
         /// Validates Schema Discriminator
         /// </summary>

@@ -1248,6 +1248,7 @@ namespace Microsoft.OpenApi
     public static class OpenApiSchemaRules
     {
         public static Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiSchema> ValidateSchemaDiscriminator { get; }
+        public static Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiSchema> ValidateSchemaPropertyHasValue { get; }
         public static bool TraverseSchemaElements(string discriminatorName, System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema>? childSchema) { }
         public static bool ValidateChildSchemaAgainstDiscriminator(Microsoft.OpenApi.IOpenApiSchema schema, string? discriminatorName) { }
     }

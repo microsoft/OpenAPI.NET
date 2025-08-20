@@ -383,7 +383,16 @@ namespace Microsoft.OpenApi {
                 return ResourceManager.GetString("Validation_RuleAddTwice", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Schema {0} property {1} is null..
+        /// </summary>
+        internal static string Validation_SchemaPropertyObjectRequired {
+            get {
+                return ResourceManager.GetString("Validation_SchemaPropertyObjectRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to The schema reference &apos;{0}&apos; does not point to an existing schema..
         /// </summary>

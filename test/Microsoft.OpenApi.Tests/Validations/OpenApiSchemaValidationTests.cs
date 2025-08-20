@@ -174,6 +174,44 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.NotEmpty(validator.Warnings);
         }
+        
+        [Fact]
+        public void ValidateNullProperty()
+        {
+            // Arrange
+            var components = new OpenApiComponents
+            {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    {
+                        "schema1",
+                        new OpenApiSchema
+                        {
+                            Properties = new Dictionary<string, IOpenApiSchema>
+                            {
+                                ["property1"] = null,
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var defaultRuleSet = ValidationRuleSet.GetDefaultRuleSet();
+            defaultRuleSet.Add(typeof(IOpenApiSchema), OpenApiNonDefaultRules.SchemaMismatchedDataType);
+            var validator = new OpenApiValidator(defaultRuleSet);
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            // Assert
+            Assert.NotEmpty(validator.Errors);
+            Assert.Equivalent(new List<OpenApiValidatorError>
+            {
+                new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaPropertyHasValue),"#/schemas/schema1/property1",
+                    string.Format(SRResource.Validation_SchemaPropertyObjectRequired,
+                        string.Empty, "property1"))
+            }, validator.Errors);
+        }
 
         [Fact]
         public void ValidateSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator()
