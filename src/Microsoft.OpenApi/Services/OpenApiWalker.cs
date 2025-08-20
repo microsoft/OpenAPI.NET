@@ -1357,7 +1357,6 @@ namespace Microsoft.OpenApi
         private void WalkTags<T>(ISet<T> tags, Action<OpenApiWalker, T> walk)
             where T : IOpenApiTag
         {
-            // Visit tags
             if (tags is HashSet<T> { Count: 1 } hashSet && hashSet.First() is { } only)
             {
                 WalkItem("0", only, walk);
