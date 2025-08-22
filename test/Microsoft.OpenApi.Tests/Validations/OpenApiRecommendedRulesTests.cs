@@ -92,7 +92,6 @@ public static class OpenApiRecommendedRulesTests
         ruleSet.Add(typeof(OpenApiPaths), OpenApiRecommendedRules.GetOperationShouldNotHaveRequestBody);
 
         // Act
-
         var errors = document.Validate(ruleSet);
         var result = !errors.Any();
 
@@ -193,15 +192,14 @@ public static class OpenApiRecommendedRulesTests
         ruleSet.Add(typeof(OpenApiPaths), OpenApiRecommendedRules.GetOperationShouldNotHaveRequestBody);
 
         // Act
-
-        var errors = document.Validate(ruleSet);
-        var result = !errors.Any();
+        var warnings = document.Validate(ruleSet);
+        var result = !warnings.Any();
 
         // Assert
         Assert.False(result);
-        Assert.NotNull(errors);
-        var error = Assert.Single(errors);
-        Assert.Equal("GET operations should not have a request body.", error.Message);
-        Assert.Equal("#/paths/people/get/requestbody", error.Pointer);
+        Assert.NotNull(warnings);
+        var warning = Assert.Single(warnings);
+        Assert.Equal("GET operations should not have a request body.", warning.Message);
+        Assert.Equal("#/paths/people/get/requestbody", warning.Pointer);
     }
 }

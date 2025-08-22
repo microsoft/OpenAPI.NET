@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi
             new(nameof(ResponsesMustContainAtLeastOneResponse),
                 (context, responses) =>
                 {
-                    if (responses.Keys.Count == 0)
+                    if (responses.Count == 0)
                     {
                         context.CreateError(nameof(ResponsesMustContainAtLeastOneResponse),
                                 "Responses must contain at least one response");
