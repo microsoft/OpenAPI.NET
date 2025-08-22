@@ -1031,6 +1031,10 @@ namespace Microsoft.OpenApi
         public OpenApiReaderException(string message, Microsoft.OpenApi.Reader.ParsingContext context) { }
         public OpenApiReaderException(string message, System.Exception innerException) { }
     }
+    public static class OpenApiRecommendedRules
+    {
+        public static Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiPaths> GetOperationShouldNotHaveRequestBody { get; }
+    }
     public class OpenApiReferenceError : Microsoft.OpenApi.OpenApiError
     {
         public readonly Microsoft.OpenApi.BaseOpenApiReference? Reference;
