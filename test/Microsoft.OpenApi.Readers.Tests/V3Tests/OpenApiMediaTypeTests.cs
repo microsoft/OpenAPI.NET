@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
       ""summary"": ""array summary"",
       ""description"": ""array description"",
       ""value"": [ 
-        1
+        ""1""
       ]
     }
   }
