@@ -70,7 +70,10 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // value
-            writer.WriteOptionalObject(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));
+            if (Value is not null)
+            {
+                writer.WriteRequiredObject(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));    
+            }
 
             // externalValue
             writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);
