@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public Task ThrowIfURLIsNotResolvableWhenValidatingAsync()
         {
             return Assert.ThrowsAsync<InvalidOperationException>(() =>
-                OpenApiService.ValidateOpenApiDocumentAsync("https://example.org/itdoesnmatter", _logger));
+                OpenApiService.ValidateOpenApiDocumentAsync("https://example.org926F4F21-88E7-4DC5-BF88-6C529BB77844/itdoesnmatter", _logger));
         }
 
         [Fact]
