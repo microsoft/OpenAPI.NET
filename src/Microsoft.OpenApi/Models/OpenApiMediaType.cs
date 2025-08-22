@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi
             // examples
             if (Examples != null && Examples.Any())
             {
-                SerializeExamples(writer, Examples, callback);
+                writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
             }
 
             // encoding
@@ -113,34 +113,6 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             // Media type does not exist in V2.
-        }
-
-        private static void SerializeExamples(IOpenApiWriter writer, IDictionary<string, IOpenApiExample> examples, Action<IOpenApiWriter, IOpenApiSerializable> callback)
-        {
-            /* Special case for writing out empty arrays as valid response examples
-            * Check if there is any example with an empty array as its value and set the flag `hasEmptyArray` to true
-            * */
-            var hasEmptyArray = examples.Values.Any( static example =>
-                example.Value is JsonArray arr && arr.Count == 0
-            );
-
-            if (hasEmptyArray)
-            {
-                writer.WritePropertyName(OpenApiConstants.Examples);
-                writer.WriteStartObject();
-                foreach (var kvp in examples.Where(static kvp => kvp.Value.Value is JsonArray arr && arr.Count == 0))
-                {
-                    writer.WritePropertyName(kvp.Key);
-                    writer.WriteStartObject();
-                    writer.WriteRequiredObject(OpenApiConstants.Value, kvp.Value.Value, (w, v) => w.WriteAny(v));
-                    writer.WriteEndObject();
-                }
-                writer.WriteEndObject();
-            }
-            else
-            {
-                writer.WriteOptionalMap(OpenApiConstants.Examples, examples, callback);
-            }
         }
     }
 }
