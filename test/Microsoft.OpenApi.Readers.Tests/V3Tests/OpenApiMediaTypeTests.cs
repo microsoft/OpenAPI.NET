@@ -98,7 +98,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
   },
   ""examples"": {
     ""Success response - no results"": {
+      ""summary"": ""empty array summary"",
+      ""description"": ""empty array description"",
       ""value"": [ ]
+    },
+    ""Success response - with results"": {
+      ""summary"": ""array summary"",
+      ""description"": ""array description"",
+      ""value"": [ 
+        ""1""
+      ]
     }
   }
 }
