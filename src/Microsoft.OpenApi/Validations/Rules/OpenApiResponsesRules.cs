@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.OpenApi
@@ -29,7 +28,7 @@ namespace Microsoft.OpenApi
             new(nameof(ResponsesMustContainAtLeastOneResponse),
                 (context, responses) =>
                 {
-                    if (!responses.Keys.Any())
+                    if (responses.Keys.Count == 0)
                     {
                         context.CreateError(nameof(ResponsesMustContainAtLeastOneResponse),
                                 "Responses must contain at least one response");
@@ -45,8 +44,6 @@ namespace Microsoft.OpenApi
                 {
                     foreach (var key in responses.Keys)
                     {
-                        context.Enter(key);
-
                         if (!"default".Equals(key, StringComparison.OrdinalIgnoreCase) && !StatusCodeRegex
 #if NET8_0_OR_GREATER
                             ().IsMatch(key)
@@ -55,13 +52,13 @@ namespace Microsoft.OpenApi
 #endif
                             )
                         {
+                            context.Enter(key);
                             context.CreateError(nameof(ResponsesMustBeIdentifiedByDefaultOrStatusCode),
                                     "Responses key must be 'default', an HTTP status code, " +
                                     "or one of the following strings representing a range of HTTP status codes: " +
                                     "'1XX', '2XX', '3XX', '4XX', '5XX' (case insensitive)");
+                            context.Exit();
                         }
-
-                        context.Exit();
                     }
                 });
     }

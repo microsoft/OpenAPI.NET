@@ -44,21 +44,19 @@ namespace Microsoft.OpenApi
                 (context, schema) =>
                 {
                     // discriminator
-                    context.Enter("discriminator");
-
                     if (schema is not null && schema.Discriminator != null)
                     {
                         var discriminatorName = schema.Discriminator?.PropertyName;
 
                         if (!ValidateChildSchemaAgainstDiscriminator(schema, discriminatorName))
                         {
+                            context.Enter("discriminator");
                             context.CreateError(nameof(ValidateSchemaDiscriminator),
                             string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                 schema is OpenApiSchemaReference { Reference: not null} schemaReference ? schemaReference.Reference.Id : string.Empty, discriminatorName));
+                            context.Exit();
                         }
                     }
-
-                    context.Exit();
                 });
 
         /// <summary>

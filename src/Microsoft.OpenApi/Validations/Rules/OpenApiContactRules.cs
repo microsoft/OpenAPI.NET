@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.OpenApi
 {
     /// <summary>
@@ -18,14 +16,13 @@ namespace Microsoft.OpenApi
             new(nameof(EmailMustBeEmailFormat),
                 (context, item) =>
                 {
-                    context.Enter("email");
                     if (item is {Email: not null} && !item.Email.IsEmailAddress())
                     {
+                        context.Enter("email");
                         context.CreateError(nameof(EmailMustBeEmailFormat),
-                            String.Format(SRResource.Validation_StringMustBeEmailAddress, item.Email));
+                            string.Format(SRResource.Validation_StringMustBeEmailAddress, item.Email));
+                        context.Exit();
                     }
-                    context.Exit();
                 });
-
     }
 }

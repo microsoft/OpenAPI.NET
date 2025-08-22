@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.OpenApi
 {
     /// <summary>
@@ -19,33 +17,31 @@ namespace Microsoft.OpenApi
                 (context, flow) =>
                 {
                     // authorizationUrl
-                    context.Enter("authorizationUrl");
                     if (flow.AuthorizationUrl == null)
                     {
+                        context.Enter("authorizationUrl");
                         context.CreateError(nameof(OAuthFlowRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow"));
+                        context.Exit();
                     }
-                    context.Exit();
 
                     // tokenUrl
-                    context.Enter("tokenUrl");
                     if (flow.TokenUrl == null)
                     {
+                        context.Enter("tokenUrl");
                         context.CreateError(nameof(OAuthFlowRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow"));
+                        context.Exit();
                     }
-                    context.Exit();
 
                     // scopes
-                    context.Enter("scopes");
                     if (flow.Scopes == null)
                     {
+                        context.Enter("scopes");
                         context.CreateError(nameof(OAuthFlowRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "scopes", "OAuth Flow"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "scopes", "OAuth Flow"));
+                        context.Exit();
                     }
-                    context.Exit();
                 });
-
-        // add more rule.
     }
 }

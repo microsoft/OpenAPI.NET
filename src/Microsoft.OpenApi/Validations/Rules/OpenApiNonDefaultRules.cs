@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi
         /// Validate the data matches with the given data type.
         /// </summary>
         public static ValidationRule<OpenApiParameter> ParameterMismatchedDataType =>
-        new(nameof(ParameterMismatchedDataType),
+            new(nameof(ParameterMismatchedDataType),
                 (context, parameter) =>
                 {
                     ValidateMismatchedDataType(context, nameof(ParameterMismatchedDataType), parameter.Example, parameter.Examples, parameter.Schema);
@@ -50,39 +50,33 @@ namespace Microsoft.OpenApi
                 (context, schema) =>
                 {
                     // default
-                    context.Enter("default");
-
                     if (schema.Default != null)
                     {
+                        context.Enter("default");
                         RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Default, schema);
+                        context.Exit();
                     }
-
-                    context.Exit();
 
                     // example
-                    context.Enter("example");
-
                     if (schema.Example != null)
                     {
+                        context.Enter("example");
                         RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Example, schema);
+                        context.Exit();
                     }
 
-                    context.Exit();
-
                     // enum
-                    context.Enter("enum");
-
                     if (schema.Enum != null)
                     {
+                        context.Enter("enum");
                         for (var i = 0; i < schema.Enum.Count; i++)
                         {
                             context.Enter(i.ToString());
                             RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Enum[i], schema);
                             context.Exit();
                         }
+                        context.Exit();
                     }
-
-                    context.Exit();
                 });
 
         private static void ValidateMismatchedDataType(IValidationContext context,
@@ -92,20 +86,17 @@ namespace Microsoft.OpenApi
                                                       IOpenApiSchema? schema)
         {
             // example
-            context.Enter("example");
-
             if (example != null)
             {
+                context.Enter("example");
                 RuleHelpers.ValidateDataTypeMismatch(context, ruleName, example, schema);
+                context.Exit();
             }
 
-            context.Exit();
-
             // enum
-            context.Enter("examples");
-
             if (examples != null)
             {
+                context.Enter("examples");
                 foreach (var key in examples.Keys.Where(k => examples[k] != null))
                 {
                     context.Enter(key);
@@ -114,9 +105,8 @@ namespace Microsoft.OpenApi
                     context.Exit();
                     context.Exit();
                 }
+                context.Exit();
             }
-
-            context.Exit();
         }
     }
 }

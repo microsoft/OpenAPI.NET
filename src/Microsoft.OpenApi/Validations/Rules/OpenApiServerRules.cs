@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.OpenApi
 {
     /// <summary>
@@ -18,41 +16,39 @@ namespace Microsoft.OpenApi
             new(nameof(ServerRequiredFields),
                 (context, server) =>
                 {
-                    context.Enter("url");
                     if (server.Url == null)
                     {
+                        context.Enter("url");
                         context.CreateError(nameof(ServerRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "url", "server"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "url", "server"));
+                        context.Exit();
                     }
 
-                    context.Exit();
-                    context.Enter("variables");
                     if (server.Variables is not null)
                     {
+                        context.Enter("variables");
                         foreach (var variable in server.Variables)
                         {
                             context.Enter(variable.Key);
                             ValidateServerVariableRequiredFields(context, variable.Key, variable.Value);
                             context.Exit();
-                        }                        
+                        }
+                        context.Exit();
                     }
-                    context.Exit();
                 });
-
-        // add more rules
 
         /// <summary>
         /// Validate required fields in server variable
         /// </summary>
         private static void ValidateServerVariableRequiredFields(IValidationContext context, string key, OpenApiServerVariable item)
         {
-            context.Enter("default");
             if (string.IsNullOrEmpty(item.Default))
             {
+                context.Enter("default");
                 context.CreateError("ServerVariableMustHaveDefaultValue",
-                    String.Format(SRResource.Validation_FieldIsRequired, "default", key));
+                    string.Format(SRResource.Validation_FieldIsRequired, "default", key));
+                context.Exit();
             }
-            context.Exit();
         }
     }
 }

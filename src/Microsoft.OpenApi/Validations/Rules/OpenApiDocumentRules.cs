@@ -19,13 +19,13 @@ namespace Microsoft.OpenApi
                 (context, item) =>
                 {
                     // info
-                    context.Enter("info");
                     if (item.Info == null)
                     {
+                        context.Enter("info");
                         context.CreateError(nameof(OpenApiDocumentFieldIsMissing),
                             string.Format(SRResource.Validation_FieldIsRequired, "info", "document"));
+                        context.Exit();
                     }
-                    context.Exit();
                 });
 
         /// <summary>
