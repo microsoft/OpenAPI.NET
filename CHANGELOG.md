@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.25](https://github.com/microsoft/openapi.net/compare/v1.6.24...v1.6.25) (2025-08-22)
+
+
+### Bug Fixes
+
+* missing examples when one example is with an empty array. ([4697af4](https://github.com/microsoft/openapi.net/commit/4697af47cb974386867e8b13118eff2e928abb4e))
+
 ## [1.6.24](https://github.com/microsoft/OpenAPI.NET/compare/1.6.23...v1.6.24) (2025-04-01)
 
 
