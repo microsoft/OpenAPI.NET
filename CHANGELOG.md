@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.1.0...v2.2.0) (2025-08-25)
+
+
+### Features
+
+* add Validation Rule for path operations to not have a request body ([d101fc3](https://github.com/microsoft/OpenAPI.NET/commit/d101fc30cfc701f2d6c52a51b9e39fa7eae96194))
+
+
+### Bug Fixes
+
+* missing examples when one example is with an empty array. ([cb1c496](https://github.com/microsoft/OpenAPI.NET/commit/cb1c4967f37f11dad6ad42784e6c3cf8570081f9))
+
 ## [2.1.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.0.1...v2.1.0) (2025-08-20)
 
 
