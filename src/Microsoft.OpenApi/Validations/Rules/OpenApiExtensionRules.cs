@@ -19,16 +19,16 @@ namespace Microsoft.OpenApi
             new(nameof(ExtensionNameMustStartWithXDash),
                 (context, item) =>
                 {
-                    context.Enter("extensions");
                     if (item.Extensions is not null)
                     {
+                        context.Enter("extensions");
                         foreach (var extensible in item.Extensions.Keys.Where(static x => !x.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)))
                         {
                             context.CreateError(nameof(ExtensionNameMustStartWithXDash),
                                 string.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible, context.PathString));
-                        }                        
+                        }
+                        context.Exit();
                     }
-                    context.Exit();
                 });
     }
 }

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.OpenApi
 {
     /// <summary>
@@ -19,15 +17,13 @@ namespace Microsoft.OpenApi
                 (context, item) =>
                 {
                     // url
-                    context.Enter("url");
                     if (item.Url == null)
                     {
+                        context.Enter("url");
                         context.CreateError(nameof(UrlIsRequired),
-                            String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"));
+                        context.Exit();
                     }
-                    context.Exit();
                 });
-
-        // add more rule.
     }
 }

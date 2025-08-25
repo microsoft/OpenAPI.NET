@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.OpenApi
 {
     /// <summary>
@@ -19,22 +17,22 @@ namespace Microsoft.OpenApi
                 (context, item) =>
                 {
                     // name
-                    context.Enter("name");
                     if (item.Name == null)
                     {
+                        context.Enter("name");
                         context.CreateError(nameof(ParameterRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "name", "parameter"));
+                        context.Exit();
                     }
-                    context.Exit();
 
                     // in
-                    context.Enter("in");
                     if (item.In == null)
                     {
+                        context.Enter("in");
                         context.CreateError(nameof(ParameterRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "in", "parameter"));
+                        context.Exit();
                     }
-                    context.Exit();
                 });
 
         /// <summary>
@@ -45,15 +43,14 @@ namespace Microsoft.OpenApi
                 (context, item) =>
                 {
                     // required
-                    context.Enter("required");
                     if (item.In == ParameterLocation.Path && !item.Required)
                     {
+                        context.Enter("required");
                         context.CreateError(
                             nameof(RequiredMustBeTrueWhenInIsPath),
                             "\"required\" must be true when parameter location is \"path\"");
+                        context.Exit();
                     }
-
-                    context.Exit();
                 });
 
         /// <summary>

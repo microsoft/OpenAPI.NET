@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi
         public CurrentKeys CurrentKeys { get; } = new();
 
         /// <summary>
-        /// Allow Rule to indicate validation error occured at a deeper context level.
+        /// Allow Rule to indicate validation error occurred at a deeper context level.
         /// </summary>
         /// <param name="segment">Identifier for context</param>
         public virtual void Enter(string segment)

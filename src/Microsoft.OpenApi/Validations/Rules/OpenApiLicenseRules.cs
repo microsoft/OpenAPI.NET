@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.OpenApi
 {
     /// <summary>
@@ -18,15 +16,13 @@ namespace Microsoft.OpenApi
             new(nameof(LicenseRequiredFields),
                 (context, license) =>
                 {
-                    context.Enter("name");
                     if (license.Name == null)
                     {
+                        context.Enter("name");
                         context.CreateError(nameof(LicenseRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "name", "license"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "name", "license"));
+                        context.Exit();
                     }
-                    context.Exit();
                 });
-
-        // add more rules
     }
 }

@@ -37,22 +37,22 @@ namespace Microsoft.OpenApi
         /// A relative path to an individual endpoint. The field name MUST begin with a slash.
         /// </summary>
         public static ValidationRule<OpenApiPaths> PathMustBeUnique =>
-            new ValidationRule<OpenApiPaths>(nameof(PathMustBeUnique),
+            new(nameof(PathMustBeUnique),
                 (context, item) =>
                 {
                     var hashSet = new HashSet<string>();
 
                     foreach (var path in item.Keys)
                     {
-                        context.Enter(path);
-
                         var pathSignature = GetPathSignature(path);
-                        
+
                         if (!hashSet.Add(pathSignature))
+                        {
+                            context.Enter(path);
                             context.CreateError(nameof(PathMustBeUnique),
                                 string.Format(SRResource.Validation_PathSignatureMustBeUnique, pathSignature));
-
-                        context.Exit();
+                            context.Exit();
+                        }
                     }
                 });
 
@@ -77,7 +77,5 @@ namespace Microsoft.OpenApi
 
             return path;
         }
-
-        // add more rules
     }
 }

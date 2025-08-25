@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.OpenApi
 {
     /// <summary>
@@ -18,15 +16,13 @@ namespace Microsoft.OpenApi
             new(nameof(TagRequiredFields),
                 (context, tag) =>
                 {
-                    context.Enter("name");
                     if (tag.Name == null)
                     {
+                        context.Enter("name");
                         context.CreateError(nameof(TagRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "name", "tag"));
+                        context.Exit();
                     }
-                    context.Exit();
                 });
-
-        // add more rules
     }
 }

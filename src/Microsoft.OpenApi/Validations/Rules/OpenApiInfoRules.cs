@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.OpenApi
 {
     /// <summary>
@@ -19,25 +17,22 @@ namespace Microsoft.OpenApi
                 (context, item) =>
                 {
                     // title
-                    context.Enter("title");
                     if (item.Title == null)
                     {
+                        context.Enter("title");
                         context.CreateError(nameof(InfoRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "title", "info"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "title", "info"));
+                        context.Exit();
                     }
-                    context.Exit();
 
                     // version
-                    context.Enter("version");
                     if (item.Version == null)
                     {
+                        context.Enter("version");
                         context.CreateError(nameof(InfoRequiredFields),
-                            String.Format(SRResource.Validation_FieldIsRequired, "version", "info"));
+                            string.Format(SRResource.Validation_FieldIsRequired, "version", "info"));
+                        context.Exit();
                     }
-                    context.Exit();
-
                 });
-
-        // add more rule.
     }
 }
