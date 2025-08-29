@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.2.0...v2.3.0) (2025-08-29)
+
+
+### Features
+
+* adds the detected format as part of the diagnostic ([#2482](https://github.com/microsoft/OpenAPI.NET/issues/2482)) ([59d7c81](https://github.com/microsoft/OpenAPI.NET/commit/59d7c81fae8cbc320a9005c529806e94cc4e9444))
+* adds the detected format to the diagnostics ([59d7c81](https://github.com/microsoft/OpenAPI.NET/commit/59d7c81fae8cbc320a9005c529806e94cc4e9444))
+
 ## [2.2.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.1.0...v2.2.0) (2025-08-25)
 
 
