@@ -20,8 +20,9 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
             var settings = new OpenApiReaderSettings { LeaveStreamOpen = false };
             settings.AddYamlReader();
-            _ = await OpenApiDocument.LoadAsync(stream, settings: settings);
+            (_, _, var format) = await OpenApiDocument.LoadAsync(stream, settings: settings);
             Assert.False(stream.CanRead);
+            Assert.Equal(OpenApiConstants.Yaml, format);
         }
 
         [Fact]

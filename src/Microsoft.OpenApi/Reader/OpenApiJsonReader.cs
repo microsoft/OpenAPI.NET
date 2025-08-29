@@ -45,7 +45,8 @@ namespace Microsoft.OpenApi.Reader
                 return new ReadResult
                 {
                     Document = null,
-                    Diagnostic = diagnostic
+                    Diagnostic = diagnostic,
+                    Format = OpenApiConstants.Json,
                 };
             }
 
@@ -106,7 +107,8 @@ namespace Microsoft.OpenApi.Reader
             return new()
             {
                 Document = document,
-                Diagnostic = diagnostic
+                Diagnostic = diagnostic,
+                Format = OpenApiConstants.Json
             };
         }
 
@@ -141,7 +143,8 @@ namespace Microsoft.OpenApi.Reader
                 return new ReadResult
                 {
                     Document = null,
-                    Diagnostic = diagnostic
+                    Diagnostic = diagnostic,
+                    Format = OpenApiConstants.Json,
                 };
             }
 

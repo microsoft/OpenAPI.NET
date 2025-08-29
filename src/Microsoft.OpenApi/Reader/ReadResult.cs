@@ -16,12 +16,24 @@ public class ReadResult
     /// </summary>
     public OpenApiDiagnostic? Diagnostic { get; set; }
     /// <summary>
+    /// The format of the OpenAPI document (e.g., "json", "yaml").
+    /// </summary>
+    public string? Format { get; set; }
+    /// <summary>
     /// Deconstructs the result for easier assignment on the client application.
     /// </summary>
     public void Deconstruct(out OpenApiDocument? document, out OpenApiDiagnostic? diagnostic)
     {
+        Deconstruct(out document, out diagnostic, out _);
+    }
+    /// <summary>
+    /// Deconstructs the result for easier assignment on the client application.
+    /// </summary>
+    public void Deconstruct(out OpenApiDocument? document, out OpenApiDiagnostic? diagnostic, out string? format)
+    {
         document = Document;
         diagnostic = Diagnostic;
+        format = Format;
     }
 }
 

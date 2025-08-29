@@ -2007,6 +2007,8 @@ namespace Microsoft.OpenApi.Reader
         public ReadResult() { }
         public Microsoft.OpenApi.Reader.OpenApiDiagnostic? Diagnostic { get; set; }
         public Microsoft.OpenApi.OpenApiDocument? Document { get; set; }
+        public string? Format { get; set; }
         public void Deconstruct(out Microsoft.OpenApi.OpenApiDocument? document, out Microsoft.OpenApi.Reader.OpenApiDiagnostic? diagnostic) { }
+        public void Deconstruct(out Microsoft.OpenApi.OpenApiDocument? document, out Microsoft.OpenApi.Reader.OpenApiDiagnostic? diagnostic, out string? format) { }
     }
 }
