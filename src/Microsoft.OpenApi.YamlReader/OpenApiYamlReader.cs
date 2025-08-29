@@ -67,11 +67,11 @@ namespace Microsoft.OpenApi.YamlReader
             {
                 var diagnostic = new OpenApiDiagnostic();
                 diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
+                diagnostic.Format = OpenApiConstants.Yaml;
                 return new()
                 {
                     Document = null,
                     Diagnostic = diagnostic,
-                    Format = OpenApiConstants.Yaml,
                 };
             }
 
@@ -79,7 +79,8 @@ namespace Microsoft.OpenApi.YamlReader
         }
         private static ReadResult UpdateFormat(ReadResult result)
         {
-            result.Format = OpenApiConstants.Yaml;
+            result.Diagnostic ??= new OpenApiDiagnostic();
+            result.Diagnostic.Format = OpenApiConstants.Yaml;
             return result;
         }
 

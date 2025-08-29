@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert            
-            Assert.Equivalent(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 }, actual.Diagnostic);
+            Assert.Equivalent(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
             actual.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
         }
 
@@ -414,7 +414,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             .Excluding(x => x.Workspace)
             .Excluding(y => y.BaseUri));
             Assert.Equivalent(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 }, actual.Diagnostic);
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
         }
 
         [Fact]

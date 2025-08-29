@@ -1934,6 +1934,7 @@ namespace Microsoft.OpenApi.Reader
     {
         public OpenApiDiagnostic() { }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiError> Errors { get; set; }
+        public string? Format { get; set; }
         public Microsoft.OpenApi.OpenApiSpecVersion SpecificationVersion { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiError> Warnings { get; set; }
         public void AppendDiagnostic(Microsoft.OpenApi.Reader.OpenApiDiagnostic diagnosticToAdd, string? fileNameToAdd = null) { }
@@ -2007,8 +2008,6 @@ namespace Microsoft.OpenApi.Reader
         public ReadResult() { }
         public Microsoft.OpenApi.Reader.OpenApiDiagnostic? Diagnostic { get; set; }
         public Microsoft.OpenApi.OpenApiDocument? Document { get; set; }
-        public string? Format { get; set; }
         public void Deconstruct(out Microsoft.OpenApi.OpenApiDocument? document, out Microsoft.OpenApi.Reader.OpenApiDiagnostic? diagnostic) { }
-        public void Deconstruct(out Microsoft.OpenApi.OpenApiDocument? document, out Microsoft.OpenApi.Reader.OpenApiDiagnostic? diagnostic, out string? format) { }
     }
 }

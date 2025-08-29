@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var callback = subscribeOperation.Callbacks["simpleHook"];
 
             Assert.Equivalent(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, result.Diagnostic);
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, result.Diagnostic);
 
             Assert.Equivalent(
                 new OpenApiCallbackReference("simpleHook", result.Document)
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var subscribeOperation = path.Operations[HttpMethod.Post];
 
             Assert.Equivalent(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, result.Diagnostic);
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, result.Diagnostic);
 
             var callback1 = subscribeOperation.Callbacks["simpleHook"];
 

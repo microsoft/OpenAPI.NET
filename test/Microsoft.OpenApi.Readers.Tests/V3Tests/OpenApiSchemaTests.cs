@@ -231,7 +231,8 @@ get:
             Assert.Equivalent(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
 
             var expectedComponents = new OpenApiComponents
@@ -394,7 +395,8 @@ get:
             Assert.Equivalent(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
 
             var expectedComponents = new OpenApiComponents
