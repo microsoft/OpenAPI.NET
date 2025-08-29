@@ -69,7 +69,8 @@ paths: {}",
             Assert.Equivalent(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
         }
 
@@ -147,7 +148,8 @@ paths: {}
                     {
                             new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
                     },
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
         }
 
@@ -170,7 +172,8 @@ paths: {}
             Assert.Equivalent(
                 new OpenApiDiagnostic()
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
         }
 
@@ -557,7 +560,7 @@ paths: {}
             actual.Document.Should().BeEquivalentTo(expectedDoc, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
 
             Assert.Equivalent(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, actual.Diagnostic);
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
         }
 
         [Fact]
@@ -1031,7 +1034,7 @@ paths: {}
             .Excluding(y => y.BaseUri));
 
             Assert.Equivalent(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, actual.Diagnostic);
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
         }
 
         [Fact]
@@ -1042,7 +1045,7 @@ paths: {}
             // TODO: Create the object in memory and compare with the one read from YAML file.
 
             Assert.Equivalent(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 }, actual.Diagnostic);
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
         }
 
         [Fact]
@@ -1444,9 +1447,10 @@ components:
             };
 
             Assert.Equivalent(
-                new OpenApiDiagnostic 
-                { 
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                new OpenApiDiagnostic
+                {
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
 
             result.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.BaseUri));

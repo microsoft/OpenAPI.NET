@@ -26,6 +26,11 @@ namespace Microsoft.OpenApi.Reader
         public OpenApiSpecVersion SpecificationVersion { get; set; }
 
         /// <summary>
+        /// The format of the OpenAPI document (e.g., "json", "yaml").
+        /// </summary>
+        public string? Format { get; set; }
+
+        /// <summary>
         /// Append another set of diagnostic Errors and Warnings to this one, this may be appended from another external
         /// document's parsing and we want to indicate which file it originated from.
         /// </summary>

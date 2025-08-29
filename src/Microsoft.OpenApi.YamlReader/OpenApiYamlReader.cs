@@ -31,14 +31,14 @@ namespace Microsoft.OpenApi.YamlReader
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (input is MemoryStream memoryStream)
             {
-                return Read(memoryStream, location, settings);
+                return UpdateFormat(Read(memoryStream, location, settings));
             } 
             else 
             {
                 using var preparedStream = new MemoryStream();
                 await input.CopyToAsync(preparedStream, copyBufferSize, cancellationToken).ConfigureAwait(false);
                 preparedStream.Position = 0;
-                return Read(preparedStream, location, settings);
+                return UpdateFormat(Read(preparedStream, location, settings));
             }
         }
 
@@ -67,20 +67,27 @@ namespace Microsoft.OpenApi.YamlReader
             {
                 var diagnostic = new OpenApiDiagnostic();
                 diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
+                diagnostic.Format = OpenApiConstants.Yaml;
                 return new()
                 {
                     Document = null,
-                    Diagnostic = diagnostic
+                    Diagnostic = diagnostic,
                 };
             }
 
-            return Read(jsonNode, location, settings);
+            return UpdateFormat(Read(jsonNode, location, settings));
+        }
+        private static ReadResult UpdateFormat(ReadResult result)
+        {
+            result.Diagnostic ??= new OpenApiDiagnostic();
+            result.Diagnostic.Format = OpenApiConstants.Yaml;
+            return result;
         }
 
         /// <inheritdoc/>
         public static ReadResult Read(JsonNode jsonNode, Uri location, OpenApiReaderSettings settings)
         {
-            return _jsonReader.Read(jsonNode, location, settings);
+            return UpdateFormat(_jsonReader.Read(jsonNode, location, settings));
         }
 
         /// <inheritdoc/>

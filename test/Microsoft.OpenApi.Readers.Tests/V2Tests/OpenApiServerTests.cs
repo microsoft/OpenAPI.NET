@@ -314,7 +314,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         new OpenApiError("#/", "Invalid host")
                     },
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi2_0,
+                    Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
         }
     }

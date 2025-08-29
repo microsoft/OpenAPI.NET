@@ -42,10 +42,11 @@ namespace Microsoft.OpenApi.Reader
             catch (JsonException ex)
             {
                 diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
+                diagnostic.Format = OpenApiConstants.Json;
                 return new ReadResult
                 {
                     Document = null,
-                    Diagnostic = diagnostic
+                    Diagnostic = diagnostic,
                 };
             }
 
@@ -102,11 +103,11 @@ namespace Microsoft.OpenApi.Reader
                     }
                 }                
             }
-
+            diagnostic.Format = OpenApiConstants.Json;
             return new()
             {
                 Document = document,
-                Diagnostic = diagnostic
+                Diagnostic = diagnostic,
             };
         }
 
@@ -138,10 +139,11 @@ namespace Microsoft.OpenApi.Reader
             catch (JsonException ex)
             {
                 diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
+                diagnostic.Format = OpenApiConstants.Json;
                 return new ReadResult
                 {
                     Document = null,
-                    Diagnostic = diagnostic
+                    Diagnostic = diagnostic,
                 };
             }
 

@@ -114,6 +114,7 @@ $$$"""
             BaseUrl = baseUri, 
         };
         var readResult = await OpenApiDocument.LoadAsync(stream, settings: settings);
+        Assert.Equal(OpenApiConstants.Json, readResult.Diagnostic.Format);
         Assert.NotNull(readResult.Document);
         Assert.NotNull(readResult.Document.Components);
         Assert.Equal(baseUri, readResult.Document.BaseUri);
