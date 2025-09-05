@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Reader
 
             return absoluteUri.Scheme switch
             {
-                "file" => File.OpenRead(absoluteUri.AbsolutePath),
+                "file" => File.OpenRead(absoluteUri.LocalPath),
                 "http" or "https" =>
 #if NET5_0_OR_GREATER
                     await _httpClient.GetStreamAsync(absoluteUri, cancellationToken).ConfigureAwait(false),
