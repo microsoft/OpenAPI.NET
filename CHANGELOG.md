@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.0...v2.3.1) (2025-09-08)
+
+
+### Bug Fixes
+
+* file access for "file" URI scheme with special characters ([6dded81](https://github.com/microsoft/OpenAPI.NET/commit/6dded810cfba50d3a8093795a9359c384dd52c6a))
+
 ## [2.3.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.2.0...v2.3.0) (2025-08-29)
 
 
