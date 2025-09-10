@@ -50,6 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.20" />
       <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
