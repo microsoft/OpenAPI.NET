@@ -14,6 +14,10 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiEncoding : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
+        /// Explode backing variable
+        /// </summary>
+        private bool? _explode;
+        /// <summary>
         /// The Content-Type for encoding a specific property.
         /// The value can be a specific media type (e.g. application/json),
         /// a wildcard media type (e.g. image/*), or a comma-separated list of the two types.
@@ -37,7 +41,11 @@ namespace Microsoft.OpenApi.Models
         /// For all other styles, the default value is false.
         /// This property SHALL be ignored if the request body media type is not application/x-www-form-urlencoded.
         /// </summary>
-        public bool? Explode { get; set; }
+        public bool? Explode
+        {
+            get => _explode ?? Style == ParameterStyle.Form;
+            set => _explode = value;
+        }
 
         /// <summary>
         /// Determines whether the parameter value SHOULD allow reserved characters,
@@ -65,7 +73,7 @@ namespace Microsoft.OpenApi.Models
             ContentType = encoding?.ContentType ?? ContentType;
             Headers = encoding?.Headers != null ? new Dictionary<string, OpenApiHeader>(encoding.Headers) : null;
             Style = encoding?.Style ?? Style;
-            Explode = encoding?.Explode ?? Explode;
+            Explode = encoding?._explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
             Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
         }
@@ -89,7 +97,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
+            if (_explode.HasValue)
+            {
+                writer.WriteProperty(OpenApiConstants.Explode, Explode);
+            }
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
