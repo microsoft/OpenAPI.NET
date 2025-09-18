@@ -76,5 +76,55 @@ namespace Microsoft.OpenApi.Tests.Models
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
         }
+
+        [Theory]
+        [InlineData(ParameterStyle.Form, true)]
+        [InlineData(ParameterStyle.SpaceDelimited, false)]
+        [InlineData(null, false)]
+        public void WhenStyleIsFormTheDefaultValueOfExplodeShouldBeTrueOtherwiseFalse(ParameterStyle? style, bool expectedExplode)
+        {
+            // Arrange
+            var parameter = new OpenApiEncoding
+            {
+                Style = style
+            };
+
+            // Act & Assert
+            parameter.Explode.Should().Be(expectedExplode);
+        }
+
+        [Theory]
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(null, false)]
+        public void WhenExplodeIsSetOutputShouldHaveExplode(bool? expectedExplode, bool hasExplode)
+        {
+            // Arrange
+            OpenApiEncoding parameter = new()
+            {
+                ContentType = "multipart/form-data",
+                Style = ParameterStyle.Form,
+                Explode = expectedExplode,
+            };
+
+            var expected =
+                $"""
+                contentType: multipart/form-data
+                style: form
+                """;
+
+            if (hasExplode)
+            {
+                expected = expected + $"\nexplode: {expectedExplode.ToString().ToLower()}";
+            }
+
+            // Act
+            var actual = parameter.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
     }
 }
