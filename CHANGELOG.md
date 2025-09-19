@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.2](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.1...v2.3.2) (2025-09-19)
+
+
+### Bug Fixes
+
+* Fix URL processing in InternalLoad method would not detect the filename/scheme properly in some scenarios ([d93689c](https://github.com/microsoft/OpenAPI.NET/commit/d93689c87ababdf64a82dc492a19b963f65b3fd1))
+* OpenApiEncoding explode property serialization defaults with form style ([ae03eab](https://github.com/microsoft/OpenAPI.NET/commit/ae03eaba3fe7aa20bf0d03f895bbd4ae85d9d344))
+
 ## [2.3.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.0...v2.3.1) (2025-09-08)
 
 
