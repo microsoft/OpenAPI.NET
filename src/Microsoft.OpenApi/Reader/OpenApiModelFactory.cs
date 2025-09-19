@@ -302,8 +302,8 @@ namespace Microsoft.OpenApi.Reader
                 Stream stream;
                 string? format;
 
-                if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase)
-                    || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+                if (url.StartsWith("http:", StringComparison.OrdinalIgnoreCase)
+                    || url.StartsWith("https:", StringComparison.OrdinalIgnoreCase))
                 {
                     var response = await settings.HttpClient.GetAsync(url, token).ConfigureAwait(false);
                     var mediaType = response.Content.Headers.ContentType?.MediaType;
@@ -320,15 +320,27 @@ namespace Microsoft.OpenApi.Reader
                 }
                 else
                 {
-                    format = Path.GetExtension(url).Split('.').LastOrDefault();
-
                     try
                     {
-                        var fileInput = new FileInfo(url);
+                        string fileName;
+                        if (url.StartsWith("file:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            fileName = new Uri(url).LocalPath;
+                        }
+                        else
+                        {
+                            fileName = url;
+                        }
+
+                        format = Path.GetExtension(fileName).Split('.').LastOrDefault();
+
+                        var fileInput = new FileInfo(fileName);
                         stream = fileInput.OpenRead();
                     }
                     catch (Exception ex) when (
                         ex is
+                            UriFormatException or
+                            FormatException or
                             FileNotFoundException or
                             PathTooLongException or
                             DirectoryNotFoundException or
