@@ -339,6 +339,8 @@ namespace Microsoft.OpenApi.Reader
                     }
                     catch (Exception ex) when (
                         ex is
+                            UriFormatException or
+                            FormatException or
                             FileNotFoundException or
                             PathTooLongException or
                             DirectoryNotFoundException or
