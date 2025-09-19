@@ -95,19 +95,19 @@ This command accepts the following parameters:
 1. Filtering by OperationIds  
 
 ```bash
-hidi transform -d files\People.yml -f yaml -o files\People.yml -v OpenApi3_0 --op users_UpdateInsights --co 
+hidi transform -d files\People.yml -f yaml -o files\People.yml -v 3.0 --op users_UpdateInsights --co 
 ```
 
 2. Filtering by Postman collection 
 
 ```bash	
-hidi transform --openapi files\People.yml --format yaml --output files\People2.yml --version OpenApi3_0 --filter-by-collection Graph-Collection-0017059134807617005.postman_collection.json 
+hidi transform --openapi files\People.yml --format yaml --output files\People2.yml --version 3.0 --filter-by-collection Graph-Collection-0017059134807617005.postman_collection.json 
 ```
 
 3. CSDL--->OpenAPI conversion and filtering 
 
 ```bash
-hidi transform --csdl Files/Todo.xml --output Files/Todo-subset.yml --format yaml --version OpenApi3_0 --filter-by-operationids Todos.Todo.UpdateTodo 
+hidi transform --csdl Files/Todo.xml --output Files/Todo-subset.yml --format yaml --version 3.0 --filter-by-operationids Todos.Todo.UpdateTodo 
 ```	 
 	
 4. CSDL Filtering by EntitySets and Singletons 
@@ -137,5 +137,6 @@ This command generates an OpenAI style Plugin manifest and minimal OpenAPI file 
 ```bash
 hidi plugin -m exampleApiManifest.yml -o mypluginfolder 
 ```
+
 
 > Run `hidi plugin -h` to see all the available usage options.
