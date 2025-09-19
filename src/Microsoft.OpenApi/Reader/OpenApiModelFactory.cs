@@ -332,7 +332,7 @@ namespace Microsoft.OpenApi.Reader
                             fileName = url;
                         }
 
-                        format = null;
+                        format = Path.GetExtension(fileName).Split('.').LastOrDefault();
 
                         var fileInput = new FileInfo(fileName);
                         stream = fileInput.OpenRead();
