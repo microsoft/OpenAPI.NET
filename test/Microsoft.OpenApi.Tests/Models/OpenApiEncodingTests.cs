@@ -90,14 +90,14 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act & Assert
-            parameter.Explode.Should().Be(expectedExplode);
+            Assert.Equal(parameter.Explode, expectedExplode);
         }
 
         [Theory]
         [InlineData(true, true)]
         [InlineData(false, true)]
         [InlineData(null, false)]
-        public void WhenExplodeIsSetOutputShouldHaveExplode(bool? expectedExplode, bool hasExplode)
+        public async Task WhenExplodeIsSetOutputShouldHaveExplode(bool? expectedExplode, bool hasExplode)
         {
             // Arrange
             OpenApiEncoding parameter = new()
@@ -119,12 +119,12 @@ namespace Microsoft.OpenApi.Tests.Models
             }
 
             // Act
-            var actual = parameter.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await parameter.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            Assert.Equal(actual, expected);
         }
     }
 }
