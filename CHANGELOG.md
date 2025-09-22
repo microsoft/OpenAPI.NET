@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.26](https://github.com/microsoft/openapi.net/compare/v1.6.25...v1.6.26) (2025-09-19)
+
+
+### Bug Fixes
+
+* OpenApiEncoding explode default value when using form style ([09b5a28](https://github.com/microsoft/openapi.net/commit/09b5a28da90963ade2051d2581ad89ef02f1514d))
+
 ## [1.6.25](https://github.com/microsoft/openapi.net/compare/v1.6.24...v1.6.25) (2025-08-22)
 
 
