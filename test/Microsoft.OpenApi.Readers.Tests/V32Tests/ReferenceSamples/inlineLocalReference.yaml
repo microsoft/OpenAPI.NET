@@ -1,0 +1,14 @@
+openapi: 3.2.0
+info:
+  title: Example of reference object pointing to a parameter
+  version: 1.0.0
+paths:
+  /item:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/size'
+components:
+  parameters:
+    size:
+      schema:
+        type: number

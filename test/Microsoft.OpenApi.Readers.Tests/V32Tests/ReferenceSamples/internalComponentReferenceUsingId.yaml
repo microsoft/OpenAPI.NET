@@ -1,0 +1,29 @@
+openapi: 3.2.0
+info:
+    title: Reference an internal component using id
+    version: 1.0.0
+paths:
+    /person/{id}:
+        get:
+          responses:
+            200:
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    $ref: 'https://schemas.acme.org/person'
+components:
+   schemas:
+      person:
+        $id: 'https://schemas.acme.org/person'
+        type: object
+        properties:
+            name:
+                type: string
+            address:
+                type: object
+                properties:
+                    street:
+                        type: string
+                    city:
+                        type: string
