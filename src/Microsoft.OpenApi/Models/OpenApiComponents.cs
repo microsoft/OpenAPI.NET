@@ -91,10 +91,23 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/> to Open API v3.2.
+        /// </summary>
+        /// <param name="writer"></param>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeAsV3X(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer), (writer, referenceElement) => referenceElement.SerializeAsV32(writer));
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open API v3.1.
         /// </summary>
         /// <param name="writer"></param>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
+        {
+            SerializeAsV3X(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer), (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
+        }
+        private void SerializeAsV3X(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, IOpenApiReferenceHolder> action)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -102,7 +115,7 @@ namespace Microsoft.OpenApi
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                RenderComponents(writer, (writer, element) => element.SerializeAsV31(writer), OpenApiSpecVersion.OpenApi3_1);                
+                RenderComponents(writer, callback, version);
                 return;
             }
 
@@ -116,16 +129,15 @@ namespace Microsoft.OpenApi
             {
                 if (component is OpenApiPathItemReference reference)
                 {
-                    reference.SerializeAsV31(w);
+                    action(w, reference);
                 }
                 else
                 {
-                    component.SerializeAsV31(w);
+                    callback(w, component);
                 }
             });
 
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer),
-               (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
+            SerializeInternal(writer, version, callback, action);
         }
 
         /// <summary>

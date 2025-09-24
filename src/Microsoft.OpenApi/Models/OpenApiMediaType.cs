@@ -61,6 +61,13 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.2.
+        /// </summary>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2, (w, element) => element.SerializeAsV32(w));
+        }
+        /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.1.
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)

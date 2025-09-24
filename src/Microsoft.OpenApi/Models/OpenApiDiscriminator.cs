@@ -41,12 +41,26 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.2
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2);
+
+            // extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_2);
+
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.1
         /// </summary>
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_1);
@@ -59,16 +73,12 @@ namespace Microsoft.OpenApi
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
-        /// </summary>
-        /// <param name="writer"></param>
-        private void SerializeInternal(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             Utils.CheckArgumentNull(writer);
 

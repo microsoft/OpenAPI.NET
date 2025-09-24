@@ -9,6 +9,11 @@ namespace Microsoft.OpenApi
     public interface IOpenApiSerializable : IOpenApiElement
     {
         /// <summary>
+        /// Serialize OpenAPI element into v3.2
+        /// </summary>
+        /// <param name="writer"></param>
+        void SerializeAsV32(IOpenApiWriter writer);
+        /// <summary>
         /// Serialize OpenAPI element into v3.1
         /// </summary>
         /// <param name="writer"></param>

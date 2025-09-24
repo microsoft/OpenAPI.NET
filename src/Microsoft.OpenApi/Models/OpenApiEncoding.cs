@@ -77,6 +77,15 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiEncoding"/> to Open Api v3.2
+        /// </summary>
+        /// <param name="writer"></param>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer));
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiEncoding"/> to Open Api v3.1
         /// </summary>
         /// <param name="writer"></param>

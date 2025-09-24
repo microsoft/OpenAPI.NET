@@ -59,6 +59,13 @@ namespace Microsoft.OpenApi
             OpenIdConnectUrl = securityScheme.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = securityScheme.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
         }
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.2
+        /// </summary>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer));
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.1
