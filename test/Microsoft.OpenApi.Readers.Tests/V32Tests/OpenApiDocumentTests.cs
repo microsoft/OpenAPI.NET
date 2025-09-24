@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -558,9 +558,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         }
 
         [Fact]
-        public async Task ParseDocumentWith31PropertiesWorks()
+        public async Task ParseDocumentWith32PropertiesWorks()
         {
-            var path = Path.Combine(SampleFolderPath, "documentWith31Properties.yaml");
+            var path = Path.Combine(SampleFolderPath, "documentWith32Properties.yaml");
             var doc = (await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings)).Document;
             var outputStringWriter = new StringWriter();
             doc.SerializeAsV32(new OpenApiYamlWriter(outputStringWriter));
