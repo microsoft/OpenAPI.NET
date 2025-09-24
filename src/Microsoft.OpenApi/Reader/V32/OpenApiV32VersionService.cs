@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Microsoft.OpenApi.Reader.V32
 {
     /// <summary>
-    /// The version service for the Open API V3.1.
+    /// The version service for the Open API V3.2.
     /// </summary>
     internal class OpenApiV32VersionService : BaseOpenApiVersionService
     {
