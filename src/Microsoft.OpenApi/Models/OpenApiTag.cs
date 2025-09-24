@@ -39,11 +39,20 @@ namespace Microsoft.OpenApi
             ExternalDocs = tag.ExternalDocs != null ? new(tag.ExternalDocs) : null;
             Extensions = tag.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiTag"/> to Open Api v3.2
+        /// </summary>
+        public virtual void SerializeAsV32(IOpenApiWriter writer) 
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2,
+                (writer, element) => element.SerializeAsV32(writer));
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.1
         /// </summary>
-        public virtual void SerializeAsV31(IOpenApiWriter writer) 
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1,
                 (writer, element) => element.SerializeAsV31(writer));

@@ -20,9 +20,11 @@ namespace Microsoft.OpenApi
         public string? ReferenceV3 { get; }
         public Microsoft.OpenApi.ReferenceType Type { get; init; }
         protected virtual void SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        protected virtual void SerializeAdditionalV32Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
         protected virtual void SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject jsonObject) { }
         protected static string? GetPropertyValueFromNode(System.Text.Json.Nodes.JsonObject jsonObject, string key) { }
     }
@@ -42,6 +44,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public sealed class BodyExpression : Microsoft.OpenApi.SourceExpression
     {
@@ -277,6 +280,7 @@ namespace Microsoft.OpenApi
         void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer);
         void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer);
         void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer);
+        void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer);
     }
     public interface IOpenApiSummarizedElement : Microsoft.OpenApi.IOpenApiElement
     {
@@ -343,6 +347,7 @@ namespace Microsoft.OpenApi
         public string? Title { get; set; }
         public bool? WriteOnly { get; set; }
         protected override void SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        protected override void SerializeAdditionalV32Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
         protected override void SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject jsonObject) { }
     }
     [System.Flags]
@@ -372,6 +377,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiCallbackReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiCallback, Microsoft.OpenApi.IOpenApiCallback, Microsoft.OpenApi.BaseOpenApiReference>, Microsoft.OpenApi.IOpenApiCallback, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiCallback>
     {
@@ -401,6 +407,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     [Microsoft.OpenApi.OpenApiRule]
     public static class OpenApiComponentsRules
@@ -576,6 +583,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     [Microsoft.OpenApi.OpenApiRule]
     public static class OpenApiContactRules
@@ -592,6 +600,7 @@ namespace Microsoft.OpenApi
         public void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiDocument : Microsoft.OpenApi.IMetadataContainer, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiSerializable
     {
@@ -617,6 +626,7 @@ namespace Microsoft.OpenApi
         public void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SetReferenceHostDocument() { }
         public static Microsoft.OpenApi.Reader.ReadResult Load(System.IO.MemoryStream stream, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) { }
         public static System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult> LoadAsync(string url, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null, System.Threading.CancellationToken token = default) { }
@@ -646,6 +656,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiError
     {
@@ -668,6 +679,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiExampleReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiExample, Microsoft.OpenApi.IOpenApiExample, Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExample, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiExample>
     {
@@ -698,6 +710,7 @@ namespace Microsoft.OpenApi
         public void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public static class OpenApiExtensibleExtensions
     {
@@ -719,6 +732,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     [Microsoft.OpenApi.OpenApiRule]
     public static class OpenApiExternalDocsRules
@@ -750,6 +764,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiHeaderReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiHeader, Microsoft.OpenApi.IOpenApiHeader, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiHeader, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiHeader>
     {
@@ -785,6 +800,7 @@ namespace Microsoft.OpenApi
         public void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     [Microsoft.OpenApi.OpenApiRule]
     public static class OpenApiInfoRules
@@ -824,6 +840,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     [Microsoft.OpenApi.OpenApiRule]
     public static class OpenApiLicenseRules
@@ -844,6 +861,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiLinkReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiLink, Microsoft.OpenApi.IOpenApiLink, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiLink, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiLink>
     {
@@ -872,6 +890,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public static class OpenApiNonDefaultRules
     {
@@ -892,6 +911,7 @@ namespace Microsoft.OpenApi
         public void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     [Microsoft.OpenApi.OpenApiRule]
     public static class OpenApiOAuthFlowRules
@@ -910,6 +930,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiOperation : Microsoft.OpenApi.IMetadataContainer, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiSerializable
     {
@@ -932,6 +953,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiParameter : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiParameter, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiParameter>
     {
@@ -954,6 +976,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiParameterReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiParameter, Microsoft.OpenApi.IOpenApiParameter, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiParameter, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiParameter>
     {
@@ -997,6 +1020,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiPathItemReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiPathItem, Microsoft.OpenApi.IOpenApiPathItem, Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiPathItem, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiPathItem>
     {
@@ -1047,6 +1071,7 @@ namespace Microsoft.OpenApi
         public OpenApiReferenceWithDescription(Microsoft.OpenApi.OpenApiReferenceWithDescription reference) { }
         public string? Description { get; set; }
         protected override void SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        protected override void SerializeAdditionalV32Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
         protected override void SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject jsonObject) { }
     }
     public class OpenApiReferenceWithDescriptionAndSummary : Microsoft.OpenApi.OpenApiReferenceWithDescription, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiSummarizedElement
@@ -1055,6 +1080,7 @@ namespace Microsoft.OpenApi
         public OpenApiReferenceWithDescriptionAndSummary(Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary reference) { }
         public string? Summary { get; set; }
         protected override void SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        protected override void SerializeAdditionalV32Properties(Microsoft.OpenApi.IOpenApiWriter writer) { }
         protected override void SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject jsonObject) { }
     }
     public class OpenApiRequestBody : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiRequestBody, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiRequestBody>
@@ -1070,6 +1096,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiRequestBodyReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiRequestBody, Microsoft.OpenApi.IOpenApiRequestBody, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiRequestBody, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiRequestBody>
     {
@@ -1097,6 +1124,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiResponseReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiResponse, Microsoft.OpenApi.IOpenApiResponse, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiResponse, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiResponse>
     {
@@ -1188,6 +1216,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiSchemaReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiSchema, Microsoft.OpenApi.IOpenApiSchema, Microsoft.OpenApi.JsonSchemaReference>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSchema, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSchema>
     {
@@ -1262,6 +1291,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiSecurityScheme : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSecurityScheme>
     {
@@ -1279,6 +1309,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiSecuritySchemeReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSecurityScheme>
     {
@@ -1326,6 +1357,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public static class OpenApiServerExtensions
     {
@@ -1347,12 +1379,14 @@ namespace Microsoft.OpenApi
         public void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public enum OpenApiSpecVersion
     {
         OpenApi2_0 = 0,
         OpenApi3_0 = 1,
         OpenApi3_1 = 2,
+        OpenApi3_2 = 3,
     }
     public class OpenApiTag : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyDescribedElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiTag, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiTag>
     {
@@ -1365,6 +1399,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiTagReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiTag, Microsoft.OpenApi.IOpenApiTag, Microsoft.OpenApi.BaseOpenApiReference>, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyDescribedElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiTag, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiTag>
     {
@@ -1643,6 +1678,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public class OpenApiYamlWriter : Microsoft.OpenApi.OpenApiWriterBase
     {
@@ -1986,6 +2022,7 @@ namespace Microsoft.OpenApi.Reader
         public static bool is2_0(this string version) { }
         public static bool is3_0(this string version) { }
         public static bool is3_1(this string version) { }
+        public static bool is3_2(this string version) { }
     }
     public class ParsingContext
     {

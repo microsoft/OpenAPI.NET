@@ -162,9 +162,22 @@ namespace Microsoft.OpenApi
                     SerializeAsV31(writer);
                     break;
 
+                case OpenApiSpecVersion.OpenApi3_2:
+                    SerializeAsV32(writer);
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(version), version, string.Format(SRResource.OpenApiSpecVersionNotSupported, version));
             }
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/> to Open API v3.2 document.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeAsV3X(writer, "3.2.0", OpenApiSpecVersion.OpenApi3_2, (w, element) => element.SerializeAsV32(w), (w, referenceElement) => referenceElement.SerializeAsV32(w));
         }
 
         /// <summary>
@@ -173,17 +186,21 @@ namespace Microsoft.OpenApi
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
+            SerializeAsV3X(writer, "3.1.2", OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w), (w, referenceElement) => referenceElement.SerializeAsV31(w));
+        }
+        private void SerializeAsV3X(IOpenApiWriter writer, string versionString, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, OpenApiPathItemReference> referenceCallback)
+        {
             Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
             // openApi
-            writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.1");
+            writer.WriteProperty(OpenApiConstants.OpenApi, versionString);
 
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect?.ToString());
 
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w));
+            SerializeInternal(writer, version, callback);
 
             // webhooks
             writer.WriteOptionalMap(
@@ -193,11 +210,11 @@ namespace Microsoft.OpenApi
             {
                 if (component is OpenApiPathItemReference reference)
                 {
-                    reference.SerializeAsV31(w);
+                    referenceCallback(w, reference);
                 }
                 else
                 {
-                    component.SerializeAsV31(w);
+                    callback(w, component);
                 }
             });
 

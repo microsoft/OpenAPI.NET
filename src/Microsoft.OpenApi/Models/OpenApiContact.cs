@@ -47,6 +47,14 @@ namespace Microsoft.OpenApi
             Email = contact?.Email ?? Email;
             Extensions = contact?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(contact.Extensions) : null;
         }
+        /// <summary>
+        /// Serialize <see cref="OpenApiContact"/> to Open Api v3.2
+        /// </summary>
+        /// <param name="writer"></param>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_2);
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v3.1

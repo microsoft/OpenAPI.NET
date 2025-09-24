@@ -234,7 +234,7 @@ tags:
             OpenApiSpecVersion.OpenApi3_1 =>
 """
 {
-  "openapi": "3.1.1",
+  "openapi": "3.1.2",
   "info": {},
   "paths": {
     "/test": {
@@ -275,7 +275,7 @@ tags:
     [InlineData(
 """
 {
-  "openapi": "3.1.1",
+  "openapi": "3.1.2",
   "info": {},
   "paths": {
     "/test": {

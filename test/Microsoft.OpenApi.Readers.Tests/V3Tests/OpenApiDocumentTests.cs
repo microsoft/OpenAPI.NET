@@ -1187,7 +1187,7 @@ paths: {}
     "title": "Pet Store with double hop references",
     "version": "1.0.0"
   },
-  "openapi": "3.1.1",
+  "openapi": "3.1.2",
   "paths": {
     "/pets": {
       "get": {
