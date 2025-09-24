@@ -15,7 +15,7 @@ public class OpenApiModelFactoryTests
         await File.WriteAllTextAsync(tempFilePathReferee,
 """
 {
-    "openapi": "3.1.1",
+    "openapi": "3.1.2",
     "info": {
         "title": "OData Service for namespace microsoft.graph",
         "description": "This OData service is located at https://graph.microsoft.com/v1.0",
@@ -61,7 +61,7 @@ public class OpenApiModelFactoryTests
         await File.WriteAllTextAsync(tempFilePathReferrer,
 $$$"""
 {
-    "openapi": "3.1.1",
+    "openapi": "3.1.2",
     "info": {
         "title": "OData Service for namespace microsoft.graph",
         "description": "This OData service is located at https://graph.microsoft.com/v1.0",

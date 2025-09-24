@@ -1892,7 +1892,7 @@ paths:
         public async Task SerializeDocumentWithWebhooksAsV3YamlWorks()
         {
             // Arrange
-            var expected = @"openapi: '3.1.1'
+            var expected = @"openapi: '3.1.2'
 info:
   title: Webhook Example
   version: 1.0.0
@@ -1947,7 +1947,7 @@ webhooks:
                 JsonSchemaDialect = new Uri("http://json-schema.org/draft-07/schema#")
             };
 
-            var expected = @"openapi: '3.1.1'
+            var expected = @"openapi: '3.1.2'
 jsonSchemaDialect: http://json-schema.org/draft-07/schema#
 info:
   title: JsonSchemaDialectTest
@@ -1990,7 +1990,7 @@ responses:
         [Fact]
         public async Task SerializeDocWithDollarIdInDollarRefSucceeds()
         {
-            var expected = @"openapi: '3.1.1'
+            var expected = @"openapi: '3.1.2'
 info:
   title: Simple API
   version: 1.0.0
