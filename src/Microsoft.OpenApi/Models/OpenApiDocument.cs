@@ -162,6 +162,10 @@ namespace Microsoft.OpenApi
                     SerializeAsV31(writer);
                     break;
 
+                case OpenApiSpecVersion.OpenApi3_2:
+                    SerializeAsV32(writer);
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(version), version, string.Format(SRResource.OpenApiSpecVersionNotSupported, version));
             }
