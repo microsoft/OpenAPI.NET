@@ -20,6 +20,10 @@ public enum OpenApiSpecVersion
     /// <summary>
     /// Represents OpenAPI V3.1 spec
     /// </summary>
-    OpenApi3_1
+    OpenApi3_1,
 
+    /// <summary>
+    /// Represents OpenAPI V3.2 spec
+    /// </summary>
+    OpenApi3_2
 }
