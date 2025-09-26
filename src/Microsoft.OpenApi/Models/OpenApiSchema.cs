@@ -389,7 +389,7 @@ namespace Microsoft.OpenApi
         {
             writer.WriteStartObject();
 
-            if (version == OpenApiSpecVersion.OpenApi3_1)
+            if (version >= OpenApiSpecVersion.OpenApi3_1)
             {
                 WriteJsonSchemaKeywords(writer);
             }
