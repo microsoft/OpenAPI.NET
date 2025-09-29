@@ -26,6 +26,11 @@ namespace Microsoft.OpenApi
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
+        /// OAI 3.2.0: The schema name or URI reference to a schema that is expected to validate the structure of the model when the discriminating property is not present in the payload or contains a value for which there is no explicit or implicit mapping.
+        /// </summary>
+        public OpenApiSchemaReference? DefaultMapping { get; set; }
+
+        /// <summary>
         /// Parameter-less constructor
         /// </summary>
         public OpenApiDiscriminator() { }
@@ -38,6 +43,7 @@ namespace Microsoft.OpenApi
             PropertyName = discriminator?.PropertyName ?? PropertyName;
             Mapping = discriminator?.Mapping != null ? new Dictionary<string, OpenApiSchemaReference>(discriminator.Mapping) : null;
             Extensions = discriminator?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(discriminator.Extensions) : null;
+            DefaultMapping = discriminator?.DefaultMapping;
         }
 
         /// <summary>
@@ -47,6 +53,13 @@ namespace Microsoft.OpenApi
         public void SerializeAsV32(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2);
+
+            // Write defaultMapping property in 3.2.0
+            if (DefaultMapping != null)
+            {
+                writer.WritePropertyName("defaultMapping");
+                DefaultMapping.SerializeAsV32(writer);
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_2);
@@ -62,6 +75,13 @@ namespace Microsoft.OpenApi
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
 
+            // Write as x-oas-default-mapping extension in 3.1.0
+            if (DefaultMapping != null)
+            {
+                writer.WritePropertyName("x-oas-default-mapping");
+                DefaultMapping.SerializeAsV31(writer);
+            }
+
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_1);
 
@@ -74,6 +94,13 @@ namespace Microsoft.OpenApi
         public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+
+            // Write as x-oas-default-mapping extension in 3.0.0
+            if (DefaultMapping != null)
+            {
+                writer.WritePropertyName("x-oas-default-mapping");
+                DefaultMapping.SerializeAsV3(writer);
+            }
 
             writer.WriteEndObject();
         }
