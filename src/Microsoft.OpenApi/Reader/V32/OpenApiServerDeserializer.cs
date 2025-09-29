@@ -26,6 +26,12 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
+                "name", (o, n, _) =>
+                {
+                    o.Name = n.GetScalarValue();
+                }
+            },
+            {
                 "variables", (o, n, t) =>
                 {
                     o.Variables = n.CreateMap(LoadServerVariable, t);

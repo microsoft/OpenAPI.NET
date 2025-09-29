@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi
 {
@@ -15,6 +16,12 @@ namespace Microsoft.OpenApi
         /// An optional string describing the host designated by the URL. CommonMark syntax MAY be used for rich text representation.
         /// </summary>
         public string? Description { get; set; }
+
+        /// <summary>
+        /// An optional string identifying the server. This MUST be unique across servers in the same document.
+        /// Note: This field is supported in OpenAPI 3.2.0+. For earlier versions, it will be serialized as x-oai-name extension.
+        /// </summary>
+        public string? Name { get; set; }
 
         /// <summary>
         /// REQUIRED. A URL to the target host. This URL supports Server Variables and MAY be relative,
@@ -44,6 +51,7 @@ namespace Microsoft.OpenApi
         public OpenApiServer(OpenApiServer server)
         {
             Description = server?.Description ?? Description;
+            Name = server?.Name ?? Name;
             Url = server?.Url ?? Url;
             Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server.Variables) : null;
             Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
@@ -86,6 +94,15 @@ namespace Microsoft.OpenApi
             // url
             writer.WriteProperty(OpenApiConstants.Url, Url);
 
+            // name - serialize as native field for v3.2+ or as extension for earlier versions
+            if (!string.IsNullOrEmpty(Name))
+            {
+                if (version == OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteProperty(OpenApiConstants.Name, Name);
+                }
+            }
+
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
@@ -93,7 +110,16 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalMap(OpenApiConstants.Variables, Variables, callback);
 
             // specification extensions
-            writer.WriteExtensions(Extensions, version);
+            var extensionsToWrite = Extensions;
+
+            // For non-v3.2 versions, add x-oai-name extension if Name is present
+            if (!string.IsNullOrEmpty(Name) && version != OpenApiSpecVersion.OpenApi3_2)
+            {
+                extensionsToWrite = new Dictionary<string, IOpenApiExtension>(Extensions ?? new Dictionary<string, IOpenApiExtension>());
+                extensionsToWrite["x-oai-name"] = new JsonNodeExtension(JsonValue.Create(Name)!);
+            }
+            
+            writer.WriteExtensions(extensionsToWrite, version);
 
             writer.WriteEndObject();
         }

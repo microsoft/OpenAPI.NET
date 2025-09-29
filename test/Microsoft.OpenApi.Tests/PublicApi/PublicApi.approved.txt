@@ -1354,6 +1354,7 @@ namespace Microsoft.OpenApi
         public OpenApiServer(Microsoft.OpenApi.OpenApiServer server) { }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
+        public string? Name { get; set; }
         public string? Url { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiServerVariable>? Variables { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
