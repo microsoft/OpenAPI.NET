@@ -594,6 +594,7 @@ namespace Microsoft.OpenApi
     {
         public OpenApiDiscriminator() { }
         public OpenApiDiscriminator(Microsoft.OpenApi.OpenApiDiscriminator discriminator) { }
+        public Microsoft.OpenApi.OpenApiSchemaReference? DefaultMapping { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiSchemaReference>? Mapping { get; set; }
         public string? PropertyName { get; set; }
