@@ -13,6 +13,9 @@ namespace Microsoft.OpenApi
     public class OpenApiResponse : IOpenApiExtensible, IOpenApiResponse
     {
         /// <inheritdoc/>
+        public string? Summary { get; set; }
+
+        /// <inheritdoc/>
         public string? Description { get; set; }
 
         /// <inheritdoc/>
@@ -38,6 +41,7 @@ namespace Microsoft.OpenApi
         internal OpenApiResponse(IOpenApiResponse response)
         {
             Utils.CheckArgumentNull(response);
+            Summary = response.Summary ?? Summary;
             Description = response.Description ?? Description;
             Headers = response.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
             Content = response.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
@@ -76,6 +80,12 @@ namespace Microsoft.OpenApi
 
             writer.WriteStartObject();
 
+            // summary - only for v3.2+
+            if (version >= OpenApiSpecVersion.OpenApi3_2)
+            {
+                writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            }
+
             // description
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
@@ -87,6 +97,12 @@ namespace Microsoft.OpenApi
 
             // links
             writer.WriteOptionalMap(OpenApiConstants.Links, Links, callback);
+
+            // summary as extension for v3.1 and earlier
+            if (version < OpenApiSpecVersion.OpenApi3_2 && !string.IsNullOrEmpty(Summary))
+            {
+                writer.WriteProperty(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.Summary, Summary);
+            }
 
             // extension
             writer.WriteExtensions(Extensions, version);

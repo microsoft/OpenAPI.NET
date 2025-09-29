@@ -34,7 +34,17 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => 
+                {
+                    if (p.Equals("x-oai-summary", StringComparison.OrdinalIgnoreCase))
+                    {
+                        o.Summary = n.GetScalarValue();
+                    }
+                    else
+                    {
+                        o.AddExtension(p, LoadExtension(p,n));
+                    }
+                }}
             };
 
         public static IOpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)

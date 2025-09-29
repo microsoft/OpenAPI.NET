@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi
         Microsoft.OpenApi.IOpenApiParameter? ConvertToBodyParameter(Microsoft.OpenApi.IOpenApiWriter writer);
         System.Collections.Generic.IEnumerable<Microsoft.OpenApi.IOpenApiParameter>? ConvertToFormDataParameters(Microsoft.OpenApi.IOpenApiWriter writer);
     }
-    public interface IOpenApiResponse : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiResponse>
+    public interface IOpenApiResponse : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiResponse>
     {
         System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiMediaType>? Content { get; }
         System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiHeader>? Headers { get; }
@@ -1112,7 +1112,7 @@ namespace Microsoft.OpenApi
         public Microsoft.OpenApi.IOpenApiRequestBody CreateShallowCopy() { }
         public override void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
-    public class OpenApiResponse : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiResponse, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiResponse>
+    public class OpenApiResponse : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiResponse, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiResponse>
     {
         public OpenApiResponse() { }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiMediaType>? Content { get; set; }
@@ -1120,13 +1120,14 @@ namespace Microsoft.OpenApi
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiHeader>? Headers { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiLink>? Links { get; set; }
+        public string? Summary { get; set; }
         public Microsoft.OpenApi.IOpenApiResponse CreateShallowCopy() { }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
-    public class OpenApiResponseReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiResponse, Microsoft.OpenApi.IOpenApiResponse, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiResponse, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiResponse>
+    public class OpenApiResponseReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiResponse, Microsoft.OpenApi.IOpenApiResponse, Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiResponse, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiResponse>
     {
         public OpenApiResponseReference(string referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiMediaType>? Content { get; }
@@ -1134,7 +1135,8 @@ namespace Microsoft.OpenApi
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiHeader>? Headers { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiLink>? Links { get; }
-        protected override Microsoft.OpenApi.OpenApiReferenceWithDescription CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescription sourceReference) { }
+        public string? Summary { get; set; }
+        protected override Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary sourceReference) { }
         public override Microsoft.OpenApi.IOpenApiResponse CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiResponse source) { }
         public Microsoft.OpenApi.IOpenApiResponse CreateShallowCopy() { }
     }

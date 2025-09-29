@@ -6,7 +6,7 @@ namespace Microsoft.OpenApi;
 /// Defines the base properties for the response object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiResponse : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiResponse>, IOpenApiReferenceable
+public interface IOpenApiResponse : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiResponse>, IOpenApiReferenceable, IOpenApiSummarizedElement
 {
     /// <summary>
     /// Maps a header name to its definition.

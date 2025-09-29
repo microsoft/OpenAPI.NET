@@ -11,6 +11,12 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new()
         {
             {
+                "summary", (o, n, _) =>
+                {
+                    o.Summary = n.GetScalarValue();
+                }
+            },
+            {
                 "description", (o, n, _) =>
                 {
                     o.Description = n.GetScalarValue();

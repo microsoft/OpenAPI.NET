@@ -67,6 +67,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             Assert.Equivalent(
                 new OpenApiResponse
                 {
+                    Summary = null,
                     Description = "Entity not found.",
                     Content = new Dictionary<string, OpenApiMediaType>()
                     {

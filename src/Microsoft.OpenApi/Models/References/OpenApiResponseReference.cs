@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Response Object Reference.
     /// </summary>
-    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, OpenApiReferenceWithDescription>, IOpenApiResponse
+    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiResponse
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -30,6 +30,13 @@ namespace Microsoft.OpenApi
         private OpenApiResponseReference(OpenApiResponseReference openApiResponseReference) : base(openApiResponseReference)
         {
 
+        }
+
+        /// <inheritdoc/>
+        public string? Summary 
+        { 
+            get => string.IsNullOrEmpty(Reference.Summary) ? Target?.Summary : Reference.Summary;
+            set => Reference.Summary = value;
         }
 
         /// <inheritdoc/>
@@ -63,9 +70,9 @@ namespace Microsoft.OpenApi
             return new OpenApiResponseReference(this);
         }
         /// <inheritdoc/>
-        protected override OpenApiReferenceWithDescription CopyReference(OpenApiReferenceWithDescription sourceReference)
+        protected override OpenApiReferenceWithDescriptionAndSummary CopyReference(OpenApiReferenceWithDescriptionAndSummary sourceReference)
         {
-            return new OpenApiReferenceWithDescription(sourceReference);
+            return new OpenApiReferenceWithDescriptionAndSummary(sourceReference);
         }
     }
 }
