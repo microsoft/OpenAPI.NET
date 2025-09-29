@@ -97,9 +97,13 @@ namespace Microsoft.OpenApi
             // name - serialize as native field for v3.2+ or as extension for earlier versions
             if (!string.IsNullOrEmpty(Name))
             {
-                if (version == OpenApiSpecVersion.OpenApi3_2)
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
                 {
                     writer.WriteProperty(OpenApiConstants.Name, Name);
+                }
+                else
+                {
+                    writer.WriteProperty("x-oai-name", Name);
                 }
             }
 
@@ -110,16 +114,7 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalMap(OpenApiConstants.Variables, Variables, callback);
 
             // specification extensions
-            var extensionsToWrite = Extensions;
-
-            // For non-v3.2 versions, add x-oai-name extension if Name is present
-            if (!string.IsNullOrEmpty(Name) && version != OpenApiSpecVersion.OpenApi3_2)
-            {
-                extensionsToWrite = new Dictionary<string, IOpenApiExtension>(Extensions ?? new Dictionary<string, IOpenApiExtension>());
-                extensionsToWrite["x-oai-name"] = new JsonNodeExtension(JsonValue.Create(Name)!);
-            }
-            
-            writer.WriteExtensions(extensionsToWrite, version);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }
