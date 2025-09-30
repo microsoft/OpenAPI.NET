@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi
             // For OpenAPI 3.1 and 3.0, serialize as an extension with x-oai- prefix
             if (DeviceAuthorizationUrl != null)
             {
-                if (version == OpenApiSpecVersion.OpenApi3_2)
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
                 {
                     writer.WriteProperty(OpenApiConstants.DeviceAuthorizationUrl, DeviceAuthorizationUrl.ToString());
                 }
