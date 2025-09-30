@@ -48,6 +48,20 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static OpenApiOAuthFlows OAuthFlowsWithDeviceAuthorization = new()
+        {
+            DeviceAuthorization = new()
+            {
+                TokenUrl = new("http://example.com/token"),
+                RefreshUrl = new("http://example.com/refresh"),
+                Scopes = new Dictionary<string, string>
+                {
+                    ["scopeName1"] = "description1",
+                    ["scopeName2"] = "description2"
+                }
+            }
+        };
+
         [Fact]
         public async Task SerializeBasicOAuthFlowsAsV3JsonWorks()
         {
@@ -133,6 +147,87 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = await OAuthFlowsWithMultipleFlows.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeOAuthFlowsWithDeviceAuthorizationAsV32JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "deviceAuthorization": {
+                    "tokenUrl": "http://example.com/token",
+                    "refreshUrl": "http://example.com/refresh",
+                    "scopes": {
+                      "scopeName1": "description1",
+                      "scopeName2": "description2"
+                    }
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await OAuthFlowsWithDeviceAuthorization.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeOAuthFlowsWithDeviceAuthorizationAsV31JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "x-oai-deviceAuthorization": {
+                    "tokenUrl": "http://example.com/token",
+                    "refreshUrl": "http://example.com/refresh",
+                    "scopes": {
+                      "scopeName1": "description1",
+                      "scopeName2": "description2"
+                    }
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await OAuthFlowsWithDeviceAuthorization.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeOAuthFlowsWithDeviceAuthorizationAsV3JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "x-oai-deviceAuthorization": {
+                    "tokenUrl": "http://example.com/token",
+                    "refreshUrl": "http://example.com/refresh",
+                    "scopes": {
+                      "scopeName1": "description1",
+                      "scopeName2": "description2"
+                    }
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await OAuthFlowsWithDeviceAuthorization.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

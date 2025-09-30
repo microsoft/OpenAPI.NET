@@ -454,6 +454,7 @@ namespace Microsoft.OpenApi
         public const string DependentRequired = "dependentRequired";
         public const string Deprecated = "deprecated";
         public const string Description = "description";
+        public const string DeviceAuthorization = "deviceAuthorization";
         public const string Discriminator = "discriminator";
         public const string DollarRef = "$ref";
         public const string DollarSchema = "$schema";
@@ -927,6 +928,7 @@ namespace Microsoft.OpenApi
         public OpenApiOAuthFlows(Microsoft.OpenApi.OpenApiOAuthFlows oAuthFlows) { }
         public Microsoft.OpenApi.OpenApiOAuthFlow? AuthorizationCode { get; set; }
         public Microsoft.OpenApi.OpenApiOAuthFlow? ClientCredentials { get; set; }
+        public Microsoft.OpenApi.OpenApiOAuthFlow? DeviceAuthorization { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.OpenApiOAuthFlow? Implicit { get; set; }
         public Microsoft.OpenApi.OpenApiOAuthFlow? Password { get; set; }
