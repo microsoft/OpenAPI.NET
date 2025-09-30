@@ -109,6 +109,15 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
+        private static OpenApiSecurityScheme DeprecatedApiKeySecurityScheme => new()
+        {
+            Description = "description1",
+            Name = "parameterName",
+            Type = SecuritySchemeType.ApiKey,
+            In = ParameterLocation.Query,
+            Deprecated = true
+        };
+
         [Fact]
         public async Task SerializeApiKeySecuritySchemeAsV3JsonWorks()
         {
@@ -328,6 +337,78 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public async Task SerializeDeprecatedSecuritySchemeAsV32JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "type": "apiKey",
+                  "description": "description1",
+                  "name": "parameterName",
+                  "in": "query",
+                  "deprecated": true
+                }
+                """;
+
+            // Act
+            var actual = await DeprecatedApiKeySecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeDeprecatedSecuritySchemeAsV31JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "type": "apiKey",
+                  "description": "description1",
+                  "name": "parameterName",
+                  "in": "query",
+                  "x-oai-deprecated": true
+                }
+                """;
+
+            // Act
+            var actual = await DeprecatedApiKeySecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeDeprecatedSecuritySchemeAsV3JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "type": "apiKey",
+                  "description": "description1",
+                  "name": "parameterName",
+                  "in": "query",
+                  "x-oai-deprecated": true
+                }
+                """;
+
+            // Act
+            var actual = await DeprecatedApiKeySecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }
