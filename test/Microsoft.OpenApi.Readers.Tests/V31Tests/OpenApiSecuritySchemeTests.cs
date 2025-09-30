@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
-namespace Microsoft.OpenApi.Readers.Tests.V3Tests
+namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
     [Collection("DefaultSettings")]
     public class OpenApiSecuritySchemeTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiSecurityScheme/";
+        private const string SampleFolderPath = "V31Tests/Samples/OpenApiSecurityScheme/";
         [Fact]
         public async Task ParseHttpSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseApiKeySecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseBearerSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseOAuth2SecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseOpenIdConnectSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             Assert.Equivalent(
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             // Act
             var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(
                 Path.Combine(SampleFolderPath, "oauth2SecuritySchemeWithDeviceUrl.yaml"),
-                OpenApiSpecVersion.OpenApi3_0,
+                OpenApiSpecVersion.OpenApi3_1,
                 new(),
                 SettingsFixture.ReaderSettings);
 
