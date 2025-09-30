@@ -3,4 +3,3 @@ mapping:
     puppy: '#/components/schemas/Dog'
     kitten: https://gigantic-server.com/schemas/animals.json#/components/schemas/Cat
     monster: https://gigantic-server.com/schemas/Monster/schema.json
-x-oas-default-mapping: '#/components/schemas/Animal'

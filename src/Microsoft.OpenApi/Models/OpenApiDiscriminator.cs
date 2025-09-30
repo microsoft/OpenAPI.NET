@@ -95,13 +95,6 @@ namespace Microsoft.OpenApi
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
 
-            // Write as x-oas-default-mapping extension in 3.0.0
-            if (DefaultMapping != null)
-            {
-                writer.WritePropertyName("x-oas-default-mapping");
-                DefaultMapping.SerializeAsV3(writer);
-            }
-
             writer.WriteEndObject();
         }
 

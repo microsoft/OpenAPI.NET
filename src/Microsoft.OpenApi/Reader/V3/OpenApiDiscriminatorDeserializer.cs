@@ -24,16 +24,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
             };
 
-        private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields = new() {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, doc) => {
-                        // Handle x-oas-default-mapping as DefaultMapping property
-                        if (p.Equals("x-oas-default-mapping", StringComparison.OrdinalIgnoreCase))
-                        {
-                            o.DefaultMapping = LoadMapping(n, doc);
-                        }
-                    }
-                }
-            };
+        private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields = new() {};
 
         public static OpenApiDiscriminator LoadDiscriminator(ParseNode node, OpenApiDocument hostDocument)
         {

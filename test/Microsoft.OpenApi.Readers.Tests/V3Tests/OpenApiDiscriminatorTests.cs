@@ -28,6 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiDocument = new OpenApiDocument();
             var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, openApiDocument, out var diagnostic, SettingsFixture.ReaderSettings);
 
+
             // Assert
             Assert.Equivalent(
                new OpenApiDiscriminator
@@ -38,8 +39,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             ["puppy"] = new OpenApiSchemaReference("Dog", openApiDocument),
                             ["kitten"] = new OpenApiSchemaReference("Cat" , openApiDocument, "https://gigantic-server.com/schemas/animals.json"),
                             ["monster"] = new OpenApiSchemaReference("schema.json" , openApiDocument, "https://gigantic-server.com/schemas/Monster/schema.json")
-                    },
-                   DefaultMapping = new OpenApiSchemaReference("Animal", openApiDocument)
+                    }
                }, discriminator);
         }
     }
