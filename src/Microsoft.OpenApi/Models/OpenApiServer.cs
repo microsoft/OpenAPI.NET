@@ -17,6 +17,12 @@ namespace Microsoft.OpenApi
         public string? Description { get; set; }
 
         /// <summary>
+        /// An optional string identifying the server. This MUST be unique across servers in the same document.
+        /// Note: This field is supported in OpenAPI 3.2.0+. For earlier versions, it will be serialized as x-oai-name extension.
+        /// </summary>
+        public string? Name { get; set; }
+
+        /// <summary>
         /// REQUIRED. A URL to the target host. This URL supports Server Variables and MAY be relative,
         /// to indicate that the host location is relative to the location where the OpenAPI document is being served.
         /// Variable substitutions will be made when a variable is named in {brackets}.
@@ -44,6 +50,7 @@ namespace Microsoft.OpenApi
         public OpenApiServer(OpenApiServer server)
         {
             Description = server?.Description ?? Description;
+            Name = server?.Name ?? Name;
             Url = server?.Url ?? Url;
             Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server.Variables) : null;
             Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
@@ -85,6 +92,19 @@ namespace Microsoft.OpenApi
 
             // url
             writer.WriteProperty(OpenApiConstants.Url, Url);
+
+            // name - serialize as native field for v3.2+ or as extension for earlier versions
+            if (!string.IsNullOrEmpty(Name))
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteProperty(OpenApiConstants.Name, Name);
+                }
+                else
+                {
+                    writer.WriteProperty("x-oai-name", Name);
+                }
+            }
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
