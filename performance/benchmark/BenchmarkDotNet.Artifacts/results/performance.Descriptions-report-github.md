@@ -1,18 +1,18 @@
 ```
 
-BenchmarkDotNet v0.15.4, Linux Ubuntu 24.04.3 LTS (Noble Numbat)
-AMD EPYC 7763 2.45GHz, 1 CPU, 4 logical and 2 physical cores
+BenchmarkDotNet v0.15.4, Windows 11 (10.0.26200.6584)
+11th Gen Intel Core i7-1185G7 3.00GHz, 1 CPU, 8 logical and 4 physical cores
 .NET SDK 8.0.414
-  [Host]   : .NET 8.0.20 (8.0.20, 8.0.2025.41914), X64 RyuJIT x86-64-v3
-  ShortRun : .NET 8.0.20 (8.0.20, 8.0.2025.41914), X64 RyuJIT x86-64-v3
+  [Host]   : .NET 8.0.20 (8.0.20, 8.0.2025.41914), X64 RyuJIT x86-64-v4
+  ShortRun : .NET 8.0.20 (8.0.20, 8.0.2025.41914), X64 RyuJIT x86-64-v4
 
 Job=ShortRun  IterationCount=3  LaunchCount=1  
 WarmupCount=3  
 
 ```
-| Method       | Mean           | Error         | StdDev      | Gen0       | Gen1       | Gen2      | Allocated    |
-|------------- |---------------:|--------------:|------------:|-----------:|-----------:|----------:|-------------:|
-| PetStoreYaml |       513.8 μs |     220.40 μs |    12.08 μs |    23.4375 |     3.9063 |         - |    387.37 KB |
-| PetStoreJson |       235.7 μs |      19.54 μs |     1.07 μs |    13.6719 |     1.9531 |         - |    249.22 KB |
-| GHESYaml     | 1,008,778.7 μs |  50,002.60 μs | 2,740.81 μs | 26000.0000 | 20000.0000 | 3000.0000 | 384508.01 KB |
-| GHESJson     |   469,189.2 μs | 144,923.46 μs | 7,943.74 μs | 16000.0000 |  9000.0000 | 2000.0000 |  245977.2 KB |
+| Method       | Mean           | Error        | StdDev       | Gen0       | Gen1       | Gen2      | Allocated    |
+|------------- |---------------:|-------------:|-------------:|-----------:|-----------:|----------:|-------------:|
+| PetStoreYaml |       519.5 μs |     807.9 μs |     44.29 μs |    62.5000 |    11.7188 |         - |    387.37 KB |
+| PetStoreJson |       234.0 μs |     166.2 μs |      9.11 μs |    40.0391 |     7.8125 |         - |    249.52 KB |
+| GHESYaml     | 1,120,391.4 μs | 912,897.7 μs | 50,039.00 μs | 65000.0000 | 21000.0000 | 3000.0000 | 384510.39 KB |
+| GHESJson     |   585,492.8 μs | 734,663.2 μs | 40,269.37 μs | 40000.0000 | 16000.0000 | 3000.0000 | 245982.27 KB |
