@@ -251,6 +251,13 @@ namespace Microsoft.OpenApi
             // openapi
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.4");
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
+
+            // $self as extension for v3.0
+            if (Self is not null)
+            {
+                writer.WriteProperty(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.Self, Self.ToString());
+            }
+
             writer.WriteEndObject();
         }
 
