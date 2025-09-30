@@ -41,6 +41,11 @@ namespace Microsoft.OpenApi
         public const string JsonSchemaDialect = "jsonSchemaDialect";
 
         /// <summary>
+        /// Field: $self
+        /// </summary>
+        public const string Self = "$self";
+
+        /// <summary>
         /// Field: Webhooks
         /// </summary>
         public const string Webhooks = "webhooks";
