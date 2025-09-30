@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
 
             // Assert
-            JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
     }
 }

@@ -1,0 +1,8 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securitySchemeObject
+type: oauth2
+flows: 
+  implicit:
+    authorizationUrl: https://example.com/api/oauth/dialog
+    scopes:
+      write:pets: modify pets in your account
+      read:pets: read your pets
