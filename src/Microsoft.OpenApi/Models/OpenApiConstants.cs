@@ -576,6 +576,11 @@ namespace Microsoft.OpenApi
         public const string RefreshUrl = "refreshUrl";
 
         /// <summary>
+        /// Field: DeviceAuthorizationUrl
+        /// </summary>
+        public const string DeviceAuthorizationUrl = "deviceAuthorizationUrl";
+
+        /// <summary>
         /// Field: Scopes
         /// </summary>
         public const string Scopes = "scopes";

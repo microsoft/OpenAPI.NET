@@ -45,6 +45,17 @@ namespace Microsoft.OpenApi.Reader.V31
                         }
                     }
                 },
+                {
+                    "x-oai-deviceAuthorizationUrl",
+                    (o, n, _) =>
+                    {
+                        var url = n.GetScalarValue();
+                        if (url != null)
+                        {
+                            o.DeviceAuthorizationUrl = new(url, UriKind.RelativeOrAbsolute);
+                        }
+                    }
+                },
                 {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
             };
 
