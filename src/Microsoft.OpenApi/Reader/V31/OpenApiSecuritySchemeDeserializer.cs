@@ -73,16 +73,6 @@ namespace Microsoft.OpenApi.Reader.V31
                     {
                         o.Flows = LoadOAuthFlows(n, t);
                     }
-                },
-                {
-                    "deprecated", (o, n, _) =>
-                    {
-                        var deprecated = n.GetScalarValue();
-                        if (deprecated != null)
-                        {
-                            o.Deprecated = bool.Parse(deprecated);
-                        }
-                    }
                 }
             };
 
