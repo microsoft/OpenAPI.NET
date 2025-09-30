@@ -73,13 +73,37 @@ namespace Microsoft.OpenApi.Reader.V31
                     {
                         o.Flows = LoadOAuthFlows(n, t);
                     }
+                },
+                {
+                    "deprecated", (o, n, _) =>
+                    {
+                        var deprecated = n.GetScalarValue();
+                        if (deprecated != null)
+                        {
+                            o.Deprecated = bool.Parse(deprecated);
+                        }
+                    }
                 }
             };
 
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => 
+                {
+                    if (p.Equals("x-oai-deprecated", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var deprecated = n.GetScalarValue();
+                        if (deprecated != null)
+                        {
+                            o.Deprecated = bool.Parse(deprecated);
+                        }
+                    }
+                    else
+                    {
+                        o.AddExtension(p, LoadExtension(p,n));
+                    }
+                }}
             };
 
         public static IOpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument)
