@@ -561,6 +561,11 @@ namespace Microsoft.OpenApi
         public const string AuthorizationCode = "authorizationCode";
 
         /// <summary>
+        /// Field: DeviceAuthorization
+        /// </summary>
+        public const string DeviceAuthorization = "deviceAuthorization";
+
+        /// <summary>
         /// Field: AuthorizationUrl
         /// </summary>
         public const string AuthorizationUrl = "authorizationUrl";
