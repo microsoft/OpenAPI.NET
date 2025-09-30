@@ -48,9 +48,15 @@ namespace Microsoft.OpenApi.Reader.V3
                         }
                     }
                 },
+                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
+            };
+
+        private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =
+            new()
+            {
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) =>
                 {
-                    "x-oai-deviceAuthorizationUrl",
-                    (o, n, _) =>
+                    if (p.Equals("x-oai-deviceAuthorizationUrl", StringComparison.OrdinalIgnoreCase))
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -58,14 +64,11 @@ namespace Microsoft.OpenApi.Reader.V3
                             o.DeviceAuthorizationUrl = new(url, UriKind.RelativeOrAbsolute);
                         }
                     }
-                },
-                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
-            };
-
-        private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =
-            new()
-            {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                    else
+                    {
+                        o.AddExtension(p, LoadExtension(p, n));
+                    }
+                }}
             };
 
         public static OpenApiOAuthFlow LoadOAuthFlow(ParseNode node, OpenApiDocument hostDocument)
