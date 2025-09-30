@@ -41,6 +41,11 @@ namespace Microsoft.OpenApi
         public Uri? JsonSchemaDialect { get; set; }
 
         /// <summary>
+        /// The URI identifying this document. This MUST be in the form of a URI. (OAI 3.2.0+)
+        /// </summary>
+        public Uri? Self { get; set; }
+
+        /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
         public IList<OpenApiServer>? Servers { get; set; } = [];
@@ -126,6 +131,7 @@ namespace Microsoft.OpenApi
             Workspace = document?.Workspace != null ? new(document.Workspace) : null;
             Info = document?.Info != null ? new(document.Info) : new OpenApiInfo();
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
+            Self = document?.Self ?? Self;
             Servers = document?.Servers != null ? [.. document.Servers] : null;
             Paths = document?.Paths != null ? new(document.Paths) : [];
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
@@ -200,6 +206,12 @@ namespace Microsoft.OpenApi
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect?.ToString());
 
+            // $self - only for v3.2+
+            if (version >= OpenApiSpecVersion.OpenApi3_2)
+            {
+                writer.WriteProperty(OpenApiConstants.Self, Self?.ToString());
+            }
+
             SerializeInternal(writer, version, callback);
 
             // webhooks
@@ -217,6 +229,12 @@ namespace Microsoft.OpenApi
                     callback(w, component);
                 }
             });
+
+            // $self as extension for v3.1 and earlier
+            if (version < OpenApiSpecVersion.OpenApi3_2 && Self is not null)
+            {
+                writer.WriteProperty(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.Self, Self.ToString());
+            }
 
             writer.WriteEndObject();
         }

@@ -21,8 +21,29 @@ namespace Microsoft.OpenApi.Reader.V3
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n, _) => o.Info = LoadInfo(n, o)},
+            {
+                "jsonSchemaDialect", (o, n, _) =>
+                {
+                    var value = n.GetScalarValue();
+                    if (value != null)
+                    {
+                        o.JsonSchemaDialect = new(value, UriKind.Absolute);
+                    }
+                }
+            },
+            {
+                "$self", (o, n, _) =>
+                {
+                    var value = n.GetScalarValue();
+                    if (value != null)
+                    {
+                        o.Self = new(value, UriKind.Absolute);
+                    }
+                }
+            },
             {"servers", (o, n, _) => o.Servers = n.CreateList(LoadServer, o)},
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
+            {"webhooks", (o, n, _) => o.Webhooks = n.CreateMap(LoadPathItem, o)},
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
             {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
@@ -32,7 +53,21 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => 
+            {
+                if (p.Equals("x-oai-$self", StringComparison.OrdinalIgnoreCase))
+                {
+                    var value = n.GetScalarValue();
+                    if (value != null)
+                    {
+                        o.Self = new(value, UriKind.Absolute);
+                    }
+                }
+                else
+                {
+                    o.AddExtension(p, LoadExtension(p, n));
+                }
+            }}
         };
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode, Uri location)
