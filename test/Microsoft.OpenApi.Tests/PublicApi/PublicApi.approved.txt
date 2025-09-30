@@ -268,6 +268,7 @@ namespace Microsoft.OpenApi
     public interface IOpenApiSecurityScheme : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSecurityScheme>
     {
         string? BearerFormat { get; }
+        bool Deprecated { get; }
         Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; }
         Microsoft.OpenApi.ParameterLocation? In { get; }
         string? Name { get; }
@@ -539,6 +540,7 @@ namespace Microsoft.OpenApi
         public const string Security = "security";
         public const string SecurityDefinitions = "securityDefinitions";
         public const string SecuritySchemes = "securitySchemes";
+        public const string Self = "$self";
         public const string Server = "server";
         public const string Servers = "servers";
         public const string Style = "style";
@@ -616,6 +618,7 @@ namespace Microsoft.OpenApi
         public System.Collections.Generic.IDictionary<string, object>? Metadata { get; set; }
         public Microsoft.OpenApi.OpenApiPaths Paths { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiSecurityRequirement>? Security { get; set; }
+        public System.Uri? Self { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer>? Servers { get; set; }
         public System.Collections.Generic.ISet<Microsoft.OpenApi.OpenApiTag>? Tags { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiPathItem>? Webhooks { get; set; }
@@ -1300,6 +1303,7 @@ namespace Microsoft.OpenApi
     {
         public OpenApiSecurityScheme() { }
         public string? BearerFormat { get; set; }
+        public bool Deprecated { get; set; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; set; }
@@ -1318,6 +1322,7 @@ namespace Microsoft.OpenApi
     {
         public OpenApiSecuritySchemeReference(string referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public string? BearerFormat { get; }
+        public bool Deprecated { get; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
         public Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; }

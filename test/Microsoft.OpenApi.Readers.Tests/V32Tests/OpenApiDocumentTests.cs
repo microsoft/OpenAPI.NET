@@ -611,6 +611,40 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             Assert.Empty(result.Diagnostic.Errors);
             Assert.Empty(result.Diagnostic.Warnings);            
         }
+
+        [Fact]
+        public async Task ParseDocumentWithSelfPropertyFromYamlWorks()
+        {
+            // Arrange && Act
+            var path = Path.Combine(SampleFolderPath, "documentWithSelfProperty.yaml");
+            var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.NotNull(result.Document);
+            Assert.NotNull(result.Document.Self);
+            Assert.Equal("https://example.org/api/openapi.yaml", result.Document.Self.ToString());
+            Assert.Equal("API with $self property", result.Document.Info.Title);
+            Assert.Equal("1.0.0", result.Document.Info.Version);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Empty(result.Diagnostic.Warnings);
+        }
+
+        [Fact]
+        public async Task ParseDocumentWithSelfPropertyFromJsonWorks()
+        {
+            // Arrange && Act
+            var path = Path.Combine(SampleFolderPath, "documentWithSelfProperty.json");
+            var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.NotNull(result.Document);
+            Assert.NotNull(result.Document.Self);
+            Assert.Equal("https://example.org/api/openapi.json", result.Document.Self.ToString());
+            Assert.Equal("API with $self property", result.Document.Info.Title);
+            Assert.Equal("1.0.0", result.Document.Info.Version);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Empty(result.Diagnostic.Warnings);
+        }
     }
 }
 
