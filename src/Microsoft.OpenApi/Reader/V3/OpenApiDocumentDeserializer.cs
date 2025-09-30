@@ -21,29 +21,8 @@ namespace Microsoft.OpenApi.Reader.V3
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n, _) => o.Info = LoadInfo(n, o)},
-            {
-                "jsonSchemaDialect", (o, n, _) =>
-                {
-                    var value = n.GetScalarValue();
-                    if (value != null)
-                    {
-                        o.JsonSchemaDialect = new(value, UriKind.Absolute);
-                    }
-                }
-            },
-            {
-                "$self", (o, n, _) =>
-                {
-                    var value = n.GetScalarValue();
-                    if (value != null)
-                    {
-                        o.Self = new(value, UriKind.Absolute);
-                    }
-                }
-            },
             {"servers", (o, n, _) => o.Servers = n.CreateList(LoadServer, o)},
             {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
-            {"webhooks", (o, n, _) => o.Webhooks = n.CreateMap(LoadPathItem, o)},
             {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
             {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
             {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
