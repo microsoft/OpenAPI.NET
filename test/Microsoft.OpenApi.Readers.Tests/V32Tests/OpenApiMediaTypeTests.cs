@@ -3,7 +3,6 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Xunit;
@@ -26,20 +25,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
                 SettingsFixture.ReaderSettings);
 
             // Assert
-            mediaType.Should().BeEquivalentTo(
-                new OpenApiMediaType
+            var expected = new OpenApiMediaType
+            {
+                Schema = new OpenApiSchema
                 {
-                    Schema = new OpenApiSchema
-                    {
-                        Type = JsonSchemaType.Array
-                    },
-                    ItemSchema = new OpenApiSchema
-                    {
-                        Type = JsonSchemaType.String,
-                        MaxLength = 100
-                    }
+                    Type = JsonSchemaType.Array
                 },
-                options => options.IgnoringCyclicReferences());
+                ItemSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String,
+                    MaxLength = 100
+                }
+            };
+            Assert.Equivalent(expected, mediaType);
         }
     }
 }
