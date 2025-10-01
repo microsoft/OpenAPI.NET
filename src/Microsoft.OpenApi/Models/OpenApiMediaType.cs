@@ -111,8 +111,7 @@ namespace Microsoft.OpenApi
             else if (version < OpenApiSpecVersion.OpenApi3_2 && ItemSchema != null)
             {
                 // For v3.1 and earlier, serialize as x-oai-itemSchema extension
-                writer.WritePropertyName(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.ItemSchema);
-                callback(writer, ItemSchema);
+                writer.WriteOptionalObject(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.ItemSchema, ItemSchema, callback);
             }
 
             // example
