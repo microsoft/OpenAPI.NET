@@ -39,6 +39,18 @@ namespace Microsoft.OpenApi
         public IDictionary<string, OpenApiEncoding>? Encoding { get; set; }
 
         /// <summary>
+        /// An encoding object for items in an array schema.
+        /// Only applies when the schema is of type array.
+        /// </summary>
+        public OpenApiEncoding? ItemEncoding { get; set; }
+
+        /// <summary>
+        /// An array of encoding objects for prefixItems in an array schema.
+        /// Each element corresponds to a prefixItem in the schema.
+        /// </summary>
+        public IList<OpenApiEncoding>? PrefixEncoding { get; set; }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -57,6 +69,8 @@ namespace Microsoft.OpenApi
             Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
             Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
+            ItemEncoding = mediaType?.ItemEncoding != null ? new OpenApiEncoding(mediaType.ItemEncoding) : null;
+            PrefixEncoding = mediaType?.PrefixEncoding != null ? new List<OpenApiEncoding>(mediaType.PrefixEncoding.Select(e => new OpenApiEncoding(e))) : null;
             Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
         }
 
@@ -107,6 +121,32 @@ namespace Microsoft.OpenApi
 
             // encoding
             writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, callback);
+
+            // itemEncoding - serialize as native field in v3.2+, as extension in earlier versions
+            if (ItemEncoding != null)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteOptionalObject(OpenApiConstants.ItemEncoding, ItemEncoding, callback);
+                }
+                else
+                {
+                    writer.WriteOptionalObject(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.ItemEncoding, ItemEncoding, callback);
+                }
+            }
+
+            // prefixEncoding - serialize as native field in v3.2+, as extension in earlier versions
+            if (PrefixEncoding != null)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteOptionalCollection(OpenApiConstants.PrefixEncoding, PrefixEncoding, callback);
+                }
+                else
+                {
+                    writer.WriteOptionalCollection(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.PrefixEncoding, PrefixEncoding, callback);
+                }
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, version);

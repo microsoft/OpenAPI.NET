@@ -321,6 +321,16 @@ namespace Microsoft.OpenApi
         public const string Encoding = "encoding";
 
         /// <summary>
+        /// Field: ItemEncoding
+        /// </summary>
+        public const string ItemEncoding = "itemEncoding";
+
+        /// <summary>
+        /// Field: PrefixEncoding
+        /// </summary>
+        public const string PrefixEncoding = "prefixEncoding";
+
+        /// <summary>
         /// Field: RequestBodies
         /// </summary>
         public const string RequestBodies = "requestBodies";
