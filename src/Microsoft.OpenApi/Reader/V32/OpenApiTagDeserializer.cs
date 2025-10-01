@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -30,7 +30,30 @@ namespace Microsoft.OpenApi.Reader.V32
                 {
                     o.ExternalDocs = LoadExternalDocs(n, t);
                 }
+            },
+            {
+                OpenApiConstants.Summary, (o, n, _) =>
+                {
+                    o.Summary = n.GetScalarValue();
+                }
+            },
+            {
+                "parent", (o, n, doc) =>
+                {
+                    var tagName = n.GetScalarValue();
+                    if (tagName != null)
+                    {
+                        o.Parent = LoadTagByReference(tagName, doc);
+                    }
+                }
+            },
+            {
+                "kind", (o, n, _) =>
+                {
+                    o.Kind = n.GetScalarValue();
+                }
             }
+
         };
 
         private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new()

@@ -58,6 +58,16 @@ namespace Microsoft.OpenApi
 
         /// <inheritdoc/>
         public string? Name { get => Target?.Name ?? Reference?.Id; }
+
+        /// <inheritdoc/>
+        public string? Summary => Target?.Summary;
+
+        /// <inheritdoc/>
+        public OpenApiTagReference? Parent => Target?.Parent;
+
+        /// <inheritdoc/>
+        public string? Kind => Target?.Kind;
+
         /// <inheritdoc/>
         public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
         {
