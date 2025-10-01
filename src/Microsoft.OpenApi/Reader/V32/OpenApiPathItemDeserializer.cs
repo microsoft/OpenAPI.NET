@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 
 namespace Microsoft.OpenApi.Reader.V32
@@ -36,8 +36,10 @@ namespace Microsoft.OpenApi.Reader.V32
             {"patch", (o, n, t) => o.AddOperation(new HttpMethod("PATCH"), LoadOperation(n, t))},
 #endif
             {"trace", (o, n, t) => o.AddOperation(HttpMethod.Trace, LoadOperation(n, t))},
+            {"query", (o, n, t) => o.Query = LoadOperation(n, t)},
             {"servers", (o, n, t) => o.Servers = n.CreateList(LoadServer, t)},
-            {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)}
+            {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)},
+            {"additionalOperations", (o, n, t) => o.AdditionalOperations = n.CreateMap(LoadOperation, t)}
         };
 
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =

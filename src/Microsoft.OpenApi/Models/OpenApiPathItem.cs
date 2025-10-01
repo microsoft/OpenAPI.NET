@@ -28,6 +28,12 @@ namespace Microsoft.OpenApi
         public IList<IOpenApiParameter>? Parameters { get; set; }
 
         /// <inheritdoc/>
+        public OpenApiOperation? Query { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, OpenApiOperation>? AdditionalOperations { get; set; }
+
+        /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
@@ -57,6 +63,8 @@ namespace Microsoft.OpenApi
             Operations = pathItem.Operations != null ? new Dictionary<HttpMethod, OpenApiOperation>(pathItem.Operations) : null;
             Servers = pathItem.Servers != null ? [.. pathItem.Servers] : null;
             Parameters = pathItem.Parameters != null ? [.. pathItem.Parameters] : null;
+            Query = pathItem.Query != null ? new OpenApiOperation(pathItem.Query) : null;
+            AdditionalOperations = pathItem.AdditionalOperations != null ? new Dictionary<string, OpenApiOperation>(pathItem.AdditionalOperations) : null;
             Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
         }
 
@@ -73,7 +81,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer), downgradeFrom32: true);
         }
 
         /// <summary>
@@ -81,7 +89,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer), downgradeFrom32: true);
         }
 
         /// <summary>
@@ -120,6 +128,9 @@ namespace Microsoft.OpenApi
                 OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Description,
                 Description);
 
+            // Write Query and AdditionalOperations as extensions when downgrading to v2
+            WriteV32FieldsAsExtensions(writer);
+
             // specification extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
@@ -127,7 +138,7 @@ namespace Microsoft.OpenApi
         }
 
         internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
-            Action<IOpenApiWriter, IOpenApiSerializable> callback)
+            Action<IOpenApiWriter, IOpenApiSerializable> callback, bool downgradeFrom32 = false)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -151,6 +162,21 @@ namespace Microsoft.OpenApi
                 }
             }
 
+            // OpenAPI 3.2 specific fields
+            if (version == OpenApiSpecVersion.OpenApi3_2)
+            {
+                // query operation
+                writer.WriteOptionalObject(OpenApiConstants.Query, Query, callback);
+
+                // additional operations
+                writer.WriteOptionalMap(OpenApiConstants.AdditionalOperations, AdditionalOperations, callback);
+            }
+            else if (downgradeFrom32)
+            {
+                // When downgrading from 3.2 to 3.1/3.0, serialize as extensions
+                WriteV32FieldsAsExtensions(writer);
+            }
+
             // servers
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, callback);
 
@@ -161,6 +187,29 @@ namespace Microsoft.OpenApi
             writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Writes OpenAPI 3.2 specific fields as extensions when downgrading to older versions
+        /// </summary>
+        private void WriteV32FieldsAsExtensions(IOpenApiWriter writer)
+        {
+            if (Query != null)
+            {
+                writer.WritePropertyName(OpenApiConstants.ExtensionFieldNamePrefix + "oas-" + OpenApiConstants.Query);
+                Query.SerializeAsV31(writer);
+            }
+
+            if (AdditionalOperations != null && AdditionalOperations.Count > 0)
+            {
+                writer.WritePropertyName(OpenApiConstants.ExtensionFieldNamePrefix + "oas-" + OpenApiConstants.AdditionalOperations);
+                writer.WriteStartObject();
+                foreach (var kvp in AdditionalOperations)
+                {
+                    writer.WriteOptionalObject(kvp.Key, kvp.Value, (w, o) => o.SerializeAsV31(w));
+                }
+                writer.WriteEndObject();
+            }
         }
 
         /// <inheritdoc/>
