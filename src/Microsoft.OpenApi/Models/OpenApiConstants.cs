@@ -296,6 +296,11 @@ namespace Microsoft.OpenApi
         public const string Schema = "schema";
 
         /// <summary>
+        /// Field: ItemSchema
+        /// </summary>
+        public const string ItemSchema = "itemSchema";
+
+        /// <summary>
         /// Field: Schemas
         /// </summary>
         public const string Schemas = "schemas";

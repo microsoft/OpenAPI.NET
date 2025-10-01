@@ -1,0 +1,45 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
+using System.IO;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Tests;
+using Xunit;
+
+namespace Microsoft.OpenApi.Readers.Tests.V32Tests
+{
+    [Collection("DefaultSettings")]
+    public class OpenApiMediaTypeTests
+    {
+        private const string SampleFolderPath = "V32Tests/Samples/OpenApiMediaType/";
+
+        [Fact]
+        public async Task ParseMediaTypeWithItemSchemaShouldSucceed()
+        {
+            // Act
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(
+                Path.Combine(SampleFolderPath, "mediaTypeWithItemSchema.yaml"),
+                OpenApiSpecVersion.OpenApi3_2,
+                new(),
+                SettingsFixture.ReaderSettings);
+
+            // Assert
+            mediaType.Should().BeEquivalentTo(
+                new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Array
+                    },
+                    ItemSchema = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String,
+                        MaxLength = 100
+                    }
+                },
+                options => options.IgnoringCyclicReferences());
+        }
+    }
+}
