@@ -32,6 +32,11 @@ namespace Microsoft.OpenApi
         public OpenApiOAuthFlow? AuthorizationCode { get; set; }
 
         /// <summary>
+        /// Configuration for the OAuth Device Authorization flow.
+        /// </summary>
+        public OpenApiOAuthFlow? DeviceAuthorization { get; set; }
+
+        /// <summary>
         /// Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -51,6 +56,7 @@ namespace Microsoft.OpenApi
             Password = oAuthFlows?.Password != null ? new(oAuthFlows.Password) : null;
             ClientCredentials = oAuthFlows?.ClientCredentials != null ? new(oAuthFlows.ClientCredentials) : null;
             AuthorizationCode = oAuthFlows?.AuthorizationCode != null ? new(oAuthFlows.AuthorizationCode) : null;
+            DeviceAuthorization = oAuthFlows?.DeviceAuthorization != null ? new(oAuthFlows.DeviceAuthorization) : null;
             Extensions = oAuthFlows?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlows.Extensions) : null;
         }
 
@@ -105,6 +111,22 @@ namespace Microsoft.OpenApi
                 OpenApiConstants.AuthorizationCode,
                 AuthorizationCode,
                 callback);
+
+            // deviceAuthorization - only for v3.2+, otherwise as extension
+            if (version >= OpenApiSpecVersion.OpenApi3_2)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.DeviceAuthorization,
+                    DeviceAuthorization,
+                    callback);
+            }
+            else if (DeviceAuthorization is not null)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.DeviceAuthorization,
+                    DeviceAuthorization,
+                    callback);
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, version);
