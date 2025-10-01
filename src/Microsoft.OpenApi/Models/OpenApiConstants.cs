@@ -341,6 +341,16 @@ namespace Microsoft.OpenApi
         public const string ExternalValue = "externalValue";
 
         /// <summary>
+        /// Field: DataValue
+        /// </summary>
+        public const string DataValue = "dataValue";
+
+        /// <summary>
+        /// Field: SerializedValue
+        /// </summary>
+        public const string SerializedValue = "serializedValue";
+
+        /// <summary>
         /// Field: DollarRef
         /// </summary>
         public const string DollarRef = "$ref";
