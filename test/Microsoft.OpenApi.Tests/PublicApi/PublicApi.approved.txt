@@ -1733,6 +1733,8 @@ namespace Microsoft.OpenApi
         PipeDelimited = 5,
         [Microsoft.OpenApi.Display("deepObject")]
         DeepObject = 6,
+        [Microsoft.OpenApi.Display("cookie")]
+        Cookie = 7,
     }
     public sealed class PathExpression : Microsoft.OpenApi.SourceExpression
     {
