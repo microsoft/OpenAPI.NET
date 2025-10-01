@@ -116,7 +116,9 @@ namespace Microsoft.OpenApi
     public interface IOpenApiElement { }
     public interface IOpenApiExample : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiExample>
     {
+        System.Text.Json.Nodes.JsonNode? DataValue { get; }
         string? ExternalValue { get; }
+        string? SerializedValue { get; }
         System.Text.Json.Nodes.JsonNode? Value { get; }
     }
     public interface IOpenApiExtensible : Microsoft.OpenApi.IOpenApiElement
@@ -443,6 +445,7 @@ namespace Microsoft.OpenApi
         public const string Contact = "contact";
         public const string Content = "content";
         public const string ContentType = "contentType";
+        public const string DataValue = "dataValue";
         public const string Default = "default";
         public const string DefaultDefault = "Default Default";
         public const string DefaultDescription = "Default Description";
@@ -542,6 +545,7 @@ namespace Microsoft.OpenApi
         public const string SecurityDefinitions = "securityDefinitions";
         public const string SecuritySchemes = "securitySchemes";
         public const string Self = "$self";
+        public const string SerializedValue = "serializedValue";
         public const string Server = "server";
         public const string Servers = "servers";
         public const string Style = "style";
@@ -675,9 +679,11 @@ namespace Microsoft.OpenApi
     public class OpenApiExample : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExample, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiExample>
     {
         public OpenApiExample() { }
+        public System.Text.Json.Nodes.JsonNode? DataValue { get; set; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public string? ExternalValue { get; set; }
+        public string? SerializedValue { get; set; }
         public string? Summary { get; set; }
         public System.Text.Json.Nodes.JsonNode? Value { get; set; }
         public Microsoft.OpenApi.IOpenApiExample CreateShallowCopy() { }
@@ -689,9 +695,11 @@ namespace Microsoft.OpenApi
     public class OpenApiExampleReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiExample, Microsoft.OpenApi.IOpenApiExample, Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExample, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiExample>
     {
         public OpenApiExampleReference(string referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
+        public System.Text.Json.Nodes.JsonNode? DataValue { get; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
         public string? ExternalValue { get; }
+        public string? SerializedValue { get; }
         public string? Summary { get; set; }
         public System.Text.Json.Nodes.JsonNode? Value { get; }
         protected override Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary sourceReference) { }
