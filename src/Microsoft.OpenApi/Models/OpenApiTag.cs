@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi
             if (Parent != null)
             {
                 writer.WritePropertyName("x-oas-parent");
-                Parent.SerializeAsV31(writer);
+                Parent.SerializeAsV3(writer);
             }
             if (Kind != null)
                 writer.WriteProperty("x-oas-kind", Kind);
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0,
-               (writer, element) => element.SerializeAsV3(writer));
+               (writer, element) => element.SerializeAsV2(writer));
 
             writer.WriteEndObject();
         }
