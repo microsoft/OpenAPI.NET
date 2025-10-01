@@ -346,6 +346,16 @@ namespace Microsoft.OpenApi
         public const string ExternalValue = "externalValue";
 
         /// <summary>
+        /// Field: DataValue
+        /// </summary>
+        public const string DataValue = "dataValue";
+
+        /// <summary>
+        /// Field: SerializedValue
+        /// </summary>
+        public const string SerializedValue = "serializedValue";
+
+        /// <summary>
         /// Field: DollarRef
         /// </summary>
         public const string DollarRef = "$ref";
@@ -564,6 +574,11 @@ namespace Microsoft.OpenApi
         /// Field: AuthorizationCode
         /// </summary>
         public const string AuthorizationCode = "authorizationCode";
+
+        /// <summary>
+        /// Field: DeviceAuthorization
+        /// </summary>
+        public const string DeviceAuthorization = "deviceAuthorization";
 
         /// <summary>
         /// Field: AuthorizationUrl
