@@ -4,7 +4,6 @@
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -26,11 +25,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
                 SettingsFixture.ReaderSettings);
 
             // Assert
-            example.Should().NotBeNull();
-            example.Summary.Should().Be("Example with dataValue");
-            example.DataValue.Should().NotBeNull();
-            example.DataValue["name"].GetValue<string>().Should().Be("John Doe");
-            example.DataValue["age"].GetValue<decimal>().Should().Be(30);
+            Assert.NotNull(example);
+            Assert.Equal("Example with dataValue", example.Summary);
+            Assert.NotNull(example.DataValue);
+            Assert.Equal("John Doe", example.DataValue["name"].GetValue<string>());
+            Assert.Equal(30, example.DataValue["age"].GetValue<decimal>());
         }
 
         [Fact]
@@ -44,9 +43,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
                 SettingsFixture.ReaderSettings);
 
             // Assert
-            example.Should().NotBeNull();
-            example.Summary.Should().Be("Example with serializedValue");
-            example.SerializedValue.Should().Be("custom serialized string");
+            Assert.NotNull(example);
+            Assert.Equal("Example with serializedValue", example.Summary);
+            Assert.Equal("custom serialized string", example.SerializedValue);
         }
     }
 }
