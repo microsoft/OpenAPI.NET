@@ -7,6 +7,7 @@ trigger:
     include:
     - main
     - support/v1
+    - support/v2
   tags:
     include:
     - 'v*'
@@ -15,6 +16,7 @@ pr:
     include:
     - main
     - support/v1
+    - support/v2
 
 variables:
   buildPlatform: 'Any CPU'
