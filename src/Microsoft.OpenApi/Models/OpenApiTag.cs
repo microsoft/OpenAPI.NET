@@ -59,18 +59,6 @@ namespace Microsoft.OpenApi
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2,
                 (writer, element) => element.SerializeAsV32(writer));
-
-            if (Summary != null)
-                writer.WriteProperty("summary", Summary);
-            if (Parent != null)
-            {
-                writer.WritePropertyName("parent");
-                Parent.SerializeAsV32(writer);
-            }
-            if (Kind != null)
-                writer.WriteProperty("kind", Kind);
-
-            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -80,19 +68,6 @@ namespace Microsoft.OpenApi
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1,
                 (writer, element) => element.SerializeAsV31(writer));
-
-            if (Summary != null)
-                writer.WriteProperty("x-oas-summary", Summary);
-            if (Parent != null)
-            {
-                writer.WritePropertyName("x-oas-parent");
-                Parent.SerializeAsV31(writer);
-            }
-            if (Kind != null)
-                writer.WriteProperty("x-oas-kind", Kind);
-
-
-            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -102,19 +77,6 @@ namespace Microsoft.OpenApi
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0,
                 (writer, element) => element.SerializeAsV3(writer));
-
-            if (Summary != null)
-                writer.WriteProperty("x-oas-summary", Summary);
-            if (Parent != null)
-            {
-                writer.WritePropertyName("x-oas-parent");
-                Parent.SerializeAsV3(writer);
-            }
-            if (Kind != null)
-                writer.WriteProperty("x-oas-kind", Kind);
-
-
-            writer.WriteEndObject();
         }
 
         internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
@@ -131,8 +93,56 @@ namespace Microsoft.OpenApi
             // external docs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
+            // summary - version specific handling
+            if (Summary != null)
+            {
+                if (version == OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteProperty("summary", Summary);
+                }
+                else if (version == OpenApiSpecVersion.OpenApi3_1 || version == OpenApiSpecVersion.OpenApi3_0)
+                {
+                    writer.WriteProperty("x-oas-summary", Summary);
+                }
+            }
+
+            // parent - version specific handling
+            if (Parent != null)
+            {
+                if (version == OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WritePropertyName("parent");
+                    Parent.SerializeAsV32(writer);
+                }
+                else if (version == OpenApiSpecVersion.OpenApi3_1)
+                {
+                    writer.WritePropertyName("x-oas-parent");
+                    Parent.SerializeAsV31(writer);
+                }
+                else if (version == OpenApiSpecVersion.OpenApi3_0)
+                {
+                    writer.WritePropertyName("x-oas-parent");
+                    Parent.SerializeAsV3(writer);
+                }
+            }
+
+            // kind - version specific handling
+            if (Kind != null)
+            {
+                if (version == OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteProperty("kind", Kind);
+                }
+                else if (version == OpenApiSpecVersion.OpenApi3_1 || version == OpenApiSpecVersion.OpenApi3_0)
+                {
+                    writer.WriteProperty("x-oas-kind", Kind);
+                }
+            }
+
             // extensions.
             writer.WriteExtensions(Extensions, version);
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -142,8 +152,6 @@ namespace Microsoft.OpenApi
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi2_0,
                (writer, element) => element.SerializeAsV2(writer));
-
-            writer.WriteEndObject();
         }
 
         /// <inheritdoc/>

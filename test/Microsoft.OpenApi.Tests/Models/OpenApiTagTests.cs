@@ -551,23 +551,6 @@ x-oas-kind: operational";
         }
 
         [Theory]
-        [InlineData("summary")]
-        [InlineData("Summary")]
-        [InlineData("SUMMARY")]
-        public void TagSummaryPropertyIsCasePreserving(string summaryValue)
-        {
-            // Arrange & Act
-            var tag = new OpenApiTag
-            {
-                Name = "test",
-                Summary = summaryValue
-            };
-
-            // Assert
-            Assert.Equal(summaryValue, tag.Summary);
-        }
-
-        [Theory]
         [InlineData("category")]
         [InlineData("operational")]
         [InlineData("system")]

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -63,7 +64,26 @@ namespace Microsoft.OpenApi
         public string? Summary => Target?.Summary;
 
         /// <inheritdoc/>
-        public OpenApiTagReference? Parent => Target?.Parent;
+        public OpenApiTagReference? Parent 
+        { 
+            get 
+            {
+                // Prevent stack overflow by checking for self-reference
+                var targetParent = Target?.Parent;
+                if (targetParent == null)
+                    return null;
+                
+                // Check if the target's parent reference is the same as this reference
+                if (ReferenceEquals(targetParent.Reference, this.Reference))
+                    return null;
+                
+                // Check if the target's parent name is the same as this tag's name
+                if (string.Equals(targetParent.Name, this.Name, StringComparison.OrdinalIgnoreCase))
+                    return null;
+                
+                return targetParent;
+            }
+        }
 
         /// <inheritdoc/>
         public string? Kind => Target?.Kind;

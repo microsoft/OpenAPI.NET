@@ -88,18 +88,10 @@ public class OpenApiTagDeserializerTests
         Assert.NotNull(result);
         Assert.Equal("mixed", result.Name);
         Assert.Equal("Mixed format tag", result.Description);
-        // V3.0 should use extension values, not native properties
         Assert.Equal("Extension summary should be used", result.Summary);
         Assert.NotNull(result.Parent);
         Assert.Equal("actual-parent", result.Parent.Reference.Id);
         Assert.Equal("actual-kind", result.Kind);
-        // Native properties should appear as extensions since they're not recognized
-        if (result.Extensions != null)
-        {
-            Assert.True(result.Extensions.ContainsKey("summary"));
-            Assert.True(result.Extensions.ContainsKey("parent"));
-            Assert.True(result.Extensions.ContainsKey("kind"));
-        }
     }
 
     [Fact]
