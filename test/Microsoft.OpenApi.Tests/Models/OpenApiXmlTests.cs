@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -75,7 +76,6 @@ namespace Microsoft.OpenApi.Tests.Models
                   "namespace": "http://swagger.io/schema/sample",
                   "prefix": "sample",
                   "attribute": true,
-                  "wrapped": true,
                   "x-xml-extension": 7
                 }
                 """;
@@ -84,9 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await AdvancedXml.SerializeAsJsonAsync(version);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Theory]
@@ -101,7 +99,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 namespace: http://swagger.io/schema/sample
                 prefix: sample
                 attribute: true
-                wrapped: true
                 x-xml-extension: 7
                 """;
 
