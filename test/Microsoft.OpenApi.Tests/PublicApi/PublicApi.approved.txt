@@ -489,6 +489,7 @@ namespace Microsoft.OpenApi
         public const string In = "in";
         public const string Info = "info";
         public const string ItemEncoding = "itemEncoding";
+        public const string ItemSchema = "itemSchema";
         public const string Items = "items";
         public const string Json = "json";
         public const string JsonSchemaDialect = "jsonSchemaDialect";
@@ -903,6 +904,7 @@ namespace Microsoft.OpenApi
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExample>? Examples { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.OpenApiEncoding? ItemEncoding { get; set; }
+        public Microsoft.OpenApi.IOpenApiSchema? ItemSchema { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiEncoding>? PrefixEncoding { get; set; }
         public Microsoft.OpenApi.IOpenApiSchema? Schema { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
@@ -1738,6 +1740,8 @@ namespace Microsoft.OpenApi
         Path = 2,
         [Microsoft.OpenApi.Display("cookie")]
         Cookie = 3,
+        [Microsoft.OpenApi.Display("querystring")]
+        QueryString = 4,
     }
     public enum ParameterStyle
     {
@@ -1755,6 +1759,8 @@ namespace Microsoft.OpenApi
         PipeDelimited = 5,
         [Microsoft.OpenApi.Display("deepObject")]
         DeepObject = 6,
+        [Microsoft.OpenApi.Display("cookie")]
+        Cookie = 7,
     }
     public sealed class PathExpression : Microsoft.OpenApi.SourceExpression
     {

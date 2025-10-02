@@ -18,6 +18,12 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
+                    OpenApiConstants.ItemSchema, (o, n, t) =>
+                    {
+                        o.ItemSchema = LoadSchema(n, t);
+                    }
+                },
+                {
                     OpenApiConstants.Examples, (o, n, t) =>
                     {
                         o.Examples = n.CreateMap(LoadExample, t);

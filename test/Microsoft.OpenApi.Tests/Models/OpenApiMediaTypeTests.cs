@@ -455,6 +455,138 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public async Task SerializeMediaTypeWithItemSchemaAsV32JsonWorks()
+        {
+            // Arrange
+            var mediaType = new OpenApiMediaType
+            {
+                Schema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.Array
+                },
+                ItemSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String,
+                    MaxLength = 100
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "schema": {
+                    "type": "array"
+                  },
+                  "itemSchema": {
+                    "maxLength": 100,
+                    "type": "string"
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeMediaTypeWithItemSchemaAsV31JsonWorks()
+        {
+            // Arrange
+            var mediaType = new OpenApiMediaType
+            {
+                Schema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.Array
+                },
+                ItemSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String,
+                    MaxLength = 100
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "schema": {
+                    "type": "array"
+                  },
+                  "x-oai-itemSchema": {
+                    "maxLength": 100,
+                    "type": "string"
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeMediaTypeWithItemSchemaAsV3JsonWorks()
+        {
+            // Arrange
+            var mediaType = new OpenApiMediaType
+            {
+                Schema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.Array
+                },
+                ItemSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String,
+                    MaxLength = 100
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "schema": {
+                    "type": "array"
+                  },
+                  "x-oai-itemSchema": {
+                    "maxLength": 100,
+                    "type": "string"
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public void MediaTypeCopyConstructorCopiesItemSchema()
+        {
+            // Arrange
+            var original = new OpenApiMediaType
+            {
+                ItemSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String
+                }
+            };
+
+            // Act
+            var clone = new OpenApiMediaType(original);
+
+            // Assert
+            Assert.NotNull(clone.ItemSchema);
+            Assert.Equal(JsonSchemaType.String, clone.ItemSchema.Type);
+            Assert.NotSame(original.ItemSchema, clone.ItemSchema);
+        }
+
+        [Fact]
         public async Task SerializeMediaTypeWithItemEncodingAsV32JsonWorks()
         {
             // Arrange
