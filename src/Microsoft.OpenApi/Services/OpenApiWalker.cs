@@ -161,6 +161,7 @@ namespace Microsoft.OpenApi
             WalkDictionary(OpenApiConstants.Links, components.Links, static (self, item, isComponent) => self.Walk(item), isComponent);
             WalkDictionary(OpenApiConstants.RequestBodies, components.RequestBodies, static (self, item, isComponent) => self.Walk(item), isComponent);
             WalkDictionary(OpenApiConstants.Responses, components.Responses, static (self, item, isComponent) => self.Walk(item), isComponent);
+            WalkDictionary(OpenApiConstants.MediaTypes, components.MediaTypes, static (self, item, isComponent) => self.Walk(item, isComponent), isComponent);
 
             Walk(components as IOpenApiExtensible);
         }
@@ -829,6 +830,28 @@ namespace Microsoft.OpenApi
             }
 
             Walk(mediaType as IOpenApiExtensible);
+        }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiMediaType"/> and child objects
+        /// </summary>
+        internal void Walk(IOpenApiMediaType mediaType, bool isComponent = false)
+        {
+            if (mediaType == null)
+            {
+                return;
+            }
+
+            if (mediaType is IOpenApiReferenceHolder openApiReferenceHolder)
+            {
+                Walk(openApiReferenceHolder);
+                return;
+            }
+
+            if (mediaType is OpenApiMediaType openApiMediaType)
+            {
+                Walk(openApiMediaType);
+            }
         }
 
         /// <summary>

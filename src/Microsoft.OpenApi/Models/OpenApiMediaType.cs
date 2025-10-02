@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Media Type Object.
     /// </summary>
-    public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible, IOpenApiMediaType
     {
         /// <summary>
         /// The schema defining the type used for the request body.
@@ -79,6 +79,29 @@ namespace Microsoft.OpenApi
             ItemEncoding = mediaType?.ItemEncoding != null ? new OpenApiEncoding(mediaType.ItemEncoding) : null;
             PrefixEncoding = mediaType?.PrefixEncoding != null ? new List<OpenApiEncoding>(mediaType.PrefixEncoding.Select(e => new OpenApiEncoding(e))) : null;
             Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
+        }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiMediaType"/> object
+        /// </summary>
+        internal OpenApiMediaType(IOpenApiMediaType mediaType)
+        {
+            Schema = mediaType?.Schema?.CreateShallowCopy();
+            ItemSchema = mediaType?.ItemSchema?.CreateShallowCopy();
+            Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
+            Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples) : null;
+            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
+            ItemEncoding = mediaType?.ItemEncoding != null ? new OpenApiEncoding(mediaType.ItemEncoding) : null;
+            PrefixEncoding = mediaType?.PrefixEncoding != null ? new List<OpenApiEncoding>(mediaType.PrefixEncoding.Select(e => new OpenApiEncoding(e))) : null;
+            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
+        }
+
+        /// <summary>
+        /// Creates a shallow copy of this <see cref="OpenApiMediaType"/> object
+        /// </summary>
+        public IOpenApiMediaType CreateShallowCopy()
+        {
+            return new OpenApiMediaType(this);
         }
 
         /// <summary>
