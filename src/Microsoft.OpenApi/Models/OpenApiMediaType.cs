@@ -19,6 +19,12 @@ namespace Microsoft.OpenApi
         public IOpenApiSchema? Schema { get; set; }
 
         /// <summary>
+        /// The schema defining the type used for the items in an array media type.
+        /// This property is only applicable for OAS 3.2.0 and later.
+        /// </summary>
+        public IOpenApiSchema? ItemSchema { get; set; }
+
+        /// <summary>
         /// Example of the media type.
         /// The example object SHOULD be in the correct format as specified by the media type.
         /// </summary>
@@ -54,6 +60,7 @@ namespace Microsoft.OpenApi
         public OpenApiMediaType(OpenApiMediaType? mediaType)
         {
             Schema = mediaType?.Schema?.CreateShallowCopy();
+            ItemSchema = mediaType?.ItemSchema?.CreateShallowCopy();
             Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
             Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
@@ -95,6 +102,17 @@ namespace Microsoft.OpenApi
 
             // schema
             writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
+
+            // itemSchema - only for v3.2+
+            if (version >= OpenApiSpecVersion.OpenApi3_2)
+            {
+                writer.WriteOptionalObject(OpenApiConstants.ItemSchema, ItemSchema, callback);
+            }
+            else if (version < OpenApiSpecVersion.OpenApi3_2 && ItemSchema != null)
+            {
+                // For v3.1 and earlier, serialize as x-oai-itemSchema extension
+                writer.WriteOptionalObject(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.ItemSchema, ItemSchema, callback);
+            }
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));

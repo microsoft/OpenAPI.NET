@@ -28,6 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiDocument = new OpenApiDocument();
             var discriminator = OpenApiModelFactory.Load<OpenApiDiscriminator>(memoryStream, OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, openApiDocument, out var diagnostic, SettingsFixture.ReaderSettings);
 
+
             // Assert
             Assert.Equivalent(
                new OpenApiDiscriminator

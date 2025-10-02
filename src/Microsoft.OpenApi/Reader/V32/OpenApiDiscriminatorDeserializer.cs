@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -21,6 +21,12 @@ namespace Microsoft.OpenApi.Reader.V32
                     "mapping", (o, n, doc) =>
                     {
                         o.Mapping = n.CreateSimpleMap((node) => LoadMapping(node, doc));
+                    }
+                },
+                 {
+                    "defaultMapping", (o, n, doc) =>
+                    {
+                        o.DefaultMapping = LoadMapping(n, doc);
                     }
                 }
             };

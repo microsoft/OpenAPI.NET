@@ -34,6 +34,18 @@ namespace Microsoft.OpenApi.Reader.V32
                     o.ExternalValue = n.GetScalarValue();
                 }
             },
+            {
+                "dataValue", (o, n, _) =>
+                {
+                    o.DataValue = n.CreateAny();
+                }
+            },
+            {
+                "serializedValue", (o, n, _) =>
+                {
+                    o.SerializedValue = n.GetScalarValue();
+                }
+            },
 
         };
 
