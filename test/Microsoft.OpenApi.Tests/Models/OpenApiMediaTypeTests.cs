@@ -182,9 +182,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await AdvanceMediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -292,9 +290,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await MediaTypeWithObjectExample.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -344,9 +340,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await MediaTypeWithXmlExample.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -438,9 +432,7 @@ namespace Microsoft.OpenApi.Tests.Models
             _output.WriteLine(actual);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -482,9 +474,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await MediaTypeWithItemEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -507,9 +497,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await MediaTypeWithItemEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -538,9 +526,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await MediaTypeWithPrefixEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -569,9 +555,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await MediaTypeWithPrefixEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
     }
 }
