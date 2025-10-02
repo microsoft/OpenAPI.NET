@@ -116,7 +116,9 @@ namespace Microsoft.OpenApi
     public interface IOpenApiElement { }
     public interface IOpenApiExample : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiExample>
     {
+        System.Text.Json.Nodes.JsonNode? DataValue { get; }
         string? ExternalValue { get; }
+        string? SerializedValue { get; }
         System.Text.Json.Nodes.JsonNode? Value { get; }
     }
     public interface IOpenApiExtensible : Microsoft.OpenApi.IOpenApiElement
@@ -268,6 +270,7 @@ namespace Microsoft.OpenApi
     public interface IOpenApiSecurityScheme : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSecurityScheme>
     {
         string? BearerFormat { get; }
+        bool Deprecated { get; }
         Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; }
         Microsoft.OpenApi.ParameterLocation? In { get; }
         string? Name { get; }
@@ -445,6 +448,7 @@ namespace Microsoft.OpenApi
         public const string Contact = "contact";
         public const string Content = "content";
         public const string ContentType = "contentType";
+        public const string DataValue = "dataValue";
         public const string Default = "default";
         public const string DefaultDefault = "Default Default";
         public const string DefaultDescription = "Default Description";
@@ -456,6 +460,8 @@ namespace Microsoft.OpenApi
         public const string DependentRequired = "dependentRequired";
         public const string Deprecated = "deprecated";
         public const string Description = "description";
+        public const string DeviceAuthorization = "deviceAuthorization";
+        public const string DeviceAuthorizationUrl = "deviceAuthorizationUrl";
         public const string Discriminator = "discriminator";
         public const string DollarRef = "$ref";
         public const string DollarSchema = "$schema";
@@ -485,6 +491,7 @@ namespace Microsoft.OpenApi
         public const string Implicit = "implicit";
         public const string In = "in";
         public const string Info = "info";
+        public const string ItemSchema = "itemSchema";
         public const string Items = "items";
         public const string Json = "json";
         public const string JsonSchemaDialect = "jsonSchemaDialect";
@@ -542,6 +549,8 @@ namespace Microsoft.OpenApi
         public const string Security = "security";
         public const string SecurityDefinitions = "securityDefinitions";
         public const string SecuritySchemes = "securitySchemes";
+        public const string Self = "$self";
+        public const string SerializedValue = "serializedValue";
         public const string Server = "server";
         public const string Servers = "servers";
         public const string Style = "style";
@@ -597,6 +606,7 @@ namespace Microsoft.OpenApi
     {
         public OpenApiDiscriminator() { }
         public OpenApiDiscriminator(Microsoft.OpenApi.OpenApiDiscriminator discriminator) { }
+        public Microsoft.OpenApi.OpenApiSchemaReference? DefaultMapping { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiSchemaReference>? Mapping { get; set; }
         public string? PropertyName { get; set; }
@@ -618,6 +628,7 @@ namespace Microsoft.OpenApi
         public System.Collections.Generic.IDictionary<string, object>? Metadata { get; set; }
         public Microsoft.OpenApi.OpenApiPaths Paths { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiSecurityRequirement>? Security { get; set; }
+        public System.Uri? Self { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer>? Servers { get; set; }
         public System.Collections.Generic.ISet<Microsoft.OpenApi.OpenApiTag>? Tags { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiPathItem>? Webhooks { get; set; }
@@ -673,9 +684,11 @@ namespace Microsoft.OpenApi
     public class OpenApiExample : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExample, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiExample>
     {
         public OpenApiExample() { }
+        public System.Text.Json.Nodes.JsonNode? DataValue { get; set; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public string? ExternalValue { get; set; }
+        public string? SerializedValue { get; set; }
         public string? Summary { get; set; }
         public System.Text.Json.Nodes.JsonNode? Value { get; set; }
         public Microsoft.OpenApi.IOpenApiExample CreateShallowCopy() { }
@@ -687,9 +700,11 @@ namespace Microsoft.OpenApi
     public class OpenApiExampleReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiExample, Microsoft.OpenApi.IOpenApiExample, Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExample, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiExample>
     {
         public OpenApiExampleReference(string referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
+        public System.Text.Json.Nodes.JsonNode? DataValue { get; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
         public string? ExternalValue { get; }
+        public string? SerializedValue { get; }
         public string? Summary { get; set; }
         public System.Text.Json.Nodes.JsonNode? Value { get; }
         protected override Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary sourceReference) { }
@@ -889,6 +904,7 @@ namespace Microsoft.OpenApi
         public System.Text.Json.Nodes.JsonNode? Example { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExample>? Examples { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.IOpenApiSchema? ItemSchema { get; set; }
         public Microsoft.OpenApi.IOpenApiSchema? Schema { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
@@ -907,6 +923,7 @@ namespace Microsoft.OpenApi
         public OpenApiOAuthFlow() { }
         public OpenApiOAuthFlow(Microsoft.OpenApi.OpenApiOAuthFlow oAuthFlow) { }
         public System.Uri? AuthorizationUrl { get; set; }
+        public System.Uri? DeviceAuthorizationUrl { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public System.Uri? RefreshUrl { get; set; }
         public System.Collections.Generic.IDictionary<string, string>? Scopes { get; set; }
@@ -927,6 +944,7 @@ namespace Microsoft.OpenApi
         public OpenApiOAuthFlows(Microsoft.OpenApi.OpenApiOAuthFlows oAuthFlows) { }
         public Microsoft.OpenApi.OpenApiOAuthFlow? AuthorizationCode { get; set; }
         public Microsoft.OpenApi.OpenApiOAuthFlow? ClientCredentials { get; set; }
+        public Microsoft.OpenApi.OpenApiOAuthFlow? DeviceAuthorization { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.OpenApiOAuthFlow? Implicit { get; set; }
         public Microsoft.OpenApi.OpenApiOAuthFlow? Password { get; set; }
@@ -1302,6 +1320,7 @@ namespace Microsoft.OpenApi
     {
         public OpenApiSecurityScheme() { }
         public string? BearerFormat { get; set; }
+        public bool Deprecated { get; set; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; set; }
@@ -1320,6 +1339,7 @@ namespace Microsoft.OpenApi
     {
         public OpenApiSecuritySchemeReference(string referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public string? BearerFormat { get; }
+        public bool Deprecated { get; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
         public Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; }
