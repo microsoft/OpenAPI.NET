@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Xunit;
 using VerifyXunit;
@@ -88,9 +89,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await CookieParameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -113,9 +112,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Theory]
