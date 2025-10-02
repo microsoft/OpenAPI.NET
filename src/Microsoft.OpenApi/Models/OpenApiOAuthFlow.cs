@@ -29,6 +29,11 @@ namespace Microsoft.OpenApi
         public Uri? RefreshUrl { get; set; }
 
         /// <summary>
+        /// The URL to be used for device authorization (RFC 8628).
+        /// </summary>
+        public Uri? DeviceAuthorizationUrl { get; set; }
+
+        /// <summary>
         /// REQUIRED. A map between the scope name and a short description for it.
         /// </summary>
         public IDictionary<string, string>? Scopes { get; set; }
@@ -51,6 +56,7 @@ namespace Microsoft.OpenApi
             AuthorizationUrl = oAuthFlow?.AuthorizationUrl != null ? new Uri(oAuthFlow.AuthorizationUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             TokenUrl = oAuthFlow?.TokenUrl != null ? new Uri(oAuthFlow.TokenUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             RefreshUrl = oAuthFlow?.RefreshUrl != null ? new Uri(oAuthFlow.RefreshUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            DeviceAuthorizationUrl = oAuthFlow?.DeviceAuthorizationUrl != null ? new Uri(oAuthFlow.DeviceAuthorizationUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Scopes = oAuthFlow?.Scopes != null ? new Dictionary<string, string>(oAuthFlow.Scopes) : null;
             Extensions = oAuthFlow?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlow.Extensions) : null;
         }
@@ -96,6 +102,21 @@ namespace Microsoft.OpenApi
 
             // refreshUrl
             writer.WriteProperty(OpenApiConstants.RefreshUrl, RefreshUrl?.ToString());
+
+            // deviceAuthorizationUrl
+            // For OpenAPI 3.2, serialize as a regular field
+            // For OpenAPI 3.1 and 3.0, serialize as an extension with x-oai- prefix
+            if (DeviceAuthorizationUrl != null)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteProperty(OpenApiConstants.DeviceAuthorizationUrl, DeviceAuthorizationUrl.ToString());
+                }
+                else
+                {
+                    writer.WriteProperty("x-oai-deviceAuthorizationUrl", DeviceAuthorizationUrl.ToString());
+                }
+            }
 
             // scopes
             writer.WriteRequiredMap(OpenApiConstants.Scopes, Scopes, (w, s) => w.WriteValue(s));
