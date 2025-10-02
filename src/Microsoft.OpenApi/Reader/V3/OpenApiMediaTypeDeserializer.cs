@@ -30,6 +30,14 @@ namespace Microsoft.OpenApi.Reader.V3
                     OpenApiConstants.Encoding,
                     (o, n, t) => o.Encoding = n.CreateMap(LoadEncoding, t)
                 },
+                {
+                    OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.ItemEncoding,
+                    (o, n, t) => o.ItemEncoding = LoadEncoding(n, t)
+                },
+                {
+                    OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.PrefixEncoding,
+                    (o, n, t) => o.PrefixEncoding = n.CreateList(LoadEncoding, t)
+                },
             };
 
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
