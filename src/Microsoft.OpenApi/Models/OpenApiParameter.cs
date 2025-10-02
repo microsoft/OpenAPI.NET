@@ -122,6 +122,20 @@ namespace Microsoft.OpenApi
                 throw new OpenApiException($"Parameter style 'cookie' is only supported in OpenAPI 3.2 and later versions. Current version: {version}");
             }
 
+            // Check for querystring restrictions
+            if (In == ParameterLocation.QueryString)
+            {
+                if (version < OpenApiSpecVersion.OpenApi3_2)
+                {
+                    throw new InvalidOperationException("Parameter location 'querystring' is only supported in OpenAPI 3.2.0 and above.");
+                }
+                // Only throw if forbidden properties are explicitly set (not just default values)
+                if ((_style.HasValue) || (_explode.HasValue && _explode.Value) || AllowReserved || Schema != null)
+                {
+                    throw new InvalidOperationException("When 'in' is 'querystring', 'style', 'explode', 'allowReserved', and 'schema' properties MUST NOT be used as per OpenAPI 3.2 specification.");
+                }
+            }
+
             writer.WriteStartObject();
 
             // name
@@ -262,6 +276,12 @@ namespace Microsoft.OpenApi
             if (Style == ParameterStyle.Cookie)
             {
                 throw new OpenApiException($"Parameter style 'cookie' is only supported in OpenAPI 3.2 and later versions. Current version: {OpenApiSpecVersion.OpenApi2_0}");
+            }
+
+            // Throw if 'querystring' is used in V2
+            if (In == ParameterLocation.QueryString)
+            {
+                throw new InvalidOperationException("Parameter location 'querystring' is not supported in OpenAPI 2.0.");
             }
 
             writer.WriteStartObject();

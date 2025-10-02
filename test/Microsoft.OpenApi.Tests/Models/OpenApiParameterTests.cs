@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -405,6 +406,53 @@ schema:
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public void SerializeQueryStringParameter_BelowV32_Throws()
+        {
+            var parameter = new OpenApiParameter
+            {
+                Name = "foo",
+                In = ParameterLocation.QueryString
+            };
+            var writer = new OpenApiJsonWriter(new StringWriter());
+            // Style, Explode, AllowReserved, and Schema must be unset for this test to throw as expected
+            Assert.Throws<InvalidOperationException>(() => parameter.SerializeAsV3(writer));
+            Assert.Throws<InvalidOperationException>(() => parameter.SerializeAsV31(writer));
+            Assert.Throws<InvalidOperationException>(() => parameter.SerializeAsV2(writer));
+        }
+
+        [Fact]
+        public void SerializeQueryStringParameter_WithForbiddenProperties_Throws()
+        {
+            var parameter = new OpenApiParameter
+            {
+                Name = "foo",
+                In = ParameterLocation.QueryString,
+                Style = ParameterStyle.Form,
+                Explode = true,
+                AllowReserved = true,
+                Schema = new OpenApiSchema { Type = JsonSchemaType.String }
+            };
+            var writer = new OpenApiJsonWriter(new StringWriter());
+            Assert.Throws<InvalidOperationException>(() => parameter.SerializeAsV32(writer));
+        }
+
+        [Fact]
+        public async Task SerializeQueryStringParameter_V32_Succeeds()
+        {
+            var parameter = new OpenApiParameter
+            {
+                Name = "foo",
+                In = ParameterLocation.QueryString,
+                Style = null,
+                AllowReserved = false,
+                Schema = null,
+                // Explode must be false (default) and not set
+            };
+            var json = await parameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            Assert.Contains("querystring", json);
         }
     }
 }

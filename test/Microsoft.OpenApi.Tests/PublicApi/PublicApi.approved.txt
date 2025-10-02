@@ -1736,6 +1736,8 @@ namespace Microsoft.OpenApi
         Path = 2,
         [Microsoft.OpenApi.Display("cookie")]
         Cookie = 3,
+        [Microsoft.OpenApi.Display("querystring")]
+        QueryString = 4,
     }
     public enum ParameterStyle
     {
