@@ -1,0 +1,7 @@
+﻿{
+  "summary": "Example with dataValue",
+  "x-oai-dataValue": {
+    "name": "John Doe",
+    "age": 30
+  }
+}

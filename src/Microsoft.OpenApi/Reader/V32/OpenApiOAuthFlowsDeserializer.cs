@@ -14,7 +14,8 @@ namespace Microsoft.OpenApi.Reader.V32
                 {"implicit", (o, n, t) => o.Implicit = LoadOAuthFlow(n, t)},
                 {"password", (o, n, t) => o.Password = LoadOAuthFlow(n, t)},
                 {"clientCredentials", (o, n, t) => o.ClientCredentials = LoadOAuthFlow(n, t)},
-                {"authorizationCode", (o, n, t) => o.AuthorizationCode = LoadOAuthFlow(n, t)}
+                {"authorizationCode", (o, n, t) => o.AuthorizationCode = LoadOAuthFlow(n, t)},
+                {"deviceAuthorization", (o, n, t) => o.DeviceAuthorization = LoadOAuthFlow(n, t)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlows> _oAuthFlowsPatternFields =
