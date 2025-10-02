@@ -38,19 +38,11 @@ namespace Microsoft.OpenApi.Reader.V32
                 "nodeType",
                 (o, n, _) =>
                 {
-                    var nodeType = n.GetScalarValue();
-                    if (nodeType is not null)
+                    if (!n.GetScalarValue().TryGetEnumFromDisplayName<OpenApiXmlNodeType>(n.Context, out var nodeType))
                     {
-                        o.NodeType = nodeType.ToLowerInvariant() switch
-                        {
-                            "element" => OpenApiXmlNodeType.Element,
-                            "attribute" => OpenApiXmlNodeType.Attribute,
-                            "text" => OpenApiXmlNodeType.Text,
-                            "cdata" => OpenApiXmlNodeType.Cdata,
-                            "none" => OpenApiXmlNodeType.None,
-                            _ => null
-                        };
+                        return;
                     }
+                    o.NodeType = nodeType;
                 }
             }
         };
