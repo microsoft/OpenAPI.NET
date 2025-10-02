@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
-                "allowedReserved", (o, n, _) =>
+                "allowReserved", (o, n, _) =>
                 {
                     var allowReserved = n.GetScalarValue();
                     if (allowReserved is not null)
