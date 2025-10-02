@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
             },
             {
-                "allowedReserved", 
+                "allowReserved", 
                 (o, n, _) =>
                 {
                     var allowReserved = n.GetScalarValue();

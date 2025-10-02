@@ -488,6 +488,7 @@ namespace Microsoft.OpenApi
         public const string Implicit = "implicit";
         public const string In = "in";
         public const string Info = "info";
+        public const string ItemEncoding = "itemEncoding";
         public const string ItemSchema = "itemSchema";
         public const string Items = "items";
         public const string Json = "json";
@@ -527,6 +528,7 @@ namespace Microsoft.OpenApi
         public const string PatternProperties = "patternProperties";
         public const string Post = "post";
         public const string Prefix = "prefix";
+        public const string PrefixEncoding = "prefixEncoding";
         public const string Produces = "produces";
         public const string Properties = "properties";
         public const string PropertyName = "propertyName";
@@ -902,7 +904,9 @@ namespace Microsoft.OpenApi
         public System.Text.Json.Nodes.JsonNode? Example { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExample>? Examples { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.OpenApiEncoding? ItemEncoding { get; set; }
         public Microsoft.OpenApi.IOpenApiSchema? ItemSchema { get; set; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiEncoding>? PrefixEncoding { get; set; }
         public Microsoft.OpenApi.IOpenApiSchema? Schema { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
