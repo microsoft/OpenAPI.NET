@@ -41,6 +41,11 @@ namespace Microsoft.OpenApi
         public const string JsonSchemaDialect = "jsonSchemaDialect";
 
         /// <summary>
+        /// Field: $self
+        /// </summary>
+        public const string Self = "$self";
+
+        /// <summary>
         /// Field: Webhooks
         /// </summary>
         public const string Webhooks = "webhooks";
@@ -291,6 +296,11 @@ namespace Microsoft.OpenApi
         public const string Schema = "schema";
 
         /// <summary>
+        /// Field: ItemSchema
+        /// </summary>
+        public const string ItemSchema = "itemSchema";
+
+        /// <summary>
         /// Field: Schemas
         /// </summary>
         public const string Schemas = "schemas";
@@ -334,6 +344,16 @@ namespace Microsoft.OpenApi
         /// Field: ExternalValue
         /// </summary>
         public const string ExternalValue = "externalValue";
+
+        /// <summary>
+        /// Field: DataValue
+        /// </summary>
+        public const string DataValue = "dataValue";
+
+        /// <summary>
+        /// Field: SerializedValue
+        /// </summary>
+        public const string SerializedValue = "serializedValue";
 
         /// <summary>
         /// Field: DollarRef
@@ -556,6 +576,11 @@ namespace Microsoft.OpenApi
         public const string AuthorizationCode = "authorizationCode";
 
         /// <summary>
+        /// Field: DeviceAuthorization
+        /// </summary>
+        public const string DeviceAuthorization = "deviceAuthorization";
+
+        /// <summary>
         /// Field: AuthorizationUrl
         /// </summary>
         public const string AuthorizationUrl = "authorizationUrl";
@@ -569,6 +594,11 @@ namespace Microsoft.OpenApi
         /// Field: RefreshUrl
         /// </summary>
         public const string RefreshUrl = "refreshUrl";
+
+        /// <summary>
+        /// Field: DeviceAuthorizationUrl
+        /// </summary>
+        public const string DeviceAuthorizationUrl = "deviceAuthorizationUrl";
 
         /// <summary>
         /// Field: Scopes

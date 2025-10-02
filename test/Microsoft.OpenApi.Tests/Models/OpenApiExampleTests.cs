@@ -143,5 +143,101 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeExampleWithDataValueAsV32JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var example = new OpenApiExample
+            {
+                Summary = "Example with dataValue",
+                DataValue = new JsonObject
+                {
+                    ["name"] = "John Doe",
+                    ["age"] = 30
+                }
+            };
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
+
+            // Act
+            example.SerializeAsV32(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeExampleWithDataValueAsV31JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var example = new OpenApiExample
+            {
+                Summary = "Example with dataValue",
+                DataValue = new JsonObject
+                {
+                    ["name"] = "John Doe",
+                    ["age"] = 30
+                }
+            };
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
+
+            // Act
+            example.SerializeAsV31(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeExampleWithSerializedValueAsV32JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var example = new OpenApiExample
+            {
+                Summary = "Example with serializedValue",
+                SerializedValue = "custom serialized string"
+            };
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
+
+            // Act
+            example.SerializeAsV32(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeExampleWithSerializedValueAsV31JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var example = new OpenApiExample
+            {
+                Summary = "Example with serializedValue",
+                SerializedValue = "custom serialized string"
+            };
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
+
+            // Act
+            example.SerializeAsV31(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
     }
 }
