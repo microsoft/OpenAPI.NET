@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.27](https://github.com/microsoft/openapi.net/compare/v1.6.26...v1.6.27) (2025-10-02)
+
+
+### Bug Fixes
+
+* typo in encoding allow reserved deserialization ([6eeca52](https://github.com/microsoft/openapi.net/commit/6eeca5283bcbf6ee9d4065cd5581a36d96ad930a))
+* typo in encoding allow reserved deserialization ([3fadb7d](https://github.com/microsoft/openapi.net/commit/3fadb7d9d0c4c4348a4c2eb8ffcf50efd79f7226))
+
 ## [1.6.26](https://github.com/microsoft/openapi.net/compare/v1.6.25...v1.6.26) (2025-09-19)
 
 
