@@ -1519,6 +1519,7 @@ namespace Microsoft.OpenApi
         public override void Visit(Microsoft.OpenApi.IOpenApiExtension openApiExtension) { }
         public override void Visit(Microsoft.OpenApi.IOpenApiHeader header) { }
         public override void Visit(Microsoft.OpenApi.IOpenApiLink link) { }
+        public override void Visit(Microsoft.OpenApi.IOpenApiMediaType mediaType) { }
         public override void Visit(Microsoft.OpenApi.IOpenApiParameter parameter) { }
         public override void Visit(Microsoft.OpenApi.IOpenApiPathItem pathItem) { }
         public override void Visit(Microsoft.OpenApi.IOpenApiRequestBody requestBody) { }
@@ -1532,7 +1533,6 @@ namespace Microsoft.OpenApi
         public override void Visit(Microsoft.OpenApi.OpenApiExternalDocs externalDocs) { }
         public override void Visit(Microsoft.OpenApi.OpenApiInfo info) { }
         public override void Visit(Microsoft.OpenApi.OpenApiLicense license) { }
-        public override void Visit(Microsoft.OpenApi.OpenApiMediaType mediaType) { }
         public override void Visit(Microsoft.OpenApi.OpenApiOAuthFlow openApiOAuthFlow) { }
         public override void Visit(Microsoft.OpenApi.OpenApiOperation operation) { }
         public override void Visit(Microsoft.OpenApi.OpenApiPaths paths) { }
@@ -1546,8 +1546,8 @@ namespace Microsoft.OpenApi
         public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExample> examples) { }
         public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiHeader> headers) { }
         public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiLink> links) { }
+        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiMediaType> content) { }
         public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiEncoding> encodings) { }
-        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiMediaType> content) { }
         public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiServerVariable> serverVariables) { }
         public override void Visit(System.Collections.Generic.List<Microsoft.OpenApi.IOpenApiExample> example) { }
     }
@@ -1574,6 +1574,7 @@ namespace Microsoft.OpenApi
         public virtual void Visit(Microsoft.OpenApi.IOpenApiExtension openApiExtension) { }
         public virtual void Visit(Microsoft.OpenApi.IOpenApiHeader header) { }
         public virtual void Visit(Microsoft.OpenApi.IOpenApiLink link) { }
+        public virtual void Visit(Microsoft.OpenApi.IOpenApiMediaType mediaType) { }
         public virtual void Visit(Microsoft.OpenApi.IOpenApiParameter parameter) { }
         public virtual void Visit(Microsoft.OpenApi.IOpenApiPathItem pathItem) { }
         public virtual void Visit(Microsoft.OpenApi.IOpenApiReferenceHolder referenceHolder) { }
@@ -1588,7 +1589,6 @@ namespace Microsoft.OpenApi
         public virtual void Visit(Microsoft.OpenApi.OpenApiExternalDocs externalDocs) { }
         public virtual void Visit(Microsoft.OpenApi.OpenApiInfo info) { }
         public virtual void Visit(Microsoft.OpenApi.OpenApiLicense license) { }
-        public virtual void Visit(Microsoft.OpenApi.OpenApiMediaType mediaType) { }
         public virtual void Visit(Microsoft.OpenApi.OpenApiOAuthFlow openApiOAuthFlow) { }
         public virtual void Visit(Microsoft.OpenApi.OpenApiOperation operation) { }
         public virtual void Visit(Microsoft.OpenApi.OpenApiPaths paths) { }
@@ -1603,9 +1603,9 @@ namespace Microsoft.OpenApi
         public virtual void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExample> examples) { }
         public virtual void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiHeader> headers) { }
         public virtual void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiLink> links) { }
+        public virtual void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiMediaType> content) { }
         public virtual void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiPathItem> webhooks) { }
         public virtual void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiEncoding> encodings) { }
-        public virtual void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiMediaType> content) { }
         public virtual void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiServerVariable> serverVariables) { }
         public virtual void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter> parameters) { }
         public virtual void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiSecurityRequirement> openApiSecurityRequirements) { }
