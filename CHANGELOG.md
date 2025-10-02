@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.3](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.2...v2.3.3) (2025-10-02)
+
+
+### Bug Fixes
+
+* typo in allowReserved property name for deserialization ([1633453](https://github.com/microsoft/OpenAPI.NET/commit/16334536dcb5182f26c0d58463bd15a124dd1505))
+* typo in allowReserved property name for deserialization ([f7e34be](https://github.com/microsoft/OpenAPI.NET/commit/f7e34be28566a4f714d43667f8c43be7159d27a2))
+
 ## [2.3.2](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.1...v2.3.2) (2025-09-19)
 
 
