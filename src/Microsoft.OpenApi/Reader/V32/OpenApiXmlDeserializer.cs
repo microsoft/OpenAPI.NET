@@ -41,7 +41,9 @@ namespace Microsoft.OpenApi.Reader.V32
                     var attribute = n.GetScalarValue();
                     if (attribute is not null)
                     {
+#pragma warning disable CS0618 // Type or member is obsolete
                         o.Attribute = bool.Parse(attribute);
+#pragma warning restore CS0618 // Type or member is obsolete
                     }
                 }
             },
@@ -52,7 +54,28 @@ namespace Microsoft.OpenApi.Reader.V32
                     var wrapped = n.GetScalarValue();
                     if (wrapped is not null)
                     {
+#pragma warning disable CS0618 // Type or member is obsolete
                         o.Wrapped = bool.Parse(wrapped);
+#pragma warning restore CS0618 // Type or member is obsolete
+                    }
+                }
+            },
+            {
+                "nodeType",
+                (o, n, _) =>
+                {
+                    var nodeType = n.GetScalarValue();
+                    if (nodeType is not null)
+                    {
+                        o.NodeType = nodeType.ToLowerInvariant() switch
+                        {
+                            "element" => OpenApiXmlNodeType.Element,
+                            "attribute" => OpenApiXmlNodeType.Attribute,
+                            "text" => OpenApiXmlNodeType.Text,
+                            "cdata" => OpenApiXmlNodeType.Cdata,
+                            "none" => OpenApiXmlNodeType.None,
+                            _ => null
+                        };
                     }
                 }
             }

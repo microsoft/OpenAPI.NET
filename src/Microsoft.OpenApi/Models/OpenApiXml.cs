@@ -11,6 +11,10 @@ namespace Microsoft.OpenApi
     /// </summary>
     public class OpenApiXml : IOpenApiSerializable, IOpenApiExtensible
     {
+        private OpenApiXmlNodeType? _nodeType;
+        private bool _attribute;
+        private bool _wrapped;
+
         /// <summary>
         /// Replaces the name of the element/attribute used for the described schema property.
         /// </summary>
@@ -30,13 +34,56 @@ namespace Microsoft.OpenApi
         /// Declares whether the property definition translates to an attribute instead of an element.
         /// Default value is false.
         /// </summary>
-        public bool Attribute { get; set; }
+        [Obsolete("Use NodeType property instead. This property will be removed in a future version.")]
+        public bool Attribute
+        {
+            get
+            {
+                // If NodeType is explicitly set, use it; otherwise use the backing field
+                if (_nodeType.HasValue)
+                {
+                    return _nodeType == OpenApiXmlNodeType.Attribute;
+                }
+                return _attribute;
+            }
+            set
+            {
+                _attribute = value;
+                _nodeType = value ? OpenApiXmlNodeType.Attribute : OpenApiXmlNodeType.None;
+            }
+        }
 
         /// <summary>
         /// Signifies whether the array is wrapped.
         /// Default value is false.
         /// </summary>
-        public bool Wrapped { get; set; }
+        [Obsolete("Use NodeType property instead. This property will be removed in a future version.")]
+        public bool Wrapped
+        {
+            get
+            {
+                // If NodeType is explicitly set, use it; otherwise use the backing field
+                if (_nodeType.HasValue)
+                {
+                    return _nodeType == OpenApiXmlNodeType.Element;
+                }
+                return _wrapped;
+            }
+            set
+            {
+                _wrapped = value;
+                _nodeType = value ? OpenApiXmlNodeType.Element : OpenApiXmlNodeType.None;
+            }
+        }
+
+        /// <summary>
+        /// The node type of the XML representation.
+        /// </summary>
+        public OpenApiXmlNodeType? NodeType
+        {
+            get => _nodeType;
+            set => _nodeType = value;
+        }
 
         /// <summary>
         /// Specification Extensions.
@@ -56,8 +103,9 @@ namespace Microsoft.OpenApi
             Name = xml?.Name ?? Name;
             Namespace = xml?.Namespace ?? Namespace;
             Prefix = xml?.Prefix ?? Prefix;
-            Attribute = xml?.Attribute ?? Attribute;
-            Wrapped = xml?.Wrapped ?? Wrapped;
+            _nodeType = xml?._nodeType ?? _nodeType;
+            _attribute = xml?._attribute ?? _attribute;
+            _wrapped = xml?._wrapped ?? _wrapped;
             Extensions = xml?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(xml.Extensions) : null;
         }
 
@@ -108,11 +156,32 @@ namespace Microsoft.OpenApi
             // prefix
             writer.WriteProperty(OpenApiConstants.Prefix, Prefix);
 
-            // attribute
-            writer.WriteProperty(OpenApiConstants.Attribute, Attribute, false);
-
-            // wrapped
-            writer.WriteProperty(OpenApiConstants.Wrapped, Wrapped, false);
+            // For OpenAPI 3.2.0 and above, serialize nodeType
+            if (specVersion >= OpenApiSpecVersion.OpenApi3_2)
+            {
+                if (_nodeType.HasValue)
+                {
+                    writer.WriteProperty(OpenApiConstants.NodeType, _nodeType.Value.GetDisplayName());
+                }
+            }
+            else
+            {
+                // For OpenAPI 3.1.0 and below, serialize attribute and wrapped
+                // Use backing fields if they were set via obsolete properties,
+                // otherwise derive from NodeType if set
+                bool attribute = _attribute;
+                bool wrapped = _wrapped;
+                
+                if (_nodeType.HasValue && !_attribute && !_wrapped)
+                {
+                    // NodeType was set directly, not via obsolete properties
+                    attribute = _nodeType == OpenApiXmlNodeType.Attribute;
+                    wrapped = _nodeType == OpenApiXmlNodeType.Element;
+                }
+                
+                writer.WriteProperty(OpenApiConstants.Attribute, attribute, false);
+                writer.WriteProperty(OpenApiConstants.Wrapped, wrapped, false);
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, specVersion);
