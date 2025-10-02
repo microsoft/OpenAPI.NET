@@ -246,6 +246,11 @@ namespace Microsoft.OpenApi
         public const string Wrapped = "wrapped";
 
         /// <summary>
+        /// Field: NodeType
+        /// </summary>
+        public const string NodeType = "nodeType";
+
+        /// <summary>
         /// Field: In
         /// </summary>
         public const string In = "in";

@@ -21,6 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var xml = await OpenApiModelFactory.LoadAsync<OpenApiXml>(Resources.GetStream(Path.Combine(SampleFolderPath, "basicXml.yaml")), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
 
             // Assert
+#pragma warning disable CS0618 // Type or member is obsolete
             Assert.Equivalent(
                 new OpenApiXml
                 {
@@ -29,6 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Prefix = "samplePrefix",
                     Wrapped = true
                 }, xml);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 }

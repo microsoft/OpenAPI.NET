@@ -520,6 +520,7 @@ namespace Microsoft.OpenApi
         public const string MultipleOf = "multipleOf";
         public const string Name = "name";
         public const string Namespace = "namespace";
+        public const string NodeType = "nodeType";
         public const string Not = "not";
         public const string Null = "null";
         public const string Nullable = "nullable";
@@ -1724,16 +1725,28 @@ namespace Microsoft.OpenApi
     {
         public OpenApiXml() { }
         public OpenApiXml(Microsoft.OpenApi.OpenApiXml xml) { }
-        public bool Attribute { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public string? Name { get; set; }
         public System.Uri? Namespace { get; set; }
+        public Microsoft.OpenApi.OpenApiXmlNodeType? NodeType { get; set; }
         public string? Prefix { get; set; }
-        public bool Wrapped { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
+    }
+    public enum OpenApiXmlNodeType
+    {
+        [Microsoft.OpenApi.Display("element")]
+        Element = 0,
+        [Microsoft.OpenApi.Display("attribute")]
+        Attribute = 1,
+        [Microsoft.OpenApi.Display("text")]
+        Text = 2,
+        [Microsoft.OpenApi.Display("cdata")]
+        Cdata = 3,
+        [Microsoft.OpenApi.Display("none")]
+        None = 4,
     }
     public class OpenApiYamlWriter : Microsoft.OpenApi.OpenApiWriterBase
     {
