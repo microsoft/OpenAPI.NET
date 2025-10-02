@@ -309,6 +309,7 @@ extends:
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
 
       - deployment: create_github_release
+        condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
         templateContext:
           type: releaseJob
           isProduction: true
