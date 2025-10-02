@@ -35,32 +35,6 @@ namespace Microsoft.OpenApi.Reader.V32
                 (o, n, _) => o.Prefix = n.GetScalarValue()
             },
             {
-                "attribute",
-                (o, n, _) =>
-                {
-                    var attribute = n.GetScalarValue();
-                    if (attribute is not null)
-                    {
-#pragma warning disable CS0618 // Type or member is obsolete
-                        o.Attribute = bool.Parse(attribute);
-#pragma warning restore CS0618 // Type or member is obsolete
-                    }
-                }
-            },
-            {
-                "wrapped",
-                (o, n, _) =>
-                {
-                    var wrapped = n.GetScalarValue();
-                    if (wrapped is not null)
-                    {
-#pragma warning disable CS0618 // Type or member is obsolete
-                        o.Wrapped = bool.Parse(wrapped);
-#pragma warning restore CS0618 // Type or member is obsolete
-                    }
-                }
-            },
-            {
                 "nodeType",
                 (o, n, _) =>
                 {

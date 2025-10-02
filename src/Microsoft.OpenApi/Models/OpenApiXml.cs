@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi
         /// Default value is false.
         /// </summary>
         [Obsolete("Use NodeType property instead. This property will be removed in a future version.")]
-        public bool Attribute
+        internal bool Attribute
         {
             get
             {
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi
         /// Default value is false.
         /// </summary>
         [Obsolete("Use NodeType property instead. This property will be removed in a future version.")]
-        public bool Wrapped
+        internal bool Wrapped
         {
             get
             {
