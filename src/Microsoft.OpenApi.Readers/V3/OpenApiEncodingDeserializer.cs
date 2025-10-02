@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 (o, n) => o.Explode = bool.Parse(n.GetScalarValue())
             },
             {
-                "allowedReserved", 
+                "allowReserved", 
                 (o, n) => o.AllowReserved = bool.Parse(n.GetScalarValue())
             },
         };

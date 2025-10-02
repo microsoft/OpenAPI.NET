@@ -76,5 +76,29 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     }
                 });
         }
+        [Fact]
+        public void ParseEncodingWithAllowReservedShouldSucceed()
+        {
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "encodingWithAllowReserved.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
+
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
+
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var encoding = OpenApiV3Deserializer.LoadEncoding(node);
+
+            // Assert
+            Assert.Equivalent(
+                new OpenApiEncoding
+                {
+                    ContentType = "application/x-www-form-urlencoded",
+                    Style = ParameterStyle.Form,
+                    Explode = true,
+                    AllowReserved = true
+                }, encoding);
+        }
     }
 }
