@@ -35,25 +35,14 @@ namespace Microsoft.OpenApi.Reader.V32
                 (o, n, _) => o.Prefix = n.GetScalarValue()
             },
             {
-                "attribute",
+                "nodeType",
                 (o, n, _) =>
                 {
-                    var attribute = n.GetScalarValue();
-                    if (attribute is not null)
+                    if (!n.GetScalarValue().TryGetEnumFromDisplayName<OpenApiXmlNodeType>(n.Context, out var nodeType))
                     {
-                        o.Attribute = bool.Parse(attribute);
+                        return;
                     }
-                }
-            },
-            {
-                "wrapped",
-                (o, n, _) =>
-                {
-                    var wrapped = n.GetScalarValue();
-                    if (wrapped is not null)
-                    {
-                        o.Wrapped = bool.Parse(wrapped);
-                    }
+                    o.NodeType = nodeType;
                 }
             }
         };

@@ -140,5 +140,45 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
             Assert.Equivalent(expected, mediaType);
         }
+
+        [Fact]
+        public async Task ParseMediaTypeWithXOaiItemEncodingShouldSucceed()
+        {
+            // Act
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(
+                Path.Combine(SampleFolderPath, "mediaTypeWithXOaiItemEncoding.yaml"),
+                OpenApiSpecVersion.OpenApi3_1,
+                new(),
+                SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.NotNull(mediaType);
+            Assert.NotNull(mediaType.ItemEncoding);
+            Assert.Equal("image/png, image/jpeg", mediaType.ItemEncoding.ContentType);
+            Assert.Equal(ParameterStyle.Simple, mediaType.ItemEncoding.Style);
+            Assert.True(mediaType.ItemEncoding.Explode);
+            Assert.True(mediaType.ItemEncoding.AllowReserved);
+        }
+
+        [Fact]
+        public async Task ParseMediaTypeWithXOaiPrefixEncodingShouldSucceed()
+        {
+            // Act
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(
+                Path.Combine(SampleFolderPath, "mediaTypeWithXOaiPrefixEncoding.yaml"),
+                OpenApiSpecVersion.OpenApi3_1,
+                new(),
+                SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.NotNull(mediaType);
+            Assert.NotNull(mediaType.PrefixEncoding);
+            Assert.Equal(2, mediaType.PrefixEncoding.Count);
+            Assert.Equal("application/json", mediaType.PrefixEncoding[0].ContentType);
+            Assert.Equal(ParameterStyle.Simple, mediaType.PrefixEncoding[0].Style);
+            Assert.Equal("text/plain", mediaType.PrefixEncoding[1].ContentType);
+            Assert.Equal(ParameterStyle.Form, mediaType.PrefixEncoding[1].Style);
+            Assert.False(mediaType.PrefixEncoding[1].Explode);
+        }
     }
 }
