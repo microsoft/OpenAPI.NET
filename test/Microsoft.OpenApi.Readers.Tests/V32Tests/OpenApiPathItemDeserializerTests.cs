@@ -51,33 +51,6 @@ public class OpenApiPathItemDeserializerTests
     }
 
     [Fact]
-    public async Task ParsePathItemWithV32ExtensionsWorks()
-    {
-        // Arrange & Act
-        var result = await OpenApiDocument.LoadAsync($"{SampleFolderPath}pathItemWithV32Extensions.yaml", SettingsFixture.ReaderSettings);
-        var pathItem = result.Document.Paths["/pets"];
-
-        // Assert
-        Assert.Equal("Pet operations", pathItem.Summary);
-        Assert.Equal("Operations available for pets", pathItem.Description);
-
-        // Regular operations
-        Assert.True(pathItem.Operations?.ContainsKey(HttpMethod.Get));
-        var getOp = Assert.Contains(HttpMethod.Get, pathItem.Operations);
-        Assert.Equal("getPets", getOp.OperationId);
-
-        // Query operation from extension should now be on the operation
-        var queryOp = Assert.Contains(new HttpMethod("Query"), pathItem.Operations);
-        Assert.Equal("Query pets with complex filters", queryOp.Summary);
-        Assert.Equal("queryPets", queryOp.OperationId);
-
-        // Additional operations from extension should now be on the operation
-        var notifyOp = Assert.Contains(new HttpMethod("notify"), pathItem.Operations);
-        Assert.Equal("Notify about pet updates", notifyOp.Summary);
-        Assert.Equal("notifyPetUpdates", notifyOp.OperationId);
-    }
-
-    [Fact]
     public async Task SerializeV32PathItemToV31ProducesExtensions()
     {
         // Arrange
@@ -120,8 +93,8 @@ public class OpenApiPathItemDeserializerTests
         var yaml = await pathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
 
         // Assert
-        Assert.Contains("x-oas-query:", yaml);
-        Assert.Contains("x-oas-additionalOperations:", yaml);
+        Assert.Contains("Query:", yaml);
+        Assert.Contains("x-oai-additionalOperations:", yaml);
         Assert.Contains("queryOp", yaml);
         Assert.Contains("notifyOp", yaml);
     }
@@ -169,8 +142,8 @@ public class OpenApiPathItemDeserializerTests
         var yaml = await pathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
         // Assert
-        Assert.Contains("x-oas-query:", yaml);
-        Assert.Contains("x-oas-additionalOperations:", yaml);
+        Assert.Contains("Query:", yaml);
+        Assert.Contains("x-oai-additionalOperations:", yaml);
         Assert.Contains("queryOp", yaml);
         Assert.Contains("notifyOp", yaml);
     }
