@@ -73,6 +73,24 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static OpenApiMediaType MediaTypeWithItemEncoding = new()
+        {
+            ItemEncoding = OpenApiEncodingTests.AdvanceEncoding
+        };
+
+        public static OpenApiMediaType MediaTypeWithPrefixEncoding = new()
+        {
+            PrefixEncoding = new List<OpenApiEncoding>
+            {
+                OpenApiEncodingTests.AdvanceEncoding,
+                new OpenApiEncoding
+                {
+                    ContentType = "application/json",
+                    Style = ParameterStyle.Simple
+                }
+            }
+        };
+
         public static OpenApiMediaType MediaTypeWithObjectExamples = new()
         {
             Examples = new Dictionary<string, IOpenApiExample>
@@ -164,9 +182,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await AdvanceMediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -274,9 +290,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await MediaTypeWithObjectExample.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -326,9 +340,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await MediaTypeWithXmlExample.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -420,9 +432,7 @@ namespace Microsoft.OpenApi.Tests.Models
             _output.WriteLine(actual);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Fact]
@@ -574,6 +584,110 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.NotNull(clone.ItemSchema);
             Assert.Equal(JsonSchemaType.String, clone.ItemSchema.Type);
             Assert.NotSame(original.ItemSchema, clone.ItemSchema);
+        }
+
+        [Fact]
+        public async Task SerializeMediaTypeWithItemEncodingAsV32JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "itemEncoding": {
+                    "contentType": "image/png, image/jpeg",
+                    "style": "simple",
+                    "explode": true,
+                    "allowReserved": true
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await MediaTypeWithItemEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeMediaTypeWithItemEncodingAsV31JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "x-oai-itemEncoding": {
+                    "contentType": "image/png, image/jpeg",
+                    "style": "simple",
+                    "explode": true,
+                    "allowReserved": true
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await MediaTypeWithItemEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeMediaTypeWithPrefixEncodingAsV32JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "prefixEncoding": [
+                    {
+                      "contentType": "image/png, image/jpeg",
+                      "style": "simple",
+                      "explode": true,
+                      "allowReserved": true
+                    },
+                    {
+                      "contentType": "application/json",
+                      "style": "simple"
+                    }
+                  ]
+                }
+                """;
+
+            // Act
+            var actual = await MediaTypeWithPrefixEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeMediaTypeWithPrefixEncodingAsV31JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "x-oai-prefixEncoding": [
+                    {
+                      "contentType": "image/png, image/jpeg",
+                      "style": "simple",
+                      "explode": true,
+                      "allowReserved": true
+                    },
+                    {
+                      "contentType": "application/json",
+                      "style": "simple"
+                    }
+                  ]
+                }
+                """;
+
+            // Act
+            var actual = await MediaTypeWithPrefixEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
     }
 }

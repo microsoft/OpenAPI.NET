@@ -55,5 +55,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     }
                 }, encoding);
         }
+
+        [Fact]
+        public async Task ParseEncodingWithAllowReservedShouldSucceed()
+        {
+            // Act
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "encodingWithAllowReserved.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.Equivalent(
+                new OpenApiEncoding
+                {
+                    ContentType = "application/x-www-form-urlencoded",
+                    Style = ParameterStyle.Form,
+                    Explode = true,
+                    AllowReserved = true
+                }, encoding);
+        }
     }
 }

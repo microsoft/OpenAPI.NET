@@ -256,6 +256,11 @@ namespace Microsoft.OpenApi
         public const string Wrapped = "wrapped";
 
         /// <summary>
+        /// Field: NodeType
+        /// </summary>
+        public const string NodeType = "nodeType";
+
+        /// <summary>
         /// Field: In
         /// </summary>
         public const string In = "in";
@@ -334,6 +339,16 @@ namespace Microsoft.OpenApi
         /// Field: Encoding
         /// </summary>
         public const string Encoding = "encoding";
+
+        /// <summary>
+        /// Field: ItemEncoding
+        /// </summary>
+        public const string ItemEncoding = "itemEncoding";
+
+        /// <summary>
+        /// Field: PrefixEncoding
+        /// </summary>
+        public const string PrefixEncoding = "prefixEncoding";
 
         /// <summary>
         /// Field: RequestBodies

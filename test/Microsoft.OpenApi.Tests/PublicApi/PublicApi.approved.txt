@@ -292,7 +292,10 @@ namespace Microsoft.OpenApi
     public interface IOpenApiTag : Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyDescribedElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiTag>
     {
         Microsoft.OpenApi.OpenApiExternalDocs? ExternalDocs { get; }
+        string? Kind { get; }
         string? Name { get; }
+        Microsoft.OpenApi.OpenApiTagReference? Parent { get; }
+        string? Summary { get; }
     }
     public interface IOpenApiWriter
     {
@@ -489,6 +492,7 @@ namespace Microsoft.OpenApi
         public const string Implicit = "implicit";
         public const string In = "in";
         public const string Info = "info";
+        public const string ItemEncoding = "itemEncoding";
         public const string ItemSchema = "itemSchema";
         public const string Items = "items";
         public const string Json = "json";
@@ -508,6 +512,7 @@ namespace Microsoft.OpenApi
         public const string MultipleOf = "multipleOf";
         public const string Name = "name";
         public const string Namespace = "namespace";
+        public const string NodeType = "nodeType";
         public const string Not = "not";
         public const string Null = "null";
         public const string Nullable = "nullable";
@@ -527,6 +532,7 @@ namespace Microsoft.OpenApi
         public const string PatternProperties = "patternProperties";
         public const string Post = "post";
         public const string Prefix = "prefix";
+        public const string PrefixEncoding = "prefixEncoding";
         public const string Produces = "produces";
         public const string Properties = "properties";
         public const string PropertyName = "propertyName";
@@ -903,7 +909,9 @@ namespace Microsoft.OpenApi
         public System.Text.Json.Nodes.JsonNode? Example { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExample>? Examples { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
+        public Microsoft.OpenApi.OpenApiEncoding? ItemEncoding { get; set; }
         public Microsoft.OpenApi.IOpenApiSchema? ItemSchema { get; set; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiEncoding>? PrefixEncoding { get; set; }
         public Microsoft.OpenApi.IOpenApiSchema? Schema { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
@@ -1421,7 +1429,10 @@ namespace Microsoft.OpenApi
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.OpenApiExternalDocs? ExternalDocs { get; set; }
+        public string? Kind { get; set; }
         public string? Name { get; set; }
+        public Microsoft.OpenApi.OpenApiTagReference? Parent { get; set; }
+        public string? Summary { get; set; }
         public Microsoft.OpenApi.IOpenApiTag CreateShallowCopy() { }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
@@ -1434,7 +1445,10 @@ namespace Microsoft.OpenApi
         public string? Description { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
         public Microsoft.OpenApi.OpenApiExternalDocs? ExternalDocs { get; }
+        public string? Kind { get; }
         public string? Name { get; }
+        public Microsoft.OpenApi.OpenApiTagReference? Parent { get; }
+        public string? Summary { get; }
         public override Microsoft.OpenApi.IOpenApiTag? Target { get; }
         protected override Microsoft.OpenApi.BaseOpenApiReference CopyReference(Microsoft.OpenApi.BaseOpenApiReference sourceReference) { }
         public override Microsoft.OpenApi.IOpenApiTag CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiTag source) { }
@@ -1696,16 +1710,28 @@ namespace Microsoft.OpenApi
     {
         public OpenApiXml() { }
         public OpenApiXml(Microsoft.OpenApi.OpenApiXml xml) { }
-        public bool Attribute { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public string? Name { get; set; }
         public System.Uri? Namespace { get; set; }
+        public Microsoft.OpenApi.OpenApiXmlNodeType? NodeType { get; set; }
         public string? Prefix { get; set; }
-        public bool Wrapped { get; set; }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
+    }
+    public enum OpenApiXmlNodeType
+    {
+        [Microsoft.OpenApi.Display("element")]
+        Element = 0,
+        [Microsoft.OpenApi.Display("attribute")]
+        Attribute = 1,
+        [Microsoft.OpenApi.Display("text")]
+        Text = 2,
+        [Microsoft.OpenApi.Display("cdata")]
+        Cdata = 3,
+        [Microsoft.OpenApi.Display("none")]
+        None = 4,
     }
     public class OpenApiYamlWriter : Microsoft.OpenApi.OpenApiWriterBase
     {
@@ -1740,6 +1766,8 @@ namespace Microsoft.OpenApi
         Path = 2,
         [Microsoft.OpenApi.Display("cookie")]
         Cookie = 3,
+        [Microsoft.OpenApi.Display("querystring")]
+        QueryString = 4,
     }
     public enum ParameterStyle
     {
@@ -1757,6 +1785,8 @@ namespace Microsoft.OpenApi
         PipeDelimited = 5,
         [Microsoft.OpenApi.Display("deepObject")]
         DeepObject = 6,
+        [Microsoft.OpenApi.Display("cookie")]
+        Cookie = 7,
     }
     public sealed class PathExpression : Microsoft.OpenApi.SourceExpression
     {
