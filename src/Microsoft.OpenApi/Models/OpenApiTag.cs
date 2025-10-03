@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi
                 {
                     writer.WriteProperty("kind", Kind);
                 }
-                else if (version == OpenApiSpecVersion.OpenApi3_1 || version == OpenApiSpecVersion.OpenApi3_0)
+                else if (version >= OpenApiSpecVersion.OpenApi3_0)
                 {
                     writer.WriteProperty("x-oas-kind", Kind);
                 }
