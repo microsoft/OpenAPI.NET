@@ -943,6 +943,8 @@ namespace Microsoft.OpenApi
         protected override Microsoft.OpenApi.BaseOpenApiReference CopyReference(Microsoft.OpenApi.BaseOpenApiReference sourceReference) { }
         public override Microsoft.OpenApi.IOpenApiMediaType CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiMediaType source) { }
         public Microsoft.OpenApi.IOpenApiMediaType CreateShallowCopy() { }
+        public override void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
+        public override void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
     public static class OpenApiNonDefaultRules
     {
