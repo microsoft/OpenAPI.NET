@@ -320,7 +320,7 @@ namespace Microsoft.OpenApi
                     }
                 });
 
-            // mediaTypes - serialize as native field in v3.2+, as extension in earlier versions
+            // mediaTypes - serialize as native field in v3.2+
             if (MediaTypes != null && version >= OpenApiSpecVersion.OpenApi3_2)
             {
 
