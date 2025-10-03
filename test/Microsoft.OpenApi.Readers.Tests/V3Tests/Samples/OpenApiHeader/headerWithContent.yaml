@@ -1,0 +1,11 @@
+description: "A complex header with content"
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: integer
