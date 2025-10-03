@@ -22,4 +22,20 @@ public interface IOpenApiExample : IOpenApiDescribedElement, IOpenApiSummarizedE
     /// The value field and externalValue field are mutually exclusive.
     /// </summary>
     public string? ExternalValue { get; }
+
+    /// <summary>
+    /// Embedded literal example value. 
+    /// The dataValue property and the value property are mutually exclusive.
+    /// To represent examples of media types that cannot be naturally represented in JSON or YAML,
+    /// use a string value to contain the example with escaping where necessary.
+    /// Available in OpenAPI 3.2+, serialized as extension in 3.1 and earlier.
+    /// </summary>
+    public JsonNode? DataValue { get; }
+
+    /// <summary>
+    /// A string representation of the example.
+    /// This is mutually exclusive with the value and dataValue properties.
+    /// Available in OpenAPI 3.2+, serialized as extension in 3.1 and earlier.
+    /// </summary>
+    public string? SerializedValue { get; }
 }

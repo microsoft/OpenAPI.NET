@@ -24,6 +24,12 @@ namespace Microsoft.OpenApi
         public JsonNode? Value { get; set; }
 
         /// <inheritdoc/>
+        public JsonNode? DataValue { get; set; }
+
+        /// <inheritdoc/>
+        public string? SerializedValue { get; set; }
+
+        /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
@@ -42,6 +48,8 @@ namespace Microsoft.OpenApi
             Description = example.Description ?? Description;
             Value = example.Value != null ? JsonNodeCloneHelper.Clone(example.Value) : null;
             ExternalValue = example.ExternalValue ?? ExternalValue;
+            DataValue = example.DataValue != null ? JsonNodeCloneHelper.Clone(example.DataValue) : null;
+            SerializedValue = example.SerializedValue ?? SerializedValue;
             Extensions = example.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
         }
 
@@ -83,6 +91,32 @@ namespace Microsoft.OpenApi
 
             // externalValue
             writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);
+
+            // dataValue - serialize as native field in v3.2+, as extension in earlier versions
+            if (DataValue is not null)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteRequiredObject(OpenApiConstants.DataValue, DataValue, (w, v) => w.WriteAny(v));
+                }
+                else
+                {
+                    writer.WriteRequiredObject(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.DataValue, DataValue, (w, v) => w.WriteAny(v));
+                }
+            }
+
+            // serializedValue - serialize as native field in v3.2+, as extension in earlier versions
+            if (SerializedValue is not null)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteProperty(OpenApiConstants.SerializedValue, SerializedValue);
+                }
+                else
+                {
+                    writer.WriteProperty(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.SerializedValue, SerializedValue);
+                }
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, version);

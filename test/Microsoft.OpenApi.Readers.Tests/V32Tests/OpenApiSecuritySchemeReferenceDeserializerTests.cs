@@ -38,5 +38,34 @@ public class OpenApiSecuritySchemeReferenceDeserializerTests
         Assert.Equal("This is a security scheme reference", resultReference.Description);
         Assert.NotNull(resultReference.Target);
     }
+
+    [Fact]
+    public void ShouldDeserializeSecuritySchemeWithDeprecatedField()
+    {
+        var json =
+        """
+        {
+            "type": "apiKey",
+            "description": "This is a deprecated security scheme",
+            "name": "api_key",
+            "in": "header",
+            "deprecated": true
+        }
+        """;
+
+        var hostDocument = new OpenApiDocument();
+        var jsonNode = JsonNode.Parse(json);
+        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+
+        var result = OpenApiV32Deserializer.LoadSecurityScheme(parseNode, hostDocument);
+
+        Assert.NotNull(result);
+        var resultScheme = Assert.IsType<OpenApiSecurityScheme>(result);
+
+        Assert.Equal(SecuritySchemeType.ApiKey, resultScheme.Type);
+        Assert.Equal("api_key", resultScheme.Name);
+        Assert.Equal(ParameterLocation.Header, resultScheme.In);
+        Assert.True(resultScheme.Deprecated);
+    }
 }
 

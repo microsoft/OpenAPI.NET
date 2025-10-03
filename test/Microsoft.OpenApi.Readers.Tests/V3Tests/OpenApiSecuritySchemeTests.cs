@@ -101,5 +101,26 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     OpenIdConnectUrl = new Uri("http://www.example.com")
                 }, securityScheme);
         }
+
+        [Fact]
+        public async Task ParseOAuth2SecuritySchemeWithDeviceAuthorizationUrlShouldSucceed()
+        {
+            // Act
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(
+                Path.Combine(SampleFolderPath, "oauth2SecuritySchemeWithDeviceUrl.yaml"),
+                OpenApiSpecVersion.OpenApi3_0,
+                new(),
+                SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.NotNull(securityScheme);
+            Assert.Equal(SecuritySchemeType.OAuth2, securityScheme.Type);
+            Assert.NotNull(securityScheme.Flows?.AuthorizationCode);
+            Assert.Equal(new Uri("https://example.com/api/oauth/dialog"), securityScheme.Flows.AuthorizationCode.AuthorizationUrl);
+            Assert.Equal(new Uri("https://example.com/api/oauth/token"), securityScheme.Flows.AuthorizationCode.TokenUrl);
+            Assert.Equal(new Uri("https://example.com/api/oauth/device"), securityScheme.Flows.AuthorizationCode.DeviceAuthorizationUrl);
+            Assert.NotNull(securityScheme.Flows.AuthorizationCode.Scopes);
+            Assert.Equal(2, securityScheme.Flows.AuthorizationCode.Scopes.Count);
+        }
     }
 }

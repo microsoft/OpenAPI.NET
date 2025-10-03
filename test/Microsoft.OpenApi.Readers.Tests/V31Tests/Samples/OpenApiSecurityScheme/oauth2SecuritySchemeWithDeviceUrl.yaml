@@ -1,0 +1,9 @@
+type: oauth2
+flows: 
+  authorizationCode:
+    authorizationUrl: https://example.com/api/oauth/dialog
+    tokenUrl: https://example.com/api/oauth/token
+    x-oai-deviceAuthorizationUrl: https://example.com/api/oauth/device
+    scopes:
+      write:pets: modify pets in your account
+      read:pets: read your pets
