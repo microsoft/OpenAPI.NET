@@ -800,7 +800,7 @@ namespace Microsoft.OpenApi
                 }
 
                 _visitor.CurrentKeys.Content = mediaType.Key;
-                WalkItem(mediaType.Key, mediaType.Value, static (self, item) => self.Walk(item));
+                WalkItem(mediaType.Key, mediaType.Value, static (self, item, isComponent) => self.Walk(item, isComponent), isComponent: false);
                 _visitor.CurrentKeys.Content = null;
             }
         }
