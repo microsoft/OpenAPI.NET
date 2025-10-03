@@ -88,6 +88,12 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
             },
             {
+                "content", (o, n, t) =>
+                {
+                    o.Content = n.CreateMap(LoadMediaType, t);
+                }
+            },
+            {
                 "examples", (o, n, t) =>
                 {
                     o.Examples = n.CreateMap(LoadExample, t);
