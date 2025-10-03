@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi
             // kind - version specific handling
             if (Kind != null)
             {
-                if (version == OpenApiSpecVersion.OpenApi3_2)
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
                 {
                     writer.WriteProperty("kind", Kind);
                 }
