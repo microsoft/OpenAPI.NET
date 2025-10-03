@@ -7,12 +7,8 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V32Tests;
 
-// NOTE: These tests are currently disabled because media type reference deserialization 
-// support needs to be implemented in the parser. The tests are kept here as a specification
-// of the expected behavior once parser support is added.
 public class OpenApiMediaTypeReferenceDeserializerTests
 {
-    /*
     [Fact]
     public void ShouldDeserializeMediaTypeReferenceInRequestBodyContent()
     {
@@ -30,7 +26,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
                         "requestBody": {
                             "content": {
                                 "application/json": {
-                                    "$ref": "#/components/mediaTypes/application~1json"
+                                    "$ref": "#/components/mediaTypes/MyCustomMediaTypeObject1.9-1_9"
                                 }
                             }
                         },
@@ -44,7 +40,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
             },
             "components": {
                 "mediaTypes": {
-                    "application/json": {
+                    "MyCustomMediaTypeObject1.9-1_9": {
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -71,8 +67,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
         Assert.True(requestBody.Content.ContainsKey("application/json"));
 
         var mediaType = requestBody.Content["application/json"];
-        Assert.IsType<OpenApiMediaTypeReference>(mediaType);
-        var mediaTypeRef = (OpenApiMediaTypeReference)mediaType;
+        var mediaTypeRef = Assert.IsType<OpenApiMediaTypeReference>(mediaType);
 
         Assert.NotNull(mediaTypeRef.Target);
         Assert.NotNull(mediaTypeRef.Schema);
@@ -98,7 +93,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
                                 "description": "OK",
                                 "content": {
                                     "application/json": {
-                                        "$ref": "#/components/mediaTypes/application~1json"
+                                        "$ref": "#/components/mediaTypes/jsonMediaType"
                                     }
                                 }
                             }
@@ -108,7 +103,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
             },
             "components": {
                 "mediaTypes": {
-                    "application/json": {
+                    "jsonMediaType": {
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -135,8 +130,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
         Assert.True(response.Content.ContainsKey("application/json"));
 
         var mediaType = response.Content["application/json"];
-        Assert.IsType<OpenApiMediaTypeReference>(mediaType);
-        var mediaTypeRef = (OpenApiMediaTypeReference)mediaType;
+        var mediaTypeRef = Assert.IsType<OpenApiMediaTypeReference>(mediaType);
 
         Assert.NotNull(mediaTypeRef.Target);
         Assert.NotNull(mediaTypeRef.Schema);
@@ -163,7 +157,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
                                 "in": "query",
                                 "content": {
                                     "application/json": {
-                                        "$ref": "#/components/mediaTypes/application~1json"
+                                        "$ref": "#/components/mediaTypes/jsonMediaType"
                                     }
                                 }
                             }
@@ -178,7 +172,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
             },
             "components": {
                 "mediaTypes": {
-                    "application/json": {
+                    "jsonMediaType": {
                         "schema": {
                             "type": "string"
                         }
@@ -203,8 +197,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
         Assert.True(parameter.Content.ContainsKey("application/json"));
 
         var mediaType = parameter.Content["application/json"];
-        Assert.IsType<OpenApiMediaTypeReference>(mediaType);
-        var mediaTypeRef = (OpenApiMediaTypeReference)mediaType;
+        var mediaTypeRef = Assert.IsType<OpenApiMediaTypeReference>(mediaType);
 
         Assert.NotNull(mediaTypeRef.Target);
         Assert.NotNull(mediaTypeRef.Schema);
@@ -233,7 +226,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
                                         "description": "Custom header",
                                         "content": {
                                             "application/json": {
-                                                "$ref": "#/components/mediaTypes/application~1json"
+                                                "$ref": "#/components/mediaTypes/jsonMediaType"
                                             }
                                         }
                                     }
@@ -245,7 +238,7 @@ public class OpenApiMediaTypeReferenceDeserializerTests
             },
             "components": {
                 "mediaTypes": {
-                    "application/json": {
+                    "jsonMediaType": {
                         "schema": {
                             "type": "array",
                             "items": {
@@ -273,12 +266,10 @@ public class OpenApiMediaTypeReferenceDeserializerTests
         Assert.True(header.Content.ContainsKey("application/json"));
 
         var mediaType = header.Content["application/json"];
-        Assert.IsType<OpenApiMediaTypeReference>(mediaType);
-        var mediaTypeRef = (OpenApiMediaTypeReference)mediaType;
+        var mediaTypeRef = Assert.IsType<OpenApiMediaTypeReference>(mediaType);
 
         Assert.NotNull(mediaTypeRef.Target);
         Assert.NotNull(mediaTypeRef.Schema);
         Assert.Equal(JsonSchemaType.Array, mediaTypeRef.Schema.Type);
     }
-    */
 }

@@ -22,7 +22,8 @@ namespace Microsoft.OpenApi.Reader.V32
         {"securitySchemes", (o, n, t) => o.SecuritySchemes = n.CreateMap(LoadSecurityScheme, t)},
         {"links", (o, n, t) => o.Links = n.CreateMap(LoadLink, t)},
         {"callbacks", (o, n, t) => o.Callbacks = n.CreateMap(LoadCallback, t)},
-        {"pathItems", (o, n, t) => o.PathItems = n.CreateMap(LoadPathItem, t)}
+        {"pathItems", (o, n, t) => o.PathItems = n.CreateMap(LoadPathItem, t)},
+        {"mediaTypes", (o, n, t) => o.MediaTypes = n.CreateMap(LoadMediaType, t)}
     };
 
         private static readonly PatternFieldMap<OpenApiComponents> _componentsPatternFields =

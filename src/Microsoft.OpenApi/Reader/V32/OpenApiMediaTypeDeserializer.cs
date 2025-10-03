@@ -90,6 +90,15 @@ namespace Microsoft.OpenApi.Reader.V32
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Content);
 
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                var mediaTypeReference = new OpenApiMediaTypeReference(reference.Item1, hostDocument, reference.Item2);
+                mediaTypeReference.Reference.SetMetadataFromMapNode(mapNode);
+                return mediaTypeReference;
+            }
+
             var mediaType = new OpenApiMediaType();
 
             ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument);
