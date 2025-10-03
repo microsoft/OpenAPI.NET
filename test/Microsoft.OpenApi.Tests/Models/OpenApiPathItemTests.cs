@@ -415,48 +415,6 @@ public class OpenApiPathItemTests
                     Summary = "get operation",
                     Description = "get description",
                     OperationId = "getOperation",
-                    Query = new OpenApiOperation
-                    {
-                        Summary = "query operation",
-                        Description = "query description", 
-                        OperationId = "queryOperation",
-                        Responses = new OpenApiResponses
-                        {
-                            ["200"] = new OpenApiResponse
-                            {
-                                Description = "query success"
-                            }
-                        }
-                    },
-                    AdditionalOperations = new Dictionary<string, OpenApiOperation>
-                    {
-                        ["notify"] = new OpenApiOperation
-                        {
-                            Summary = "notify operation",
-                            Description = "notify description",
-                            OperationId = "notifyOperation", 
-                            Responses = new OpenApiResponses
-                            {
-                                ["200"] = new OpenApiResponse
-                                {
-                                    Description = "notify success"
-                                }
-                            }
-                        },
-                        ["custom"] = new OpenApiOperation
-                        {
-                            Summary = "custom operation",
-                            Description = "custom description",
-                            OperationId = "customOperation",
-                            Responses = new OpenApiResponses
-                            {
-                                ["200"] = new OpenApiResponse
-                                {
-                                    Description = "custom success"
-                                }
-                            }
-                        }
-                    },
                     Responses = new OpenApiResponses
                     {
                         ["200"] = new OpenApiResponse
@@ -464,6 +422,45 @@ public class OpenApiPathItemTests
                             Description = "success"
                         }
                     }
+                },
+                [new HttpMethod("Query")] = new OpenApiOperation
+                {
+                    Summary = "query operation",
+                    Description = "query description", 
+                    OperationId = "queryOperation",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "query success"
+                        }
+                    }
+                },
+                [new HttpMethod("Notify")] = new OpenApiOperation
+                {
+                    Summary = "notify operation",
+                    Description = "notify description",
+                    OperationId = "notifyOperation", 
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "notify success"
+                        }
+                    }
+                },
+                [new HttpMethod("Custom")] = new OpenApiOperation
+                {
+                    Summary = "custom operation",
+                    Description = "custom description",
+                    OperationId = "customOperation",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "custom success"
+                        }
+                    },
                 }
             }
         };
@@ -481,36 +478,36 @@ public class OpenApiPathItemTests
               "200": {
                 "description": "success"
               }
-            },
-            "query": {
-              "summary": "query operation",
-              "description": "query description",
-              "operationId": "queryOperation", 
+            }
+          },
+          "query": {
+            "summary": "query operation",
+            "description": "query description",
+            "operationId": "queryOperation", 
+            "responses": {
+              "200": {
+                "description": "query success"
+              }
+            }
+          },
+          "additionalOperations": {
+            "notify": {
+              "summary": "notify operation",
+              "description": "notify description",
+              "operationId": "notifyOperation",
               "responses": {
                 "200": {
-                  "description": "query success"
+                  "description": "notify success"
                 }
               }
             },
-            "additionalOperations": {
-              "notify": {
-                "summary": "notify operation",
-                "description": "notify description",
-                "operationId": "notifyOperation",
-                "responses": {
-                  "200": {
-                    "description": "notify success"
-                  }
-                }
-              },
-              "custom": {
-                "summary": "custom operation",
-                "description": "custom description", 
-                "operationId": "customOperation",
-                "responses": {
-                  "200": {
-                    "description": "custom success"
-                  }
+            "custom": {
+              "summary": "custom operation",
+              "description": "custom description", 
+              "operationId": "customOperation",
+              "responses": {
+                "200": {
+                  "description": "custom success"
                 }
               }
             }
@@ -540,33 +537,6 @@ public class OpenApiPathItemTests
                 {
                     Summary = "get operation",
                     OperationId = "getOperation",
-                    Query = new OpenApiOperation
-                    {
-                        Summary = "query operation",
-                        OperationId = "queryOperation",
-                        Responses = new OpenApiResponses
-                        {
-                            ["200"] = new OpenApiResponse
-                            {
-                                Description = "query success"
-                            }
-                        }
-                    },
-                    AdditionalOperations = new Dictionary<string, OpenApiOperation>
-                    {
-                        ["notify"] = new OpenApiOperation
-                        {
-                            Summary = "notify operation",
-                            OperationId = "notifyOperation",
-                            Responses = new OpenApiResponses
-                            {
-                                ["200"] = new OpenApiResponse
-                                {
-                                    Description = "notify success"
-                                }
-                            }
-                        }
-                    },
                     Responses = new OpenApiResponses
                     {
                         ["200"] = new OpenApiResponse
@@ -574,7 +544,32 @@ public class OpenApiPathItemTests
                             Description = "success"
                         }
                     }
-                }
+                },
+                [new HttpMethod("Query")] = new OpenApiOperation
+                {
+                    Summary = "query operation",
+                    OperationId = "queryOperation",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "query success"
+                        }
+                    }
+                },
+                [new HttpMethod("Notify")] = new OpenApiOperation
+                {
+                    Summary = "notify operation",
+                    OperationId = "notifyOperation",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "notify success"
+                        }
+                    }
+                },
+                    
             }
         };
 
@@ -603,33 +598,6 @@ public class OpenApiPathItemTests
                 {
                     Summary = "get operation",
                     OperationId = "getOperation",
-                    Query = new OpenApiOperation
-                    {
-                        Summary = "query operation",
-                        OperationId = "queryOperation",
-                        Responses = new OpenApiResponses
-                        {
-                            ["200"] = new OpenApiResponse
-                            {
-                                Description = "query success"
-                            }
-                        }
-                    },
-                    AdditionalOperations = new Dictionary<string, OpenApiOperation>
-                    {
-                        ["notify"] = new OpenApiOperation
-                        {
-                            Summary = "notify operation",
-                            OperationId = "notifyOperation",
-                            Responses = new OpenApiResponses
-                            {
-                                ["200"] = new OpenApiResponse
-                                {
-                                    Description = "notify success"
-                                }
-                            }
-                        }
-                    },
                     Responses = new OpenApiResponses
                     {
                         ["200"] = new OpenApiResponse
@@ -637,8 +605,32 @@ public class OpenApiPathItemTests
                             Description = "success"
                         }
                     }
+                },
+                [new HttpMethod("Query")] = new OpenApiOperation
+                {
+                    Summary = "query operation",
+                    OperationId = "queryOperation",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "query success"
+                        }
+                    }
+                },
+                [new HttpMethod("Notify")] = new OpenApiOperation
+                {
+                    Summary = "notify operation",
+                    OperationId = "notifyOperation",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "notify success"
+                        }
+                    }
                 }
-            }
+            },
         };
 
         // When
@@ -666,38 +658,35 @@ public class OpenApiPathItemTests
                 {
                     Summary = "get operation",
                     OperationId = "getOperation",
-                    Query = new OpenApiOperation
-                    {
-                        Summary = "query operation",
-                        OperationId = "queryOperation",
-                        Responses = new OpenApiResponses
-                        {
-                            ["200"] = new OpenApiResponse
-                            {
-                                Description = "query success"
-                            }
-                        }
-                    },
-                    AdditionalOperations = new Dictionary<string, OpenApiOperation>
-                    {
-                        ["notify"] = new OpenApiOperation
-                        {
-                            Summary = "notify operation",
-                            OperationId = "notifyOperation",
-                            Responses = new OpenApiResponses
-                            {
-                                ["200"] = new OpenApiResponse
-                                {
-                                    Description = "notify success"
-                                }
-                            }
-                        }
-                    },
                     Responses = new OpenApiResponses
                     {
                         ["200"] = new OpenApiResponse
                         {
                             Description = "success"
+                        }
+                    },
+                },
+                [new HttpMethod("Query")] = new OpenApiOperation
+                {
+                    Summary = "query operation",
+                    OperationId = "queryOperation",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "query success"
+                        }
+                    }
+                },
+                [new HttpMethod("Notify")] = new OpenApiOperation
+                {
+                    Summary = "notify operation",
+                    OperationId = "notifyOperation",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "notify success"
                         }
                     }
                 }
@@ -729,20 +718,17 @@ public class OpenApiPathItemTests
                 {
                     Summary = "get operation",
                     OperationId = "getOperation",
-                    Query = new OpenApiOperation
-                    {
-                        Summary = "query operation",
-                        OperationId = "queryOperation"
-                    },
-                    AdditionalOperations = new Dictionary<string, OpenApiOperation>
-                    {
-                        ["notify"] = new OpenApiOperation
-                        {
-                            Summary = "notify operation",
-                            OperationId = "notifyOperation"
-                        }
-                    },
                     Responses = new OpenApiResponses()
+                },
+                [new HttpMethod("Query")] = new OpenApiOperation
+                {
+                    Summary = "query operation",
+                    OperationId = "queryOperation"
+                },
+                [new HttpMethod("Notify")] = new OpenApiOperation
+                {
+                    Summary = "notify operation",
+                    OperationId = "notifyOperation"
                 }
             }
         };
@@ -751,19 +737,30 @@ public class OpenApiPathItemTests
         var copy = new OpenApiPathItem(original);
 
         // Assert
-        var originalGetOp = original.Operations![HttpMethod.Get];
-        var copyGetOp = copy.Operations![HttpMethod.Get];
-        
-        Assert.NotNull(copyGetOp.Query);
-        Assert.Equal(originalGetOp.Query!.Summary, copyGetOp.Query.Summary);
-        Assert.Equal(originalGetOp.Query.OperationId, copyGetOp.Query.OperationId);
+        Assert.NotNull(original.Operations);
+        Assert.NotNull(copy.Operations);
+        var originalGetOp = original.Operations[HttpMethod.Get];
+        var copyGetOp = copy.Operations[HttpMethod.Get];
 
-        Assert.NotNull(copyGetOp.AdditionalOperations);
-        Assert.Equal(originalGetOp.AdditionalOperations!.Count, copyGetOp.AdditionalOperations.Count);
-        Assert.Equal(originalGetOp.AdditionalOperations["notify"].Summary, copyGetOp.AdditionalOperations["notify"].Summary);
+        Assert.NotNull(originalGetOp);
+        Assert.NotNull(copyGetOp);
+
+        var copyQueryOp = copy.Operations[new HttpMethod("Query")];
+        var originalQueryOp = original.Operations[new HttpMethod("Query")];
+        Assert.NotNull(copyQueryOp);
+        Assert.NotNull(originalQueryOp);
+        Assert.Equal(originalQueryOp!.Summary, copyQueryOp.Summary);
+        Assert.Equal(originalQueryOp.OperationId, copyQueryOp.OperationId);
+
+        var originalNotifyOp = original.Operations[new HttpMethod("Notify")];
+        var copyNotifyOp = copy.Operations[new HttpMethod("Notify")];
+        Assert.NotNull(originalNotifyOp);
+        Assert.NotNull(copyNotifyOp);
+
+        Assert.Equal(originalNotifyOp.Summary, copyNotifyOp.Summary);
 
         // Verify it's a deep copy
-        copyGetOp.Query.Summary = "modified";
-        Assert.NotEqual(originalGetOp.Query.Summary, copyGetOp.Query.Summary);
+        copyQueryOp.Summary = "modified";
+        Assert.NotEqual(originalQueryOp.Summary, copyQueryOp.Summary);
     }
 }
