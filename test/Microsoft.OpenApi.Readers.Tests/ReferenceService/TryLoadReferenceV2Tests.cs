@@ -69,9 +69,9 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 {
                     Summary = null,
                     Description = "Entity not found.",
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
-                        ["application/json"] = new()
+                        ["application/json"] = new OpenApiMediaType()
                     }
                 }, reference
             );
@@ -86,9 +86,9 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var expected = new OpenApiResponse
                 {
                     Description = "General Error",
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
-                        ["application/json"] = new()
+                        ["application/json"] = new OpenApiMediaType()
                         {
                             Schema = new OpenApiSchemaReference("SampleObject2")
                         }

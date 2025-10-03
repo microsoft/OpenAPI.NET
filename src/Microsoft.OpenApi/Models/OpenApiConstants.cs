@@ -401,6 +401,11 @@ namespace Microsoft.OpenApi
         public const string Callbacks = "callbacks";
 
         /// <summary>
+        /// Field: MediaTypes
+        /// </summary>
+        public const string MediaTypes = "mediaTypes";
+
+        /// <summary>
         /// Field: Url
         /// </summary>
         public const string Url = "url";

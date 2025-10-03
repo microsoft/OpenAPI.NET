@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {

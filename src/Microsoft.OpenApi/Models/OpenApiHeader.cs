@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi
         public IDictionary<string, IOpenApiExample>? Examples { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi
             Schema = header.Schema?.CreateShallowCopy();
             Example = header.Example != null ? JsonNodeCloneHelper.Clone(header.Example) : null;
             Examples = header.Examples != null ? new Dictionary<string, IOpenApiExample>(header.Examples) : null;
-            Content = header.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
+            Content = header.Content != null ? new Dictionary<string, IOpenApiMediaType>(header.Content) : null;
             Extensions = header.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
 

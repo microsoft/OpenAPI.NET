@@ -460,7 +460,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
                         },
                         RequestBody = new OpenApiRequestBody
                         {
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new Dictionary<string, IOpenApiMediaType>
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {

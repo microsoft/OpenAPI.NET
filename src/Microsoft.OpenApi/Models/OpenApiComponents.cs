@@ -63,6 +63,11 @@ namespace Microsoft.OpenApi
         public IDictionary<string, IOpenApiPathItem>? PathItems { get; set; }
 
         /// <summary>
+        /// An object to hold reusable <see cref="IOpenApiMediaType"/> Objects.
+        /// </summary>
+        public IDictionary<string, IOpenApiMediaType>? MediaTypes { get; set; }
+
+        /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -87,6 +92,7 @@ namespace Microsoft.OpenApi
             Links = components?.Links != null ? new Dictionary<string, IOpenApiLink>(components.Links) : null;
             Callbacks = components?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(components.Callbacks) : null;
             PathItems = components?.PathItems != null ? new Dictionary<string, IOpenApiPathItem>(components.PathItems) : null;
+            MediaTypes = components?.MediaTypes != null ? new Dictionary<string, IOpenApiMediaType>(components.MediaTypes) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 
@@ -313,6 +319,26 @@ namespace Microsoft.OpenApi
                         callback(w, component);
                     }
                 });
+
+            // mediaTypes - serialize as native field in v3.2+
+            if (MediaTypes != null && version >= OpenApiSpecVersion.OpenApi3_2)
+            {
+
+                writer.WriteOptionalMap(
+                    OpenApiConstants.MediaTypes,
+                    MediaTypes,
+                    (w, key, component) =>
+                    {
+                        if (component is OpenApiMediaTypeReference reference)
+                        {
+                            action(w, reference);
+                        }
+                        else
+                        {
+                            callback(w, component);
+                        }
+                    });
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, version);

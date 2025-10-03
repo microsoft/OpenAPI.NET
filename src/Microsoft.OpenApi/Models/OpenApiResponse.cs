@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi
         public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiLink>? Links { get; set; }
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi
             Summary = response.Summary ?? Summary;
             Description = response.Description ?? Description;
             Headers = response.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
-            Content = response.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
+            Content = response.Content != null ? new Dictionary<string, IOpenApiMediaType>(response.Content) : null;
             Links = response.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
             Extensions = response.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
         }

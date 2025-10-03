@@ -71,9 +71,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
                         {
                             ["200"] = new OpenApiResponse()
                             {
-                                Content = new Dictionary<string, OpenApiMediaType>()
+                                Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
-                                    ["application/json"] = new()
+                                    ["application/json"] = new OpenApiMediaType()
                                     {
                                         Schema = new OpenApiSchema
                                         {
@@ -196,9 +196,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
-                                            ["application/json"] = new()
+                                            ["application/json"] = new OpenApiMediaType()
                                             {
                                                 Schema = new OpenApiSchemaReference("derived")
                                             }
@@ -297,12 +297,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add("referenceAt: " + this.PathString);
         }
-        public override void Visit(IDictionary<string, OpenApiMediaType> content)
+        public override void Visit(IDictionary<string, IOpenApiMediaType> content)
         {
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(OpenApiMediaType mediaType)
+        public override void Visit(IOpenApiMediaType mediaType)
         {
             Keys.Add(CurrentKeys.Content);
             Locations.Add(this.PathString);

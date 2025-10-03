@@ -61,9 +61,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     ],
                     RequestBody = new OpenApiRequestBody()
                     {
-                        Content = new Dictionary<string, OpenApiMediaType>()
+                        Content = new Dictionary<string, IOpenApiMediaType>()
                         {
-                            ["application/x-www-form-urlencoded"] = new()
+                            ["application/x-www-form-urlencoded"] = new OpenApiMediaType()
                             {
                                 Schema = new OpenApiSchema()
                                 {
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     }
                                 }
                             },
-                            ["multipart/form-data"] = new()
+                            ["multipart/form-data"] = new OpenApiMediaType()
                             {
                                Schema = new OpenApiSchema()
                                 {
@@ -118,19 +118,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["200"] = new OpenApiResponse()
                         {
                             Description = "Pet updated.",
-                            Content = new Dictionary<string, OpenApiMediaType>()
+                            Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
-                                    ["application/json"] = new(),
-                                    ["application/xml"] = new()
+                                    ["application/json"] = new OpenApiMediaType(),
+                                    ["application/xml"] = new OpenApiMediaType()
                                 }
                         },
                         ["405"] = new OpenApiResponse()
                         {
                             Description = "Invalid input",
-                            Content = new Dictionary<string, OpenApiMediaType>()
+                            Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
-                                    ["application/json"] = new(),
-                                    ["application/xml"] = new()
+                                    ["application/json"] = new OpenApiMediaType(),
+                                    ["application/xml"] = new OpenApiMediaType()
                                 }
                         }
                     }
@@ -167,9 +167,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     ],
                     RequestBody = new OpenApiRequestBody()
                     {
-                        Content = new Dictionary<string, OpenApiMediaType>()
+                        Content = new Dictionary<string, IOpenApiMediaType>()
                         {
-                            ["application/x-www-form-urlencoded"] = new()
+                            ["application/x-www-form-urlencoded"] = new OpenApiMediaType()
                             {
                                 Schema = new OpenApiSchema()
                                 {
@@ -198,7 +198,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     }
                                 }
                             },
-                            ["multipart/form-data"] = new()
+                            ["multipart/form-data"] = new OpenApiMediaType()
                             {
                                 Schema = new OpenApiSchema()
                                 {
@@ -234,10 +234,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["200"] = new OpenApiResponse()
                         {
                             Description = "Pet updated.",
-                            Content = new Dictionary<string, OpenApiMediaType>()
+                            Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
-                                    ["application/json"] = new(),
-                                    ["application/xml"] = new()
+                                    ["application/json"] = new OpenApiMediaType(),
+                                    ["application/xml"] = new OpenApiMediaType()
                                 }
                         }
                     }

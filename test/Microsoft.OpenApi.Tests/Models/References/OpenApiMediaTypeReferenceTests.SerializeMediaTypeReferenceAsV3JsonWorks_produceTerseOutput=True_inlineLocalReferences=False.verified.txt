@@ -1,0 +1,1 @@
+﻿{"openapi":"3.0.4","info":{"title":"Test API","version":"1.0.0"},"paths":{"/test":{"post":{"requestBody":{"content":{"application/json":{"schema":{"type":"object"}}}},"responses":{}}}},"components":{}}

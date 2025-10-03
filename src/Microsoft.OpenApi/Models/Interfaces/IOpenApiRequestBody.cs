@@ -17,7 +17,7 @@ public interface IOpenApiRequestBody : IOpenApiDescribedElement, IOpenApiReadOnl
     /// REQUIRED. The content of the request body. The key is a media type or media type range and the value describes it.
     /// For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
     /// </summary>
-    public IDictionary<string, OpenApiMediaType>? Content { get; }
+    public IDictionary<string, IOpenApiMediaType>? Content { get; }
     /// <summary>
     /// Converts the request body to a body parameter in preparation for a v2 serialization.
     /// </summary>

@@ -338,7 +338,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -361,7 +361,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -372,7 +372,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -390,7 +390,7 @@ paths: {}
                                 {
                                     Description = "Pet to add to the store",
                                     Required = true,
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -403,7 +403,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -414,7 +414,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -425,7 +425,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -466,7 +466,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -481,7 +481,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -492,7 +492,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -530,7 +530,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -541,7 +541,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -762,7 +762,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -785,7 +785,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -796,7 +796,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -819,7 +819,7 @@ paths: {}
                                 {
                                     Description = "Pet to add to the store",
                                     Required = true,
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -832,7 +832,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -843,7 +843,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -854,7 +854,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -907,7 +907,7 @@ paths: {}
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -922,7 +922,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -933,7 +933,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -971,7 +971,7 @@ paths: {}
                                     ["4XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected client error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -982,7 +982,7 @@ paths: {}
                                     ["5XX"] = new OpenApiResponse
                                     {
                                         Description = "unexpected server error",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["text/html"] = new OpenApiMediaType
                                             {
@@ -1278,7 +1278,7 @@ paths: {}
                             ["200"] = new OpenApiResponse
                             {
                                 Description = "A list of pets",
-                                Content = new Dictionary<string, OpenApiMediaType>()
+                                Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {

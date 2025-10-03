@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi
         public bool Required { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi
             Utils.CheckArgumentNull(requestBody);
             Description = requestBody.Description ?? Description;
             Required = requestBody.Required;
-            Content = requestBody.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
+            Content = requestBody.Content != null ? new Dictionary<string, IOpenApiMediaType>(requestBody.Content) : null;
             Extensions = requestBody.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
         }
 

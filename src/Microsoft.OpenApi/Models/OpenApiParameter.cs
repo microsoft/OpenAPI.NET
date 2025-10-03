@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi
             Schema = parameter.Schema?.CreateShallowCopy();
             Examples = parameter.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
-            Content = parameter.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
+            Content = parameter.Content != null ? new Dictionary<string, IOpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter.AllowEmptyValue;
             Deprecated = parameter.Deprecated;

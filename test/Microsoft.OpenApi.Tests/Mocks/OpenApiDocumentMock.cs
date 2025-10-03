@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                         Value = JsonValue.Create("Fluffy")
                                     }
                                 },
-                                Content = new Dictionary<string, OpenApiMediaType>
+                                Content = new Dictionary<string, IOpenApiMediaType>
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                 ],
                                 RequestBody =  new OpenApiRequestBody
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    Content = new Dictionary<string, IOpenApiMediaType>
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                                         Value = JsonValue.Create("Fluffy")
                                                     }
                                                 },
-                                                Content = new Dictionary<string, OpenApiMediaType>
+                                                Content = new Dictionary<string, IOpenApiMediaType>
                                                 {
                                                     ["application/json"] = new OpenApiMediaType
                                                     {
@@ -210,7 +210,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                                 }
                                             }
                                         },
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new Dictionary<string, IOpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -304,7 +304,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                         ["200"] = new OpenApiResponse
                         {
                             Description = "A list of pets.",                            
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new Dictionary<string, IOpenApiMediaType>
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
@@ -321,7 +321,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                     {
                         ["pet"] = new OpenApiRequestBody
                         {
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new Dictionary<string, IOpenApiMediaType>
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
@@ -408,7 +408,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
                                         ["200"] = new OpenApiResponse
                                         {
                                             Description = "A list of pets.",
-                                            Content = new Dictionary<string, OpenApiMediaType>
+                                            Content = new Dictionary<string, IOpenApiMediaType>
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {

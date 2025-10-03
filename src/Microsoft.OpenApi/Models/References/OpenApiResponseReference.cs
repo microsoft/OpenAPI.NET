@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiHeader>? Headers { get => Target?.Headers; }

@@ -46,7 +46,7 @@ public class OpenApiPathItemTests
                         ["200"] = new OpenApiResponse
                         {
                             Description = "description",
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new Dictionary<string, IOpenApiMediaType>
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
@@ -170,7 +170,7 @@ public class OpenApiPathItemTests
                         ["200"] = new OpenApiResponse
                         {
                             Description = "description",
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new Dictionary<string, IOpenApiMediaType>
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
@@ -302,7 +302,7 @@ public class OpenApiPathItemTests
                         ["200"] = new OpenApiResponse
                         {
                             Description = "description",
-                            Content = new Dictionary<string, OpenApiMediaType>
+                            Content = new Dictionary<string, IOpenApiMediaType>
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
