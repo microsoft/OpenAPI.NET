@@ -321,14 +321,11 @@ namespace Microsoft.OpenApi
                 });
 
             // mediaTypes - serialize as native field in v3.2+, as extension in earlier versions
-            if (MediaTypes != null)
+            if (MediaTypes != null && version >= OpenApiSpecVersion.OpenApi3_2)
             {
-                var mediaTypesFieldName = version >= OpenApiSpecVersion.OpenApi3_2
-                    ? OpenApiConstants.MediaTypes
-                    : OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.MediaTypes;
 
                 writer.WriteOptionalMap(
-                    mediaTypesFieldName,
+                    OpenApiConstants.MediaTypes,
                     MediaTypes,
                     (w, key, component) =>
                     {
