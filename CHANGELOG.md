@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.4](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.3...v2.3.4) (2025-10-03)
+
+
+### Bug Fixes
+
+* missing deserialization for header content property in 3.1 and 3.0 ([717f154](https://github.com/microsoft/OpenAPI.NET/commit/717f1547bf94c3e9f76078d9a3b93ce684e17306))
+* missing deserialization for header content property in 3.1 and 3.0 ([0fdfae1](https://github.com/microsoft/OpenAPI.NET/commit/0fdfae1b0bf4d371af8ad3bfa6ad4df3da8d545b))
+
 ## [2.3.3](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.2...v2.3.3) (2025-10-02)
 
 
