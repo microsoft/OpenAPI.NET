@@ -788,6 +788,11 @@ namespace Microsoft.OpenApi
         public static readonly Version version2_0 = new(2, 0);
 
         /// <summary>
+        /// Field: AdditionalOperations
+        /// </summary>
+        public const string AdditionalOperations = "additionalOperations";
+
+        /// <summary>
         /// Field: BasePath
         /// </summary>
         public const string BasePath = "basePath";

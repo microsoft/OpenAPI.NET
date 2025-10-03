@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 
 namespace Microsoft.OpenApi
@@ -126,6 +127,31 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
+        internal static readonly HashSet<string> _standardHttp2MethodsNames = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "get",
+            "put",
+            "post",
+            "delete",
+            "options",
+            "head",
+            "patch",
+        };
+
+        internal static readonly HashSet<string> _standardHttp30MethodsNames = new(_standardHttp2MethodsNames, StringComparer.OrdinalIgnoreCase)
+        {
+            "trace",
+        };
+
+        internal static readonly HashSet<string> _standardHttp31MethodsNames = new(_standardHttp30MethodsNames, StringComparer.OrdinalIgnoreCase)
+        {
+        };
+
+        internal static readonly HashSet<string> _standardHttp32MethodsNames = new(_standardHttp31MethodsNames, StringComparer.OrdinalIgnoreCase)
+        {
+            "query",
+        };
+
         internal virtual void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
@@ -139,15 +165,34 @@ namespace Microsoft.OpenApi
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
+            var standardMethodsNames = version switch
+            {
+                OpenApiSpecVersion.OpenApi2_0 => _standardHttp2MethodsNames,
+                OpenApiSpecVersion.OpenApi3_0 => _standardHttp30MethodsNames,
+                OpenApiSpecVersion.OpenApi3_1 => _standardHttp31MethodsNames,
+                OpenApiSpecVersion.OpenApi3_2 or _ => _standardHttp32MethodsNames,
+            };
+
             // operations
             if (Operations != null)
             {
-                foreach (var operation in Operations)
+                foreach (var operation in Operations.Where(o => standardMethodsNames.Contains(o.Key.Method, StringComparer.OrdinalIgnoreCase)))
                 {
                     writer.WriteOptionalObject(
                     operation.Key.Method.ToLowerInvariant(),
                     operation.Value,
                     callback);
+                }
+                var nonStandardOperations = Operations.Where(o => !standardMethodsNames.Contains(o.Key.Method, StringComparer.OrdinalIgnoreCase)).ToDictionary(static o => o.Key.Method, static o => o.Value);
+                if (nonStandardOperations.Count > 0)
+                {
+                    var additionalOperationsPropertyName = version switch
+                    {
+                        OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0 or OpenApiSpecVersion.OpenApi3_1 =>
+                            $"x-oai-{OpenApiConstants.AdditionalOperations}",
+                        _ => OpenApiConstants.AdditionalOperations,
+                    };
+                    writer.WriteRequiredMap(additionalOperationsPropertyName, nonStandardOperations, (w, o) => o.SerializeAsV32(w));
                 }
             }
 
