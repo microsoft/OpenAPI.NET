@@ -237,8 +237,8 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             // Remove default ports to clean up the URL
-            if ((uriBuilder.Scheme == "https" && uriBuilder.Port == 443) ||
-                (uriBuilder.Scheme == "http" && uriBuilder.Port == 80))
+            if (("https".Equals(uriBuilder.Scheme, StringComparison.OrdinalIgnoreCase)  && uriBuilder.Port == 443) ||
+                ("http".Equals(uriBuilder.Scheme, StringComparison.OrdinalIgnoreCase) && uriBuilder.Port == 80))
             {
                 uriBuilder.Port = -1; // Setting to -1 removes the port from the URL
             }
