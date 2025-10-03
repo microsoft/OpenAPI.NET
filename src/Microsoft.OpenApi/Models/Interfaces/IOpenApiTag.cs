@@ -15,4 +15,19 @@ public interface IOpenApiTag : IOpenApiReadOnlyExtensible, IOpenApiReadOnlyDescr
     /// Additional external documentation for this tag.
     /// </summary>
     public OpenApiExternalDocs? ExternalDocs { get; }
+
+    /// <summary>
+    /// A short summary of the tag, used for display purposes.
+    /// </summary>
+    public string? Summary { get; }
+
+    /// <summary>
+    /// The tag that this tag is nested under.
+    /// </summary>
+    public OpenApiTagReference? Parent { get; }
+
+    /// <summary>
+    /// A machine-readable string to categorize what sort of tag it is.
+    /// </summary>
+    public string? Kind { get; }
 }

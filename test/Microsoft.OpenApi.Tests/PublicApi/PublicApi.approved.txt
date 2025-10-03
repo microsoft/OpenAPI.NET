@@ -292,7 +292,10 @@ namespace Microsoft.OpenApi
     public interface IOpenApiTag : Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyDescribedElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiTag>
     {
         Microsoft.OpenApi.OpenApiExternalDocs? ExternalDocs { get; }
+        string? Kind { get; }
         string? Name { get; }
+        Microsoft.OpenApi.OpenApiTagReference? Parent { get; }
+        string? Summary { get; }
     }
     public interface IOpenApiWriter
     {
@@ -1422,7 +1425,10 @@ namespace Microsoft.OpenApi
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public Microsoft.OpenApi.OpenApiExternalDocs? ExternalDocs { get; set; }
+        public string? Kind { get; set; }
         public string? Name { get; set; }
+        public Microsoft.OpenApi.OpenApiTagReference? Parent { get; set; }
+        public string? Summary { get; set; }
         public Microsoft.OpenApi.IOpenApiTag CreateShallowCopy() { }
         public virtual void SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter writer) { }
@@ -1435,7 +1441,10 @@ namespace Microsoft.OpenApi
         public string? Description { get; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
         public Microsoft.OpenApi.OpenApiExternalDocs? ExternalDocs { get; }
+        public string? Kind { get; }
         public string? Name { get; }
+        public Microsoft.OpenApi.OpenApiTagReference? Parent { get; }
+        public string? Summary { get; }
         public override Microsoft.OpenApi.IOpenApiTag? Target { get; }
         protected override Microsoft.OpenApi.BaseOpenApiReference CopyReference(Microsoft.OpenApi.BaseOpenApiReference sourceReference) { }
         public override Microsoft.OpenApi.IOpenApiTag CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiTag source) { }
