@@ -233,7 +233,7 @@ public class OpenApiMediaTypeReferenceTests
                             {
                                 Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
-                                    ["application/json"] = new OpenApiMediaTypeReference("JsonMediaType", null)
+                                    ["application/json"] = new OpenApiMediaTypeReference("JsonMediaType")
                                 }
                             }
                         }
@@ -241,6 +241,7 @@ public class OpenApiMediaTypeReferenceTests
                 }
             }
         };
+        document.SetReferenceHostDocument();
         document.Workspace.RegisterComponents(document);
 
         var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -297,7 +298,7 @@ public class OpenApiMediaTypeReferenceTests
                             {
                                 Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
-                                    ["application/json"] = new OpenApiMediaTypeReference("JsonMediaType", null)
+                                    ["application/json"] = new OpenApiMediaTypeReference("JsonMediaType")
                                 }
                             }
                         }
@@ -305,6 +306,7 @@ public class OpenApiMediaTypeReferenceTests
                 }
             }
         };
+        document.SetReferenceHostDocument();
         document.Workspace.RegisterComponents(document);
 
         var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -361,7 +363,7 @@ public class OpenApiMediaTypeReferenceTests
                             {
                                 Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
-                                    ["application/json"] = new OpenApiMediaTypeReference("JsonMediaType", null)
+                                    ["application/json"] = new OpenApiMediaTypeReference("JsonMediaType")
                                 }
                             }
                         }
@@ -369,6 +371,7 @@ public class OpenApiMediaTypeReferenceTests
                 }
             }
         };
+        document.SetReferenceHostDocument();
         document.Workspace.RegisterComponents(document);
 
         var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
