@@ -33,8 +33,8 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(Dictionary<string, IOpenApiCallback>));
             visitor.Visit(default(IOpenApiResponse));
             visitor.Visit(default(OpenApiResponses));
-            visitor.Visit(default(Dictionary<string, OpenApiMediaType>));
-            visitor.Visit(default(OpenApiMediaType));
+            visitor.Visit(default(Dictionary<string, IOpenApiMediaType>));
+            visitor.Visit(default(IOpenApiMediaType));
             visitor.Visit(default(OpenApiEncoding));
             visitor.Visit(default(Dictionary<string, IOpenApiExample>));
             visitor.Visit(default(OpenApiComponents));
@@ -192,13 +192,13 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(response);
             }
 
-            public override void Visit(IDictionary<string, OpenApiMediaType> content)
+            public override void Visit(IDictionary<string, IOpenApiMediaType> content)
             {
                 EncodeCall();
                 base.Visit(content);
             }
 
-            public override void Visit(OpenApiMediaType mediaType)
+            public override void Visit(IOpenApiMediaType mediaType)
             {
                 EncodeCall();
                 base.Visit(mediaType);

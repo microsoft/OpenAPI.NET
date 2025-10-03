@@ -11,49 +11,27 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Media Type Object.
     /// </summary>
-    public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible, IOpenApiMediaType
     {
-        /// <summary>
-        /// The schema defining the type used for the request body.
-        /// </summary>
+        /// <inheritdoc />
         public IOpenApiSchema? Schema { get; set; }
 
-        /// <summary>
-        /// The schema defining the type used for the items in an array media type.
-        /// This property is only applicable for OAS 3.2.0 and later.
-        /// </summary>
+        /// <inheritdoc />
         public IOpenApiSchema? ItemSchema { get; set; }
 
-        /// <summary>
-        /// Example of the media type.
-        /// The example object SHOULD be in the correct format as specified by the media type.
-        /// </summary>
+        /// <inheritdoc />
         public JsonNode? Example { get; set; }
 
-        /// <summary>
-        /// Examples of the media type.
-        /// Each example object SHOULD match the media type and specified schema if present.
-        /// </summary>
+        /// <inheritdoc />
         public IDictionary<string, IOpenApiExample>? Examples { get; set; }
 
-        /// <summary>
-        /// A map between a property name and its encoding information.
-        /// The key, being the property name, MUST exist in the schema as a property.
-        /// The encoding object SHALL only apply to requestBody objects
-        /// when the media type is multipart or application/x-www-form-urlencoded.
-        /// </summary>
+        /// <inheritdoc />
         public IDictionary<string, OpenApiEncoding>? Encoding { get; set; }
 
-        /// <summary>
-        /// An encoding object for items in an array schema.
-        /// Only applies when the schema is of type array.
-        /// </summary>
+        /// <inheritdoc />
         public OpenApiEncoding? ItemEncoding { get; set; }
 
-        /// <summary>
-        /// An array of encoding objects for prefixItems in an array schema.
-        /// Each element corresponds to a prefixItem in the schema.
-        /// </summary>
+        /// <inheritdoc />
         public IList<OpenApiEncoding>? PrefixEncoding { get; set; }
 
         /// <summary>
@@ -74,11 +52,32 @@ namespace Microsoft.OpenApi
             Schema = mediaType?.Schema?.CreateShallowCopy();
             ItemSchema = mediaType?.ItemSchema?.CreateShallowCopy();
             Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
-            Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples) : null;
-            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
+            Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples, StringComparer.Ordinal) : null;
+            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding, StringComparer.Ordinal) : null;
             ItemEncoding = mediaType?.ItemEncoding != null ? new OpenApiEncoding(mediaType.ItemEncoding) : null;
             PrefixEncoding = mediaType?.PrefixEncoding != null ? new List<OpenApiEncoding>(mediaType.PrefixEncoding.Select(e => new OpenApiEncoding(e))) : null;
-            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
+            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions, StringComparer.Ordinal) : null;
+        }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiMediaType"/> object
+        /// </summary>
+        internal OpenApiMediaType(IOpenApiMediaType mediaType)
+        {
+            Schema = mediaType?.Schema?.CreateShallowCopy();
+            ItemSchema = mediaType?.ItemSchema?.CreateShallowCopy();
+            Example = mediaType?.Example != null ? JsonNodeCloneHelper.Clone(mediaType.Example) : null;
+            Examples = mediaType?.Examples != null ? new Dictionary<string, IOpenApiExample>(mediaType.Examples, StringComparer.Ordinal) : null;
+            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding, StringComparer.Ordinal) : null;
+            ItemEncoding = mediaType?.ItemEncoding != null ? new OpenApiEncoding(mediaType.ItemEncoding) : null;
+            PrefixEncoding = mediaType?.PrefixEncoding != null ? new List<OpenApiEncoding>(mediaType.PrefixEncoding.Select(e => new OpenApiEncoding(e))) : null;
+            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions, StringComparer.Ordinal) : null;
+        }
+
+        /// <inheritdoc />
+        public IOpenApiMediaType CreateShallowCopy()
+        {
+            return new OpenApiMediaType(this);
         }
 
         /// <summary>

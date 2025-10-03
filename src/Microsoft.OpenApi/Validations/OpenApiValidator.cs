@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi
         public override void Visit(IOpenApiResponse response) => Validate(response);
 
         /// <inheritdoc/>
-        public override void Visit(OpenApiMediaType mediaType) => Validate(mediaType);
+        public override void Visit(IOpenApiMediaType mediaType) => Validate(mediaType);
 
         /// <inheritdoc/>
         public override void Visit(OpenApiResponses response) => Validate(response);
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, IOpenApiCallback> callbacks) => Validate(callbacks, callbacks.GetType());
         /// <inheritdoc/>
-        public override void Visit(IDictionary<string, OpenApiMediaType> content) => Validate(content, content.GetType());
+        public override void Visit(IDictionary<string, IOpenApiMediaType> content) => Validate(content, content.GetType());
         /// <inheritdoc/>
         public override void Visit(IDictionary<string, IOpenApiExample> examples) => Validate(examples, examples.GetType());
         /// <inheritdoc/>

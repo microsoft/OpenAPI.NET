@@ -50,9 +50,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 new OpenApiHeader
                 {
                     Description = "A complex header with content",
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
-                        ["application/json"] = new()
+                        ["application/json"] = new OpenApiMediaType()
                         {
                            Schema = new OpenApiSchema()
                            {
@@ -89,9 +89,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 new OpenApiHeader
                 {
                     Description = "A header that accepts multiple content types",
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
-                        ["application/json"] = new()
+                        ["application/json"] = new OpenApiMediaType()
                         {
                            Schema = new OpenApiSchema()
                            {
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 }
                            }
                         },
-                        ["text/plain"] = new()
+                        ["text/plain"] = new OpenApiMediaType()
                         {
                            Schema = new OpenApiSchema()
                            {

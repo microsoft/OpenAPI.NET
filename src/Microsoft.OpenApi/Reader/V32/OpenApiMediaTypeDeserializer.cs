@@ -86,9 +86,18 @@ namespace Microsoft.OpenApi.Reader.V32
             }
         };
 
-        public static OpenApiMediaType LoadMediaType(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiMediaType LoadMediaType(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Content);
+
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                var reference = GetReferenceIdAndExternalResource(pointer);
+                var mediaTypeReference = new OpenApiMediaTypeReference(reference.Item1, hostDocument, reference.Item2);
+                mediaTypeReference.Reference.SetMetadataFromMapNode(mapNode);
+                return mediaTypeReference;
+            }
 
             var mediaType = new OpenApiMediaType();
 

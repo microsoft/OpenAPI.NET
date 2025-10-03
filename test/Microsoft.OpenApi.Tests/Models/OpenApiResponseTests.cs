@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse AdvancedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse AdvancedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse ReferencedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse ReferencedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Summary = "Successful response",
             Description = "A detailed description of a successful response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["application/json"] = new OpenApiMediaType
                 {

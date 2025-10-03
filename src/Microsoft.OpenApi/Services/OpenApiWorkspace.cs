@@ -187,6 +187,16 @@ namespace Microsoft.OpenApi
                     RegisterComponent(location, item.Value);
                 }
             }
+
+            // Register MediaTypes
+            if (document.Components.MediaTypes != null)
+            {
+                foreach (var item in document.Components.MediaTypes)
+                {
+                    location = baseUri + ReferenceType.MediaType.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    RegisterComponent(location, item.Value);
+                }
+            }
         }
 
         private static string getBaseUri(OpenApiDocument openApiDocument)
@@ -225,6 +235,7 @@ namespace Microsoft.OpenApi
                 IOpenApiExample => baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + id,
                 IOpenApiHeader => baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + id,
                 IOpenApiSecurityScheme => baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + id,
+                IOpenApiMediaType => baseUri + ReferenceType.MediaType.GetDisplayName() + ComponentSegmentSeparator + id,
                 _ => throw new ArgumentException($"Invalid component type {componentToRegister!.GetType().Name}"),
             };
 
