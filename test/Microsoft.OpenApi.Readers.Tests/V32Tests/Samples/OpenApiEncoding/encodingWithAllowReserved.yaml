@@ -1,0 +1,5 @@
+# https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.2.0.md#encodingObject
+contentType: application/x-www-form-urlencoded
+style: form
+explode: true
+allowReserved: true
