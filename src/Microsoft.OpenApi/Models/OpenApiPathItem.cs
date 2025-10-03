@@ -98,15 +98,18 @@ namespace Microsoft.OpenApi
             // operations except "trace"
             if (Operations != null)
             {
-                foreach (var operation in Operations)
+
+                foreach (var operation in Operations.Where(o => _standardHttp2MethodsNames.Contains(o.Key.Method, StringComparer.OrdinalIgnoreCase)))
                 {
-                  if (operation.Key != HttpMethod.Trace)
-                  {
-                      writer.WriteOptionalObject(
-                          operation.Key.Method.ToLowerInvariant(),
-                          operation.Value,
-                          (w, o) => o.SerializeAsV2(w));
-                  }
+                    writer.WriteOptionalObject(
+                    operation.Key.Method.ToLowerInvariant(),
+                    operation.Value,
+                    (w, o) => o.SerializeAsV2(w));
+                }
+                var nonStandardOperations = Operations.Where(o => !_standardHttp2MethodsNames.Contains(o.Key.Method, StringComparer.OrdinalIgnoreCase)).ToDictionary(static o => o.Key.Method, static o => o.Value);
+                if (nonStandardOperations.Count > 0)
+                {
+                    writer.WriteRequiredMap($"x-oai-{OpenApiConstants.AdditionalOperations}", nonStandardOperations, (w, o) => o.SerializeAsV2(w));
                 }
             }
 
