@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Reader.V32
             {"trace", (o, n, t) => o.AddOperation(HttpMethod.Trace, LoadOperation(n, t))},
             {"servers", (o, n, t) => o.Servers = n.CreateList(LoadServer, t)},
             {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)},
-            {"additionalOperations", LoadAdditionalOperations }
+            {OpenApiConstants.AdditionalOperations, LoadAdditionalOperations }
         };
 
         
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 return;
             }
 
-            var mapNode = n.CheckMapNode("additionalOperations");
+            var mapNode = n.CheckMapNode(OpenApiConstants.AdditionalOperations);
 
             foreach (var property in mapNode.Where(p => !OpenApiPathItem._standardHttp32MethodsNames.Contains(p.Name)))
             {
