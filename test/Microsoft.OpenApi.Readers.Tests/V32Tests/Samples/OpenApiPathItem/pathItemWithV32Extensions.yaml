@@ -9,19 +9,19 @@ paths:
     get:
       summary: Get pets
       operationId: getPets
+      x-oas-query:
+        summary: Query pets with complex filters
+        operationId: queryPets
+        responses:
+          '200':
+            description: Filtered pets
+      x-oas-additionalOperations:
+        notify:
+          summary: Notify about pet updates
+          operationId: notifyPetUpdates
+          responses:
+            '200':
+              description: Notification sent
       responses:
         '200':
           description: List of pets
-    x-oas-query:
-      summary: Query pets with complex filters
-      operationId: queryPets
-      responses:
-        '200':
-          description: Filtered pets
-    x-oas-additionalOperations:
-      notify:
-        summary: Notify about pet updates
-        operationId: notifyPetUpdates
-        responses:
-          '200':
-            description: Notification sent

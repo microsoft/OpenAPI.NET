@@ -9,6 +9,63 @@ paths:
     get:
       summary: Get pets
       operationId: getPets
+      query:
+        summary: Query pets with complex filters
+        operationId: queryPets
+        parameters:
+          - name: filter
+            in: query
+            description: Complex filter expression
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Filtered pets
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+      additionalOperations:
+        notify:
+          summary: Notify about pet updates
+          operationId: notifyPetUpdates
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    petId:
+                      type: string
+                    event:
+                      type: string
+          responses:
+            '200':
+              description: Notification sent
+        subscribe:
+          summary: Subscribe to pet events
+          operationId: subscribePetEvents
+          parameters:
+            - name: events
+              in: query
+              description: Event types to subscribe to
+              schema:
+                type: array
+                items:
+                  type: string
+          responses:
+            '200':
+              description: Subscription created
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      subscriptionId:
+                        type: string
       responses:
         '200':
           description: List of pets
@@ -18,60 +75,3 @@ paths:
       responses:
         '201':
           description: Pet created
-    query:
-      summary: Query pets with complex filters
-      operationId: queryPets
-      parameters:
-        - name: filter
-          in: query
-          description: Complex filter expression
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Filtered pets
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-    additionalOperations:
-      notify:
-        summary: Notify about pet updates
-        operationId: notifyPetUpdates
-        requestBody:
-          required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  petId:
-                    type: string
-                  event:
-                    type: string
-        responses:
-          '200':
-            description: Notification sent
-      subscribe:
-        summary: Subscribe to pet events
-        operationId: subscribePetEvents
-        parameters:
-          - name: events
-            in: query
-            description: Event types to subscribe to
-            schema:
-              type: array
-              items:
-                type: string
-        responses:
-          '200':
-            description: Subscription created
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    subscriptionId:
-                      type: string

@@ -165,10 +165,8 @@ namespace Microsoft.OpenApi
     }
     public interface IOpenApiPathItem : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiPathItem>
     {
-        System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiOperation>? AdditionalOperations { get; }
         System.Collections.Generic.Dictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.OpenApiOperation>? Operations { get; }
         System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter>? Parameters { get; }
-        Microsoft.OpenApi.OpenApiOperation? Query { get; }
         System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer>? Servers { get; }
     }
     public interface IOpenApiReadOnlyDescribedElement : Microsoft.OpenApi.IOpenApiElement
@@ -940,6 +938,7 @@ namespace Microsoft.OpenApi
     {
         public OpenApiOperation() { }
         public OpenApiOperation(Microsoft.OpenApi.OpenApiOperation operation) { }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiOperation>? AdditionalOperations { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiCallback>? Callbacks { get; set; }
         public bool Deprecated { get; set; }
         public string? Description { get; set; }
@@ -948,6 +947,7 @@ namespace Microsoft.OpenApi
         public System.Collections.Generic.IDictionary<string, object>? Metadata { get; set; }
         public string? OperationId { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter>? Parameters { get; set; }
+        public Microsoft.OpenApi.OpenApiOperation? Query { get; set; }
         public Microsoft.OpenApi.IOpenApiRequestBody? RequestBody { get; set; }
         public Microsoft.OpenApi.OpenApiResponses? Responses { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiSecurityRequirement>? Security { get; set; }
@@ -1013,12 +1013,10 @@ namespace Microsoft.OpenApi
     public class OpenApiPathItem : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiPathItem, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiPathItem>
     {
         public OpenApiPathItem() { }
-        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiOperation>? AdditionalOperations { get; set; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public System.Collections.Generic.Dictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.OpenApiOperation>? Operations { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter>? Parameters { get; set; }
-        public Microsoft.OpenApi.OpenApiOperation? Query { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer>? Servers { get; set; }
         public string? Summary { get; set; }
         public void AddOperation(System.Net.Http.HttpMethod operationType, Microsoft.OpenApi.OpenApiOperation operation) { }
@@ -1031,12 +1029,10 @@ namespace Microsoft.OpenApi
     public class OpenApiPathItemReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiPathItem, Microsoft.OpenApi.IOpenApiPathItem, Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiPathItem, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IOpenApiSummarizedElement, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiPathItem>
     {
         public OpenApiPathItemReference(string referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
-        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiOperation>? AdditionalOperations { get; }
         public string? Description { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; }
         public System.Collections.Generic.Dictionary<System.Net.Http.HttpMethod, Microsoft.OpenApi.OpenApiOperation>? Operations { get; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter>? Parameters { get; }
-        public Microsoft.OpenApi.OpenApiOperation? Query { get; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer>? Servers { get; }
         public string? Summary { get; set; }
         protected override Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary sourceReference) { }

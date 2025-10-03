@@ -28,29 +28,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             
             // Regular operations
             Assert.True(pathItem.Operations?.ContainsKey(HttpMethod.Get));
-            Assert.Equal("getPets", pathItem.Operations[HttpMethod.Get].OperationId);
-            Assert.True(pathItem.Operations?.ContainsKey(HttpMethod.Post));
-            Assert.Equal("createPet", pathItem.Operations[HttpMethod.Post].OperationId);
-
-            // Query operation
-            Assert.NotNull(pathItem.Query);
-            Assert.Equal("Query pets with complex filters", pathItem.Query.Summary);
-            Assert.Equal("queryPets", pathItem.Query.OperationId);
-            Assert.Single(pathItem.Query.Parameters);
-            Assert.Equal("filter", pathItem.Query.Parameters[0].Name);
-
-            // Additional operations
-            Assert.NotNull(pathItem.AdditionalOperations);
-            Assert.Equal(2, pathItem.AdditionalOperations.Count);
+            var getOp = pathItem.Operations[HttpMethod.Get];
+            Assert.Equal("getPets", getOp.OperationId);
             
-            Assert.True(pathItem.AdditionalOperations.ContainsKey("notify"));
-            var notifyOp = pathItem.AdditionalOperations["notify"];
+            Assert.True(pathItem.Operations?.ContainsKey(HttpMethod.Post));
+            var postOp = pathItem.Operations[HttpMethod.Post];
+            Assert.Equal("createPet", postOp.OperationId);
+
+            // Query operation should now be on one of the operations
+            // Since the YAML structure changed, we need to check which operation has the query
+            Assert.NotNull(getOp.Query);
+            Assert.Equal("Query pets with complex filters", getOp.Query.Summary);
+            Assert.Equal("queryPets", getOp.Query.OperationId);
+            Assert.Single(getOp.Query.Parameters);
+            Assert.Equal("filter", getOp.Query.Parameters[0].Name);
+
+            // Additional operations should now be on one of the operations
+            Assert.NotNull(getOp.AdditionalOperations);
+            Assert.Equal(2, getOp.AdditionalOperations.Count);
+            
+            Assert.True(getOp.AdditionalOperations.ContainsKey("notify"));
+            var notifyOp = getOp.AdditionalOperations["notify"];
             Assert.Equal("Notify about pet updates", notifyOp.Summary);
             Assert.Equal("notifyPetUpdates", notifyOp.OperationId);
             Assert.NotNull(notifyOp.RequestBody);
             
-            Assert.True(pathItem.AdditionalOperations.ContainsKey("subscribe"));
-            var subscribeOp = pathItem.AdditionalOperations["subscribe"];
+            Assert.True(getOp.AdditionalOperations.ContainsKey("subscribe"));
+            var subscribeOp = getOp.AdditionalOperations["subscribe"];
             Assert.Equal("Subscribe to pet events", subscribeOp.Summary);
             Assert.Equal("subscribePetEvents", subscribeOp.OperationId);
             Assert.Single(subscribeOp.Parameters);
@@ -70,18 +74,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 
             // Regular operations
             Assert.True(pathItem.Operations?.ContainsKey(HttpMethod.Get));
-            Assert.Equal("getPets", pathItem.Operations[HttpMethod.Get].OperationId);
+            var getOp = pathItem.Operations[HttpMethod.Get];
+            Assert.Equal("getPets", getOp.OperationId);
 
-            // Query operation from extension
-            Assert.NotNull(pathItem.Query);
-            Assert.Equal("Query pets with complex filters", pathItem.Query.Summary);
-            Assert.Equal("queryPets", pathItem.Query.OperationId);
+            // Query operation from extension should now be on the operation
+            Assert.NotNull(getOp.Query);
+            Assert.Equal("Query pets with complex filters", getOp.Query.Summary);
+            Assert.Equal("queryPets", getOp.Query.OperationId);
 
-            // Additional operations from extension
-            Assert.NotNull(pathItem.AdditionalOperations);
-            Assert.Single(pathItem.AdditionalOperations);
-            Assert.True(pathItem.AdditionalOperations.ContainsKey("notify"));
-            var notifyOp = pathItem.AdditionalOperations["notify"];
+            // Additional operations from extension should now be on the operation
+            Assert.NotNull(getOp.AdditionalOperations);
+            Assert.Single(getOp.AdditionalOperations);
+            Assert.True(getOp.AdditionalOperations.ContainsKey("notify"));
+            var notifyOp = getOp.AdditionalOperations["notify"];
             Assert.Equal("Notify about pet updates", notifyOp.Summary);
             Assert.Equal("notifyPetUpdates", notifyOp.OperationId);
         }
@@ -93,21 +98,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var pathItem = new OpenApiPathItem
             {
                 Summary = "Test path",
-                Query = new OpenApiOperation
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
-                    Summary = "Query operation",
-                    OperationId = "queryOp",
-                    Responses = new OpenApiResponses
+                    [HttpMethod.Get] = new OpenApiOperation
                     {
-                        ["200"] = new OpenApiResponse { Description = "Success" }
-                    }
-                },
-                AdditionalOperations = new Dictionary<string, OpenApiOperation>
-                {
-                    ["notify"] = new OpenApiOperation
-                    {
-                        Summary = "Notify operation", 
-                        OperationId = "notifyOp",
+                        Summary = "Get operation",
+                        OperationId = "getOp",
+                        Query = new OpenApiOperation
+                        {
+                            Summary = "Query operation",
+                            OperationId = "queryOp",
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse { Description = "Success" }
+                            }
+                        },
+                        AdditionalOperations = new Dictionary<string, OpenApiOperation>
+                        {
+                            ["notify"] = new OpenApiOperation
+                            {
+                                Summary = "Notify operation", 
+                                OperationId = "notifyOp",
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse { Description = "Success" }
+                                }
+                            }
+                        },
                         Responses = new OpenApiResponses
                         {
                             ["200"] = new OpenApiResponse { Description = "Success" }
@@ -133,21 +150,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var pathItem = new OpenApiPathItem
             {
                 Summary = "Test path",
-                Query = new OpenApiOperation
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
-                    Summary = "Query operation",
-                    OperationId = "queryOp",
-                    Responses = new OpenApiResponses
+                    [HttpMethod.Get] = new OpenApiOperation
                     {
-                        ["200"] = new OpenApiResponse { Description = "Success" }
-                    }
-                },
-                AdditionalOperations = new Dictionary<string, OpenApiOperation>
-                {
-                    ["notify"] = new OpenApiOperation
-                    {
-                        Summary = "Notify operation",
-                        OperationId = "notifyOp", 
+                        Summary = "Get operation",
+                        OperationId = "getOp",
+                        Query = new OpenApiOperation
+                        {
+                            Summary = "Query operation",
+                            OperationId = "queryOp",
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse { Description = "Success" }
+                            }
+                        },
+                        AdditionalOperations = new Dictionary<string, OpenApiOperation>
+                        {
+                            ["notify"] = new OpenApiOperation
+                            {
+                                Summary = "Notify operation",
+                                OperationId = "notifyOp", 
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse { Description = "Success" }
+                                }
+                            }
+                        },
                         Responses = new OpenApiResponses
                         {
                             ["200"] = new OpenApiResponse { Description = "Success" }
@@ -173,17 +202,26 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var original = new OpenApiPathItem
             {
                 Summary = "Original",
-                Query = new OpenApiOperation
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>
                 {
-                    Summary = "Query operation",
-                    OperationId = "queryOp"
-                },
-                AdditionalOperations = new Dictionary<string, OpenApiOperation>
-                {
-                    ["notify"] = new OpenApiOperation
+                    [HttpMethod.Get] = new OpenApiOperation
                     {
-                        Summary = "Notify operation",
-                        OperationId = "notifyOp"
+                        Summary = "Get operation",
+                        OperationId = "getOp",
+                        Query = new OpenApiOperation
+                        {
+                            Summary = "Query operation",
+                            OperationId = "queryOp"
+                        },
+                        AdditionalOperations = new Dictionary<string, OpenApiOperation>
+                        {
+                            ["notify"] = new OpenApiOperation
+                            {
+                                Summary = "Notify operation",
+                                OperationId = "notifyOp"
+                            }
+                        },
+                        Responses = new OpenApiResponses()
                     }
                 }
             };
@@ -192,14 +230,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var copy = original.CreateShallowCopy();
 
             // Assert
-            Assert.NotNull(copy.Query);
-            Assert.Equal("Query operation", copy.Query.Summary);
-            Assert.Equal("queryOp", copy.Query.OperationId);
+            var originalGetOp = original.Operations![HttpMethod.Get];
+            var copyGetOp = copy.Operations![HttpMethod.Get];
+            
+            Assert.NotNull(copyGetOp.Query);
+            Assert.Equal("Query operation", copyGetOp.Query.Summary);
+            Assert.Equal("queryOp", copyGetOp.Query.OperationId);
 
-            Assert.NotNull(copy.AdditionalOperations);
-            Assert.Single(copy.AdditionalOperations);
-            Assert.Equal("Notify operation", copy.AdditionalOperations["notify"].Summary);
-            Assert.Equal("notifyOp", copy.AdditionalOperations["notify"].OperationId);
+            Assert.NotNull(copyGetOp.AdditionalOperations);
+            Assert.Single(copyGetOp.AdditionalOperations);
+            Assert.Equal("Notify operation", copyGetOp.AdditionalOperations["notify"].Summary);
+            Assert.Equal("notifyOp", copyGetOp.AdditionalOperations["notify"].OperationId);
         }
     }
 }

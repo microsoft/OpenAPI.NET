@@ -59,12 +59,6 @@ namespace Microsoft.OpenApi
         public IList<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
 
         /// <inheritdoc/>
-        public OpenApiOperation? Query { get => Target?.Query; }
-
-        /// <inheritdoc/>
-        public IDictionary<string, OpenApiOperation>? AdditionalOperations { get => Target?.AdditionalOperations; }
-
-        /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
