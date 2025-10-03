@@ -44,6 +44,10 @@ namespace Microsoft.OpenApi.Readers.V3
                 (o, n) => o.Explode = bool.Parse(n.GetScalarValue())
             },
             {
+                "content",
+                (o, n) => o.Content = n.CreateMap(LoadMediaType)
+            },
+            {
                 "schema",
                 (o, n) => o.Schema = LoadSchema(n)
             },
