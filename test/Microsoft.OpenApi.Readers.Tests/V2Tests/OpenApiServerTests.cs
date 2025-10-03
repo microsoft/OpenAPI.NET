@@ -323,5 +323,74 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
                 });
         }
+
+        [Fact]
+        public void BaseUrlWithPortShouldPreservePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new()
+            {
+                BaseUrl = new("http://demo.testfire.net:8080")
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Single(doc.Servers);
+            Assert.Equal("http://demo.testfire.net:8080", server.Url);
+        }
+
+        [Fact]
+        public void BaseUrlWithPortAndPathShouldPreservePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new()
+            {
+                BaseUrl = new("http://demo.testfire.net:8080/swagger/properties.json")
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Single(doc.Servers);
+            Assert.Equal("http://demo.testfire.net:8080/swagger/properties.json", server.Url);
+        }
+
+        [Fact]
+        public void BaseUrlWithNonStandardPortShouldPreservePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new()
+            {
+                BaseUrl = new("https://api.example.com:9443/v1/openapi.yaml")
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Single(doc.Servers);
+            Assert.Equal("https://api.example.com:9443/v1/openapi.yaml", server.Url);
+        }
     }
 }

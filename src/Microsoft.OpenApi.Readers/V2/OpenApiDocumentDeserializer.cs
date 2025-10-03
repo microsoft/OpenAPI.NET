@@ -145,8 +145,8 @@ namespace Microsoft.OpenApi.Readers.V2
                 basePath = "/";
             }
 
-            // If nothing is provided, don't create a server
-            if (host == null && basePath == null && schemes == null)
+            // If nothing is provided and there's no defaultUrl, don't create a server
+            if (host == null && basePath == null && schemes == null && defaultUrl == null)
             {
                 return;
             }
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Readers.V2
             // Fill in missing information based on the defaultUrl
             if (defaultUrl != null)
             {
-                host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
+                host = host ?? defaultUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped);
                 basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
                 schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
             }
