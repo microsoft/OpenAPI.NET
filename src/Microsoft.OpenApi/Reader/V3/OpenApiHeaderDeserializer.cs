@@ -88,6 +88,12 @@ namespace Microsoft.OpenApi.Reader.V3
                 (o, n, t) => o.Schema = LoadSchema(n, t)
             },
             {
+                "content", (o, n, t) =>
+                {
+                    o.Content = n.CreateMap(LoadMediaType, t);
+                }
+            },
+            {
                 "examples",
                 (o, n, t) => o.Examples = n.CreateMap(LoadExample, t)
             },

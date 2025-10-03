@@ -1,0 +1,11 @@
+description: "A header that accepts multiple content types"
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        data:
+          type: string
+  text/plain:
+    schema:
+      type: string
