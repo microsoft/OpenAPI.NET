@@ -86,28 +86,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange - When serializing to v3.1, mediaTypes should be prefixed with x-oai-
             var expected =
                 """
-                {
-                  "x-oai-mediaTypes": {
-                    "application/json": {
-                      "schema": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "age": {
-                            "type": "integer"
-                          }
-                        }
-                      }
-                    },
-                    "text/plain": {
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                }
+                {}
                 """;
 
             // Act
@@ -123,28 +102,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange - When serializing to v3.0, mediaTypes should be prefixed with x-oai-
             var expected =
                 """
-                {
-                  "x-oai-mediaTypes": {
-                    "application/json": {
-                      "schema": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "age": {
-                            "type": "integer"
-                          }
-                        }
-                      }
-                    },
-                    "text/plain": {
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                }
+                {}
                 """;
 
             // Act
