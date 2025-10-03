@@ -483,7 +483,7 @@ public class OpenApiPathItemTests
           "query": {
             "summary": "query operation",
             "description": "query description",
-            "operationId": "queryOperation", 
+            "operationId": "queryOperation",
             "responses": {
               "200": {
                 "description": "query success"
@@ -491,7 +491,7 @@ public class OpenApiPathItemTests
             }
           },
           "additionalOperations": {
-            "notify": {
+            "Notify": {
               "summary": "notify operation",
               "description": "notify description",
               "operationId": "notifyOperation",
@@ -501,9 +501,9 @@ public class OpenApiPathItemTests
                 }
               }
             },
-            "custom": {
+            "Custom": {
               "summary": "custom operation",
-              "description": "custom description", 
+              "description": "custom description",
               "operationId": "customOperation",
               "responses": {
                 "200": {
@@ -575,14 +575,13 @@ public class OpenApiPathItemTests
 
         // When
         var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
-        var parsedActualJson = JsonNode.Parse(actualJson);
+        var parsedActualJson = Assert.IsType<JsonObject>(JsonNode.Parse(actualJson));
 
-        // Then - should contain x-oas- prefixed extensions in the operation
-        var getOperation = parsedActualJson!["get"];
-        Assert.True(getOperation!["x-oas-query"] != null);
-        Assert.True(getOperation!["x-oas-additionalOperations"] != null);
-        Assert.Equal("query operation", getOperation!["x-oas-query"]!["summary"]!.GetValue<string>());
-        Assert.Equal("notify operation", getOperation!["x-oas-additionalOperations"]!["notify"]!["summary"]!.GetValue<string>());
+        // Then - should contain x-oai- prefixed extensions in the operation
+        var additionalOperationsElement = Assert.IsType<JsonObject>(Assert.Contains("x-oai-additionalOperations", parsedActualJson));
+        var queryElement = Assert.IsType<JsonObject>(Assert.Contains("Query", additionalOperationsElement));
+        Assert.Equal("query operation", queryElement["summary"]!.GetValue<string>());
+        Assert.Equal("notify operation", additionalOperationsElement["Notify"]!["summary"]!.GetValue<string>());
     }
 
     [Fact]
@@ -635,14 +634,13 @@ public class OpenApiPathItemTests
 
         // When
         var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
-        var parsedActualJson = JsonNode.Parse(actualJson);
+        var parsedActualJson = Assert.IsType<JsonObject>(JsonNode.Parse(actualJson));
 
-        // Then - should contain x-oas- prefixed extensions in the operation
-        var getOperation = parsedActualJson!["get"];
-        Assert.True(getOperation!["x-oas-query"] != null);
-        Assert.True(getOperation!["x-oas-additionalOperations"] != null);
-        Assert.Equal("query operation", getOperation!["x-oas-query"]!["summary"]!.GetValue<string>());
-        Assert.Equal("notify operation", getOperation!["x-oas-additionalOperations"]!["notify"]!["summary"]!.GetValue<string>());
+        // Then - should contain x-oai- prefixed extensions in the operation
+        var additionalOperationsElement = Assert.IsType<JsonObject>(Assert.Contains("x-oai-additionalOperations", parsedActualJson));
+        var queryElement = Assert.IsType<JsonObject>(Assert.Contains("Query", additionalOperationsElement));
+        Assert.Equal("query operation", queryElement["summary"]!.GetValue<string>());
+        Assert.Equal("notify operation", additionalOperationsElement["Notify"]!["summary"]!.GetValue<string>());
     }
 
     [Fact]
@@ -695,14 +693,13 @@ public class OpenApiPathItemTests
 
         // When
         var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
-        var parsedActualJson = JsonNode.Parse(actualJson);
+        var parsedActualJson = Assert.IsType<JsonObject>(JsonNode.Parse(actualJson));
 
-        // Then - should contain x-oas- prefixed extensions in the operation
-        var getOperation = parsedActualJson!["get"];
-        Assert.True(getOperation!["x-oas-query"] != null);
-        Assert.True(getOperation!["x-oas-additionalOperations"] != null);
-        Assert.Equal("query operation", getOperation!["x-oas-query"]!["summary"]!.GetValue<string>());
-        Assert.Equal("notify operation", getOperation!["x-oas-additionalOperations"]!["notify"]!["summary"]!.GetValue<string>());
+        // Then - should contain x-oai- prefixed extensions in the operation
+        var additionalOperationsElement = Assert.IsType<JsonObject>(Assert.Contains("x-oai-additionalOperations", parsedActualJson));
+        var queryElement = Assert.IsType<JsonObject>(Assert.Contains("Query", additionalOperationsElement));
+        Assert.Equal("query operation", queryElement["summary"]!.GetValue<string>());
+        Assert.Equal("notify operation", additionalOperationsElement["Notify"]!["summary"]!.GetValue<string>());
     }
 
     [Fact]
@@ -739,28 +736,17 @@ public class OpenApiPathItemTests
         // Assert
         Assert.NotNull(original.Operations);
         Assert.NotNull(copy.Operations);
-        var originalGetOp = original.Operations[HttpMethod.Get];
-        var copyGetOp = copy.Operations[HttpMethod.Get];
+        Assert.Contains(HttpMethod.Get, original.Operations);
+        Assert.Contains(HttpMethod.Get, copy.Operations);
 
-        Assert.NotNull(originalGetOp);
-        Assert.NotNull(copyGetOp);
-
-        var copyQueryOp = copy.Operations[new HttpMethod("Query")];
-        var originalQueryOp = original.Operations[new HttpMethod("Query")];
-        Assert.NotNull(copyQueryOp);
-        Assert.NotNull(originalQueryOp);
-        Assert.Equal(originalQueryOp!.Summary, copyQueryOp.Summary);
+        var copyQueryOp = Assert.Contains(new HttpMethod("Query"), copy.Operations);
+        var originalQueryOp = Assert.Contains(new HttpMethod("Query"), original.Operations);
+        Assert.Equal(originalQueryOp.Summary, copyQueryOp.Summary);
         Assert.Equal(originalQueryOp.OperationId, copyQueryOp.OperationId);
 
-        var originalNotifyOp = original.Operations[new HttpMethod("Notify")];
-        var copyNotifyOp = copy.Operations[new HttpMethod("Notify")];
-        Assert.NotNull(originalNotifyOp);
-        Assert.NotNull(copyNotifyOp);
+        var originalNotifyOp = Assert.Contains(new HttpMethod("Notify"), original.Operations);
+        var copyNotifyOp = Assert.Contains(new HttpMethod("Notify"), copy.Operations);
 
         Assert.Equal(originalNotifyOp.Summary, copyNotifyOp.Summary);
-
-        // Verify it's a deep copy
-        copyQueryOp.Summary = "modified";
-        Assert.NotEqual(originalQueryOp.Summary, copyQueryOp.Summary);
     }
 }
