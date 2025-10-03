@@ -1,0 +1,11 @@
+description: "A header with both style and content (content should take precedence)"
+style: simple
+schema:
+  type: string
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        value:
+          type: string
