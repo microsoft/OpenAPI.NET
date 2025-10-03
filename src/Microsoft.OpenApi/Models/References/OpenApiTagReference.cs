@@ -68,13 +68,12 @@ namespace Microsoft.OpenApi
         { 
             get 
             {
-                var target = Target;
-                if (target is OpenApiTagReference targetRef && ReferenceEquals(targetRef.Reference, this.Reference))
+                if (Target is OpenApiTagReference targetRef && (Reference.Id?.Equals(targetRef.Reference.Id, StringComparison.Ordinal) ?? false))
                 {
                     return null;
                 }
 
-                return target?.Parent;
+                return Target?.Parent;
             }
         }
 
