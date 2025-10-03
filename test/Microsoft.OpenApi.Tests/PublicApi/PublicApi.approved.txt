@@ -423,7 +423,6 @@ namespace Microsoft.OpenApi
     public static class OpenApiConstants
     {
         public const string AccessCode = "accessCode";
-        public const string AdditionalOperations = "additionalOperations";
         public const string AdditionalProperties = "additionalProperties";
         public const string AllOf = "allOf";
         public const string AllowEmptyValue = "allowEmptyValue";
@@ -537,7 +536,6 @@ namespace Microsoft.OpenApi
         public const string Properties = "properties";
         public const string PropertyName = "propertyName";
         public const string Put = "put";
-        public const string Query = "query";
         public const string ReadOnly = "readOnly";
         public const string RecursiveAnchor = "$recursiveAnchor";
         public const string RecursiveRef = "$recursiveRef";
@@ -964,7 +962,6 @@ namespace Microsoft.OpenApi
     {
         public OpenApiOperation() { }
         public OpenApiOperation(Microsoft.OpenApi.OpenApiOperation operation) { }
-        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiOperation>? AdditionalOperations { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiCallback>? Callbacks { get; set; }
         public bool Deprecated { get; set; }
         public string? Description { get; set; }
@@ -973,7 +970,6 @@ namespace Microsoft.OpenApi
         public System.Collections.Generic.IDictionary<string, object>? Metadata { get; set; }
         public string? OperationId { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter>? Parameters { get; set; }
-        public Microsoft.OpenApi.OpenApiOperation? Query { get; set; }
         public Microsoft.OpenApi.IOpenApiRequestBody? RequestBody { get; set; }
         public Microsoft.OpenApi.OpenApiResponses? Responses { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiSecurityRequirement>? Security { get; set; }

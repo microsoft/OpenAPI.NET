@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -104,18 +104,6 @@ namespace Microsoft.OpenApi.Reader.V32
                     "servers", (o, n, t) =>
                     {
                         o.Servers = n.CreateList(LoadServer, t);
-                    }
-                },
-                {
-                    "query", (o, n, t) =>
-                    {
-                        o.Query = LoadOperation(n, t);
-                    }
-                },
-                {
-                    "additionalOperations", (o, n, t) =>
-                    {
-                        o.AdditionalOperations = n.CreateMap(LoadOperation, t);
                     }
                 },
             };

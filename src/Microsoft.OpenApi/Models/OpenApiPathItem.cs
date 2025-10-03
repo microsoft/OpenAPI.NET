@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 
 namespace Microsoft.OpenApi
@@ -55,8 +54,7 @@ namespace Microsoft.OpenApi
             Utils.CheckArgumentNull(pathItem);
             Summary = pathItem.Summary ?? Summary;
             Description = pathItem.Description ?? Description;
-            Operations = pathItem.Operations != null ? 
-                new Dictionary<HttpMethod, OpenApiOperation>(pathItem.Operations.ToDictionary(kvp => kvp.Key, kvp => new OpenApiOperation(kvp.Value))) : null;
+            Operations = pathItem.Operations != null ? new Dictionary<HttpMethod, OpenApiOperation>(pathItem.Operations) : null;
             Servers = pathItem.Servers != null ? [.. pathItem.Servers] : null;
             Parameters = pathItem.Parameters != null ? [.. pathItem.Parameters] : null;
             Extensions = pathItem.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;

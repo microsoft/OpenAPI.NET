@@ -111,17 +111,6 @@ namespace Microsoft.OpenApi
         public IList<OpenApiServer>? Servers { get; set; }
 
         /// <summary>
-        /// Gets the query operation for this operation (OpenAPI 3.2).
-        /// </summary>
-        public OpenApiOperation? Query { get; set; }
-
-        /// <summary>
-        /// Gets the additional operations for this operation (OpenAPI 3.2).
-        /// A map of additional operations that are not one of the standard HTTP methods (GET, PUT, POST, DELETE, OPTIONS, HEAD, PATCH, TRACE).
-        /// </summary>
-        public IDictionary<string, OpenApiOperation>? AdditionalOperations { get; set; }
-
-        /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -152,9 +141,6 @@ namespace Microsoft.OpenApi
             Deprecated = operation.Deprecated;
             Security = operation.Security != null ? [.. operation.Security] : null;
             Servers = operation.Servers != null ? [.. operation.Servers] : null;
-            Query = operation.Query != null ? new OpenApiOperation(operation.Query) : null;
-            AdditionalOperations = operation.AdditionalOperations != null ? 
-                new Dictionary<string, OpenApiOperation>(operation.AdditionalOperations.ToDictionary(kvp => kvp.Key, kvp => new OpenApiOperation(kvp.Value))) : null;
             Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
             Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
         }
@@ -172,7 +158,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer), downgradeFrom32: true);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -180,13 +166,13 @@ namespace Microsoft.OpenApi
         /// </summary>
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer), downgradeFrom32: true);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback, bool downgradeFrom32 = false)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
 
@@ -222,21 +208,6 @@ namespace Microsoft.OpenApi
             // callbacks
             writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, callback);
 
-            // OpenAPI 3.2 specific fields
-            if (version == OpenApiSpecVersion.OpenApi3_2)
-            {
-                // query operation
-                writer.WriteOptionalObject(OpenApiConstants.Query, Query, callback);
-
-                // additional operations
-                writer.WriteOptionalMap(OpenApiConstants.AdditionalOperations, AdditionalOperations, callback);
-            }
-            else if (downgradeFrom32)
-            {
-                // When downgrading from 3.2 to 3.1/3.0, serialize as extensions
-                WriteV32FieldsAsExtensions(writer);
-            }
-
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
@@ -250,29 +221,6 @@ namespace Microsoft.OpenApi
             writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Writes OpenAPI 3.2 specific fields as extensions when downgrading to older versions
-        /// </summary>
-        private void WriteV32FieldsAsExtensions(IOpenApiWriter writer)
-        {
-            if (Query != null)
-            {
-                writer.WritePropertyName(OpenApiConstants.ExtensionFieldNamePrefix + "oas-" + OpenApiConstants.Query);
-                Query.SerializeAsV31(writer);
-            }
-
-            if (AdditionalOperations != null && AdditionalOperations.Count > 0)
-            {
-                writer.WritePropertyName(OpenApiConstants.ExtensionFieldNamePrefix + "oas-" + OpenApiConstants.AdditionalOperations);
-                writer.WriteStartObject();
-                foreach (var kvp in AdditionalOperations)
-                {
-                    writer.WriteOptionalObject(kvp.Key, kvp.Value, (w, o) => o.SerializeAsV31(w));
-                }
-                writer.WriteEndObject();
-            }
         }
 
         /// <summary>
@@ -400,9 +348,6 @@ namespace Microsoft.OpenApi
 
             // security
             writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.SerializeAsV2(w));
-
-            // Write Query and AdditionalOperations as extensions when downgrading to v2
-            WriteV32FieldsAsExtensions(writer);
 
             // specification extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);

@@ -111,8 +111,6 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix + "oas-query", StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.Query = LoadOperation(n, t)},
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix + "oas-additionalOperations", StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.AdditionalOperations = n.CreateMap(LoadOperation, t)},
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
             };
 

@@ -211,16 +211,6 @@ namespace Microsoft.OpenApi
         public const string RequestBody = "requestBody";
 
         /// <summary>
-        /// Field: Query (OpenAPI 3.2)
-        /// </summary>
-        public const string Query = "query";
-
-        /// <summary>
-        /// Field: AdditionalOperations (OpenAPI 3.2)
-        /// </summary>
-        public const string AdditionalOperations = "additionalOperations";
-
-        /// <summary>
         /// Field: ExtensionFieldNamePrefix
         /// </summary>
         public const string ExtensionFieldNamePrefix = "x-";
