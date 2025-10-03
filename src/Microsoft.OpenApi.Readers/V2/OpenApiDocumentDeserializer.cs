@@ -146,13 +146,13 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             // If nothing is provided and there's no defaultUrl, don't create a server
-            if (host == null && basePath == null && schemes == null && defaultUrl == null)
+            if (string.IsNullOrEmpty(host) && string.IsNullOrEmpty(basePath) && (schemes == null || schemes.Count == 0) && defaultUrl == null)
             {
                 return;
             }
 
             //Validate host
-            if (host != null && !IsHostValid(host))
+            if (!string.IsNullOrEmpty(host) && !IsHostValid(host))
             {
                 rootNode.Context.Diagnostic.Errors.Add(new(rootNode.Context.GetLocation(), "Invalid host"));
                 return;
@@ -234,6 +234,13 @@ namespace Microsoft.OpenApi.Readers.V2
             if (port != null)
             {
                 uriBuilder.Port = port.Value;
+            }
+
+            // Remove default ports to clean up the URL
+            if ((uriBuilder.Scheme == "https" && uriBuilder.Port == 443) ||
+                (uriBuilder.Scheme == "http" && uriBuilder.Port == 80))
+            {
+                uriBuilder.Port = -1; // Setting to -1 removes the port from the URL
             }
 
             return uriBuilder.ToString();

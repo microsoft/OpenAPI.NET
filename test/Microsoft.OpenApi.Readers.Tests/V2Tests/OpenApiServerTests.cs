@@ -392,5 +392,101 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Assert.Single(doc.Servers);
             Assert.Equal("https://api.example.com:9443/v1/openapi.yaml", server.Url);
         }
+
+        [Fact]
+        public void BaseUrlWithStandardHttpsPortShouldRemovePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new()
+            {
+                BaseUrl = new("https://foo.bar:443/api")
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Single(doc.Servers);
+            Assert.Equal("https://foo.bar/api", server.Url);
+        }
+
+        [Fact]
+        public void BaseUrlWithStandardHttpPortShouldRemovePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new()
+            {
+                BaseUrl = new("http://foo.bar:80/api")
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Single(doc.Servers);
+            Assert.Equal("http://foo.bar/api", server.Url);
+        }
+
+        [Fact]
+        public void HostWithStandardHttpsPortShouldRemovePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: foo.bar:443
+                schemes:
+                  - https
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new()
+            {
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Single(doc.Servers);
+            Assert.Equal("https://foo.bar", server.Url);
+        }
+
+        [Fact]
+        public void HostWithStandardHttpPortShouldRemovePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: foo.bar:80
+                schemes:
+                  - http
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new()
+            {
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Single(doc.Servers);
+            Assert.Equal("http://foo.bar", server.Url);
+        }
     }
 }
