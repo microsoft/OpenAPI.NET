@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi
             // summary - version specific handling
             if (Summary != null)
             {
-                if (version == OpenApiSpecVersion.OpenApi3_2)
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
                 {
                     writer.WriteProperty("summary", Summary);
                 }
