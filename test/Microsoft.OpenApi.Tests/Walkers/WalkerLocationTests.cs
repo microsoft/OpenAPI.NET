@@ -71,9 +71,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
                         {
                             ["200"] = new OpenApiResponse()
                             {
-                                Content = new Dictionary<string, OpenApiMediaType>()
+                                Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
-                                    ["application/json"] = new()
+                                    ["application/json"] = new OpenApiMediaType()
                                     {
                                         Schema = new OpenApiSchema
                                         {
@@ -196,9 +196,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
-                                            ["application/json"] = new()
+                                            ["application/json"] = new OpenApiMediaType()
                                             {
                                                 Schema = new OpenApiSchemaReference("derived")
                                             }

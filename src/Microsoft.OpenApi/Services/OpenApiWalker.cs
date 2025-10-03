@@ -641,7 +641,7 @@ namespace Microsoft.OpenApi
 
             if (parameter.Content is { } content)
             {
-                WalkDictionary(OpenApiConstants.Content, content, static (self, item, isComponent) => self.Walk(item, isComponent));
+                WalkItem(OpenApiConstants.Content, content, static (self, item) => self.Walk(item));
             }
 
             WalkDictionary(OpenApiConstants.Examples, parameter.Examples, static (self, item, isComponent) => self.Walk(item, isComponent));
@@ -696,7 +696,7 @@ namespace Microsoft.OpenApi
 
             if (response.Content is { } content)
             {
-                WalkDictionary(OpenApiConstants.Content, content, static (self, item, isComponent) => self.Walk(item, isComponent));
+                WalkItem(OpenApiConstants.Content, content, static (self, item) => self.Walk(item));
             }
 
             WalkDictionary(OpenApiConstants.Links, response.Links, static (self, item, isComponent) => self.Walk(item, isComponent));
@@ -724,7 +724,7 @@ namespace Microsoft.OpenApi
 
             if (requestBody.Content is { } content)
             {
-                WalkDictionary(OpenApiConstants.Content, content, static (self, item, isComponent) => self.Walk(item, isComponent));
+                WalkItem(OpenApiConstants.Content, content, static (self, item) => self.Walk(item));
             }
 
             Walk(requestBody as IOpenApiExtensible);
@@ -1187,7 +1187,7 @@ namespace Microsoft.OpenApi
 
             if (header.Content is { } content)
             {
-                WalkDictionary(OpenApiConstants.Content, content, static (self, item, isComponent) => self.Walk(item, isComponent));
+                WalkItem(OpenApiConstants.Content, content, static (self, item) => self.Walk(item));
             }
 
             if (header.Example is { } example)

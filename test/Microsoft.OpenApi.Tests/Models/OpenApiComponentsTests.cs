@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             RequestBody = new OpenApiRequestBody
                             {
                                 Description = "Information about a new pet in the system",
-                                Content = new Dictionary<string, OpenApiMediaType>()
+                                Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {

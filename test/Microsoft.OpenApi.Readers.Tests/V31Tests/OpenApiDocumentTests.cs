@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 {
                                     Description = "Information about a new pet in the system",
                                     Required = true,
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "Return a 200 status to indicate that the data was received successfully",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -339,7 +339,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -367,7 +367,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Description = "Information about a new pet in the system",
                                 Required = true,
-                                Content = new Dictionary<string, OpenApiMediaType>()
+                                Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -380,7 +380,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "Return a 200 status to indicate that the data was received successfully",
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {

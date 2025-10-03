@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entities",
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved entity",
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -310,7 +310,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved navigation property",
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -357,7 +357,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -414,7 +414,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Retrieved navigation property",
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -545,7 +545,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             "200", new OpenApiResponse()
                                             {
                                                 Description = "Success",
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         applicationJsonMediaType,
@@ -679,8 +679,8 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
             document.Paths[eventsDeltaPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("groups.Functions", document)};
             document.Paths[refPath].Operations![HttpMethod.Get].Tags = new HashSet<OpenApiTagReference> {new OpenApiTagReference("applications.directoryObject", document)};
             ((OpenApiSchema)document.Paths[usersPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.user", document);
-            document.Paths[usersByIdPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.user", document);
-            document.Paths[messagesByIdPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema = new OpenApiSchemaReference("microsoft.graph.message", document);
+            ((OpenApiMediaType)document.Paths[usersByIdPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType]).Schema = new OpenApiSchemaReference("microsoft.graph.user", document);
+            ((OpenApiMediaType)document.Paths[messagesByIdPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType]).Schema = new OpenApiSchemaReference("microsoft.graph.message", document);
             ((OpenApiSchema)document.Paths[securityProfilesPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.networkInterface", document);
             ((OpenApiSchema)document.Paths[eventsDeltaPath].Operations![HttpMethod.Get].Responses!["200"].Content![applicationJsonMediaType].Schema!.Properties!["value"]).Items = new OpenApiSchemaReference("microsoft.graph.event", document);
             return document;

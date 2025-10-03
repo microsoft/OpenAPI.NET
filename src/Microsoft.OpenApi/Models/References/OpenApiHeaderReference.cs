@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi
         public IDictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
