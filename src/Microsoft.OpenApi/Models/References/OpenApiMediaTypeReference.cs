@@ -74,5 +74,15 @@ namespace Microsoft.OpenApi
         {
             return new BaseOpenApiReference(sourceReference);
         }
+        /// <inheritdoc/>
+        public override void SerializeAsV31(IOpenApiWriter writer)
+        {
+            CopyReferenceAsTargetElementWithOverrides(new OpenApiMediaType()).SerializeAsV31(writer);
+        }
+        /// <inheritdoc/>
+        public override void SerializeAsV3(IOpenApiWriter writer)
+        {
+            CopyReferenceAsTargetElementWithOverrides(new OpenApiMediaType()).SerializeAsV3(writer);
+        }
     }
 }
