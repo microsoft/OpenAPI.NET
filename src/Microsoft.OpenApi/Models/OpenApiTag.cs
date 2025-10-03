@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi
             // parent - version specific handling
             if (Parent != null)
             {
-                if (version == OpenApiSpecVersion.OpenApi3_2)
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
                 {
                     writer.WritePropertyName("parent");
                     Parent.SerializeAsV32(writer);
