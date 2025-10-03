@@ -68,20 +68,13 @@ namespace Microsoft.OpenApi
         { 
             get 
             {
-                // Prevent stack overflow by checking for self-reference
-                var targetParent = Target?.Parent;
-                if (targetParent == null)
+                var target = Target;
+                if (target is OpenApiTagReference targetRef && ReferenceEquals(targetRef.Reference, this.Reference))
+                {
                     return null;
-                
-                // Check if the target's parent reference is the same as this reference
-                if (ReferenceEquals(targetParent.Reference, this.Reference))
-                    return null;
-                
-                // Check if the target's parent name is the same as this tag's name
-                if (string.Equals(targetParent.Name, this.Name, StringComparison.OrdinalIgnoreCase))
-                    return null;
-                
-                return targetParent;
+                }
+
+                return target?.Parent;
             }
         }
 
