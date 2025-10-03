@@ -1,4 +1,4 @@
-openapi: 3.2.0
+openapi: 3.0.0
 info:
   title: PathItem with Query and AdditionalOperations
   version: 1.0.0
@@ -12,25 +12,25 @@ paths:
       responses:
         '200':
           description: List of pets
-    query:
-      summary: Query pets with complex filters
-      operationId: queryPets
-      parameters:
-        - name: filter
-          in: query
-          description: Complex filter expression
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Filtered pets
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-      additionalOperations:
+      x-oai-additionalOperations:
+        query:
+        summary: Query pets with complex filters
+        operationId: queryPets
+        parameters:
+          - name: filter
+            in: query
+            description: Complex filter expression
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Filtered pets
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
         notify:
           summary: Notify about pet updates
           operationId: notifyPetUpdates
