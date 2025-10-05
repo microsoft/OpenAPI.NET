@@ -1,4 +1,6 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 
 namespace Microsoft.OpenApi.Reader.V32
@@ -35,10 +37,32 @@ namespace Microsoft.OpenApi.Reader.V32
 #else
             {"patch", (o, n, t) => o.AddOperation(new HttpMethod("PATCH"), LoadOperation(n, t))},
 #endif
+            {"query", (o, n, t) => o.AddOperation(new HttpMethod("QUERY"), LoadOperation(n, t))},
             {"trace", (o, n, t) => o.AddOperation(HttpMethod.Trace, LoadOperation(n, t))},
             {"servers", (o, n, t) => o.Servers = n.CreateList(LoadServer, t)},
-            {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)}
+            {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)},
+            {OpenApiConstants.AdditionalOperations, LoadAdditionalOperations }
         };
+
+        
+
+        private static void LoadAdditionalOperations(OpenApiPathItem o, ParseNode n, OpenApiDocument t)
+        {
+            if (n is null)
+            {
+                return;
+            }
+
+            var mapNode = n.CheckMapNode(OpenApiConstants.AdditionalOperations);
+
+            foreach (var property in mapNode.Where(p => !OpenApiPathItem._standardHttp32MethodsNames.Contains(p.Name)))
+            {
+                var operationType = property.Name;
+
+                var httpMethod = new HttpMethod(operationType);
+                o.AddOperation(httpMethod, LoadOperation(property.Value, t));
+            }
+        }
 
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
             new()
