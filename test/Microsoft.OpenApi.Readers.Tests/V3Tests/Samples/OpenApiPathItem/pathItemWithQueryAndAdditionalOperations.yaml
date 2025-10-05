@@ -12,8 +12,8 @@ paths:
       responses:
         '200':
           description: List of pets
-      x-oai-additionalOperations:
-        query:
+    x-oai-additionalOperations:
+      query:
         summary: Query pets with complex filters
         operationId: queryPets
         parameters:
@@ -31,44 +31,44 @@ paths:
                   type: array
                   items:
                     type: object
-        notify:
-          summary: Notify about pet updates
-          operationId: notifyPetUpdates
-          requestBody:
-            required: true
+      notify:
+        summary: Notify about pet updates
+        operationId: notifyPetUpdates
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  petId:
+                    type: string
+                  event:
+                    type: string
+          responses:
+            '200':
+              description: Notification sent
+      subscribe:
+        summary: Subscribe to pet events
+        operationId: subscribePetEvents
+        parameters:
+          - name: events
+            in: query
+            description: Event types to subscribe to
+            schema:
+              type: array
+              items:
+                type: string
+        responses:
+          '200':
+            description: Subscription created
             content:
               application/json:
                 schema:
                   type: object
                   properties:
-                    petId:
+                    subscriptionId:
                       type: string
-                    event:
-                      type: string
-          responses:
-            '200':
-              description: Notification sent
-        subscribe:
-          summary: Subscribe to pet events
-          operationId: subscribePetEvents
-          parameters:
-            - name: events
-              in: query
-              description: Event types to subscribe to
-              schema:
-                type: array
-                items:
-                  type: string
-          responses:
-            '200':
-              description: Subscription created
-              content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      subscriptionId:
-                        type: string
     post:
       summary: Create pet
       operationId: createPet
