@@ -426,7 +426,7 @@ public class OpenApiPathItemTests
                 [new HttpMethod("Query")] = new OpenApiOperation
                 {
                     Summary = "query operation",
-                    Description = "query description", 
+                    Description = "query description",
                     OperationId = "queryOperation",
                     Responses = new OpenApiResponses
                     {
@@ -440,7 +440,7 @@ public class OpenApiPathItemTests
                 {
                     Summary = "notify operation",
                     Description = "notify description",
-                    OperationId = "notifyOperation", 
+                    OperationId = "notifyOperation",
                     Responses = new OpenApiResponses
                     {
                         ["200"] = new OpenApiResponse
@@ -530,7 +530,7 @@ public class OpenApiPathItemTests
         var pathItem = new OpenApiPathItem
         {
             Summary = "summary",
-            Description = "description", 
+            Description = "description",
             Operations = new Dictionary<HttpMethod, OpenApiOperation>
             {
                 [HttpMethod.Get] = new OpenApiOperation
@@ -569,7 +569,7 @@ public class OpenApiPathItemTests
                         }
                     }
                 },
-                    
+
             }
         };
 
@@ -589,7 +589,7 @@ public class OpenApiPathItemTests
     {
         var pathItem = new OpenApiPathItem
         {
-            Summary = "summary", 
+            Summary = "summary",
             Description = "description",
             Operations = new Dictionary<HttpMethod, OpenApiOperation>
             {
@@ -748,5 +748,150 @@ public class OpenApiPathItemTests
         var copyNotifyOp = Assert.Contains(new HttpMethod("Notify"), copy.Operations);
 
         Assert.Equal(originalNotifyOp.Summary, copyNotifyOp.Summary);
+    }
+    
+    [Fact]
+    public async Task SerializeV32PathItemToV31ProducesExtensions()
+    {
+        // Arrange
+        var pathItem = new OpenApiPathItem
+        {
+            Summary = "Test path",
+            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+            {
+                [HttpMethod.Get] = new OpenApiOperation
+                {
+                    Summary = "Get operation",
+                    OperationId = "getOp",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse { Description = "Success" }
+                    }
+                },
+                [new HttpMethod("Query")] = new OpenApiOperation
+                {
+                    Summary = "Query operation",
+                    OperationId = "queryOp",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse { Description = "Success" }
+                    }
+                },
+                [new HttpMethod("notify")] = new OpenApiOperation
+                {
+                    Summary = "Notify operation", 
+                    OperationId = "notifyOp",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse { Description = "Success" }
+                    }
+                }
+            }
+        };
+
+        // Act
+        var yaml = await pathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+
+        // Assert
+        Assert.Contains("Query:", yaml);
+        Assert.Contains("x-oai-additionalOperations:", yaml);
+        Assert.Contains("queryOp", yaml);
+        Assert.Contains("notifyOp", yaml);
+    }
+
+    [Fact]
+    public async Task SerializeV32PathItemToV3ProducesExtensions()
+    {
+        // Arrange
+        var pathItem = new OpenApiPathItem
+        {
+            Summary = "Test path",
+            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+            {
+                [HttpMethod.Get] = new OpenApiOperation
+                {
+                    Summary = "Get operation",
+                    OperationId = "getOp",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse { Description = "Success" }
+                    }
+                },
+                [new HttpMethod("Query")] = new OpenApiOperation
+                {
+                    Summary = "Query operation",
+                    OperationId = "queryOp",
+                    Responses = new OpenApiResponses
+                    {
+                       ["200"] = new OpenApiResponse { Description = "Success" }
+                    }
+                },
+                [new HttpMethod("notify")] = new OpenApiOperation
+                {
+                    Summary = "Notify operation",
+                    OperationId = "notifyOp", 
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse { Description = "Success" }
+                    }
+                }
+            }
+        };
+
+        // Act
+        var yaml = await pathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+
+        // Assert
+        Assert.Contains("Query:", yaml);
+        Assert.Contains("x-oai-additionalOperations:", yaml);
+        Assert.Contains("queryOp", yaml);
+        Assert.Contains("notifyOp", yaml);
+    }
+
+    [Fact]
+    public void PathItemShallowCopyIncludesV32Fields()
+    {
+        // Arrange
+        var original = new OpenApiPathItem
+        {
+            Summary = "Original",
+            Operations = new Dictionary<HttpMethod, OpenApiOperation>
+            {
+                [HttpMethod.Get] = new OpenApiOperation
+                {
+                    Summary = "Get operation",
+                    OperationId = "getOp",
+                    Responses = new OpenApiResponses()
+                },
+                [new HttpMethod("Query")] = new OpenApiOperation
+                {
+                    Summary = "Query operation",
+                    OperationId = "queryOp"
+                },
+                [new HttpMethod("notify")] = new OpenApiOperation
+                {
+                    Summary = "Notify operation",
+                    OperationId = "notifyOp"
+                }
+            }
+        };
+
+        // Act
+        var copy = original.CreateShallowCopy();
+
+        // Assert
+        Assert.NotNull(original.Operations);
+        Assert.NotNull(copy.Operations);
+        Assert.Contains(HttpMethod.Get, original.Operations);
+        Assert.Contains(HttpMethod.Get, copy.Operations);
+
+        var copyQueryOp = Assert.Contains(new HttpMethod("Query"), copy.Operations);
+        Assert.Contains(new HttpMethod("Query"), original.Operations);
+        Assert.Equal("Query operation", copyQueryOp.Summary);
+        Assert.Equal("queryOp", copyQueryOp.OperationId);
+        Assert.Contains(new HttpMethod("notify"), original.Operations);
+        var copyNotifyOp = Assert.Contains(new HttpMethod("notify"), copy.Operations);
+        Assert.Equal("Notify operation", copyNotifyOp.Summary);
+        Assert.Equal("notifyOp", copyNotifyOp.OperationId);
     }
 }
