@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.28](https://github.com/microsoft/openapi.net/compare/v1.6.27...v1.6.28) (2025-10-06)
+
+
+### Bug Fixes
+
+* Improve server creation and URL handling logic to maintain port ([a15c50e](https://github.com/microsoft/openapi.net/commit/a15c50ef2d13483bb64a5d5767d58da2d89aeee7))
+* missing deserialization for header content property in 3.0 ([7c65a49](https://github.com/microsoft/openapi.net/commit/7c65a49117a869f772cdd91f0cf9c2eea02dc7c5))
+* missing deserialization for header content property in 3.0 ([e256d29](https://github.com/microsoft/openapi.net/commit/e256d29fa8b47f267e63749c36f61283851d8bbc))
+
 ## [1.6.27](https://github.com/microsoft/openapi.net/compare/v1.6.26...v1.6.27) (2025-10-02)
 
 
