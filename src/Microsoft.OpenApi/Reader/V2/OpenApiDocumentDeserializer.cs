@@ -124,14 +124,14 @@ namespace Microsoft.OpenApi.Reader.V2
                 basePath = "/";
             }
 
-            // If nothing is provided, don't create a server
-            if (host == null && basePath == null && schemes == null)
+            // If nothing is provided and there's no defaultUrl, don't create a server
+            if (string.IsNullOrEmpty(host) && string.IsNullOrEmpty(basePath) && (schemes == null || schemes.Count == 0) && defaultUrl == null)
             {
                 return;
             }
 
             //Validate host
-            if (host != null && !IsHostValid(host))
+            if (!string.IsNullOrEmpty(host) && !IsHostValid(host!))
             {
                 rootNode.Context.Diagnostic.Errors.Add(new(rootNode.Context.GetLocation(), "Invalid host"));
                 return;
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Reader.V2
             // Fill in missing information based on the defaultUrl
             if (defaultUrl != null)
             {
-                host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
+                host = host ?? defaultUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped);
                 basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
                 schemes = schemes ?? [defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped)];
             }
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Reader.V2
             }
 
             // Create the Server objects
-            if (schemes is {Count: > 0})
+            if (schemes is { Count: > 0 })
             {
                 foreach (var scheme in schemes)
                 {
@@ -202,8 +202,8 @@ namespace Microsoft.OpenApi.Reader.V2
                 if (pieces is not null)
                 {
                     host = pieces[0];
-                    port = int.Parse(pieces[pieces.Count() -1], CultureInfo.InvariantCulture);
-                }                
+                    port = int.Parse(pieces[pieces.Count() - 1], CultureInfo.InvariantCulture);
+                }
             }
 
             var uriBuilder = new UriBuilder
@@ -216,6 +216,13 @@ namespace Microsoft.OpenApi.Reader.V2
             if (port != null)
             {
                 uriBuilder.Port = port.Value;
+            }
+
+            // Remove default ports to clean up the URL
+            if (("https".Equals(uriBuilder.Scheme, StringComparison.OrdinalIgnoreCase) && uriBuilder.Port == 443) ||
+                ("http".Equals(uriBuilder.Scheme, StringComparison.OrdinalIgnoreCase) && uriBuilder.Port == 80))
+            {
+                uriBuilder.Port = -1; // Setting to -1 removes the port from the URL
             }
 
             return uriBuilder.ToString();

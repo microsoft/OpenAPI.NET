@@ -318,5 +318,177 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
         }
+
+        [Fact]
+        public void BaseUrlWithPortShouldPreservePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var settings = new OpenApiReaderSettings
+            {
+                BaseUrl = new("http://demo.testfire.net:8080")
+            };
+            settings.AddYamlReader();
+
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+
+            var server = result.Document.Servers.First();
+            Assert.Single(result.Document.Servers);
+            Assert.Equal("http://demo.testfire.net:8080", server.Url);
+        }
+
+        [Fact]
+        public void BaseUrlWithPortAndPathShouldPreservePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var settings = new OpenApiReaderSettings
+            {
+                BaseUrl = new("http://demo.testfire.net:8080/swagger/properties.json")
+            };
+            settings.AddYamlReader();
+
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+
+            var server = result.Document.Servers.First();
+            Assert.Single(result.Document.Servers);
+            Assert.Equal("http://demo.testfire.net:8080/swagger/properties.json", server.Url);
+        }
+
+        [Fact]
+        public void BaseUrlWithNonStandardPortShouldPreservePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var settings = new OpenApiReaderSettings
+            {
+                BaseUrl = new("https://api.example.com:9443/v1/openapi.yaml")
+            };
+            settings.AddYamlReader();
+
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+
+            var server = result.Document.Servers.First();
+            Assert.Single(result.Document.Servers);
+            Assert.Equal("https://api.example.com:9443/v1/openapi.yaml", server.Url);
+        }
+
+        [Fact]
+        public void BaseUrlWithStandardHttpsPortShouldRemovePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var settings = new OpenApiReaderSettings
+            {
+                BaseUrl = new("https://foo.bar:443/api")
+            };
+            settings.AddYamlReader();
+
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+
+            var server = result.Document.Servers.First();
+            Assert.Single(result.Document.Servers);
+            Assert.Equal("https://foo.bar/api", server.Url);
+        }
+
+        [Fact]
+        public void BaseUrlWithStandardHttpPortShouldRemovePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var settings = new OpenApiReaderSettings
+            {
+                BaseUrl = new("http://foo.bar:80/api")
+            };
+            settings.AddYamlReader();
+
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+
+            var server = result.Document.Servers.First();
+            Assert.Single(result.Document.Servers);
+            Assert.Equal("http://foo.bar/api", server.Url);
+        }
+
+        [Fact]
+        public void HostWithStandardHttpsPortShouldRemovePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: foo.bar:443
+                schemes:
+                  - https
+                paths: {}
+                """;
+            var settings = new OpenApiReaderSettings
+            {
+            };
+            settings.AddYamlReader();
+
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+
+            var server = result.Document.Servers.First();
+            Assert.Single(result.Document.Servers);
+            Assert.Equal("https://foo.bar", server.Url);
+        }
+
+        [Fact]
+        public void HostWithStandardHttpPortShouldRemovePort()
+        {
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: foo.bar:80
+                schemes:
+                  - http
+                paths: {}
+                """;
+            var settings = new OpenApiReaderSettings
+            {
+            };
+            settings.AddYamlReader();
+
+            var result = OpenApiDocument.Parse(input, "yaml", settings);
+
+            var server = result.Document.Servers.First();
+            Assert.Single(result.Document.Servers);
+            Assert.Equal("http://foo.bar", server.Url);
+        }
     }
 }
